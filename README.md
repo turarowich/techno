@@ -1,16 +1,14 @@
 ## Introduction
 We will going to talk about organizing node.js project in a structured way.
 
-![Alt Text](https://dev-to-uploads.s3.amazonaws.com/i/62hwsju098k925z6tw4c.png)
-
 Organized project structure reduces bugs & delicacy, Increases the stability & scalability of the code.
 
 ## The Structure
 ```
 |--app.js
 |--api-routes
+|--app
 |--config
-|--data
 |--jobs
 |--loaders
 |--node_modules
@@ -57,7 +55,15 @@ module.exports = function(app, network_information){
 }
 ```
 
-### 3. config
+### 3. app
+app contains models of databas and controllers to work with them.
+```
+|--app
+   |--controllers
+   |--models
+```
+
+### 4. config
 This folder contains files that are used to configure the parameters & initial settings for application. They can be overridden & extended by Environment Variables, Command Line Parameters, or External Sources
 ```
 |--config
@@ -69,25 +75,6 @@ module.exports = {
     port: process.env.PORT || 80
 };
 ``` 
-
-### 4. data
-Here you can store your small data or can use it as a local database
-Note: Don't store any sensitive or confidential data here, Always use secure database for that kind of data.
-```
-|--data
-   |--users.json
-```
-```
-//users.json
-[
-    {
-        "name": "Mario Curtis",
-        "city": "San Francisco",
-        "contact number": "4949494949780",
-        "type": "Admin"        
-    }
-]
-```
 
 ### 5. Jobs
 jobs folder contains scripts that will execute themselves automatically at a particular time
@@ -132,32 +119,8 @@ http.get('http://api.ipify.org?format=json', (resp) => {
 });
 ```
 
-### 7. public
-public folder contains all the files that have to be served "statically" (JS, CSS, Image File).
-```
-|--public
-   |--css
-   |  |--home.css
-   |--js
-   |  |--home.js
-```
-```
-//home.css
-body{
-    background-color: #f3f7fa;
-}
 
-div{
-    text-align: center;
-    padding-top: 200px;    
-}
-```
-```
-//home.js
-console.log('Hello from javascript');
-```
-
-### 8. secrets
+### 7. secrets
 You can store all your secrets related to web application such as API-KEY, AUTHENTICATION-KEY, etc.
 ```
 |--secrets
@@ -170,7 +133,7 @@ You can store all your secrets related to web application such as API-KEY, AUTHE
 }
 ```
 
-### 9. services
+### 8. services
 services contains set of modules which performs a specific task. They can be used over & over again.
 ```
 |--services
@@ -190,30 +153,35 @@ module.exports = {
 }
 ```
 
-### 10. views
-It contains **HTML Template** files, Which later rendered "dynamically" by **Templating Engine** & serve HTML response to user.
-Here we are using **EJS** templating engine, You can use any templating engine(pug, ejs) as per your convenience.
+### 9. views
+It contains **Frontend part** files, and main index.html file as an entry point.
+
 ```
 |--views
-   |--home.ejs
+   |--frontend
+   |--index.html
 ```
 ```
-//home.ejs
-<html>
-    <head>
-        <title>Node.js Project Structure</title>
-        <link rel="stylesheet" href="/css/home.css"/>
-    </head>
-    <body>
-        <div><%= key %></div>
-    </body>
-    <script src="/js/home.js"></script>
+//index.html
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+      <!-- CSS only -->
+  </head>
+  <body>
+    <noscript>
+      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
 </html>
 ```
 
 ## Conclusion
 Organized folder structure reduces the code complexity & increases the scalability of application.
-
-You can find whole project on [GitHub](https://github.com/Kalpitrathore/node-project-structure.git).
-
-For more update, Follow me on [Twitter](https://twitter.com/kalpitrathore) or [GitHub](https://github.com/Kalpitrathore).
