@@ -6,7 +6,7 @@ Organized project structure reduces bugs & delicacy, Increases the stability & s
 ## The Structure
 ```
 |--app.js
-|--api-routes
+|--routes
 |--app
 |--config
 |--jobs
@@ -39,10 +39,10 @@ app.listen(config.port, () => {
 })
 ```
 
-### 2. api-routes
-api-routes contain URL endpoints, which help users to interact with the application.
+### 2. routes
+routes contain URL endpoints, which help users to interact with the application.
 ```
-|--api-routes
+|--routes
    |--home.js
 ```
 ```
