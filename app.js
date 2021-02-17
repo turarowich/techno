@@ -1,54 +1,32 @@
-const express  = require('express');
+const express = require('express');
 const app      = express();
-const mongoose = require('mongoose');
-var router = express.Router();
-var config = require('./config/config.js');
-var fs = require('fs');
-var path = require('path');
+const router = express.Router();
+const config = require('./config/config.js');
+const fs = require('fs');
+const path = require('path');
+const bodyParser = require('body-parser');
 
-var http = require('http');
-var https = require('https');
+const http = require('http');
+const https = require('https');
 
-var privateKey = fs.readFileSync('ssl/loygift.key', 'utf8');
-var certificate = fs.readFileSync('ssl/loygift.crt', 'utf8');
-var credentials = { key: privateKey, cert: certificate };
+const privateKey = fs.readFileSync('ssl/loygift.key', 'utf8');
+const certificate = fs.readFileSync('ssl/loygift.crt', 'utf8');
+const credentials = { key: privateKey, cert: certificate };
 
-var httpServer = http.createServer(app);
-var httpsServer = https.createServer(credentials, app);
+const httpServer = http.createServer(app);
+const httpsServer = https.createServer(credentials, app);
 
-const { initClientDbConnection } = require('./config/dbutil.js');
+const { initClientDbConnection } = require('./config/dbutil');
+const userConnection = initClientDbConnection()
 
+global.appRoot = path.resolve(__dirname);
+global.userConnection = userConnection;
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(__dirname + '/views/frontend/dist'));
 app.use('/', require('./routes/home.js')(router))
 app.use('/api', require('./routes/api.js')(router))
-app.use(express.static(__dirname + '/views/frontend/dist'));
-
-
-global.clientConnection = initClientDbConnection();
-global.appRoot = path.resolve(__dirname);
-
-const dbConnection =  global.clientConnection;
-const db =  dbConnection.useDb("loygift");
-const Client = db.model("Client");
-const Category = db.model("Category");
-
-var category = new Category({
-    name: 'Human',
-    type: 'Client'
-});
-category.save(function(error, category){
-    new Client({
-        firstName: 'Ormonali',
-        lastName: 'Omuraliev',
-        phone: '0772405055',
-        email: 'kaarov8@gmail.com',
-        birthDate: new Date(),
-        address: 'some address',
-        category: category._id
-    }).save(async function(error, client) {
-        client = await client.populate('category').execPopulate();
-        console.log(client)
-    });   
-});
 
 httpServer.listen(config.port_http, () => {
     console.log(`App listening at http://${config.localhost}:${config.port_http}`);
