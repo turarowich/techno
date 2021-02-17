@@ -1,15 +1,15 @@
 const db = global.userConnection.useDb("loygift");
-const Client = db.model("Client");
+const Promocode = db.model("Promocode");
 const Category = db.model("Category");
 
-exports.getClient = async function (req, res) {
+exports.getPromocode = async function (req, res) {
     let result = {
         'status': 200,
-        'msg': 'Sending client'
+        'msg': 'Sending promocode'
     }
     try {
-        let client = await Client.findById(req.params.client)
-        result['client'] = client
+        let promocode = await Promocode.findById(req.params.promocode)
+        result['promocode'] = promocode
     } catch (error) {
         result = {
             'status': 500,
@@ -20,14 +20,14 @@ exports.getClient = async function (req, res) {
     res.status(result.status).json(result);
 };
 
-exports.getClients = async function (req, res) {
+exports.getPromocodes = async function (req, res) {
     let result = {
         'status': 200,
-        'msg': 'Sending clients'
+        'msg': 'Sending promocodes'
     }
     try {
-        let clients = await Client.find()
-        result['clients'] = clients
+        let promocodes = await Promocode.find()
+        result['promocodes'] = promocodes
     } catch (error) {
         result = {
             'status': 500,
@@ -38,44 +38,44 @@ exports.getClients = async function (req, res) {
     res.status(result.status).json(result);
 };
 
-exports.addClient = async function(req, res) {
+exports.addPromocode = async function (req, res) {
     let result = {
         'status': 200,
-        'msg': 'Client added'
+        'msg': 'Promocode added'
     }
     try {
         let category = await Category.findById(req.body.category)
 
-        let client = await new Client({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            phone: req.body.phone,
-            email: req.body.email,
-            birthDate: req.body.birthDate,
-            address: req.body.address,
-            category: category._id
+        let promocode = await new Promocode({
+            name: req.body.name,
+            code: req.body.code,
+            percent: req.body.percent,
+            bonus: req.body.bonus,
+            startDate: req.body.startDate,
+            endDate: req.body.endDate
         }).save();
-        result['client'] = client
+
+        result['promocode'] = promocode
     } catch (error) {
         result = {
             'status': 500,
             'msg': error.message
         }
     }
-    
+
     res.status(result.status).json(result);
 };
 
-exports.updateClient = async function (req, res) {
+exports.updatePromocode = async function (req, res) {
     let result = {
         'status': 200,
-        'msg': 'Client updated'
+        'msg': 'Promocode updated'
     }
     try {
-        let query = {'_id': req.params.client}
+        let query = { '_id': req.params.promocode }
         req.body['updatedAt'] = new Date()
-        let client = await Client.findOneAndUpdate(query, req.body)
-        result['client'] = client
+        let promocode = await Promocode.findOneAndUpdate(query, req.body)
+        result['promocode'] = promocode
     } catch (error) {
         result = {
             'status': 500,
@@ -86,14 +86,14 @@ exports.updateClient = async function (req, res) {
     res.status(result.status).json(result);
 };
 
-exports.deleteClient = async function (req, res) {
+exports.deletePromocode = async function (req, res) {
     let result = {
         'status': 200,
-        'msg': 'Client deleted'
+        'msg': 'Promocode deleted'
     }
     try {
-        let query = { '_id': req.params.client }
-        await Client.findByIdAndRemove(query)
+        let query = { '_id': req.params.promocode }
+        await Promocode.findByIdAndRemove(query)
     } catch (error) {
         result = {
             'status': 500,
@@ -103,3 +103,4 @@ exports.deleteClient = async function (req, res) {
 
     res.status(result.status).json(result);
 };
+

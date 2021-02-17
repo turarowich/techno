@@ -1,42 +1,36 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const clientSchema = new Schema({
-    firstName: {
+const promocodeSchema = new Schema({
+    name: {
         type: String,
         required: true,
     },
-    lastName: {
+    code: {
         type: String,
         required: true,
     },
-    phone: {
-        type: String,
+    percent: {
+        type: Number,
         required: false,
-        unique: true
     },
-    email: {
-        type: String,
+    bonus: {
+        type: Number,
         required: false,
-        unique: true
     },
-    birthDate: {
+    usedBy: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Client'
+    }],
+    startDate: {
         type: Date,
         required: true,
+        default: Date.now,
     },
-    address: {
-        type: String,
-        required: false,
-        default: ''
-    },
-    balance: {
-        type: Number,
+    endDate: {
+        type: Date,
         required: true,
-        default: 0
-    },
-    category: { 
-        type: Schema.Types.ObjectId, 
-        ref: 'Category' 
+        default: Date.now,
     },
     createdAt: {
         type: Date,
@@ -50,4 +44,4 @@ const clientSchema = new Schema({
     },
 })
 
-module.exports = mongoose.model('Client', clientSchema)
+module.exports = mongoose.model('Promocode', promocodeSchema)

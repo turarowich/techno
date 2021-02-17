@@ -1,42 +1,32 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const clientSchema = new Schema({
-    firstName: {
+const productSchema = new Schema({
+    name: {
         type: String,
         required: true,
     },
-    lastName: {
-        type: String,
-        required: true,
-    },
-    phone: {
+    img: {
         type: String,
         required: false,
-        unique: true
     },
-    email: {
+    description: {
         type: String,
         required: false,
-        unique: true
     },
-    birthDate: {
-        type: Date,
-        required: true,
-    },
-    address: {
+    quantity: {
         type: String,
         required: false,
-        default: ''
+        default: 0
     },
-    balance: {
+    price: {
         type: Number,
         required: true,
         default: 0
     },
-    category: { 
-        type: Schema.Types.ObjectId, 
-        ref: 'Category' 
+    category: {
+        type: Schema.Types.ObjectId,
+        ref: 'Category'
     },
     createdAt: {
         type: Date,
@@ -50,4 +40,4 @@ const clientSchema = new Schema({
     },
 })
 
-module.exports = mongoose.model('Client', clientSchema)
+module.exports = mongoose.model('Product', productSchema)

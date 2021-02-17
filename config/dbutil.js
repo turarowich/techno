@@ -21,6 +21,9 @@ const initClientDbConnection = () => {
     });
     require("../app/models/client.js")
     require("../app/models/category.js")
+    require("../app/models/product.js")
+    require("../app/models/review.js")
+    require("../app/models/promocode.js")
     return db;
 };
 

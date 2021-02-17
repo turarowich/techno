@@ -1,14 +1,24 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const categorySchema = new Schema({
-    name: {
+const reviewSchema = new Schema({
+    client: {
+        type: Schema.Types.ObjectId,
+        ref: 'Client'
+    },
+    comment: {
         type: String,
         required: true,
+    },
+    score: {
+        type: Number,
+        required: true,
+        default: 0,
     },
     type: {
         type: String,
         required: true,
+        default: 'Company',
     },
     createdAt: {
         type: Date,
@@ -22,4 +32,4 @@ const categorySchema = new Schema({
     },
 })
 
-module.exports = mongoose.model('Category', categorySchema)
+module.exports = mongoose.model('Review', reviewSchema)
