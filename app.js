@@ -26,27 +26,29 @@ app.use(express.static(__dirname + '/views/frontend/dist'));
 global.clientConnection = initClientDbConnection();
 global.appRoot = path.resolve(__dirname);
 
-// const dbConnection =  global.clientConnection;
-// const db =  dbConnection.useDb("loygift");
-// const Client = db.model("Client");
-// const Category = db.model("Category");
+const dbConnection =  global.clientConnection;
+const db =  dbConnection.useDb("loygift");
+const Client = db.model("Client");
+const Category = db.model("Category");
 
-// const category = new Category({
-//     name: 'Human',
-//     type: 'Client'
-// }).save(function (err, category) {
-//     const newUser = new Client({
-//         firstName: 'Ormonali',
-//         lastName: 'Omuraliev',
-//         phone: '0772405055',
-//         email: 'kaarov8@gmail.com',
-//         birthDate: new Date(),
-//         address: 'some address',
-//         category: category._id
-//     }).save(function (err, user) {
-//         console.log(user.populate('Category'))
-//     });    
-// });
+var category = new Category({
+    name: 'Human',
+    type: 'Client'
+});
+category.save(function(error, category){
+    new Client({
+        firstName: 'Ormonali',
+        lastName: 'Omuraliev',
+        phone: '0772405055',
+        email: 'kaarov8@gmail.com',
+        birthDate: new Date(),
+        address: 'some address',
+        category: category._id
+    }).save(async function(error, client) {
+        client = await client.populate('category').execPopulate();
+        console.log(client)
+    });   
+});
 
 httpServer.listen(config.port_http, () => {
     console.log(`App listening at http://${config.localhost}:${config.port_http}`);
