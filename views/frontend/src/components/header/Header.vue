@@ -1,6 +1,11 @@
 <template>
   <div class="main-page">
-    <div class="header d-flex justify-content-end align-items-center">
+    <div class="header d-flex align-items-center">
+      <button v-on:click="openSideBar" type="button" id="sidebarCollapse" class="btn">
+        <i class="fas fa-align-left"></i>
+
+      </button>
+      <div class="d-flex ">
       <div class="select-lang">
         <a href="/">Eng <img src="../../assets/icons/Line.svg"></a>
       </div>
@@ -17,13 +22,19 @@
           <span class="user-tariff">tarif: lite</span>
         </div>
       </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-name: "Header"
+name: "Header",
+  props:{
+  openSideBar:{
+    type:Function
+  }
+  }
 }
 </script>
 
@@ -31,16 +42,12 @@ name: "Header"
 .header{
   background: #fff;
   padding:10px 50px;
-  margin-left: -20px;
-  margin-right: -20px;
   height:55px;
   margin-bottom: 10px;
+  justify-content:flex-end;
 
 }
-.main-page{
-  margin:0 10px;
 
-}
 .select-lang a{
   color: #525252;
   font-size: 14px;
@@ -80,5 +87,16 @@ name: "Header"
 }
 .user-text{
   line-height: 17px;
+}
+#sidebarCollapse{
+  display: none;
+}
+@media(max-width:992px){
+  #sidebarCollapse{
+    display: block;
+  }
+  .header{
+    justify-content: space-between;
+  }
 }
 </style>
