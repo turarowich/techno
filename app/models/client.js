@@ -1,10 +1,7 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const clientSchema = new mongoose.Schema({
-    id: { 
-        type: String,
-        required: true 
-    },
+const clientSchema = new Schema({
     firstName: {
         type: String,
         required: true,
@@ -37,9 +34,9 @@ const clientSchema = new mongoose.Schema({
         required: true,
         default: 0
     },
-    category: {
-        type: Number,
-        required: false,
+    category: { 
+        type: Schema.Types.ObjectId, 
+        ref: 'Category' 
     },
     createdDate: {
         type: Date,
@@ -53,4 +50,4 @@ const clientSchema = new mongoose.Schema({
     },
 })
 
-module.exports = mongoose.model('Clients', clientSchema)
+module.exports = mongoose.model('Client', clientSchema)
