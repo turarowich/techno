@@ -24,6 +24,7 @@ const initClientDbConnection = () => {
     require("../app/models/product.js")
     require("../app/models/review.js")
     require("../app/models/promocode.js")
+    require("../app/models/order.js")
     return db;
 };
 

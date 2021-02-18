@@ -3,6 +3,7 @@ var productController = require('../app/controllers/productController');
 var promocodeController = require('../app/controllers/promocodeController');
 var categoryController = require('../app/controllers/categoryController');
 var reviewController = require('../app/controllers/reviewController');
+var orderController = require('../app/controllers/orderController');
 
 module.exports = function (app, network_information) {
     //Clients url
@@ -39,6 +40,13 @@ module.exports = function (app, network_information) {
     app.post('/addReview', reviewController.addReview);
     app.put('/updateReview/:review', reviewController.updateReview);
     app.delete('/deleteReview/:review', reviewController.deleteReview);
+
+    // Order url
+    app.get('/getOrder/:order', orderController.getOrder);
+    app.get('/getOrders', orderController.getOrders);
+    app.post('/addOrder', orderController.addOrder);
+    app.put('/updateOrder/:order', orderController.updateOrder);
+    app.delete('/deleteOrder/:order', orderController.deleteOrder);
 
     return app;
 }
