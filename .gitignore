@@ -22,7 +22,7 @@ dist/
 # Maven
 target/
 dist/
-
+config/config.js
 # JetBrains IDE
 .idea/
 

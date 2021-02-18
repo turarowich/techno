@@ -25,8 +25,51 @@ global.userConnection = userConnection;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/views/frontend/dist'));
+
+app.use('/api/*', (req, res, next) => {
+    console.log('Logged');
+    next();
+});
+
 app.use('/', require('./routes/home.js')(router))
 app.use('/api', require('./routes/api.js')(router))
+
+app.get('/nonexistant', (req, res, next) => {
+    let err = new Error('I couldn\'t find it.');
+    err.httpStatusCode = 404;
+    next(err);
+});
+
+app.get('/problematic', (req, res, next) => {
+    let err = new Error('I\'m sorry, you can\'t do that, Dave.');
+    err.httpStatusCode = 304;
+    next(err);
+});
+
+// handles not found errors
+app.use((err, req, res, next) => {
+    if (err.httpStatusCode === 404) {
+        res.status(400).render('NotFound');
+    }
+    next(err);
+});
+
+// handles unauthorized errors
+app.use((err, req, res, next) => {
+    if (err.httpStatusCode === 304) {
+        res.status(304).render('Unauthorized');
+    }
+    next(err);
+})
+
+// catch all
+app.use((err, req, res, next) => {
+    console.log(err);
+    if (!res.headersSent) {
+        res.status(err.httpStatusCode || 500).render('UnknownError');
+    }
+});
+
 
 httpServer.listen(config.port_http, () => {
     console.log(`App listening at http://${config.localhost}:${config.port_http}`);
