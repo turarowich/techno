@@ -4,11 +4,11 @@ const Schema = mongoose.Schema;
 const categorySchema = new Schema({
     name: {
         type: String,
-        required: true,
+        required: [true, 'Name required'],
     },
     type: {
         type: String,
-        required: true,
+        required: [true, 'Type required'],
     },
     createdAt: {
         type: Date,

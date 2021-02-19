@@ -13,8 +13,8 @@ const clientOption = {
 const option = { useNewUrlParser: true };
 
 const initClientDbConnection = () => {
+    mongoose.set('useFindAndModify', false);
     const db = mongoose.createConnection('mongodb://localhost/', clientOption);
-
     db.on("error", console.error.bind(console, "MongoDB Connection Error>> : "));
     db.once("open", function () {
         console.log("client MongoDB Connection ok!");
@@ -25,6 +25,7 @@ const initClientDbConnection = () => {
     require("../app/models/review.js")
     require("../app/models/promocode.js")
     require("../app/models/order.js")
+    require("../app/models/user.js")
     return db;
 };
 

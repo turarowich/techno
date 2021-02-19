@@ -4,37 +4,66 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
     name: {
         type: String,
-        required: true,
+        required: [true, 'Name required'],
     },
     phone: {
         type: String,
         required: true,
-        unique: true,
+        validate: {
+            validator: async function (phone) {
+                const user = await this.constructor.findOne({ phone });
+                if (user) {
+                    if (this.id === user.id) {
+                        return true;
+                    }
+                    return false;
+                }
+                return true;
+            },
+            message: props => 'The specified phone address is already in use.'
+        }
     },
     email: {
         type: String,
         required: true,
-        unique: true,
+        validate: {
+            validator: async function (email) {
+                const user = await this.constructor.findOne({ email });
+                if (user) {
+                    if (this.id === user.id) {
+                        return true;
+                    }
+                    return false;
+                }
+                return true;
+            },
+            message: props => 'The specified email address is already in use.'
+        }
     },
     password: {
         type: String,
-        required: true,
+        required: [true, 'Password required'],
+        select: false
+    },
+    _db: {
+        type: String,
+        required: false,
         select: false
     },
     companyName: {
         type: String,
-        required: true,
+        required: [true, 'Company name required'],
     },
     logo: {
         type: String,
-        required: true,
+        required: [false, 'Logo required'],
     },
     description: {
         type: String,
-        required: true,
+        required: [true, 'Description required'],
     },
     rate: {
-        type: number,
+        type: Number,
         required: true,
         default: 1,
     },

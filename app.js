@@ -18,33 +18,17 @@ const httpsServer = https.createServer(credentials, app);
 
 const { initClientDbConnection } = require('./config/dbutil');
 const userConnection = initClientDbConnection()
+const formidableMiddleware = require('express-formidable');
+const VerifyToken = require('./services/verifyToken');
 
 global.appRoot = path.resolve(__dirname);
 global.userConnection = userConnection;
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/views/frontend/dist'));
-
-app.use('/api/*', (req, res, next) => {
-    console.log('Logged');
-    next();
-});
-
+app.use(formidableMiddleware());
 app.use('/', require('./routes/home.js')(router))
-app.use('/api', require('./routes/api.js')(router))
-
-app.get('/nonexistant', (req, res, next) => {
-    let err = new Error('I couldn\'t find it.');
-    err.httpStatusCode = 404;
-    next(err);
-});
-
-app.get('/problematic', (req, res, next) => {
-    let err = new Error('I\'m sorry, you can\'t do that, Dave.');
-    err.httpStatusCode = 304;
-    next(err);
-});
+app.use('/api', VerifyToken, require('./routes/api.js')(router))
 
 // handles not found errors
 app.use((err, req, res, next) => {

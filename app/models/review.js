@@ -8,7 +8,7 @@ const reviewSchema = new Schema({
     },
     comment: {
         type: String,
-        required: true,
+        required: [true, 'Comment required'],
     },
     score: {
         type: Number,

@@ -4,7 +4,9 @@ var promocodeController = require('../app/controllers/promocodeController');
 var categoryController = require('../app/controllers/categoryController');
 var reviewController = require('../app/controllers/reviewController');
 var orderController = require('../app/controllers/orderController');
-
+var userController = require('../app/controllers/userController');
+var multer = require('multer');
+var upload = multer({ dest: '../public/product/' });
 module.exports = function (app, network_information) {
     //Clients url
     app.get('/getClient/:client', clientController.getClient);
@@ -16,8 +18,8 @@ module.exports = function (app, network_information) {
     // Products url
     app.get('/getProduct/:product', productController.getProduct);
     app.get('/getProducts', productController.getProducts);
-    app.post('/addProduct', productController.addProduct);
-    app.put('/updateProduct/:product', productController.updateProduct);
+    app.post('/addProduct', upload.single('file'), productController.addProduct);
+    app.put('/updateProduct/:product', upload.single('file'), productController.updateProduct);
     app.delete('/deleteProduct/:product', productController.deleteProduct);
 
     // Category url
@@ -47,6 +49,12 @@ module.exports = function (app, network_information) {
     app.post('/addOrder', orderController.addOrder);
     app.put('/updateOrder/:order', orderController.updateOrder);
     app.delete('/deleteOrder/:order', orderController.deleteOrder);
+
+    // User url
+    app.get('/getUser/:order', userController.getUser);
+    app.get('/getUsers', userController.getUsers);
+    app.put('/updateUser/:user', userController.updateUser);
+    app.delete('/deleteUser/:user', userController.deleteUser);
 
     return app;
 }
