@@ -1,0 +1,327 @@
+body{
+    font-size:14px;
+}
+input:focus, button:focus,textarea:focus{
+    outline:none;
+}
+.app-buttons{
+    margin-bottom: 24px;
+}
+.img-btn{
+    width: 18px;
+    height: 18px;
+}
+img{
+    cursor:pointer;
+}
+.app-buttons-item{
+    background: #F9F9F9;
+    border-radius: 5px;
+    padding:10px 20px;
+    border:none;
+    color: #606877;
+    font-size: 14px;
+    margin-right: 7px;
+    display: inline-flex;
+    align-items: center;
+}
+.app-buttons-item:last-child{
+    margin-right: 0;
+}
+.app-buttons-item:focus{
+    outline:none;
+}
+.app-buttons-item img{
+    margin-right: 10px;
+}
+.route-name{
+    font-weight: 600;
+    font-size: 24px;
+    margin: 0;
+}
+
+/*=====================DropDown=========================*/
+.dropdown-menu{
+    background: #FFFFFF;
+    border: 1px solid #F4F4F4;
+    box-sizing: border-box;
+    box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.07);
+    border-radius: 5px;
+    padding: 0;
+}
+.dropdown-menu li{
+    border-top:none;
+    border-left:none;
+    border-right:none;
+    padding:6px 10px;
+    border-bottom:1px solid #e8e8e8;
+    cursor:pointer;
+    font-size: 14px;
+    color: #949494;
+}
+.dropdown-menu li:last-child{
+    border-bottom: none;
+}
+.dropdown-menu li:hover{
+    background: #e8e8e8;
+    transition: .3s;
+}
+
+.dropleft .dropdown-toggle:before{
+    display: none;
+}
+
+
+.dropdown-toggle::after{
+    display: none;
+}
+
+.dropdown-toggle{
+    cursor:pointer;
+}
+.dropMenu{
+    width: 30px;
+    display: flex;
+    align-items: center;
+    height: 30px;
+    padding:5px;
+
+}
+.dropMenu:hover .three-dots{
+    filter: brightness(0.5);
+    transition: .3s;
+
+
+
+}
+/*=======================END OF DROPDOWN*/
+
+
+/*======================Main Content=============*/
+.main-content-header{
+    border-bottom:1px solid #e8e8e8;
+    color: #787878;
+    padding-bottom: 14px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.table-item{
+    padding:0 10px;
+    height: 70px;
+    border-bottom: 1px solid #e8e8e8;
+}
+.table-item:hover{
+    background: #F8F9FF;
+    transition:.3s;
+}
+.table-img{
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+.table-img img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+.table-link:hover{
+    cursor: pointer;
+    color:#222;
+    transition: .3s;
+}
+.date-pol.active,.total-pol.active {
+    filter: invert(44%) sepia(96%) saturate(2719%) hue-rotate(219deg) brightness(96%) contrast(100%);
+    transform: rotate(180deg);
+}
+
+.table-content{
+    overflow-y: auto;
+    height:calc(100vh - 351px);
+}
+.table-head{
+    list-style: none;
+}
+.circle-status{
+    font-size: 8px;
+    margin-right: 10px;
+}
+.status{
+    display: flex;
+    align-items: center;
+}
+/*=================end of Main Content*/
+
+/*============Search=================*/
+.searchAndButtons{
+    margin-bottom: 30px;
+    height:103px;
+
+}
+.main-input{
+    border:none;
+    height: 100%;
+    width: 100%;
+}
+.main-search{
+    border:1px solid #c4c4c4;
+    border-radius:5px;
+    padding:0 10px;
+    height: 40px;
+}
+.main-search img{
+    opacity:0.3;
+    margin-right: 10px;
+
+}
+.main-input:focus{
+    outline:none
+}
+.custom-checkbox{
+    width: 12px;
+    height: 12px;
+    cursor:pointer;
+
+
+}
+.custom-checkbox .checkmark{
+    height:100%;
+    width: 100%;
+    border: 1px solid #ADADAD;
+    box-sizing: border-box;
+    border-radius: 3px;
+    display: inline-block;
+}
+.custom-checkbox input:checked + .checkmark{
+    background: #616CF5;
+    border: 1px solid #616CF5;
+}
+.custom-checkbox input{
+    display: none;
+}
+
+/*========Switcher design=================*/
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+    margin-right: 10px;
+
+}
+.enable{
+    color: #B0B0B0;
+    font-size: 16px;
+
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #d3d3d3;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 17px;
+    width: 17px;
+    left: 3px;
+    bottom: 2.5px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #616CF5;
+}
+
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(17px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+/*=========================END of Switcher*/
+
+/*=====================Loyalty page's general styles=========================*/
+.cashback-title{
+    font-size: 20px;
+    color:#222;
+    font-weight:600;
+    margin-bottom: 0;
+}
+.cashback-description{
+    font-size: 16px;
+    color: #B0B0B0;
+    margin: 0;
+}
+.cashback-sub-title{
+    font-size: 16px;
+    font-weight: 600;
+    color:#222;
+
+}
+.cashback-input{
+    border: 1px solid #E3E3E3;
+    border-radius: 5px;
+    height:45px;
+    padding-left:10px;
+}
+.save{
+    background: #616CF5;
+    border-radius: 5px;
+    color:#fff;
+    height:37px;
+    display: flex;
+    align-items: center;
+    border:none;
+    padding:0 40px;
+    font-size: 16px;
+}
+.marginBottom{
+    margin-bottom: 20px;
+}
+.cashback-text-area{
+    width: 100%;
+    height:86px;
+    border: 1px solid #E3E3E3;
+    border-radius: 5px;
+    padding:10px;
+    resize: none;
+
+}
+.sum-point{
+    margin-bottom:5px;
+}
+.cash-btn{
+    border-radius: 5px;
+    height: 45px;
+    border: 1px solid #616CF5;
+    width: 45px;
+    background: none;
+
+
+}

@@ -2,13 +2,18 @@
 <div class="d-flex">
 
   <div class="siding-bar">
-    <SideBar v-bind:closeSideBar="closeSideBar"/>
+    <SideBar v-bind:closeSideBar="closeSideBar"
+              v-bind:count_order="count_order"
+    />
   </div>
 
     <div class="main-content">
-      <Header v-bind:openSideBar="openSideBar"/>
-      <div class="router-view">
-          <router-view/>
+      <Header v-if="$route.name !== 'Loyalty'"  v-bind:openSideBar="openSideBar"
+              v-bind:total_order="total_order"/>
+      <div  class="router-view">
+          <router-view @countNewOrder="countNewOrder"
+                        @totalOrders="totalOrders"
+              />
       </div>
       </div>
   </div>
@@ -27,31 +32,49 @@ export default {
     SideBar,
     Header,
   },
+  data(){
+    return{
+      count_order: 0,
+      total_order:0
+    }
+  },
   methods:{
     openSideBar(){
         $('.siding-bar').addClass('active');
       },
     closeSideBar(){
       $('.siding-bar').removeClass('active')
-    }
-  }
+    },
+    countNewOrder(count_order){
+      this.count_order = count_order
+    },
+    totalOrders(total){
+      this.total_order= total;
+    },
+  },
 }
 </script>
 
 <style scoped>
+@font-face {
+  font-family:"SF Pro Display";
+  font-weight:normal
+}
 .main-content{
-  width: 85%;
-  background: #F2F6FA;
+  width: calc(100% - 250px);
   margin-left: 250px;
+  font-size: 14px;
+  height:100vh;
+  overflow: hidden;
+}
+.router-view{
+  height: 100%;
 }
 .siding-bar{
   min-width: 250px;
   max-width: 250px;
   position: fixed;
-}
-.router-view{
-  margin: 0 10px;
-  overflow: auto;
+  z-index:999;
 }
 
 @media (max-width: 992px) {

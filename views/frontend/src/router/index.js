@@ -1,9 +1,11 @@
 import { createWebHistory, createRouter } from "vue-router";
 import Dashboard from "@/components/dashboard/Dashboard";
 import Orders from "@/components/orders/Orders";
-import LoayltyProgramm from "@/components/loyalty-programm/LoayltyProgramm";
+import Loaylty from "@/components/loyalty/Loaylty";
 import Chats from '@/components/chats/Chats';
 import Clients from "@/components/clients/Clients";
+import Catalog from "@/components/catalog/Catalog";
+import Analytics from "@/components/analytics/Analytics";
 const routes = [
     {
         path: "/",
@@ -22,14 +24,25 @@ const routes = [
     },
     {
         path: "/loyalty",
-        name: "LoyaltyProgramm",
-        component: LoayltyProgramm,
+        name: "Loyalty",
+        component: Loaylty,
+
     },
     {
         path: "/chats",
         name: "Chats",
         component: Chats,
     },
+    {
+        path: "/catalog",
+        name: "Catalog",
+        component: Catalog,
+    },
+    {
+        path:'/analytics',
+        name:"Analytics",
+        component: Analytics
+    }
 ];
 
 const router = createRouter({

@@ -1,19 +1,21 @@
 <template>
 <div class="side-bar">
     <div class="side-bar-header">
-          <img src="../assets/img/logo.svg"/>
+          <img class="logo" src="../assets/img/logo.svg"/>
           <button v-on:click="closeSideBar" class="btn closing"><i class="fas fa-align-right "></i></button>
     </div>
-    <div>
-      <router-link class="router-link" to="/">Home</router-link>
-      <router-link class="router-link" to="/orders"><img src="../assets/icons/Plus.svg" >Orders <span class="counters">13</span></router-link>
-      <router-link class="router-link" to="/clients"><img src="../assets/icons/Document.svg" >Clients<span class="counters">27</span></router-link>
-      <router-link class="router-link" to="/loyalty"><img src="../assets/icons/Game.svg" >Loyalty Programm</router-link>
-      <router-link class="router-link" to="/"><img src="../assets/icons/Discovery.svg" >Online</router-link>
-      <router-link class="router-link" to="/chats"><img src="../assets/icons/MoreSquare.svg" >Chats<span class="counters">2</span></router-link>
-      <router-link class="router-link" to="/"><img src="../assets/icons/Chart.svg" >Reports</router-link>
-      <router-link class="router-link" to="/"><img src="../assets/icons/Setting.svg" >Settings</router-link>
-
+    <div v-on:click="closeSideBar">
+      <router-link class="router-link" to="/orders"><span class="sider-bar-link"> <div class="left-line"></div><img src="../assets/icons/Plus.svg" >Orders</span> <span class="counters counters-order">{{count_order}}</span></router-link>
+      <router-link class="router-link" to="/clients"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Document.svg" >Clients</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+      <router-link class="router-link" to="/loyalty"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Game.svg" >Loyalty</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+      <router-link class="router-link" to="/catalog"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Discovery.svg" >Catalog</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+      <router-link class="router-link" to="/chats"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/MoresSquare.svg" >Chats</span><span class="counters">2</span></router-link>
+      <router-link class="router-link" to="/analytics"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/group.svg" >Analytics</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+      <div class="help-setting">
+        <router-link class="router-link help" to="/"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/question.svg" >Help</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+        <div class="line-side"></div>
+        <router-link class="router-link" to="/"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Setting.svg" >Settings</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+      </div>
     </div>
 </div>
 
@@ -21,19 +23,33 @@
 </template>
 
 <script>
+
 export default {
 name: "SideBar",
-props:{
+  data() {
+    return {
+      sideBarMenu: true,
+    }
+  },
+  props:{
   closeSideBar: {
     type:Function,
+  },
+    count_order: Number,
+
+
+
   }
-}
 }
 </script>
 
 <style scoped>
+.logo{
+  height: auto;
+  width:50%;
+}
 .side-bar{
-  background: #30303A;
+  background: #25262C;
   min-height: 100vh;
   width: 100%;
   position: relative;
@@ -42,22 +58,21 @@ props:{
 .side-bar-header{
   display: flex;
   justify-content: center;
-  background: #4257D0;
-  padding:10px 0;
-  height:55px;
+  background: #616CF5;
+  height:60px;
   margin-bottom: 20px;
 }
+
 
 .counters{
   width:24px;
   height: 22px;
-  background: #D87575;
+  background: #D25858;
   border-radius: 5px;
-  font-size: 13px;
-  display: inline-block;
-  vertical-align: center;
-  padding-top:2px ;
-  text-align: center;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: absolute;
   right:20px;
 }
@@ -68,30 +83,77 @@ props:{
   align-items: center;
   color:#fff;
   text-decoration: none;
-  border-left:3px solid transparent;
-  font-size: 14px;
-  padding-top:10px;
-  padding-bottom: 10px;
-}
-.router-link:last-child{
-  position: absolute;
-  width: 100%;
-  bottom:20px;
+  font-size: 15px;
+  height: 50px;
+  position: relative;
+
 
 }
+.sider-bar-link{
+  opacity: 0.7;
+}
+.router-link-active {
+  background: #363642;
+
+}
+.router-link-active .sider-bar-link{
+  opacity: 1;
+}
+.router-link-active .left-line{
+  visibility:visible;
+  opacity:1;
+}
+
 .router-link:hover{
-  border-left:3px solid blue;
-  background: #2A2A31;
+  opacity: 1;
+  background: #363642;
   transition: 0.4s;
 }
+.router-link:hover .left-line{
+  visibility:visible;
+  opacity:1;
+}
+.router-link:hover .sider-bar-link{
+  opacity: 1;
+ }
 .router-link img{
   margin-right: 10px;
 }
 .closing{
   display: none;
   color:#fff;
-
 }
+.router-link:active{
+  background: #363642;
+}
+.arrow{
+  position: absolute;
+  right:20px;
+}
+.help-setting{
+  position: absolute;
+  width: 100%;
+  bottom:20px;
+}
+.line-side{
+  border-bottom:1px solid #e8e8e8;
+  width: 90%;
+  opacity: 0.3;
+  margin: 10px auto;
+}
+.left-line{
+  width: 5px;
+  height: 100%;
+  background: #616CF5;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 5px 0px 0px 5px;
+  transform: matrix(-1, 0, 0, 1, 0, 0);
+  opacity:0;
+  transition:visibility 0.3s linear,opacity 0.3s linear;
+}
+
 @media(max-width:992px){
   .side-bar-header{
     justify-content: space-around;

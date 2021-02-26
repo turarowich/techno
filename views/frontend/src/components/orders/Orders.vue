@@ -1,96 +1,165 @@
 <template>
   <div class="orders">
-    <div class="filter-box">
-      <h5 class="m-0">Orders</h5>
-      <p class="m-0 filtering">
-        <img src="../../assets/icons/filter.svg">
-        Filter
-      </p>
+    <div class="searchAndButtons">
+    <div class="d-flex justify-content-between app-buttons">
+      <div class="d-flex align-items-center">
+        <button class="app-buttons-item"><img class="img-btn" src="../../assets/icons/trash_empty.svg"><span>Remove</span></button>
+        <button class="app-buttons-item"><img class="img-btn" src="../../assets/icons/filter.svg"><span>Filter</span></button>
+        <button class="app-buttons-item"><img class="img-btn" src="../../assets/icons/set.svg"><span>Export to Excell </span></button>
+      </div>
+      <div>
+        <button class="app-buttons-item"><img src="../../assets/icons/yesterday.svg"><span>Yesterday</span></button>
+        <button class="app-buttons-item"><img src="../../assets/icons/yesterday.svg"><span>Today</span></button>
+        <button class="app-buttons-item"><img src="../../assets/icons/yesterday.svg"><span>1 Feb - 13 Feb</span></button>
+      </div>
     </div>
 
-    <div class="orders-content">
-      <table class="table">
-        <tr>
-          <th><input type="checkbox"/></th>
-          <th>Name</th>
-          <th>Phone Number</th>
-          <th>Category</th>
-          <th>Last visit</th>
-          <th>Bonus</th>
-          <th>Spend money</th>
-        </tr>
+    <div class="main-search d-flex align-items-center">
+      <img src="../../assets/icons/search-icon.svg">
+      <input class="main-input" type="text" placeholder="Search" v-model="search">
+    </div>
+    </div>
+    <div class="d-flex main-content-header">
+      <div class="table-head" style="width: 3%;"><label class="custom-checkbox"><input type="checkbox"  @click="toggleSelect" :checked="selectAll"><span class="checkmark"></span></label></div>
+      <div class="table-head" style="width: 20%;">Name order</div>
+      <div class="table-head" style="width: 14%;">Client</div>
+      <div class="table-head" style="width: 12%;">Phone number</div>
+      <div class="table-head table-link " style="width: 10%;" @click="sortByTotal" >Total <img class="total-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
+      <div class="table-head table-link" style="width: 10%; cursor: pointer" v-on:click="sortByDate" >Date <img class="date-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
+      <div class="table-head" style="width: 18%;">Notes</div>
+      <div class="table-head" style="width: 10%;">Status</div>
+      <div class="table-head" style="width:3%"></div>
+      </div>
+      <div class="table-content">
         <OrderItem
-            v-for:="order of orderList" :key="order"
-            v-bind:order="order"
-         />
+              v-bind:orderList="filteredList"
+              @countNewOrder="countNewOrder"
+              v-on:deleteOrder="deleteOrder"
+              v-on:inProgress="inProgress"
+        />
+      </div>
 
-      </table>
+    <div class="pagination d-flex justify-content-between align-items-center">
+      <div>Rows per page <span>8</span> <img src="../../assets/icons/Line.svg"></div>
+      <div><span>1-12</span> of <span>200</span><img class="prevBtn mr-3 ml-3" src="../../assets/icons/side-arrow.svg"><img src="../../assets/icons/side-arrow.svg"></div>
     </div>
-  </div>
+    </div>
+
 </template>
 
 <script>
 import OrderItem from "@/components/order-item/OrderItem";
+import $ from 'jquery';
+
 
 export default {
 name: "Orders",
   data(){
     return{
       orderList:[
-        {name:"Bektemir Kudaiberdiev",phone:99654, category:"VIP", last_visit:"19.01.2021",bonus:998999,spent_money:9997343},
-        {name:"Jason Statham",phone:99654, category:"VIP", last_visit:"19.01.2021",bonus:998999,spent_money:9997343},
-        {name:"John Doe",phone:99654, category:"VIP", last_visit:"19.01.2021",bonus:998999,spent_money:9997343},
-        {name:"John Doe",phone:99654, category:"VIP", last_visit:"19.01.2021",bonus:998999,spent_money:9997343},
-        {name:"John Doe",phone:99654, category:"VIP", last_visit:"19.01.2021",bonus:998999,spent_money:9997343},
-        {name:"John Doe",phone:99654, category:"VIP", last_visit:"19.01.2021",bonus:998999,spent_money:9997343},
-        {name:"John Doe",phone:99654, category:"VIP", last_visit:"19.01.2021",bonus:998999,spent_money:9997343},
-        {name:"John Doe",phone:99654, category:"VIP", last_visit:"19.01.2021",bonus:998999,spent_money:9997343},
-        {name:"John Doe",phone:99654, category:"VIP", last_visit:"19.01.2021",bonus:998999,spent_money:9997343},
-        {name:"John Doe",phone:99654, category:"VIP", last_visit:"19.01.2021",bonus:998999,spent_money:9997343},
-        {name:"John Doe",phone:99654, category:"VIP", last_visit:"19.01.2021",bonus:998999,spent_money:9997343},
-        {name:"John Doe",phone:99654, category:"VIP", last_visit:"19.01.2021",bonus:998999,spent_money:9997343},
-      ]
+        {id:1,name:"Essential Shoes",client:"Tomas Levins", phone:"0550457834", total:"450 $",date:"14.02.2021",notes:"Please, can you \n" + "do it quickly?",status:'New'},
+        {id:2,name:"Sneakers, Term..",client:"Tomas Levins", phone:"0771196560", total:"342 $",date:"15.02.2021",notes:"Please, can you \n" + "do it quickly?",status:'New'},
+        {id:3,name:"AirForces",client:"Tomas Levins", phone:"0775896542", total:"13 $",date:"12.03.1998",notes:"Please, can you \n" + "do it quickly?" ,status:'New'},
+        {id:4,name:"Krosses",client:"Tomas Levins", phone:"0500687909", total:"120 $",date:"16.01.1992",notes:"Please, can you \n" + "do it quickly?",status:'New'},
+        {id:5,name:"Krosses",client:"Tomas Levins", phone:"0500687909", total:"120 $",date:"16.01.1992",notes:"Please, can you \n" + "do it quickly?",status:'Done'},
+        {id:6,name:"Krosses",client:"Tomas Levins", phone:"0500687909", total:"120 $",date:"16.01.1992",notes:"Please, can you \n" + "do it quickly?",status:'In Progress'},
+      ],
+      sorting:true,
+      search:'',
+      new_orders:0,
+      count_order:0
     }
   },
   components:{
-    OrderItem
+    OrderItem,
+  },
+  computed: {
+    selectAll: function() {
+      return this.orderList.every(function(user){
+        return user.checked;
+      });
+    },
+    filteredList() {
+      return this.orderList.filter(order => {
+          return order.name.toLowerCase().includes(this.search.toLowerCase()) || order.phone.includes(this.search)
+        })
+      },
+  },
+  methods: {
+    toggleSelect: function() {
+      var select = this.selectAll;
+      this.orderList.forEach(function(user) {
+        user.checked = !select;
+      });
+      this.selectAll = !select;
+    },
+    sortByDate() {
+      this.orderList.sort((a, b) => this.sorting? (parseInt(a.date) - parseInt(b.date)) : (parseInt(b.date) - parseInt(a.date)));
+      this.sorting = !this.sorting;
+      $('.date-pol').toggleClass('active')
+      $('.total-pol').removeClass('active')
+    },
+    sortByTotal(){
+      this.orderList.sort((a, b) => this.sorting? (parseInt(a.total) - parseInt(b.total)) : (parseInt(b.total) - parseInt(a.total)));
+      this.sorting = !this.sorting;
+      $('.total-pol').toggleClass('active')
+      $('.date-pol').removeClass('active')
+
+    },
+    countNewOrder(){
+      let count = 0;
+      this.orderList.map((order)=>{
+        if(order.status === 'New'){
+          count++;
+        }
+      })
+
+      this.count_order = count;
+      this.$emit('countNewOrder',this.count_order)
+    },
+    totalOrders() {
+      this.$emit("totalOrders", this.orderList.length)
+    },
+    deleteOrder(id){
+      this.orderList = this.orderList.filter(el=> el.id !== id);
+      this.countNewOrder()
+      this.totalOrders()
+    },
+    inProgress(id){
+      this.orderList.map((order)=>{
+        if(order.id === id){
+          order.status = 'InProgress';
+          this.countNewOrder()
+
+        }
+      })
+    },
+  },
+  mounted(){
+  this.totalOrders()
+  this.countNewOrder()
   }
 }
 </script>
 
 <style scoped>
 
-.orders-content{
-  border-radius: 5px;
-  background: #fff;
-  padding:10px;
+.orders{
+  margin: 0 20px;
+  height:100%;
 }
-table{
-  width: 100%;
+.total-order img, .date-order img{
+  margin-left: 10px;
 }
-.table th{
-  font-size: 14px;
-  color: #787878;
-  font-weight: lighter;
-  border-top:none;
-  border-bottom:1px solid #dee2e6;
+
+.pagination{
+  height: 90px;
+  color: #8C94A5;
 }
-.filter-box{
-  background: #fff;
-  margin-bottom: 10px;
-  height:50px;
-  padding:0 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.pagination img{
+  cursor:pointer;
 }
-.filter-box{
-  border-radius: 5px;
-}
-.filter-box h5{
-  font-weight: 600;
-}
-.filtering{
-  cursor: pointer;
+.prevBtn{
+  transform: rotate(180deg);
 }
 </style>

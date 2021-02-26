@@ -1,30 +1,45 @@
 <template>
-  <div class="main-page">
-    <div class="header d-flex align-items-center">
+
+    <div class="header d-flex justify-content-between align-items-center">
       <button v-on:click="openSideBar" type="button" id="sidebarCollapse" class="btn">
         <i class="fas fa-align-left"></i>
 
       </button>
-      <div class="d-flex ">
-      <div class="select-lang">
-        <a href="/">Eng <img src="../../assets/icons/Line.svg"></a>
+      <div class="total-order">
+        <h5 class="route-name">{{$route.name}}</h5>
+        <span class="total-order">Total orders: {{total_order}}</span>
+      </div>
+      <div class="d-flex align-items-center">
+      <div class="select-lang dropdown">
+        <div class="dropdown-toggle" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a href="/">Eng <img src="../../assets/icons/Line.svg"></a>
+        </div>
+
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
+          <ul class="list-group" >
+            <li class="list-group-item"><a class="dropown-link" href="/">English</a></li>
+            <li class="list-group-item"><a class="dropown-link" href="/">Russian</a></li>
+
+          </ul>
+        </div>
+
       </div>
 
       <div class="notification">
         <img src="../../assets/icons/notification.svg">
-        <img src="../../assets/icons/doubt.svg">
       </div>
 
       <div class="user-info d-flex">
         <span class="user-logo">W</span>
         <div class="user-text">
           <h4 class="user-name">Wory Shop</h4>
-          <span class="user-tariff">tarif: lite</span>
+          <span class="user-tariff">Your tarif is lite</span>
         </div>
+        <img src="../../assets/icons/Line.svg">
       </div>
       </div>
     </div>
-  </div>
+
 </template>
 
 <script>
@@ -33,34 +48,36 @@ name: "Header",
   props:{
   openSideBar:{
     type:Function
-  }
+  },
+    total_order:Number,
   }
 }
 </script>
 
 <style scoped>
+
+.total-order span{
+  color: #8C94A5;
+  font-size: 14px;
+  line-height: 17px;
+}
+.total-order{
+  line-height: 17px;
+}
 .header{
   background: #fff;
-  padding:10px 50px;
-  height:55px;
-  margin-bottom: 10px;
-  justify-content:flex-end;
+  height: 60px;
+  padding: 0 20px;
+  margin-bottom: 30px;
 
 }
-
 .select-lang a{
   color: #525252;
   font-size: 14px;
 }
 .notification{
-  padding:0 10px;
-  border-right:1px solid #e8e8e8;
-  border-left:1px solid #e8e8e8;
-  margin:0 20px;
+  margin:0 24px;
   cursor: pointer;
-}
-.notification img:first-child{
-  margin-right: 10px;
 }
 .user-name{
   font-size: 16px;
@@ -77,7 +94,7 @@ name: "Header",
   height: 34px;
   background: #4257D0;
   color:#fff;
-  border-radius:5px;
+  border-radius:50%;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -87,16 +104,19 @@ name: "Header",
 }
 .user-text{
   line-height: 17px;
+  margin-right: 10px;
+}
+.user-info img{
+  cursor:pointer;
 }
 #sidebarCollapse{
   display: none;
+  padding: 0;
 }
 @media(max-width:992px){
   #sidebarCollapse{
     display: block;
   }
-  .header{
-    justify-content: space-between;
-  }
+
 }
 </style>

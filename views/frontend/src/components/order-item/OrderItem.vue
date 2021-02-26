@@ -1,43 +1,68 @@
 <template>
-  <tr>
-    <td><input type="checkbox"/></td>
-    <td><div  class="name-info"><span>{{order.name[0]}}</span><div>{{order.name}}</div></div></td>
-    <td>{{order.phone}}</td>
-    <td>{{order.category}}</td>
-    <td>{{order.last_visit}}</td>
-    <td>{{order.bonus}}</td>
-    <td>{{order.spent_money}}</td>
-  </tr>
-  </template>
+  <div  v-for="order in orderList" class="table-item d-flex align-items-center" :key="order.id">
+    <div  style="width: 3%;"><label class="custom-checkbox"><input  type="checkbox" :value="order.id" v-model="order.checked"><span class="checkmark"></span></label></div>
+    <div  class="d-flex align-items-center"  style="width: 20%;">
+      <div class="table-img">
+        <img src="../../assets/img/sneak.webp">
+      </div>
+      {{order.name}}
+    </div>
+
+    <div  style="width: 14%;">{{order.client}}</div>
+    <div  style="width: 12%;">{{order.phone}}</div>
+    <div  style="width: 10%;">{{order.total}}</div>
+    <div  style="width: 10%;">{{order.date}}</div>
+    <div  style="width: 18%;">{{order.notes}}</div>
+    <div  style="width: 10%;" class="status" v-bind:class="{redd: order.status.toLowerCase()==='new'}" ><i class=" circle-status fas fa-circle"></i>{{order.status}}</div>
+    <div  style="width:3%">
+      <div class="dropleft dropMenu">
+      <div class="dropdown-toggle" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <img  src="../../assets/icons/three-dots.svg"
+              class="three-dots">
+      </div>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
+        <ul class="list-group " >
+          <li class="list-group-item">Done</li>
+          <li class="list-group-item">Edit</li>
+          <li class="list-group-item">Cancel</li>
+          <li class="list-group-item" v-on:click="$emit('deleteOrder',order.id)">Delete</li>
+          <li class="list-group-item" v-on:click="$emit('inProgress',order.id)">In progress</li>
+        </ul>
+      </div>
+      </div>
+    </div>
+  </div>
+</template>
 
 <script>
 
 export default {
   name: "OrderItem",
-  props:{
-    order:{
-      type:Object
+  props: {
+    orderList: {
+      type: Array,
+      default: function () {
+        return []
+      },
+    },
+  },
+  data(){
+    return{
+      count_order: 0
     }
-  }
+  },
+
+  methods:{
 
 
 
-
-
+  },
 }
+
 </script>
 
 <style scoped>
-tr td{
-  font-size: 14px;
-  border-top:none;
-  border-bottom:1px solid #dee2e6;
-  vertical-align: middle;
-}
-tr:hover{
-  background: #F8F9FF;
 
-}
 .name-info span{
   width:30px;
   height:30px;
@@ -47,12 +72,10 @@ tr:hover{
   display: flex;
   align-items: center;
   justify-content: center;
-
 }
-.name-info{
-  display: flex;
-  align-items: center;
-
+.redd{
+  color:red;
 }
+
 
 </style>
