@@ -12,57 +12,95 @@
     </div>
 
     <div class="row ">
-      <div  class="col-lg-3 analytics-box">
-          <p class="analtycs-desc"><img src="../../assets/icons/coin.svg"> The amount of profit</p>
-          <h2 class="analytics-title">4000</h2>
-      </div>
-      <div class="col-lg-3 analytics-box">
+      <div  class="col-lg-3 col-md-4 col-sm-4 col-xs-6 analytics-box">
           <p class="analtycs-desc"><img src="../../assets/icons/coin.svg"> The amount of profit</p>
           <h2 class="analytics-title">4000</h2>
       </div>
 
-      <div class="col-lg-3 analytics-box">
+      <div  class="col-lg-3 col-md-4 col-sm-4 col-xs-6 analytics-box">
+        <p class="analtycs-desc"><img src="../../assets/icons/numUser.svg"> The amount of profit</p>
+        <h2 class="analytics-title">4000</h2>
+      </div>
+
+      <div  class="col-lg-3 col-md-4 col-sm-4 col-xs-6 analytics-box">
+        <p class="analtycs-desc"><img src="../../assets/icons/new.svg"> The amount of profit</p>
+        <h2 class="analytics-title">4000</h2>
+      </div>
+
+      <div  class="col-lg-3 col-md-4 col-sm-4 col-xs-6 analytics-box">
+        <p class="analtycs-desc"><img src="../../assets/icons/middle.svg"> The amount of profit</p>
+        <h2 class="analytics-title">4000</h2>
+      </div>
+
+      <div  class="col-lg-3 col-md-4 col-sm-4 col-xs-6 analytics-box">
+        <p class="analtycs-desc"><img src="../../assets/icons/spent.svg"> The amount of profit</p>
+        <h2 class="analytics-title">4000</h2>
+      </div>
+
+      <div  class="col-lg-3 col-md-4 col-sm-4 col-xs-6 analytics-box">
         <p class="analtycs-desc"><img src="../../assets/icons/coin.svg"> The amount of profit</p>
         <h2 class="analytics-title">4000</h2>
       </div>
-      <div class="col-lg-3 analytics-box">
+
+      <div  class="col-lg-3 col-md-4 col-sm-4 col-xs-6 analytics-box">
         <p class="analtycs-desc"><img src="../../assets/icons/coin.svg"> The amount of profit</p>
         <h2 class="analytics-title">4000</h2>
       </div>
-      <div class="col-lg-3 analytics-box">
+
+      <div  class="col-lg-3 col-md-4 col-sm-4 col-xs-6 analytics-box">
         <p class="analtycs-desc"><img src="../../assets/icons/coin.svg"> The amount of profit</p>
         <h2 class="analytics-title">4000</h2>
       </div>
-      <div class="col-lg-3 analytics-box">
-        <p class="analtycs-desc"><img src="../../assets/icons/coin.svg"> The amount of profit</p>
-        <h2 class="analytics-title">4000</h2>
-      </div>
-      <div class="col-lg-3 analytics-box">
-        <p class="analtycs-desc"><img src="../../assets/icons/coin.svg"> The amount of profit</p>
-        <h2 class="analytics-title">4000</h2>
-      </div>
-      <div class="col-lg-3 analytics-box">
-        <p class="analtycs-desc"><img src="../../assets/icons/coin.svg"> The amount of profit</p>
-        <h2 class="analytics-title">4000</h2>
-      </div>
+
+
+
     </div>
 
     <div class="graph">
       <h3 class="graph-title">Number and amount of orders</h3>
-
+        <div class="canvas-graph">
+            <canvas id="planet-chart" width="100%"></canvas>
+        </div>
     </div>
   </div>
 </template>
 
 <script>
+import Chart from 'chart.js'
+import planetChartData from "@/components/analytics/chart-data";
 export default {
-name: "Analytics"
+  name: "Analytics",
+
+  data() {
+    return {
+      planetChartData,
+    }
+  },
+  methods: {
+    createChart(chartId, chartData) {
+      const ctx = document.getElementById(chartId);
+      new Chart(ctx, {
+        type: chartData.type,
+        data: chartData.data,
+        options: chartData.options,
+      });
+    }
+  },
+  mounted() {
+    this.createChart('planet-chart', this.planetChartData);
+  }
+
+
 }
 </script>
 
 <style scoped>
 .analytics{
-  padding: 0 20px;
+  padding-right: 20px;
+  padding-left: 20px;
+  height:100vh;
+  overflow-y: auto;
+  padding-bottom: 120px;
 }
 .analtycs-desc{
   color: #8C94A5;
@@ -96,10 +134,17 @@ name: "Analytics"
 .graph-title{
   font-size: 20px;
 }
+.canvas-graph{
+  width: 100%;
+  height: 400px;
+}
 @media(max-width:1200px){
   .analytics-box:before{
-    right:0;
+    display: none;
   }
 }
 
 </style>
+
+
+

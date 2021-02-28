@@ -276,7 +276,7 @@ input:checked + .slider:before {
 .cashback-description{
     font-size: 16px;
     color: #B0B0B0;
-    margin: 0;
+    margin-bottom: 10px;
 }
 .cashback-sub-title{
     font-size: 16px;
@@ -322,6 +322,34 @@ input:checked + .slider:before {
     border: 1px solid #616CF5;
     width: 45px;
     background: none;
+}
+
+/*=================TABS=================*/
+.tab-menu{
+    margin-bottom: 24px;
+    padding-left: 0;
+    border-bottom: 1px solid #D3D3D3;
+    padding-bottom: 10px;
+
+}
+.tab-list{
+    list-style-type: none;
+    display: inline;
+    margin-right: 35px;
+    font-size: 16px;
+    cursor:pointer;
+}
+.tab-list a{
+    color:#999;
+    text-decoration: none;
+    padding-bottom: 11px;
 
 
 }
+.tab-list a:hover, a.active{
+    border-bottom: 3px solid #616CF5;
+    color:#222;
+}
+
+
+

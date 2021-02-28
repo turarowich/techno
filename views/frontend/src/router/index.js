@@ -6,6 +6,7 @@ import Chats from '@/components/chats/Chats';
 import Clients from "@/components/clients/Clients";
 import Catalog from "@/components/catalog/Catalog";
 import Analytics from "@/components/analytics/Analytics";
+import Settings from "@/components/settings/Settings";
 const routes = [
     {
         path: "/",
@@ -42,7 +43,12 @@ const routes = [
         path:'/analytics',
         name:"Analytics",
         component: Analytics
-    }
+    },
+    {
+        path:'/settings',
+        name:"Settings",
+        component: Settings
+    },
 ];
 
 const router = createRouter({
