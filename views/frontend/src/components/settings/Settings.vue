@@ -12,7 +12,7 @@
         <h1>QR Codes</h1>
       </SettingsTabContent>
       <SettingsTabContent :isSelected="selected==='Prices'">
-      <h1>Prices</h1>
+       <Price/>
       </SettingsTabContent>
     </SettingsTab>
   </div>
@@ -22,12 +22,14 @@
 import SettingsTab from "@/components/settings/SettingsTab";
 import SettingsTabContent from "@/components/settings/SettingsTabContent";
 import General from "@/components/settings/general/General";
+import Price from "@/components/settings/prices/Price";
 export default {
 name: "Settings",
   components:{
     SettingsTab,
     SettingsTabContent,
-    General
+    General,
+    Price
   },
   data(){
     return{

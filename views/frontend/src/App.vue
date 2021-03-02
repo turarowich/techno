@@ -8,7 +8,7 @@
   </div>
 
     <div class="main-content">
-      <Header v-if="$route.name !== 'Settings'" v-bind:openSideBar="openSideBar"
+      <Header  v-if="!['Settings', 'Loyalty'].includes($route.name)"  v-bind:openSideBar="openSideBar"
               v-bind:total_order="total_order"/>
       <div  class="router-view">
           <router-view @countNewOrder="countNewOrder"

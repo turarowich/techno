@@ -4,19 +4,28 @@
       <div class="col-lg-6">
         <div class="general-left">
           <div class="form">
+
+            <div class="mb-4">
+              <p class="sum-point">Profile image</p>
+             <div class="profile-img">
+                  <img class="profile-logo" src="../../../assets/icons/profile-img.svg">
+                  <input type="file" id="file" v-on:change="uploadPhoto">
+                  <label class="addPhoto" for="file"><img src="../../../assets/icons/addBtn.svg"></label>
+             </div>
+            </div>
             <p class="sum-point">Name</p>
             <input class="form-input cashback-input mb-4">
             <p class="sum-point">Name of company</p>
             <input class="form-input cashback-input mb-4">
             <p class="sum-point">Password</p>
             <div class="pswrd-input mb-4">
-              <input>
-              <img src="../../../assets/icons/eye.svg">
+              <input id="show-password" type="password">
+              <img class="show-pswrd"  v-on:click="showPassword" src="../../../assets/icons/eye.svg">
             </div>
             <p class="sum-point">Repeat password</p>
             <div class="pswrd-input mb-4">
-              <input>
-              <img src="../../../assets/icons/eye.svg">
+              <input id="show-repeat" type="password">
+              <img  v-on:click="showRepeat" class="show-pswrd" src="../../../assets/icons/eye.svg">
             </div>
             <p class="sum-point">Description</p>
             <textarea class="general-area mb-4"></textarea>
@@ -26,22 +35,26 @@
 
           <div class="addititon-settings">
             <div class="additional-item mb-4">
-              <label class="switch mb-3">
-                <input type="checkbox" @click="disabled = (disabled + 1) % 2" >
-                <span class="slider round"></span>
-              </label>
-              <span class="enable">Enable</span>
+              <div class="d-flex align-items-center mb-3">
+                <label class="switch">
+                  <input type="checkbox" @click="disabled = (disabled + 1) % 2" >
+                  <span class="slider round"></span>
+                </label>
+                <span class="enable">Enable</span>
+              </div>
 
               <h3 class="cashback-sub-title">Welcome point</h3>
               <p class="cashback-description">A one-time award of points to the client for joining the company.</p>
               <input class="cashback-input" placeholder="0">
             </div>
             <div class="additional-item mb-4">
-              <label class="switch mb-3">
-                <input type="checkbox" @click="disabled = (disabled + 1) % 2" >
-                <span class="slider round"></span>
-              </label>
-              <span class="enable">Enable</span>
+              <div class="d-flex align-items-center mb-3">
+                <label class="switch">
+                  <input type="checkbox" @click="disabled = (disabled + 1) % 2" >
+                  <span class="slider round"></span>
+                </label>
+                <span class="enable">Enable</span>
+              </div>
 
               <h3 class="cashback-sub-title">Share with a friend</h3>
               <p class="cashback-description">Friends will share the link and receive a bonus on the account</p>
@@ -49,12 +62,13 @@
             </div>
 
             <div class="additional-item mb-4">
-              <label class="switch mb-3">
-                <input type="checkbox" @click="disabled = (disabled + 1) % 2" >
-                <span class="slider round"></span>
-              </label>
-              <span class="enable">Delivery</span>
-
+              <div class="d-flex align-items-center mb-3">
+                <label class="switch">
+                  <input type="checkbox" @click="disabled = (disabled + 1) % 2" >
+                  <span class="slider round"></span>
+                </label>
+                <span class="enable">Enable</span>
+              </div>
               <h3 class="cashback-sub-title">Settings Delivery</h3>
               <p class="cashback-description">Add shipping methods or shipping options</p>
               <textarea class="general-area mb-5"></textarea>
@@ -126,12 +140,13 @@
             </div>
 
             <div class="additional-item mb-4">
-              <label class="switch mb-3">
-                <input type="checkbox" @click="disabled = (disabled + 1) % 2" >
-                <span class="slider round"></span>
-              </label>
-              <span class="enable">Enable</span>
-
+              <div class="d-flex align-items-center mb-3">
+                <label class="switch">
+                  <input type="checkbox" @click="disabled = (disabled + 1) % 2" >
+                  <span class="slider round"></span>
+                </label>
+                <span class="enable">Enable</span>
+              </div>
               <h3 class="cashback-sub-title">Your url from online catalog</h3>
               <p class="cashback-description">A one-time award of points to the client for joining the company.</p>
               <input class="cashback-input" placeholder="0">
@@ -146,9 +161,44 @@
 </template>
 
 <script>
+
 export default {
-name: "General"
+name: "General",
+  methods:{
+    uploadPhoto(){
+    const file = document.querySelector('#file');
+    let chooseFiles = file.files[0];
+    if(chooseFiles){
+      const reader = new FileReader();
+
+      reader.addEventListener('load', function(){
+        const logo = document.querySelector('.profile-logo')
+        logo.setAttribute('src', reader.result);
+      })
+      reader.readAsDataURL(chooseFiles)
+    }
+  },
+    showPassword(){
+      var x = document.getElementById("show-password");
+      if (x.type === "password") {
+        x.type = "text";
+      } else {
+        x.type = "password";
+      }
+
+    },
+    showRepeat(){
+      var x = document.getElementById("show-repeat");
+      if (x.type === "password") {
+        x.type = "text";
+      } else {
+        x.type = "password";
+      }
+
+    }
 }
+}
+
 </script>
 
 <style scoped>
@@ -187,14 +237,14 @@ label{
   width:30%;
   margin-right: 10px;
 }
-.select:focus{
+select:focus{
   outline:none;
 }
 option{
   height:45px;
 }
 .general{
-  padding: 50px 0;
+  padding: 20px 0;
 }
 .general-left, .general-right{
   padding-right:100px;
@@ -213,6 +263,10 @@ option{
 .additional-item input{
   width: 100%;
 }
+.additional-item .enable{
+  color: #606877;
+
+}
 .pswrd-input{
   border: 1px solid #E3E3E3;
   border-radius: 5px;
@@ -220,9 +274,35 @@ option{
   height:45px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 .pswrd-input input{
   border:none;
 }
+.show-pswrd{
+  width: 20px;
+  height: 20px;
+}
+.profile-img{
+  width: 100px;
+  height: 100px;
+  position: relative;
+ }
+.profile-logo{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+
+}
+.profile-img input{
+  display: none;
+}
+.addPhoto{
+  position: absolute;
+  bottom: -20px;
+  right: -26px;
+}
+
 
 </style>

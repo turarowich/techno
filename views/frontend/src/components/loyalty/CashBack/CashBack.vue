@@ -8,7 +8,6 @@
             <span class="slider round"></span>
           </label>
           <span class="enable">Enable</span>
-
         </div>
 
         <div class="marginBottom">

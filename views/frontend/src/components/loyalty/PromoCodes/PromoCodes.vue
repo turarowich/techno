@@ -9,8 +9,25 @@
     <span class="enable">Enable</span>
     </div>
     <div  class="d-flex">
-      <div class="add-promo">
+      <div class="add-promo p-2 ">
+          <div class="promo-item mb-2 p-3">
+            <p class="cashback-description sum-point">Name</p>
+            <h3 class="cashback-sub-title mb-3">Promo Codes for shoes</h3>
+            <div class="d-flex align-items-center">
+              <div class="mr-3 d-flex align-items-center">
+                <img class="promo-img" src="../../../assets/icons/Calendar.svg">
+                <span class="promo-text">20%</span>
+              </div>
+              <div class=" d-flex align-items-center">
+                <img class="promo-img" src="../../../assets/icons/Calendar.svg">
+                <span  class="promo-text">21.12.2021</span>
+              </div>
+            </div>
+          </div>
 
+        <div class="add-promo-btn">
+            + click to add promo code
+        </div>
       </div>
 
       <div class="register-promo">
@@ -42,17 +59,21 @@
 
               <div class="d-flex align-items-center" style="width:50%">
                 <label>To</label>
-                <div style="width: 100%" class="input-box d-flex align-items-center"><input placeholder="Promo code name"><img class="mr-2" src="../../../assets/icons/Calendar.svg"></div>
+                <div style="width: 100%" class="input-box d-flex align-items-center"><input placeholder="Promo code name" v-model="date"><img class="mr-2" src="../../../assets/icons/Calendar.svg"></div>
               </div>
             </div>
         </div>
 
+
+
+
+
             <div class="valid-for marginBottom">
               <p>Valid for</p>
               <div class="d-flex">
-                <div class="valid-btn" ><button>Services</button></div>
-                <div  class="valid-btn" ><button>Services</button></div>
-                <div  class="valid-btn" ><button>Services</button></div>
+                <div class="valid-btn"> <button>Services</button></div>
+                <div  class="valid-btn"><button>Services</button></div>
+                <div  class="valid-btn"><button>Services</button></div>
               </div>
             </div>
 
@@ -62,8 +83,13 @@
               <input class="cashback-input" style="width: 70%; margin-right:10px;" placeholder="+ add services or category">
               <button class="cash-btn text-center"><img src="../../../assets/icons/enable+.svg"></button>
             </div>
+            <div class="d-flex">
+              <button class="save mr-3">Save</button>
+              <button class="remove">Remove</button>
+            </div>
 
-            <button class="save">Save</button>
+
+
 
           </div>
       </div>
@@ -75,8 +101,17 @@
 </template>
 
 <script>
+
 export default {
-name: "PromoCodes"
+
+
+name: "PromoCodes",
+
+  methods: {
+    onChange(date, dateString) {
+      console.log(date, dateString);
+    },
+  },
 }
 </script>
 
@@ -90,6 +125,11 @@ name: "PromoCodes"
  height:calc(100vh - 210px);
   margin-right: 10px;
 }
+.promo-item{
+  background: #fff;
+  border: 1px solid #616CF5;
+  border-radius: 5px;
+}
 .register-promo{
   width: 70%;
   border: 1px solid #D3D3D3;
@@ -98,6 +138,23 @@ name: "PromoCodes"
   padding:30px;
   height:calc(100vh - 210px);
   overflow-y: auto;
+}
+.promo-img{
+  margin-right:5px;
+}
+.promo-text{
+  color: #8C94A5;
+}
+.add-promo-btn{
+  border: 1px solid #8C94A5;
+  box-sizing: border-box;
+  border-radius: 5px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color:#8C94A5;
+  cursor:pointer;
 }
 .input-box{
   border: 1px solid #D3D3D3;
@@ -132,6 +189,18 @@ name: "PromoCodes"
 }
 .mb-10{
   margin-bottom:10px;
+}
+.remove{
+  background: none;
+  border-radius: 5px;
+  color:#d81919;
+  height:37px;
+  display: flex;
+  align-items: center;
+  border:1px solid #d81919;
+  justify-content: center;;
+  font-size: 16px;
+  width: 120px;
 }
 
 

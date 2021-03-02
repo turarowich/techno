@@ -19,37 +19,37 @@
 
       <div  class="col-lg-3 col-md-4 col-sm-4 col-xs-6 analytics-box">
         <p class="analtycs-desc"><img src="../../assets/icons/numUser.svg"> The amount of profit</p>
-        <h2 class="analytics-title">4000</h2>
+        <h2 class="analytics-title">1020</h2>
       </div>
 
       <div  class="col-lg-3 col-md-4 col-sm-4 col-xs-6 analytics-box">
         <p class="analtycs-desc"><img src="../../assets/icons/new.svg"> The amount of profit</p>
-        <h2 class="analytics-title">4000</h2>
+        <h2 class="analytics-title">2000</h2>
       </div>
 
       <div  class="col-lg-3 col-md-4 col-sm-4 col-xs-6 analytics-box">
         <p class="analtycs-desc"><img src="../../assets/icons/middle.svg"> The amount of profit</p>
-        <h2 class="analytics-title">4000</h2>
+        <h2 class="analytics-title">12000</h2>
       </div>
 
       <div  class="col-lg-3 col-md-4 col-sm-4 col-xs-6 analytics-box">
         <p class="analtycs-desc"><img src="../../assets/icons/spent.svg"> The amount of profit</p>
-        <h2 class="analytics-title">4000</h2>
+        <h2 class="analytics-title">13445</h2>
       </div>
 
       <div  class="col-lg-3 col-md-4 col-sm-4 col-xs-6 analytics-box">
-        <p class="analtycs-desc"><img src="../../assets/icons/coin.svg"> The amount of profit</p>
-        <h2 class="analytics-title">4000</h2>
+        <p class="analtycs-desc"><img src="../../assets/icons/customer.svg"> The amount of profit</p>
+        <h2 class="analytics-title">111234</h2>
       </div>
 
       <div  class="col-lg-3 col-md-4 col-sm-4 col-xs-6 analytics-box">
-        <p class="analtycs-desc"><img src="../../assets/icons/coin.svg"> The amount of profit</p>
-        <h2 class="analytics-title">4000</h2>
+        <p class="analtycs-desc"><img src="../../assets/icons/check.svg"> The amount of profit</p>
+        <h2 class="analytics-title">444444</h2>
       </div>
 
       <div  class="col-lg-3 col-md-4 col-sm-4 col-xs-6 analytics-box">
-        <p class="analtycs-desc"><img src="../../assets/icons/coin.svg"> The amount of profit</p>
-        <h2 class="analytics-title">4000</h2>
+        <p class="analtycs-desc"><img src="../../assets/icons/orders.svg"> The amount of profit</p>
+        <h2 class="analytics-title">111111</h2>
       </div>
 
 
