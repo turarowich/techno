@@ -3,11 +3,10 @@
   <div class="cashback-left" style="width:55%">
     <div>
         <div class="marginBottom">
-          <label class="switch">
+          <label class="switch d-flex">
             <input type="checkbox" @click="disabled = (disabled + 1) % 2" >
-            <span class="slider round"></span>
+            <span class="slider round"><span class="enable">  Enable</span></span>
           </label>
-          <span class="enable">Enable</span>
         </div>
 
         <div class="marginBottom">
@@ -17,32 +16,41 @@
 
           <div class="cashback-work marginBottom">
             <h3 class="cashback-sub-title">How will it work</h3>
-            <div class="mb-3"><input class="mr-2" type="checkbox"><span>Percentage of receipt or product</span></div>
-            <div><input class="mr-2" type="checkbox"><span>Fixed amount</span></div>
+            <div class="mb-2"><label class="custom-checkbox work-checkbox"><input type="checkbox"><span class="checkmark"></span></label><span>Percentage of receipt or product</span></div>
+            <div><label class="custom-checkbox work-checkbox"><input type="checkbox"  @click="toggleSelect" :checked="selectAll"><span class="checkmark"></span></label><span>Fixed amount</span></div>
           </div>
     </div>
 
     <div class="d-flex marginBottom">
       <div class="select-left">
-        <h3 class="cashback-sub-title mb-3">Select product</h3>
-        <input class=" cashback-input mb-3"  >
+        <h3 class="cashback-sub-title mb-3 ">Select product</h3>
+        <select class=" form-control form-control-lg mb-2" aria-label=".form-select-lg example">
+          <option>All product</option>
+          <option>Shoes permanent</option>
+          <option>Shoes permanent</option>
+          <option>Shoes permanent</option>
+          <option>Shoes permanent</option>
+          <option>Shoes permanent</option>
+          <option>Shoes permanent</option>
+          <option>Shoes permanent</option>
+        </select>
         <input class="cashback-input"  placeholder="+ add product or category">
       </div>
       <div class="select-right">
         <h3 class="cashback-sub-title mb-3">% or total</h3>
-        <input class="cashback-input mb-3"  placeholder="0" ><button disabled="true" class=" check cash-btn"><img src="../../../assets/icons/enable+.svg"></button>
+        <input class="cashback-input mb-2"  placeholder="0" ><button disabled="true" class=" check cash-btn"><img src="../../../assets/icons/enable+.svg"></button>
         <input class="check cashback-input"  :disabled="disabled == 1" placeholder="0">
       </div>
     </div>
 
     <div class="marginBottom">
-      <h3 class="cashback-sub-title m-0">Welcome points</h3>
-      <p class="cashback-description mb-3">A one-time award of points to the client for joining the company.</p>
+      <h3 class="cashback-sub-title ">Welcome points</h3>
+      <p class="cashback-description mb-3">A  one-time award of points to the client for joining the company.</p>
       <input class="cashback-input" placeholder="0">
     </div>
 
     <div class="d-flex">
-      <div style="width:10%">
+      <div>
         <label class="switch">
         <input type="checkbox">
         <span class="slider round"></span>
@@ -61,8 +69,8 @@
   <div class="cashback-right" style="width:45%">
     <div class="marginBottom"><h2 class="cashback-title">Birthday Points</h2></div>
 
-    <div class="d-flex mb-3">
-      <div style="width:10%">
+    <div class="d-flex mb-3 ">
+      <div>
         <label class="switch">
           <input type="checkbox">
           <span class="slider round"></span>
@@ -150,9 +158,11 @@ data(){
 .cashback-right{
   padding-right:90px;
 }
-
-.check.disabled{
-  background: red;
+.work-checkbox{
+  margin-right: 10px;
+}
+.cashback-work h3{
+  margin-bottom: 14px;
 }
 
 </style>

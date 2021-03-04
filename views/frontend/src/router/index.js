@@ -1,5 +1,6 @@
 import { createWebHistory, createRouter } from "vue-router";
-import Dashboard from "@/components/dashboard/Dashboard";
+import SignIn from "@/components/sign-in/SignIn";
+import SignUp from "@/components/sign-up/SignUp";
 import Orders from "@/components/orders/Orders";
 import Loaylty from "@/components/loyalty/Loaylty";
 import Chats from '@/components/chats/Chats';
@@ -10,8 +11,8 @@ import Settings from "@/components/settings/Settings";
 const routes = [
     {
         path: "/",
-        name: "Dashboard",
-        component: Dashboard,
+        name: "SignIn",
+        component: SignIn,
     },
     {
         path: "/orders",
@@ -48,6 +49,11 @@ const routes = [
         path:'/settings',
         name:"Settings",
         component: Settings
+    },
+    {
+        path:'/signup',
+        name:"SignUp",
+        component: SignUp
     },
 ];
 

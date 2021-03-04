@@ -1,9 +1,13 @@
 body{
     font-size:14px;
 }
+h1,h2,h3,h4,h5,h6{
+    margin-bottom: 0;
+}
 input:focus, button:focus,textarea:focus{
     outline:none;
 }
+
 .app-buttons{
     margin-bottom: 24px;
 }
@@ -207,14 +211,15 @@ img{
     display: inline-block;
     width: 40px;
     height: 22px;
-    margin-right: 10px;
+    margin-right: 15px;
     margin-bottom: 0;
 
 }
 .enable{
     color: #B0B0B0;
     font-size: 16px;
-
+    margin-left: 50px;
+    transition: .3s;
 }
 
 .switch input {
@@ -223,7 +228,7 @@ img{
     height: 0;
 }
 
-.slider {
+.slider{
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -234,6 +239,7 @@ img{
     -webkit-transition: .4s;
     transition: .4s;
 }
+
 
 .slider:before {
     position: absolute;
@@ -246,9 +252,16 @@ img{
     -webkit-transition: .4s;
     transition: .4s;
 }
-
 input:checked + .slider {
     background-color: #616CF5;
+
+
+}
+input:checked + .slider .enable {
+    color:#000;
+    transition: .4s;
+
+
 }
 
 input:checked + .slider:before {
@@ -256,7 +269,6 @@ input:checked + .slider:before {
     -ms-transform: translateX(26px);
     transform: translateX(17px);
 }
-
 .slider.round {
     border-radius: 34px;
 }
@@ -264,6 +276,20 @@ input:checked + .slider:before {
 .slider.round:before {
     border-radius: 50%;
 }
+
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+
+    color: rgba(0, 0, 0, 0);
+    opacity: 0;
+}
+input[type="date"] {
+    background:#fff url('../../assets/icons/Calendar.svg')  97% 50% no-repeat ;
+    cursor:pointer;
+}
+
+
+
 /*=========================END of Switcher*/
 
 /*=====================Loyalty page's general styles=========================*/
@@ -282,6 +308,7 @@ input:checked + .slider:before {
     font-size: 16px;
     font-weight: 600;
     color:#222;
+    margin-bottom: 3px;
 
 }
 .cashback-input{
@@ -301,6 +328,7 @@ input:checked + .slider:before {
     padding:0 40px;
     font-size: 16px;
     width: 120px;
+    margin-right: 10px;
 }
 .marginBottom{
     margin-bottom: 20px;
@@ -316,6 +344,10 @@ input:checked + .slider:before {
 }
 .sum-point{
     margin-bottom:5px;
+    color:#222;
+}
+.color-p{
+    color:#222;
 }
 .cash-btn{
     border-radius: 5px;
@@ -323,6 +355,16 @@ input:checked + .slider:before {
     border: 1px solid #616CF5;
     width: 45px;
     background: none;
+}
+
+.form-control{
+    height: 45px;
+    font-size: 16px;
+    color: #767676;
+}
+.form-control:focus{
+    box-shadow: none;
+    border-color:#e3e3e3;
 }
 
 /*=================TABS=================*/
@@ -353,4 +395,69 @@ input:checked + .slider:before {
 }
 
 
+/*=============================Login and register style =======================*/
+.login-input{
+    width: 100%;
+    border: 1px solid #D3D3D3;
+    border-radius: 5px;
+    height: 40px;
+    padding:0 10px;
+    margin-bottom: 10px;
+}
 
+.show-eye{
+    display: none;
+}
+#show-eye{
+    display: none;
+}
+.main-logo{
+    width: 49px;
+    height: 53px;
+}
+.authorization{
+    background: #FAFAFA;
+    width: 100%;
+    height: 100vh;
+    padding:23px 44px;
+}
+.sign-in-header{
+    margin-bottom: 50px;
+}
+.password .login-input{
+    border:none;
+    margin-bottom: 0;
+    height:100%;
+    width: 100%;
+}
+.password{
+    width: 100%;
+    border: 1px solid #D3D3D3;
+    border-radius: 5px;
+    height: 40px;
+    padding:0 10px;
+    margin-bottom: 15px;
+}
+.password img{
+    width: 20px;
+    height: 20px;
+    opacity: 0.7;
+}
+.sign-in-btn{
+    width: 100%;
+    background: #616CF5;
+    border-radius: 5px;
+    height: 50px;
+    border:none;
+    color:#fff;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.footer-text{
+    margin:0 auto;
+    text-align: center;
+    color: #B0B0B0;
+    font-size: 16px;
+    width: 480px;
+}

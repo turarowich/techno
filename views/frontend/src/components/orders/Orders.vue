@@ -36,6 +36,7 @@
               @countNewOrder="countNewOrder"
               v-on:deleteOrder="deleteOrder"
               v-on:inProgress="inProgress"
+              v-on:done="done"
         />
       </div>
 
@@ -51,18 +52,19 @@
 import OrderItem from "@/components/order-item/OrderItem";
 import $ from 'jquery';
 
-
 export default {
 name: "Orders",
   data(){
     return{
       orderList:[
         {id:1,name:"Essential Shoes",client:"Tomas Levins", phone:"0550457834", total:"450 $",date:"14.02.2021",notes:"Please, can you \n" + "do it quickly?",status:'New'},
-        {id:2,name:"Sneakers, Term..",client:"Tomas Levins", phone:"0771196560", total:"342 $",date:"15.02.2021",notes:"Please, can you \n" + "do it quickly?",status:'New'},
         {id:3,name:"AirForces",client:"Tomas Levins", phone:"0775896542", total:"13 $",date:"12.03.1998",notes:"Please, can you \n" + "do it quickly?" ,status:'New'},
         {id:4,name:"Krosses",client:"Tomas Levins", phone:"0500687909", total:"120 $",date:"16.01.1992",notes:"Please, can you \n" + "do it quickly?",status:'New'},
-        {id:5,name:"Krosses",client:"Tomas Levins", phone:"0500687909", total:"120 $",date:"16.01.1992",notes:"Please, can you \n" + "do it quickly?",status:'Done'},
-        {id:6,name:"Krosses",client:"Tomas Levins", phone:"0500687909", total:"120 $",date:"16.01.1992",notes:"Please, can you \n" + "do it quickly?",status:'In Progress'},
+        {id:5,name:"Krosses",client:"Tomas Levins", phone:"0500687909", total:"120 $",date:"02.01.1961",notes:"Please, can you \n" + "do it quickly?",status:'Done'},
+        {id:6,name:"Krosses",client:"Tomas Levins", phone:"0500687909", total:"120 $",date:"16.09.982",notes:"Please, can you \n" + "do it quickly?",status:'InProgress'},
+
+
+
       ],
       sorting:true,
       search:'',
@@ -94,7 +96,9 @@ name: "Orders",
       this.selectAll = !select;
     },
     sortByDate() {
-      this.orderList.sort((a, b) => this.sorting? (parseInt(a.date) - parseInt(b.date)) : (parseInt(b.date) - parseInt(a.date)));
+      this.orderList.sort((a, b) =>
+          this.sorting ? (parseInt(a.date.split('.').reverse().join()) - parseInt(b.date.split('.').reverse().join()))
+              : (parseInt(b.date.split('.').reverse().join()) - parseInt(a.date.split('.').reverse().join())));
       this.sorting = !this.sorting;
       $('.date-pol').toggleClass('active')
       $('.total-pol').removeClass('active')
@@ -129,11 +133,18 @@ name: "Orders",
       this.orderList.map((order)=>{
         if(order.id === id){
           order.status = 'InProgress';
-          this.countNewOrder()
-
+          this.countNewOrder();
         }
       })
     },
+    done(id) {
+      this.orderList.map((order) => {
+        if (order.id === id) {
+          order.status = 'Done';
+          document.getElementsByClassName('status').classList.add('done')
+        }
+      })
+    }
   },
   mounted(){
   this.totalOrders()
@@ -143,9 +154,11 @@ name: "Orders",
 </script>
 
 <style scoped>
-
+.status.done{
+  color:green;
+}
 .orders{
-  margin: 0 20px;
+  margin: 0 30px;
   height:100%;
 }
 .total-order img, .date-order img{

@@ -144,7 +144,7 @@ export default {
   height: 39px;
 }
 .main-chat{
-  padding-left:20px;
+  padding-left:30px;
 }
 
 

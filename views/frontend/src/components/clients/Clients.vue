@@ -108,6 +108,6 @@ name: "Clients",
 
 <style scoped>
 .client{
-  margin: 0 20px;
+  margin: 0 30px;
 }
 </style>

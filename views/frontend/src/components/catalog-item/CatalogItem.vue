@@ -10,7 +10,7 @@
     <div  style="width: 27%;">{{catalog.article}}</div>
     <div  style="width: 12%;">{{catalog.quantity}}</div>
     <div  style="width: 10%;">{{catalog.price}}</div>
-    <div  style="width:5%;" class="see-catalog"><img class="non-see" src="../../assets/icons/nonsee.svg"></div>
+    <div  style="width:5%;" class="see-catalog"><img @click="$emit('hideCatalog',catalog.id)" class="see-catalog" src="../../assets/icons/see.svg"><img class="nonsee-catalog" src="../../assets/icons/nonsee.svg"></div>
     <div  style="width:5%;">
       <div class="dropleft dropMenu">
         <div class="dropdown-toggle" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -31,7 +31,6 @@
 </template>
 
 <script>
-
 export default {
   name: "CatalogItem",
   props:{
@@ -40,6 +39,11 @@ export default {
 
     }
   },
+  methods:{
+    hideCatalog(){
+
+    }
+  }
 
 
 }
@@ -48,6 +52,9 @@ export default {
 <style scoped>
 .see-catalog{
   cursor:pointer;
+}
+.nonsee-catalog{
+  display: none;
 }
 
 </style>

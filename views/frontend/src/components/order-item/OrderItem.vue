@@ -13,7 +13,10 @@
     <div  style="width: 10%;">{{order.total}}</div>
     <div  style="width: 10%;">{{order.date}}</div>
     <div  style="width: 18%;">{{order.notes}}</div>
-    <div  style="width: 10%;" class="status" v-bind:class="{redd: order.status.toLowerCase()==='new'}" ><i class=" circle-status fas fa-circle"></i>{{order.status}}</div>
+    <div  style="width: 10%;"  :class="computedClass">
+      <i class=" circle-status fas fa-circle"></i>
+      {{order.status}}
+    </div>
     <div  style="width:3%">
       <div class="dropleft dropMenu">
       <div class="dropdown-toggle" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -22,7 +25,7 @@
       </div>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
         <ul class="list-group " >
-          <li class="list-group-item">Done</li>
+          <li class="list-group-item" v-on:click="$emit('done',order.id)">Done</li>
           <li class="list-group-item">Edit</li>
           <li class="list-group-item">Cancel</li>
           <li class="list-group-item" v-on:click="$emit('deleteOrder',order.id)">Delete</li>
@@ -48,15 +51,17 @@ export default {
   },
   data(){
     return{
-      count_order: 0
+      count_order: 0,
     }
   },
+  computed: {
+    computedClass() {
+      let className = 'redd'
+      return className
+    }
+  }
 
-  methods:{
 
-
-
-  },
 }
 
 </script>
@@ -76,6 +81,13 @@ export default {
 .redd{
   color:red;
 }
-
-
+.green{
+  color:#5CBD85;
+}
+.orange{
+  color:orange;
+}
+.status{
+  color:#000;
+}
 </style>

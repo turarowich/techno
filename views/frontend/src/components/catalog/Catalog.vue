@@ -22,7 +22,7 @@
       <div class="catalog-wrapper d-flex">
         <div class="catalog-menu" style="width:18%">
           <ul class="list-group">
-            <li class="catalog-list">
+            <li class="catalog-list active">
               All
               <div class="dropleft dropMenu">
                 <div class="dropdown-toggle" id="dropdownMenuAll" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -45,8 +45,8 @@
                 </div>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuShoes">
                   <ul class="list-group " >
-                    <li class="list-group-item"><a class="dropown-link" href="/">Edit</a></li>
-                    <li class="list-group-item"><a class="dropown-link" href="/">Delete</a></li>
+                    <li class="list-group-item">Edit</li>
+                    <li class="list-group-item">Delete</li>
 
                   </ul>
                 </div>
@@ -60,8 +60,8 @@
                 </div>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuClothes">
                   <ul class="list-group " >
-                    <li class="list-group-item"><a class="dropown-link" href="/">Edit</a></li>
-                    <li class="list-group-item"><a class="dropown-link" href="/">Delete</a></li>
+                    <li class="list-group-item">Edit</li>
+                    <li class="list-group-item">Delete</li>
                   </ul>
                 </div>
               </div>
@@ -82,6 +82,7 @@
               <CatalogItem
                   v-bind:catalogList="filteredList"
                   v-on:deleteCatalog="deleteCatalog"
+                  v-on:hideCatalog="hideCatalog"
               />
           </div>
         </div>
@@ -152,13 +153,22 @@ name: "Catalog",
       this.catalogList = this.catalogList.filter(el=> el.id !== id);
 
     },
+    activeCatalog(){
+      $('.catalog-list').click(function(){
+        $('.catalog-list').removeClass("active");
+        $(this).addClass("active");
+      });
+    }
+  },
+  mounted(){
+  this.activeCatalog()
   }
 }
 </script>
 
 <style scoped>
 .catalog{
-  margin: 0 20px;
+  margin: 0 30px;
 }
 .catalog-list{
   list-style-type: none;
@@ -175,6 +185,10 @@ name: "Catalog",
   background: #EBEEFF;
   color: #616CF5;
   cursor:pointer;
+}
+.catalog-list.active{
+  background: #EBEEFF;
+  color: #616CF5;
 }
 .catalog-list img{
   width: 15px;

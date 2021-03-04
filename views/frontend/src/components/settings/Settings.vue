@@ -52,7 +52,7 @@ name: "Settings",
   margin-bottom: 30px;
 }
 .settings{
-  padding:0 20px;
+  padding:0 30px;
   height:100vh;
   overflow-y: auto;
 }

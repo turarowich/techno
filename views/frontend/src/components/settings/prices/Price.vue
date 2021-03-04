@@ -4,23 +4,23 @@
 
   <div class="container-fluid pl-0">
     <div class="row">
-      <div class="col-lg-4">
+      <div class="col-lg-3 pr-0">
         <div class="card-price">
           <div class="price-head d-flex align-items-center mb-4">
-            <img class="price-img mr-2" src="../../../assets/icons/start-setting.svg">
+            <img class="price-img" src="../../../assets/icons/start-setting.svg">
             <h1 class="price-title">Start</h1>
           </div>
           <div class="price-body">
             <ul class="price-menu">
-              <li class="price-list"><a href="#">Customer base</a><span>200</span></li>
-              <li class="price-list"><a href="#">Link to the site</a><img src="../../../assets/icons/true.svg"></li>
-              <li class="price-list"><a href="#">Users</a><span>1</span></li>
-              <li class="price-list"><a href="#">Loyalty</a><img src="../../../assets/icons/x.svg"></li>
-              <li class="price-list"><a href="#">Chats with clients</a><img src="../../../assets/icons/true.svg"></li>
-              <li class="price-list"><a href="#">Push notification</a><img src="../../../assets/icons/true.svg"></li>
-              <li class="price-list"><a href="#">Product catalog</a><img src="../../../assets/icons/true.svg"></li>
-              <li class="price-list"><a href="#">Managing orders</a><img src="../../../assets/icons/true.svg"></li>
-              <li class="price-list"><a href="#">Managing statuses</a><img src="../../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Customer base</span><span>200</span></li>
+              <li class="price-list"><span>Link to the site</span><img src="../../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Users</span><span>1</span></li>
+              <li class="price-list"><span>Loyalty</span><img src="../../../assets/icons/x.svg"></li>
+              <li class="price-list"><span>Chats with clients</span><img src="../../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Push notification</span><img src="../../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Product catalog</span><img src="../../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Managing orders</span><img src="../../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Managing statuses</span><img src="../../../assets/icons/true.svg"></li>
             </ul>
           </div>
           <div class="price-foot d-flex align-items-center">
@@ -29,23 +29,23 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-4">
+      <div class="col-lg-3 pr-0">
         <div class="card-price">
           <div class="price-head d-flex align-items-center mb-4">
-            <img class="mr-2 price-img " src="../../../assets/icons/pro.svg">
+            <img class="price-img " src="../../../assets/icons/pro.svg">
             <h1 class="price-title">Pro</h1>
           </div>
           <div class="price-body">
             <ul class="price-menu">
-              <li class="price-list"><a href="#">Customer base</a><span>unlimited</span></li>
-              <li class="price-list"><a href="#">Link to the site</a><img src="../../../assets/icons/true.svg"></li>
-              <li class="price-list"><a href="#">Users</a><span>unlimited</span></li>
-              <li class="price-list"><a href="#">Loyalty</a><img src="../../../assets/icons/true.svg"></li>
-              <li class="price-list"><a href="#">Chats with clients</a><img src="../../../assets/icons/true.svg"></li>
-              <li class="price-list"><a href="#">Push notification</a><img src="../../../assets/icons/true.svg"></li>
-              <li class="price-list"><a href="#">Product catalog</a><img src="../../../assets/icons/true.svg"></li>
-              <li class="price-list"><a href="#">Managing orders</a><img src="../../../assets/icons/true.svg"></li>
-              <li class="price-list"><a href="#">Managing statuses</a><img src="../../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Customer base</span><span>unlimited</span></li>
+              <li class="price-list"><span>Link to the site</span><img src="../../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Users</span><span>unlimited</span></li>
+              <li class="price-list"><span>Loyalty</span><img src="../../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Chats with clients</span><img src="../../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Push notification</span><img src="../../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Product catalog</span><img src="../../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Managing orders</span><img src="../../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Managing statuses</span><img src="../../../assets/icons/true.svg"></li>
             </ul>
           </div>
           <div class="price-foot d-flex align-items-center">
@@ -54,7 +54,7 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-4">
+      <div class="col-lg-3 pr-0">
         <div class="card-price app d-flex align-items-center justify-content-center">
             <div class="text-center">
               <img class="mb-2 app-img" src="../../../assets/icons/app.svg">
@@ -73,11 +73,11 @@
     </div>
 
     <h3 class="cashback-sub-title mb-4 mt-4">Select the validity period</h3>
-    <div class="row">
-      <div class="col-3">
+    <div class="row month">
+      <div class="col-3 pr-0">
         <div class="validity-period">
           <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="validity-title">3 month</h3>
+            <h3 class="validity-title">6 month</h3>
             <div class="round">
               <input type="checkbox" id="checkbox" />
               <label for="checkbox"></label>
@@ -87,10 +87,10 @@
         </div>
       </div>
 
-      <div class="col-3">
+      <div class="col-3 pr-0">
         <div class="validity-period">
           <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="validity-title">6 month</h3>
+            <h3 class="validity-title">9 month</h3>
             <div class="round">
               <input type="checkbox" id="checkbox2" />
               <label for="checkbox2"></label>
@@ -100,10 +100,10 @@
         </div>
       </div>
 
-      <div class="col-3">
+      <div class="col-3 pr-0">
         <div class="validity-period">
           <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="validity-title">9 month</h3>
+            <h3 class="validity-title">12 month</h3>
             <div class="round">
               <input type="checkbox" id="checkbox3" />
               <label for="checkbox3"></label>
@@ -113,10 +113,10 @@
         </div>
       </div>
 
-      <div class="col-3">
+      <div class="col-3 pr-0">
         <div class="validity-period mb-4 " v-on:click="checkBlock">
           <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="validity-title">12 month</h3>
+            <h3 class="validity-title">24 month</h3>
             <div class="round">
               <input type="checkbox" id="checkbox4" />
               <label for="checkbox4"></label>
@@ -127,10 +127,10 @@
       </div>
     </div>
 
-      <h3 class="cashback-sub-title">Total</h3>
+      <h3 class="cashback-sub-title mb-3">Total</h3>
       <div class="total justify-content-between d-flex align-items-center">
         <div class="total-price d-flex ">
-          <div class="pr-5 mr-5 total-left">
+          <div class="total-left">
             <p class="valid-desc">Benefits:</p>
             <h3>0$</h3>
           </div>
@@ -153,17 +153,22 @@
 export default {
 name: "Price",
 
+
 }
 </script>
 
 <style scoped>
+.month{
+  width: 76.6%;
+}
 .price{
-  width: 60%;
+
   padding-bottom: 50px;
 }
 .price-img{
   width:22px;
   height: 22px;
+  margin-right: 5px;
 }
 .card-price{
   padding:20px;
@@ -171,6 +176,7 @@ name: "Price",
   border-radius: 7px;
   height:360px;
   transition: .4s;
+  cursor:pointer
 }
 .card-price:hover{
   border: 1px solid #616CF5;
@@ -178,6 +184,7 @@ name: "Price",
 }
 .app{
   background: #F0F2FF;
+  position: relative;
 }
 .app h3{
   color: #616CF5;
@@ -188,7 +195,7 @@ name: "Price",
 }
 .app-foot{
   position: absolute;
-  bottom: 10px;
+  bottom: 20px;
 }
 .app-img{
   width: 56px;
@@ -211,13 +218,6 @@ name: "Price",
   align-items: center;
 }
 
-.price-list a, .price-list{
-  color: #8C94A5;
-  text-decoration: none;
-}
-.price-list a:hover{
-  color: #616CF5;
-}
 .price-foot h1{
   color: #616CF5;
   font-size: 26px;
@@ -285,12 +285,15 @@ name: "Price",
   border: 1px solid #D3D3D3;
   border-radius: 7px;
   padding: 10px 20px;
+  width:75.5%;
 }
 .total-price h3{
   font-size: 24px;
 }
 .total-left{
   border-right: 1px solid #D3D3D3;
+  margin-right: 50px;
+  padding-right: 50px;
 }
 
 

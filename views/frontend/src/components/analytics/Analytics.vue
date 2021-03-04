@@ -51,9 +51,6 @@
         <p class="analtycs-desc"><img src="../../assets/icons/orders.svg"> The amount of profit</p>
         <h2 class="analytics-title">111111</h2>
       </div>
-
-
-
     </div>
 
     <div class="graph">
@@ -68,6 +65,7 @@
 <script>
 import Chart from 'chart.js'
 import planetChartData from "@/components/analytics/chart-data";
+
 export default {
   name: "Analytics",
 
@@ -96,8 +94,8 @@ export default {
 
 <style scoped>
 .analytics{
-  padding-right: 20px;
-  padding-left: 20px;
+  padding-right: 30px;
+  padding-left: 30px;
   height:100vh;
   overflow-y: auto;
   padding-bottom: 120px;

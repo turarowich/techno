@@ -11,6 +11,7 @@
       <router-link class="router-link" to="/catalog"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Discovery.svg" >Catalog</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
       <router-link class="router-link" to="/chats"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/MoresSquare.svg" >Chats</span><span class="counters">2</span></router-link>
       <router-link class="router-link" to="/analytics"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/group.svg" >Analytics</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+      <router-link class="router-link" to="/signup"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/group.svg" >Sign Up</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
       <div class="help-setting">
         <router-link class="router-link help" to="/"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/question.svg" >Help</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
         <div class="line-side"></div>

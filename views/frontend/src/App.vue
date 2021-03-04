@@ -4,17 +4,18 @@
   <div class="siding-bar">
     <SideBar v-bind:closeSideBar="closeSideBar"
               v-bind:count_order="count_order"
+             v-if="!['SignUp','SignIn'].includes($route.name)"
     />
   </div>
-
-    <div class="main-content">
-      <Header  v-if="!['Settings', 'Loyalty'].includes($route.name)"  v-bind:openSideBar="openSideBar"
+  <div class="main-content" v-bind:class="{hun: $route.name === 'SignUp' || $route.name === 'SignIn'} ">
+      <Header  v-if="!['Settings', 'Loyalty','SignIn', 'SignUp'].includes($route.name) "  v-bind:openSideBar="openSideBar"
               v-bind:total_order="total_order"/>
       <div  class="router-view">
           <router-view @countNewOrder="countNewOrder"
                         @totalOrders="totalOrders"
+
               />
-      </div>
+        </div>
       </div>
   </div>
 </template>
@@ -29,8 +30,9 @@ export default {
   name: 'App',
 
   components: {
-    SideBar,
-    Header,
+Header,
+    SideBar
+    // SignUp
   },
   data(){
     return{
@@ -66,6 +68,10 @@ export default {
   font-size: 14px;
   height:100vh;
   overflow: hidden;
+}
+.hun{
+  width: 100%;
+  margin-left: 0;
 }
 .router-view{
   height: 100%;

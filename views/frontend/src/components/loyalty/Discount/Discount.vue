@@ -1,11 +1,10 @@
 <template>
 <div class="discount">
   <div class="mb-3">
-    <label class="switch">
-      <input type="checkbox">
-      <span class="slider round"></span>
+    <label class="switch d-flex">
+      <input type="checkbox" @click="disabled = (disabled + 1) % 2" >
+      <span class="slider round"><span class="enable">  Enable</span></span>
     </label>
-    <span class="enable">Enable</span>
   </div>
 
 
@@ -14,24 +13,24 @@
     <p class="cashback-description">Increase customer loyalty with the help of this tool</p>
   </div>
 
-  <div class="discount-system d-flex align-items-center mb-5">
+  <div class="discount-system discount-bottom d-flex align-items-center">
     <div class="first-block">
-      <h3 class="cashback-sub-title">Discount system</h3>
+      <h3 class="cashback-sub-title mb-3">Discount system</h3>
       <div class="show-data d-flex align-items-center">Total Purchase</div>
     </div>
     <div class="discount-input">
-      <p class="sum-point">Specify a discount</p>
+      <p class="sum-point mb-3">Specify a discount</p>
       <input class="cashback-input" placeholder="0">
     </div>
-    <div  class="discount-input">
-      <p class="sum-point">Specify a discount</p>
+    <div  class="discount-input ">
+      <p class="sum-point mb-3">Specify a discount</p>
       <input class="cashback-input" placeholder="0">
     </div>
   </div>
 
 
-  <h3 class="cashback-sub-title">Validity period</h3>
-  <div class="discount-system d-flex align-items-end mb-5">
+  <h3 class="cashback-sub-title mb-3">Validity period</h3>
+  <div class="valid-bottom discount-system d-flex align-items-end">
     <div class="first-block">
      <div class="show-data mb-3"></div>
      <input  class="cashback-input" placeholder="+ add product or category">
@@ -57,9 +56,16 @@ name: "Discount"
 </script>
 
 <style scoped>
+.discount-bottom{
+  margin-bottom: 30px;
+}
 
 .discount-system{
   width: 60%;
+
+}
+.valid-bottom{
+  margin-bottom: 100px;
 
 }
 .show-data img{

@@ -17,8 +17,8 @@
 
         <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
           <ul class="list-group" >
-            <li class="list-group-item"><a class="dropown-link" href="/">English</a></li>
-            <li class="list-group-item"><a class="dropown-link" href="/">Russian</a></li>
+            <li class="list-group-item">English</li>
+            <li class="list-group-item">Russian</li>
 
           </ul>
         </div>
@@ -26,7 +26,7 @@
       </div>
 
       <div class="notification">
-        <img src="../../assets/icons/notification.svg">
+        <img src="../../assets/icons/ring.svg">
       </div>
 
       <div class="user-info d-flex">
@@ -67,7 +67,7 @@ name: "Header",
 .header{
   background: #fff;
   height: 60px;
-  padding: 0 20px;
+  padding: 0 30px;
   margin-bottom: 30px;
 
 }
