@@ -127,7 +127,7 @@
 
             <div class="mb-4">
               <p class="sum-point">Your country</p>
-              <select class=" form-control  form-control-lg mb-2" aria-label=".form-select-lg example">
+              <select class=" form-control long-form-control  form-control-lg mb-2" aria-label=".form-select-lg example">
                 <option>Kyrgyzstan</option>
                 <option>Russia</option>
                 <option>USA</option>
@@ -266,14 +266,7 @@ option{
 .form input{
   width: 100%;
 }
-.general-area{
-  border: 1px solid #E3E3E3;
-  border-radius: 5px;
-  padding-left:10px;
-  width:100%;
-  resize: none;
-  height: 125px;
-}
+
 .additional-item input{
   width: 100%;
 }

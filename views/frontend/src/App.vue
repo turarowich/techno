@@ -66,8 +66,8 @@ Header,
   width: calc(100% - 250px);
   margin-left: 250px;
   font-size: 14px;
-  height:100vh;
-  overflow: hidden;
+overflow-y: hidden;
+  height: 100vh;
 }
 .hun{
   width: 100%;

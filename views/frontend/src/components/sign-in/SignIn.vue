@@ -70,22 +70,16 @@ name: "SignIn",
 <style scoped>
 
 .login{
-  width: 486px;
+  width: 586px;
   background: #FFFFFF;
   border: 1px solid #D3D3D3;
   box-sizing: border-box;
   border-radius: 10px;
   margin: 0 auto;
-  padding:30px 60px;
+  padding:35px 90px;
   text-align: center;
-  margin-bottom: 78px;
+  margin-bottom: 50px;
 
-}
-
-.welcome-logo{
-  margin-bottom: 20px;
-  width:300px;
-  height: 70px;
 }
 
 form{
@@ -93,7 +87,7 @@ form{
 }
 .label{
   color:#222;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
   margin-right: 10px;
 }
 
@@ -121,7 +115,8 @@ form{
 
 }
 .main-or{
-  margin:10px 0;
+  margin-top:15px;
+  margin-bottom: 11px;
 }
 .have-account{
   font-size: 16px;
@@ -129,7 +124,7 @@ form{
 }
 
 .welcome-sign-in{
-  font-size:50px;
+  font-size:48px;
   font-weight: bold;
   color: #616CF5;
   line-height: 100%;
@@ -142,5 +137,8 @@ form{
   width: 73px;
   height: 30px;
   font-size: 13px;
+
+  background-position-x:80%;
+  background-position-y: 12px;
 }
 </style>

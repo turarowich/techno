@@ -11,7 +11,7 @@
       </div>
 
       <div class="sign-up">
-          <h1 class="welcome-sign-up ">Growth for your
+          <h1 class="welcome-sign-up ">Growth for your<br>
             business with loy <span>Gift</span></h1>
       <form>
         <div class="container-fluid">
@@ -118,28 +118,25 @@ form {
 }
 
 .sign-up{
-  width: 723px;
+  width: 823px;
   background: #FFFFFF;
   border: 1px solid #D3D3D3;
   box-sizing: border-box;
   border-radius:10px;
   margin:0 auto;
-  padding:32px 60px;
+  padding:35px 100px;
   text-align: center;
-  margin-bottom: 78px;
+  margin-bottom: 50px;
 }
 .label{
   color:#222;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
 }
 .rules label{
   margin-right: 10px;
 }
-.rules{
-  margin-bottom: 5px;
-}
 .policy{
-  margin-top: 15px;
+  margin-top:17px;
   margin-bottom: 32px;
   color: #858585;
 }
@@ -155,13 +152,15 @@ a{
   width: 73px;
   height: 30px;
   font-size: 13px;
+  background-position-y: 12px;
+  background-position-x:80%;
 }
 .welcome-sign-up{
-  font-size:50px;
+  font-size:48px;
   font-weight: bold;
   color: #616CF5;
   line-height: 100%;
-  margin-bottom: 50px;
+  margin-bottom: 40px;
 }
 .welcome-sign-up span{
   font-weight: 100;

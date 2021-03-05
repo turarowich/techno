@@ -3,9 +3,9 @@
     <div class="searchAndButtons">
     <div class="d-flex justify-content-between app-buttons">
       <div class="d-flex align-items-center">
-        <button class="app-buttons-item"><span>+ Add product</span></button>
-        <button class="app-buttons-item"><span>+ Add service</span></button>
-        <button class="app-buttons-item"><span>+ Add category </span></button>
+        <button class="app-buttons-item adding-btns" data-toggle="modal" data-target="#exampleModal"><span>+ Add product</span></button>
+        <button class="app-buttons-item adding-btns" data-toggle="modal" data-target="#add-service"><span>+ Add service</span></button>
+        <button class="app-buttons-item adding-btns"  data-toggle="modal" data-target="#add-category"><span>+ Add category </span></button>
       </div>
       <div class="d-flex align-items-center">
         <button class="app-buttons-item"><img src="../../assets/icons/trash_empty.svg"><span>Remove</span></button>
@@ -82,23 +82,45 @@
               <CatalogItem
                   v-bind:catalogList="filteredList"
                   v-on:deleteCatalog="deleteCatalog"
-                  v-on:hideCatalog="hideCatalog"
+
               />
+
           </div>
         </div>
       </div>
 
     </div>
+    <AddService/>
+    <AddProduct/>
+    <Edit/>
+    <AddCategory/>
   </div>
 </template>
 
 <script>
 import CatalogItem from "@/components/catalog-item/CatalogItem";
+import AddProduct from "@/modals/add-product/AddProduct";
+import AddService from "@/modals/add-service/AddService";
+import Edit from "@/modals/Edit/Edit";
+import AddCategory from "@/modals/add-category/AddCategory";
+
 import $ from "jquery";
 
 
 export default {
 name: "Catalog",
+
+  components:{
+    CatalogItem,
+    AddProduct,
+    AddService,
+    Edit,
+    AddCategory
+
+
+  },
+
+
   data(){
     return{
       catalogList:[
@@ -111,9 +133,6 @@ name: "Catalog",
       search:'',
       sorting:true
     }
-  },
-  components:{
-    CatalogItem,
   },
 
   computed:{
@@ -196,5 +215,9 @@ name: "Catalog",
 }
 .catalog-menu{
   margin-right: 25px;
+}
+.adding-btns{
+  background: #E9ECFF;
+  color:#616CF5;
 }
 </style>

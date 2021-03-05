@@ -79,7 +79,7 @@
 
             <div class="select-service mb-5">
               <p class="color-p">Select Services</p>
-              <select class="form-control select-phone mb-3" style="width: 70%;" aria-label="Default select example">
+              <select class="form-control long-form-control select-phone mb-3" style="width: 70%;" aria-label="Default select example">
                 <option>+996834</option>
                 <option>+996834</option>
                 <option>+996834</option>

@@ -24,7 +24,7 @@
     <div class="d-flex marginBottom">
       <div class="select-left">
         <h3 class="cashback-sub-title mb-3 ">Select product</h3>
-        <select class=" form-control form-control-lg mb-2" aria-label=".form-select-lg example">
+        <select class=" form-control long-form-control form-control-lg mb-2" aria-label=".form-select-lg example">
           <option>All product</option>
           <option>Shoes permanent</option>
           <option>Shoes permanent</option>

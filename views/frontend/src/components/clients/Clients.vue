@@ -3,7 +3,7 @@
   <div class="searchAndButtons">
   <div class="d-flex justify-content-between app-buttons">
     <div class="d-flex align-items-center">
-      <button class="app-buttons-item"><span>+ Add category</span></button>
+      <button class="app-buttons-item adding-btns"><span>+ Add category</span></button>
       <button class="app-buttons-item"><img src="../../assets/icons/birsday.svg"><span>Birthday</span></button>
 
     </div>
@@ -109,5 +109,9 @@ name: "Clients",
 <style scoped>
 .client{
   margin: 0 30px;
+}
+.adding-btns{
+  background: #E9ECFF;
+  color:#616CF5;
 }
 </style>
