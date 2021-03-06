@@ -462,7 +462,7 @@ input[type="date"] {
     border: 1px solid #D3D3D3;
     border-radius: 5px;
     height: 40px;
-    padding:0 10px;
+    padding-right:10px;
     margin-bottom: 13px;
 }
 .password img{

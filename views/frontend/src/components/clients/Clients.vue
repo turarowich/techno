@@ -3,7 +3,7 @@
   <div class="searchAndButtons">
   <div class="d-flex justify-content-between app-buttons">
     <div class="d-flex align-items-center">
-      <button class="app-buttons-item adding-btns"><span>+ Add category</span></button>
+      <button class="app-buttons-item adding-btns" data-toggle="modal" data-target="#add-category"><span>+ Add category</span></button>
       <button class="app-buttons-item"><img src="../../assets/icons/birsday.svg"><span>Birthday</span></button>
 
     </div>
@@ -38,18 +38,24 @@
          />
     </div>
   </div>
-
+<AddCategory/>
+  <Edit/>
 </div>
 </template>
 
+
 <script>
 import ClientItem from "@/components/client-item/ClientItem";
+import AddCategory from "@/modals/add-category/AddCategory";
+import Edit from "@/modals/Edit/Edit";
 import $ from "jquery";
 export default {
 
 name: "Clients",
   components:{
-    ClientItem
+    ClientItem,
+    AddCategory,
+    Edit
   },
   data(){
     return {

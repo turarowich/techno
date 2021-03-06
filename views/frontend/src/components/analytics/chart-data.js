@@ -5,49 +5,42 @@ export const planetChartData = {
         datasets: [
             { // one line graph
                 label: 'Number of Moons',
-                data: [0, 0, 1, 2, 67, 62, 27, 14],
+                data: [10, 12, 5, 50, 10, 28, 17, 15, 23, 6],
 
                 borderColor: [
-                    '#36495d',
-                    '#36495d',
-                    '#36495d',
-                    '#36495d',
-                    '#36495d',
-                    '#36495d',
-                    '#36495d',
-                    '#36495d',
-                ],
-                borderWidth: 3
-            },
-            { // another line graph
-                label: 'Planet Mass (x1,000 km)',
-                data: [4.8, 12.1, 12.7, 6.7, 139.8, 116.4, 50.7, 49.2],
+                    '#616CF5',
 
-                borderColor: [
-                    '#47b784',
                 ],
-                borderWidth: 3
             }
+
+
         ]
     },
     options: {
-        // responsive: true,
-        // lineTension: 1,
-        // scales: {
-        //     yAxes: [{
-        //         ticks: {
-        //             beginAtZero: true,
-        //             padding: 25,
-        //         }
-        //     }]
-        // }
+        responsive: true,
+        lineTension: 1,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                    padding:25,
+                }
+            }]
+        },
+        elements: {
+            point: {
+                radius: 0
+            }
+        },
         layout: {
             padding: {
-                left: 50,
+                left: 0,
                 right: 0,
-                top: 0,
+                top: 10,
                 bottom: 0
-            }
+            },
+
+
         }
     }
 }

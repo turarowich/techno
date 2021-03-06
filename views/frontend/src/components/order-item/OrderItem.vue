@@ -11,9 +11,15 @@
     <div  style="width: 14%;">{{order.client}}</div>
     <div  style="width: 12%;">{{order.phone}}</div>
     <div  style="width: 10%;">{{order.total}}</div>
-    <div  style="width: 10%;">{{order.date}}</div>
-    <div  style="width: 18%;">{{order.notes}}</div>
-    <div  style="width: 10%;"  :class="computedClass">
+    <div  style="width: 10%;">{{order.date.split('').slice(0,10).join('')}}</div>
+    <div  style="width: 18%;"><div class="comment-width">{{order.notes}}</div></div>
+    <div  style="width: 10%;"
+          :class="[{red: order.status === 'Canceled'},
+          {green: order.status === 'Done'},
+          {orange: order.status === 'In Progress'},
+          {new: order.status === 'New'}
+          ]">
+
       <i class=" circle-status fas fa-circle"></i>
       {{order.status}}
     </div>
@@ -26,8 +32,8 @@
       <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
         <ul class="list-group " >
           <li class="list-group-item" v-on:click="$emit('done',order.id)">Done</li>
-          <li class="list-group-item">Edit</li>
-          <li class="list-group-item">Cancel</li>
+          <li class="list-group-item" data-toggle="modal" data-target="#edit">Edit</li>
+          <li class="list-group-item" @click="$emit('canceled' ,order.id)">Cancel</li>
           <li class="list-group-item" v-on:click="$emit('deleteOrder',order.id)">Delete</li>
           <li class="list-group-item" v-on:click="$emit('inProgress',order.id)">In progress</li>
         </ul>
@@ -54,12 +60,7 @@ export default {
       count_order: 0,
     }
   },
-  computed: {
-    computedClass() {
-      let className = 'redd'
-      return className
-    }
-  }
+
 
 
 }
@@ -78,7 +79,7 @@ export default {
   align-items: center;
   justify-content: center;
 }
-.redd{
+.red{
   color:red;
 }
 .green{
@@ -87,7 +88,17 @@ export default {
 .orange{
   color:orange;
 }
+.new{
+  color:#616CF5;
+}
 .status{
   color:#000;
+}
+.comment-width{
+  width: 200px;
+  text-overflow:ellipsis;
+  padding:20px 0;
+
+  overflow: hidden;
 }
 </style>

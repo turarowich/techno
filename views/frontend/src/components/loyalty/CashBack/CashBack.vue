@@ -101,7 +101,7 @@ next purchase!"></textarea>
     <h2 class="cashback-title marginBottom">Security</h2>
 
     <div class="d-flex mb-3">
-      <div style="width:10%">
+      <div>
         <label class="switch">
           <input type="checkbox">
           <span class="slider round"></span>

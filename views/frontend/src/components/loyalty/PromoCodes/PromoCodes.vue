@@ -96,11 +96,7 @@
             <div class="d-flex">
               <button class="save">Save</button>
               <button class="remove">Remove</button>
-
             </div>
-
-
-
           </div>
       </div>
 
@@ -165,12 +161,12 @@ export default {
   border-radius: 5px;
   height: 45px;
   padding-left:20px;
-
 }
 .input-box input{
   width: 100%;
   height: 100%;
   border:none;
+  color:#b0b0b0;
 }
 .qr {
   margin-right: 5px;
@@ -180,9 +176,7 @@ export default {
   margin-right: 10px;
   color:#8C94A5;
 }
-.input-box  input{
-  color:#b0b0b0;
-}
+
 label{
   margin-bottom: 5px;
 }

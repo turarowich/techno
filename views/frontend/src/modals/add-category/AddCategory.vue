@@ -5,7 +5,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content category-content">
         <div class="modal-header align-items-center">
-          <h3 class="modal-title">Add Product</h3>
+          <h3 class="modal-title">Add Category</h3>
           <button type="button" data-dismiss="modal" aria-label="Close" class="close">
               <span aria-hidden="true">
                 <img src="../../assets/icons/x.svg" alt="">
