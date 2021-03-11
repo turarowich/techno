@@ -42,6 +42,7 @@ class AuthController{
     };
 
     login = async function (req, res) {
+        console.log(req.fields)
         let db = global.userConnection.useDb('loygift');
         let User = db.model("User");
 

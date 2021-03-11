@@ -18,6 +18,13 @@ const httpsServer = https.createServer(credentials, app);
 
 const { initClientDbConnection } = require('./config/dbutil');
 const userConnection = initClientDbConnection()
+
+app.use((req, res, next) => {
+    if (userConnection.readyState == 0) {
+        res.status(500).json({ status: 500, msg: 'DB not connected' });
+    }
+    next();
+})
 const formidableMiddleware = require('express-formidable');
 const VerifyToken = require('./services/verifyToken');
 
@@ -39,12 +46,15 @@ app.use((err, req, res, next) => {
 });
 
 // handles unauthorized errors
+
+
 app.use((err, req, res, next) => {
     if (err.httpStatusCode === 304) {
         res.status(304).render('Unauthorized');
     }
     next(err);
 })
+
 
 // catch all
 app.use((err, req, res, next) => {
