@@ -8,5 +8,5 @@ module.exports = {
     port_https: process.env.PORT || 8443,
     localhost:'localhost',
     ip: address,
-    secret_key: 'sasdfsdfasdf'
+    secret_key: 'sasdfsdfasdfh'
 };
