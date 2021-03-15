@@ -8,7 +8,7 @@
           <h3 class="modal-title">Add Service</h3>
           <button type="button" data-dismiss="modal" aria-label="Close" class="close">
               <span aria-hidden="true">
-                <img src="../../assets/icons/x.svg" alt="">
+                <img src="../../../assets/icons/x.svg" alt="">
               </span>
           </button>
         </div>
@@ -39,7 +39,7 @@
             <div class="modal-img ">
               <label>Photos</label>
               <p class="cashback-description">You can upload 4 more JPG or PNG photos, the minimum resolution is 400*400px, the size is not more than 3 MB.</p>
-              <img src="../../assets/img/modal-img.svg">
+              <img src="../../../assets/img/modal-img.svg">
             </div>
 
             <div class="modal-btn d-flex">

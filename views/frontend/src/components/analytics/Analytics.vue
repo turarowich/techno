@@ -56,7 +56,7 @@
     <div class="graph">
       <h3 class="graph-title">Number and amount of orders</h3>
         <div class="canvas-graph">
-            <canvas id="planet-chart" width="100%"></canvas>
+            <canvas ref="canvas" id="planet-chart" width="100%"></canvas>
         </div>
     </div>
   </div>
@@ -64,28 +64,136 @@
 
 <script>
 import Chart from 'chart.js'
-import planetChartData from "@/components/analytics/chart-data";
 
 export default {
   name: "Analytics",
 
-  data() {
-    return {
-      planetChartData,
-    }
-  },
   methods: {
-    createChart(chartId, chartData) {
-      const ctx = document.getElementById(chartId);
-      new Chart(ctx, {
-        type: chartData.type,
-        data: chartData.data,
-        options: chartData.options,
-      });
-    }
+   createChart(){
+     var ctx = document.getElementById('planet-chart').getContext("2d");
+
+     var gradientStroke = ctx.createLinearGradient(500, 0, 100, 0);
+     gradientStroke.addColorStop(0, '#80b6f4');
+     gradientStroke.addColorStop(1, '#f49080');
+
+     var gradientFill = ctx.createLinearGradient(0, 0, 0, 400);
+     gradientFill.addColorStop(0, "rgba(97, 108, 245, 1)");
+     gradientFill.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+     new Chart(ctx, {
+       type: 'line',
+       data: {
+         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug','Sep','Ocr','Nov' , 'Dec'],
+         datasets: [{
+
+           label: "Data",
+           borderColor: '#616CF5',
+           pointBorderColor: '#616cf5',
+           pointBackgroundColor: '#fff',
+           pointHoverBackgroundColor: '#616CF5',
+           pointHoverBorderColor: '#616CF5',
+           pointBorderWidth: 7,
+           pointHoverRadius: 7,
+           pointHoverBorderWidth: 1,
+           pointRadius: 3,
+           lineTension:0,
+           fill: true,
+           backgroundColor: gradientFill,
+           borderWidth: 3,
+           data: [2, 15, 5 ,15, 5, 15, 5, 15, 5, 15,5,20]
+         }]
+       },
+       options: {
+         legend: {
+           position: "top"
+         },
+         padding:{
+            top:20
+         },
+         scales: {
+           yAxes: [{
+             ticks: {
+               fontColor: "rgba(0,0,0,0.5)",
+               fontStyle: "bold",
+               beginAtZero: true,
+               maxTicksLimit: 5,
+               padding: 20
+             },
+             gridLines: {
+               drawTicks: false,
+               display: false
+             }
+
+           }],
+           xAxes: [{
+             gridLines: {
+               zeroLineColor: "transparent"
+             },
+             ticks: {
+               padding: 20,
+               fontColor: "rgba(0,0,0,0.5)",
+               fontStyle: "bold"
+             }
+           }]
+         }
+       }
+     });
+   }
   },
   mounted() {
-    this.createChart('planet-chart', this.planetChartData);
+
+    // this.renderChart({
+    //   type: 'line',
+    //   data: {
+    //     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug','Sep','Ocr','Nov' , 'Dec'],
+    //     datasets: [
+    //       { // one line graph
+    //         label: 'Number of Moons',
+    //         data: [2, 15, 5 ,30, 5, 15, 5, 15, 5, 15,5,20],
+    //         borderColor: [
+    //           '#616CF5'
+    //         ],
+    //         backgroundColor:'rgba(0,0,0,0)',
+    //         pointBorderColor:'#616cf5',
+    //         borderRadius: 0,
+    //         lineTension: 0,
+    //       }
+    //     ]
+    //   },
+    //   options: {
+    //     responsive: true,
+    //     lineTension: 1,
+    //     scales: {
+    //       yAxes: [{
+    //         ticks: {
+    //           beginAtZero: true,
+    //           padding:25,
+    //         },
+    //
+    //       }]
+    //     },
+    //     elements: {
+    //       point: {
+    //         radius: 5,
+    //         pointBackgroundColor:'#616cf5',
+    //
+    //       }
+    //     },
+    //     layout: {
+    //       padding: {
+    //         left: 0,
+    //         right: 0,
+    //         top: 10,
+    //         bottom: 0
+    //       },
+    //
+    //
+    //     }
+    //   }
+    // })
+
+
+    this.createChart();
   }
 
 

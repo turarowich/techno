@@ -1,20 +1,22 @@
+
 export const planetChartData = {
+
     type: 'line',
     data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug','Sep','Ocr'],
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug','Sep','Ocr','Nov' , 'Dec'],
         datasets: [
             { // one line graph
                 label: 'Number of Moons',
-                data: [10, 12, 5, 50, 10, 28, 17, 15, 23, 6],
-
+                data: [2, 15, 5 ,30, 5, 15, 5, 15, 5, 15,5,20],
                 borderColor: [
-                    '#616CF5',
-
+                    '#616CF5'
                 ],
+                backgroundColor:'rgba(0,0,0,0)',
+                pointBorderColor:'#616cf5',
+                borderRadius: 0,
+                lineTension: 0,
             }
-
-
-        ]
+            ]
     },
     options: {
         responsive: true,
@@ -24,12 +26,15 @@ export const planetChartData = {
                 ticks: {
                     beginAtZero: true,
                     padding:25,
-                }
+                },
+
             }]
         },
         elements: {
             point: {
-                radius: 0
+                radius: 5,
+                pointBackgroundColor:'#616cf5',
+
             }
         },
         layout: {

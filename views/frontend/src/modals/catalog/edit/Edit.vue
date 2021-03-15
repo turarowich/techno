@@ -8,27 +8,25 @@
           <h3 class="modal-title">Edit</h3>
           <button type="button" data-dismiss="modal" aria-label="Close" class="close">
               <span aria-hidden="true">
-                <img src="../../assets/icons/x.svg" alt="">
+                <img src="../../../assets/icons/x.svg" alt="">
               </span>
           </button>
         </div>
-        <div class=" myModal-body">
-          <form class="modal-form">
+        <div class="myModal-body">
+          <form  @submit.prevent="onSubmit"  class="modal-form">
             <label>Name</label>
-            <input class="form-input cashback-input mb-3" placeholder="Enter a name">
+            <input  v-model="currentData.name"  class="form-input cashback-input mb-3" placeholder="Enter a name">
 
             <div>
               <label>Select category</label>
-              <select class="form-control long-form-control modal-select mb-3">
-                <option>Select Category</option>
-                <option>Select Category</option>
-                <option>Select Category</option>
-                <option>Select Category</option>
+              <select v-model="currentData.category" class="form-control modal-select long-form-control mb-3">
+                <option disabled>Select a category</option>
+                <option v-for="category in listCategory" :value="category.name.toLowerCase()" :key="category.id">{{category.name}}</option>
               </select>
             </div>
 
             <label>Quantity</label>
-            <input class="form-input cashback-input mb-3" placeholder="10">
+            <input  v-model="currentData.quantity" class="form-input cashback-input mb-3" placeholder="10">
 
             <label>Description</label>
             <textarea class="general-area mb-3" style="height:160px"></textarea>
@@ -37,31 +35,29 @@
             <div class="d-flex ">
               <div style=" width:50%; margin-right:8px;">
                 <label>Price</label>
-                <input class="form-input cashback-input mb-4" placeholder="Price">
+                <input  v-model="currentData.price" class="form-input cashback-input mb-4" placeholder="Price">
               </div>
               <div class="promotion-disc" style="margin-right:8px;">
                 <label>Promotional prices</label>
                 <input class="form-input cashback-input mb-4" placeholder="Price">
               </div>
               <div style="width:50%;">
-                <label>Artice number</label>
-                <input class="form-input cashback-input mb-4" placeholder="Article number">
+                <label>Article number</label>
+                <input v-model="currentData.article" class="form-input cashback-input mb-4" placeholder="Article number">
               </div>
             </div>
 
             <div class="modal-img ">
               <label>Photos</label>
               <p class="cashback-description">You can upload 4 more JPG or PNG photos, the minimum resolution is 400*400px, the size is not more than 3 MB.</p>
-              <img src="../../assets/img/modal-img.svg">
+              <img src="../../../assets/img/modal-img.svg">
             </div>
-        <div class="modal-btn d-flex">
-            <button class="save">Save</button>
-            <button class="cancel">Cancel</button>
-        </div>
+            <div class="modal-btn d-flex">
+              <button class="save">Save</button>
+              <button class="cancel">Cancel</button>
+           </div>
           </form>
         </div>
-
-
       </div>
     </div>
   </div>
@@ -70,7 +66,35 @@
 
 <script>
 export default {
-  name: "AddProduct"
+  name: "Edit",
+  props: ['edit_catalog', 'listCategory'],
+
+  data(){
+    return {
+      currentData: '',
+
+
+    }
+  },
+  methods: {
+
+    onSubmit() {
+      this.$emit('editedData', this.currentData);
+
+
+
+    },
+
+
+  },
+  watch:{
+    edit_catalog(newCat){
+      this.currentData = Object.assign({}, newCat)
+    }
+  },
+
+
+
 }
 </script>
 

@@ -1,6 +1,6 @@
 <template>
   <div  v-for="order in orderList" class="table-item d-flex align-items-center" :key="order.id">
-    <div  style="width: 3%;"><label class="custom-checkbox"><input  type="checkbox" :value="order.id" v-model="order.checked"><span class="checkmark"></span></label></div>
+    <div  style="width: 3%;"><label class="custom-checkbox"><input  type="checkbox" :value="order.id" v-model="order.checked" ><span class="checkmark"></span></label></div>
     <div  class="d-flex align-items-center"  style="width: 20%;">
       <div class="table-img">
         <img src="../../assets/img/sneak.webp">
@@ -61,7 +61,10 @@ export default {
     }
   },
 
+  methods:{
 
+
+  }
 
 }
 
@@ -95,10 +98,10 @@ export default {
   color:#000;
 }
 .comment-width{
-  width: 200px;
-  text-overflow:ellipsis;
-  padding:20px 0;
-
+  width: 100px;
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: clip;
+
 }
 </style>

@@ -8,7 +8,7 @@
 
     </div>
     <div class="d-flex align-items-center">
-      <button class="app-buttons-item"><img src="../../assets/icons/trash_empty.svg"><span>Remove</span></button>
+      <button class="app-buttons-item" @click="deleteAllClient"><img src="../../assets/icons/trash_empty.svg"><span>Remove</span></button>
       <button class="app-buttons-item"><img src="../../assets/icons/moveto.svg"><span>Move to</span></button>
       <button class="app-buttons-item"><img src="../../assets/icons/import.svg"><span>Import</span></button>
       <button class="app-buttons-item"><img src="../../assets/icons/filter.svg"><span>Filter</span></button>
@@ -38,24 +38,18 @@
          />
     </div>
   </div>
-<AddCategory/>
-  <Edit/>
 </div>
 </template>
 
 
 <script>
 import ClientItem from "@/components/client-item/ClientItem";
-import AddCategory from "@/modals/add-category/AddCategory";
-import Edit from "@/modals/Edit/Edit";
 import $ from "jquery";
-export default {
 
-name: "Clients",
+export default {
+  name: "Clients",
   components:{
     ClientItem,
-    AddCategory,
-    Edit
   },
   data(){
     return {
@@ -105,8 +99,13 @@ name: "Clients",
     },
     deleteClient(id){
       this.clientList = this.clientList.filter(el=> el.id !== id);
-    }
-
+    },
+    deleteAllClient() {
+      if(this.selectAll){
+        this.clientList = [];
+      }
+      $('.custom-checkbox input').prop('checked', false)
+    },
   }
 
 }
