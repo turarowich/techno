@@ -18,7 +18,7 @@
           <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
             <ul class="list-group " >
               <li class="list-group-item">Select a category</li>
-              <li v-for="cat in listCategory" :key="cat.id" class="list-group-item" @click="moveCategory(cat.name.toLowerCase())" >{{cat.name}}</li>
+              <li v-for="cat in listCategory.slice(1)" :key="cat.id" class="list-group-item" @click="moveCategory(cat.name.toLowerCase())" >{{cat.name}}</li>
             </ul>
           </div>
         </div>
@@ -34,7 +34,7 @@
       <div class="catalog-wrapper d-flex">
         <div class="catalog-menu" style="width:18%">
           <ul class="list-group" >
-            <li class="catalog-list" :id="category.name" :ref="'menu'+index"  v-for="(category,index) in listCategory" :key="category.id"  :class="{active: filtered === category.name.toLowerCase()}"  @click="changeFiltered(category.name)">
+            <li class="catalog-list" :id="category.name" :ref="'menu'+index"  v-for="(category,index) in listCategory" :key="category.id"  :class="{active: filtered === category.name.toLowerCase()}"  @click="changeFilter(category.name.toLowerCase())">
               <span>{{category.name}}</span>
               <div class="dropleft dropMenu">
                 <div class="dropdown-toggle" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -52,32 +52,49 @@
         </div>
         <div class="catalog-content" style="width:82%">
           <div class="d-flex main-content-header">
-            <div class="table-head" style="width: 5%;"><label class="custom-checkbox"><input id="parent-check" type="checkbox"  @click="toggleSelect" :checked="selectAll"><span class="checkmark"></span></label></div>
+            <div class="table-head" style="width: 5%;"><label class="custom-checkbox"><input id="parent-check" type="checkbox"  @click="toggleSelect()" :checked="selectAll"><span class="checkmark"></span></label></div>
             <div class="table-head" style="width: 42%;">Name</div>
             <div class="table-head" style="width: 24%;">Article</div>
-            <div class="table-head table-link" style="width: 9%;" @click="sortByQunatity">Quantity <img class="date-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
+            <div class="table-head table-link pr-3" style="width: 10%;" @click="sortByQunatity">Quantity<img class="date-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
             <div class="table-head table-link" style="width: 10%;" @click="sortByPrice">Price<img class="total-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
             <div class="table-head" style="width: 8%;"></div>
             <div class="table-head" style="width: 8%;"></div>
           </div>
-          <div class="table-content">
+          <div class="table-content" >
               <CatalogItem
-                  v-bind:catalogList="filteredList"
+                  v-bind:catalogList="catalogToDisplay"
                   v-on:deleteCatalog="deleteCatalog"
                   v-on:editCatalog="editCatalog"
               />
+          </div>
+          <div class="pagination d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+              <span>Rows per page</span>
+              <select class="form-control pagination-select" v-model='perPage'>
+                <option value="2">2</option>
+                <option value="5">5</option>
+                <option value="8">8</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+            </div>
+            <div><span>{{currentPage}}</span> of <span class="mr-3">{{totalPages}}</span>
+              <img v-show='showPrev' @click.stop.prevent='renderPaginationList(currentPage-1)' class="prevBtn mr-3" src="../../assets/icons/side-arrow.svg">
+              <img v-show='showNext' @click.stop.prevent='renderPaginationList(currentPage+1)' src="../../assets/icons/side-arrow.svg"></div>
+
           </div>
         </div>
       </div>
     </div>
     <AddService/>
-
     <Edit :edit_catalog="edit_catalog"
           :catalogList="catalogList"
-          @editedData="editedData"
+          @editedCatalogSubmit="editedCatalogSubmit"
           :listCategory="listCategory"
     />
-    <AddCategory v-on:addCategory="addCategory"/>
+    <AddCategory v-on:addCategory="addCategory"
+      :listCategory="listCategory"
+    />
     <AddProduct
         @addNewProduct="addNewProduct"
         :listCategory="listCategory"/>
@@ -95,9 +112,7 @@ import AddService from "@/modals/catalog/add-service/AddService";
 import Edit from "@/modals/catalog/edit/Edit";
 import AddCategory from "@/modals/catalog/add-category/AddCategory";
 import EditCategory from "@/modals/catalog/add-category/EditCategory";
-import 'sweetalert2/dist/sweetalert2.css';
-import $ from "jquery";
-
+import Swal from 'sweetalert2';
 
 export default {
 name: "Catalog",
@@ -115,9 +130,9 @@ name: "Catalog",
         {id:1,name:"Essential Shoes",article:"B3214PO", quantity:1, price: "450 $", category:'shoes'},
         {id:2,name:"Football boots",article:"B3214PO", quantity:5, price: "350 $", category:'shoes'},
         {id:3,name:"Sneakers",article:"B3214PO", quantity:4, price: "370 $", category:'shoes'},
+        {id:6,name:"Shoues",article:"B3214PO", quantity:4, price: "370 $", category:'shoes'},
         {id:4,name:"T-shirts",article:"B3214PO", quantity:2, price: "220 $", category: 'clothes'},
-        {id:5,name:"Jackets",article:"B3214PO", quantity:3, price: "100 $", category: 'clothes'},
-
+        {id:5,name:"Jackets",article:"B3214PO", quantity:2, price: "220 $", category: 'clothes'},
       ],
       listCategory:[{id:2,name:''}],
       search:'',
@@ -125,7 +140,12 @@ name: "Catalog",
       filtered: '',
       className:'',
       edit_catalog:'',
-      edit_category:''
+      edit_category:'',
+      perPage: 8,
+      pageToOpen: 1,
+      currentPage: 1,
+      catalogToDisplay:[],
+
     }
   },
   computed:{
@@ -134,144 +154,231 @@ name: "Catalog",
           return user.checked
         });
       },
-    filteredList() {
-      return this.catalogList
-      .filter(catalog => {
-        return catalog.name.toLowerCase().includes(this.search.toLowerCase())
-      })
-      .filter(product => {
-        return !product.category.indexOf(this.filtered)
-      })
-
+    filteredList: function(){
+      return  this.catalogList
+          .filter(catalog => {
+            return catalog.name.toLowerCase().includes(this.search.toLowerCase())
+          })
+          .filter(product => {
+            return !product.category.indexOf(this.filtered)
+          })
     },
+    totalPages(){
+      //calculate the total number of pages based on the number of items to show per page and the total items we got from server
+      console.log(this.filteredList.length)
+      return this.filteredList.length && (this.filteredList.length > this.perPage) ? Math.ceil(this.filteredList.length/this.perPage) : 1;
+    },
+    start(){
+      return (this.pageToOpen - 1) * this.perPage;
+    },
+    stop(){
+      //stop at the end of the array if array length OR the items left are less than the number of items to show per page
+      //do the calculation if otherwise
+      if((this.filteredList.length - this.start) >= this.perPage){
+        return (this.pageToOpen * this.perPage) - 1;
+      }
+      else{
+        return this.filteredList.length - 1;
+      }
+    },
+    showNext(){
+      return this.currentPage < this.totalPages;
+    },
+    showPrev(){
+      return this.currentPage > 1;
+    }
   },
   methods:{
+    renderPaginationList(pageNumber=1){
+      //clear currently displayed list
+      this.catalogToDisplay = [];
+      //set countries to display
+      if(this.filteredList.length){
+        let _this = this;
+        return new Promise(function(res){
+          //set the page to open to the pageNumber in the parameter in order to allow start and stop to update accordingly
+          _this.pageToOpen = pageNumber;
+          //add the necessary data to `countriesToDisplay` array
+          for(let i = _this.start; i <= _this.stop; i++){
+              _this.catalogToDisplay.push(_this.filteredList[i]);
+          }
+          res();
+        }).then(function(){
+          //Now update the current page to the page we just loaded
+          _this.currentPage = _this.pageToOpen;
+        }).catch(function(){
+          console.log('render err');
+        });
+      }
+    },
+    changeFilter(name){
+      this.filtered = name;
+      this.catalogList.forEach(catalog=>{
+        return catalog.checked = false
+      })
+      this.$$('#parent-check').prop('checked',false)
 
+    },
     moveCategory(value){
         let  move = this.catalogList.filter(catalog => catalog.checked)
         move.every(catalog=>catalog.category = value)
         move.map(cat=>cat.checked = false);
+        this.renderPaginationList()
+       this.$informationAlert('Category has been changed')
+
     },
     editCategory(id){
       this.edit_category = this.listCategory.find((category)=>category.id === id)
     },
     addCategory(newCategory){
-      this.listCategory.push(newCategory);
-      this.$swal( {
-        text: 'Category has been added',
-        showConfirmButton: false,
-        timer: 1000,
-        customClass: 'added',
-        position:'top-right'
-      });
-    },
+      let user = this.listCategory.find(item=>item.name.toLowerCase() === newCategory.name.toLowerCase())
+       if(user){
+          this.$warningAlert('You already have category with this name',)
+       }
+       else{
+         this.listCategory.push(newCategory)
+        this.$successAlert('Category has been added')
 
+       }
+    },
     deleteCategory(name, id){
       const idx = this.listCategory.findIndex(el=>el.id === id);
       this.$refs[Object.keys(this.$refs)[idx-1]].click()
       this.listCategory = this.listCategory.filter(cate => cate.id !== id);
       this.catalogList = this.catalogList.filter(catalog=>catalog.category !== name.toLowerCase())
-      this.$swal( {
-        text: 'Category has been deleted',
-        showConfirmButton: false,
-        timer: 1000,
-        customClass: 'added',
-        position:'top-right'
-      });
-
-    },
-
-    changeFiltered(name){
-      this.filtered = name.toLowerCase();
-      console.log(this.filtered);
-
-
+      this.$successAlert('Category has been removed')
     },
     addNewProduct(newProduct){
-        this.catalogList.push(newProduct)
-        this.$swal( {
-          text: 'Product has been added',
-          showConfirmButton: false,
-          timer: 2000,
-          customClass: 'added',
-
-      });
+      this.catalogList.push(newProduct)
+      this.renderPaginationList()
+      this.$successAlert('Product has added')
     },
-    editedData(edited){
+    editedCatalogSubmit(edited){
       var foundIndex = this.catalogList.findIndex(x => x.id === edited.id);
       this.catalogList[foundIndex] = edited;
+      this.renderPaginationList()
+      this.$successAlert('Changes are saved')
     },
     editCatalog(id){
      this.edit_catalog = this.catalogList.find((catalog)=>catalog.id === id)
     },
     deleteAllOrder() {
       if(this.selectAll){
-        this.catalogList = [];
-        $('#parent-check').prop('checked', false)
+        this.catalogList = []
+        this.$successAlert('All products have been removed')
+        this.$$('#parent-check').prop('checked', false)
       }
       else{
        this.catalogList = this.catalogList.filter(catalog => !catalog.checked)
       }
+
+      this.renderPaginationList()
     },
     allCategory(){
-      $('.list-group .catalog-list').first().text('All')
+      this.$$('.list-group .catalog-list').first().text('All')
+
 
     },
     toggleSelect: function() {
-      var select = this.selectAll;
-      this.catalogList.forEach(function(user) {
-        user.checked = !select;
+      let select = this.selectAll
+      this.catalogList.filter((user)=> {
+        if(this.filtered === '' || this.filtered === user.category){
+          user.checked = !select
+          console.log(user.checked)
+        }
       });
-      this.selectAll = !select;
     },
     sortByQunatity() {
-      if(this.catalogList.length === 0){
+      if(this.catalogToDisplay.length === 0){
         return null;
       }
-      this.catalogList.sort((a, b) => this.sorting? (parseInt(a.quantity) - parseInt(b.quantity)) : (parseInt(b.quantity) - parseInt(a.quantity)));
+      this.catalogToDisplay.sort((a, b) => this.sorting? (parseInt(a.quantity) - parseInt(b.quantity)) : (parseInt(b.quantity) - parseInt(a.quantity)));
       this.sorting = !this.sorting;
-      $('.date-pol').toggleClass('active')
-      $('.total-pol').removeClass('active')
+      this.$$('.date-pol').toggleClass('active')
+      this.$$('.total-pol').removeClass('active')
+
     },
     sortByPrice(){
-      if(this.catalogList.length === 0){
+      if(this.catalogToDisplay.length === 0){
         return null;
       }
-      this.catalogList.sort((a, b) => this.sorting? (parseInt(a.price) - parseInt(b.price)) : (parseInt(b.price) - parseInt(a.price)));
+      this.catalogToDisplay.sort((a, b) => this.sorting? (parseInt(a.price) - parseInt(b.price)) : (parseInt(b.price) - parseInt(a.price)));
       this.sorting = !this.sorting;
-      $('.total-pol').toggleClass('active')
-      $('.date-pol').removeClass('active')
+      this.$$('.total-pol').toggleClass('active')
+     this.$$('.date-pol').removeClass('active')
+
     },
     deleteCatalog(id){
-      this.$swal({
+      Swal.fire({
         showConfirmButton: true,
-        text: 'Are you sure to remove this product',
+        html: 'Are you sure to remove this <br>product',
         showCloseButton: true,
         showCancelButton: true,
         confirmButtonText: 'Delete',
-        className:'delete-catalog'
-     
+        buttonsStyling:false,
+        customClass:{
+          popup: 'sweet-delete',
+          confirmButton: 'confirm-btn',
+          cancelButton:'cancel-btn',
+          actions:'btn-group',
+          content:'content-sweet',
+          closeButton:'close-btn'
 
+        },
+        showClass: {
+          popup: 'animate__animated animate__zoomIn'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__zoomOut'
+        }
       }).then((result) => {
         if (result.isConfirmed) {
           this.catalogList = this.catalogList.filter(el=> el.id !== id);
-          this.$swal({
+          this.renderPaginationList()
+          Swal.fire({
+            title:'Success',
+            timer:1500,
             text:'Product has been removed',
-            timer: 2000,
             showConfirmButton:false,
-            position: 'top-right'
-          }
+            position: 'top-right',
+            customClass:{
+              popup:'success-popup',
+              content:'success-content',
+              title:'success-title',
+              header:'success-header',
+              image:'success-img'
+            },
+            showClass:{
+              popup: 'animate__animated animate__zoomIn'
+            },
+
+              }
           )}
       })
 
     },
   },
   mounted(){
-  this.allCategory()
+    this.allCategory()
+    this. renderPaginationList()
+  },
+  watch: {
+    perPage: function(){
+      this. renderPaginationList();
+    },
+    search: function (){
+      this. renderPaginationList()
+    },
+    filtered:function(){
+      this. renderPaginationList()
+    },
 
-  }
+  },
 }
 </script>￼
+
+
+
 
 <style scoped>
 .catalog{
@@ -307,10 +414,6 @@ name: "Catalog",
 .adding-btns{
   background: #E9ECFF;
   color:#616CF5;
-}
-
-.swal2-popup.delete-catalog{
-  background: red;
 }
 
 </style>

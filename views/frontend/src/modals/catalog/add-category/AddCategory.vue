@@ -20,9 +20,8 @@
             <div>
               <label>Select category</label>
               <select class="form-control long-form-control modal-select mb-5">
-                <option value="all">All</option>
-                <option value="shoes">Shoes</option>
-                <option value="clothes">Clothes</option>
+                <option value="">Without category</option>
+                <option v-for="cat in listCategory" :key="cat.id"  :value="cat.name.toLowerCase()">{{cat.name}}</option>
 
               </select>
             </div>
@@ -41,8 +40,10 @@
 </template>
 
 <script>
+import $ from 'jquery'
 export default {
 name: "AddCategory",
+  props:['listCategory'],
 
   data(){
     return{
@@ -56,11 +57,12 @@ name: "AddCategory",
   methods:{
     onSubmit(){
       const newCategory = this.new_category;
-      this.$emit('addCategory', newCategory)
+      $('#add-category').modal("hide")
       this.new_category = {
         name: '',
         id: Math.random(),
       };
+      this.$emit('addCategory', newCategory)
     }
   }
 }

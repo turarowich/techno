@@ -21,9 +21,7 @@
         </div>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
           <ul class="list-group" >
-            <li class="list-group-item">Done</li>
             <li class="list-group-item" data-toggle="modal" data-target="#edit">Edit</li>
-            <li class="list-group-item">Cancel</li>
             <li class="list-group-item" v-on:click="$emit('deleteClient',client.id)">Delete</li>
           </ul>
         </div>
