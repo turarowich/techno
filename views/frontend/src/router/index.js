@@ -1,14 +1,18 @@
 import { createWebHistory, createRouter } from "vue-router";
-import Dashboard from "@/components/dashboard/Dashboard";
+import SignIn from "@/components/sign-in/SignIn";
+import SignUp from "@/components/sign-up/SignUp";
 import Orders from "@/components/orders/Orders";
-import LoayltyProgramm from "@/components/loyalty-programm/LoayltyProgramm";
+import Loaylty from "@/components/loyalty/Loaylty";
 import Chats from '@/components/chats/Chats';
 import Clients from "@/components/clients/Clients";
+import Catalog from "@/components/catalog/Catalog";
+import Analytics from "@/components/analytics/Analytics";
+import Settings from "@/components/settings/Settings";
 const routes = [
     {
         path: "/",
-        name: "Dashboard",
-        component: Dashboard,
+        name: "SignIn",
+        component: SignIn,
     },
     {
         path: "/orders",
@@ -22,13 +26,34 @@ const routes = [
     },
     {
         path: "/loyalty",
-        name: "LoyaltyProgramm",
-        component: LoayltyProgramm,
+        name: "Loyalty",
+        component: Loaylty,
+
     },
     {
         path: "/chats",
         name: "Chats",
         component: Chats,
+    },
+    {
+        path: "/catalog",
+        name: "Catalog",
+        component: Catalog,
+    },
+    {
+        path:'/analytics',
+        name:"Analytics",
+        component: Analytics
+    },
+    {
+        path:'/settings',
+        name:"Settings",
+        component: Settings
+    },
+    {
+        path:'/signup',
+        name:"SignUp",
+        component: SignUp
     },
 ];
 

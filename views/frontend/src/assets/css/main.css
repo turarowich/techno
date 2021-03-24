@@ -1,0 +1,541 @@
+body{
+    font-size:14px;
+}
+h1,h2,h3,h4,h5,h6{
+    margin-bottom: 0;
+}
+input:focus, button:focus,textarea:focus{
+    outline:none;
+}
+
+.app-buttons{
+    margin-bottom: 24px;
+}
+.img-btn{
+    width: 18px;
+    height: 18px;
+}
+img{
+    cursor:pointer;
+}
+.app-buttons-item{
+    background: #F9F9F9;
+    border-radius: 5px;
+    padding:10px 20px;
+    border:none;
+    color: #606877;
+    font-size: 14px;
+    margin-right: 7px;
+    display: inline-flex;
+    align-items: center;
+    transition: .3s;
+}
+.app-buttons-item:hover{
+    background: #E9ECFF;
+}
+.app-buttons-item:last-child{
+    margin-right: 0;
+}
+.app-buttons-item:focus{
+    outline:none;
+}
+.app-buttons-item img{
+    margin-right: 10px;
+}
+.route-name{
+    font-weight: 600;
+    font-size: 24px;
+    margin: 0;
+}
+
+/*=====================DropDown=========================*/
+.dropdown-menu{
+    background: #FFFFFF;
+    border: 1px solid #F4F4F4;
+    box-sizing: border-box;
+    box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.07);
+    border-radius: 5px;
+    padding: 0;
+}
+.dropdown-menu li{
+    border-top:none;
+    border-left:none;
+    border-right:none;
+    padding:6px 10px;
+    border-bottom:1px solid #e8e8e8;
+    cursor:pointer;
+    font-size: 14px;
+    color: #949494;
+}
+.dropdown-menu li:last-child{
+    border-bottom: none;
+}
+.dropdown-menu li:hover{
+    background: #e8e8e8;
+    transition: .3s;
+}
+
+.dropleft .dropdown-toggle:before{
+    display: none;
+}
+
+
+.dropdown-toggle::after{
+    display: none;
+}
+
+.dropdown-toggle{
+    cursor:pointer;
+}
+.dropMenu{
+    width: 30px;
+    display: flex;
+    align-items: center;
+    height: 30px;
+    padding:5px;
+
+}
+.dropMenu:hover .three-dots{
+    filter: brightness(0.5);
+    transition: .3s;
+
+
+
+}
+/*=======================END OF DROPDOWN*/
+
+
+/*======================Main Content=============*/
+.main-content-header{
+    border-bottom:1px solid #e8e8e8;
+    color: #787878;
+    padding-bottom: 14px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.table-item{
+    padding:0 10px;
+    height: 70px;
+    border-bottom: 1px solid #e8e8e8;
+}
+.table-item:hover{
+    background: #F8F9FF;
+    transition:.3s;
+}
+.table-img{
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+.table-img img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+.table-link:hover{
+    cursor: pointer;
+    color:#222;
+    transition: .3s;
+}
+.date-pol.active,.total-pol.active {
+    filter: invert(44%) sepia(96%) saturate(2719%) hue-rotate(219deg) brightness(96%) contrast(100%);
+    transform: rotate(180deg);
+}
+
+.table-content{
+    overflow-y: auto;
+    height:calc(100vh - 351px);
+}
+.table-head{
+    list-style: none;
+}
+.circle-status{
+    font-size: 8px;
+    margin-right: 10px;
+}
+.status{
+    display: flex;
+    align-items: center;
+}
+/*=================end of Main Content*/
+
+/*============Search=================*/
+.searchAndButtons{
+    margin-bottom: 30px;
+    height:103px;
+
+}
+.main-input{
+    border:none;
+    height: 100%;
+    width: 100%;
+}
+.main-search{
+    border:1px solid #c4c4c4;
+    border-radius:5px;
+    padding:0 10px;
+    height: 40px;
+}
+.main-search img{
+    opacity:0.3;
+    margin-right: 10px;
+
+}
+.main-input:focus{
+    outline:none
+}
+.custom-checkbox{
+    width: 12px;
+    height: 12px;
+    cursor:pointer;
+
+
+}
+.custom-checkbox .checkmark{
+    height:100%;
+    width: 100%;
+    border: 1px solid #ADADAD;
+    box-sizing: border-box;
+    border-radius: 3px;
+    display: inline-block;
+}
+.custom-checkbox input:checked + .checkmark{
+    background: #616CF5;
+    border: 1px solid #616CF5;
+}
+.custom-checkbox input{
+    display: none;
+}
+
+/*========Switcher design=================*/
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+    margin-right: 15px;
+    margin-bottom: 0;
+
+}
+.enable{
+    color: #B0B0B0;
+    font-size: 16px;
+    margin-left: 50px;
+    transition: .3s;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider{
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #d3d3d3;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 17px;
+    width: 17px;
+    left: 3px;
+    bottom: 2.5px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+input:checked + .slider {
+    background-color: #616CF5;
+
+
+}
+input:checked + .slider .enable {
+    color:#000;
+    transition: .4s;
+
+
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(17px);
+}
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+
+    color: rgba(0, 0, 0, 0);
+    opacity: 0;
+}
+input[type="date"] {
+    background:url('../../assets/icons/Calendar.svg')  97% 50% no-repeat ;
+    cursor:pointer;
+    border-color:transparent;
+}
+
+
+
+/*=========================END of Switcher*/
+
+/*=====================Loyalty page's general styles=========================*/
+.cashback-title{
+    font-size: 20px;
+    color:#222;
+    font-weight:600;
+    margin-bottom: 0;
+}
+.cashback-description{
+    font-size: 16px;
+    color: #B0B0B0;
+    margin-bottom: 10px;
+}
+.cashback-sub-title{
+    font-size: 16px;
+    font-weight: 600;
+    color:#222;
+    margin-bottom: 3px;
+
+}
+.cashback-input{
+    border: 1px solid #E3E3E3;
+    border-radius: 5px;
+    height:45px;
+    padding-left:10px;
+}
+.save{
+    background: #616CF5;
+    border-radius: 5px;
+    color:#fff;
+    height:37px;
+    display: flex;
+    align-items: center;
+    padding:0 40px;
+    font-size: 16px;
+    width: 120px;
+    margin-right: 10px;
+    transition: .3s;
+    border:none;
+    justify-content: center;
+}
+.save:hover{
+    background: #3B4DB3;
+}
+.cancel{
+    border: 1px solid #D3D3D3;
+    box-sizing: border-box;
+    border-radius: 5px;
+    width: 120px;
+    height:37px;
+    font-size: 16px;
+    color: #8C94A5;
+    background: #fff;
+    transition: .3s;
+}
+.cancel:hover{
+    border: 1px solid #676C78;
+    color: #676C78;
+}
+.marginBottom{
+    margin-bottom: 20px;
+}
+.cashback-text-area{
+    width: 100%;
+    height:86px;
+    border: 1px solid #E3E3E3;
+    border-radius: 5px;
+    padding:10px;
+    resize: none;
+
+}
+.sum-point{
+    margin-bottom:5px;
+    color:#222;
+}
+.color-p{
+    color:#222;
+}
+.cash-btn{
+    border-radius: 5px;
+    height: 45px;
+    border: 1px solid #616CF5;
+    width: 45px;
+    background: none;
+}
+.form-control{
+    height: 45px;
+    font-size: 16px;
+    color: #767676;
+    background: url('../../assets/icons/select.svg' ) no-repeat;
+    -webkit-appearance: none;
+    background-position-x: 90%;
+    background-position-y: 19px;
+}
+.long-form-control{
+
+    background-position-x: 95%;
+
+}
+
+.form-control:focus{
+    box-shadow: none;
+    border-color:#e3e3e3;
+}
+.general-area{
+    border: 1px solid #E3E3E3;
+    border-radius: 5px;
+    padding-left:10px;
+    width:100%;
+    resize: none;
+    height: 125px;
+}
+
+/*=================TABS=================*/
+.tab-menu{
+    margin-bottom: 24px;
+    padding-left: 0;
+    border-bottom: 1px solid #D3D3D3;
+    padding-bottom: 10px;
+
+}
+.tab-list{
+    list-style-type: none;
+    display: inline;
+    margin-right: 35px;
+    font-size: 16px;
+    cursor:pointer;
+}
+.tab-list a{
+    color:#999;
+    text-decoration: none;
+    padding-bottom: 11px;
+
+
+}
+.tab-list a:hover, a.active{
+    border-bottom: 3px solid #616CF5;
+    color:#222;
+}
+
+
+/*=============================Login and register style =======================*/
+.login-input{
+    width: 100%;
+    border: 1px solid #D3D3D3;
+    border-radius: 5px;
+    height: 40px;
+    padding:0 10px;
+    margin-bottom: 13px;
+}
+
+.show-eye{
+    display: none;
+}
+#show-eye{
+    display: none;
+}
+.main-logo{
+    width: 49px;
+    height: 53px;
+}
+.authorization{
+    background: #FAFAFA;
+    width: 100%;
+    min-height: 100vh;
+    padding:23px 44px;
+}
+.sign-in-header{
+    margin-bottom: 30px;
+}
+.password .login-input{
+    border:none;
+    margin-bottom: 0;
+    height:100%;
+    width: 100%;
+}
+.password{
+    width: 100%;
+    border: 1px solid #D3D3D3;
+    border-radius: 5px;
+    height: 40px;
+    padding-right:10px;
+    margin-bottom: 13px;
+}
+.password img{
+    width: 20px;
+    height: 20px;
+    opacity: 0.7;
+}
+.sign-in-btn{
+    width: 100%;
+    background: #616CF5;
+    border-radius: 5px;
+    height: 50px;
+    border:none;
+    color:#fff;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.footer-text{
+    margin:0 auto;
+    text-align: center;
+    color: #B0B0B0;
+    font-size: 14px;
+    width: 480px;
+}
+/*===================Modal=====================*/
+
+.myModal-content{
+    border:none;
+    border-radius: 0;
+    overflow-y: auto;
+    padding-bottom:30px;
+}
+
+.modal-title{
+    color: #616CF5;
+    font-size: 21px;
+    font-weight: 600;
+}
+.modal-content .modal-header{
+    border-bottom: none;
+    padding:27px 57px;
+
+}
+.myModal-body{
+     padding:0 57px;
+ }
+.modal-form input{
+    width: 100%;
+    font-size: 16px;
+}
+.modal-form label{
+    margin-right: 10px;
+    margin-bottom: 8px;
+}
+.modal-img{
+    margin-bottom: 60px;
+}
+.modal-img p{
+    margin-bottom: 15px;
+}
