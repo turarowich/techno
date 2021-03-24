@@ -15,27 +15,77 @@ import Swal from "sweetalert2";
 import $ from 'jquery';
 import moment from 'moment';
 import Lightpick from 'lightpick'
-import {createStore}  from 'vuex';
+// import {createStore}  from 'vuex';
 import axios from "axios";
-import User from './store/user';
+// import User from './store/user';
 
-axios.defaults.baseURL = 'http://localhost/8080/';
+// axios.defaults.baseURL = 'http://localhost/8080/';
 
-const store = createStore({
-    modules:{
-        user:User
-    }
-})
+// const store = createStore({
+//     modules:{
+//         user:User
+//     }
+// })
 
 
 
 const app = createApp(App)
 app.use(router)
-app.use(store)
+// app.use(store)
+let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMmY2ZmNhYzM5ZTMwNzNjZWMwNWI3ZiIsImlhdCI6MTYxNjU3MjY1OCwiZXhwIjoxNjE2NjU5MDU4fQ.ZkdjBzgxo1JaRIBN8NHDCNui7YPxyWuAfeDCFjO2M7c"
 
+const ax = axios.create({
+    timeout: 1000,
+    proxy: {
+        host: 'localhost',
+        port: 8080
+    },
+    headers: { 
+        'x-access-token': token,
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+});
 app.config.globalProperties.$moment = moment;
 app.config.globalProperties.$lightpick = Lightpick;
 app.config.globalProperties.$$ = $
+app.config.globalProperties.axios = ax
+app.config.globalProperties.$api = "http://localhost:8080/api";
+
+app.config.globalProperties.url = function (main, id = null, search = null) {
+    let additional = '/'
+    if (id) {
+        additional += id + '/'
+    }
+    if (search) {
+        additional += '?' + search[0] + '=' + search[1]
+    }
+    return this.$api + '/' + main + additional
+}
+app.config.globalProperties.formToJson = function (formData) {
+    let obj = {}
+    formData.find('.alert-danger').remove()
+    formData.serializeArray().map(function (v) {
+        if (v.name.includes('[]')) {
+            let new_obj = {}
+            let single = v.name.slice(0, -3)
+            let multiple = v.name.slice(0, -2)
+            if (!obj[multiple]) {
+                obj[multiple] = []
+            }
+            new_obj[single] = v.value
+            obj[multiple].push(new_obj)
+        } else {
+            obj[v.name] = v.value
+        }
+    })
+
+    return obj
+}
+
+app.config.globalProperties.clearForm = function (formData) {
+    $(formData).find(':radio, :checkbox').removeAttr('checked').end()
+        .find('textarea, :text, select').val('')
+}
 app.config.globalProperties.$successAlert = function(text){
     Swal.fire({
             title:'Success',

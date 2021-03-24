@@ -11,14 +11,14 @@
             </button>
           </div>
           <div class=" myModal-body">
-              <form @submit.prevent="onSubmit" class="modal-form">
+              <form @submit.prevent="onSubmit" class="modal-form add-product">
                 <label>Name</label>
-                <input v-model="newProduct.name" class="form-input cashback-input mb-3" placeholder="Enter a name">
+                <input v-model="newProduct.name" class="form-input cashback-input mb-3" name="name" placeholder="Enter a name">
 
                 <div class="d-flex align-items-center">
                   <div style="width: 50%; margin-right:8px;">
                     <label>Quantity</label>
-                    <input v-model="newProduct.quantity" class="form-input cashback-input mb-3" placeholder="Enter a quantity">
+                    <input v-model="newProduct.quantity" class="form-input cashback-input mb-3"  name="quantity" placeholder="Enter a quantity">
 
                   </div>
                   <div  style="width: 50%;">
@@ -31,22 +31,22 @@
                 </div>
 
                 <label>Description</label>
-                <textarea class="general-area mb-3" style="height:160px"></textarea>
+                <textarea class="general-area mb-3" style="height:160px"  name="description"></textarea>
 
                 <div class="d-flex mb-3">
-                  <label class="custom-checkbox"><input data-toggle="collapse" data-target="#collapse-disc" aria-expanded="true" aria-controls="collapse-disc" type="checkbox"><span class="checkmark"></span></label>
+                  <label class="custom-checkbox"><input data-toggle="collapse" data-target="#collapse-disc" aria-expanded="true" aria-controls="collapse-disc" type="checkbox" ><span class="checkmark"></span></label>
                   <span>Discount</span>
                 </div>
                 <div class="collapse" id="collapse-disc">
                   <label>Promotional price</label>
-                  <input v-model="newProduct.promo" class="form-input cashback-input mb-3" placeholder="Promotional price">
+                  <input v-model="newProduct.promo" class="form-input cashback-input mb-3" placeholder="Promotional price"  name="promo">
                 </div>
 
 
                 <div class="d-flex ">
                   <div style=" width:50%; margin-right:8px;">
                     <label>Price</label>
-                    <input v-model="newProduct.price" class="form-input cashback-input mb-4" placeholder="Price">
+                    <input v-model="newProduct.price" class="form-input cashback-input mb-4" placeholder="Price"  name="price">
                   </div>
                   <div class="promotion-disc" style="margin-right:8px;">
                     <label>Promotional prices</label>
@@ -54,7 +54,7 @@
                   </div>
                   <div style="width:50%;">
                     <label>Article number</label>
-                    <input v-model="newProduct.article" class="form-input cashback-input mb-4" placeholder="Article number">
+                    <input v-model="newProduct.article" class="form-input cashback-input mb-4" placeholder="Article number"  name="article">
                   </div>
                 </div>
 
@@ -100,6 +100,19 @@ name: "AddProduct",
   onSubmit(){
     const new_product = this.newProduct;
     this.$emit('addNewProduct' ,new_product);
+    let form_data = this.formToJson($('.add-product'))
+    let form = new FormData()
+    form.append("name", form_data.name)    
+    form.append("descriptiom", form_data.descriptiom)
+    this.axios.post(this.url('addProduct'), form)
+        .then((response) => {
+            console.log("success", response)
+            
+            this.clearForm(form)
+        }).catch((error) => {
+            console.log("fail", error)
+            
+        })
     $('#add-products').modal("hide")
     this.newProduct = {
       name: '',

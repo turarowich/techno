@@ -357,10 +357,20 @@ name: "Catalog",
       })
 
     },
+    getProducts: function () {
+        console.log("here")
+        this.axios.get(this.url('getProducts'))
+            .then((response) => {
+                console.log(response.data)
+                console.log("here")
+                this.products = response.data
+            })
+    },
   },
   mounted(){
     this.allCategory()
-    this. renderPaginationList()
+    this.getProducts()
+    this.renderPaginationList()
   },
   watch: {
     perPage: function(){

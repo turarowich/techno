@@ -32,6 +32,8 @@ global.appRoot = path.resolve(__dirname);
 global.userConnection = userConnection;
 // app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({ extended: true }));
+var cors = require("cors");
+app.use(cors());
 app.use(express.static(__dirname + '/views/frontend/dist'));
 app.use(formidableMiddleware());
 app.use('/', require('./routes/home.js')(router))

@@ -319,10 +319,19 @@ name: "Orders",
         }
       })
     },
+    getProducts() {
+        console.log("here")
+        this.axios.get(this.url('getProducts'))
+            .then((response) => {
+                console.log(response.data)
+                console.log("here")
+            })
+    },
   },
 
   mounted(){
       this.totalOrders()
+      this.getProducts()
       this.countNewOrder()
       this.renderPaginationList()
 
