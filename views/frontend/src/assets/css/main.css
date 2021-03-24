@@ -29,6 +29,7 @@ img{
     display: inline-flex;
     align-items: center;
     transition: .3s;
+    box-sizing: border-box;
 }
 .app-buttons-item:hover{
     background: #E9ECFF;
@@ -538,4 +539,122 @@ input[type="date"] {
 }
 .modal-img p{
     margin-bottom: 15px;
+}
+
+.swal2-styled.swal2-confirm{
+    background: red;
+}
+
+
+/*==================Sweet alert modal styles==================*/
+
+.confirm-btn, .cancel-btn{
+    padding:10px 40px;
+    border-radius:5px;
+    border:none;
+    font-weight:normal;
+    font-size: 16px;
+}
+.confirm-btn{
+    background: #D81919;
+    color:#fff;
+    margin-right: 10px;
+}
+.cancel-btn{
+    border: 1px solid #8C94A5;
+    color: #8C94A5;
+    background: #fff;
+}
+.confirm-btn:hover{
+    background: #BD1010;
+}
+.cancel-btn:hover{
+    border: 1px solid #676C78;
+    color:#676c78;
+}
+.btn-group{
+    padding:0;
+    justify-content: flex-start;
+}
+.swal2-content.content-sweet{
+    padding: 0;
+    text-align:left;
+    margin-bottom: 20px;
+    color: #8C94A5;
+}
+.swal2-popup.sweet-delete{
+    border: 1px solid #D3D3D3;
+    border-radius: 5px;
+    width: 24%;
+    padding:20px;
+    animation-duration: .7s;
+
+}
+.swal2-actions.btn-group{
+    justify-content: flex-start;
+    padding: 0;
+}
+
+.swal2-popup.success-popup{
+    background: #5CBD85;
+    border-radius: 13px;
+    padding: 20px 10px;
+    width: 385px;
+    animation-duration: .5s;
+}
+.swal2-content.success-content{
+    color:#fff;
+    text-align: left;
+    font-size: 14px;
+}
+.swal2-title.success-title{
+    color:#fff;
+    text-align: left;
+    margin-bottom: 5px;
+    font-weight: normal;
+    font-size: 20px;
+}
+.swal2-header.success-header{
+    align-items: flex-start;
+    padding-left: 20px;
+
+
+}
+.swal2-image.success.img{
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: block;
+
+}
+.swal2-popup.information-popup{
+    background: #616CF5;
+}
+.swal2-popup.warning-popup{
+    background: #FDB62E;
+}
+.close-btn{
+    outline:none;
+    box-shadow: none;
+}
+
+/*===============Pagination Style====================*/
+.pagination-select{
+    width: 40px;
+    border:none
+}
+.prevBtn{
+    transform: rotate(180deg);
+}
+.pagination{
+    height: 90px;
+    color: #8C94A5;
+}
+.pagination-btns{
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor:pointer;
 }

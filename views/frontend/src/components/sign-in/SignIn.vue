@@ -11,11 +11,11 @@
 
   <div class="login">
    <h1 class="welcome-sign-in">Welcome<br> to loy <span>Gift</span></h1>
-    <form>
+    <form @submit.prevent="login">
       <label class="label">Login</label>
-      <input class="login-input">
+      <input v-model="username" class="login-input">
       <label class="label">Password</label>
-      <div class="password d-flex justify-space-between align-items-center"><input id="password"  class="login-input" type="password"><img id="hide-eye" @click="showPassword" src="../../assets/icons/Hide.svg"><img id="show-eye"  @click="showPassword" src="../../assets/icons/eye.svg"></div>
+      <div class="password d-flex justify-space-between align-items-center"><input v-model="password" id="password"  class="login-input" type="password"><img id="hide-eye" @click="showPassword" src="../../assets/icons/Hide.svg"><img id="show-eye"  @click="showPassword" src="../../assets/icons/eye.svg"></div>
 
         <div class="remind d-flex justify-content-between align-item-center">
           <div class="d-flex ">
@@ -46,6 +46,12 @@
 import $ from 'jquery';
 export default {
 name: "SignIn",
+  data(){
+  return{
+    username:'',
+    password:''
+  }
+  },
 
 
   methods:{
@@ -61,7 +67,7 @@ name: "SignIn",
         $('#hide-eye').css({'display':'block'})
 
       }
-    }
+    },
 
   }
 }

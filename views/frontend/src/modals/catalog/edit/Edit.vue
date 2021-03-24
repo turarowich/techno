@@ -20,8 +20,8 @@
             <div>
               <label>Select category</label>
               <select v-model="currentData.category" class="form-control modal-select long-form-control mb-3">
-                <option disabled>Select a category</option>
-                <option v-for="category in listCategory" :value="category.name.toLowerCase()" :key="category.id">{{category.name}}</option>
+                <option value="">Without category</option>
+                <option v-for="category in listCategory.slice(1)" :value="category.name.toLowerCase()" :key="category.id">{{category.name}}</option>
               </select>
             </div>
 
@@ -65,6 +65,8 @@
 </template>
 
 <script>
+import $ from "jquery";
+
 export default {
   name: "Edit",
   props: ['edit_catalog', 'listCategory'],
@@ -79,7 +81,8 @@ export default {
   methods: {
 
     onSubmit() {
-      this.$emit('editedData', this.currentData);
+      this.$emit('editedCatalogSubmit', this.currentData);
+      $('#edit').modal("hide")
 
 
 

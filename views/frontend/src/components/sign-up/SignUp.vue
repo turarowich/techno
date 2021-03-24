@@ -13,7 +13,7 @@
       <div class="sign-up">
           <h1 class="welcome-sign-up ">Growth for your<br>
             business with loy <span>Gift</span></h1>
-      <form>
+      <form @submit.prevent="register">
         <div class="container-fluid">
           <div class="row">
             <div class="col-lg-6">
@@ -62,8 +62,6 @@
                    </div>
                  </div>
 
-
-
         </div>
       </form>
       </div>
@@ -78,9 +76,17 @@
 
 <script>
 import $ from "jquery";
-
+import axios from 'axios'
 export default {
 name: "SignUp",
+  data(){
+    return {
+      username:'',
+      password:'',
+      companyName:'',
+      
+    }
+  },
   methods:{
     showPassword() {
       var x = document.getElementById("show-password");
@@ -108,6 +114,14 @@ name: "SignUp",
 
       }
     },
+    register(){
+      axios.post('https://localhost:8443/register',{
+        username: this.username,
+        password: this.password,
+        companyName: this.companyName
+      })
+
+    }
   }
 }
 </script>

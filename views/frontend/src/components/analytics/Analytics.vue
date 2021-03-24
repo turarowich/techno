@@ -11,45 +11,10 @@
       </div>
     </div>
 
-    <div class="row ">
-      <div  class="col-lg-3 col-md-4 col-sm-4 col-xs-6 analytics-box">
-          <p class="analtycs-desc"><img src="../../assets/icons/coin.svg"> The amount of profit</p>
-          <h2 class="analytics-title">4000</h2>
-      </div>
-
-      <div  class="col-lg-3 col-md-4 col-sm-4 col-xs-6 analytics-box">
-        <p class="analtycs-desc"><img src="../../assets/icons/numUser.svg"> The amount of profit</p>
-        <h2 class="analytics-title">1020</h2>
-      </div>
-
-      <div  class="col-lg-3 col-md-4 col-sm-4 col-xs-6 analytics-box">
-        <p class="analtycs-desc"><img src="../../assets/icons/new.svg"> The amount of profit</p>
-        <h2 class="analytics-title">2000</h2>
-      </div>
-
-      <div  class="col-lg-3 col-md-4 col-sm-4 col-xs-6 analytics-box">
-        <p class="analtycs-desc"><img src="../../assets/icons/middle.svg"> The amount of profit</p>
-        <h2 class="analytics-title">12000</h2>
-      </div>
-
-      <div  class="col-lg-3 col-md-4 col-sm-4 col-xs-6 analytics-box">
-        <p class="analtycs-desc"><img src="../../assets/icons/spent.svg"> The amount of profit</p>
-        <h2 class="analytics-title">13445</h2>
-      </div>
-
-      <div  class="col-lg-3 col-md-4 col-sm-4 col-xs-6 analytics-box">
-        <p class="analtycs-desc"><img src="../../assets/icons/customer.svg"> The amount of profit</p>
-        <h2 class="analytics-title">111234</h2>
-      </div>
-
-      <div  class="col-lg-3 col-md-4 col-sm-4 col-xs-6 analytics-box">
-        <p class="analtycs-desc"><img src="../../assets/icons/check.svg"> The amount of profit</p>
-        <h2 class="analytics-title">444444</h2>
-      </div>
-
-      <div  class="col-lg-3 col-md-4 col-sm-4 col-xs-6 analytics-box">
-        <p class="analtycs-desc"><img src="../../assets/icons/orders.svg"> The amount of profit</p>
-        <h2 class="analytics-title">111111</h2>
+    <div class="analytics-wrapper">
+      <div class="analytics-box" v-for="item in analytics" :key="item.id">
+        <p><img class="mr-2" src="../../assets/icons/coin.svg">{{item.title}}</p>
+        <h2 class="analytics-title">{{item.number}}</h2>
       </div>
     </div>
 
@@ -67,6 +32,20 @@ import Chart from 'chart.js'
 
 export default {
   name: "Analytics",
+  data(){
+    return{
+      analytics:[
+        {id:1,title:'The amount of profit', number:4000},
+        {id:2,title:'The amount of profit', number:1020},
+        {id:3,title:'The amount of profit', number:2000},
+        {id:4,title:'The amount of profit', number:12000},
+        {id:5,title:'The amount of profit', number:12445},
+        {id:6,title:'The amount of profit', number:111234},
+        {id:7,title:'The amount of profit', number:44444},
+        {id:8,title:'The amount of profit', number:11111},
+      ]
+    }
+  },
 
   methods: {
    createChart(){
@@ -76,7 +55,7 @@ export default {
      gradientStroke.addColorStop(0, '#80b6f4');
      gradientStroke.addColorStop(1, '#f49080');
 
-     var gradientFill = ctx.createLinearGradient(0, 0, 0, 400);
+     var gradientFill = ctx.createLinearGradient(0, 0, 0, 300);
      gradientFill.addColorStop(0, "rgba(97, 108, 245, 1)");
      gradientFill.addColorStop(1, "rgba(255, 255, 255, 0)");
 
@@ -85,22 +64,21 @@ export default {
        data: {
          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug','Sep','Ocr','Nov' , 'Dec'],
          datasets: [{
-
            label: "Data",
            borderColor: '#616CF5',
            pointBorderColor: '#616cf5',
            pointBackgroundColor: '#fff',
            pointHoverBackgroundColor: '#616CF5',
            pointHoverBorderColor: '#616CF5',
-           pointBorderWidth: 7,
-           pointHoverRadius: 7,
+           pointBorderWidth: 5,
+           pointHoverRadius: 5,
            pointHoverBorderWidth: 1,
            pointRadius: 3,
            lineTension:0,
            fill: true,
            backgroundColor: gradientFill,
            borderWidth: 3,
-           data: [2, 15, 5 ,15, 5, 15, 5, 15, 5, 15,5,20]
+           data: [2, 15, 12 ,5, 7.5, 15, 2.3, 18.3, 8.9, 15,5,20]
          }]
        },
        options: {
@@ -121,13 +99,20 @@ export default {
              },
              gridLines: {
                drawTicks: false,
-               display: false
+               display: true,
+               beginAtZero: false
              }
 
            }],
            xAxes: [{
+             time: {
+
+               unit: 'day',
+               tooltipFormat: 'lll',
+             },
              gridLines: {
-               zeroLineColor: "transparent"
+               zeroLineColor: "transparent",
+               display:false
              },
              ticks: {
                padding: 20,
@@ -141,58 +126,6 @@ export default {
    }
   },
   mounted() {
-
-    // this.renderChart({
-    //   type: 'line',
-    //   data: {
-    //     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug','Sep','Ocr','Nov' , 'Dec'],
-    //     datasets: [
-    //       { // one line graph
-    //         label: 'Number of Moons',
-    //         data: [2, 15, 5 ,30, 5, 15, 5, 15, 5, 15,5,20],
-    //         borderColor: [
-    //           '#616CF5'
-    //         ],
-    //         backgroundColor:'rgba(0,0,0,0)',
-    //         pointBorderColor:'#616cf5',
-    //         borderRadius: 0,
-    //         lineTension: 0,
-    //       }
-    //     ]
-    //   },
-    //   options: {
-    //     responsive: true,
-    //     lineTension: 1,
-    //     scales: {
-    //       yAxes: [{
-    //         ticks: {
-    //           beginAtZero: true,
-    //           padding:25,
-    //         },
-    //
-    //       }]
-    //     },
-    //     elements: {
-    //       point: {
-    //         radius: 5,
-    //         pointBackgroundColor:'#616cf5',
-    //
-    //       }
-    //     },
-    //     layout: {
-    //       padding: {
-    //         left: 0,
-    //         right: 0,
-    //         top: 10,
-    //         bottom: 0
-    //       },
-    //
-    //
-    //     }
-    //   }
-    // })
-
-
     this.createChart();
   }
 
@@ -208,32 +141,42 @@ export default {
   overflow-y: auto;
   padding-bottom: 120px;
 }
-.analtycs-desc{
-  color: #8C94A5;
-  font-size: 15px;
-  margin-bottom: 17px;
-}
-.analytics-title{
-  font-size: 26px;
-  color:#222;
+.analytics-wrapper{
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
 }
 .analytics-box{
-  margin-bottom: 62px;
+  width: 25%;
+  margin-bottom: 50px;
   position: relative;
+
 }
-.row .analytics-box:nth-child(4):before,.row .analytics-box:nth-child(8):before{
+.analytics-box:nth-child(4):before,
+.analytics-box:nth-child(8):before{
   display: none;
+
 }
 .analytics-box:before{
   content:'';
+  left: 65%;
+  top: 50%;
+  border: 1px solid #d3d3d3;
+  transform: rotate(90deg);
   width: 70px;
   height: 0;
-  border: 1px solid #D3D3D3;
-  transform: rotate(90deg);
   position: absolute;
-  bottom: 50%;
-  right: 10%;
 }
+.analytics-box p{
+  color: #8C94A5;
+  font-size: 15px;
+  margin-bottom: 15px;
+}
+.analytics-box h2{
+  color: #222222;
+  font-size: 26px;
+}
+
 .analytics-btn{
   margin-bottom: 44px;
 }

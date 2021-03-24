@@ -1,4 +1,5 @@
 <template>
+
   <div>
     <div v-if="catalogList.length === 0" class="d-flex justify-content-center align-items-center">
           <div class="no-product">
@@ -9,10 +10,11 @@
     </div>
 
     <div v-else>
-      <div   v-for="catalog in catalogList" class="catalog-item table-item d-flex align-items-center" :key="catalog.id">
+      <div   v-for="catalog in  catalogList" class="catalog-item table-item d-flex align-items-center" :key="catalog.id">
         <div  style="width: 5%;"><label class="custom-checkbox"><input type="checkbox" :value="catalog" v-model="catalog.checked">
           <span class="checkmark"></span></label>
         </div>
+
         <div  class="d-flex align-items-center"  style="width: 42%;">
           <div class="table-img">
             <img src="../../assets/img/sneak.webp">
@@ -31,9 +33,7 @@
             </div>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
               <ul class="list-group " >
-                <li class="list-group-item">Done</li>
                 <li class="list-group-item" data-toggle="modal" data-target="#edit" @click="$emit('editCatalog',catalog.id)">Edit</li>
-                <li class="list-group-item">Cancel</li>
                 <li class="list-group-item" v-on:click="$emit('deleteCatalog' ,catalog.id)">Delete</li>
               </ul>
             </div>
@@ -44,19 +44,23 @@
   </div>
 
 
-
 </template>
 
 <script>
 import $ from 'jquery';
 export default {
   name: "CatalogItem",
-  props:['catalogList'],
+  props:['catalogList', 'displayList'],
+
+
   methods:{
     addProduct(){
       $('#add-product').click()
-    }
-  }
+    },
+
+  },
+
+
 }
 </script>
 

@@ -149,9 +149,17 @@
 </template>
 
 <script>
-
 export default {
 name: "Price",
+
+methods:{
+  checkBlock(){
+    var bools = false
+    this.$('#checkbox4').prop('checked',!bools)
+    bools = true
+
+  }
+  }
 
 
 }

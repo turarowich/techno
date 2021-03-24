@@ -13,8 +13,7 @@
       <div  class="router-view">
           <router-view @countNewOrder="countNewOrder"
                         @totalOrders="totalOrders"
-
-              />
+          />
         </div>
       </div>
   </div>
@@ -30,9 +29,9 @@ export default {
   name: 'App',
 
   components: {
-Header,
+    Header,
     SideBar
-    // SignUp
+
   },
   data(){
     return{
@@ -53,6 +52,7 @@ Header,
     totalOrders(total){
       this.total_order= total;
     },
+
   },
 }
 </script>

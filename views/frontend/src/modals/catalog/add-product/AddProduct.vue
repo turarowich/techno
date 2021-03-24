@@ -77,6 +77,8 @@
 </template>
 
 <script>
+import $ from "jquery";
+
 export default {
 name: "AddProduct",
   props:['listCategory'],
@@ -98,7 +100,7 @@ name: "AddProduct",
   onSubmit(){
     const new_product = this.newProduct;
     this.$emit('addNewProduct' ,new_product);
-
+    $('#add-products').modal("hide")
     this.newProduct = {
       name: '',
       price:'',
