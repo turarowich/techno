@@ -1,4 +1,4 @@
-
+var config = require('./config');
 const mongoose = require("mongoose");
 
 const clientOption = {
@@ -12,9 +12,11 @@ const clientOption = {
 };
 const option = { useNewUrlParser: true };
 
+const db_admin_name = config.admin;
+const db_admin_password = config.password;
 const initClientDbConnection = () => {
     mongoose.set('useFindAndModify', false);
-    const db = mongoose.createConnection('mongodb://localhost/', clientOption);
+    const db = mongoose.createConnection(`mongodb://${db_admin_name}:${db_admin_password}@localhost/`, clientOption);
     db.on("error", console.error.bind(console, "MongoDB Connection Error>> : "));
     db.once("open", function () {
         console.log("client MongoDB Connection ok!");
