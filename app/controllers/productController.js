@@ -59,23 +59,27 @@ class ProductController{
             let product = await new Product({
                 name: data.name,
                 description: data.description,
+                article: data.article,
+                promo: data.promo,
                 quantity: data.quantity,
                 price: data.price,
                 category: data.category
             });
             await product.validate()
+        
             if (req.files.img){
+                
                 let filename = saveImage(req.files.img, req.db)
                 if (filename == 'Not image') {
                     result['status'] = 500
                     result['msg'] = filename
                 }else{
                     product.img = filename
+                    product.save()
                 }
             }
-            result['product'] = product
-            product.save()
             
+            result['product'] = product
         } catch (error) {
             result = {
                 'status': 500,

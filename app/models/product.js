@@ -14,8 +14,16 @@ const productSchema = new Schema({
         type: String,
         required: false,
     },
-    quantity: {
+    article: {
         type: String,
+        required: false,
+    },
+    promo: {
+        type: String,
+        required: false,
+    },
+    quantity: {
+        type: Number,
         required: false,
         default: 0
     },
