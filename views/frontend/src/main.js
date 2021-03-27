@@ -15,24 +15,13 @@ import Swal from "sweetalert2";
 import $ from 'jquery';
 import moment from 'moment';
 import Lightpick from 'lightpick'
-// import {createStore}  from 'vuex';
 import axios from "axios";
-// import User from './store/user';
-
-// axios.defaults.baseURL = 'http://localhost/8080/';
-
-// const store = createStore({
-//     modules:{
-//         user:User
-//     }
-// })
 
 
 
 const app = createApp(App)
 app.use(router)
-// app.use(store)
-let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMmY2ZmNhYzM5ZTMwNzNjZWMwNWI3ZiIsImlhdCI6MTYxNjU3MjY1OCwiZXhwIjoxNjE2NjU5MDU4fQ.ZkdjBzgxo1JaRIBN8NHDCNui7YPxyWuAfeDCFjO2M7c"
+let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwNWYwNDM4YmEyMThlNDA5MjZhZDA1MSIsImRiIjoibG95Z2lmdDYwNWYwNDM4YmEyMThlNDA5MjZhZDA1MSIsImlhdCI6MTYxNjgzOTczNiwiZXhwIjoxNjE2OTI2MTM2fQ.6Oa1u-tWuITaQKpCg8USZgkYOmN7nHoU7WsfrC1qknk"
 
 const ax = axios.create({
     timeout: 1000,
@@ -49,7 +38,7 @@ app.config.globalProperties.$moment = moment;
 app.config.globalProperties.$lightpick = Lightpick;
 app.config.globalProperties.$$ = $
 app.config.globalProperties.axios = ax
-app.config.globalProperties.$api = "http://localhost:8080/api";
+app.config.globalProperties.$api = "http://localhost:8443/api";
 
 app.config.globalProperties.url = function (main, id = null, search = null) {
     let additional = '/'
@@ -60,6 +49,7 @@ app.config.globalProperties.url = function (main, id = null, search = null) {
         additional += '?' + search[0] + '=' + search[1]
     }
     return this.$api + '/' + main + additional
+    
 }
 app.config.globalProperties.formToJson = function (formData) {
     let obj = {}
@@ -81,7 +71,6 @@ app.config.globalProperties.formToJson = function (formData) {
 
     return obj
 }
-
 app.config.globalProperties.clearForm = function (formData) {
     $(formData).find(':radio, :checkbox').removeAttr('checked').end()
         .find('textarea, :text, select').val('')
@@ -124,8 +113,7 @@ app.config.globalProperties.$warningAlert = function (text){
             showClass:{
                 popup: 'animate__animated animate__zoomIn'
             }
-        }
-    )
+        } )
 }
 app.config.globalProperties.$informationAlert = function(text){
     Swal.fire({

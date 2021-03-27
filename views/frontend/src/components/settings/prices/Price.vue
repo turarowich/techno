@@ -5,7 +5,7 @@
   <div class="container-fluid pl-0">
     <div class="row">
       <div class="col-lg-3 pr-0">
-        <div class="card-price">
+        <div class="card-price"  id="one" @click="addClassFree">
           <div class="price-head d-flex align-items-center mb-4">
             <img class="price-img" src="../../../assets/icons/start-setting.svg">
             <h1 class="price-title">Start</h1>
@@ -24,13 +24,12 @@
             </ul>
           </div>
           <div class="price-foot d-flex align-items-center">
-            <h1>19$</h1>
-            <span>/month</span>
+            <h1>free</h1>
           </div>
         </div>
       </div>
-      <div class="col-lg-3 pr-0">
-        <div class="card-price">
+      <div  class="col-lg-3 pr-0">
+        <div class="card-price"  @click="addClassStart" id="two">
           <div class="price-head d-flex align-items-center mb-4">
             <img class="price-img " src="../../../assets/icons/pro.svg">
             <h1 class="price-title">Pro</h1>
@@ -55,7 +54,7 @@
         </div>
       </div>
       <div class="col-lg-3 pr-0">
-        <div class="card-price app d-flex align-items-center justify-content-center">
+        <div @click="addClassApp" id="three" class="card-price app d-flex align-items-center justify-content-center">
             <div class="text-center">
               <img class="mb-2 app-img" src="../../../assets/icons/app.svg">
               <h3>+ App</h3>
@@ -64,7 +63,7 @@
               </p>
             </div>
           <div class="price-foot app-foot d-flex align-items-center">
-            <h1>29$</h1>
+            <h1>299$</h1>
             <span>/month</span>
           </div>
         </div>
@@ -73,61 +72,21 @@
     </div>
 
     <h3 class="cashback-sub-title mb-4 mt-4">Select the validity period</h3>
-    <div class="row month">
-      <div class="col-3 pr-0">
-        <div class="validity-period">
+    <div class="row month mb-4">
+      <div class="col-3 pr-0"  v-for="price in prices" :key="price.id"  >
+        <div class="validity-period" @click="checkBlock(price.id)">
           <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="validity-title">6 month</h3>
+            <h3 class="validity-title">{{price.month}} month</h3>
             <div class="round">
-              <input type="checkbox" id="checkbox" />
-              <label for="checkbox"></label>
-          </div>
-          </div>
-          <div class="valid-desc">19$/month</div>
-        </div>
-      </div>
-
-      <div class="col-3 pr-0">
-        <div class="validity-period">
-          <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="validity-title">9 month</h3>
-            <div class="round">
-              <input type="checkbox" id="checkbox2" />
-              <label for="checkbox2"></label>
+              <input type="checkbox" :id="`id${price.id}`" >
+              <label :for="`id${price.id}`"></label>
             </div>
           </div>
-          <div class="valid-desc">19$/month</div>
-        </div>
-      </div>
-
-      <div class="col-3 pr-0">
-        <div class="validity-period">
-          <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="validity-title">12 month</h3>
-            <div class="round">
-              <input type="checkbox" id="checkbox3" />
-              <label for="checkbox3"></label>
-            </div>
-          </div>
-          <div class="valid-desc">19$/month</div>
-        </div>
-      </div>
-
-      <div class="col-3 pr-0">
-        <div class="validity-period mb-4 " v-on:click="checkBlock">
-          <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="validity-title">24 month</h3>
-            <div class="round">
-              <input type="checkbox" id="checkbox4" />
-              <label for="checkbox4"></label>
-            </div>
-          </div>
-          <div class="valid-desc">19$/month</div>
+          <div class="valid-desc"><span class="valid-desc-price">{{price.price}}</span>$/month</div>
         </div>
       </div>
     </div>
-
-      <h3 class="cashback-sub-title mb-3">Total</h3>
+    <h3 class="cashback-sub-title mb-3">Total</h3>
       <div class="total justify-content-between d-flex align-items-center">
         <div class="total-price d-flex ">
           <div class="total-left">
@@ -136,7 +95,7 @@
           </div>
           <div>
             <p class="valid-desc">To be paid:</p>
-            <h3>57$</h3>
+            <h3>{{tobePaid}}$</h3>
           </div>
         </div>
         <div>
@@ -151,15 +110,55 @@
 <script>
 export default {
 name: "Price",
+  data(){
+      return{
+        prices:[
+          {id:1 ,month:6, price:0},
+          {id:2 ,month:9, price:0},
+          {id:3 ,month:12, price:0},
+          {id:4 ,month:24, price:0},
+        ],
+        checked:true,
+        tobePaid:0
+      }
+  },
 
-methods:{
-  checkBlock(){
-    var bools = false
-    this.$('#checkbox4').prop('checked',!bools)
-    bools = true
+  methods:{
+    addClassFree() {
+    this.$$('#two').removeClass('active');
+    this.$$('#three').removeClass('active');
+    this.$$('#one').addClass('active');
+      this.prices.map(price=>{
+        return price.price = 0
+      })
+    },
+    addClassStart() {
+      this.$$('#one').removeClass('active');
+      this.$$('#three').removeClass('active');
+      this.$$('#two').addClass('active')
+      this.prices.map(price=>{
+       return price.price = price.month * 29
+      })
+    },
+    addClassApp() {
+    this.$$('#two').removeClass('active');
+      this.$$('#one').removeClass('active');
+      this.$$('#three').addClass('active');
+      this.prices.map(price=>{
+        return price.price = price.month * 299;
+      })
+    },
+    checkBlock(id){
+      this.prices.map(price=>{
+        if(price.id === id){
+          // this.$$('#id'+id).prop('checked',this.checked)
+          this.tobePaid = price.price;
+        }
+      })
+    }
+  },
 
-  }
-  }
+
 
 
 }
@@ -170,7 +169,6 @@ methods:{
   width: 76.6%;
 }
 .price{
-
   padding-bottom: 50px;
 }
 .price-img{
@@ -188,7 +186,9 @@ methods:{
 }
 .card-price:hover{
   border: 1px solid #616CF5;
-
+}
+.card-price.active{
+  border: 1px solid #616CF5;
 }
 .app{
   background: #F0F2FF;

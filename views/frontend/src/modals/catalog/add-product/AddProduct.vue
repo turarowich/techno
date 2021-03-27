@@ -102,8 +102,7 @@ name: "AddProduct",
     this.$emit('addNewProduct' ,new_product);
     let form_data = this.formToJson($('.add-product'))
     let form = new FormData()
-    form.append("name", form_data.name)    
-    form.append("descriptiom", form_data.descriptiom)
+    form.append("name", form_data.name)
     this.axios.post(this.url('addProduct'), form)
         .then((response) => {
             console.log("success", response)

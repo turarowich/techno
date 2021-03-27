@@ -357,19 +357,19 @@ name: "Catalog",
       })
 
     },
-    getProducts: function () {
-        console.log("here")
-        this.axios.get(this.url('getProducts'))
-            .then((response) => {
-                console.log(response.data)
-                console.log("here")
-                this.products = response.data
-            })
-    },
+    // getProducts: function () {
+    //     console.log("here")
+    //     this.axios.get(this.url('getProducts'))
+    //         .then((response) => {
+    //             console.log(response.data)
+    //             console.log("here")
+    //             this.products = response.data
+    //         })
+    // },
   },
   mounted(){
     this.allCategory()
-    this.getProducts()
+
     this.renderPaginationList()
   },
   watch: {
