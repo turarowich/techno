@@ -14,7 +14,7 @@ class ClientController{
         try {
             
             let client = await Client.findById(req.params.client)
-            result['client'] = client
+            result['object'] = client
         
         } catch (error) {
             result = {
@@ -37,7 +37,7 @@ class ClientController{
         try {
             
             let clients = await Client.find()
-            result['clients'] = clients
+            result['objects'] = clients
         
         } catch (error) {
         
@@ -73,7 +73,7 @@ class ClientController{
                 category: req.fields.category
             }).save();
             client.password = 'secured';
-            result['client'] = client
+            result['object'] = client
         } catch (error) {
             result = {
                 'status': 500,
@@ -98,7 +98,7 @@ class ClientController{
 
             let client = await Client.findOneAndUpdate(query, req.fields)
             client.password = 'secured';
-            result['client'] = client
+            result['object'] = client
         } catch (error) {
             result = {
                 'status': 500,

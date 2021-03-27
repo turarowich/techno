@@ -12,7 +12,7 @@ class CategoryController {
         }
         try {
             let category = await Category.findById(req.params.category)
-            result['category'] = category
+            result['object'] = category
         } catch (error) {
             result = {
                 'status': 500,
@@ -33,7 +33,7 @@ class CategoryController {
         try {
             
             let categories = await Category.find()
-            result['categories'] = categories
+            result['objects'] = categories
         } catch (error) {
             result = {
                 'status': 500,
@@ -58,7 +58,7 @@ class CategoryController {
                 type: req.fields.type,
             }).save();
 
-            result['category'] = category
+            result['object'] = category
         } catch (error) {
             result = {
                 'status': 500,
@@ -82,7 +82,7 @@ class CategoryController {
             let query = { '_id': req.params.category }
             req.fields['updatedAt'] = new Date()
             let category = await Category.findOneAndUpdate(query, req.fields)
-            result['category'] = category
+            result['object'] = category
         } catch (error) {
             result = {
                 'status': 500,

@@ -24,7 +24,7 @@ class AuthController{
             await user.validate()
             user._db = 'loygift' + user._id
             user.save()
-            let token = jwt.sign({ id: user._id, db: user._db }, config.secret_key, {
+            let token = jwt.sign({ id: user._id }, config.secret_key, {
                 expiresIn: 86400 // expires in 24 hours
             });
             result['auth'] = true
@@ -53,7 +53,7 @@ class AuthController{
             var passwordIsValid = bcrypt.compareSync(req.fields.password, user.password);
             if (!passwordIsValid) return res.status(401).json({ auth: false, token: null });
 
-            var token = jwt.sign({ id: user._id, db: user._db }, config.secret_key, {
+            var token = jwt.sign({ id: user._id}, config.secret_key, {
                 expiresIn: 86400 // expires in 24 hours
             });
 

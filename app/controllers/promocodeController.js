@@ -12,7 +12,7 @@ class PromocodeController{
         }
         try {
             let promocode = await Promocode.findById(req.params.promocode)
-            result['promocode'] = promocode
+            result['object'] = promocode
         } catch (error) {
             result = {
                 'status': 500,
@@ -33,7 +33,7 @@ class PromocodeController{
         }
         try {
             let promocodes = await Promocode.find()
-            result['promocodes'] = promocodes
+            result['objects'] = promocodes
         } catch (error) {
             result = {
                 'status': 500,
@@ -62,7 +62,7 @@ class PromocodeController{
                 endDate: req.fields.endDate
             }).save();
 
-            result['promocode'] = promocode
+            result['object'] = promocode
         } catch (error) {
             result = {
                 'status': 500,
@@ -85,7 +85,7 @@ class PromocodeController{
             let query = { '_id': req.params.promocode }
             req.fields['updatedAt'] = new Date()
             let promocode = await Promocode.findOneAndUpdate(query, req.fields)
-            result['promocode'] = promocode
+            result['object'] = promocode
         } catch (error) {
             result = {
                 'status': 500,

@@ -11,7 +11,7 @@ class UserController{
         }
         try {
             let user = await User.findById(req.params.user)
-            result['user'] = user
+            result['object'] = user
         } catch (error) {
             result = {
                 'status': 500,
@@ -29,7 +29,7 @@ class UserController{
         }
         try {
             let user = await User.find()
-            result['user'] = user
+            result['objects'] = user
         } catch (error) {
             result = {
                 'status': 500,
@@ -48,7 +48,7 @@ class UserController{
             let query = { '_id': req.params.user }
             req.fields['updatedAt'] = new Date()
             let user = await User.findOneAndUpdate(query, req.fields)
-            result['user'] = user
+            result['object'] = user
         } catch (error) {
             result = {
                 'status': 500,

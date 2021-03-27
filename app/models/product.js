@@ -6,7 +6,23 @@ const productSchema = new Schema({
         type: String,
         required: [true, 'Name required'],
     },
+    name_ru: {
+        type: String,
+        required: true,
+    },
+    category: {
+        type: Schema.Types.ObjectId,
+        ref: 'Category'
+    },
     img: {
+        type: String,
+        required: false,
+    },
+    secondary: {
+        type: String,
+        required: false,
+    },
+    secondary_ru: {
         type: String,
         required: false,
     },
@@ -14,11 +30,11 @@ const productSchema = new Schema({
         type: String,
         required: false,
     },
-    article: {
+    description_ru: {
         type: String,
         required: false,
     },
-    promo: {
+    vendorCode: {
         type: String,
         required: false,
     },
@@ -32,9 +48,27 @@ const productSchema = new Schema({
         required: true,
         default: 0
     },
-    category: {
-        type: Schema.Types.ObjectId,
-        ref: 'Category'
+    promo: {
+        type: String,
+        required: false,
+    },
+    promoPrice: {
+        type: Number,
+        required: false,
+        default: 0
+    },
+    promoStart: {
+        type: Date,
+        required: false,
+    },
+    promoEnd: {
+        type: Date,
+        required: false,
+    },
+    recommend: {
+        type: Boolean,
+        required: true,
+        default: false
     },
     createdAt: {
         type: Date,
