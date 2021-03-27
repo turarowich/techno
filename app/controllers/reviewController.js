@@ -13,7 +13,7 @@ class ReviewController{
         }
         try {
             let review = await Review.findById(req.params.review)
-            result['review'] = review
+            result['object'] = review
         } catch (error) {
             result = {
                 'status': 500,
@@ -34,7 +34,7 @@ class ReviewController{
         }
         try {
             let review = await Review.find()
-            result['review'] = review
+            result['objects'] = review
         } catch (error) {
             result = {
                 'status': 500,
@@ -61,7 +61,7 @@ class ReviewController{
                 type: req.fields.type,
             }).save();
 
-            result['review'] = review
+            result['object'] = review
         } catch (error) {
             result = {
                 'status': 500,
@@ -84,7 +84,7 @@ class ReviewController{
             let query = { '_id': req.params.review }
             req.fields['updatedAt'] = new Date()
             let review = await Review.findOneAndUpdate(query, req.fields)
-            result['review'] = review
+            result['object'] = review
         } catch (error) {
             result = {
                 'status': 500,

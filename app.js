@@ -30,12 +30,13 @@ const VerifyToken = require('./services/verifyToken');
 
 global.appRoot = path.resolve(__dirname);
 global.userConnection = userConnection;
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
+
+
 var cors = require("cors");
 app.use(cors());
 app.use(express.static(__dirname + '/views/frontend/dist'));
 app.use(formidableMiddleware());
+app.use('/images', express.static(__dirname + '/views/frontend/images'))
 app.use('/', require('./routes/home.js')(router))
 app.use('/api', VerifyToken, require('./routes/api.js')(router))
 
@@ -69,7 +70,7 @@ app.use((err, req, res, next) => {
 
 httpServer.listen(config.port_http, () => {
     console.log(`App listening at http://${config.localhost}:${config.port_http}`);
-    console.log(`App listening at http://${config.ip}:${config.port_https}`);
+    console.log(`App listening at http://${config.ip}:${config.port_http}`);
 })
 httpsServer.listen(config.port_https, () => {
     console.log(`App listening at https://${config.localhost}:${config.port_https}`);

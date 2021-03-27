@@ -12,7 +12,7 @@ class OrderController{
         }
         try {
             let order = await Order.findById(req.params.order)
-            result['order'] = await order.populate('client').populate('products').execPopulate()
+            result['object'] = await order.populate('client').populate('products').execPopulate()
         } catch (error) {
             result = {
                 'status': 500,
@@ -33,7 +33,7 @@ class OrderController{
         }
         try {
             let orders = await Order.find().populate('client').populate('products').exec()
-            result['orders'] = orders
+            result['objects'] = orders
         } catch (error) {
             result = {
                 'status': 500,
@@ -63,7 +63,7 @@ class OrderController{
                 deliveryType: req.fields.deliveryType,
             }).save();
 
-            result['order'] = await order.populate('client').populate('products').execPopulate()
+            result['object'] = await order.populate('client').populate('products').execPopulate()
         } catch (error) {
             result = {
                 'status': 500,
@@ -86,7 +86,7 @@ class OrderController{
             let query = { '_id': req.params.order }
             req.fields['updatedAt'] = new Date()
             let order = await Order.findOneAndUpdate(query, req.fields)
-            result['order'] = await order.populate('client').populate('products').execPopulate()
+            result['object'] = await order.populate('client').populate('products').execPopulate()
         } catch (error) {
             result = {
                 'status': 500,

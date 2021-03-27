@@ -7,7 +7,7 @@ function useDB(db_name) {
 }
 
 function saveImage(file, company, old_file_name=null){
-    let filename = company + '/' + Math.random().toString().substr(2, 8) + file.name
+    let filename = 'images/' + company + '/' + Math.random().toString().substr(2, 8) + path.extname(file.name)
     var dir = path.join(__dirname, '/../views/frontend/images/' + company)
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
@@ -20,7 +20,7 @@ function saveImage(file, company, old_file_name=null){
             });
         }
     }
-    var upload = path.join(__dirname, '/../views/frontend/images/' + filename)
+    var upload = path.join(__dirname, '/../views/frontend/' + filename)
     if (file.name.match(/\.(jpg|jpeg|png|gif)$/)) {
         fs.rename(file.path, upload, function (err) {
             if (err) {

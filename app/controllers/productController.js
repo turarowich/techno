@@ -13,7 +13,7 @@ class ProductController{
         }
         try {
             let product = await Product.findById(req.params.product)
-            result['product'] = product
+            result['object'] = product
         } catch (error) {
             result = {
                 'status': 500,
@@ -34,7 +34,7 @@ class ProductController{
         }
         try {
             let products = await Product.find()
-            result['products'] = products
+            result['objects'] = products
         } catch (error) {
             result = {
                 'status': 500,
@@ -58,12 +58,20 @@ class ProductController{
             
             let product = await new Product({
                 name: data.name,
+                name_ru: data.name_ru,
+                secondary: data.secondary,
+                secondary_ru: data.secondary_ru,
                 description: data.description,
-                article: data.article,
+                description_ru: data.description_ru,
+                vendorCode: data.vendorCode,
                 promo: data.promo,
+                promoPrice: data.promoPrice,
+                promoStart: data.promoStart,
+                promoEnd: data.promoEnd,
                 quantity: data.quantity,
                 price: data.price,
-                category: data.category
+                category: data.category,
+                recommend: data.recommend,
             });
             await product.validate()
         
@@ -113,7 +121,7 @@ class ProductController{
                     product.save()
                 }
             }
-            result['product'] = product
+            result['object'] = product
         } catch (error) {
             console.log(error)
             result = {
