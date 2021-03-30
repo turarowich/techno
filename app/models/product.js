@@ -18,6 +18,14 @@ const productSchema = new Schema({
         type: String,
         required: false,
     },
+    imgArray: [{
+        type: String,
+        required: false,
+    }],
+    status: {
+        type: String,
+        required: false,
+    },
     secondary: {
         type: String,
         required: false,
