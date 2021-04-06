@@ -4,13 +4,16 @@ module.exports = io => {
     }
 
     io.on('connection', (socket) => {
-        console.log('a user connected');
-
+           
+        socket.on('init', function (msg) {
+            socket.join(msg.user)
+        });
         socket.on("details", listener)
 
         socket.on('message', (msg) => {
             console.log("got message " + msg.message);
-            socket.emit("server message", "send it back")
+            console.log(socket.id)
+            io.to('aligator').emit("server message", msg.message)
         });
     });
 };
