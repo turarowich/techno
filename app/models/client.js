@@ -67,6 +67,10 @@ const clientSchema = new Schema({
         type: Schema.Types.ObjectId, 
         ref: 'Category' 
     },
+    messages: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Message'
+    }],
     createdAt: {
         type: Date,
         required: true,
