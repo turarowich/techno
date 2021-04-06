@@ -29,13 +29,37 @@
         <img src="../../assets/icons/ring.svg">
       </div>
 
-      <div class="user-info d-flex">
+      <div class="user-info d-flex align-items-center">
         <span class="user-logo">W</span>
         <div class="user-text">
           <h4 class="user-name">Wory Shop</h4>
           <span class="user-tariff">Your tarif is lite</span>
         </div>
-        <img src="../../assets/icons/Line.svg">
+
+
+        <div class="dropdown">
+         <div class="drop-img dropdown-toggle" id="dropdownProfile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <img src="../../assets/icons/Line.svg"  >
+         </div>
+          <div class="dropdown-menu profile-dropdown" aria-labelledby="dropdownProfile">
+           <form>
+             <div class="user-info d-flex align-items-center">
+               <span class="user-logo">W</span>
+               <div class="user-text">
+                 <h4 class="user-name ">Wory Shop</h4>
+                 <span class="user-tariff">Your tarif is lite</span>
+               </div>
+             </div>
+
+             <ul class="list-group">
+               <li class="profile-list list-group-item"><img src="../../assets/icons/edit-profile.svg">Edit pofile</li>
+               <li class="profile-list list-group-item"><img src="../../assets/icons/discountProfile.svg">Choose your tariff</li>
+             </ul>
+             <span class="logout" @click="logout">Log out</span>
+              <p class="profile-footer">Powered by ”Loy Gift” 2021</p>
+           </form>
+          </div>
+        </div>
+
       </div>
       </div>
     </div>
@@ -50,7 +74,14 @@ name: "Header",
     type:Function
   },
     total_order:Number,
+  },
+  methods:{
+  logout(){
+    this.$router.push('/')
+    localStorage.removeItem('token')
   }
+  }
+
 }
 </script>
 
@@ -90,8 +121,8 @@ name: "Header",
   font-size: 14px;
 }
 .user-logo{
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   background: #4257D0;
   color:#fff;
   border-radius:50%;
@@ -113,6 +144,65 @@ name: "Header",
   display: none;
   padding: 0;
 }
+.profile-dropdown{
+  position: absolute;
+  width: 277px;
+  height: 386px;
+  background: #FFFFFF;
+  box-shadow: 2px 11px 35px rgba(0, 0, 0, 0.1);
+  border-radius: 7px;
+  transform: translate3d(-256px, 40px, 0px) !important;
+  padding:23px;
+
+}
+.profile-dropdown .user-info{
+  margin-bottom:40px;
+}
+.profile-dropdown .user-logo{
+  width: 50px;
+  height: 50px;
+}
+.profile-dropdown .user-name{
+  font-size: 18px;
+}
+.drop-img{
+  width: 20px;
+  height: 20px;
+  cursor:pointer;
+  text-align: center;
+}
+.profile-list{
+  font-size:16px;
+  color:#222;
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  border-radius: 0;
+}
+.profile-list:last-child{
+  border-bottom: 1px solid #e8e8e8;
+}
+.profile-list:hover{
+  background: none;
+}
+.profile-list img{
+  margin-right:10px;
+  width: 13px;
+  height: 13px;
+}
+.logout{
+  color:#D81919;
+  font-size: 16px;
+  cursor:pointer;
+}
+.profile-footer{
+  color: #8C94A5;
+  font-size: 14px;
+  position: absolute;
+  bottom:0;
+  left: 55px;
+}
+
 @media(max-width:992px){
   #sidebarCollapse{
     display: block;

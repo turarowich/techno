@@ -99,6 +99,7 @@
 <script>
 import ClientItem from "@/components/client-item/ClientItem";
 import Swal from "sweetalert2";
+import $ from 'jquery'
 
 
 export default {
@@ -206,19 +207,18 @@ export default {
       this.clientList.forEach(function(user) {
         user.checked = !select;
       });
-      this.selectAll = !select;
     },
     sortByBonus() {
       this.clientToDisplay.sort((a, b) => this.sorting ? (parseInt(a.bonus) - parseInt(b.bonus)) : (parseInt(b.bonus) - parseInt(a.bonus)));
       this.sorting = !this.sorting;
-      this.$$('.date-pol').toggleClass('active')
-      this.$$('.total-pol').removeClass('active')
+      $('.date-pol').toggleClass('active')
+      $('.total-pol').removeClass('active')
     },
     sortByTotal(){
       this.clientToDisplay.sort((a, b) => this.sorting? (parseInt(a.total) - parseInt(b.total)) : (parseInt(b.total) - parseInt(a.total)));
       this.sorting = !this.sorting;
-      this.$$('.total-pol').toggleClass('active')
-      this.$$('.date-pol').removeClass('active')
+      $('.total-pol').toggleClass('active')
+      $('.date-pol').removeClass('active')
     },
     deleteClient(id){
       Swal.fire({
@@ -276,12 +276,12 @@ export default {
       else{
         this.clientList = this.clientList.filter(catalog => !catalog.checked)
       }
-      this.$$('.custom-checkbox input').prop('checked', false)
+      $('.custom-checkbox input').prop('checked', false)
       this.renderPaginationList()
     },
     uncloseDropDown(){
-      this.$$(document).click(function() {
-        this.$$(".dropdown").removeClass('open');
+      $(document).click(function(){
+        $(".dropdown").removeClass('open');
 
       });
 
@@ -309,6 +309,7 @@ export default {
   mounted(){
     this.renderPaginationList()
     this.uncloseDropDown()
+
   },
   watch: {
     perPage: function () {

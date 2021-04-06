@@ -15,7 +15,7 @@
         <div class="modal-body category-body">
           <form @submit.prevent="onSubmit" class="modal-form">
             <label>Name</label>
-            <input class="form-input cashback-input mb-3" v-model="new_category.name" placeholder="Enter a name">
+            <input class="form-input cashback-input mb-3" v-model="new_category.name" name="name" placeholder="Enter a name">
 
             <div>
               <label>Select category</label>
@@ -49,20 +49,21 @@ name: "AddCategory",
     return{
       new_category: {
         name: '',
-        id: Math.random()
       }
-
     }
   },
   methods:{
     onSubmit(){
-      const newCategory = this.new_category;
+      const data = new FormData();
+      data.append('name', this.new_category.name)
+      this.axios.post(this.url('AddCategory'),data)
+        .then((response)=>{
+          console.log('Success ', response.data.object)
+        })
+        .catch((error)=>{
+          console.log("Error"+error)
+      })
       $('#add-category').modal("hide")
-      this.new_category = {
-        name: '',
-        id: Math.random(),
-      };
-      this.$emit('addCategory', newCategory)
     }
   }
 }
