@@ -13,17 +13,17 @@
       <div class="sign-up">
           <h1 class="welcome-sign-up ">Growth for your<br>
             business with loy <span>Gift</span></h1>
-      <form @submit.prevent="register">
+      <form @submit.prevent="registerSubmit">
         <div class="container-fluid">
           <div class="row">
             <div class="col-lg-6">
               <label class="label">Your name</label>
-              <input class="login-input">
+              <input v-model="register.name" class="login-input" name="name">
               <label class="label">Email</label>
-              <input class="login-input">
+              <input v-model="register.email" class="login-input" name="password">
               <label class="label">Password</label>
               <div class="password d-flex justify-space-between align-items-center">
-                <input id="show-password"  class="login-input" type="password">
+                <input v-model="register.password" id="show-password"  name="password" class="login-input" type="password">
                 <img class="hide-eye" @click="showPassword" src="../../assets/icons/Hide.svg">
                 <img class="show-eye"  @click="showPassword" src="../../assets/icons/eye.svg">
               </div>
@@ -31,9 +31,9 @@
             </div>
             <div class="col-lg-6">
               <label class="label">Phone number</label>
-              <input class="login-input">
-              <label class="label">Country</label>
-              <input class="login-input">
+              <input v-model="register.phone" class="login-input" name="phone">
+              <label class="label">Description</label>
+              <input v-model="register.description" class="login-input" name="description">
               <label class="label">Repeat password</label>
               <div class=" password d-flex justify-space-between align-items-center">
                 <input id="show-repeat"  class="login-input" type="password">
@@ -76,15 +76,18 @@
 
 <script>
 import $ from "jquery";
-import axios from 'axios'
 export default {
 name: "SignUp",
   data(){
     return {
-      username:'',
-      password:'',
-      companyName:'',
-      
+      register:{
+        name:'',
+        password:'',
+        email: '',
+        description:'',
+        phone:'',
+      }
+
     }
   },
   methods:{
@@ -114,13 +117,21 @@ name: "SignUp",
 
       }
     },
-    register(){
-      axios.post('https://localhost:8443/register',{
-        username: this.username,
-        password: this.password,
-        companyName: this.companyName
+    registerSubmit(){
+      const data = new FormData()
+      data.append('name', this.register.name);
+      data.append('email', this.register.email);
+      data.append('phone', this.register.phone);
+      data.append('description', this.register.description);
+      data.append('password', this.register.password);
+      this.axios.post('http://localhost:8080/register',data)
+      .then(()=>{
+          this.$index.push('/')
       })
-
+      .catch((error)=>{
+        console.log("Error",error)
+      })
+    this.register = ''
     }
   }
 }

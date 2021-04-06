@@ -4,7 +4,7 @@
     <div class="d-flex justify-content-between app-buttons">
       <div class="d-flex align-items-center">
         <button class="app-buttons-item adding-btns" id="add-product" data-toggle="modal" data-target="#add-products"><span>+ Add product</span></button>
-        <button class="app-buttons-item adding-btns" data-toggle="modal" data-target="#add-service"><span>+ Add service</span></button>
+        <button class="app-buttons-item adding-btns" @click="getProducts" data-toggle="modl" data-target="#add-service"><span>+ Add service</span></button>
         <button class="app-buttons-item adding-btns"  data-toggle="modal" data-target="#add-category"><span>+ Add category </span></button>
       </div>
       <div class="d-flex align-items-center">
@@ -34,7 +34,7 @@
       <div class="catalog-wrapper d-flex">
         <div class="catalog-menu" style="width:18%">
           <ul class="list-group" >
-            <li class="catalog-list" :id="category.name" :ref="'menu'+index"  v-for="(category,index) in listCategory" :key="category.id"  :class="{active: filtered === category.name.toLowerCase()}"  @click="changeFilter(category.name.toLowerCase())">
+            <li class="catalog-list" :id="category.name" :ref="'menu'+index"  v-for="(category,index) in listCategory" :key="category._id"  :class="{active: filtered === category.name.toLowerCase()}"  @click="changeFilter(category.name.toLowerCase())">
               <span>{{category.name}}</span>
               <div class="dropleft dropMenu">
                 <div class="dropdown-toggle" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -42,8 +42,8 @@
                 </div>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenu">
                   <ul class="list-group" >
-                    <li class="list-group-item" data-toggle="modal" data-target="#edit-category" @click="editCategory(category.id)">Edit</li>
-                    <li class="list-group-item" @click.stop.prevent="deleteCategory(category.name, category.id)">Delete</li>
+                    <li class="list-group-item" data-toggle="modal" data-target="#edit-category" @click="editCategory(category._id)">Edit</li>
+                    <li class="list-group-item" @click.stop.prevent="deleteCategory(category._id)">Delete</li>
                   </ul>
                 </div>
               </div>
@@ -92,11 +92,11 @@
           @editedCatalogSubmit="editedCatalogSubmit"
           :listCategory="listCategory"
     />
-    <AddCategory v-on:addCategory="addCategory"
+    <AddCategory
       :listCategory="listCategory"
     />
     <AddProduct
-        @addNewProduct="addNewProduct"
+
         :listCategory="listCategory"/>
 
     <EditCategory
@@ -113,6 +113,7 @@ import Edit from "@/modals/catalog/edit/Edit";
 import AddCategory from "@/modals/catalog/add-category/AddCategory";
 import EditCategory from "@/modals/catalog/add-category/EditCategory";
 import Swal from 'sweetalert2';
+import $ from 'jquery';
 
 export default {
 name: "Catalog",
@@ -134,7 +135,7 @@ name: "Catalog",
         {id:4,name:"T-shirts",article:"B3214PO", quantity:2, price: "220 $", category: 'clothes'},
         {id:5,name:"Jackets",article:"B3214PO", quantity:2, price: "220 $", category: 'clothes'},
       ],
-      listCategory:[{id:2,name:''}],
+      listCategory:[{id:0,name:''}],
       search:'',
       sorting:true,
       filtered: '',
@@ -165,7 +166,7 @@ name: "Catalog",
     },
     totalPages(){
       //calculate the total number of pages based on the number of items to show per page and the total items we got from server
-      console.log(this.filteredList.length)
+
       return this.filteredList.length && (this.filteredList.length > this.perPage) ? Math.ceil(this.filteredList.length/this.perPage) : 1;
     },
     start(){
@@ -216,7 +217,7 @@ name: "Catalog",
       this.catalogList.forEach(catalog=>{
         return catalog.checked = false
       })
-      this.$$('#parent-check').prop('checked',false)
+      $('#parent-check').prop('checked',false)
 
     },
     moveCategory(value){
@@ -227,32 +228,7 @@ name: "Catalog",
        this.$informationAlert('Category has been changed')
 
     },
-    editCategory(id){
-      this.edit_category = this.listCategory.find((category)=>category.id === id)
-    },
-    addCategory(newCategory){
-      let user = this.listCategory.find(item=>item.name.toLowerCase() === newCategory.name.toLowerCase())
-       if(user){
-          this.$warningAlert('You already have category with this name',)
-       }
-       else{
-         this.listCategory.push(newCategory)
-        this.$successAlert('Category has been added')
 
-       }
-    },
-    deleteCategory(name, id){
-      const idx = this.listCategory.findIndex(el=>el.id === id);
-      this.$refs[Object.keys(this.$refs)[idx-1]].click()
-      this.listCategory = this.listCategory.filter(cate => cate.id !== id);
-      this.catalogList = this.catalogList.filter(catalog=>catalog.category !== name.toLowerCase())
-      this.$successAlert('Category has been removed')
-    },
-    addNewProduct(newProduct){
-      this.catalogList.push(newProduct)
-      this.renderPaginationList()
-      this.$successAlert('Product has added')
-    },
     editedCatalogSubmit(edited){
       var foundIndex = this.catalogList.findIndex(x => x.id === edited.id);
       this.catalogList[foundIndex] = edited;
@@ -266,7 +242,7 @@ name: "Catalog",
       if(this.selectAll){
         this.catalogList = []
         this.$successAlert('All products have been removed')
-        this.$$('#parent-check').prop('checked', false)
+        $('#parent-check').prop('checked', false)
       }
       else{
        this.catalogList = this.catalogList.filter(catalog => !catalog.checked)
@@ -275,16 +251,13 @@ name: "Catalog",
       this.renderPaginationList()
     },
     allCategory(){
-      this.$$('.list-group .catalog-list').first().text('All')
-
-
+      $('.list-group .catalog-list').first().text('All');
     },
     toggleSelect: function() {
       let select = this.selectAll
       this.catalogList.filter((user)=> {
         if(this.filtered === '' || this.filtered === user.category){
           user.checked = !select
-          console.log(user.checked)
         }
       });
     },
@@ -294,8 +267,8 @@ name: "Catalog",
       }
       this.catalogToDisplay.sort((a, b) => this.sorting? (parseInt(a.quantity) - parseInt(b.quantity)) : (parseInt(b.quantity) - parseInt(a.quantity)));
       this.sorting = !this.sorting;
-      this.$$('.date-pol').toggleClass('active')
-      this.$$('.total-pol').removeClass('active')
+      $('.date-pol').toggleClass('active')
+      $('.total-pol').removeClass('active')
 
     },
     sortByPrice(){
@@ -304,8 +277,8 @@ name: "Catalog",
       }
       this.catalogToDisplay.sort((a, b) => this.sorting? (parseInt(a.price) - parseInt(b.price)) : (parseInt(b.price) - parseInt(a.price)));
       this.sorting = !this.sorting;
-      this.$$('.total-pol').toggleClass('active')
-     this.$$('.date-pol').removeClass('active')
+      $('.total-pol').toggleClass('active')
+     $('.date-pol').removeClass('active')
 
     },
     deleteCatalog(id){
@@ -357,19 +330,34 @@ name: "Catalog",
       })
 
     },
-    // getProducts: function () {
-    //     console.log("here")
-    //     this.axios.get(this.url('getProducts'))
-    //         .then((response) => {
-    //             console.log(response.data)
-    //             console.log("here")
-    //             this.products = response.data
-    //         })
-    // },
+    getProducts: function() {
+        this.axios.get(this.url('getProducts'))
+            .then((response) => {
+                this.products = response.data
+              console.log(response)
+            })
+    },
+    getCategories:function(){
+      this.axios.get(this.url('getCategories'))
+      .then((res)=>{
+        res.data.objects.map((item)=>{
+          this.listCategory.push(item)
+          console.log(res)
+        })
+      })
+    },
+    deleteCategory(id){
+      this.axios.delete(this.url('deleteCategory',id))
+      .then((response)=>{
+        console.log(response)
+      })
+      // const idx = this.listCategory.findIndex(el=>el.id === id);
+      // this.$refs[Object.keys(this.$refs)[idx-1]].click()
+    },
   },
   mounted(){
     this.allCategory()
-
+    this.getCategories()
     this.renderPaginationList()
   },
   watch: {

@@ -1,5 +1,9 @@
 import {createApp} from 'vue'
 import App from './App.vue'
+import 'slick-carousel/slick/slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css'
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap'
 import '@fortawesome/fontawesome-free/css/all.css'
@@ -10,7 +14,7 @@ import './assets/css/main.css'
 import 'sweetalert2/dist/sweetalert2.css';
 import 'lightpick/css/lightpick.css'
 import 'animate.css'
-import router from "@/router";
+import router from '@/router'
 import Swal from "sweetalert2";
 import $ from 'jquery';
 import moment from 'moment';
@@ -21,7 +25,9 @@ import axios from "axios";
 
 const app = createApp(App)
 app.use(router)
-let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwNWYwNDM4YmEyMThlNDA5MjZhZDA1MSIsImRiIjoibG95Z2lmdDYwNWYwNDM4YmEyMThlNDA5MjZhZDA1MSIsImlhdCI6MTYxNjgzOTczNiwiZXhwIjoxNjE2OTI2MTM2fQ.6Oa1u-tWuITaQKpCg8USZgkYOmN7nHoU7WsfrC1qknk"
+
+let token = localStorage.getItem('token')
+console.log(token)
 
 const ax = axios.create({
     timeout: 1000,
@@ -29,16 +35,17 @@ const ax = axios.create({
         host: 'localhost',
         port: 8080
     },
-    headers: { 
+    headers: {
         'x-access-token': token,
         'Content-Type': 'application/x-www-form-urlencoded'
     }
 });
+ax.defaults.headers.common['Authorization'] = 'Bearer'+ token
 app.config.globalProperties.$moment = moment;
 app.config.globalProperties.$lightpick = Lightpick;
-app.config.globalProperties.$$ = $
+app.config.globalProperties.$ = $
 app.config.globalProperties.axios = ax
-app.config.globalProperties.$api = "http://localhost:8443/api";
+app.config.globalProperties.$api = "http://localhost:8080/api";
 
 app.config.globalProperties.url = function (main, id = null, search = null) {
     let additional = '/'
@@ -68,7 +75,6 @@ app.config.globalProperties.formToJson = function (formData) {
             obj[v.name] = v.value
         }
     })
-
     return obj
 }
 app.config.globalProperties.clearForm = function (formData) {

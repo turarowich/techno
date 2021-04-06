@@ -108,6 +108,7 @@
 </template>
 
 <script>
+import $ from 'jquery';
 export default {
 name: "Price",
   data(){
@@ -125,25 +126,25 @@ name: "Price",
 
   methods:{
     addClassFree() {
-    this.$$('#two').removeClass('active');
-    this.$$('#three').removeClass('active');
-    this.$$('#one').addClass('active');
+    $('#two').removeClass('active');
+    $('#three').removeClass('active');
+    $('#one').addClass('active');
       this.prices.map(price=>{
         return price.price = 0
       })
     },
     addClassStart() {
-      this.$$('#one').removeClass('active');
-      this.$$('#three').removeClass('active');
-      this.$$('#two').addClass('active')
+      $('#one').removeClass('active');
+      $('#three').removeClass('active');
+      $('#two').addClass('active')
       this.prices.map(price=>{
        return price.price = price.month * 29
       })
     },
     addClassApp() {
-    this.$$('#two').removeClass('active');
-      this.$$('#one').removeClass('active');
-      this.$$('#three').addClass('active');
+      $('#two').removeClass('active');
+      $('#one').removeClass('active');
+      $('#three').addClass('active');
       this.prices.map(price=>{
         return price.price = price.month * 299;
       })

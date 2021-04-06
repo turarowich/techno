@@ -11,11 +11,11 @@
 
   <div class="login">
    <h1 class="welcome-sign-in">Welcome<br> to loy <span>Gift</span></h1>
-    <form @submit.prevent="login">
+    <form @submit.prevent="loginSubmit">
       <label class="label">Login</label>
-      <input v-model="username" class="login-input">
+      <input v-model="login.email" name="email" class="login-input">
       <label class="label">Password</label>
-      <div class="password d-flex justify-space-between align-items-center"><input v-model="password" id="password"  class="login-input" type="password"><img id="hide-eye" @click="showPassword" src="../../assets/icons/Hide.svg"><img id="show-eye"  @click="showPassword" src="../../assets/icons/eye.svg"></div>
+      <div class="password d-flex justify-space-between align-items-center"><input name="password" v-model="login.password" id="password"  class="login-input" type="password"><img id="hide-eye" @click="showPassword" src="../../assets/icons/Hide.svg"><img id="show-eye"  @click="showPassword" src="../../assets/icons/eye.svg"></div>
 
         <div class="remind d-flex justify-content-between align-item-center">
           <div class="d-flex ">
@@ -48,8 +48,10 @@ export default {
 name: "SignIn",
   data(){
   return{
-    username:'',
-    password:''
+    login:{
+      email:'',
+      password:''
+    }
   }
   },
 
@@ -68,7 +70,21 @@ name: "SignIn",
 
       }
     },
-
+    loginSubmit(){
+      const data  = new FormData();
+      data.append('email', this.login.email)
+      data.append('password', this.login.password)
+      this.axios.post('http://localhost:8080/login', data)
+      .then((resp)=>{
+        this.$router.push('/orders')
+        console.log(resp.data.token)
+        localStorage.setItem('token', resp.data.token)
+      })
+      .catch((error)=>{
+        localStorage.removeItem('token')
+        console.log(error)
+      })
+    }
   }
 }
 </script>

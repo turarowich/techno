@@ -65,6 +65,7 @@
 <script>
 import OrderItem from "@/components/order-item/OrderItem";
 import Swal from "sweetalert2";
+import $ from 'jquery';
 
 
 
@@ -147,7 +148,7 @@ name: "Orders",
   },
   methods: {
     clickOnDate(){
-        this.$$('.date-pick').click()
+        $('.date-pick').click()
     },
     showYesterday(){
         this.filtered = this.yesterdayDate
@@ -158,9 +159,10 @@ name: "Orders",
       this.filtered = this.todayDate;
       this.renderPaginationList()
 
+
     },
     filteredBetweenDate(){
-      const value = this.$$('#datepicker').val();
+      const value = $('#datepicker').val();
       this.filtered = value
       this.filterByDate = value
       this.renderPaginationList()
@@ -206,7 +208,7 @@ name: "Orders",
       }
       this.renderPaginationList()
 
-      this.$$('.custom-checkbox input').prop('checked', false)
+      $('.custom-checkbox input').prop('checked', false)
     },
     sortByDate() {
       if (this.orderList.length === 0) {
@@ -217,8 +219,8 @@ name: "Orders",
         })
         this.renderPaginationList()
         this.sorting = !this.sorting;
-       this.$$('.date-pol').toggleClass('active')
-        this.$$('.total-pol').removeClass('active')
+       $('.date-pol').toggleClass('active')
+        $('.total-pol').removeClass('active')
       }
     },
     sortByTotal() {
@@ -228,8 +230,8 @@ name: "Orders",
         this.orderList.sort((a, b) => this.sorting ? (parseInt(a.total) - parseInt(b.total)) : (parseInt(b.total) - parseInt(a.total)));
         this.renderPaginationList()
         this.sorting = !this.sorting;
-        this.$$('.total-pol').toggleClass('active')
-        this.$$('.date-pol').removeClass('active')
+        $('.total-pol').toggleClass('active')
+        $('.date-pol').removeClass('active')
       }
     },
     countNewOrder() {
@@ -320,20 +322,22 @@ name: "Orders",
       })
     },
     getProducts() {
-        console.log("here")
+
         this.axios.get(this.url('getProducts'))
             .then((response) => {
                 console.log(response.data)
-                console.log("here")
+
             })
     },
   },
+
 
   mounted(){
       this.totalOrders()
       this.getProducts()
       this.countNewOrder()
       this.renderPaginationList()
+
 
     new this.$lightpick({
       field: document.getElementById('datepicker'),

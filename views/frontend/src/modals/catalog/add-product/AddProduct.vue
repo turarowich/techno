@@ -11,7 +11,7 @@
             </button>
           </div>
           <div class=" myModal-body">
-              <form @submit.prevent="onSubmit" class="modal-form add-product">
+              <form  class="modal-form add-product">
                 <label>Name</label>
                 <input v-model="newProduct.name" class="form-input cashback-input mb-3" name="name" placeholder="Enter a name">
 
@@ -23,7 +23,7 @@
                   </div>
                   <div  style="width: 50%;">
                     <label>Without category</label>
-                   <select v-model="newProduct.category" class="form-control mb-3">
+                   <select v-model="newProduct.category" class="form-control mb-3" name="category">
                      <option value=''>Without category</option>
                      <option v-for="cat in listCategory.slice(1)" v-bind:value="cat.name.toLowerCase()" v-bind:key="cat.id">{{cat.name}}</option>
                    </select>
@@ -65,7 +65,7 @@
                 </div>
 
                 <div class="modal-btn d-flex">
-                  <button class="save">Save</button>
+                  <button @click.prevent="onSubmit" class="save">Save</button>
                   <button class="cancel">Cancel</button>
                 </div>
               </form>
@@ -86,45 +86,31 @@ name: "AddProduct",
   data(){
     return{
       newProduct:{
-        id: 100,
         name: '',
-        article: '',
         price: '',
         quantity: '',
         category:'',
-        promo:''
+
       },
     };
   },
   methods:{
   onSubmit(){
     const new_product = this.newProduct;
-    this.$emit('addNewProduct' ,new_product);
-    let form_data = this.formToJson($('.add-product'))
-    let form = new FormData()
-    form.append("name", form_data.name)
+    const form_data = this.formToJson(new_product)
+    const form  = new FormData;
+    form.append('name', form_data.name)
+    form.append('price', form_data.price)
+    form.append('quantity', form_data.quantity)
+
     this.axios.post(this.url('addProduct'), form)
         .then((response) => {
             console.log("success", response)
-            
-            this.clearForm(form)
         }).catch((error) => {
             console.log("fail", error)
-            
         })
     $('#add-products').modal("hide")
-    this.newProduct = {
-      name: '',
-      price:'',
-      category:'',
-      article: '',
-      quantity: '',
-      id:Math.random()
-
-    };
-
-    
-  }
+    }
   },
 
 }
