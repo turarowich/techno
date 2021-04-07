@@ -24,6 +24,7 @@
         <Conversation
            v-bind:contact="selectedContact"
             v-bind:messages="messages"
+            v-on:message="sendMessage"
         />
     </div>
     <div class="people-info">
@@ -39,6 +40,9 @@
 import Conversation from "@/components/chats/conversation/Conversation";
 import Contacts from "@/components/chats/contacts/Contacts";
 import ChatProfile from "@/components/chats/chat-profile/ChatProfile";
+import io from "socket.io-client"
+const socket = io("http://localhost:8080")
+
 export default {
   name: "Chats",
   components:{
@@ -94,7 +98,22 @@ export default {
   methods:{
     startConversation(contact){
       this.selectedContact = contact
-    }
+      socket.emit('init', contact.id)
+    },
+    sendMessage(data){
+        socket.emit('message', data)
+        let message = {id:data.user, text:data.text, from:'me'}
+        this.messages.push(message)
+        this.scrollToBottom("chatToBottom")
+    },
+  },
+  created() {
+        let that = this
+        socket.on("server message", function(data) {
+            let message = {id:data.user , text:data.text, from:'him'}
+            that.messages.push(message)
+            that.scrollToBottom("chatToBottom")
+        })
   }
 
 }

@@ -35,13 +35,13 @@ global.userConnection = userConnection;
 
 
 var cors = require("cors");
+// app.use(cors());
 app.use(cors());
 app.use(express.static(__dirname + '/views/frontend/dist'));
 app.use(formidableMiddleware());
 app.use('/images', express.static(__dirname + '/views/frontend/images'))
 app.use('/', require('./routes/home.js')(router))
 app.use('/api', VerifyToken, require('./routes/api.js')(router))
-
 
 
 // handles not found errors
@@ -70,9 +70,15 @@ app.use((err, req, res, next) => {
         res.status(err.httpStatusCode || 500).render('UnknownError');
     }
 });
-const io = require('socket.io')(http);
-io.listen(httpServer);
+const options = {
+    cors: true,
+    origins: ["http://localhost:3000"],
+}
+const io = require('socket.io')(httpServer, options);
 
+// io.listen(httpServer, {
+//     origins: allowedOrigins
+// });
 require("./app/controllers/chatController")(io)
 
 httpServer.listen(config.port_http, () => {

@@ -12,6 +12,7 @@
 import MessageComposer from "@/components/chats/message-composer/MessageComposer";
 import MessageFeed from "@/components/chats/message-feed/MessageFeed";
 import ConversationHeader from "@/components/chats/conversation/ConversationHeader";
+
 export default {
 name: "Conversation",
   components:{
@@ -26,14 +27,12 @@ name: "Conversation",
     messages:{
       type:Array,
       default: function () { return [] }
-
-
     }
 
   },
   methods:{
     sendMessage(text){
-      console.log(text)
+        this.$emit('message', {user: this.contact.id, text: text})
     }
   }
 }
