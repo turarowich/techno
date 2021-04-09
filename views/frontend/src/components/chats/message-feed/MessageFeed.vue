@@ -1,8 +1,7 @@
 <template>
-
-   <ul id="chatToBottom" class="feed-list " v-if="contact">
-     <li  v-for="message in messages" :class="`message${message.from === 'me' ? ' send' : ' received' }`" :key="message.id">
-      <div v-if="message.id == contact.id" class="text">
+   <ul id="chatToBottom" class="feed-list" v-if="contact">
+     <li  v-for="message in messages" :class="`message${message.isIncoming ? ' send' : ' received' }`" :key="message.id">
+      <div class="text">
         {{message.text}}
         <i class="send-text fas fa-check"></i>
       </div>
@@ -10,9 +9,6 @@
     <li class="emptySpace">
     </li>
    </ul>
-
-
-
 </template>
 
 <script>

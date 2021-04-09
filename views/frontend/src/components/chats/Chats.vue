@@ -41,8 +41,11 @@ import Conversation from "@/components/chats/conversation/Conversation";
 import Contacts from "@/components/chats/contacts/Contacts";
 import ChatProfile from "@/components/chats/chat-profile/ChatProfile";
 import io from "socket.io-client"
-const socket = io("http://localhost:8080")
-
+const socket = io("http://localhost:8080",{
+    extraHeaders: {
+        token: localStorage.getItem('token')
+    }
+})
 export default {
   name: "Chats",
   components:{
@@ -53,37 +56,10 @@ export default {
   data(){
     return{
       contactList:[
-        {id:1, name:"Bektemir Kudaiberdiev", email:'example@.com', last_visit:"18:28",},
-        {id:2, name:"Cristiano Ronaldo", email:'instance@.com',last_visit:"18:28",img_source:"https://akns-images.eonline.com/eol_images/Entire_Site/2020722/rs_634x1024-200822143134-634-Georgina-Rodriguez.cristiano-ronaldo.ct.082220.jpg?fit=around%7C634:1024&output-quality=90&crop=634:1024;center,top"},
-        {id:3, name:"Lionel Messi", email:'instance@.com',last_visit:"18:28"},
-        {id:4, name:"Neymar ", email:'instance@.com',last_visit:"18:28"},
-        {id:5, name:"Marcelo", email:'instance@.com',last_visit:"18:28"},
-        {id:5, name:"Marcelo", email:'instance@.com',last_visit:"18:28"},
-        {id:5, name:"Marcelo", email:'instance@.com',last_visit:"18:28"},
-        {id:5, name:"Marcelo", email:'instance@.com',last_visit:"18:28"},
-        {id:5, name:"Marcelo", email:'instance@.com',last_visit:"18:28"},
-        {id:5, name:"Marcelo", email:'instance@.com',last_visit:"18:28"},
-
 
       ],
       search:'',
       messages:[
-        {id:1 , text:"hello" , from:'me'},
-        {id:2 , text:"hi",from:'him'},
-        {id:3 , text:"Hello, Milena , we are happy to try! We are waiting for your new orders",from:'me',},
-        {id:4 , text:"sleeping",from:'him'},
-        {id:5 , text:"ok",from:'me'},
-        {id:1 , text:"hello" , from:'me'},
-        {id:2 , text:"hi",from:'him'},
-        {id:3 , text:"Hello, Milena , we are happy to try! We are waiting for your new orders",from:'me',},
-        {id:4 , text:"sleeping",from:'him'},
-        {id:5 , text:"ok",from:'me'},
-        {id:1 , text:"hello" , from:'me'},
-        {id:2 , text:"hi",from:'him'},
-        {id:3 , text:"Hello, Milena , we are happy to try! We are waiting for your new orders",from:'me',},
-        {id:4 , text:"sleeping",from:'him'},
-        {id:5 , text:"ok",from:'me'},
-
       ],
       selectedContact: null
     }
@@ -91,30 +67,59 @@ export default {
   computed:{
     filteredContact() {
       return this.contactList.filter(contact => {
-        return contact.name.toLowerCase().includes(this.search.toLowerCase())
+        return contact.firstName.toLowerCase().includes(this.search.toLowerCase())
       })
     }
   },
   methods:{
+    init () {
+        this.getClients()
+    },
+    getClients(){
+        console.log('got here')
+        this.axios.get(this.url('/getClients')).
+        then(result =>{
+            this.contactList = result.data.objects
+        });
+    },
     startConversation(contact){
       this.selectedContact = contact
-      socket.emit('init', contact.id)
+      this.messages = contact.messages
+      socket.emit('init', contact._id)
     },
     sendMessage(data){
         socket.emit('message', data)
-        let message = {id:data.user, text:data.text, from:'me'}
-        this.messages.push(message)
+        let message = {client:data.user, text:data.text, isIncoming: true}
+        
+        let index = this.contactList.findIndex(user => user._id === data.user );
+        if(index != undefined){
+            this.contactList[index].messages.push(message)
+        }
+
         this.scrollToBottom("chatToBottom")
     },
   },
   created() {
         let that = this
         socket.on("server message", function(data) {
-            let message = {id:data.user , text:data.text, from:'him'}
-            that.messages.push(message)
+            let message = {client:data.user , text:data.text, isIncoming: false}
+            let index = that.contactList.findIndex(user => user._id === data.user );
+            console.log(index);
+            if(index != undefined){
+                console.log(that.contactList[index].messages)
+                that.contactList[index].messages.push(message)
+                console.log(that.contactList[index].messages)
+            }
+            if(that.selectedContact._id == data.user){
+                that.messages  = that.contactList[index].messages
+            }
+            
             that.scrollToBottom("chatToBottom")
         })
-  }
+  },
+  mounted: function () {
+    this.init()
+ }
 
 }
 </script>

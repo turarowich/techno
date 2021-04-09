@@ -32,7 +32,7 @@ name: "Conversation",
   },
   methods:{
     sendMessage(text){
-        this.$emit('message', {user: this.contact.id, text: text})
+        this.$emit('message', {user: this.contact._id, text: text, isIncoming: true })
     }
   }
 }

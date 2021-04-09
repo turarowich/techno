@@ -2,7 +2,7 @@
   <div class="conversation-header d-flex align-items-center">
     <div class="d-flex align-items-center"  v-if="contact" style="height:100%">
       <img src="../../../assets/img/chat.jpg" >
-      <h5>{{contact.name}}</h5>
+      <h5>{{contact.firstName +' '+ contact.lastName}}</h5>
     </div>
       <h5 v-else>Select a contact</h5>
   </div>

@@ -75,10 +75,6 @@ const options = {
     origins: ["http://localhost:3000"],
 }
 const io = require('socket.io')(httpServer, options);
-
-// io.listen(httpServer, {
-//     origins: allowedOrigins
-// });
 require("./app/controllers/chatController")(io)
 
 httpServer.listen(config.port_http, () => {

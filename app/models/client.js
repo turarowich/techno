@@ -63,6 +63,10 @@ const clientSchema = new Schema({
         required: true,
         default: 0
     },
+    messages: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Message'
+    }],
     category: { 
         type: Schema.Types.ObjectId, 
         ref: 'Category' 
