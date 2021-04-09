@@ -81,12 +81,26 @@ class ProductController{
                 if (filename == 'Not image') {
                     result['status'] = 500
                     result['msg'] = filename
+                    throw new Error('file with name ' + req.files.img.name + ' not an image');
                 }else{
                     product.img = filename   
                 }
             }
+            
+            for(let $i=0; $i < 3; $i++){
+                if (req.files['imgArray' + $i]) {
+                    let filename = saveImage(req.files['imgArray' + $i], req.db)
+                    if (filename == 'Not image') {
+                        result['status'] = 500
+                        result['msg'] = filename
+                        throw new Error('file with name ' + req.files['imgArray' + $i].name + ' not an image');
+                    } else {
+                        product.imgArray.push(filename)
+                    }
+                }
+            }    
             product.save()
-            result['product'] = product
+            result['object'] = product
         } catch (error) {
             result = {
                 'status': 500,
@@ -115,11 +129,25 @@ class ProductController{
                 if (filename == 'Not image') {
                     result['status'] = 500
                     result['msg'] = filename
+                    throw new Error('file with name ' + req.files.img.name + ' not an image');
                 } else {
-                    product.img = filename
-                    product.save()
+                    product.img = filename   
                 }
             }
+            for (let $i = 0; $i < 3; $i++) {
+                if (req.files['imgArray' + $i]) {
+                    product.imgArray = []
+                    let filename = saveImage(req.files['imgArray' + $i], req.db)
+                    if (filename == 'Not image') {
+                        result['status'] = 500
+                        result['msg'] = filename
+                        throw new Error('file with name ' + req.files['imgArray' + $i].name + ' not an image');
+                    } else {
+                        product.imgArray.push(filename)
+                    }
+                }
+            }
+            product.save()
             result['object'] = product
         } catch (error) {
             console.log(error)

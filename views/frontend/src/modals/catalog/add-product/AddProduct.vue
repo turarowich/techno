@@ -60,8 +60,13 @@
 
                 <div class="modal-img ">
                   <label>Photos</label>
+                  
                   <p class="cashback-description">You can upload 4 more JPG or PNG photos, the minimum resolution is 400*400px, the size is not more than 3 MB.</p>
-                  <img src="../../../assets/img/modal-img.svg">
+                  
+                  <label for="imgArray">
+                      <img src="../../../assets/img/modal-img.svg">
+                      <input class="d-none" multiple id="imgArray" type="file" name="">
+                  </label>
                 </div>
 
                 <div class="modal-btn d-flex">
@@ -97,12 +102,13 @@ name: "AddProduct",
   methods:{
   onSubmit(){
     const new_product = this.newProduct;
-    const form_data = this.formToJson(new_product)
     const form  = new FormData;
-    form.append('name', form_data.name)
-    form.append('price', form_data.price)
-    form.append('quantity', form_data.quantity)
-
+    $.each($("#imgArray")[0].files, function(i, file) {
+        form.append('imgArray'+i, file);
+    });
+    form.append('name', new_product.name)
+    form.append('price', new_product.price)
+    form.append('quantity', new_product.quantity)
     this.axios.post(this.url('addProduct'), form)
         .then((response) => {
             console.log("success", response)
