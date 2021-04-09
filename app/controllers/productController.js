@@ -82,11 +82,10 @@ class ProductController{
                     result['status'] = 500
                     result['msg'] = filename
                 }else{
-                    product.img = filename
-                    product.save()
+                    product.img = filename   
                 }
             }
-            
+            product.save()
             result['product'] = product
         } catch (error) {
             result = {
