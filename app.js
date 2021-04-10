@@ -1,5 +1,5 @@
 const express = require('express');
-const app      = express();
+const app = express();
 const router = express.Router();
 const config = require('./config/config.js');
 const fs = require('fs');

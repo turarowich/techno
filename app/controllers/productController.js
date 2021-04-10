@@ -55,7 +55,7 @@ class ProductController{
         }
         try {
             let data = req.fields
-            
+            console.log(data)
             let product = await new Product({
                 name: data.name,
                 name_ru: data.name_ru,

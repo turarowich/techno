@@ -8,7 +8,7 @@ const categorySchema = new Schema({
     },
     type: {
         type: String,
-        required: [true, 'Type required'],
+        required: [false, 'Type required'],
     },
     createdAt: {
         type: Date,

@@ -8,7 +8,7 @@ const productSchema = new Schema({
     },
     name_ru: {
         type: String,
-        required: true,
+        required:false
     },
     category: {
         type: Schema.Types.ObjectId,
@@ -40,7 +40,7 @@ const productSchema = new Schema({
     },
     quantity: {
         type: Number,
-        required: false,
+        required: true,
         default: 0
     },
     price: {
