@@ -1,17 +1,14 @@
 <template>
-
-   <ul  class="feed-list" v-if="contact">
-     <li  v-for="message in messages" :class="`message${message.from === 'me' ? ' send' : ' received' }`" :key="message.id">
+   <ul id="chatToBottom" class="feed-list" v-if="contact">
+     <li  v-for="message in messages" :class="`message${message.isIncoming ? ' send' : ' received' }`" :key="message.id">
       <div class="text">
         {{message.text}}
         <i class="send-text fas fa-check"></i>
       </div>
      </li>
-
+    <li class="emptySpace">
+    </li>
    </ul>
-
-
-
 </template>
 
 <script>
@@ -66,7 +63,8 @@ justify-content: flex-end;
   border-radius: 5px;
   padding:10px 20px;
   margin-bottom: 10px;
-
+  max-width: calc(100% - 50px);
+  word-break: break-word;
 }
 .send .text{
   background: #616CF5;
@@ -75,7 +73,9 @@ justify-content: flex-end;
   color:#fff;
   margin-bottom: 10px;
   max-width: 50%;
-
-
+}
+.emptySpace{
+    display: flex;
+    height: 50px;
 }
 </style>

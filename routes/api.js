@@ -5,6 +5,8 @@ var categoryController = require('../app/controllers/categoryController');
 var reviewController = require('../app/controllers/reviewController');
 var orderController = require('../app/controllers/orderController');
 var userController = require('../app/controllers/userController');
+var newsController = require('../app/controllers/newsController');
+
 var multer = require('multer');
 var upload = multer({ dest: '../public/product/' });
 module.exports = function (app, network_information) {
@@ -49,6 +51,13 @@ module.exports = function (app, network_information) {
     app.post('/addOrder', orderController.addOrder);
     app.put('/updateOrder/:order', orderController.updateOrder);
     app.delete('/deleteOrder/:order', orderController.deleteOrder);
+
+    // News url
+    app.get('/getSingleNews/:news', newsController.getSingleNews);
+    app.get('/getNews', newsController.getNews);
+    app.post('/addNews', newsController.addNews);
+    app.put('/updateNews/:news', newsController.updateNews);
+    app.delete('/deleteNews/:news', newsController.deleteNews);
 
     // User url
     app.get('/getUser/:order', userController.getUser);

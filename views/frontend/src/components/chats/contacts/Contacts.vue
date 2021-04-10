@@ -1,9 +1,10 @@
 <template>
-  <li v-for="(contact,index) in contactList" :key="contact.id" :class="{'selected' : index === selected}" v-on:click="selectContact(index, contact)">
+    <div>  
+        <li v-for="(contact,index) in contactList" :key="contact.id" :class="{'selected' : index === selected}" v-on:click="selectContact(index, contact)">
         <div class="contact-list d-flex align-items-center">
           <img src="../../../assets/img/chat.jpg" class="avatar mr-1">
           <div>
-            <p class="contact-name m-0">{{contact.name}}</p>
+            <p class="contact-name m-0">{{contact.firstName +' '+ contact.lastName}}</p>
             <span  class="contact-span m-0">{{contact.email}}</span>
           </div>
         </div>
@@ -11,7 +12,7 @@
           <span class="contact-span">{{contact.last_visit}}</span>
         </div>
       </li>
-
+    </div>
 </template>
 
 <script>

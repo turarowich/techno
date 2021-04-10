@@ -76,9 +76,8 @@ name: "SignIn",
       data.append('password', this.login.password)
       this.axios.post('http://localhost:8080/login', data)
       .then((resp)=>{
-        this.$router.push('/orders')
-        console.log(resp.data.token)
         localStorage.setItem('token', resp.data.token)
+        this.$router.push('/orders')
       })
       .catch((error)=>{
         localStorage.removeItem('token')

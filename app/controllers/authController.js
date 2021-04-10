@@ -68,11 +68,16 @@ class AuthController{
     };
 
     loginClient = async function (req, res) {
-        let db = global.userConnection.useDb(req.headers['access_place']);
+        
+        
         let Client = db.model("Client");
+        let User = db.model("User");
 
+        let user = await User.findOne({ _id: req.headers['access_place'] }).select('+_db')
+        let db = global.userConnection.useDb(user._db);
+        
         try {
-            let user = await Client.findOne({ email: req.fields.email }).select('+password')
+            user = await Client.findOne({ email: req.fields.email }).select('+password')
             if (!user) return res.status(404).json({ status: 404, msg: 'No user found' });
 
             var passwordIsValid = bcrypt.compareSync(req.fields.password, user.password);

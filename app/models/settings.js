@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const clientSchema = new Schema({
-    firstName: {
+const settingsSchema = new Schema({
+    name: {
         type: String,
-        required: [true, 'FirstName required'],
+        required: [true, 'Company name required'],
     },
     lastName: {
         type: String,
@@ -13,23 +13,11 @@ const clientSchema = new Schema({
     phone: {
         type: String,
         required: false,
-        validate: {
-            validator: async function (phone) {
-                const user = await this.constructor.findOne({ phone });
-                if (user) {
-                    if (this.id === user.id) {
-                        return true;
-                    }
-                    return false;
-                }
-                return true;
-            },
-            message: props => 'The specified phone address is already in use.'
-        }
+        default: ''
     },
     email: {
         type: String,
-        required: false,
+        required: true,
         validate: {
             validator: async function (email) {
                 const user = await this.constructor.findOne({ email });
@@ -44,37 +32,25 @@ const clientSchema = new Schema({
             message: props => 'The specified email address is already in use.'
         }
     },
-    password: {
+    country: {
         type: String,
-        required: [true, 'Password required'],
-        select: false
-    },
-    birthDate: {
-        type: Date,
-        required: [true, 'Birthdate required'],
+        required: false,
+        default: ''
     },
     address: {
         type: String,
         required: false,
         default: ''
     },
-    balance: {
+    description: {
         type: Number,
         required: true,
         default: 0
     },
-    messages: [{
+    category: {
         type: Schema.Types.ObjectId,
-        ref: 'Message'
-    }],
-    category: { 
-        type: Schema.Types.ObjectId, 
-        ref: 'Category' 
+        ref: 'user'
     },
-    messages: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Message'
-    }],
     createdAt: {
         type: Date,
         required: true,
@@ -87,4 +63,4 @@ const clientSchema = new Schema({
     },
 })
 
-module.exports = mongoose.model('Client', clientSchema)
+module.exports = mongoose.model('Settings', settingsSchema)

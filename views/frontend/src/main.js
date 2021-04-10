@@ -22,13 +22,10 @@ import moment from 'moment';
 import Lightpick from 'lightpick'
 import axios from "axios";
 
-
-
 const app = createApp(App)
 app.use(router)
 
 let token = localStorage.getItem('token')
-console.log(token)
 
 const ax = axios.create({
     timeout: 1000,
@@ -47,6 +44,10 @@ app.config.globalProperties.$lightpick = Lightpick;
 app.config.globalProperties.$ = $
 app.config.globalProperties.axios = ax
 app.config.globalProperties.$api = "http://localhost:8080/api";
+
+app.config.globalProperties.scrollToBottom = function(obj){
+    $("#"+obj).scrollTop(1000000)
+}
 
 app.config.globalProperties.url = function (main, id = null, search = null) {
     let additional = '/'

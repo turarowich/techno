@@ -28,6 +28,8 @@ const initClientDbConnection = () => {
     require("../app/models/promocode.js")
     require("../app/models/order.js")
     require("../app/models/user.js")
+    require("../app/models/message.js")
+    require("../app/models/news.js")
     return db;
 };
 
