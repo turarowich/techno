@@ -1,6 +1,5 @@
 <template>
 <div>
-  <div class="line mt-0"></div>
   <NewsItem v-bind:news="news"/>
 </div>
 </template>

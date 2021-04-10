@@ -1,6 +1,9 @@
 <template>
+  <div>
+    <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg">Back | <span>Jacket / Polo ralph lauren</span> </div>
   <div class="row mt-5 mb-5">
     <div class="col-10 m-auto">
+
       <div class="row">
         <div class="col-lg-7 detail-right">
           <div class="product-img">
@@ -38,7 +41,7 @@
         </div>
       </div>
     </div>
-
+  </div>
   </div>
 </template>
 
@@ -66,7 +69,7 @@ export default {
     }
   },
   mounted(){
-    this.slide()
+    this.slide();
   }
 }
 </script>
@@ -95,49 +98,10 @@ export default {
   font-weight: 700;
   margin-bottom: 30px;
 }
-.decrease,.increase{
-  border: 1px solid #8C94A5;
-  border-radius: 5.54945px;
-  width: 26px;
-  height: 26px;
-  background: none;
-  color:#8C94A5;
-  margin-bottom: 30px;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-
-
-}
-.count{
-  margin: 0 12px;
-  width: 15px;
-  display: inline-block;
-  text-align: center;
-}
 .product-text{
   color: #999999;
   margin-bottom: 30px;
 }
-.slider-item{
-  height: 120px;
-  width: 80px !important;
-
-
-}
-.slider-item img{
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-.multiple-items{
-  margin: 60px 80px;
-}
-.detail-right{
-  padding-right: 50px;
-}
-
-
 </style>
 
 

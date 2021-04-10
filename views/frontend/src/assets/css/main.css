@@ -351,6 +351,8 @@ input[type="date"] {
     color: #8C94A5;
     background: #fff;
     transition: .3s;
+    display: flex;
+    align-items: center;justify-content: center;
 }
 .cancel:hover{
     border: 1px solid #676C78;
@@ -670,7 +672,7 @@ input[type="date"] {
     border-bottom: 1px solid #E4E4E4;
     width: 100%;
     height: 0;
-    margin: 30px 0;
+    margin-bottom: 23px;
 }
 .catalog-btn{
     background: #616CF5;
@@ -702,6 +704,120 @@ input[type="date"] {
     content: '-';
     padding:0 20px;
     background: url('../../assets/clients/slideRight.svg') no-repeat;
-
+}
+.slick-slide img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.slider-item {
+    height: 120px;
 }
 
+.multiple-items{
+  margin: 60px 80px;
+}
+.client-table-header{
+    display: flex;
+    margin-bottom: 20px;
+}
+.client-table-head{
+    color: #8C94A5;
+    font-size: 14px;
+}
+
+.decrease,.increase{
+    border: 1px solid #8C94A5;
+    border-radius: 5.54945px;
+    width: 26px;
+    height: 26px;
+    background: none;
+    color:#8C94A5;
+    margin-bottom: 30px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+.count{
+    margin: 0 10px;
+    width: 15px;
+    display: inline-block;
+    text-align: center;
+}
+
+.client-paragraph {
+    color: #606877;
+    font-size: 16px;
+    margin-bottom: 50px;
+}
+.path-img{
+    margin-right: 8px;
+}
+.show-path{
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    margin-bottom: 32px;
+    cursor:pointer;
+}
+.show-path span{
+    margin-left: 8px;
+    color: #B0B0B0;
+}
+.path-title{
+    font-size: 20px;
+    font-weight: 700;
+}
+.path-box{
+    margin-bottom: 55px;
+    cursor:pointer;
+}
+
+
+/*=========================Input slider in catalog======================*/
+.irs--flat {
+    margin-bottom: 30px;
+}
+.irs--flat .irs-handle {
+    top: 17px;
+    width: 18px;
+    height: 18px;
+    background: white;
+    border: 3px solid #616CF5;
+    border-radius: 18px;
+}
+.irs--flat .irs-handle>i:first-child{
+    background: none;
+}
+.irs--flat .irs-handle.state_hover>i:first-child, .irs--flat .irs-handle:hover>i:first-child {
+    background: none;
+}
+.irs--flat .irs-bar {
+    top: 25px;
+    height: 3px;
+    background-color: #616cf5;
+}
+.irs--flat .irs-line {
+    top: 25px;
+    height: 3px;
+    background-color: #e1e4e9;
+    border-radius: 4px;
+}
+.irs-from, .irs-to, .irs-single {
+    top: -20px;
+ }
+.irs--flat .irs-from, .irs--flat .irs-to, .irs--flat .irs-single {
+    color: white;
+    font-size: 12px;
+    padding: 7px 10px;
+    background-color: #616cf5;
+ }
+.irs--flat .irs-from:before, .irs--flat .irs-to:before, .irs--flat .irs-single:before {
+    border-top-color: #616cf5;
+}
+.irs--flat .irs-min, .irs--flat .irs-max {
+
+    display: none;
+}
+
+/*========================= End Input slider in catalog======================*/

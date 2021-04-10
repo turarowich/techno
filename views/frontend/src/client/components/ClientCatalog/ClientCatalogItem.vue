@@ -2,7 +2,7 @@
   <div class="row ">
     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 product-box" v-for="cat in catalog" :key="cat.id" @click="openDetail">
       <div class="product-img">
-        <img src="../../../assets/clients/hodie1.svg">
+        <img src="../../../assets/clients/shirt.svg">
       </div>
       <div class="product-add">
         <h2>{{cat.name}} </h2>
@@ -34,6 +34,11 @@ name: "ClientCatalogItem",
   width: 100%;
   margin-bottom: 10px;
   text-align: center;
+}
+.product-img img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 .product-add{
   font-weight: bold;

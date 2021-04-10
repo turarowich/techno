@@ -1,12 +1,16 @@
 <template>
+  <div>
 <nav class="navigation d-flex align-items-center justify-content-between">
     <a href="/" class="brand-navbar">Modius <span>Catalog</span></a>
     <ul class="client-menu">
       <li class="client-list"><router-link class="client-link" to="/home/about"><img src="../assets/clients/info.svg"/>About us</router-link></li>
       <li class="client-list"><router-link class="client-link" to="/home/news"><img src="../assets/clients/Profile.svg"/>Login</router-link></li>
-      <li class="client-list"><router-link class="client-link" to="/home"><img src="../assets/clients/Buy.svg"/>Basket</router-link></li>
+      <li class="client-list"><router-link class="client-link" to="/home/basket"><img src="../assets/clients/Buy.svg"/>Basket</router-link></li>
     </ul>
 </nav>
+
+    <div class="line"></div>
+  </div>
 </template>
 
 <script>

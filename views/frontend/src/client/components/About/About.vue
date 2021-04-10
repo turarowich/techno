@@ -1,23 +1,23 @@
 <template>
 <div class="about">
-  <div class="line mt-0"></div>
-<div class="row">
+  <div class="row">
   <div class="col-lg-7 mr-4">
     <div class="about-left">
+      <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg">Back | <span>{{$route.name}}</span> </div>
       <div class="main-box">
         <div class="relatives">
          </div>
       </div>
 
-      <h3 class="price about-title">About us</h3>
-      <p class="about-parag">Enter your real phone number and you will receive a confirmation codeEnter your real phone number and you will receive a confirmation
+      <h3 class="about-title">About us</h3>
+      <p class="client-paragraph">Enter your real phone number and you will receive a confirmation codeEnter your real phone number and you will receive a confirmation
         codeEnter your real phone number and you will receive a confirmation codeEnter your real phone number and you will recei...</p>
-      <button class=" catalog-btn"><a href="/home">Go to catalog</a></button>
+      <button class=" catalog-btn" @click="$router.push('/home')"><a>Go to catalog</a></button>
     </div>
   </div>
   <div class="col-lg-4">
     <div class="about-right">
-      <h2 class="about-name">Modius Catalog</h2>
+      <h2 class="shop-name">Modius Catalog</h2>
       <div class="line mt-0"></div>
 
       <h3 class="contact-title">Contacts</h3>
@@ -64,22 +64,18 @@ export default {
 }
 .main-box{
   height: 411px;
-  background: url('../../../assets/clients/main-box.svg');
+  background: url('../../../assets/clients/main-box.svg')no-repeat center;
   position: relative;
   border-radius: 5px;
-
+background-size:cover;
 }
 .about-title{
   margin: 30px 0;
+  font-size: 16px;
   font-weight: 600;
 }
-.about-parag{
-  color: #606877;
-  font-size: 15px;
-  margin-bottom: 50px;
-}
 
-.about-name{
+.shop-name{
   font-size: 28px;
   font-weight: 700;
   margin-bottom: 20px;

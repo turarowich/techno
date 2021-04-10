@@ -1,14 +1,18 @@
 <template>
   <div class="news">
     <div class="row">
-      <div class="col-4  news-box" v-for="newss in news" :key="newss.id">
+      <div class="col-lg-10 m-auto">
+
+        <div class="row">
+      <div class="col-4  news-box" v-for="newss in news" :key="newss.id" @click="openNewsDetail">
         <div class="new-img">
-          <img src="../../../assets/clients/Mask.svg">
+          <img src="../../../assets/clients/mask3.svg">
         </div>
         <span class="date">{{newss.data}}</span>
         <h4 class="news-content">{{newss.name}}</h4>
       </div>
-
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -16,7 +20,12 @@
 <script>
 export default {
   name: "NewsItem",
-  props:['news']
+  props:['news'],
+  methods:{
+    openNewsDetail(){
+      this.$router.push('/home/news-detail')
+    }
+  }
 }
 </script>
 

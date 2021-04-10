@@ -61,11 +61,14 @@
             <div class="table-head" style="width: 8%;"></div>
           </div>
           <div class="table-content" >
+
               <CatalogItem
+
                   v-bind:catalogList="catalogToDisplay"
                   v-on:deleteCatalog="deleteCatalog"
                   v-on:editCatalog="editCatalog"
               />
+
           </div>
           <div class="pagination d-flex justify-content-between align-items-center">
             <div class="d-flex align-items-center">
@@ -134,6 +137,10 @@ name: "Catalog",
         {id:6,name:"Shoues",article:"B3214PO", quantity:4, price: "370 $", category:'shoes'},
         {id:4,name:"T-shirts",article:"B3214PO", quantity:2, price: "220 $", category: 'clothes'},
         {id:5,name:"Jackets",article:"B3214PO", quantity:2, price: "220 $", category: 'clothes'},
+        {id:7,name:"Jackets",article:"B3214PO", quantity:2, price: "220 $", category: 'clothes'},
+        {id:8,name:"Jackets",article:"B3214PO", quantity:2, price: "220 $", category: 'clothes'},
+        {id:9,name:"Jackets",article:"B3214PO", quantity:2, price: "220 $", category: 'clothes'},
+        {id:10,name:"Jackets",article:"B3214PO", quantity:2, price: "220 $", category: 'clothes'},
       ],
       listCategory:[{id:0,name:''}],
       search:'',
@@ -214,10 +221,6 @@ name: "Catalog",
     },
     changeFilter(name){
       this.filtered = name;
-      this.catalogList.forEach(catalog=>{
-        return catalog.checked = false
-      })
-      $('#parent-check').prop('checked',false)
 
     },
     moveCategory(value){
@@ -254,12 +257,11 @@ name: "Catalog",
       $('.list-group .catalog-list').first().text('All');
     },
     toggleSelect: function() {
-      let select = this.selectAll
-      this.catalogList.filter((user)=> {
-        if(this.filtered === '' || this.filtered === user.category){
-          user.checked = !select
-        }
-      });
+      let select = this.selectAll;
+      this.catalogList.forEach((user)=>{
+        user.checked = !select;
+
+      })
     },
     sortByQunatity() {
       if(this.catalogToDisplay.length === 0){
@@ -306,8 +308,8 @@ name: "Catalog",
         }
       }).then((result) => {
         if (result.isConfirmed) {
-          this.catalogList = this.catalogList.filter(el=> el.id !== id);
-          this.renderPaginationList()
+          this.filteredList.filter(el=> el.id !== id);
+
           Swal.fire({
             title:'Success',
             timer:1500,
@@ -342,7 +344,7 @@ name: "Catalog",
       .then((res)=>{
         res.data.objects.map((item)=>{
           this.listCategory.push(item)
-          console.log(res)
+
         })
       })
     },
@@ -359,6 +361,7 @@ name: "Catalog",
     this.allCategory()
     this.getCategories()
     this.renderPaginationList()
+    this.getProducts()
   },
   watch: {
     perPage: function(){

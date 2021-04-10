@@ -3,7 +3,8 @@ import App from './App.vue'
 import 'slick-carousel/slick/slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css'
-
+import 'ion-rangeslider/js/ion.rangeSlider';
+import 'ion-rangeslider/css/ion.rangeSlider.min.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap'
 import '@fortawesome/fontawesome-free/css/all.css'

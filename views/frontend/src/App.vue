@@ -9,7 +9,7 @@
     />
   </div>
   <div class="main-content" v-bind:class="{hun: $route.name === 'SignUp' || $route.name === 'SignIn' || $route.path.includes('home')} ">
-    <Header  v-if="!['Settings', 'Loyalty','SignIn', 'SignUp','Home','News','About','CatalogDetail'].includes($route.name)"  v-bind:openSideBar="openSideBar"
+    <Header  v-if="!['Settings', 'Loyalty','SignIn', 'SignUp','Home','News','About','CatalogDetail','NewsDetail','Shopping cart','ClientAccount','PersonalInfo', 'EditProfile'].includes($route.name)"  v-bind:openSideBar="openSideBar"
               v-bind:total_order="total_order"
 
     />

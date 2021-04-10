@@ -15,7 +15,10 @@
     "bootstrap": "^4.6.0",
     "chart.js": "^2.9.4",
     "core-js": "^3.6.5",
+    "ion-rangeslider": "^2.3.1",
     "jquery": "^3.5.1",
+    "jquery-range": "^1.0.0",
+    "jrange": "^1.0.4",
     "lightpick": "^1.6.2",
     "moment": "^2.29.1",
     "popper.js": "^1.16.1",
@@ -25,6 +28,7 @@
     "sweetalert2": "^10.15.5",
     "vue": "^3.0.5",
     "vue-router": "^4.0.3",
+    "vue-scroll-behavior": "^0.3.0",
     "vue-sweetalert2": "^4.2.0",
     "vue2-animate": "^2.1.4",
     "vuex": "^3.6.2"

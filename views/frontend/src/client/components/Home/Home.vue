@@ -1,6 +1,6 @@
 <template>
   <div class="client">
-<div class="container">
+<div class="container client-container">
   <Navbar/>
   <router-view/>
 </div>
@@ -23,6 +23,9 @@ name: "Home",
 </script>
 
 <style scoped>
+.client-container{
+  max-width: calc(100vw - 240px);
+}
 .client{
   overflow-y: auto;
   height: 100%;

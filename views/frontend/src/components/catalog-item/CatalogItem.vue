@@ -10,8 +10,8 @@
     </div>
 
     <div v-else>
-      <div   v-for="catalog in  catalogList" class="catalog-item table-item d-flex align-items-center" :key="catalog.id">
-        <div  style="width: 5%;"><label class="custom-checkbox"><input type="checkbox" :value="catalog" v-model="catalog.checked">
+      <div  v-for="catalog in  catalogList" class="catalog-item table-item d-flex align-items-center" :key="catalog.id">
+        <div  style="width: 5%;"><label class="custom-checkbox"><input ref="catalog" type="checkbox" :value="catalog" v-model="catalog.checked">
           <span class="checkmark"></span></label>
         </div>
 

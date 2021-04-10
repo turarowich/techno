@@ -12,8 +12,13 @@ import Home from "@/client/components/Home/Home";
 import About from "@/client/components/About/About";
 import Dashboard from "@/client/components/Dashboard/Dashboard";
 import News from "@/client/components/News/News";
-import auth from '../middle-ware/auth';
+// import auth from '../middle-ware/auth';
 import CatalogDetail from "@/client/components/ClientCatalog/CatalogDetail";
+import NewsDetail from "@/client/components/News/NewsDetail";
+import Basket from "@/client/components/Basket/Basket";
+import ClientAccount from "@/client/components/ClientAccount/ClientAccount";
+import PersonalInfo from "@/client/components/PersonalInfo/PersonalInfo";
+import EditProfile from "@/client/components/EditProfile/EditProfile";
 
 
 
@@ -28,9 +33,7 @@ const routes = [
         path: "/orders",
         name: "Orders",
         component: Orders,
-        meta:{
-            middleware: auth
-        }
+
     },
     {
         path: "/home",
@@ -55,9 +58,36 @@ const routes = [
             {
                 path:'catalog-detail',
                 name:"CatalogDetail",
-                component:CatalogDetail
+                component:CatalogDetail,
+
             },
-        ]
+            {
+                path:'news-detail',
+                name:"NewsDetail",
+                component:NewsDetail
+            },
+            {
+                path:'basket',
+                name:"Shopping cart",
+                component:Basket
+            },
+            {
+                path:'client-account',
+                name:"ClientAccount",
+                component:ClientAccount
+            },
+            {
+                path:'personal-info',
+                name:'PersonalInfo',
+                component:PersonalInfo
+            },
+            {
+                path:'edit-profile',
+                name:'EditProfile',
+                component:EditProfile
+            },
+        ],
+
 
 
     },
@@ -65,50 +95,38 @@ const routes = [
         path: "/clients",
         name: "Clients",
         component: Clients,
-        meta:{
-            middleware: auth
-        }
+
     },
     {
         path: "/loyalty",
         name: "Loyalty",
         component: Loaylty,
-        meta:{
-            middleware: auth
-        }
+
 
     },
     {
         path: "/chats",
         name: "Chats",
         component: Chats,
-        meta:{
-            middleware: auth
-        }
+
     },
     {
         path: "/catalog",
         name: "Catalog",
         component: Catalog,
-        meta:{
-            middleware: auth
-        }
+
     },
     {
         path:'/analytics',
         name:"Analytics",
         component: Analytics,
-        meta:{
-            middleware: auth
-        }
+
     },
     {
         path:'/settings',
         name:"Settings",
         component: Settings,
-        meta:{
-            middleware: auth
-        }
+
     },
     {
         path:'/signup',
@@ -121,9 +139,15 @@ const routes = [
     },
 ];
 
+
+
 const index = createRouter({
     history: createWebHistory(),
     routes,
+
+
+
+
 });
 
 // Creates a nextMiddleware() function which not only
