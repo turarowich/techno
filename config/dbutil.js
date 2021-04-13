@@ -16,11 +16,8 @@ const db_admin_name = config.admin;
 const db_admin_password = config.password;
 const initClientDbConnection = () => {
     mongoose.set('useFindAndModify', false);
-    const db = mongoose.createConnection(`mongodb://${db_admin_name}:${db_admin_password}@localhost/`, clientOption);
-    db.on("error", console.error.bind(console, "MongoDB Connection Error>> : "));
-    db.once("open", function () {
-        console.log("client MongoDB Connection ok!");
-    });
+    const db = mongoose.createConnection(`mongodb://${db_admin_name}:${db_admin_password}@127.0.0.1:27017/admin`, clientOption);
+
     require("../app/models/client.js")
     require("../app/models/category.js")
     require("../app/models/product.js")
