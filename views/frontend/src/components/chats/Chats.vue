@@ -81,7 +81,7 @@ export default {
     },
     getClients(){
         console.log('got here')
-        this.axios.get(this.url('/getClients')).
+        this.axios.get(this.url('getClients')).
         then(result =>{
             this.contactList = result.data.objects
         });
