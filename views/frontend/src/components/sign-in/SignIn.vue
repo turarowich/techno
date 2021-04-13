@@ -75,7 +75,7 @@ name: "SignIn",
       data.append('email', this.login.email)
       data.append('password', this.login.password)
       
-      this.axios.post(this.url('login'), data)
+      this.axios.post('/login', data)
       .then((resp)=>{
         localStorage.setItem('token', resp.data.token)
         this.$router.push('/orders')
