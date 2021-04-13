@@ -10,5 +10,7 @@ module.exports = {
     ip: address,
     secret_key: 'sasdfsdfasdfh',
     admin:'AdminMono',
-    password:'123123123'
+    password:'123123123',
+    privateKey: 'ssl/loygift.key',
+    certificate: 'ssl/loygift.crt',
 };

@@ -41,10 +41,11 @@ import Conversation from "@/components/chats/conversation/Conversation";
 import Contacts from "@/components/chats/contacts/Contacts";
 import ChatProfile from "@/components/chats/chat-profile/ChatProfile";
 import io from "socket.io-client"
-const socket = io("http://localhost:8080",{
+const socket = io({
     extraHeaders: {
         token: localStorage.getItem('token')
-    }
+    },
+    withCredentials: true,
 })
 export default {
   name: "Chats",
@@ -66,9 +67,12 @@ export default {
   },
   computed:{
     filteredContact() {
-      return this.contactList.filter(contact => {
-        return contact.firstName.toLowerCase().includes(this.search.toLowerCase())
-      })
+        if(this.contactList){
+            return this.contactList.filter(contact => {
+                return contact.firstName.toLowerCase().includes(this.search.toLowerCase())
+            })
+        }
+        return []
     }
   },
   methods:{

@@ -29,7 +29,7 @@ const ax = axios.create({
     timeout: 1000,
     proxy: {
         host: 'localhost',
-        port: 8080
+        port: 8443
     },
     headers: {
         'x-access-token': token,
@@ -41,7 +41,7 @@ app.config.globalProperties.$moment = moment;
 app.config.globalProperties.$lightpick = Lightpick;
 app.config.globalProperties.$ = $
 app.config.globalProperties.axios = ax
-app.config.globalProperties.$api = "http://localhost:8080/api";
+app.config.globalProperties.$api = "https://localhost:8443/api";
 
 app.config.globalProperties.scrollToBottom = function(obj){
     $("#"+obj).scrollTop(1000000)

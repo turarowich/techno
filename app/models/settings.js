@@ -6,9 +6,9 @@ const settingsSchema = new Schema({
         type: String,
         required: [true, 'Company name required'],
     },
-    lastName: {
+    slogan: {
         type: String,
-        required: [true, 'LastName required'],
+        required: [true, 'Slogan required'],
     },
     phone: {
         type: String,

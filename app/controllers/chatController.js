@@ -9,7 +9,6 @@ module.exports = io => {
         verifyTokenSocket(socket, next)
     });
     io.on('connection', (socket) => {
-
         socket.on("details", listener)
         socket.on('init', (user) => {
             console.log("client joined ")

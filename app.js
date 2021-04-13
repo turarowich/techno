@@ -9,9 +9,8 @@ const bodyParser = require('body-parser');
 const http = require('http');
 const https = require('https');
 
-
-const privateKey = fs.readFileSync('ssl/loygift.key', 'utf8');
-const certificate = fs.readFileSync('ssl/loygift.crt', 'utf8');
+const privateKey = fs.readFileSync(config.privateKey, 'utf8');
+const certificate = fs.readFileSync(config.certificate, 'utf8');
 const credentials = { key: privateKey, cert: certificate };
 
 const httpServer = http.createServer(app);
@@ -35,13 +34,13 @@ global.userConnection = userConnection;
 
 
 var cors = require("cors");
-// app.use(cors());
 app.use(cors());
 app.use(express.static(__dirname + '/views/frontend/dist'));
 app.use(formidableMiddleware());
 app.use('/images', express.static(__dirname + '/views/frontend/images'))
-app.use('/', require('./routes/home.js')(router))
 app.use('/api', VerifyToken, require('./routes/api.js')(router))
+app.use('/', require('./routes/home.js')(router))
+
 
 
 // handles not found errors
@@ -70,11 +69,14 @@ app.use((err, req, res, next) => {
         res.status(err.httpStatusCode || 500).render('UnknownError');
     }
 });
-const options = {
-    cors: true,
-    origins: ["http://localhost:3000"],
-}
-const io = require('socket.io')(httpServer, options);
+
+const io = require('socket.io')(httpsServer, {
+    cors: {
+        methods: ["GET", "POST"],
+        credentials: true
+    },
+    path: '/socket.io',
+});
 require("./app/controllers/chatController")(io)
 
 httpServer.listen(config.port_http, () => {

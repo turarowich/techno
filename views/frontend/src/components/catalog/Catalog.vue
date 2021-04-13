@@ -351,13 +351,13 @@ name: "Catalog",
       .then((response)=>{
         console.log(response)
       })
-      // const idx = this.listCategory.findIndex(el=>el.id === id);
-      // this.$refs[Object.keys(this.$refs)[idx-1]].click()
+
     },
   },
   mounted(){
     this.allCategory()
     this.getCategories()
+    this.getProducts()
     this.renderPaginationList()
   },
   watch: {
