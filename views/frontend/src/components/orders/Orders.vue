@@ -381,7 +381,8 @@ name: "Orders",
 }
 .orders{
   margin: 0 30px;
-  height:100%;
+  height:calc(100vh - 90px);
+  overflow: hidden;
 }
 .total-order img, .date-order img{
   margin-left: 0;

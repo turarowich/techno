@@ -3,7 +3,7 @@
   <div class="row">
   <div class="col-lg-7 mr-4">
     <div class="about-left">
-      <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg">Back | <span>{{$route.name}}</span> </div>
+      <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg"><div @click="$router.go(-1)" class="mr-1">Back </div>  | <span>{{$route.name}}</span> </div>
       <div class="main-box">
         <div class="relatives">
          </div>

@@ -18,21 +18,21 @@
         </div>
         <div class="col-lg-9">
           <div class="row">
-            <div class="col-lg-4 col-md-4 col-sm-6 pl-0">
+            <div class="col-lg-4 col-md-4 col-sm-6 pl-0" @click="openNews">
               <div class="new-img">
                 <img src="../../../assets/clients/Mask.svg">
               </div>
               <span class="date">12 Dec, 2021</span>
               <h4 class="news-content">New promotion, buy everything with a 20% discount!!!</h4>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 pl-0">
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 pl-0" @click="openNews">
               <div class="new-img">
                 <img src="../../../assets/clients/mask2.svg">
               </div>
               <span class="date">12 Dec, 2021</span>
               <h4 class="news-content">New promotion, buy everything with a 20% discount!!!</h4>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-6 pl-0">
+            <div class="col-lg-4 col-md-4 col-sm-6 pl-0" @click="openNews">
               <div class="new-img">
                 <img src="../../../assets/clients/mask3.svg">
               </div>
@@ -54,6 +54,11 @@ export default {
 name: "Dashboard",
   components:{
     ClientCatalog
+  },
+  methods:{
+    openNews(){
+      this.$router.push('/home/news-detail')
+    },
   }
 }
 </script>

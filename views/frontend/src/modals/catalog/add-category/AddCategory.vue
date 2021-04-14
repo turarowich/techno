@@ -40,10 +40,18 @@
 </template>
 
 <script>
+
 import $ from 'jquery'
 export default {
 name: "AddCategory",
-  props:['listCategory'],
+  props:{
+    listCategory:{
+      type:Array,
+      required:true
+    },
+
+
+  },
 
   data(){
     return{
@@ -56,14 +64,10 @@ name: "AddCategory",
     onSubmit(){
       const data = new FormData();
       data.append('name', this.new_category.name)
-      this.axios.post(this.url('AddCategory'),data)
-        .then((response)=>{
-          console.log('Success ', response.data.object)
-        })
-        .catch((error)=>{
-          console.log("Error"+error)
-      })
+      this.$store.dispatch('addCategory',data)
+      this.$store.dispatch('getCategories')
       $('#add-category').modal("hide")
+      this.new_category.name = ''
     }
   }
 }

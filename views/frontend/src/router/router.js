@@ -1,4 +1,5 @@
 import { createWebHistory, createRouter } from "vue-router";
+
 import SignIn from "@/components/sign-in/SignIn";
 import SignUp from "@/components/sign-up/SignUp";
 import Orders from "@/components/orders/Orders";
@@ -137,15 +138,19 @@ const routes = [
         path: '/:pathMatch(.*)*',
         redirect: "/"
     },
-];
+]
 
 
 
-const index = createRouter({
+const router = createRouter({
     history: createWebHistory(),
+    scrollBehavior (to,from ,savedPosition) {
+        if(savedPosition){
+            return savedPosition
+        }
+        return { top:0}
+    },
     routes,
-
-
 
 
 });
@@ -169,7 +174,8 @@ function nextFactory(context, middleware, index) {
     };
 }
 
-index.beforeEach((to, from, next) => {
+router.beforeEach((to, from, next) => {
+
     if (to.meta.middleware) {
         const middleware = Array.isArray(to.meta.middleware) ?
             to.meta.middleware : [to.meta.middleware];
@@ -177,7 +183,7 @@ index.beforeEach((to, from, next) => {
         const context = {
             from,
             next,
-            router: index,
+            router: router,
             to,
         };
         const nextMiddleware = nextFactory(context, middleware, 1);
@@ -190,4 +196,4 @@ index.beforeEach((to, from, next) => {
 
 
 
-export default index;
+export default router;

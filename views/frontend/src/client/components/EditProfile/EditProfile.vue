@@ -1,7 +1,7 @@
 <template>
 <div class="container container-profile">
   <div class="profile-content">
-    <div class="d-flex align-items-center path-box mt-5"><img class="mr-3" src="../../../assets/clients/slide.svg"><h3 class="path-title">Edit profile</h3></div>
+    <div class="d-flex align-items-center path-box mt-5" @click="$router.go(-1)"><img class="mr-3" src="../../../assets/clients/slide.svg"><h3 class="path-title">Edit profile</h3></div>
 
 
     <form class="edit-form">

@@ -25,6 +25,9 @@ name: "News",
       {id:9, data:'12 Dec 2021', name:'New promotion, buy everything with a 20% discount!!!'},
     ]
   }
+  },
+  methods:{
+
   }
 }
 </script>

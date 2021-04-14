@@ -76,16 +76,14 @@ export default {
  width: calc(100% - 250px);
   margin-left: 250px;
   font-size: 14px;
-overflow-y: hidden;
- height: 100vh;
+  /*overflow-y: hidden;*/
+  /* height: 100vh;*/
 }
 .hun{
   width: 100%;
   margin-left: 0;
 }
-.router-view{
-  height: 100%;
-}
+
 .siding-bar{
   min-width: 250px;
  max-width: 250px;

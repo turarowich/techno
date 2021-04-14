@@ -50,6 +50,22 @@
             </li>
           </ul>
         </div>
+        <AddService/>
+        <Edit :edit_catalog="edit_catalog"
+              :catalogList="catalogList"
+              @editedCatalogSubmit="editedCatalogSubmit"
+              :listCategory="listCategory"
+        />
+        <AddCategory
+            :listCategory="listCategory"
+        />
+        <AddProduct
+
+            :listCategory="listCategory"/>
+
+        <EditCategory
+            :listCategory="listCategory"
+            :edit_category="edit_category"/>
         <div class="catalog-content" style="width:82%">
           <div class="d-flex main-content-header">
             <div class="table-head" style="width: 5%;"><label class="custom-checkbox"><input id="parent-check" type="checkbox"  @click="toggleSelect()" :checked="selectAll"><span class="checkmark"></span></label></div>
@@ -89,26 +105,12 @@
         </div>
       </div>
     </div>
-    <AddService/>
-    <Edit :edit_catalog="edit_catalog"
-          :catalogList="catalogList"
-          @editedCatalogSubmit="editedCatalogSubmit"
-          :listCategory="listCategory"
-    />
-    <AddCategory
-      :listCategory="listCategory"
-    />
-    <AddProduct
 
-        :listCategory="listCategory"/>
-
-    <EditCategory
-        :listCategory="listCategory"
-        :edit_category="edit_category"/>
   </div>
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
 import CatalogItem from "@/components/catalog-item/CatalogItem";
 import AddProduct from "@/modals/catalog/add-product/AddProduct";
 import AddService from "@/modals/catalog/add-service/AddService";
@@ -117,7 +119,6 @@ import AddCategory from "@/modals/catalog/add-category/AddCategory";
 import EditCategory from "@/modals/catalog/add-category/EditCategory";
 import Swal from 'sweetalert2';
 import $ from 'jquery';
-
 export default {
 name: "Catalog",
   components:{
@@ -142,7 +143,7 @@ name: "Catalog",
         {id:9,name:"Jackets",article:"B3214PO", quantity:2, price: "220 $", category: 'clothes'},
         {id:10,name:"Jackets",article:"B3214PO", quantity:2, price: "220 $", category: 'clothes'},
       ],
-      listCategory:[{id:0,name:''}],
+
       search:'',
       sorting:true,
       filtered: '',
@@ -157,6 +158,7 @@ name: "Catalog",
     }
   },
   computed:{
+    ...mapGetters(['listCategory']),
     selectAll: function() {
         return this.catalogList.every(function(user){
           return user.checked
@@ -339,15 +341,7 @@ name: "Catalog",
               console.log(response)
             })
     },
-    getCategories:function(){
-      this.axios.get(this.url('getCategories'))
-      .then((res)=>{
-        res.data.objects.map((item)=>{
-          this.listCategory.push(item)
 
-        })
-      })
-    },
     deleteCategory(id){
       this.axios.delete(this.url('deleteCategory',id))
       .then((response)=>{
@@ -356,12 +350,17 @@ name: "Catalog",
       // const idx = this.listCategory.findIndex(el=>el.id === id);
       // this.$refs[Object.keys(this.$refs)[idx-1]].click()
     },
+    getCategories(){
+      this.$store.dispatch('getCategories')
+    }
+
+
   },
   mounted(){
     this.allCategory()
     this.getCategories()
     this.renderPaginationList()
-    this.getProducts()
+
   },
   watch: {
     perPage: function(){
@@ -384,6 +383,8 @@ name: "Catalog",
 <style scoped>
 .catalog{
   margin: 0 30px;
+  height: calc(100vh - 90px);
+  overflow: hidden;
 }
 .catalog-list{
   list-style-type: none;

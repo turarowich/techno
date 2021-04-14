@@ -326,6 +326,8 @@ export default {
 <style scoped>
 .client{
   margin: 0 30px;
+  height: calc(100vh - 90px);
+  overflow:hidden;
 }
 .adding-btns{
   background: #E9ECFF;

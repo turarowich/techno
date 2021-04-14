@@ -1,9 +1,9 @@
 <template>
 <div>
-  <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg">Back | <span>Shopping cart</span>
+  <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg"><div @click="$router.go(-1)" class="mr-1">Back </div> | <span>Shopping cart</span>
 
   </div>
-  <div class="d-flex align-items-center path-box"><img class="mr-2" src="../../../assets/clients/slide.svg"><h3 class="path-title">{{$route.name}}</h3></div>
+  <div class="d-flex align-items-center path-box" @click="$router.go(-1)"><img class="mr-2" src="../../../assets/clients/slide.svg"><h3 class="path-title">{{$route.name}}</h3></div>
   <div class="client-table-header">
     <div class="client-table-head" style="width:40%">Products</div>
     <div class="client-table-head" style="width:20%">Amount</div>
@@ -12,7 +12,10 @@
     <div class="client-table-head" style="width: 12%"></div>
 
   </div>
-  <BasketItem v-bind:shoppingList="shoppingList"/>
+  <BasketItem
+      :shoppingList="shoppingCart"
+      :countTotalPrice="countTotalPrice"
+  />
 
   <div>
     <div class="row confirm">
@@ -24,7 +27,7 @@
       <div class="col-lg-4">
         <div class="confirm-order">
           <h3>Discount</h3>
-          <span class="discount">0%</span>
+          <span class="discount">50 %</span>
         </div>
         <div class="confirm-order">
           <h3>Delivery</h3>
@@ -34,11 +37,11 @@
 
         <div class="total d-flex justify-content-between mb-4">
           <h3>Total</h3>
-          <h3>500$</h3>
+          <h3>{{totalPrice}}$</h3>
         </div>
         <div class="confirm-btns d-flex justify-content-between">
-          <button class="confirm-continue-btn">Continue shopping</button>
-          <button class="confirm-order-btn" @click="confirm">Confirm order</button>
+          <button class="confirm-continue-btn cancel" v-show="shoppingCart.length>0" @click="$router.go(-2)">Continue shopping</button>
+          <button class="confirm-order-btn save" @click="confirm">Confirm order</button>
         </div>
       </div>
     </div>
@@ -48,25 +51,48 @@
 
 <script>
 import BasketItem from "@/client/components/Basket/BasketItem";
+import {mapGetters} from 'vuex'
+
 export default {
 name: "Basket",
   components:{
-    BasketItem
+    BasketItem,
   },
   data(){
-    return{
-      shoppingList:[
-        {id:1, name:'Polo ralph lauren', code:'1617W11F', count:0, price:'250$'},
-        {id:2, name:'Polo ralph lauren', code:'1617W11F', count:0, price:'250$'},
-        {id:3, name:'Polo ralph lauren', code:'1617W11F', count:0, price:'250$'},
-      ]
+  return{
+    totalPrice: 0
   }
   },
+
+
+  computed:{
+  ...mapGetters(["shoppingCart"])
+  },
   methods:{
-  confirm(){
-    this.$router.push('/home/personal-info')
+    confirm(){
+      if(this.shoppingCart.length === 0){
+        this.$warningAlert("Your shopping is empty")
+      }
+      else{
+        this.$router.push('/home/personal-info')
+      }
+      },
+    countTotalPrice(){
+        var total = 0
+        for ( var i = 0, _len = this.shoppingCart.length; i < _len; i++ ) {
+          total += this.shoppingCart[i]['count']*this.shoppingCart[i]['price']
+        }
+        this.totalPrice = total;
+
+    }
+  },
+  mounted(){
+  this.countTotalPrice()
+
   }
-  }
+
+
+
 }
 </script>
 
@@ -99,30 +125,11 @@ name: "Basket",
 .free{
   color: #5CBD85;
 }
-.confirm-order-btn{
-  background: #616CF5;
-  border-radius: 5px;
-  color:#fff;
-  height:37px;
-  display: flex;
-  align-items: center;
+.confirm-order-btn, .confirm-continue-btn{
+  width:inherit;
   padding:0 20px;
-  font-size: 16px;
-  transition: .3s;
-  border:none;
-  justify-content: center;
 }
-.confirm-continue-btn{
-  border: 1px solid #D3D3D3;
-  box-sizing: border-box;
-  border-radius: 5px;
-padding:0 20px;
-  height:37px;
-  font-size: 16px;
-  color: #8C94A5;
-  background: #fff;
-  transition: .3s;
-}
+
 .total h3{
   font-size: 26px;
 }

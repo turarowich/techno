@@ -8,11 +8,7 @@ const productSchema = new Schema({
     },
     name_ru: {
         type: String,
-<<<<<<< HEAD
-        required:false
-=======
         required: false,
->>>>>>> 0137cfd57155b29648ec4b4e3b5a8ff7cfdc3f72
     },
     category: {
         type: Schema.Types.ObjectId,

@@ -9,11 +9,11 @@
     <div class="d-flex mb-5">
       <div style="width:40%" class="mr-3">
         <label class="label-client">From</label>
-        <input class="client-input" style="width:100%">
+        <input class="client-input" v-model="from" style="width:100%">
       </div>
       <div style="width:40%">
         <label class="label-client">To</label>
-        <input class="client-input" style="width:100%">
+        <input class="client-input" v-model="to" style="width:100%">
       </div>
     </div>
     <input type="text" id="range-slider" name="example_name" value="" />
@@ -21,10 +21,7 @@
 
     <h3 class="price">Categories:</h3>
     <ul class="list-group">
-
-      <li class="catalog-list active" @click="filtered=''">All</li>
-      <li class="catalog-list"  @click="filtered='shoes'">Shoes</li>
-      <li class="catalog-list"  @click="filtered='clothes'">Clothes</li>
+      <li v-for="category in listCategory" :key="category.id" :class="{active: category.name === filtered}" class="catalog-list" @click="filtered=category.name">{{category.name}}</li>
     </ul>
     </div>
   </div>
@@ -36,6 +33,7 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex';
 import $ from 'jquery';
 import ClientCatalogItem from "@/client/components/ClientCatalog/ClientCatalogItem";
 
@@ -46,19 +44,10 @@ name: "Catalog",
   },
   data(){
   return{
-    catalog:[
-      {id:1, name:'Shoes', code:'1617W11F', price:'15 $',category:'shoes'},
-      {id:2, name:'Shoes', code:'1617W11F', price:'15 $',category:'shoes'},
-      {id:3, name:'Shoes', code:'1617W11F', price:'15 $',category:'shoes'},
-      {id:4, name:'Shoes', code:'1617W11F', price:'15 $',category:'shoes'},
-      {id:10, name:'Shoes', code:'1617W11F', price:'15 $',category:'shoes'},
-      {id:5, name:'Clothes', code:'1617W11F', price:'15 $',category:'clothes'},
-      {id:6, name:'Clothes', code:'1617W11F', price:'15 $',category:'clothes'},
-      {id:7, name:'Clothes', code:'1617W11F', price:'15 $',category:'clothes'},
-      {id:8, name:'Clothes', code:'1617W11F', price:'15 $',category:'clothes'},
-      {id:9, name:'Clothes', code:'1617W11F', price:'15 $',category:'clothes'},
-    ],
-    filtered: ''
+    filtered: '',
+    from:0,
+    to:0,
+
   }
   },
   computed:{
@@ -67,10 +56,23 @@ name: "Catalog",
           .filter(product => {
             return !product.category.indexOf(this.filtered)
           })
+        .filter((product)=>{
+            return product.price >= this.from && product.price <= this.to
+        })
     },
+   ...mapGetters(['listCategory', 'catalog'])
+
+
   },
   methods:{
-
+    getRangeValues(){
+      const slider = $("#range-slider").data("ionRangeSlider");
+      this.from = slider.result.from;
+      this.to = slider.result.to;
+      },
+    allCategory(){
+      $('.catalog-list').first().text('All');
+    },
     rangeSlider(){
       $("#range-slider").ionRangeSlider({
         type: "double",
@@ -78,25 +80,23 @@ name: "Catalog",
         max: 1000,
         from: 10,
         to: 800,
-        prefix: "$"
+        prefix: "$",
+        onChange: (data)=>{
+          this.from = data.from;
+          this.to = data.to
+        }
       });
     },
-    addClassToScroll(){
-      $(window).scroll(function() {
-        var scroll = $(window).scrollTop();
-
-        //>=, not <=
-        if (scroll >= 500) {
-          //clearHeader, not clearheader - caps H
-          $(".catalog-list").addClass("bektemir");
-        }
-      })
+    getCategories(){
+      this.$store.dispatch('getCategories')
     }
-  },
+    },
   mounted(){
     this.rangeSlider()
-    this.addClassToScroll()
-  }
+    this.allCategory()
+    this.getRangeValues()
+    this.getCategories()
+}
 
 }
 </script>
@@ -105,9 +105,6 @@ name: "Catalog",
 
 .catalog{
   color:#222222;
-}
-.catalog-list.bektemir{
-  color:red;
 }
 
 .catalog-left{

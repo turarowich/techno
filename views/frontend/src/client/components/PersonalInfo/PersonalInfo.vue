@@ -2,7 +2,7 @@
 <div class="row">
   <div class="col-lg-5 col-md-8 col-sm-10 col-xs-12 m-auto">
       <div class="personal-info">
-        <div class="d-flex align-items-center path-box mt-5 "><img class="mr-3" src="../../../assets/clients/slide.svg"><h3 class="path-title">Personal information</h3></div>
+        <div class="d-flex align-items-center path-box mt-5 " @click="$router.go(-1)"><img class="mr-3" src="../../../assets/clients/slide.svg"><h3 class="path-title">Personal information</h3></div>
 
         <form>
               <label class="personal-label">Name</label><br>
