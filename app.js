@@ -52,12 +52,11 @@ app.use('/', require('./routes/home.js')(router))
 
 
 // handles not found errors
-app.error(function(err, req, res, next){
-    if (err instanceof NotFound) {
-        res.sendFile(path.resolve('views/frontend/dist/index.html'));
-    } else {
-        next(err);
+app.use((err, req, res, next) => {
+    if (err.httpStatusCode === 404) {
+        res.status(400).render('NotFound');
     }
+    next(err);
 });
 
 // handles unauthorized errors
