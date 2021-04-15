@@ -79,10 +79,10 @@ const io = require('socket.io')(httpsServer, {
 });
 require("./app/controllers/chatController")(io)
 
-httpServer.listen(config.port_http, () => {
-    console.log(`App listening at http://${config.localhost}:${config.port_http}`);
-    console.log(`App listening at http://${config.ip}:${config.port_http}`);
-})
+// httpServer.listen(config.port_http, () => {
+//     console.log(`App listening at http://${config.localhost}:${config.port_http}`);
+//     console.log(`App listening at http://${config.ip}:${config.port_http}`);
+// })
 httpsServer.listen(config.port_https, () => {
     console.log(`App listening at https://${config.localhost}:${config.port_https}`);
     console.log(`App listening at https://${config.ip}:${config.port_https}`);
