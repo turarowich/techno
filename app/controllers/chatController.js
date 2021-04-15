@@ -12,10 +12,13 @@ module.exports = io => {
         socket.on("details", listener)
         socket.on('init', (user) => {
             console.log("client joined ")
+            console.log(user)
             socket.join(user)
         });
         socket.on('message', (data) => {
             addMessage(socket, data)
+            console.log('sendiing message')
+            console.log(data)
             socket.join(data.user)
             socket.broadcast.to(data.user).emit("server message", data)
         });
