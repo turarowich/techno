@@ -11,6 +11,7 @@ module.exports = function(app, network_information){
     app.post('/login', authController.login);
     app.post('/loginClient', authController.loginClient);
     app.get('*', function (req, res) {
+        if (req.url.includes('socket.io')) return next();
         res.sendFile(path.resolve('views/frontend/dist/index.html'));
     });
     return app
