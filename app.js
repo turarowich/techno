@@ -15,14 +15,7 @@ const credentials = { key: privateKey, cert: certificate };
 
 const httpServer = http.createServer(app);
 const httpsServer = https.createServer(credentials, app);
-const io = require('socket.io')(httpsServer, {
-    cors: {
-        methods: ["GET", "POST"],
-        credentials: true
-    },
-    path: '/socket.io',
-});
-require("./app/controllers/chatController")(io)
+
 
 const { initClientDbConnection } = require('./config/dbutil');
 const userConnection = initClientDbConnection()
@@ -47,7 +40,6 @@ app.use(formidableMiddleware());
 app.use('/images', express.static(__dirname + '/views/frontend/images'))
 app.use('/api', VerifyToken, require('./routes/api.js')(router))
 app.use('/', require('./routes/home.js')(router))
-
 
 
 
@@ -78,7 +70,14 @@ app.use((err, req, res, next) => {
     }
 });
 
-
+const io = require('socket.io')(httpsServer, {
+    cors: {
+        methods: ["GET", "POST"],
+        credentials: true
+    },
+    path: '/socket.io',
+});
+require("./app/controllers/chatController")(io)
 
 httpServer.listen(config.port_http, () => {
     console.log(`App listening at http://${config.localhost}:${config.port_http}`);
