@@ -1,7 +1,7 @@
 const db = global.userConnection.useDb("loygift");
 const User = db.model("User");
-const { useDB } = require('../../services/helper')
-
+const { useDB, sendError} = require('../../services/helper')
+var validate = require('../../config/errorMessages');
 class UserController{
     
     getUser = async function (req, res) {
@@ -13,10 +13,7 @@ class UserController{
             let user = await User.findById(req.params.user)
             result['object'] = user
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -31,10 +28,7 @@ class UserController{
             let user = await User.find()
             result['objects'] = user
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -50,10 +44,7 @@ class UserController{
             let user = await User.findOneAndUpdate(query, req.fields)
             result['object'] = user
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -68,10 +59,7 @@ class UserController{
             let query = { '_id': req.params.user }
             await User.findByIdAndRemove(query)
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);

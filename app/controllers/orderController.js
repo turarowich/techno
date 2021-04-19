@@ -1,5 +1,5 @@
-const { useDB } = require('../../services/helper')
-
+const { useDB, sendError } = require('../../services/helper')
+var validate = require('../../config/errorMessages');
 class OrderController{
     
     getOrder = async function (req, res) {
@@ -14,10 +14,7 @@ class OrderController{
             let order = await Order.findById(req.params.order)
             result['object'] = await order.populate('client').populate('products').execPopulate()
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -35,10 +32,7 @@ class OrderController{
             let orders = await Order.find().populate('client').populate('products').exec()
             result['objects'] = orders
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -65,10 +59,7 @@ class OrderController{
 
             result['object'] = await order.populate('client').populate('products').execPopulate()
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -88,10 +79,7 @@ class OrderController{
             let order = await Order.findOneAndUpdate(query, req.fields)
             result['object'] = await order.populate('client').populate('products').execPopulate()
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -109,10 +97,7 @@ class OrderController{
             let query = { '_id': req.params.order }
             await Order.findByIdAndRemove(query)
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);

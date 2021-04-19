@@ -1,6 +1,6 @@
 
-const { useDB } = require('../../services/helper')
-
+const { useDB, sendError } = require('../../services/helper')
+var validate = require('../../config/errorMessages');
 class ReviewController{
     
     getReview = async function (req, res) {
@@ -15,10 +15,7 @@ class ReviewController{
             let review = await Review.findById(req.params.review)
             result['object'] = review
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -36,10 +33,7 @@ class ReviewController{
             let review = await Review.find()
             result['objects'] = review
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -63,10 +57,7 @@ class ReviewController{
 
             result['object'] = review
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -86,10 +77,7 @@ class ReviewController{
             let review = await Review.findOneAndUpdate(query, req.fields)
             result['object'] = review
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -107,10 +95,7 @@ class ReviewController{
             let query = { '_id': req.params.review }
             await Review.findByIdAndRemove(query)
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);

@@ -2,7 +2,10 @@ var jwt = require('jsonwebtoken');
 var config = require('../config/config');
 
 function verifyTokenSocket(socket, next) {
-    var token = socket.handshake.headers.token
+    // Header names in Express are auto-converted to lowercase
+    let token = req.headers['x-access-token'] || req.headers['authorization'];
+    // Remove Bearer from string
+    token = token.replace(/^Bearer\s+/, "");
     
     if (!token)
         return res.status(403).send({ auth: false, message: 'No token provided.' });

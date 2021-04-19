@@ -31,22 +31,24 @@ const ax = axios.create({
         host: 'localhost',
         port: 8443
     },
-    headers: {
-        'x-access-token': token,
-        'Content-Type': 'application/x-www-form-urlencoded'
-    }
 });
-ax.defaults.headers.common['Authorization'] = 'Bearer'+ token
+ax.defaults.headers.common['Authorization'] = 'Bearer '+ token
 app.config.globalProperties.$moment = moment;
 app.config.globalProperties.$lightpick = Lightpick;
 app.config.globalProperties.$ = $
 app.config.globalProperties.axios = ax
-app.config.globalProperties.$api = "/api";
+app.config.globalProperties.$api = process.env.VUE_APP_API_URL;
+app.config.globalProperties.$server = process.env.VUE_APP_SERVER_URL;
 
 app.config.globalProperties.scrollToBottom = function(obj){
     $("#"+obj).scrollTop(1000000)
 }
+var home_url = ['login', 'register', 'loginClient', 'registerClient']
 
+app.config.globalProperties.changeToken = function () {
+    this.axios.defaults.headers.common['Authorization'] = 'Bearer '+ localStorage.getItem('token')
+    console.log(this.axios.defaults.headers)
+}
 app.config.globalProperties.url = function (main, id = null, search = null) {
     let additional = '/'
     if (id) {
@@ -54,6 +56,10 @@ app.config.globalProperties.url = function (main, id = null, search = null) {
     }
     if (search) {
         additional += '?' + search[0] + '=' + search[1]
+    }
+    console.log(process.env.NODE_ENV, process.env.VUE_APP_API_URL)
+    if (home_url.includes(main)){
+        return this.$server + '/' + main + additional
     }
     return this.$api + '/' + main + additional
     

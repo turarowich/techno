@@ -74,10 +74,10 @@ name: "SignIn",
       const data  = new FormData();
       data.append('email', this.login.email)
       data.append('password', this.login.password)
-      
-      this.axios.post('/login', data)
+      this.axios.post(this.url('login'), data)
       .then((resp)=>{
         localStorage.setItem('token', resp.data.token)
+        this.changeToken()
         this.$router.push('/orders')
       })
       .catch((error)=>{

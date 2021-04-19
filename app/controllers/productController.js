@@ -1,6 +1,7 @@
-const { useDB, saveImage } = require('../../services/helper')
-const fs = require('fs')
 
+const fs = require('fs')
+const { useDB, sendError, saveImage } = require('../../services/helper')
+var validate = require('../../config/errorMessages');
 class ProductController{
     
     getProduct = async function (req, res) {
@@ -15,10 +16,7 @@ class ProductController{
             let product = await Product.findById(req.params.product)
             result['object'] = product
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -36,10 +34,7 @@ class ProductController{
             let products = await Product.find()
             result['objects'] = products
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -102,10 +97,7 @@ class ProductController{
             product.save()
             result['object'] = product
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -150,11 +142,7 @@ class ProductController{
             product.save()
             result['object'] = product
         } catch (error) {
-            console.log(error)
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -172,10 +160,7 @@ class ProductController{
             let query = { '_id': req.params.product }
             await Product.findByIdAndRemove(query)
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);

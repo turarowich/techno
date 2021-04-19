@@ -1,6 +1,7 @@
 var path = require('path')
 const fs = require('fs')
 var validate = require('../config/errorMessages');
+const { errors } = require('formidable');
 function useDB(db_name) {
     let db = global.userConnection.useDb(db_name);
     return db;
@@ -56,6 +57,8 @@ function sendError(error, lang) {
         result["status"] = 400
         result["msg"] = "Validation error"
         result["errors"] = errors
+    }else{
+        console.log(error)
     }
     return result
 };

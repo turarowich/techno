@@ -1,6 +1,6 @@
 var bcrypt = require('bcryptjs');
-const { useDB } = require('../../services/helper')
-
+const { useDB, sendError } = require('../../services/helper')
+var validate = require('../../config/errorMessages');
 class ClientController{
     
     getClient = async function (req, res) {
@@ -17,10 +17,7 @@ class ClientController{
             result['object'] = client
         
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -40,12 +37,7 @@ class ClientController{
             result['objects'] = clients
         
         } catch (error) {
-        
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
-        
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -75,10 +67,7 @@ class ClientController{
             client.password = 'secured';
             result['object'] = client
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -100,10 +89,7 @@ class ClientController{
             client.password = 'secured';
             result['object'] = client
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -123,10 +109,7 @@ class ClientController{
             await Client.findByIdAndRemove(query)
 
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);

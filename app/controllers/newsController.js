@@ -1,4 +1,5 @@
-const { useDB } = require('../../services/helper')
+const { useDB, sendError, saveImage } = require('../../services/helper')
+var validate = require('../../config/errorMessages');
 
 class NewsController {
 
@@ -14,10 +15,7 @@ class NewsController {
             let category = await News.findById(req.params.news)
             result['object'] = category
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -28,17 +26,14 @@ class NewsController {
 
         let result = {
             'status': 200,
-            'msg': 'Sending categories'
+            'msg': 'Sending news'
         }
         try {
 
             let news = await News.find()
             result['objects'] = news
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -67,6 +62,7 @@ class NewsController {
                 if (filename == 'Not image') {
                     result['status'] = 500
                     result['msg'] = filename
+                    throw new Error('file with name ' + req.files.img.name + ' not an image');
                 } else {
                     news.img = filename
                 }
@@ -74,10 +70,7 @@ class NewsController {
             news.save()
             result['object'] = news
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -101,17 +94,14 @@ class NewsController {
                 if (filename == 'Not image') {
                     result['status'] = 500
                     result['msg'] = filename
+                    throw new Error('file with name ' + req.files.img.name + ' not an image');
                 } else {
                     news.img = filename
-                    news.save()
                 }
             }
             result['object'] = news
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -129,10 +119,7 @@ class NewsController {
             let query = { '_id': req.params.category }
             await News.findByIdAndRemove(query)
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);

@@ -2,10 +2,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
     
 const newsSchema = new Schema({
-    img: {
-        type: String,
-        required: true,
-    },
     name: {
         type: String,
         required: true,
@@ -21,6 +17,10 @@ const newsSchema = new Schema({
     desc_ru: {
         type: String,
         required: true,
+    },
+    img: {
+        type: String,
+        required: false,
     },
     createdAt: {
         type: Date,

@@ -1,5 +1,5 @@
-const { useDB } = require('../../services/helper')
-
+const { useDB, sendError } = require('../../services/helper')
+var validate = require('../../config/errorMessages');
 class PromocodeController{
     
     getPromocode = async function (req, res) {
@@ -14,10 +14,7 @@ class PromocodeController{
             let promocode = await Promocode.findById(req.params.promocode)
             result['object'] = promocode
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -35,10 +32,7 @@ class PromocodeController{
             let promocodes = await Promocode.find()
             result['objects'] = promocodes
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -64,10 +58,7 @@ class PromocodeController{
 
             result['object'] = promocode
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -87,10 +78,7 @@ class PromocodeController{
             let promocode = await Promocode.findOneAndUpdate(query, req.fields)
             result['object'] = promocode
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
@@ -108,10 +96,7 @@ class PromocodeController{
             let query = { '_id': req.params.promocode }
             await Promocode.findByIdAndRemove(query)
         } catch (error) {
-            result = {
-                'status': 500,
-                'msg': error.message
-            }
+            result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);

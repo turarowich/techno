@@ -124,7 +124,7 @@ name: "SignUp",
       data.append('phone', this.register.phone);
       data.append('description', this.register.description);
       data.append('password', this.register.password);
-      this.axios.post('/register', data)
+      this.axios.post(this.url('register'), data)
       .then(()=>{
           this.$index.push('/')
       })
