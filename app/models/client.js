@@ -2,17 +2,13 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const clientSchema = new Schema({
-    firstName: {
+    name: {
         type: String,
-        required: [true, 'FirstName required'],
-    },
-    lastName: {
-        type: String,
-        required: [true, 'LastName required'],
+        required: [true, 'name_required'],
     },
     phone: {
         type: String,
-        required: false,
+        required: [true, 'phone_required'],
         validate: {
             validator: async function (phone) {
                 const user = await this.constructor.findOne({ phone });
@@ -24,12 +20,14 @@ const clientSchema = new Schema({
                 }
                 return true;
             },
-            message: props => 'The specified phone address is already in use.'
-        }
+            message: props => 'phone_unique'
+        },
+        minlength: [8, 'phone_min'],
+        maxlength: [16, 'phone_max']
     },
     email: {
         type: String,
-        required: false,
+        required: [true, 'email_required'],
         validate: {
             validator: async function (email) {
                 const user = await this.constructor.findOne({ email });
@@ -41,17 +39,21 @@ const clientSchema = new Schema({
                 }
                 return true;
             },
-            message: props => 'The specified email address is already in use.'
-        }
+            message: props => 'email_unique'
+        },
+        match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'email_valid']
     },
     password: {
         type: String,
-        required: [true, 'Password required'],
-        select: false
+        required: [true, 'password_required'],
+        select: false,
+        minlength: [8, 'password_min'],
+        maxlength: [64, 'password_max'],
+        match: [/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/, 'password_valid']
     },
     birthDate: {
         type: Date,
-        required: [true, 'Birthdate required'],
+        required: [false, 'Birthdate required'],
     },
     address: {
         type: String,
@@ -71,10 +73,6 @@ const clientSchema = new Schema({
         type: Schema.Types.ObjectId, 
         ref: 'Category' 
     },
-    messages: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Message'
-    }],
     createdAt: {
         type: Date,
         required: true,

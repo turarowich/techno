@@ -1,6 +1,6 @@
 var path = require('path')
 const fs = require('fs')
-
+var validate = require('../config/errorMessages');
 function useDB(db_name) {
     let db = global.userConnection.useDb(db_name);
     return db;
@@ -32,7 +32,36 @@ function saveImage(file, company, old_file_name=null){
     }
     return filename
 }
+function sendError(error, lang) {
+    let result = {
+        'status': 500,
+        'msg': "Something went wrong"
+    }
+    if(lang != 'ru'){
+        lang = 'en'
+    }
+    if (error.name === "ValidationError") {
+        let errors = {};
+
+        Object.keys(error.errors).forEach((key) => {
+            
+            if (error.errors[key].message in validate[lang]){
+                errors[key] = validate[lang][error.errors[key].message]
+                
+            }else{
+                errors[key] = error.errors[key].message;
+            }
+            
+        });
+        result["status"] = 400
+        result["msg"] = "Validation error"
+        result["errors"] = errors
+    }
+    return result
+};
+
 module.exports = {
     useDB: useDB,
-    saveImage: saveImage
+    saveImage: saveImage,
+    sendError: sendError
 }

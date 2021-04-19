@@ -4,11 +4,11 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
     name: {
         type: String,
-        required: [true, 'Name required'],
+        required: [true, 'name_required'],
     },
     phone: {
         type: String,
-        required: true,
+        required: [true, 'phone_required'],
         validate: {
             validator: async function (phone) {
                 const user = await this.constructor.findOne({ phone });
@@ -20,12 +20,14 @@ const userSchema = new Schema({
                 }
                 return true;
             },
-            message: props => 'The specified phone address is already in use.'
-        }
+            message: props => 'phone_unique'
+        },
+        minlength: [8, 'phone_min'],
+        maxlength: [16, 'phone_max']
     },
     email: {
         type: String,
-        required: true,
+        required: [true, 'email_required'],
         validate: {
             validator: async function (email) {
                 const user = await this.constructor.findOne({ email });
@@ -37,13 +39,17 @@ const userSchema = new Schema({
                 }
                 return true;
             },
-            message: props => 'The specified email address is already in use.'
-        }
+            message: props => 'email_unique'
+        },
+        match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'email_valid']
     },
     password: {
         type: String,
-        required: [true, 'Password required'],
-        select: false
+        required: [true, 'password_required'],
+        select: false,
+        minlength: [8, 'password_min'],
+        maxlength: [64, 'password_max'],
+        match: [/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/, 'password_valid']
     },
     _db: {
         type: String,
