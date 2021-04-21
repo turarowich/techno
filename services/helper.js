@@ -21,7 +21,7 @@ function saveImage(file, company, old_file_name=null){
         }
     }
     var upload = path.join(__dirname, '/../views/frontend/' + filename)
-    if (file.name.match(/\.(jpg|jpeg|png|gif)$/)) {
+    if (file.name.match(/\.(jpg|jpeg|png|gif|svg)$/)) {
         fs.rename(file.path, upload, function (err) {
             if (err) {
                 console.log(err);

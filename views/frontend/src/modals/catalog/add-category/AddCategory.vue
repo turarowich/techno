@@ -49,10 +49,11 @@ name: "AddCategory",
       type:Array,
       required:true
     },
-
-
+    getCategories:{
+      type:Function,
+      required:true
+    }
   },
-
   data(){
     return{
       new_category: {
@@ -64,11 +65,17 @@ name: "AddCategory",
     onSubmit(){
       const data = new FormData();
       data.append('name', this.new_category.name)
-      this.$store.dispatch('addCategory',data)
-      this.$store.dispatch('getCategories')
+      this.axios.post(this.url('addCategory'),data)
+            .then((response)=>{
+              console.log('Success ', response.data.object)
+            })
+            .catch((error)=>{
+              console.log("Error"+error)
+            })
+      this.getCategories()
       $('#add-category').modal("hide")
       this.new_category.name = ''
-    }
+      },
   }
 }
 </script>

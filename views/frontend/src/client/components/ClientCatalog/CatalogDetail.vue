@@ -1,41 +1,37 @@
 <template>
   <div>
-    <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg"><div @click="$router.go(-1)" class="mr-1">Back </div> | <span>{{productDetail.category}} / {{productDetail.name}}</span> </div>
+    <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg"><div @click="$router.go(-1)" class="mr-1">Back </div> | <span > {{getProduct.name}}</span> </div>
   <div class="row mt-5 mb-5">
     <div class="col-10 m-auto">
 
       <div class="row">
         <div class="col-lg-7 detail-right">
           <div class="product-img" id="container">
-            <img :src="productDetail.image[0]">
-            <img :src="productDetail.image[1]">
-            <img :src="productDetail.image[2]">
-            <img :src="productDetail.image[3]">
-            <img :src="productDetail.image[4]">
-
+            <img src="../../../assets/clients/hodie1.svg">
+            <img src="../../../assets/clients/hodie2.svg">
+            <img src="../../../assets/clients/hodie3.svg">
+            <img src="../../../assets/clients/hodie4.svg">
           </div>
 
           <div class="multiple-items">
-            <div class="slider-item"><img :src="productDetail.image[0]"></div>
-            <div class="slider-item"><img :src="productDetail.image[1]"></div>
-            <div class="slider-item"><img :src="productDetail.image[2]"></div>
-            <div class="slider-item"><img :src="productDetail.image[3]"></div>
-            <div class="slider-item"><img :src="productDetail.image[4]"></div>
+         <div class="slider-item"> <img src="../../../assets/clients/hodie1.svg"></div>
+         <div class="slider-item"> <img src="../../../assets/clients/hodie2.svg"></div>
+         <div class="slider-item"> <img src="../../../assets/clients/hodie3.svg"></div>
+         <div class="slider-item"> <img src="../../../assets/clients/hodie4.svg"></div>
           </div>
         </div>
         <div class="col-lg-5">
-          <h3 class="product-name">{{productDetail.name}}</h3>
-          <h5 class="product-code">{{productDetail.code}}</h5>
-          <h1 class="product-price">{{productDetail.price}} $</h1>
+          <h3 class="product-name">{{getProduct.name}}</h3>
+          <h5 class="product-code">{{getProduct.code}}</h5>
+          <h1 class="product-price">{{getProduct.price}} $</h1>
 
 
-          <button class="decrease" @click="decrease">-</button>
-          <span class="count">{{productDetail.count}}</span>
-          <button class="increase" @click="productDetail.count+=1">+</button>
+          <button class="decrease" @click="decrease(getProduct._id)">-</button>
+          <span class="count">{{getProduct.quantity}}</span>
+          <button class="increase" @click="increase(getProduct._id)">+</button>
 
           <h3 class="price mt-0">Description</h3>
-          <p class="product-text">A light blue T-shirt from the spring-summer 2021 collection, as if faded in the sun, turned out to be as comfortable as possible. The cut of the loose model with a round neck and short sleeves does not restrict movement, and the soft cotton jersey is well-permeable and quickly removes moisture.
-            The brand's ownership of the product was marked with a large white logo on the back.</p>
+          <p class="product-text">{{getProduct.description}}</p>
           <button class="catalog-btn" @click="addToCart"><a >Add to card +</a></button>
         </div>
       </div>
@@ -46,24 +42,27 @@
 
 <script>
 import $ from 'jquery';
-import {mapGetters} from 'vuex'
 export default {
   name: "CatalogDetail",
-  computed:{
-    ...mapGetters(["productDetail",'listCategory']),
-
+  data(){
+    return{
+      getProduct: ''
+    }
   },
   methods: {
-    addToCart() {
-      this.$store.dispatch('addToCart', this.productDetail)
+
+    increase(){
+      this.getProduct.quantity+=1
     },
-    decrease(){
-      if(this.productDetail.count === 0){
-        this.productDetail.count = 0
-      }
-      else{
-        this.productDetail.count-=1
-      }
+    decrease(id) {
+      if (this.getProduct._id === id) {
+          while (this.getProduct.quantity !== 1) {
+            return this.getProduct.quantity -= 1
+          }
+        }
+    },
+    addToCart() {
+      this.$store.dispatch('addToCart', this.getProduct)
     },
     slide() {
       $('.product-img').slick({
@@ -85,7 +84,12 @@ export default {
   },
   mounted(){
     this.slide()
+    this.axios.get(this.url('getProduct',this.$route.params.id.slice(1)))
+        .then((res)=>{
+          this.getProduct = res.data.object;
+        })
   }
+
 }
 </script>
 

@@ -319,7 +319,7 @@ input[type="date"] {
 
 }
 .cashback-input{
-    border: 1px solid #E3E3E3;
+    border: 1px solid #d3d3d3;
     border-radius: 5px;
     height:45px;
     padding-left:10px;
@@ -331,10 +331,8 @@ input[type="date"] {
     height:37px;
     display: flex;
     align-items: center;
-    padding:0 40px;
+    padding:0 20px;
     font-size: 16px;
-    width: 120px;
-    margin-right: 10px;
     transition: .3s;
     border:none;
     justify-content: center;
@@ -346,14 +344,15 @@ input[type="date"] {
     border: 1px solid #D3D3D3;
     box-sizing: border-box;
     border-radius: 5px;
-    width: 120px;
     height:37px;
     font-size: 16px;
     color: #8C94A5;
     background: #fff;
     transition: .3s;
     display: flex;
+    padding:0 20px;
     align-items: center;justify-content: center;
+    margin-right: 10px;
 }
 .cancel:hover{
     border: 1px solid #676C78;
@@ -412,35 +411,6 @@ input[type="date"] {
     resize: none;
     height: 125px;
 }
-
-/*=================TABS=================*/
-.tab-menu{
-    margin-bottom: 24px;
-    padding-left: 0;
-    border-bottom: 1px solid #D3D3D3;
-    padding-bottom: 10px;
-
-}
-.tab-list{
-    list-style-type: none;
-    display: inline;
-    margin-right: 35px;
-    font-size: 16px;
-    cursor:pointer;
-}
-.tab-list a{
-    color:#999;
-    text-decoration: none;
-    padding-bottom: 11px;
-
-
-}
-.tab-list a:hover, a.active{
-    border-bottom: 3px solid #616CF5;
-    color:#222;
-}
-
-
 /*=============================Login and register style =======================*/
 .login-input{
     width: 100%;
@@ -509,43 +479,36 @@ input[type="date"] {
 }
 /*===================Modal=====================*/
 
-.myModal-content{
-    border:none;
-    border-radius: 0;
-    overflow-y: auto;
-    padding-bottom:30px;
-}
-
-.modal-title{
-    color: #616CF5;
-    font-size: 21px;
-    font-weight: 600;
+.myModal-body{
+    padding:0 57px;
 }
 .modal-content .modal-header{
     border-bottom: none;
     padding:27px 57px;
 
 }
-.myModal-body{
-     padding:0 57px;
- }
-.modal-form input{
-    width: 100%;
-    font-size: 16px;
-}
-.modal-form label{
-    margin-right: 10px;
-    margin-bottom: 8px;
-}
-.modal-img{
-    margin-bottom: 60px;
-}
-.modal-img p{
-    margin-bottom: 15px;
+.myModal-content{
+    border:none;
+    border-radius: 0;
+    overflow-y: auto;
+    padding-bottom:30px;
+    -moz-padding-bottom: 50px;
 }
 
 .swal2-styled.swal2-confirm{
     background: red;
+}
+.modal-btn .save{
+    margin-right: 10px;
+}
+.modal-btn .save, .modal-btn .cancel{
+    width: 120px;
+}
+
+.modal-title{
+    color: #616CF5;
+    font-size: 21px;
+    font-weight: 600;
 }
 
 
@@ -664,6 +627,20 @@ input[type="date"] {
 
 /*===========================Clients Styles=================================*/
 
+.bonus-notification{
+    background: #F8F9FF;
+    border-radius: 7px;
+    padding: 20px;
+    margin-bottom: 80px;
+}
+.bonus-span{
+    font-size: 18px;
+    color:#616cf5;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: inline-block;
+}
+
 .price{
     font-size: 16px;
     font-weight: normal;
@@ -755,8 +732,8 @@ input[type="date"] {
     align-items: center;
 }
 .count{
-    margin: 0 10px;
-    width: 15px;
+
+    width: 40px;
     display: inline-block;
     text-align: center;
 }
@@ -835,5 +812,88 @@ input[type="date"] {
 
     display: none;
 }
-
+.nav-tabs{
+    border-bottom: none;
+}
 /*========================= End Input slider in catalog======================*/
+
+
+/*=======================Мелочные общие  стили =============================== */
+
+
+
+.btns-item{
+    border: 1px solid #D3D3D3;
+    border-radius: 5px;
+    width: 150px;
+    height: 30px;
+    background: none;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    padding:0 10px;
+    cursor:pointer;
+    transition: .3s;
+}
+.personal-btns{
+    margin-bottom: 21px;
+    display: flex;
+}
+
+.btn-round{
+    border: 1px solid #D3D3D3;
+    box-sizing: border-box;
+    width: 14px;
+    height: 14px;
+    border-radius:50%;
+    display: inline-block;
+    margin-right: 10px;
+}
+.btns-item.active{
+    border-color:#616CF5;
+
+}
+.btns-item.active .btn-round{
+    background: #616CF5;
+    border:none;
+}
+.on-map{
+    font-size: 16px;
+    color:#616cf5;
+    font-weight: 600;
+}
+.map-box{
+    margin-bottom: 56px;
+}
+
+.general-dropdown{
+    background: #FFFFFF;
+    box-shadow: 2px 11px 35px rgba(0, 0, 0, 0.1);
+    border-radius: 7px;
+    right: 0;
+    width: 18rem;
+    transform: translate3d(-118px, -5px, 0px) !important;
+    top: 50px !important;
+}
+.drop-title{
+    font-size: 15px;
+    font-weight: normal;
+    margin-bottom: 18px;
+}
+.drop-input:first-child{
+    width: 65%;
+}
+.drop-input{
+    border: 1px solid #E3E3E3;
+    border-radius: 5px;
+    height:30px;
+    padding-left:10px;
+    width: 100%;
+    font-size:14px;
+    margin-bottom: 22px;
+
+}
+.adding-btns{
+    background: #E9ECFF;
+    color:#616CF5;
+}

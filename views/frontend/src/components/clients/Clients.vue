@@ -23,7 +23,14 @@
            <div class="accordion" id="accordion-filter">
              <div data-toggle="collapse" class="filter-list" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">Last purchase <img class="filter-img" src="../../assets/icons/down.svg"></div>
              <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion-filter">
-                <input ref="forms" v-model="lastPurchase" class="cashback-input" placeholder="Last-purchase">
+<!--                <input ref="forms" v-model="lastPurchase" class="cashback-input" placeholder="Last-purchase">-->
+               <div class="d-flex">
+                 <input class="drop-input">
+                 <div class="d-flex">
+                   <label class="mr-2 pl-2">to</label>
+                   <input class="drop-input">
+                 </div>
+               </div>
              </div>
 
              <div class="filter-list" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseOne">Bonus <img class="filter-img" src="../../assets/icons/down.svg"></div>
@@ -335,11 +342,12 @@ export default {
 }
 
 .filter-box{
-  width: 230px;
-  /*height: 265px;*/
+  width: 18rem;
   margin-right: 20px;
   margin-top: 10px;
   padding:15px;
+
+  transform: translate3d(-191px, 40px, 0px);
 }
 .filter-header h3{
   font-size: 16px;
@@ -355,13 +363,15 @@ export default {
   cursor:pointer;
 }
 .filter-list{
-  padding:3px 0;
+  padding: 10px 0;
   border-bottom:none;
   color:#222;
   background: #fff;
   position: relative;
   cursor:pointer;
   font-size:14px;
+
+
 }
 .filter-img{
   position: absolute;

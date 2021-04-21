@@ -1,31 +1,33 @@
 <template>
   <div class="row ">
-    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 product-box" v-for="cat in catalog" :key="cat.id" @click="selectProduct(cat.id)">
-      <div class="product-img">
-        <img :src="cat.image[0]">
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 product-box" v-for="cat in catalog" :key="cat._id">
+      <div class="product-img"  @click="selectProduct(cat._id)">
+        <img src="../../../assets/clients/shirt.svg">
       </div>
       <div class="product-add">
         <h2>{{cat.name}} </h2>
-        <h3> {{cat.code}} </h3>
+        <h3></h3>
         <span >{{cat.price}}</span>
       </div>
-      <button class="add-to-card mr-2">Add to cart</button>
+      <button class="add-to-card" @click="addToCart(cat._id)">Add to cart</button>
     </div>
   </div>
 
 </template>
 
 <script>
-
 export default {
 name: "ClientCatalogItem",
   props:['catalog'],
+
   methods:{
+
+  addToCart(id){
+    const newCatalog = this.catalog.filter((el)=>el.id === id);
+    this.$store.dispatch('addToCart', newCatalog)
+  },
     selectProduct(id){
-    const newCatalog = this.catalog.filter((el)=>el.id === id)[0];
-      localStorage.setItem('detail', JSON.stringify(newCatalog));
-      this.$store.dispatch('getDetail')
-      this.$router.push('/home/catalog-detail');
+      this.$router.push('/home/catalog-detail/:'+id);
     },
   },
 }
@@ -52,13 +54,17 @@ name: "ClientCatalogItem",
 
 .add-to-card{
   color: #898989;
-  font-size: 16px;
+  font-size: 14px;
   border:none;
-  padding: 5px 25px;
+  padding: 0.3rem  2rem;
   background: #F4F4F4;
   border-radius: 10px;
 }
-
+.add-to-card:hover{
+  color:#222;
+  background: #e3e3e3;
+  transition:.3s;
+}
 .product-box{
   margin-bottom: 50px;
   text-align: center;

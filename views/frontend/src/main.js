@@ -2,7 +2,6 @@ import {createApp} from 'vue'
 import App from './App.vue'
 import {createStore} from "vuex";
 import 'slick-carousel/slick/slick';
-import ZoomOnHover from 'vue-zoom-on-hover';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css'
 import 'ion-rangeslider/js/ion.rangeSlider';
@@ -26,121 +25,51 @@ import axios from "axios";
 const store = createStore({
 
     actions:{
-        getCategories:async function(ctx){
-          await ax.get('http://localhost:8080/api/getCategories')
-                .then((res)=>{
-                    ctx.commit('updateCategory', res.data.objects)
-                })
-        },
-        addCategory: async function( ctx, data){
-           await ax.post('http://localhost:8080/api/addCategory',data)
-                .then((response)=>{
-                    console.log('Success ', response.data.object)
-                    console.log(ctx)
-
-                })
-                .catch((error)=>{
-                    console.log("Error"+error)
-                })
+        getDetail: function({commit},product){
+            commit('getDetail' ,product)
         },
         addToCart: function({commit}, product){
             commit('addToCart', product)
         },
-        getDetail: function(ctx){
-            ctx.commit('changeDetail', JSON.parse(localStorage.getItem('detail')))
+        deleteFromCart: function({commit,dispatch},id){
+            commit('deleteFromCart',id)
+            dispatch('totalPrice')
         },
-        deleteFromCart: function(ctx,id){
-            ctx.commit('deleteFromCart',id)
-        }
-    },
+        totalPrice:function({commit,state}){
+            var total = 0
+            for ( var i = 0, _len = state.shoppingCart.length; i < _len; i++ ) {
+                total += state.shoppingCart[i]['count']*state.shoppingCart[i]['price']
+            }
+            commit('totalPrice',total)
+        },
+        countOrders: function({commit}){
+            commit('countOrders')
+        },
+
+
+        },
     state () {
         return {
-            listCategory:[
-                {id:1, name:''},
-            ],
-            catalog:[
-                {id:1, name:'Air Forces ', count: 1, discount: '30%', code:'1617W11F', price:23, category:'shoes',image: [
-                        'https://n.nordstrommedia.com/id/sr3/6766217f-3a04-4af3-8e89-82f05bc4d1f3.jpeg?crop=pad&pad_color=FFF&format=jpeg&trim=color&trimcolor=FFF&w=780&h=838',
-                        'https://n2.sdlcdn.com/imgs/h/m/c/large/Nike-AIR-FORCE-1-White-SDL968002180-1-a6803.jpeg',
-                        'https://www.cdiscount.com/pdt2/9/6/2/1/700x700/mp29694962/rw/baskets-casual-pour-hommes-de-la-mode-hiver.jpg',
-                        'https://kickz.akamaized.net/se/media/images/p/600/nike-air_force_1_07-WHITE_WHITE-1.jpg',
-                        'https://www.babyshop.com/images/489630/open_graph.jpg',
-                        'https://img01.ztat.net/article/spp-media-p1/d9f1aedd837939cc95686168fa2ba2e0/4c173933bbc841c9b1106071a3fdde9e.jpg?imwidth=762&filter=packshot'
-                    ]},
-                {id:2, name:'Nike Air Max',count:1, discount: '50%', code:'1617W11F', price:467,category:'shoes',image:  [
-                        'https://suprehero.kg/wp-content/uploads/2021/02/nike-air-max-270-react-travis-scott-2-1000.png',
-                        'https://static-sl.insales.ru/images/products/1/528/364225040/Travis_Scott_x_Nike_Air_Max_270_React_%D0%BA%D1%83%D0%BF%D0%B8%D1%82%D1%8C_-.jpg',
-                        'https://step-man.com/wp-content/uploads/2020/05/Travis-Scott-x-Nike-Air-Max-270-React-Cactus-Trails-for-sale.jpg',
-                        'https://image-cdn.hypb.st/https%3A%2F%2Fhypebeast.com%2Fimage%2F2020%2F03%2Ftravis-scott-nike-air-max-270-react-release-date-ct2864-200-info-001.jpg',
-                        'https://i.pinimg.com/originals/45/5c/ae/455cae7b1f3255eeedc6e1bebbba7857.png'
-
-                    ]},
-                {id:3, name:'Macks', count:1, discount:  '21%', code:'1617W11F', price:12,category:'clothes',image:  [
-                        'https://accessories.tvsmotor.com/images/premium-acc/T-shirts-Red-1.jpg',
-                        'https://cdn11.bigcommerce.com/s-405b0/images/stencil/500x659/products/71/16784/5000-gildan-heavy-cotton-t-shirt-white-t-shirt.ca__76325.1605526691.jpg?c=2',
-                        'https://cdn.shopify.com/s/files/1/2143/3217/products/500_946a22ef-e740-40ad-8c96-ba7e6ca15f87_1024x1024.png?v=1617646131',
-                        'https://cdn11.bigcommerce.com/s-405b0/images/stencil/500x659/products/71/16784/5000-gildan-heavy-cotton-t-shirt-white-t-shirt.ca__76325.1605526691.jpg?c=2',
-                        'https://cdn.shopify.com/s/files/1/2143/3217/products/500_946a22ef-e740-40ad-8c96-ba7e6ca15f87_1024x1024.png?v=1617646131',
-                        'https://accessories.tvsmotor.com/images/premium-acc/T-shirts-Red-1.jpg',
-                        'https://cdn11.bigcommerce.com/s-405b0/images/stencil/500x659/products/71/16784/5000-gildan-heavy-cotton-t-shirt-white-t-shirt.ca__76325.1605526691.jpg?c=2'
-                    ]},
-                {id:4, name:'Alexander msqween', count:1, discount: '70%', code:'1617W11F', price:15,category:'clothes',image: [
-                        'https://cdn11.bigcommerce.com/s-405b0/images/stencil/500x659/products/71/16784/5000-gildan-heavy-cotton-t-shirt-white-t-shirt.ca__76325.1605526691.jpg?c=2',
-                        'https://cdn.shopify.com/s/files/1/2143/3217/products/500_946a22ef-e740-40ad-8c96-ba7e6ca15f87_1024x1024.png?v=1617646131',
-                        'https://accessories.tvsmotor.com/images/premium-acc/T-shirts-Red-1.jpg',
-                        'https://cdn11.bigcommerce.com/s-405b0/images/stencil/500x659/products/71/16784/5000-gildan-heavy-cotton-t-shirt-white-t-shirt.ca__76325.1605526691.jpg?c=2',
-                        'https://cdn.shopify.com/s/files/1/2143/3217/products/500_946a22ef-e740-40ad-8c96-ba7e6ca15f87_1024x1024.png?v=1617646131',
-                        'https://accessories.tvsmotor.com/images/premium-acc/T-shirts-Red-1.jpg',
-                        'https://cdn11.bigcommerce.com/s-405b0/images/stencil/500x659/products/71/16784/5000-gildan-heavy-cotton-t-shirt-white-t-shirt.ca__76325.1605526691.jpg?c=2'
-                    ]},
-                {id:5, name:'T-shirt',count:1, code:'1617W11F',discount: '100%', price:456,category:'clothes',image:  [
-                        'https://accessories.tvsmotor.com/images/premium-acc/T-shirts-Red-1.jpg',
-                        'https://cdn.shopify.com/s/files/1/2143/3217/products/500_946a22ef-e740-40ad-8c96-ba7e6ca15f87_1024x1024.png?v=1617646131',
-                        'https://accessories.tvsmotor.com/images/premium-acc/T-shirts-Red-1.jpg',
-                        'https://cdn11.bigcommerce.com/s-405b0/images/stencil/500x659/products/71/16784/5000-gildan-heavy-cotton-t-shirt-white-t-shirt.ca__76325.1605526691.jpg?c=2',
-                        'https://cdn.shopify.com/s/files/1/2143/3217/products/500_946a22ef-e740-40ad-8c96-ba7e6ca15f87_1024x1024.png?v=1617646131',
-                        'https://accessories.tvsmotor.com/images/premium-acc/T-shirts-Red-1.jpg',
-                        'https://cdn11.bigcommerce.com/s-405b0/images/stencil/500x659/products/71/16784/5000-gildan-heavy-cotton-t-shirt-white-t-shirt.ca__76325.1605526691.jpg?c=2'
-                    ] },
-            ],
             shoppingCart:[],
-            productDetail: '',
-            countOrders: 0
+            countOrders: 0,
+            totalPrice: 0,
+            getProduct: {},
         }
     },
+
     mutations:{
-        updateCategory:(state, listCategory)=>{
-            state.listCategory = listCategory
-            state.listCategory.unshift({id:1, name:''})
-        },
-        changeDetail(state,detail) {
-            state.productDetail = detail
+        getDetail(state, product){
+            state.getProduct = product
         },
         addToCart(state, product) {
-            if(state.shoppingCart.includes(product)){
-                return  Swal.fire({
-                    title:'Warning',
-                    text:"You already added this product to your cart",
-                    timer:1500,
-                    showConfirmButton:false,
-                    position: 'top-right',
-                    customClass:{
-                        popup:'success-popup warning-popup',
-                        content:'success-content',
-                        title:'success-title',
-                        header:'success-header',
-                        image:'success-img'
-                    },
-                    showClass:{
-                        popup: 'animate__animated animate__zoomIn'
-                    }
-                } )
-            }
-            else{
+            const index = state.shoppingCart.findIndex(item=>item._id === product._id)
+            if(index === -1){
+                state.shoppingCart.push(product)
+                state.countOrders+=1;
                 Swal.fire({
                     timer:1500,
                     title:'Added to cart',
-                    text:"You have added this product to your cart",
+                    text:"You have added this product to basket",
                     showConfirmButton:false,
                     position: 'top-right',
                     customClass:{
@@ -154,14 +83,14 @@ const store = createStore({
                         popup: 'animate__animated animate__zoomIn'
                     }
                 })
-                state.countOrders+=1
-
-                return   state.shoppingCart.push(product)
 
             }
-
-
-
+            else{
+                   state.shoppingCart[index].quantity +=1;
+                }
+            },
+        totalPrice(state,totalPrice){
+            state.totalPrice = totalPrice
         },
         deleteFromCart(state, id) {
             Swal.fire({
@@ -180,15 +109,11 @@ const store = createStore({
                     closeButton:'close-btn'
 
                 },
-                showClass: {
-                    popup: 'animate__animated animate__zoomIn'
-                },
-                hideClass: {
-                    popup: 'animate__animated animate__zoomOut'
-                }
+
             }).then((result) => {
                 if (result.isConfirmed) {
                     state.shoppingCart = state.shoppingCart.filter((item)=>item.id !== id)
+                    state.countOrders -= 1;
                     Swal.fire({
                         timer:1500,
                         title:'Removed',
@@ -202,30 +127,30 @@ const store = createStore({
                             header:'success-header',
                             image:'success-img'
                         },
-                        showClass:{
-                            popup: 'animate__animated animate__zoomIn'
-                        }}
+                     }
                     )}
             })
 
+        },
+        countOrders(state){
+            state.countOrders = 0;
         }
+
     },
     getters:{
-        listCategory(state){
-            return state.listCategory
-        },
-        catalog(state){
-            return state.catalog
-        },
-        productDetail(state){
-            return state.productDetail
+        getProduct(state){
+            return state.getProduct
         },
         shoppingCart(state){
             return state.shoppingCart
         },
         countOrders(state){
             return state.countOrders
-        }
+        },
+        totalPrice(state){
+            return state.totalPrice
+        },
+
     }
 })
 
@@ -234,7 +159,6 @@ const store = createStore({
 const app = createApp(App)
 app.use(router)
 app.use(store)
-app.use(ZoomOnHover)
 let token = localStorage.getItem('token')
 
 const ax = axios.create({
@@ -248,13 +172,14 @@ const ax = axios.create({
         'Content-Type': 'application/x-www-form-urlencoded'
     }
 });
+
+
 ax.defaults.headers.common['Authorization'] = 'Bearer'+ token
 app.config.globalProperties.$moment = moment;
 app.config.globalProperties.$lightpick = Lightpick;
 app.config.globalProperties.$ = $
 app.config.globalProperties.axios = ax
 app.config.globalProperties.$api = "http://localhost:8080/api";
-
 
 app.config.globalProperties.scrollToBottom = function(obj){
     $("#"+obj).scrollTop(1000000)

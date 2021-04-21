@@ -26,20 +26,15 @@
         <h3 class="cashback-sub-title mb-3 ">Select product</h3>
         <select class=" form-control long-form-control form-control-lg mb-2" aria-label=".form-select-lg example">
           <option>All product</option>
-          <option>Shoes permanent</option>
-          <option>Shoes permanent</option>
-          <option>Shoes permanent</option>
-          <option>Shoes permanent</option>
-          <option>Shoes permanent</option>
-          <option>Shoes permanent</option>
-          <option>Shoes permanent</option>
+          <option>Only shoes and clothes</option>
+          <option>Food and Drinks</option>
+
         </select>
-        <input class="cashback-input"  placeholder="+ add product or category">
+
       </div>
       <div class="select-right">
         <h3 class="cashback-sub-title mb-3">% or total</h3>
-        <input class="cashback-input mb-2"  placeholder="0" ><button disabled="true" class=" check cash-btn"><img src="../../../assets/icons/enable+.svg"></button>
-        <input class="check cashback-input"  :disabled="disabled == 1" placeholder="0">
+        <input class="cashback-input mb-2"  placeholder="0" ><button disabled="true" class=" check cash-btn"><img src="../../assets/icons/enable+.svg"></button>
       </div>
     </div>
 

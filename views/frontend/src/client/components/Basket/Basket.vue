@@ -4,47 +4,84 @@
 
   </div>
   <div class="d-flex align-items-center path-box" @click="$router.go(-1)"><img class="mr-2" src="../../../assets/clients/slide.svg"><h3 class="path-title">{{$route.name}}</h3></div>
-  <div class="client-table-header">
-    <div class="client-table-head" style="width:40%">Products</div>
-    <div class="client-table-head" style="width:20%">Amount</div>
-    <div class="client-table-head" style="width:14%">Discount</div>
-    <div class="client-table-head" style="width:14%">Price</div>
-    <div class="client-table-head" style="width: 12%"></div>
+  <div class="row">
+    <div class="col-lg-9">
 
-  </div>
-  <BasketItem
-      :shoppingList="shoppingCart"
-      :countTotalPrice="countTotalPrice"
-  />
+      <div class="client-table-header">
+        <div class="client-table-head" style="width:40%">Products</div>
+        <div class="client-table-head" style="width:20%">Amount</div>
+        <div class="client-table-head" style="width:14%">Discount</div>
+        <div class="client-table-head" style="width:14%">Price</div>
+        <div class="client-table-head" style="width: 12%"></div>
 
-  <div>
-    <div class="row confirm">
-      <div class="col-lg-5">
-        <h3 class="cashback-sub-title">Sales</h3>
-        <div class="sales"><input><img src="../../../assets/icons/Discount.svg"></div>
       </div>
-      <div class="col-lg-3"></div>
-      <div class="col-lg-4">
-        <div class="confirm-order">
-          <h3>Discount</h3>
-          <span class="discount">50 %</span>
-        </div>
-        <div class="confirm-order">
-          <h3>Delivery</h3>
-          <span class="free">Free</span>
-        </div>
-        <p>Order another 500$ for free shopping</p>
+      <BasketItem
+          :shoppingList="shoppingCart"
+      />
 
-        <div class="total d-flex justify-content-between mb-4">
-          <h3>Total</h3>
-          <h3>{{totalPrice}}$</h3>
-        </div>
-        <div class="confirm-btns d-flex justify-content-between">
-          <button class="confirm-continue-btn cancel" v-show="shoppingCart.length>0" @click="$router.go(-2)">Continue shopping</button>
-          <button class="confirm-order-btn save" @click="confirm">Confirm order</button>
-        </div>
-      </div>
+
+
     </div>
+
+    <div class="col-lg-3">
+        <div class="sales">
+          <h3 class="cashback-sub-title">Sales</h3>
+          <p class="sales-text">Take advantage of the points for additional discount</p>
+
+            <div class="bonus-notification">
+              <span class="bonus-span">My bonuses: 100</span>
+              <h3 class="bonus-number">90</h3>
+            </div>
+
+          <div class="sales-input d-flex">
+            <input class="cashback-input" placeholder="Enter a promocode">
+            <img src="../../../assets/icons/Discount.svg">
+          </div>
+
+          <div class="delivery">
+            <h3 class="cashback-sub-title">Delivery</h3>
+            <div class="personal-btns">
+              <div style="width:50%" class="btns-item"><span class="btn-round"></span>Delivery</div>
+              <div style="width:50%" class="btns-item mr-0"><span class="btn-round"></span>Pick-up service</div>
+            </div>
+
+            <label class="cashback-label">Deliver address</label><br>
+            <input type="text" class="cashback-input" placeholder="Enter your address"/>
+
+            <div class="d-flex align-items-center map-box">
+              <img class="mr-2" src="../../../assets/clients/map.svg"> <span class="on-map">Specify on the map</span>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="total">
+              <div class=" discount d-flex justify-content-between">
+                <h3>Discount</h3>
+                <span>50 %</span>
+              </div>
+
+              <div class="delivery d-flex justify-content-between">
+                <h3>Delivery</h3>
+                <span style="color:#5CBD85;">Free</span>
+              </div>
+              <p>Order another 500$ for free shipping</p>
+              <div class="d-flex justify-content-between">
+                <h4>Total</h4>
+                <h4>300 $</h4>
+              </div>
+
+              <div class="d-flex justify-content-between ">
+                <button class="cancel">Continue shopping</button>
+                <button class="save" @click="$router.push('/home/personal-info')">Confirm order</button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+    </div>
+  </div>
+  <div>
   </div>
 </div>
 </template>
@@ -52,21 +89,18 @@
 <script>
 import BasketItem from "@/client/components/Basket/BasketItem";
 import {mapGetters} from 'vuex'
+import $ from "jquery";
 
 export default {
 name: "Basket",
   components:{
     BasketItem,
   },
-  data(){
-  return{
-    totalPrice: 0
-  }
-  },
+
 
 
   computed:{
-  ...mapGetters(["shoppingCart"])
+  ...mapGetters(["shoppingCart", ])
   },
   methods:{
     confirm(){
@@ -77,84 +111,89 @@ name: "Basket",
         this.$router.push('/home/personal-info')
       }
       },
-    countTotalPrice(){
-        var total = 0
-        for ( var i = 0, _len = this.shoppingCart.length; i < _len; i++ ) {
-          total += this.shoppingCart[i]['count']*this.shoppingCart[i]['price']
-        }
-        this.totalPrice = total;
-
+    addActive(){
+      $(document).ready(function() {
+        $('.btns-item').click(function() {
+          $('.btns-item.active').removeClass("active");
+          $(this).addClass("active");
+        });
+      });
     }
   },
   mounted(){
-  this.countTotalPrice()
-
+    this.$store.dispatch('countOrders')
+    this.addActive()
   }
-
-
-
 }
 </script>
 
 <style scoped>
-.confirm-order{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.confirm-order h3{
-  color: #484848;
-  font-size: 18px;
-}
-.confirm-order{
+.sales .cashback-sub-title{
   margin-bottom: 10px;
 }
-.confirm p{
-  color: #858585;
-  font-size: 14px;
-  margin-bottom: 40px;
+.sales-text{
+  color:#858585;
 }
-.confirm{
-  margin-top: 40px;
-  font-size:16px;
+.bonus-number{
+  color:#616CF5;
+  font-size:24px;
+  font-weight: normal;
 }
-.confirm .discount{
-  font-weight: bold;
-  font-size: 16px;
+.bonus-span{
+  font-weight: normal;
 }
-.free{
-  color: #5CBD85;
-}
-.confirm-order-btn, .confirm-continue-btn{
-  width:inherit;
-  padding:0 20px;
-}
-
-.total h3{
-  font-size: 26px;
-}
-.confirm-btns{
-  margin-bottom: 100px;
-}
-.sales{
-  border: 1px solid #D3D3D3;
+.sales-input{
+  border: 1px solid #E3E3E3;
   border-radius: 5px;
   height: 40px;
-  width:220px;
-  display: flex;
-  justify-content: center;
-  margin-top: 15px;
-  align-items: center;
-  padding:010px;
+  padding:0 10px;
+  margin-bottom: 42px;
 }
-.sales img{
-  width: 18px;
-  height:18px;
-}
-.sales input{
+.sales-input input{
   border:none;
   width: 100%;
-  margin-right: 10px;
-
+  height: 100%;
 }
+.sales .bonus-notification{
+  margin-bottom: 30px;
+}
+.delivery .cashback-sub-title{
+  margin-bottom: 20px;
+}
+.delivery .cashback-input{
+  width: 100%;
+  height: 40px;
+  margin-bottom: 27px;
+}
+.delivery .personal-btns{
+  margin-bottom: 30px;
+}
+.delivery .map-box{
+  margin-bottom: 48px;
+}
+.total h3{
+  font-size: 18px;
+  font-weight: normal;
+  color:#484848;
+}
+.discount{
+  margin-bottom: 10px;
+}
+.total .delivery{
+  margin-bottom: 5px;
+}
+.discount span{
+  font-size: 16px;
+  font-weight: normal;
+}
+.total p{
+  color:#858585;
+  margin-bottom: 45px;
+}
+.total h4{
+  font-size: 26px;
+  font-weight: normal;
+  margin-bottom: 25px;
+}
+
 </style>

@@ -12,7 +12,10 @@ import Settings from "@/components/settings/Settings";
 import Home from "@/client/components/Home/Home";
 import About from "@/client/components/About/About";
 import Dashboard from "@/client/components/Dashboard/Dashboard";
-import News from "@/client/components/News/News";
+import News from "@/components/News/News";
+import CashBack from "@/components/loyalty/CashBack";
+import Discount from "@/components/loyalty/Discount";
+import PromoCode from "@/components/loyalty/Promocode";
 // import auth from '../middle-ware/auth';
 import CatalogDetail from "@/client/components/ClientCatalog/CatalogDetail";
 import NewsDetail from "@/client/components/News/NewsDetail";
@@ -20,6 +23,7 @@ import Basket from "@/client/components/Basket/Basket";
 import ClientAccount from "@/client/components/ClientAccount/ClientAccount";
 import PersonalInfo from "@/client/components/PersonalInfo/PersonalInfo";
 import EditProfile from "@/client/components/EditProfile/EditProfile";
+import ProductInfo from "@/client/components/product-info/ProductInfo";
 
 
 
@@ -36,6 +40,7 @@ const routes = [
         component: Orders,
 
     },
+
     {
         path: "/home",
         name: "Home",
@@ -57,7 +62,12 @@ const routes = [
                 component:News
             },
             {
-                path:'catalog-detail',
+                path:'product-info',
+                name:"ProductInfo",
+                component:ProductInfo
+            },
+            {
+                path:'catalog-detail/:id',
                 name:"CatalogDetail",
                 component:CatalogDetail,
 
@@ -102,6 +112,24 @@ const routes = [
         path: "/loyalty",
         name: "Loyalty",
         component: Loaylty,
+        children: [
+            {
+                path: '',
+                name:'CashBack',
+                component:CashBack
+            },
+            {
+                path: 'promocode',
+                name:'PromoCode',
+                component:PromoCode
+            },
+            {
+                path: 'discount',
+                name:'Discount',
+                component:Discount
+            },
+
+        ]
 
 
     },
@@ -127,6 +155,12 @@ const routes = [
         path:'/settings',
         name:"Settings",
         component: Settings,
+
+    },
+    {
+        path: "/news",
+        name: "News",
+        component: News,
 
     },
     {

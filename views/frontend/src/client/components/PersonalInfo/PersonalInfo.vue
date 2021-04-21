@@ -13,20 +13,32 @@
               <input class="cashback-input email" placeholder="Email address">
 
               <div class="personal-btns">
-                <button class="btns-item">Delivery</button>
-                <button class="btns-item">Pick-up service</button>
+                <div class="btns-item"><span class="btn-round"></span>Delivery</div>
+                <div class="btns-item"><span class="btn-round"></span>Pick-up service</div>
               </div>
 
+              <label class="personal-label">Delivery service</label><br>
+              <select class="personal-form form-control long-form-control  form-control-lg mb-3" aria-label=".form-select-lg example">
+                <option>Kyrgyzstan</option>
+                <option>Russia</option>
+                <option>USA</option>
+                <option>Kyrgyzstan</option>
+                <option>Russia</option>
+                <option>USA</option>
+              </select>
+              <label class="personal-label">Your country</label><br>
+              <input class="cashback-input" placeholder="Your country">
               <label class="personal-label">Delivery address</label><br>
-              <input class="cashback-input email" placeholder="Enter your address">
+              <input class="cashback-input email" placeholder="Delivery address">
 
-              <div class="d-flex align-items-center map-box">
+
+          <div class="d-flex align-items-center map-box">
                 <img class="mr-2" src="../../../assets/clients/map.svg"> <span class="on-map">Specify on the map</span>
               </div>
 
               <div class="d-flex">
-                  <button class="save save-order">Confirm order</button>
-                  <button class="cancel cancel-order">Cancel</button>
+                <button class="cancel cancel-order">Cancel</button>
+                <button class="save save-order" >Confirm order</button>
               </div>
 
             </form>
@@ -37,8 +49,22 @@
 </template>
 
 <script>
+import $ from 'jquery'
 export default {
-name: "PersonalInfo"
+name: "PersonalInfo",
+  methods:{
+      addActive(){
+        $(document).ready(function() {
+          $('.btns-item').click(function() {
+            $('.btns-item.active').removeClass("active");
+            $(this).addClass("active");
+          });
+        });
+      }
+  },
+  mounted(){
+  this.addActive()
+  }
 }
 </script>
 
@@ -47,33 +73,18 @@ name: "PersonalInfo"
   width: 100%;
   margin-bottom: 20px;
 }
-.btns-item{
-  border: 1px solid #D3D3D3;
-  border-radius: 5px;
-  width: 150px;
-  height: 30px;
-  background: none;
-  margin-right: 10px;
-}
-.personal-btns{
-  margin-bottom: 21px;
-}
 .personal-label{
   margin-bottom: 10px;
 }
 .email{
   margin-bottom: 41px !important;
 }
-.on-map{
-  font-size: 16px;
-  color:#616cf5;
-  font-weight: 600;
-}
-.map-box{
-  margin-bottom: 56px;
+.personal-info .personal-btns{
+  margin-bottom: 27px;
 }
 .save-order,.cancel-order{
   width: 130px;
   padding:10px 10px;
 }
+
 </style>

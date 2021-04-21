@@ -21,7 +21,7 @@
 
     <h3 class="price">Categories:</h3>
     <ul class="list-group">
-      <li v-for="category in listCategory" :key="category.id" :class="{active: category.name === filtered}" class="catalog-list" @click="filtered=category.name">{{category.name}}</li>
+      <li v-for="category in listCategory" :key="category.id" :class="{active: category._id === filtered}" class="catalog-list" @click="filtered=category._id">{{category.name}}</li>
     </ul>
     </div>
   </div>
@@ -33,7 +33,6 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
 import $ from 'jquery';
 import ClientCatalogItem from "@/client/components/ClientCatalog/ClientCatalogItem";
 
@@ -44,6 +43,8 @@ name: "Catalog",
   },
   data(){
   return{
+    catalog:[],
+    listCategory:[{_id:'', name:''}],
     filtered: '',
     from:0,
     to:0,
@@ -60,20 +61,17 @@ name: "Catalog",
             return product.price >= this.from && product.price <= this.to
         })
     },
-   ...mapGetters(['listCategory', 'catalog'])
+
 
 
   },
-  methods:{
-    getRangeValues(){
+  methods: {
+    getRangeValues() {
       const slider = $("#range-slider").data("ionRangeSlider");
       this.from = slider.result.from;
       this.to = slider.result.to;
-      },
-    allCategory(){
-      $('.catalog-list').first().text('All');
     },
-    rangeSlider(){
+    rangeSlider() {
       $("#range-slider").ionRangeSlider({
         type: "double",
         min: 0,
@@ -81,21 +79,34 @@ name: "Catalog",
         from: 10,
         to: 800,
         prefix: "$",
-        onChange: (data)=>{
+        onChange: (data) => {
           this.from = data.from;
           this.to = data.to
         }
       });
     },
-    getCategories(){
-      this.$store.dispatch('getCategories')
-    }
+    async  getProducts(){
+      await this.axios.get(this.url('getProducts'))
+          .then((response) => {
+            this.catalog = response.data.objects;
+
+          })
     },
+
+    async getCategories() {
+      await this.axios.get('http://localhost:8080/api/getCategories')
+          .then((res) => {
+            this.listCategory = res.data.objects;
+            this.listCategory.unshift({_id: '', name: 'All'})
+          })
+    },
+  },
   mounted(){
     this.rangeSlider()
-    this.allCategory()
     this.getRangeValues()
     this.getCategories()
+    this.getProducts()
+
 }
 
 }

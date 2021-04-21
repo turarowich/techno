@@ -5,23 +5,23 @@
           <div class="no-product">
             <img src="../../assets/img/noCatalog2.png">
             <p>There are no products in this category yet</p>
-            <button class="save add-product" @click="addProduct">Add</button>
+            <button class="save add-product" @click="addProduct">Add product</button>
           </div>
     </div>
 
     <div v-else>
-      <div  v-for="catalog in  catalogList" class="catalog-item table-item d-flex align-items-center" :key="catalog.id">
+      <div  v-for="catalog in  catalogList" class="catalog-item table-item d-flex align-items-center" :key="catalog._id">
         <div  style="width: 5%;"><label class="custom-checkbox"><input ref="catalog" type="checkbox" :value="catalog" v-model="catalog.checked">
           <span class="checkmark"></span></label>
         </div>
 
         <div  class="d-flex align-items-center"  style="width: 42%;">
           <div class="table-img">
-            <img src="../../assets/img/sneak.webp">
+            <img >
           </div>
           {{catalog.name}}
         </div>
-        <div  style="width: 24%;">{{catalog.article}}</div>
+        <div  style="width: 24%;">{{catalog.description}}</div>
         <div  style="width: 9%;">{{catalog.quantity}}</div>
         <div  style="width: 10%;">{{catalog.price}}</div>
         <div  style="width:8%;" class="see-catalog"><img @click="$emit('hideCatalog',catalog.id)" class="see-catalog" src="../../assets/icons/see.svg"><img class="nonsee-catalog" src="../../assets/icons/nonsee.svg"></div>
@@ -33,8 +33,8 @@
             </div>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
               <ul class="list-group " >
-                <li class="list-group-item" data-toggle="modal" data-target="#edit" @click="$emit('editCatalog',catalog.id)">Edit</li>
-                <li class="list-group-item" v-on:click="$emit('deleteCatalog' ,catalog.id)">Delete</li>
+                <li class="list-group-item" data-toggle="modal" data-target="#edit" @click="$emit('editCatalog',catalog._id)">Edit</li>
+                <li class="list-group-item" v-on:click="$emit('deleteProduct' ,catalog._id)">Delete</li>
               </ul>
             </div>
           </div>

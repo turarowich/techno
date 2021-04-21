@@ -21,7 +21,7 @@
               <label>Select category</label>
               <select v-model="currentData.category" class="form-control modal-select long-form-control mb-3">
                 <option value="">Without category</option>
-                <option v-for="category in listCategory.slice(1)" :value="category.name.toLowerCase()" :key="category.id">{{category.name}}</option>
+                <option v-for="category in listCategory.slice(1)" :value="category._id" :key="category._id">{{category.name}}</option>
               </select>
             </div>
 
@@ -74,24 +74,18 @@ export default {
   data(){
     return {
       currentData: '',
-
-
     }
   },
   methods: {
 
     onSubmit() {
       this.$emit('editedCatalogSubmit', this.currentData);
-      $('#edit').modal("hide")
-
-
-
+      $('#edit-catalog').modal("hide")
     },
-
-
   },
+
   watch:{
-    edit_catalog(newCat){
+      edit_catalog(newCat){
       this.currentData = Object.assign({}, newCat)
     }
   },

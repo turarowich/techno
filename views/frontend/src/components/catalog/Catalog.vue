@@ -34,7 +34,7 @@
       <div class="catalog-wrapper d-flex">
         <div class="catalog-menu" style="width:18%">
           <ul class="list-group" >
-            <li class="catalog-list" :id="category.name" :ref="'menu'+index"  v-for="(category,index) in listCategory" :key="category._id"  :class="{active: filtered === category.name.toLowerCase()}"  @click="changeFilter(category.name.toLowerCase())">
+            <li class="catalog-list" :id="category.name" :ref="'menu'+index"  v-for="(category,index) in listCategory" :key="category._id"  :class="{active: filtered === category._id}"  @click="filtered = category._id">
               <span>{{category.name}}</span>
               <div class="dropleft dropMenu">
                 <div class="dropdown-toggle" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -42,7 +42,7 @@
                 </div>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenu">
                   <ul class="list-group" >
-                    <li class="list-group-item" data-toggle="modal" data-target="#edit-category" @click="editCategory(category._id)">Edit</li>
+                    <li class="list-group-item" data-toggle="modal" data-target="#edit-category">Edit</li>
                     <li class="list-group-item" @click.stop.prevent="deleteCategory(category._id)">Delete</li>
                   </ul>
                 </div>
@@ -51,17 +51,21 @@
           </ul>
         </div>
         <AddService/>
-        <Edit :edit_catalog="edit_catalog"
+        <EditCatalog :edit_catalog="edit_catalog"
               :catalogList="catalogList"
               @editedCatalogSubmit="editedCatalogSubmit"
               :listCategory="listCategory"
         />
         <AddCategory
             :listCategory="listCategory"
+            :getCategories="getCategories"
+
         />
         <AddProduct
+            :listCategory="listCategory"
+            :getProducts="getProducts"
 
-            :listCategory="listCategory"/>
+        />
 
         <EditCategory
             :listCategory="listCategory"
@@ -79,9 +83,8 @@
           <div class="table-content" >
 
               <CatalogItem
-
                   v-bind:catalogList="catalogToDisplay"
-                  v-on:deleteCatalog="deleteCatalog"
+                  v-on:deleteProduct="deleteProduct"
                   v-on:editCatalog="editCatalog"
               />
 
@@ -110,11 +113,11 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+
 import CatalogItem from "@/components/catalog-item/CatalogItem";
 import AddProduct from "@/modals/catalog/add-product/AddProduct";
 import AddService from "@/modals/catalog/add-service/AddService";
-import Edit from "@/modals/catalog/edit/Edit";
+import EditCatalog from "@/modals/catalog/edit-catalog/EditCatalog";
 import AddCategory from "@/modals/catalog/add-category/AddCategory";
 import EditCategory from "@/modals/catalog/add-category/EditCategory";
 import Swal from 'sweetalert2';
@@ -125,25 +128,14 @@ name: "Catalog",
     CatalogItem,
     AddProduct,
     AddService,
-    Edit,
+    EditCatalog,
     AddCategory,
     EditCategory
   },
   data(){
     return{
-      catalogList:[
-        {id:1,name:"Essential Shoes",article:"B3214PO", quantity:1, price: "450 $", category:'shoes'},
-        {id:2,name:"Football boots",article:"B3214PO", quantity:5, price: "350 $", category:'shoes'},
-        {id:3,name:"Sneakers",article:"B3214PO", quantity:4, price: "370 $", category:'shoes'},
-        {id:6,name:"Shoues",article:"B3214PO", quantity:4, price: "370 $", category:'shoes'},
-        {id:4,name:"T-shirts",article:"B3214PO", quantity:2, price: "220 $", category: 'clothes'},
-        {id:5,name:"Jackets",article:"B3214PO", quantity:2, price: "220 $", category: 'clothes'},
-        {id:7,name:"Jackets",article:"B3214PO", quantity:2, price: "220 $", category: 'clothes'},
-        {id:8,name:"Jackets",article:"B3214PO", quantity:2, price: "220 $", category: 'clothes'},
-        {id:9,name:"Jackets",article:"B3214PO", quantity:2, price: "220 $", category: 'clothes'},
-        {id:10,name:"Jackets",article:"B3214PO", quantity:2, price: "220 $", category: 'clothes'},
-      ],
-
+      listCategory:[{_id:'', name:'All'}],
+      catalogList:[],
       search:'',
       sorting:true,
       filtered: '',
@@ -154,11 +146,10 @@ name: "Catalog",
       pageToOpen: 1,
       currentPage: 1,
       catalogToDisplay:[],
-
     }
   },
   computed:{
-    ...mapGetters(['listCategory']),
+
     selectAll: function() {
         return this.catalogList.every(function(user){
           return user.checked
@@ -221,19 +212,14 @@ name: "Catalog",
         });
       }
     },
-    changeFilter(name){
-      this.filtered = name;
-
-    },
     moveCategory(value){
-        let  move = this.catalogList.filter(catalog => catalog.checked)
+      let  move = this.catalogList.filter(catalog => catalog.checked)
         move.every(catalog=>catalog.category = value)
         move.map(cat=>cat.checked = false);
         this.renderPaginationList()
        this.$informationAlert('Category has been changed')
 
     },
-
     editedCatalogSubmit(edited){
       var foundIndex = this.catalogList.findIndex(x => x.id === edited.id);
       this.catalogList[foundIndex] = edited;
@@ -241,7 +227,7 @@ name: "Catalog",
       this.$successAlert('Changes are saved')
     },
     editCatalog(id){
-     this.edit_catalog = this.catalogList.find((catalog)=>catalog.id === id)
+     this.edit_catalog = this.catalogList.find((catalog)=>catalog._id === id)
     },
     deleteAllOrder() {
       if(this.selectAll){
@@ -254,9 +240,6 @@ name: "Catalog",
       }
 
       this.renderPaginationList()
-    },
-    allCategory(){
-      $('.list-group .catalog-list').first().text('All');
     },
     toggleSelect: function() {
       let select = this.selectAll;
@@ -285,7 +268,9 @@ name: "Catalog",
      $('.date-pol').removeClass('active')
 
     },
-    deleteCatalog(id){
+
+
+    deleteProduct(id){
       Swal.fire({
         showConfirmButton: true,
         html: 'Are you sure to remove this <br>product',
@@ -310,67 +295,71 @@ name: "Catalog",
         }
       }).then((result) => {
         if (result.isConfirmed) {
-          this.filteredList.filter(el=> el.id !== id);
+          this.axios.delete(this.url('deleteProduct',id))
+          .then(()=>{
+            this.getProducts()
+            Swal.fire({
+                  title:'Success',
+                  timer:1500,
+                  text:'Product has been removed',
+                  showConfirmButton:false,
+                  position: 'top-right',
+                  customClass:{
+                    popup:'success-popup',
+                    content:'success-content',
+                    title:'success-title',
+                    header:'success-header',
+                    image:'success-img'
+                  },
+                  showClass:{
+                    popup: 'animate__animated animate__zoomIn'
+                  },
 
-          Swal.fire({
-            title:'Success',
-            timer:1500,
-            text:'Product has been removed',
-            showConfirmButton:false,
-            position: 'top-right',
-            customClass:{
-              popup:'success-popup',
-              content:'success-content',
-              title:'success-title',
-              header:'success-header',
-              image:'success-img'
-            },
-            showClass:{
-              popup: 'animate__animated animate__zoomIn'
-            },
-
-              }
-          )}
+                }
+            )
+          })
+       }
       })
-
     },
-    getProducts: function() {
-        this.axios.get(this.url('getProducts'))
-            .then((response) => {
-                this.products = response.data
-              console.log(response)
-            })
-    },
-
     deleteCategory(id){
       this.axios.delete(this.url('deleteCategory',id))
-      .then((response)=>{
-        console.log(response)
-      })
-      // const idx = this.listCategory.findIndex(el=>el.id === id);
-      // this.$refs[Object.keys(this.$refs)[idx-1]].click()
+      this.getCategories()
+      const idx = this.listCategory.findIndex(el=>el._id === id);
+      this.$refs[Object.keys(this.$refs)[idx-1]].click()
     },
-    getCategories(){
-      this.$store.dispatch('getCategories')
-    }
+    async  getProducts(){
+      await this.axios.get(this.url('getProducts'))
+          .then((response) => {
+              this.catalogList = response.data.objects;
+              this.renderPaginationList()
+  })
+    },
+    async getCategories(){
+      await this.axios.get(this.url('getCategories'))
+          .then((res)=>{
+            this.listCategory = res.data.objects;
+            this.listCategory.unshift({_id:'', name: 'All'})
 
+          })
+    },
 
   },
+
+
   mounted(){
-    this.allCategory()
     this.getCategories()
     this.renderPaginationList()
-
+    this.getProducts()
   },
   watch: {
     perPage: function(){
-      this. renderPaginationList();
+      this.renderPaginationList();
     },
     search: function (){
-      this. renderPaginationList()
+      this.renderPaginationList()
     },
     filtered:function(){
-      this. renderPaginationList()
+      this.renderPaginationList()
     },
 
   },

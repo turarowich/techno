@@ -40,7 +40,7 @@
       <input class="cashback-input" placeholder="0" >
     </div>
     <div  class="discount-input d-flex">
-      <button class="cash-btn"><img src="../../../assets/icons/enable+.svg"></button>
+      <button class="cash-btn"><img src="../../assets/icons/enable+.svg"></button>
     </div>
   </div>
 

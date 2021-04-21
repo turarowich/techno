@@ -19,7 +19,7 @@
               <div>
                 <label>Move to the Category</label>
                 <select class="form-control long-form-control modal-select mb-5">
-                  <option v-for="category in listCategory" :key="category.id">{{category.name}}</option>
+                  <option v-for="category in listCategory" :key="category._id">{{category._id}}</option>
                 </select>
               </div>
               <div class="d-flex justify-content-end">
