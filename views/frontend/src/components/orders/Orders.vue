@@ -40,10 +40,16 @@
       <div>
         <button class="app-buttons-item" @click="showYesterday"><img src="../../assets/icons/yesterday.svg"><span>Yesterday</span></button>
         <button class="app-buttons-item" @click="showTodayData"><img src="../../assets/icons/yesterday.svg"><span>Today</span></button>
-        <button class="app-buttons-item" @click="clickOnDate"><img src="../../assets/icons/yesterday.svg"><input  :value="filterByDate" placeholder="2021-12-03" class="date-pick" id="datepicker"></button>
+        <button class="app-buttons-item" @click="clickOnDate"><img src="../../assets/icons/yesterday.svg"><input  :value="filterByDate" class="date-pick" id="datepicker"></button>
       </div>
     </div>
-
+      <span>Main Checkbox</span>
+      <input type="checkbox"  @click="bektemir">
+      <div ref="bektemir">
+        <input type="checkbox" value="hello">
+        <input type="checkbox" value="hello">
+        <input type="checkbox" value="hello">
+      </div>
     <div class="main-search d-flex align-items-center">
       <img src="../../assets/icons/search-icon.svg">
       <input class="main-input" type="text" placeholder="Search" v-model="search">
@@ -219,13 +225,13 @@ name: "Orders",
         });
       }
     },
-    toggleSelect: function () {
-      var select = this.selectAll;
-      this.orderList.forEach(function (user) {
-        user.checked = !select;
-      });
-      this.selectAll = !select;
-    },
+    // toggleSelect: function () {
+    //   var select = this.selectAll;
+    //   this.orderList.forEach(function (user) {
+    //     user.checked = !select;
+    //   });
+    //   this.selectAll = !select;
+    // },
     deleteAllOrder() {
       if (this.selectAll) {
         this.orderList = [];
@@ -351,6 +357,19 @@ name: "Orders",
         }
       })
     },
+    bektemir(){
+      let check = true;
+      let eventItems = this.$refs.bektemir.children
+      for (let i = 0; i <=eventItems.length ; i++) {
+        if(check){
+          eventItems[i].checked = true
+        }
+        else{
+          eventItems[i].checked = false
+        }
+        check = !check
+      }
+    }
 
   },
 

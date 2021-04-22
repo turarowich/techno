@@ -22,8 +22,7 @@
   </div>
   <div class="table-content">
    <PromoCodeItem/>
-   <PromoCodeItem/>
-   <PromoCodeItem/>
+
   </div>
   <AddPromocode/>
 

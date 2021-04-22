@@ -209,11 +209,12 @@ export default {
         });
       }
     },
-    toggleSelect: function() {
+    toggleSelect: function () {
       var select = this.selectAll;
-      this.clientList.forEach(function(user) {
+      this.clientList.forEach(function (user) {
         user.checked = !select;
       });
+      this.selectAll = !select;
     },
     sortByBonus() {
       this.clientToDisplay.sort((a, b) => this.sorting ? (parseInt(a.bonus) - parseInt(b.bonus)) : (parseInt(b.bonus) - parseInt(a.bonus)));
@@ -244,12 +245,7 @@ export default {
           closeButton:'close-btn'
 
         },
-        showClass: {
-          popup: 'animate__animated animate__zoomIn'
-        },
-        hideClass: {
-          popup: 'animate__animated animate__zoomOut'
-        }
+
       }).then((result) => {
         if (result.isConfirmed) {
           this.clientList = this.clientList.filter(el=> el.id !== id);
@@ -267,10 +263,6 @@ export default {
                   header:'success-header',
                   image:'success-img'
                 },
-                showClass:{
-                  popup: 'animate__animated animate__zoomIn'
-                },
-
               }
           )}
       })

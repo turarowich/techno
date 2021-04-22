@@ -33,11 +33,11 @@
               <div class="d-flex">
                 <div style="width:50%" class=" mr-2 d-flex align-items-center">
                   <label class="promo-label">From</label>
-                  <div class="calendar-period d-flex align-items-center"><input><img src="../../assets/icons/Calendar.svg"></div>
+                  <div class="calendar-period d-flex align-items-center"><input id="demo-1"><img src="../../assets/icons/Calendar.svg"></div>
                 </div>
                 <div style="width:50%" class="d-flex align-items-center mr-0">
                   <label class="promo-label">To</label>
-                  <div class=" calendar-period d-flex align-items-center"><input><img src="../../assets/icons/Calendar.svg"></div>
+                  <div class=" calendar-period d-flex align-items-center"><input id="demo-2"><img src="../../assets/icons/Calendar.svg"></div>
                 </div>
               </div>
             </div>
@@ -93,6 +93,20 @@ import $ from "jquery";
 export default {
   name: "Promocode",
   methods:{
+    selectDates(){
+      new this.$lightpick({
+        field: document.getElementById('demo-1'),
+        onSelect: function(date){
+          document.getElementById('demo-1').innerHTML = date.format('Do MMMM YYYY');
+        }
+      });
+      new this.$lightpick({
+        field: document.getElementById('demo-2'),
+        onSelect: function(date){
+          document.getElementById('demo-2').innerHTML = date.format('Do MMMM YYYY');
+        }
+      });
+    },
     addActive(){
       $(document).ready(function() {
         $('.btns-item').click(function() {
@@ -104,6 +118,7 @@ export default {
   },
   mounted(){
     this.addActive()
+    this.selectDates()
   }
 }
 </script>

@@ -95,14 +95,7 @@ name: "Header",
 <style scoped>
 
 
-.profile .dropdown-menu{
-  display: block;
-  opacity: 0;
-}
-.profile .dropdown-menu.show{
-  opacity:1;
-  transition: .3s;
-}
+
 .header{
   background: #fff;
   height: 60px;
