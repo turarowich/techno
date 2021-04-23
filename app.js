@@ -15,8 +15,9 @@ const credentials = { key: privateKey, cert: certificate };
 
 const httpServer = http.createServer(app);
 const httpsServer = https.createServer(credentials, app);
-
-
+const passport = require("passport");
+const strategy = require("passport-facebook");
+const FacebookStrategy = strategy.Strategy;
 const { initClientDbConnection } = require('./config/dbutil');
 const userConnection = initClientDbConnection()
 
@@ -32,14 +33,38 @@ const VerifyToken = require('./services/verifyToken');
 global.appRoot = path.resolve(__dirname);
 global.userConnection = userConnection;
 
+passport.serializeUser(function (user, done) {
+    done(null, user);
+});
+
+passport.deserializeUser(function (obj, done) {
+    done(null, obj);
+});
+
+passport.use(
+    new FacebookStrategy(
+        {
+            clientID: config.FACEBOOK_CLIENT_ID,
+            clientSecret: config.FACEBOOK_CLIENT_SECRET,
+            callbackURL: config.FACEBOOK_CALLBACK_URL,
+            profileFields: ["email", "first_name", "last_name", "gender", "birthday"]
+        },
+        function (accessToken, refreshToken, profile, done) {
+            done(null, profile._json);
+        }
+    )
+);
 
 var cors = require("cors");
+app.use(passport.initialize());
 app.use(cors());
 app.use(express.static(__dirname + '/views/frontend/dist'));
 app.use(formidableMiddleware());
+
+router.get("/auth/facebook", passport.authenticate("facebook", { authType: 'reauthenticate'}));
 app.use('/images', express.static(__dirname + '/views/frontend/images'))
 app.use('/api', VerifyToken, require('./routes/api.js')(router))
-app.use('/', require('./routes/home.js')(router))
+app.use('/', require('./routes/home.js')(router, passport))
 
 
 

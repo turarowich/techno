@@ -62,9 +62,8 @@ function sendError(error, lang) {
     }
     return result
 };
-
 module.exports = {
     useDB: useDB,
     saveImage: saveImage,
-    sendError: sendError
+    sendError: sendError,
 }

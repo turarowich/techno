@@ -73,6 +73,21 @@ const clientSchema = new Schema({
         type: Schema.Types.ObjectId, 
         ref: 'Category' 
     },
+    fb_id: {
+        type: String,
+        required: false,
+        default: ''
+    },
+    apple_id: {
+        type: String,
+        required: false,
+        default: ''
+    },
+    twitter_id: {
+        type: String,
+        required: false,
+        default: ''
+    },
     createdAt: {
         type: Date,
         required: true,

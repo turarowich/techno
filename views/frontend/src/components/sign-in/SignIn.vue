@@ -11,6 +11,7 @@
 
   <div class="login">
    <h1 class="welcome-sign-in">Welcome<br> to loy <span>Gift</span></h1>
+   <a href="http://localhost:8080/auth/facebook">Facebook</a>
     <form @submit.prevent="loginSubmit">
       <label class="label">Login</label>
       <input v-model="login.email" name="email" class="login-input">

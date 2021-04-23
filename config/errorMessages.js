@@ -15,7 +15,12 @@ const en_messages = {
     password_max: 'Password is too long',
     password_valid: "Please fill a valid password",
     user_not_found: 'User not found',
-    password_wrong: 'Wrong password'
+    user_exist: 'User already exist',
+    password_wrong: 'Wrong password',
+    client_user_exist_title: 'User already signed in',
+    client_user_exist_msg: 'Probably u have been signed in already, try to authenticate',
+    client_user_not_found_title: 'User not found',
+    client_user_not_found_msg: 'Probably u didnt sign up'
 }
 const ru_messages = {
     name_required: 'Имя обязательно',
@@ -34,7 +39,12 @@ const ru_messages = {
     password_max: 'Пароль слишком длинный',
     password_valid: "Пожалуйста, введите действующий пароль",
     user_not_found: 'Пользователь не найден',
-    password_wrong: 'Неверный пароль'
+    user_exist: 'Пользователь уже существует',
+    password_wrong: 'Неверный пароль',
+    client_user_exist_title: 'Пользователь уже зарегистрирован',
+    client_user_exist_msg: 'Возможно вы уже зарегистрировались ранее, попробуйте авторизоватся',
+    client_user_not_found_title: 'Пользователь не найден',
+    client_user_not_found_msg: 'Возможно вы ещё не зарегистрировались'
 }
 module.exports = {
     en: en_messages,
