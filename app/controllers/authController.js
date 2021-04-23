@@ -288,8 +288,8 @@ async function socialRegister(type, token){
         response = await fbRegister(token)
     } else if (type == "twitter") {
         response = await twitterRegister(token)
-    } else if (type == "apple") {
-        response = await appleRegister(token)
+    } else if (type == "google") {
+        response = await googleRegister(token)
     }
     return response
 } 
@@ -371,7 +371,7 @@ function twitterRegister(token) {
     }
     return result
 }
-function appleRegister(token) {
+function googleRegister(token) {
     // let fb_response = await axios({
     //     url: 'https://graph.facebook.com/me',
     //     method: 'get',

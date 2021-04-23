@@ -78,7 +78,7 @@ const clientSchema = new Schema({
         required: false,
         default: ''
     },
-    apple_id: {
+    google_id: {
         type: String,
         required: false,
         default: ''
