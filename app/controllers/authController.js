@@ -5,9 +5,8 @@ const { sendError } = require('../../services/helper')
 var validate = require('../../config/errorMessages');
 var axios = require('axios');
 const { response } = require('express');
-var passport = require('passport')
-    , FacebookStrategy = require('passport-facebook').Strategy;
-var queryString = require('query-string')
+var queryString = require('query-string');
+
 class AuthController{
     register = async function (req, res) {
         let db = global.userConnection.useDb('loygift');
@@ -370,41 +369,31 @@ function twitterRegister(token) {
     }
     return result
 }
-function googleRegister(token) {
-    // let fb_response = await axios({
-    //     url: 'https://graph.facebook.com/me',
-    //     method: 'get',
-    //     params: {
-    //         fields: ['id', 'email', 'first_name', 'last_name', 'gender', 'birthday', 'picture'].join(','),
-    //         access_token: token,
-    //     },
-    // })
-
-    let fb_response = {
-        data: {
-            id: '259053925911615',
-            first_name: 'Али',
-            last_name: 'Кааров',
-            gender: 'male',
-            birthday: '02/01/1993',
-            email: "kaarov8232@gmail.com",
-            picture: {
-                data: {
-                    height: 50,
-                    is_silhouette: true,
-                    url: 'https://scontent.ffru7-1.fna.fbcdn.net/v/t1.30497-1/cp0/c15.0.50.50a/p50x50/84628273_176159830277856_972693363922829312_n.jpg?_nc_cat=1&ccb=1-3&_nc_sid=12b3be&_nc_ohc=BnyBL7OgTNQAX938V_m&_nc_ht=scontent.ffru7-1.fna&tp=27&oh=f83ac1aba00c0d3d43285c0a0f8719db&oe=60A5E538',
-                    width: 50
-                }
+async function googleRegister(token) {
+    let response = await axios({
+        url: 'https://www.googleapis.com/oauth2/v3/tokeninfo',
+        method: 'get',
+        params: {
+            id_token: token
+        }
+    }).catch(error => {
+        let result = {
+            status: 500,
+            msg: "Token is not valid",
+            errors: {
+                token: "Token is not valid",
             }
         }
+        return { error: result }
+    })
+    if (response.error) {
+        return response
     }
-    let check = { $or: [{ fb_id: fb_response.data.id }, { email: fb_response.data.email }] }
+    let check = { $or: [{ google_id: response.data.sub }, { email: response.data.email }] }
     let save = {
-        name: fb_response.data.first_name + ' ' + fb_response.data.last_name,
-        email: fb_response.data.email,
-        birthDate: fb_response.data.birthday,
-        gender: fb_response.data.gender,
-        fb_id: fb_response.data.id,
+        name: response.data.name,
+        email: response.data.email,
+        google_id: response.data.sub,
     }
     let result = {
         check: check,
