@@ -153,13 +153,15 @@ class AuthController{
         }
 
         socialAuth: try {
-            let social_res = await socialRegister(req.fields.social, req.fields.token)
-            
-            if (social_res.error) {
-                result = social_res.error
-                break socialAuth
+            let check = { fb_id: req.fields.fb_id }
+            if(!check.fb_id){
+                check = { twitter_id: req.fields.twitter_id }
+                if (!check.twitter_id) {
+                    check = { google_id: req.fields.google_id }
+                }
             }
-            let user = await Client.findOne(social_res.check)
+            
+            let user = await Client.findOne(check)
             if(user){
                 result = {
                     status: 500,
@@ -172,7 +174,11 @@ class AuthController{
                 }
                 break socialAuth
             }
-            var client = new Client(social_res.save)
+            check.name = req.fields.name
+            check.email = req.fields.email
+            check.birthDate = req.fields.birthday
+            check.gender = req.fields.gender
+            var client = new Client(check)
             await client.save({ validateBeforeSave: false })
             result = {
                 'status': 200,
@@ -203,13 +209,14 @@ class AuthController{
             lang = 'en'
         }
         socialAuth: try {
-            let social_res = await socialRegister(req.fields.social, req.fields.token)
-            
-            if (social_res.error) {
-                result = social_res.error
-                break socialAuth
+            let check = { fb_id: req.fields.fb_id }
+            if (!check.fb_id) {
+                check = { twitter_id: req.fields.twitter_id }
+                if (!check.twitter_id) {
+                    check = { google_id: req.fields.google_id }
+                }
             }
-            let client = await Client.findOne(social_res.check)
+            let client = await Client.findOne(check)
             
             if (!client) {
                 result = {
