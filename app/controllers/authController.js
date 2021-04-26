@@ -276,8 +276,10 @@ class AuthController{
     };
 
     callbackFB = async function (req, res) {
-        var token = req.user.jwtoken;
-        res.cookie('auth', token);
+        // var token = req.user.jwtoken;
+        var fb_token = req.authInfo;
+        res.cookie('auth', fb_token);
+        await socialRegister("facebook", fb_token)
         res.redirect('/');
     };
     
@@ -327,6 +329,7 @@ async function fbRegister(token){
         check: check,
         save: save
     }
+    console.log(result,"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     return result
 }
 function twitterRegister(token) {

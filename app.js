@@ -50,7 +50,7 @@ passport.use(
             profileFields: ["email", "first_name", "last_name", "gender", "birthday"]
         },
         function (accessToken, refreshToken, profile, done) {
-            done(null, profile._json);
+            done(null, profile._json,accessToken);
         }
     )
 );
