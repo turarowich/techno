@@ -13,36 +13,29 @@
     <p class="cashback-description">Increase customer loyalty with the help of this tool</p>
   </div>
 
-  <div class="discount-system discount-bottom d-flex align-items-center">
+  <div class="discount-system discount-bottom d-flex ">
     <div class="first-block">
       <h3 class="cashback-sub-title mb-3">Discount system</h3>
       <div class="show-data d-flex align-items-center">Total Purchase</div>
+      <div class="show-data d-flex align-items-center">Total Purchase</div>
     </div>
     <div class="discount-input">
-      <p class="sum-point mb-3">Specify a discount</p>
+      <label class="mb-3">Specify a discount</label>
+      <input class="cashback-input" placeholder="0">
       <input class="cashback-input" placeholder="0">
     </div>
     <div  class="discount-input ">
-      <p class="sum-point mb-3">Specify a discount</p>
+      <label class="mb-3">Amount of shopping</label>
+      <input class="cashback-input" placeholder="0">
       <input class="cashback-input" placeholder="0">
     </div>
+    <button class="discount-btn">
+      <img src="../../assets/icons/enable+.svg">
+    </button>
+
   </div>
 
 
-  <h3 class="cashback-sub-title mb-3">Validity period</h3>
-  <div class="valid-bottom discount-system d-flex align-items-end">
-    <div class="first-block">
-     <div class="show-data mb-3"></div>
-     <input  class="cashback-input" placeholder="+ add product or category">
-    </div>
-    <div class="discount-input">
-      <input class="cashback-input mb-3" placeholder="10 %">
-      <input class="cashback-input" placeholder="0" >
-    </div>
-    <div  class="discount-input d-flex">
-      <button class="cash-btn"><img src="../../assets/icons/enable+.svg"></button>
-    </div>
-  </div>
 
   <button class="save">Save</button>
 
@@ -61,13 +54,21 @@ name: "Discount"
 }
 
 .discount-system{
-  width: 60%;
+  width: 70%;
 
 }
-.valid-bottom{
-  margin-bottom: 100px;
-
+.discount-btn{
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #616CF5;
+  border-radius: 5px;
+  background: none;
+  margin-top: 36px;
 }
+
 .show-data img{
   width: 35px;
   height: 35px;
@@ -80,6 +81,7 @@ name: "Discount"
   height:45px;
   padding-left:10px;
   box-sizing: border-box;
+  margin-bottom: 15px;
 }
 .discount-input{
   width: 15%;
@@ -87,6 +89,7 @@ name: "Discount"
 }
 .discount-input input{
   width: 100%;
+  margin-bottom: 15px;
 }
 .first-block{
   width: 70%;

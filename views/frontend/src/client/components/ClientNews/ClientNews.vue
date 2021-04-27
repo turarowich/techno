@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import NewsItem from "@/client/components/News/NewsItem";
+import NewsItem from "@/client/components/ClientNews/NewsItem";
 export default {
 name: "News",
   components:{

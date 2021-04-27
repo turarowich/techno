@@ -1,75 +1,78 @@
 <template>
-<div class="row">
-  <div class="col-lg-10 m-auto">
-    <div class="profile-info">
-      <div class="d-flex align-items-center">
-        <img class="client-avatar" src="../../../assets/clients/clientProfile.svg">
-        <div>
-          <h1 class="profile-title">Afsar Hossen <img src="../../../assets/clients/Edit.svg"></h1>
-          <span class="profile-phone">+1812 546 28 53</span>
+  <div class="container myContainer">
+    <div class="row">
+      <div class="col-lg-10 m-auto">
+        <div class="profile-info">
+          <div class="d-flex align-items-center">
+            <img class="client-avatar" src="../../../assets/clients/clientProfile.svg">
+            <div>
+              <h1 class="profile-title">Afsar Hossen <img src="../../../assets/clients/Edit.svg"></h1>
+              <span class="profile-phone">+1812 546 28 53</span>
+            </div>
+          </div>
+          <div class="logout">Logout <img class="ml-2" src="../../../assets/clients/log-out.svg"></div>
         </div>
+
+        <div class="bonus-notification">
+          <div class="d-flex align-items-center">
+            <img class="mr-2" src="../../../assets/clients/Discount.svg"> <span class="bonus-span mb-0">My bonuses: 100</span>
+          </div>
+          <p class="client-paragraph mb-0">You can spend your current points or continue to accumulate them</p>
+        </div>
+
+        <ul class="nav nav-tabs mb-5">
+          <li>
+            <a class="disable-underline" data-toggle="tab" href="#menu1">
+              <div class="order-tab d-flex align-items-center mr-4">
+                <img src="../../../assets/clients/trash.svg">
+                <h2 class="orders-title">Orders</h2>
+                <div class="order-count">2</div>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a class="disable-underline" data-toggle="tab" href="#menu2">
+              <div data-toggle="tab" class="order-tab d-flex align-items-center">
+                <img src="../../../assets/clients/DiscountBlack.svg">
+                <h2 class="orders-title">Bonus history</h2>
+              </div>
+            </a>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+          <div id="menu1" class="tab-pane fade">
+            <div class="d-flex main-content-header">
+              <div class="table-head" style="width: 20%;">Name order</div>
+              <div class="table-head" style="width: 14%;">Deliver address</div>
+              <div class="table-head table-link " @click="sortByDate" style="width: 10%;">Date<img class="date-pol" style="margin-left:10px" src="../../../assets/icons/polygon.svg"></div>
+              <div class="table-head " style="width: 12%;" >Total quantity </div>
+              <div class="table-head " style="width: 12%; cursor: pointer">Delivery price</div>
+              <div class="table-head" style="width: 12%; ">Discount</div>
+              <div class="table-head table-link" @click="sortByTotal" style="width: 11%;">Total <img class="total-pol" style="margin-left:10px" src="../../../assets/icons/polygon.svg"></div>
+              <div class="table-head" style="width:10%">Status</div>
+            </div>
+            <OrdersItem :orderList="orderList"/>
+
+          </div>
+          <div id="menu2" class="tab-pane fade">
+            <div class="d-flex main-content-header">
+              <div class="table-head te" style="width:50%">Name</div>
+              <div class="table-head table-link " @click="sortByDate" style="width: 30%;">Date<img class="date-pol" style="margin-left:10px" src="../../../assets/icons/polygon.svg"></div>
+              <div class="table-head d-flex justify-content-end" style="width:20%">Quantity</div>
+            </div>
+            <HistoryBonus :orderList="orderList"/>
+          </div>
+        </div>
+
+
+
+
+
       </div>
-      <div class="logout">Logout <img class="ml-2" src="../../../assets/clients/log-out.svg"></div>
     </div>
-
-    <div class="bonus-notification">
-        <div class="d-flex align-items-center">
-           <img class="mr-2" src="../../../assets/clients/Discount.svg"> <span class="bonus-span mb-0">My bonuses: 100</span>
-        </div>
-      <p class="client-paragraph mb-0">You can spend your current points or continue to accumulate them</p>
-    </div>
-
-    <ul class="nav nav-tabs mb-5">
-      <li>
-        <a class="disable-underline" data-toggle="tab" href="#menu1">
-        <div class="order-tab d-flex align-items-center mr-4">
-          <img src="../../../assets/clients/trash.svg">
-          <h2 class="orders-title">Orders</h2>
-          <div class="order-count">2</div>
-        </div>
-      </a>
-      </li>
-      <li>
-        <a class="disable-underline" data-toggle="tab" href="#menu2">
-        <div data-toggle="tab" class="order-tab d-flex align-items-center">
-          <img src="../../../assets/clients/DiscountBlack.svg">
-          <h2 class="orders-title">Bonus history</h2>
-        </div>
-      </a>
-      </li>
-    </ul>
-
-    <div class="tab-content">
-      <div id="menu1" class="tab-pane fade">
-        <div class="d-flex main-content-header">
-          <div class="table-head" style="width: 20%;">Name order</div>
-          <div class="table-head" style="width: 14%;">Deliver address</div>
-          <div class="table-head table-link " @click="sortByDate" style="width: 10%;">Date<img class="date-pol" style="margin-left:10px" src="../../../assets/icons/polygon.svg"></div>
-          <div class="table-head " style="width: 12%;" >Total quantity </div>
-          <div class="table-head " style="width: 12%; cursor: pointer">Delivery price</div>
-          <div class="table-head" style="width: 12%; ">Discount</div>
-          <div class="table-head table-link" @click="sortByTotal" style="width: 11%;">Total <img class="total-pol" style="margin-left:10px" src="../../../assets/icons/polygon.svg"></div>
-          <div class="table-head" style="width:10%">Status</div>
-        </div>
-        <OrdersItem :orderList="orderList"/>
-
-      </div>
-      <div id="menu2" class="tab-pane fade">
-         <div class="d-flex main-content-header">
-          <div class="table-head te" style="width:50%">Name</div>
-           <div class="table-head table-link " @click="sortByDate" style="width: 30%;">Date<img class="date-pol" style="margin-left:10px" src="../../../assets/icons/polygon.svg"></div>
-           <div class="table-head d-flex justify-content-end" style="width:20%">Quantity</div>
-         </div>
-        <HistoryBonus :orderList="orderList"/>
-      </div>
-    </div>
-
-
-
-
 
   </div>
-</div>
 </template>
 
 <script>

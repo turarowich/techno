@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container client-container">
     <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg"><div @click="$router.go(-1)" class="mr-1">Back </div> | <span > {{getProduct.name}}</span> </div>
   <div class="row mt-5 mb-5">
     <div class="col-10 m-auto">

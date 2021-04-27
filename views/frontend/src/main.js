@@ -22,6 +22,8 @@ import $ from 'jquery';
 import moment from 'moment';
 import Lightpick from 'lightpick'
 import axios from "axios";
+import 'dropzone/dist/dropzone'
+import 'dropzone/dist/dropzone.css'
 const store = createStore({
 
     actions:{

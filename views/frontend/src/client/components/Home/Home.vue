@@ -1,10 +1,17 @@
 <template>
   <div class="client">
-<div class="container client-container">
-  <Navbar/>
+<div >
+
+  <div v-if="!['ClientLogin', 'ClientRegister'].includes($route.name)">
+    <Navbar/>
+
+  </div>
   <router-view/>
 </div>
-    <Footer/>
+    <div v-if="!['ClientLogin', 'ClientRegister'].includes($route.name)">
+      <Footer/>
+
+    </div>
   </div>
 </template>
 

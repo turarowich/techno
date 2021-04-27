@@ -18,12 +18,15 @@ import Discount from "@/components/loyalty/Discount";
 import PromoCode from "@/components/loyalty/Promocode";
 // import auth from '../middle-ware/auth';
 import CatalogDetail from "@/client/components/ClientCatalog/CatalogDetail";
-import NewsDetail from "@/client/components/News/NewsDetail";
+import NewsDetail from "@/client/components/ClientNews/NewsDetail";
+import ClientNews from "@/client/components/ClientNews/ClientNews";
 import Basket from "@/client/components/Basket/Basket";
 import ClientAccount from "@/client/components/ClientAccount/ClientAccount";
 import PersonalInfo from "@/client/components/PersonalInfo/PersonalInfo";
 import EditProfile from "@/client/components/EditProfile/EditProfile";
 import ProductInfo from "@/client/components/product-info/ProductInfo";
+import ClientLogin from "@/client/components/ClientLogin";
+import ClientRegister from "@/client/components/ClientRegister";
 
 
 
@@ -62,6 +65,11 @@ const routes = [
                 component:News
             },
             {
+                path:'client-news',
+                name:"ClientNews",
+                component:ClientNews
+            },
+            {
                 path:'product-info',
                 name:"ProductInfo",
                 component:ProductInfo
@@ -96,6 +104,16 @@ const routes = [
                 path:'edit-profile',
                 name:'EditProfile',
                 component:EditProfile
+            },
+            {
+                path:'signin',
+                name:'ClientLogin',
+                component:ClientLogin
+            },
+            {
+                path:'signup',
+                name:'ClientRegister',
+                component:ClientRegister
             },
         ],
 

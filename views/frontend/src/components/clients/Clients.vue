@@ -4,13 +4,13 @@
   <div class="d-flex justify-content-between app-buttons">
     <div class="d-flex align-items-center">
       <button class="app-buttons-item adding-btns" data-toggle="modal" data-target="#add-category"><span>+ Add category</span></button>
-      <button class="app-buttons-item" @click="selectBirthDate"><img src="../../assets/icons/birsday.svg"><span>Birthday</span></button>
+      <button class="app-buttons-item" data-toggle="modal" data-target="#push-notification"><img src="../../assets/icons/bgNotification.svg"><span>Push notification</span></button>
 
     </div>
     <div class="d-flex align-items-center">
       <button class="app-buttons-item" @click="deleteAllClient"><img src="../../assets/icons/trash_empty.svg"><span>Remove</span></button>
       <button class="app-buttons-item"><img src="../../assets/icons/moveto.svg"><span>Move to</span></button>
-      <button class="app-buttons-item"><img src="../../assets/icons/import.svg"><span>Import</span></button>
+      <button class="app-buttons-item"  data-toggle="modal" data-target="#import-client"><img src="../../assets/icons/import.svg"><span>Import</span></button>
       <div class="dropdown filter">
         <button class="dropdown-toggle app-buttons-item mr-0" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="../../assets/icons/filter.svg"><span>Filter</span></button>
         <div class="dropdown-menu filter-box" aria-labelledby="dropdownMenuTotal">
@@ -81,6 +81,9 @@
                 v-on:deleteClient="deleteClient"
          />
     </div>
+    <ImportClient/>
+    <PushNotification/>
+    <EditClient/>
     <div class="pagination d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-center">
         <span>Rows per page</span>
@@ -104,7 +107,10 @@
 
 
 <script>
+import ImportClient from "@/modals/client/ImportClient";
 import ClientItem from "@/components/client-item/ClientItem";
+import PushNotification from "@/modals/client/PushNotification";
+import EditClient from "@/modals/client/EditClient";
 import Swal from "sweetalert2";
 import $ from 'jquery'
 
@@ -113,6 +119,9 @@ export default {
   name: "Clients",
   components:{
     ClientItem,
+    ImportClient,
+    PushNotification,
+    EditClient
   },
   data(){
     return {
@@ -129,7 +138,6 @@ export default {
       pageToOpen: 1,
       currentPage: 1,
       clientToDisplay:[],
-      filtered:'',
       category:'',
       bonuss:'',
       lastPurchase:'',
@@ -146,9 +154,7 @@ export default {
       return this.clientList.filter(client => {
         return client.name.toLowerCase().includes(this.search.toLowerCase()) || client.phone.includes(this.search)
       })
-      .filter(client=>{
-        return client.birthDate.includes(this.filtered)
-      })
+
 
     },
 
@@ -177,16 +183,7 @@ export default {
     }
   },
   methods: {
-    selectBirthDate(){
-      if(this.sorting){
-        this.filtered = this.$moment().format('YYYY-MM-DD')
-      }
-      else{
-        this.filtered = ''
-      }
-      this.sorting = !this.sorting;
-      this.renderPaginationList()
-    },
+
     renderPaginationList(pageNumber=1){
       //clear currently displayed list
       this.clientToDisplay = [];

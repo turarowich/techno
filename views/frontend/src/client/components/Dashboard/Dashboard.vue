@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="container client-container">
   <div class="main-box">
     <div class="relatives">
       <h1>Modius </h1>

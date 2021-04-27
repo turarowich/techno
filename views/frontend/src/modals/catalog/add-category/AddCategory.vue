@@ -86,7 +86,6 @@ name: "AddCategory",
   border:0;
   border-radius: 0;
   width: 562px;
-
   margin-top: 50%;
 }
 .parent-modal{
@@ -95,6 +94,9 @@ name: "AddCategory",
 .category-body{
   padding: 0 50px;
   padding-bottom: 34px;
+}
+.category-body input{
+  width: 100%;
 }
 .category-header{
   padding:34px 50px;

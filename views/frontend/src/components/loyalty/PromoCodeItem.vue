@@ -13,10 +13,15 @@
        Tom Levins
      </div>
 
-     <div  style="width: 18%;">20%</div>
-     <div  style="width: 18%;">WERTGYHUGDLF</div>
-     <div  style="width: 18%;">16.06.2020</div>
-     <div  style="width: 16%;">12.06.2020</div>
+     <div  style="width: 12%;">25</div>
+     <div  style="width: 13%;">20%</div>
+     <div  style="width: 16%;">WERTGYHUGDLF</div>
+     <div  style="width: 16%;">16.06.2020</div>
+     <div  style="width: 13%;" >
+       <div class="history-btn" data-toggle="modal" data-target="#history-promocode">
+         <img src="../../assets/icons/History.svg">
+       </div>
+     </div>
 
      <div  style="width:3%">
        <div class="dropleft dropMenu">
@@ -54,5 +59,12 @@ export default {
 .no-item{
   color:#8C94A5;
   font-size: 16px;
+}
+.history-btn{
+  padding: 7px;
+  background: #E9ECFF;
+  border-radius:5px;
+  width:34px;
+  height: 34px;
 }
 </style>

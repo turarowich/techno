@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div class="container client-container">
 <nav class="navigation d-flex align-items-center justify-content-between">
     <a href="/home" class="brand-navbar">Modius <span>Catalog</span></a>
     <ul class="client-menu">
 
       <li class="client-list"><router-link class="client-link" to="/home/about"><img src="../assets/clients/info.svg"/>About us</router-link></li>
-      <li class="client-list"><router-link class="client-link" to="/home/news"><img src="../assets/clients/Profile.svg"/>Login</router-link></li>
+      <li class="client-list"><router-link class="client-link" to="/home/signin"><img src="../assets/clients/Profile.svg"/>Login</router-link></li>
       <li class="client-list hoverBasket dropdown">
 
           <router-link class="client-link  d-inline-flex align-items-center" to="/home/basket" data-toggle="dropdown" data-hover="dropdown">

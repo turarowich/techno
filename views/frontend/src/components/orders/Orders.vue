@@ -43,13 +43,7 @@
         <button class="app-buttons-item" @click="clickOnDate"><img src="../../assets/icons/yesterday.svg"><input  :value="filterByDate" class="date-pick" id="datepicker"></button>
       </div>
     </div>
-      <span>Main Checkbox</span>
-      <input type="checkbox"  @click="bektemir">
-      <div ref="bektemir">
-        <input type="checkbox" value="hello">
-        <input type="checkbox" value="hello">
-        <input type="checkbox" value="hello">
-      </div>
+
     <div class="main-search d-flex align-items-center">
       <img src="../../assets/icons/search-icon.svg">
       <input class="main-input" type="text" placeholder="Search" v-model="search">
@@ -57,8 +51,9 @@
     </div>
     <div class="d-flex main-content-header">
       <div class="table-head" style="width: 3%;"><label class="custom-checkbox"><input type="checkbox"  @click="toggleSelect" :checked="selectAll"><span class="checkmark"></span></label></div>
-      <div class="table-head" style="width: 20%;">Name order</div>
-      <div class="table-head" style="width: 14%;">Client</div>
+      <div class="table-head" style="width: 9%;">Name order</div>
+      <div class="table-head" style="width: 15%;">Product</div>
+      <div class="table-head" style="width: 10%;">Client</div>
       <div class="table-head" style="width: 12%;">Phone number</div>
       <div class="table-head table-link " style="width: 10%;" @click="sortByTotal()" >Total <img class="total-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
       <div class="table-head table-link" style="width: 10%; cursor: pointer" v-on:click="sortByDate" >Date <img class="date-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>

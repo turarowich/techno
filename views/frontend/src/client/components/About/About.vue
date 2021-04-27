@@ -1,5 +1,5 @@
 <template>
-<div class="about">
+<div class="about container client-container">
   <div class="row">
   <div class="col-lg-7 mr-4">
     <div class="about-left">

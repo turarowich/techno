@@ -14,10 +14,11 @@
   <div class="d-flex main-content-header">
     <div class="table-head" style="width: 3%;"><label class="custom-checkbox"><input type="checkbox" ><span class="checkmark"></span></label></div>
     <div class="table-head" style="width: 24%;">Name</div>
-    <div class="table-head" style="width: 18%;">Discount</div>
-    <div class="table-head" style="width: 18%;">Code</div>
-    <div class="table-head" style="width: 18%; ">Valid until</div>
-    <div class="table-head" style="width: 16%;">History</div>
+    <div class="table-head" style="width: 12%;">User amount</div>
+    <div class="table-head" style="width: 13%;">Discount</div>
+    <div class="table-head" style="width: 16%;">Code</div>
+    <div class="table-head" style="width: 16%; ">Valid until</div>
+    <div class="table-head" style="width: 13%;">History</div>
     <div class="table-head" style="width:3%"></div>
   </div>
   <div class="table-content">
@@ -25,6 +26,7 @@
 
   </div>
   <AddPromocode/>
+  <HistoryPromocode/>
 
 
 </div>
@@ -32,12 +34,14 @@
 
 <script>
 import AddPromocode from '@/modals/Promocode/AddPromocode'
+import HistoryPromocode from "@/modals/Promocode/HistoryPromocode";
 import PromoCodeItem from "@/components/loyalty/PromoCodeItem";
 export default {
   name: "Promocode",
   components:{
     PromoCodeItem,
-    AddPromocode
+    AddPromocode,
+    HistoryPromocode
   }
 }
 </script>

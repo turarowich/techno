@@ -1,14 +1,16 @@
 <template>
   <div  v-for="order in orderList" class="table-item d-flex align-items-center" :key="order.id">
     <div  style="width: 3%;"><label class="custom-checkbox"><input  type="checkbox" :value="order.id" v-model="order.checked" ><span class="checkmark"></span></label></div>
-    <div  class="d-flex align-items-center"  style="width: 20%;">
+
+    <div  style="width: 9%;">34543</div>
+    <div  class="d-flex align-items-center"  style="width: 15%;">
       <div class="table-img">
         <img src="../../assets/img/sneak.webp">
       </div>
       {{order.name}}
     </div>
 
-    <div  style="width: 14%;">{{order.client}}</div>
+    <div  style="width: 10%;">{{order.client}}</div>
     <div  style="width: 12%;">{{order.phone}}</div>
     <div  style="width: 10%;">{{order.total}}</div>
     <div  style="width: 10%;">{{order.date.split('').slice(0,10).join('')}}</div>
