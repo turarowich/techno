@@ -151,13 +151,14 @@ class AuthController{
             lang = 'en'
         }
         socialAuth: try {
-            let social_res = await socialRegister(req.fields.social, req.fields.token)
-            console.log(social_res)
+            let social_res = await socialRegister(req.fields.social, req.fields.token, req.fields.screen_name)
+            
             if (social_res.error) {
                 result = social_res.error
                 break socialAuth
             }
             let user = await Client.findOne(social_res.check)
+            console.log(user)
             if(user){
                 result = {
                     status: 500,
@@ -201,7 +202,7 @@ class AuthController{
             lang = 'en'
         }
         socialAuth: try {
-            let social_res = await socialRegister(req.fields.social, req.fields.token)
+            let social_res = await socialRegister(req.fields.social, req.fields.token, req.fields.screen_name)
             
             if (social_res.error) {
                 result = social_res.error
@@ -280,12 +281,12 @@ class AuthController{
     };
     
 }
-async function socialRegister(type, token){
+async function socialRegister(type, token, screen_name=""){
     let response = []
     if (type == "facebook") {
         response = await fbRegister(token)
     } else if (type == "twitter") {
-        response = await twitterRegister(token)
+        response = await twitterRegister(token, screen_name)
     } else if (type == "google") {
         response = await googleRegister(token)
     }
@@ -327,41 +328,67 @@ async function fbRegister(token){
     }
     return result
 }
-function twitterRegister(token) {
-    // let fb_response = await axios({
-    //     url: 'https://graph.facebook.com/me',
-    //     method: 'get',
-    //     params: {
-    //         fields: ['id', 'email', 'first_name', 'last_name', 'gender', 'birthday', 'picture'].join(','),
-    //         access_token: token,
-    //     },
-    // })
-
-    let fb_response = {
-        data: {
-            id: '259053925911615',
-            first_name: 'Али',
-            last_name: 'Кааров',
-            gender: 'male',
-            birthday: '02/01/1993',
-            email: "kaarov8232@gmail.com",
-            picture: {
-                data: {
-                    height: 50,
-                    is_silhouette: true,
-                    url: 'https://scontent.ffru7-1.fna.fbcdn.net/v/t1.30497-1/cp0/c15.0.50.50a/p50x50/84628273_176159830277856_972693363922829312_n.jpg?_nc_cat=1&ccb=1-3&_nc_sid=12b3be&_nc_ohc=BnyBL7OgTNQAX938V_m&_nc_ht=scontent.ffru7-1.fna&tp=27&oh=f83ac1aba00c0d3d43285c0a0f8719db&oe=60A5E538',
-                    width: 50
-                }
+async function twitterRegister(token, screen_name) {
+    let consumer_key = "S0KIiVOhHcWIJtVBaL99aIZKg"
+    let consumer_secret = "Kk3MKRfnB6OhBNAtn6W2C08bS3Md1QkYTnyKtdQ37Vn3t2BIdA"
+    let base64 = Buffer.from(consumer_key + ':' + consumer_secret).toString('base64')
+    
+    let response = await axios({
+        url: 'https://api.twitter.com/oauth2/token',
+        method: 'post',
+        headers:{
+            Authorization: "Basic " + base64
+        },
+        params:{
+            grant_type:"client_credentials"
+        }
+        
+        
+    }).catch(error => {
+        let result = {
+            status: 500,
+            msg: "Token is not valid",
+            errors: {
+                token: "Token is not valid",
             }
         }
+        return { error: result }
+    })
+    let access_token = response.data.access_token
+    response = await axios({
+        url: 'https://api.twitter.com/1.1/users/show.json?screen_name=' + screen_name,
+        method: 'get',
+        headers: {
+            Authorization: "Bearer " + access_token
+        },
+        params: {
+            grant_type: "client_credentials"
+        }
+    }).catch(error => {
+        let result = {
+            status: 500,
+            msg: "Token is not valid",
+            errors: {
+                token: "Token is not valid",
+            }
+        }
+        return { error: result }
+    })
+    console.log(response.data)
+    if (response.error) {
+        return response
     }
-    let check = { $or: [{ fb_id: fb_response.data.id }, { email: fb_response.data.email }] }
+    let check = { twitter_id: response.data.id }
+    if (response.data.email){
+        check = { $or: [{ twitter_id: response.data.id }, { email: response.data.email }] }
+    }
+    
     let save = {
-        name: fb_response.data.first_name + ' ' + fb_response.data.last_name,
-        email: fb_response.data.email,
-        birthDate: fb_response.data.birthday,
-        gender: fb_response.data.gender,
-        fb_id: fb_response.data.id,
+        name: response.data.name,
+        email: response.data.email,
+        birthDate: response.data.birthday,
+        gender: response.data.gender,
+        twitter_id: response.data.id,
     }
     let result = {
         check: check,
