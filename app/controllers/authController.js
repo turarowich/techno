@@ -5,9 +5,8 @@ const { sendError } = require('../../services/helper')
 var validate = require('../../config/errorMessages');
 var axios = require('axios');
 const { response } = require('express');
-var passport = require('passport')
-    , FacebookStrategy = require('passport-facebook').Strategy;
-var queryString = require('query-string')
+var queryString = require('query-string');
+
 class AuthController{
     register = async function (req, res) {
         let db = global.userConnection.useDb('loygift');
@@ -151,17 +150,15 @@ class AuthController{
         if (lang != 'ru') {
             lang = 'en'
         }
-
         socialAuth: try {
-            let check = { fb_id: req.fields.fb_id }
-            if(!check.fb_id){
-                check = { twitter_id: req.fields.twitter_id }
-                if (!check.twitter_id) {
-                    check = { google_id: req.fields.google_id }
-                }
+            let social_res = await socialRegister(req.fields.social, req.fields.token, req.fields.screen_name)
+
+            if (social_res.error) {
+                result = social_res.error
+                break socialAuth
             }
-            
-            let user = await Client.findOne(check)
+            let user = await Client.findOne(social_res.check)
+            console.log(user)
             if(user){
                 result = {
                     status: 500,
@@ -174,11 +171,7 @@ class AuthController{
                 }
                 break socialAuth
             }
-            check.name = req.fields.name
-            check.email = req.fields.email
-            check.birthDate = req.fields.birthday
-            check.gender = req.fields.gender
-            var client = new Client(check)
+            var client = new Client(social_res.save)
             await client.save({ validateBeforeSave: false })
             result = {
                 'status': 200,
@@ -209,14 +202,13 @@ class AuthController{
             lang = 'en'
         }
         socialAuth: try {
-            let check = { fb_id: req.fields.fb_id }
-            if (!check.fb_id) {
-                check = { twitter_id: req.fields.twitter_id }
-                if (!check.twitter_id) {
-                    check = { google_id: req.fields.google_id }
-                }
+            let social_res = await socialRegister(req.fields.social, req.fields.token, req.fields.screen_name)
+
+            if (social_res.error) {
+                result = social_res.error
+                break socialAuth
             }
-            let client = await Client.findOne(check)
+            let client = await Client.findOne(social_res.check)
             
             if (!client) {
                 result = {
@@ -306,12 +298,12 @@ class AuthController{
         res.redirect('/');
     };
 }
-async function socialRegister(type, token,screen_name=""){
+async function socialRegister(type, token, screen_name=""){
     let response = []
     if (type == "facebook") {
         response = await fbRegister(token)
     } else if (type == "twitter") {
-        response = await twitterRegister(token,screen_name)
+        response = await twitterRegister(token, screen_name)
     } else if (type == "google") {
         response = await googleRegister(token)
     }
@@ -368,6 +360,7 @@ async function twitterRegister(token, screen_name) {
             grant_type:"client_credentials"
         }
 
+
     }).catch(error => {
         let result = {
             status: 500,
@@ -422,14 +415,15 @@ async function twitterRegister(token, screen_name) {
 }
 async function googleRegister(token) {
     let response = await axios({
+        // url: 'https://www.googleapis.com/oauth2/v3/tokeninfo',
         url: 'https://www.googleapis.com/oauth2/v3/userinfo',
+
         method: 'get',
         params: {
-            // id_token: token,
+            id_token: token,
             access_token: token
         }
     }).catch(error => {
-        console.log(error);
         let result = {
             status: 500,
             msg: "Token is not valid",
