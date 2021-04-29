@@ -47,7 +47,7 @@ class NewsController {
             'status': 200,
             'msg': 'News added'
         }
-        try {
+        addNews: try {
             let news = await new News({
                 name: req.fields.name,
                 name_ru: req.fields.name_ru,
@@ -60,9 +60,14 @@ class NewsController {
 
                 let filename = saveImage(req.files.img, req.db)
                 if (filename == 'Not image') {
-                    result['status'] = 500
-                    result['msg'] = filename
-                    throw new Error('file with name ' + req.files.img.name + ' not an image');
+                    result = {
+                        status: 500,
+                        msg: "Validation error",
+                        errors: {
+                            img: validate[lang]['image_not_valid'],
+                        },
+                    }
+                    break addNews
                 } else {
                     news.img = filename
                 }
@@ -84,7 +89,7 @@ class NewsController {
             'status': 200,
             'msg': 'News updated'
         }
-        try {
+        updateNews: try {
 
             let query = { '_id': req.params.news }
             req.fields['updatedAt'] = new Date()
@@ -92,9 +97,14 @@ class NewsController {
             if (req.files.img) {
                 let filename = saveImage(req.files.img, req.db, news.img)
                 if (filename == 'Not image') {
-                    result['status'] = 500
-                    result['msg'] = filename
-                    throw new Error('file with name ' + req.files.img.name + ' not an image');
+                    result = {
+                        status: 500,
+                        msg: "Validation error",
+                        errors: {
+                            img: validate[lang]['image_not_valid'],
+                        },
+                    }
+                    break updateNews
                 } else {
                     news.img = filename
                 }

@@ -20,7 +20,8 @@ const en_messages = {
     client_user_exist_title: 'User already signed in',
     client_user_exist_msg: 'Probably u have been signed in already, try to authenticate',
     client_user_not_found_title: 'User not found',
-    client_user_not_found_msg: 'Probably u didnt sign up'
+    client_user_not_found_msg: 'Probably u didnt sign up',
+    image_not_valid: 'Not valid image format'
 }
 const ru_messages = {
     name_required: 'Имя обязательно',
@@ -44,7 +45,8 @@ const ru_messages = {
     client_user_exist_title: 'Пользователь уже зарегистрирован',
     client_user_exist_msg: 'Возможно вы уже зарегистрировались ранее, попробуйте авторизоватся',
     client_user_not_found_title: 'Пользователь не найден',
-    client_user_not_found_msg: 'Возможно вы ещё не зарегистрировались'
+    client_user_not_found_msg: 'Возможно вы ещё не зарегистрировались',
+    image_not_valid: 'Неправильный формат изображения'
 }
 module.exports = {
     en: en_messages,

@@ -1,6 +1,7 @@
 var path = require('path')
 const fs = require('fs')
 var validate = require('../config/errorMessages');
+var excel = require('excel4node');
 const { errors } = require('formidable');
 function useDB(db_name) {
     let db = global.userConnection.useDb(db_name);
@@ -62,8 +63,41 @@ function sendError(error, lang) {
     }
     return result
 };
+function createExcel(headers, params){
+    var workbook = new excel.Workbook();
+
+    // Add Worksheets to the workbook
+    var worksheet = workbook.addWorksheet('Sheet 1');
+
+    // Create a reusable style
+    var headerStyle = workbook.createStyle({
+        font: {
+            color: '#FF0800',
+            size: 12
+        },
+        numberFormat: '$#,##0.00; ($#,##0.00); -'
+    });
+    var paramStyle = workbook.createStyle({
+        font: {
+            color: '#FF0800',
+            size: 12
+        },
+        numberFormat: '$#,##0.00; ($#,##0.00); -'
+    });
+
+    // Create Headers
+    for (let [index, header] in headers.keys){
+        worksheet.cell(index + 1, 1).string(headers[header]).style(headerStyle);
+        for (let [param_index, param] in params) {
+            worksheet.cell(index + 1, param_index + 1,).string(param[header]).style(paramStyle);
+        }
+    }
+    workbook.write('Excel.xlsx');
+    return workbook
+}
 module.exports = {
     useDB: useDB,
     saveImage: saveImage,
     sendError: sendError,
+    createExcel: createExcel
 }
