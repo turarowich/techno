@@ -16,8 +16,10 @@ const credentials = { key: privateKey, cert: certificate };
 const httpServer = http.createServer(app);
 const httpsServer = https.createServer(credentials, app);
 const passport = require("passport");
-const strategy = require("passport-facebook");
-const FacebookStrategy = strategy.Strategy;
+// const strategy = require("passport-facebook");
+const FacebookStrategy = require("passport-facebook").Strategy;
+const TwitterStrategy = require("passport-twitter").Strategy;
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const { initClientDbConnection } = require('./config/dbutil');
 const userConnection = initClientDbConnection()
 
@@ -54,6 +56,38 @@ passport.use(
         }
     )
 );
+//only for twitter
+var expressSession = require('express-session');
+app.use(expressSession({
+    secret: 'keyboard cat',
+    resave: true,
+    saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+//
+passport.use(new TwitterStrategy({
+    consumerKey: config.TWITTER_CONSUMER_KEY,
+    consumerSecret: config.TWITTER_SECRET_KEY,
+    callbackURL: config.TWITTER_CALLBACK_URL,
+}, function(token, tokenSecret, profile, done) {
+    process.nextTick(function () {
+        return done(null, profile,token);
+    });
+}));
+passport.use(new GoogleStrategy({
+        clientID: config.GOOGLE_CLIENT_ID,
+        clientSecret: config.GOOGLE_CLIENT_SECRET,
+        callbackURL: config.GOOGLE_CALLBACK_URL,
+    },
+    function(accessToken, refreshToken, profile, done) {
+        // User.findOrCreate({ googleId: profile.id }, function (err, user) {
+        //     return done(err, user);
+        // });
+        done(null, profile._json,accessToken);
+    }
+));
 
 var cors = require("cors");
 app.use(passport.initialize());
@@ -62,6 +96,9 @@ app.use(express.static(__dirname + '/views/frontend/dist'));
 app.use(formidableMiddleware());
 
 router.get("/auth/facebook", passport.authenticate("facebook", { authType: 'reauthenticate'}));
+router.get("/auth/google", passport.authenticate("google", { authType: 'reauthenticate',scope: ['https://www.googleapis.com/auth/plus.login','https://www.googleapis.com/auth/userinfo.email','https://www.googleapis.com/auth/userinfo.profile']}));
+router.get("/auth/twitter", passport.authenticate("twitter", { authType: 'reauthenticate'}));
+
 app.use('/images', express.static(__dirname + '/views/frontend/images'))
 app.use('/api', VerifyToken, require('./routes/api.js')(router))
 app.use('/', require('./routes/home.js')(router, passport))

@@ -286,17 +286,32 @@ class AuthController{
         // var token = req.user.jwtoken;
         var fb_token = req.authInfo;
         res.cookie('auth', fb_token);
-        await socialRegister("facebook", fb_token)
+        // let result = await registerClientSocialWeb ("facebook", fb_token,"en","602e5015622e3235df995cbe");
+        let result = await loginClientSocialWeb ("facebook", fb_token,"en","602e5015622e3235df995cbe");
         res.redirect('/');
     };
-    
+    callbackGG = async function (req, res) {
+        var gg_token = req.authInfo;
+        res.cookie('auth', gg_token);
+        let result = await loginClientSocialWeb ("google", gg_token,"en","602e5015622e3235df995cbe");
+        // let result = await loginClientSocialWeb ("google", gg_token,"en","602e5015622e3235df995cbe");
+        res.redirect('/');
+    };
+    callbackTW = async function (req, res) {
+        let tw_token = req.authInfo;
+        let screen_name = req.user.username;
+        res.cookie('auth', tw_token);
+        let result = await registerClientSocialWeb ("twitter", tw_token,"en","602e5015622e3235df995cbe",screen_name);
+        // let result = await loginClientSocialWeb ("google", gg_token,"en","602e5015622e3235df995cbe");
+        res.redirect('/');
+    };
 }
-async function socialRegister(type, token){
+async function socialRegister(type, token,screen_name=""){
     let response = []
     if (type == "facebook") {
         response = await fbRegister(token)
     } else if (type == "twitter") {
-        response = await twitterRegister(token)
+        response = await twitterRegister(token,screen_name)
     } else if (type == "google") {
         response = await googleRegister(token)
     }
@@ -336,44 +351,68 @@ async function fbRegister(token){
         check: check,
         save: save
     }
-    console.log(result,"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     return result
 }
-function twitterRegister(token) {
-    // let fb_response = await axios({
-    //     url: 'https://graph.facebook.com/me',
-    //     method: 'get',
-    //     params: {
-    //         fields: ['id', 'email', 'first_name', 'last_name', 'gender', 'birthday', 'picture'].join(','),
-    //         access_token: token,
-    //     },
-    // })
+async function twitterRegister(token, screen_name) {
+    let consumer_key = "S0KIiVOhHcWIJtVBaL99aIZKg"
+    let consumer_secret = "Kk3MKRfnB6OhBNAtn6W2C08bS3Md1QkYTnyKtdQ37Vn3t2BIdA"
+    let base64 = Buffer.from(consumer_key + ':' + consumer_secret).toString('base64')
 
-    let fb_response = {
-        data: {
-            id: '259053925911615',
-            first_name: 'Али',
-            last_name: 'Кааров',
-            gender: 'male',
-            birthday: '02/01/1993',
-            email: "kaarov8232@gmail.com",
-            picture: {
-                data: {
-                    height: 50,
-                    is_silhouette: true,
-                    url: 'https://scontent.ffru7-1.fna.fbcdn.net/v/t1.30497-1/cp0/c15.0.50.50a/p50x50/84628273_176159830277856_972693363922829312_n.jpg?_nc_cat=1&ccb=1-3&_nc_sid=12b3be&_nc_ohc=BnyBL7OgTNQAX938V_m&_nc_ht=scontent.ffru7-1.fna&tp=27&oh=f83ac1aba00c0d3d43285c0a0f8719db&oe=60A5E538',
-                    width: 50
-                }
+    let response = await axios({
+        url: 'https://api.twitter.com/oauth2/token',
+        method: 'post',
+        headers:{
+            Authorization: "Basic " + base64
+        },
+        params:{
+            grant_type:"client_credentials"
+        }
+
+    }).catch(error => {
+        let result = {
+            status: 500,
+            msg: "Token is not valid",
+            errors: {
+                token: "Token is not valid",
             }
         }
+        return { error: result }
+    })
+    let access_token = response.data.access_token
+    response = await axios({
+        url: 'https://api.twitter.com/1.1/users/show.json?screen_name=' + screen_name,
+        method: 'get',
+        headers: {
+            Authorization: "Bearer " + access_token
+        },
+        params: {
+            grant_type: "client_credentials"
+        }
+    }).catch(error => {
+        let result = {
+            status: 500,
+            msg: "Token is not valid",
+            errors: {
+                token: "Token is not valid",
+            }
+        }
+        return { error: result }
+    })
+    console.log(response.data)
+    if (response.error) {
+        return response
     }
-    let check = { $or: [{ fb_id: fb_response.data.id }, { email: fb_response.data.email }] }
+    let check = { twitter_id: response.data.id }
+    if (response.data.email){
+        check = { $or: [{ twitter_id: response.data.id }, { email: response.data.email }] }
+    }
+
     let save = {
-        name: fb_response.data.first_name + ' ' + fb_response.data.last_name,
-        email: fb_response.data.email,
-        birthDate: fb_response.data.birthday,
-        gender: fb_response.data.gender,
-        fb_id: fb_response.data.id,
+        name: response.data.name,
+        email: response.data.email,
+        birthDate: response.data.birthday,
+        gender: response.data.gender,
+        twitter_id: response.data.id,
     }
     let result = {
         check: check,
@@ -381,41 +420,33 @@ function twitterRegister(token) {
     }
     return result
 }
-function googleRegister(token) {
-    // let fb_response = await axios({
-    //     url: 'https://graph.facebook.com/me',
-    //     method: 'get',
-    //     params: {
-    //         fields: ['id', 'email', 'first_name', 'last_name', 'gender', 'birthday', 'picture'].join(','),
-    //         access_token: token,
-    //     },
-    // })
-
-    let fb_response = {
-        data: {
-            id: '259053925911615',
-            first_name: 'Али',
-            last_name: 'Кааров',
-            gender: 'male',
-            birthday: '02/01/1993',
-            email: "kaarov8232@gmail.com",
-            picture: {
-                data: {
-                    height: 50,
-                    is_silhouette: true,
-                    url: 'https://scontent.ffru7-1.fna.fbcdn.net/v/t1.30497-1/cp0/c15.0.50.50a/p50x50/84628273_176159830277856_972693363922829312_n.jpg?_nc_cat=1&ccb=1-3&_nc_sid=12b3be&_nc_ohc=BnyBL7OgTNQAX938V_m&_nc_ht=scontent.ffru7-1.fna&tp=27&oh=f83ac1aba00c0d3d43285c0a0f8719db&oe=60A5E538',
-                    width: 50
-                }
+async function googleRegister(token) {
+    let response = await axios({
+        url: 'https://www.googleapis.com/oauth2/v3/userinfo',
+        method: 'get',
+        params: {
+            // id_token: token,
+            access_token: token
+        }
+    }).catch(error => {
+        console.log(error);
+        let result = {
+            status: 500,
+            msg: "Token is not valid",
+            errors: {
+                token: "Token is not valid",
             }
         }
+        return { error: result }
+    })
+    if (response.error) {
+        return response
     }
-    let check = { $or: [{ fb_id: fb_response.data.id }, { email: fb_response.data.email }] }
+    let check = { $or: [{ google_id: response.data.sub }, { email: response.data.email }] }
     let save = {
-        name: fb_response.data.first_name + ' ' + fb_response.data.last_name,
-        email: fb_response.data.email,
-        birthDate: fb_response.data.birthday,
-        gender: fb_response.data.gender,
-        fb_id: fb_response.data.id,
+        name: response.data.name,
+        email: response.data.email,
+        google_id: response.data.sub,
     }
     let result = {
         check: check,
@@ -423,4 +454,102 @@ function googleRegister(token) {
     }
     return result
 }
+async function registerClientSocialWeb (type,token,lang,access_place,screen_name="") {
+    let db = global.userConnection.useDb('loygift' + access_place);
+    let Client = db.model("Client");
+    let result = []
+    if (lang != 'ru') {
+        lang = 'en'
+    }
+
+    socialAuth: try {
+        let social_res = await socialRegister(type, token,screen_name)
+
+        if (social_res.error) {
+            result = social_res.error
+            break socialAuth
+        }
+        let user = await Client.findOne(social_res.check)
+        if(user){
+            result = {
+                status: 500,
+                msg: "Validation error",
+                errors: {
+                    user: validate[lang]['user_exist'],
+                },
+                client_title: validate[lang]['client_user_exist_title'],
+                client_msg: validate[lang]['client_user_exist_msg']
+            }
+            break socialAuth
+        }
+        var client = new Client(social_res.save)
+        await client.save({ validateBeforeSave: false })
+        result = {
+            'status': 200,
+            'msg': 'Client added',
+            'auth': true,
+            'object': client,
+            'refresh_token': jwt.sign({ id: access_place }, config.secret_key, {
+                expiresIn: "30 days"
+            }),
+            'token': jwt.sign({ id: access_place }, config.secret_key, {
+                expiresIn: 86400 // expires in 24 hours
+            }),
+        }
+
+    } catch (error) {
+
+        result = sendError(error, lang)
+    }
+    return result;
+};
+
+async function loginClientSocialWeb (type,token,lang,access_place,screen_name="") {
+    let db = global.userConnection.useDb('loygift' + access_place);
+    let Client = db.model("Client");
+    let result = []
+    if (lang != 'ru') {
+        lang = 'en'
+    }
+    socialAuth: try {
+        let social_res = await socialRegister(type, token,screen_name)
+
+        if (social_res.error) {
+            result = social_res.error
+            break socialAuth
+        }
+        let client = await Client.findOne(social_res.check)
+
+        if (!client) {
+            result = {
+                status: 500,
+                msg: "Validation error",
+                errors: {
+                    user: validate[lang]['user_not_found'],
+                },
+                client_title: validate[lang]['client_user_not_found_title'],
+                client_msg: validate[lang]['client_user_not_found_msg']
+            }
+            break socialAuth
+        }
+        result = {
+            'status': 200,
+            'msg': 'Sending token',
+            'auth': true,
+            'object': client,
+            'refresh_token': jwt.sign({ id: access_place }, config.secret_key, {
+                expiresIn: "30 days"
+            }),
+            'token': jwt.sign({ id: access_place }, config.secret_key, {
+                expiresIn: 86400 // expires in 24 hours
+            }),
+        }
+
+    } catch (error) {
+
+        result = sendError(error, lang)
+    }
+    return result;
+};
+
 module.exports = new AuthController();

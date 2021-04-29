@@ -16,8 +16,10 @@ module.exports = function(app, passport){
     app.post('/registerClientSocial', authController.registerClientSocial);
     app.post('/refreshToken', authController.refreshToken);
     app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login', session: false }), authController.callbackFB);
-    
-    
+    app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login', session: false }), authController.callbackGG);
+    app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/login', session: false }), authController.callbackTW);
+
+
     app.get('*', function (req, res) {
         if (!req.url.includes('socket.io')){
             res.sendFile(path.resolve('views/frontend/dist/index.html'));
