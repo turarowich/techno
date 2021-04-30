@@ -1,6 +1,7 @@
 var bcrypt = require('bcryptjs');
 const { useDB, sendError } = require('../../services/helper')
 var validate = require('../../config/messages');
+const { query } = require('express');
 class ClientController{
     
     getClient = async function (req, res) {
@@ -95,6 +96,30 @@ class ClientController{
         res.status(result.status).json(result);
     };
 
+    updateClientsCategory = async function (req, res) {
+        let db = useDB(req.db)
+        let Client = db.model("Client");
+
+        let result = {
+            'status': 200,
+            'msg': 'Sending clients'
+        }
+        try {
+            let  query = {}
+            console.log(req.fields.category)
+            if (req.fields.category){
+                req.fields.objects.forEach(async function(client, index){
+                    query = { '_id': client }
+                    await Client.findOneAndUpdate(query, req.fields)
+                })
+            }
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+
+        res.status(result.status).json(result);
+    };
+
     deleteClient = async function (req, res) {
         let db = useDB(req.db)
         let Client = db.model("Client");
@@ -111,6 +136,36 @@ class ClientController{
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
+
+        res.status(result.status).json(result);
+    };
+    
+    deleteClients = async function (req, res) {
+        let db = useDB(req.db)
+        let Client = db.model("Client");
+
+        let result = {
+            'status': 200,
+            'msg': 'Clients deleted'
+        }
+        if (req.fields.objects.length) {
+            try {
+                let query = {
+                    '_id': {
+                        $in: req.fields.objects
+                    }
+                }
+                await Client.deleteMany(query)
+            } catch (error) {
+                result = sendError(error, req.headers["accept-language"])
+            }
+        } else {
+            result = {
+                'status': 200,
+                'msg': 'Parametr objects is empty'
+            }
+        }
+
 
         res.status(result.status).json(result);
     };

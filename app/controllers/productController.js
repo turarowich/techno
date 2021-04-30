@@ -1,6 +1,6 @@
 
 const fs = require('fs')
-const { useDB, sendError, saveImage } = require('../../services/helper')
+const { useDB, sendError, saveImage, createExcel } = require('../../services/helper')
 var validate = require('../../config/messages');
 class ProductController{
     
@@ -71,6 +71,7 @@ class ProductController{
                 price: data.price,
                 category: data.category,
                 recommend: data.recommend,
+                active: data.active,
             });
             await product.validate()
         
@@ -171,7 +172,28 @@ class ProductController{
 
         res.status(result.status).json(result);
     };
+    updateProductsCategory = async function (req, res) {
+        let db = useDB(req.db)
+        let Product = db.model("Product");
 
+        let result = {
+            'status': 200,
+            'msg': 'Sending objects'
+        }
+        try {
+            let query = {}
+            if (req.fields.category) {
+                req.fields.objects.forEach(async function (product, index) {
+                    query = { '_id': product }
+                    await Product.findOneAndUpdate(query, req.fields)
+                })
+            }
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+
+        res.status(result.status).json(result);
+    };
     deleteProduct = async function (req, res) {
         let db = useDB(req.db)
         let Product = db.model("Product");
@@ -215,6 +237,29 @@ class ProductController{
             }
         }
         
+
+        res.status(result.status).json(result);
+    };
+
+    getProductExcel = async function (req, res) {
+        let db = useDB(req.db)
+        let Product = db.model("Product");
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
+        let result = {
+            'status': 200,
+            'msg': 'Sending link'
+        }
+        try {
+            let objects = await Product.find().where('_id').in(req.fields.objects).populate('category').exec()
+            createExcel("product", objects, lang, req.db)
+            let file = 'https://localhost:8443/files/' + req.db + '/Excel.xlsx'
+            result['object'] = file
+        } catch (error) {
+            result = sendError(error, lang)
+        }
 
         res.status(result.status).json(result);
     };

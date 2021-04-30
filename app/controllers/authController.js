@@ -415,13 +415,12 @@ async function twitterRegister(token, screen_name) {
 }
 async function googleRegister(token) {
     let response = await axios({
-        // url: 'https://www.googleapis.com/oauth2/v3/tokeninfo',
-        url: 'https://www.googleapis.com/oauth2/v3/userinfo',
-
+        url: 'https://www.googleapis.com/oauth2/v3/tokeninfo',
+        // url: 'https://www.googleapis.com/oauth2/v3/userinfo',
         method: 'get',
         params: {
             id_token: token,
-            access_token: token
+            // access_token: token
         }
     }).catch(error => {
         let result = {
@@ -433,6 +432,7 @@ async function googleRegister(token) {
         }
         return { error: result }
     })
+    console.log(response.data, token)
     if (response.error) {
         return response
     }

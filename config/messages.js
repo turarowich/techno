@@ -26,6 +26,7 @@ const en_messages = {
 
     // EXCEL messages
     xl_produt_name:'Product name',
+    xl_produt_name_ru: "Product name ru",
     xl_produt_price: 'Product price',
     xl_product_quantity: 'Product quantity',
     xl_client_name: 'Client name',
@@ -33,7 +34,14 @@ const en_messages = {
     xl_created_at: 'Created at',
     xl_order_notes: 'Order notes',
     xl_order_status: 'Order status',
-    xl_product_result: 'Result'
+    xl_product_result: 'Result',
+    xl_category_name: 'Category',
+    xl_product_vendorcode: 'Vendorcode',
+    xl_promo_name: 'Promocde',
+    xl_promo_price: 'Promocode discount',
+    xl_promo_start: 'Promocode start date',
+    xl_promo_end: 'Promocode end date',
+    xl_recommend: 'Recommended',
 }
 const ru_messages = {
     // ERROR messages
@@ -63,6 +71,7 @@ const ru_messages = {
 
     // EXCEL messages
     xl_produt_name: 'Название',
+    xl_produt_name_ru: "Название ru",
     xl_produt_price: 'Цена',
     xl_product_quantity: 'Колличество',
     xl_product_result: 'Итого',
@@ -71,6 +80,13 @@ const ru_messages = {
     xl_created_at: 'Дата заказа',
     xl_order_notes: 'Заметки',
     xl_order_status: 'Статус',
+    xl_category_name: 'Категория',
+    xl_product_vendorcode: 'Артикул',
+    xl_promo_name: 'Промокод',
+    xl_promo_price: 'Скидка промодка',
+    xl_promo_start: 'Дата начало промокода',
+    xl_promo_end: 'Дата конца промокода',
+    xl_recommend: 'Рекомендовано',
 }
 module.exports = {
     en: en_messages,

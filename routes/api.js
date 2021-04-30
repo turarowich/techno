@@ -15,13 +15,20 @@ module.exports = function (app, network_information) {
     app.get('/getClients', clientController.getClients);
     app.post('/addClient', clientController.addClient);
     app.put('/updateClient/:client', clientController.updateClient);
+    app.put('/updateClient/:client', clientController.updateClient);
+    app.put('/updateClientsCategory', clientController.updateClientsCategory);
     app.delete('/deleteClient/:client', clientController.deleteClient);
+    app.delete('/deleteClients', clientController.deleteClients);
     
     // Products url
     app.get('/getProduct/:product', productController.getProduct);
     app.get('/getProducts', productController.getProducts);
+    app.post('/getProductExcel', productController.getProductExcel);
     app.post('/addProduct', upload.single('file'), productController.addProduct);
     app.put('/updateProduct/:product', upload.single('file'), productController.updateProduct);
+    app.put('/updateProductsCategory', productController.updateProductsCategory);
+    
+    
     app.delete('/deleteProduct/:product', productController.deleteProduct);
     app.delete('/deleteProducts', productController.deleteProducts);
 
@@ -54,6 +61,8 @@ module.exports = function (app, network_information) {
     app.delete('/deleteOrder/:order', orderController.deleteOrder);
     app.delete('/deleteOrders', orderController.deleteOrders);
     app.post('/getOrderExcel', orderController.getOrderExcel);
+
+
     // News url
     app.get('/getSingleNews/:news', newsController.getSingleNews);
     app.get('/getNews', newsController.getNews);

@@ -97,40 +97,29 @@ function createExcel(type, params, lang, company){
         let key = header.key.split('/')
         let element_index = 2
         
-        params.forEach((param_element, param_index) => {
-            if(param_index){
-                element_index++
-            }
-            
+        params.forEach((param_element, param_index) => {    
             if (typeof global_index[param_index] === 'undefined'){
                 global_index[param_index] = element_index
-                console.log(global_index)
             }
             if (key.length > 1) {
-                if (param_element[key[0]]) {
+                if (param_element[key[0]] instanceof Array) {
                     param_element[key[0]].forEach(param => {
                         setWorkSheetCell(param[key[1]], worksheet, element_index, index, paramStyle, key[1])
                         element_index++
                     })
-                    
-                    // if (global_index[param_index - 1] && !global_index[param_index]) {
-                    //     // console.log(param_element[key[0]].length)
-                    //     global_index[param_index] = param_element[key[0]].length + 1
-                    // }
+                }else{
+                    if (param_element[key[0]] && param_element[key[0]][key[1]]){
+                        setWorkSheetCell(param_element[key[0]][key[1]], worksheet, element_index, index, paramStyle, key[1])
+                        element_index++
+                    }
                 }
             }else {
                 setWorkSheetCell(param_element[header.key], worksheet, global_index[param_index], index, paramStyle, "")
                 element_index++
             }
-            
-            // if (global_index[param_index - 1] && !global_index[param_index]){
-            //     console.log(element_index, global_index[param_index - 1])
-            //     global_index[param_index] = element_index - global_index[param_index - 1]
-            // }
-        
         });
     });
-    console.log(global_index)
+    
     var dir = path.join(__dirname, '/../views/frontend/files/' + company)
     if (!fs.existsSync(dir)) {
         console.log(dir)
@@ -197,8 +186,61 @@ function getExcelHeader(type){
                 key: "status"
             },
         ]
-    }
+    } else if (type == "product"){
+        headers = [
+            {
+                name: "xl_produt_name",
+                key: "name"
 
+            },
+            {
+                name: "xl_produt_name_ru",
+                key: "name_ru"
+
+            },
+            {
+                name: "xl_produt_price",
+                key: "price"
+            },
+            {
+                name: "xl_product_quantity",
+                key: "quantity"
+            },
+            {
+                name: "xl_category_name",
+                key: "category/name"
+            },
+            {
+                name: "xl_product_vendorcode",
+                key: "vendorCode"
+            },
+            {
+                name: "xl_promo_name",
+                key: "promo"
+            },
+            {
+                name: "xl_promo_price",
+                key: "promoPrice"
+            },
+            {
+                name: "xl_promo_start",
+                key: "promoStart"
+            },
+            {
+                name: "xl_promo_end",
+                key: "promoEnd"
+            },
+            {
+                name: "xl_recommend",
+                key: "recommend"
+            },
+            {
+                name: "xl_created_at",
+                key: "createdAt"
+            },
+            
+        ]
+    }
     return headers
 }
 module.exports = {
