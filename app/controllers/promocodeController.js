@@ -21,6 +21,7 @@ class PromocodeController{
     };
 
     getPromocodes = async function (req, res) {
+        console.log(req)
         let db = useDB(req.db)
         let Promocode = db.model("Promocode");
 

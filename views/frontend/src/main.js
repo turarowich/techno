@@ -19,10 +19,11 @@ import $ from 'jquery';
 import moment from 'moment';
 import Lightpick from 'lightpick'
 import axios from "axios";
+import store from './store';
 
 const app = createApp(App)
-app.use(router)
-
+app.use(router);
+app.use(store);
 let token = localStorage.getItem('token')
 
 const ax = axios.create({

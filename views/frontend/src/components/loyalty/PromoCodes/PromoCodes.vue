@@ -32,29 +32,50 @@
 <script>
 import AddPromo from "@/components/loyalty/PromoCodes/AddPromo";
 import AddFormPromo from "@/components/loyalty/PromoCodes/AddFormPromo";
+// import {useStore} from "vuex";
 export default {
   name: "PromoCodes",
   components:{
     AddPromo,
     AddFormPromo
   },
-  data(){
-    return{
-      promocodes:[],
+  // data(){
+  //   return{
+  //     promocodes:[],
+  //   }
+  // },
+
+  computed:{
+    promocodes(){
+      // const store = useStore();
+      console.log(this.$store.state.Promocode.promocodes,"rrrt")
+      // console.log(this.$store.state.Promocode.promocodes,"rrrdt")
+      return this.$store.state.Promocode.promocodes;
     }
   },
+
   methods:{
     submitPromo(newPromo){
-      this.promocodes.push(newPromo)
+      //this.promocodes.push(newPromo)
+      this.$store.dispatch('Promocode/addPromocode', newPromo);
 
     },
     removePromo(id){
       alert("id selected "+ id)
       this.promocodes.filter(promo=>id !== promo.id)
     }
+  },
+  watch: {
+    promocodes: {
+      handler(val, oldVal) {
+        console.log('promocodes list changed',val, oldVal)
+      },
+      deep: true
+    },
+  },
+  mounted() {
+    this.$store.dispatch("Promocode/setPromocodeAPI",this.axios);
   }
-
-
 }
 </script>
 
