@@ -1,5 +1,6 @@
 const { useDB, sendError, createExcel } = require('../../services/helper')
-var validate = require('../../config/errorMessages');
+var validate = require('../../config/messages');
+const fs = require('fs')
 class OrderController{
     
     getOrder = async function (req, res) {
@@ -44,6 +45,10 @@ class OrderController{
         let Client = db.model("Client");  
         let Product = db.model("Product");
         let OrderProduct = db.model("OrderProduct");
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
         let result = {
             'status': 200,
             'msg': 'Order added'
@@ -59,6 +64,7 @@ class OrderController{
                     promoCode: req.fields.promoCode,
                     status: req.fields.status,
                     deliveryType: req.fields.deliveryType,
+                    notes: req.fields.notes,
                 });
                 var products = req.fields.products
                 for(let i=0; i < products.length; i++){
@@ -164,20 +170,21 @@ class OrderController{
     getOrderExcel = async function (req, res) {
         let db = useDB(req.db)
         let Order = db.model("Order");
-        
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
         let result = {
             'status': 200,
-            'msg': 'Order deleted'
+            'msg': 'Sending link'
         }
         try {
-            let result = {
-                'status': 200,
-                'msg': 'Order deleted'
-            }
-            // let excel = createExcel(куыг)    
-            // console.log(excel)
+            let objects = await Order.find().where('_id').in(req.fields.orders).populate('client').populate('products').exec()
+            createExcel("order", objects, lang, req.db)
+            let file = 'https://localhost:8443/files/' + req.db + '/Excel.xlsx'
+            result['object'] = file
         } catch (error) {
-            result = sendError(error, req.headers["accept-language"])
+            result = sendError(error, lang)
         }
 
         res.status(result.status).json(result);

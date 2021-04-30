@@ -1,5 +1,5 @@
 const { useDB, sendError } = require('../../services/helper')
-var validate = require('../../config/errorMessages');
+var validate = require('../../config/messages');
 class CategoryController {
     
     getCategory = async function (req, res) {

@@ -63,6 +63,7 @@ app.use(formidableMiddleware());
 
 router.get("/auth/facebook", passport.authenticate("facebook", { authType: 'reauthenticate'}));
 app.use('/images', express.static(__dirname + '/views/frontend/images'))
+app.use('/files', express.static(__dirname + '/views/frontend/files'))
 app.use('/api', VerifyToken, require('./routes/api.js')(router))
 app.use('/', require('./routes/home.js')(router, passport))
 

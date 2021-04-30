@@ -1,6 +1,6 @@
 
 const { useDB, sendError } = require('../../services/helper')
-var validate = require('../../config/errorMessages');
+var validate = require('../../config/messages');
 class ReviewController{
     
     getReview = async function (req, res) {

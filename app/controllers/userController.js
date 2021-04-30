@@ -1,7 +1,7 @@
 const db = global.userConnection.useDb("loygift");
 const User = db.model("User");
 const { useDB, sendError} = require('../../services/helper')
-var validate = require('../../config/errorMessages');
+var validate = require('../../config/messages');
 class UserController{
     
     getUser = async function (req, res) {

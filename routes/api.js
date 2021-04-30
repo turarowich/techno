@@ -53,7 +53,7 @@ module.exports = function (app, network_information) {
     app.put('/updateOrder/:order', orderController.updateOrder);
     app.delete('/deleteOrder/:order', orderController.deleteOrder);
     app.delete('/deleteOrders', orderController.deleteOrders);
-    app.get('/getOrderExcel/:order', orderController.getOrderExcel);
+    app.post('/getOrderExcel', orderController.getOrderExcel);
     // News url
     app.get('/getSingleNews/:news', newsController.getSingleNews);
     app.get('/getNews', newsController.getNews);
