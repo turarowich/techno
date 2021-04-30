@@ -1,4 +1,5 @@
 const en_messages = {
+    // ERROR messages
     name_required: 'Name required',
     name_min: 'Name is too short',
     name_max: 'Name is too long',
@@ -20,9 +21,22 @@ const en_messages = {
     client_user_exist_title: 'User already signed in',
     client_user_exist_msg: 'Probably u have been signed in already, try to authenticate',
     client_user_not_found_title: 'User not found',
-    client_user_not_found_msg: 'Probably u didnt sign up'
+    client_user_not_found_msg: 'Probably u didnt sign up',
+    image_not_valid: 'Not valid image format',
+
+    // EXCEL messages
+    xl_produt_name:'Product name',
+    xl_produt_price: 'Product price',
+    xl_product_quantity: 'Product quantity',
+    xl_client_name: 'Client name',
+    xl_client_phone: 'Client phone',
+    xl_created_at: 'Created at',
+    xl_order_notes: 'Order notes',
+    xl_order_status: 'Order status',
+    xl_product_result: 'Result'
 }
 const ru_messages = {
+    // ERROR messages
     name_required: 'Имя обязательно',
     name_min: 'Имя слишком короткое',
     name_max: 'Имя слишком длинное',
@@ -44,7 +58,19 @@ const ru_messages = {
     client_user_exist_title: 'Пользователь уже зарегистрирован',
     client_user_exist_msg: 'Возможно вы уже зарегистрировались ранее, попробуйте авторизоватся',
     client_user_not_found_title: 'Пользователь не найден',
-    client_user_not_found_msg: 'Возможно вы ещё не зарегистрировались'
+    client_user_not_found_msg: 'Возможно вы ещё не зарегистрировались',
+    image_not_valid: 'Неправильный формат изображения',
+
+    // EXCEL messages
+    xl_produt_name: 'Название',
+    xl_produt_price: 'Цена',
+    xl_product_quantity: 'Колличество',
+    xl_product_result: 'Итого',
+    xl_client_name: 'Имя Клиента',
+    xl_client_phone: 'Телефон',
+    xl_created_at: 'Дата заказа',
+    xl_order_notes: 'Заметки',
+    xl_order_status: 'Статус',
 }
 module.exports = {
     en: en_messages,

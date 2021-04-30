@@ -23,6 +23,7 @@ module.exports = function (app, network_information) {
     app.post('/addProduct', upload.single('file'), productController.addProduct);
     app.put('/updateProduct/:product', upload.single('file'), productController.updateProduct);
     app.delete('/deleteProduct/:product', productController.deleteProduct);
+    app.delete('/deleteProducts', productController.deleteProducts);
 
     // Category url
     app.get('/getCategory/:category', categoryController.getCategory);
@@ -51,7 +52,8 @@ module.exports = function (app, network_information) {
     app.post('/addOrder', orderController.addOrder);
     app.put('/updateOrder/:order', orderController.updateOrder);
     app.delete('/deleteOrder/:order', orderController.deleteOrder);
-
+    app.delete('/deleteOrders', orderController.deleteOrders);
+    app.post('/getOrderExcel', orderController.getOrderExcel);
     // News url
     app.get('/getSingleNews/:news', newsController.getSingleNews);
     app.get('/getNews', newsController.getNews);

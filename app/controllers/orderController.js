@@ -1,5 +1,6 @@
-const { useDB, sendError } = require('../../services/helper')
-var validate = require('../../config/errorMessages');
+const { useDB, sendError, createExcel } = require('../../services/helper')
+var validate = require('../../config/messages');
+const fs = require('fs')
 class OrderController{
     
     getOrder = async function (req, res) {
@@ -41,23 +42,57 @@ class OrderController{
     addOrder = async function (req, res) {
         let db = useDB(req.db)
         let Order = db.model("Order");
-
+        let Client = db.model("Client");  
+        let Product = db.model("Product");
+        let OrderProduct = db.model("OrderProduct");
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
         let result = {
             'status': 200,
             'msg': 'Order added'
         }
         try {
+            let client = await Client.findById(req.userID)
+            if(client){
+                
+                let order = await new Order({
+                    client: client._id,
+                    client_name: client.name,
+                    client_phone: client.phone,
+                    promoCode: req.fields.promoCode,
+                    status: req.fields.status,
+                    deliveryType: req.fields.deliveryType,
+                    notes: req.fields.notes,
+                });
+                var products = req.fields.products
+                for(let i=0; i < products.length; i++){
+                    let product = products[i]
+                    let search_product = await Product.findById(product.id)
+                    if (search_product) {
 
-            let order = await new Order({
-                products: req.fields.products,
-                quantity: req.fields.quantity,
-                client: req.fields.client,
-                promoCode: req.fields.promoCode,
-                status: req.fields.status,
-                deliveryType: req.fields.deliveryType,
-            }).save();
+                        let order_product = await new OrderProduct({
+                            product: product.id,
+                            name: search_product.name,
+                            name_ru: search_product.name_ru,
+                            secondary: search_product.secondary,
+                            secondary_ru: search_product.secondary_ru,
+                            img: search_product.img,
+                            price: search_product.price,
+                            quantity: product.quantity
+                        }).save();
+                        order.products.push(order_product._id)
+                    }
+                }
+                order.save()
+                result['object'] = await order.populate('products').execPopulate()
+            }else{
+                result['msg'] = 'Cant find user'
+            }
+            
 
-            result['object'] = await order.populate('client').populate('products').execPopulate()
+            
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
@@ -98,6 +133,58 @@ class OrderController{
             await Order.findByIdAndRemove(query)
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
+        }
+
+        res.status(result.status).json(result);
+    };
+
+    deleteOrders = async function (req, res) {
+        let db = useDB(req.db)
+        let Order = db.model("Order");
+
+        let result = {
+            'status': 200,
+            'msg': 'Orders deleted'
+        }
+        if (req.fields.objects.length) {
+            try {
+                let query = {
+                    '_id': {
+                        $in: req.fields.objects
+                    }
+                }
+                await Order.deleteMany(query)
+            } catch (error) {
+                result = sendError(error, req.headers["accept-language"])
+            }
+        } else {
+            result = {
+                'status': 200,
+                'msg': 'Parametr objects is empty'
+            }
+        }
+
+
+        res.status(result.status).json(result);
+    };
+    getOrderExcel = async function (req, res) {
+        let db = useDB(req.db)
+        let Order = db.model("Order");
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
+        let result = {
+            'status': 200,
+            'msg': 'Sending link'
+        }
+        try {
+            let objects = await Order.find().where('_id').in(req.fields.orders).populate('client').populate('products').exec()
+            createExcel("order", objects, lang, req.db)
+            let file = 'https://localhost:8443/files/' + req.db + '/Excel.xlsx'
+            result['object'] = file
+        } catch (error) {
+            result = sendError(error, lang)
         }
 
         res.status(result.status).json(result);

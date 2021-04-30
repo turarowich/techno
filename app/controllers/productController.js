@@ -1,7 +1,7 @@
 
 const fs = require('fs')
 const { useDB, sendError, saveImage } = require('../../services/helper')
-var validate = require('../../config/errorMessages');
+var validate = require('../../config/messages');
 class ProductController{
     
     getProduct = async function (req, res) {
@@ -48,7 +48,11 @@ class ProductController{
             'status': 200,
             'msg': 'Product added'
         }
-        try {
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
+        addProduct: try {
             let data = req.fields
             
             let product = await new Product({
@@ -74,9 +78,14 @@ class ProductController{
                 
                 let filename = saveImage(req.files.img, req.db)
                 if (filename == 'Not image') {
-                    result['status'] = 500
-                    result['msg'] = filename
-                    throw new Error('file with name ' + req.files.img.name + ' not an image');
+                    result = {
+                        status: 500,
+                        msg: "Validation error",
+                        errors: {
+                            img: validate[lang]['image_not_valid'],
+                        },
+                    }
+                    break addProduct
                 }else{
                     product.img = filename   
                 }
@@ -86,9 +95,14 @@ class ProductController{
                 if (req.files['imgArray' + $i]) {
                     let filename = saveImage(req.files['imgArray' + $i], req.db)
                     if (filename == 'Not image') {
-                        result['status'] = 500
-                        result['msg'] = filename
-                        throw new Error('file with name ' + req.files['imgArray' + $i].name + ' not an image');
+                        result = {
+                            status: 500,
+                            msg: "Validation error",
+                            errors: {
+                                imgArray: validate[lang]['image_not_valid'],
+                            },
+                        }
+                        break addProduct
                     } else {
                         product.imgArray.push(filename)
                     }
@@ -97,7 +111,7 @@ class ProductController{
             product.save()
             result['object'] = product
         } catch (error) {
-            result = sendError(error, req.headers["accept-language"])
+            result = sendError(error, lang)
         }
 
         res.status(result.status).json(result);
@@ -111,7 +125,7 @@ class ProductController{
             'status': 200,
             'msg': 'Product updated'
         }
-        try {
+        updateProduct: try {
             let data = req.fields
             let query = { '_id': req.params.product }
             data['updatedAt'] = new Date()
@@ -119,9 +133,14 @@ class ProductController{
             if (req.files.img) {
                 let filename = saveImage(req.files.img, req.db, product.img)
                 if (filename == 'Not image') {
-                    result['status'] = 500
-                    result['msg'] = filename
-                    throw new Error('file with name ' + req.files.img.name + ' not an image');
+                    result = {
+                        status: 500,
+                        msg: "Validation error",
+                        errors: {
+                            img: validate[lang]['image_not_valid'],
+                        },
+                    }
+                    break updateProduct
                 } else {
                     product.img = filename   
                 }
@@ -131,9 +150,14 @@ class ProductController{
                     product.imgArray = []
                     let filename = saveImage(req.files['imgArray' + $i], req.db)
                     if (filename == 'Not image') {
-                        result['status'] = 500
-                        result['msg'] = filename
-                        throw new Error('file with name ' + req.files['imgArray' + $i].name + ' not an image');
+                        result = {
+                            status: 500,
+                            msg: "Validation error",
+                            errors: {
+                                imgArray: validate[lang]['image_not_valid'],
+                            },
+                        }
+                        break updateProduct
                     } else {
                         product.imgArray.push(filename)
                     }
@@ -162,6 +186,35 @@ class ProductController{
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
+
+        res.status(result.status).json(result);
+    };
+    deleteProducts = async function (req, res) {
+        let db = useDB(req.db)
+        let Product = db.model("Product");
+
+        let result = {
+            'status': 200,
+            'msg': 'Product deleted'
+        }
+        if (req.fields.objects.length){
+            try {
+                let query = {
+                    '_id': {
+                        $in: req.fields.objects
+                    }
+                }
+                await Product.deleteMany(query)
+            } catch (error) {
+                result = sendError(error, req.headers["accept-language"])
+            }
+        }else{
+            result = {
+                'status': 200,
+                'msg': 'Parametr objects is empty'
+            }
+        }
+        
 
         res.status(result.status).json(result);
     };

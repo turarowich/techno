@@ -5,7 +5,7 @@
       <div class="d-flex align-items-center">
         <button class="app-buttons-item" @click="deleteAllOrder"><img class="img-btn" src="../../assets/icons/trash_empty.svg" ><span>Remove</span></button>
         <button class="app-buttons-item" ><img class="img-btn" src="../../assets/icons/filter.svg"><span>Filter</span></button>
-        <button class="app-buttons-item" ><img class="img-btn" src="../../assets/icons/set.svg"><span>Export to Excell </span></button>
+        <button class="app-buttons-item" @click="exportOrder"><img class="img-btn" src="../../assets/icons/set.svg"><span>Export to Excell </span></button>
       </div>
       <div>
         <button class="app-buttons-item" @click="showYesterday"><img src="../../assets/icons/yesterday.svg"><span>Yesterday</span></button>
@@ -147,6 +147,21 @@ name: "Orders",
     }
   },
   methods: {
+    exportOrder(){
+        this.axios.post(this.url('getOrderExcel'),{
+            orders: ['608a5131405656e224436194', '608a5102405656e224436191']
+        }).then((response)=>{
+            const link = document.createElement('a');
+            link.href = response.data.object;
+            link.setAttribute('download', 'file.xlsx'); //any other extension
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        })
+        .catch((error)=>{
+            console.log("Error",error)
+        })
+    },
     clickOnDate(){
         $('.date-pick').click()
     },

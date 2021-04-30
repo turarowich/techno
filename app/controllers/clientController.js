@@ -1,6 +1,6 @@
 var bcrypt = require('bcryptjs');
 const { useDB, sendError } = require('../../services/helper')
-var validate = require('../../config/errorMessages');
+var validate = require('../../config/messages');
 class ClientController{
     
     getClient = async function (req, res) {

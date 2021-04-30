@@ -100,6 +100,7 @@ router.get("/auth/google", passport.authenticate("google", { authType: 'reauthen
 router.get("/auth/twitter", passport.authenticate("twitter", { authType: 'reauthenticate'}));
 
 app.use('/images', express.static(__dirname + '/views/frontend/images'))
+app.use('/files', express.static(__dirname + '/views/frontend/files'))
 app.use('/api', VerifyToken, require('./routes/api.js')(router))
 app.use('/', require('./routes/home.js')(router, passport))
 

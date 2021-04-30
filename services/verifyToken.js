@@ -16,7 +16,7 @@ function verifyToken(req, res, next) {
 
         // if everything good, save to request for use in other routes
         
-        req.userID = decoded.id;
+        req.userID = decoded.user;
         req.db = "loygift" + decoded.id;
         next();
     });
