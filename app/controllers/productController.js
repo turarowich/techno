@@ -1,7 +1,10 @@
 
 const fs = require('fs')
+var os = require("os");
 const { useDB, sendError, saveImage, createExcel } = require('../../services/helper')
 var validate = require('../../config/messages');
+var readXlsxFile = require('read-excel-file/node')
+
 class ProductController{
     
     getProduct = async function (req, res) {
@@ -255,8 +258,67 @@ class ProductController{
         try {
             let objects = await Product.find().where('_id').in(req.fields.objects).populate('category').exec()
             createExcel("product", objects, lang, req.db)
-            let file = 'https://localhost:8443/files/' + req.db + '/Excel.xlsx'
+            var hostname = os.hostname();
+            let file = hostname + req.db + '/Excel.xlsx'
             result['object'] = file
+        } catch (error) {
+            result = sendError(error, lang)
+        }
+
+        res.status(result.status).json(result);
+    };
+
+    getProductImportExcel = async function (req, res) {
+        let db = useDB(req.db)
+        let Product = db.model("Product");
+        let Category = db.model("Category");
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
+        let result = {
+            'status': 200,
+            'msg': 'Sending link'
+        }
+        try {
+            
+            let rows = await readXlsxFile(req.files.excel.path).catch((error) =>{
+                console.log(error)
+            })
+            var products = []
+            for (let index = 0; index < rows.length; index++) {
+                let data = rows[index]
+                if (index) {
+                    let product = await new Product({
+                        name: data[0],
+                        name_ru: data[1],
+                        secondary: data[2],
+                        secondary_ru: data[3],
+                        description: data[4],
+                        description_ru: data[5],
+                        vendorCode: data[6],
+                        quantity: data[7],
+                        price: data[8],
+                    }).save();
+                    products.push(product._id)
+                    
+                    if (data[9]) {
+                        
+                        let category = await Category.find({ type: 'product', name: data[9] })
+                        category = category[0]
+                        if (!category) {
+                            category = await new Category({
+                                name: data[9],
+                                type: 'product',
+                            }).save();
+                        }
+                        product.category = category._id
+                        await product.save()
+                    }
+                }
+            }
+            let objects = await Product.find().where('_id').in(products).populate('category').exec()
+            result['objects'] = objects
         } catch (error) {
             result = sendError(error, lang)
         }

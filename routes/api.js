@@ -24,6 +24,7 @@ module.exports = function (app, network_information) {
     app.get('/getProduct/:product', productController.getProduct);
     app.get('/getProducts', productController.getProducts);
     app.post('/getProductExcel', productController.getProductExcel);
+    app.post('/getProductImportExcel', productController.getProductImportExcel);
     app.post('/addProduct', upload.single('file'), productController.addProduct);
     app.put('/updateProduct/:product', upload.single('file'), productController.updateProduct);
     app.put('/updateProductsCategory', productController.updateProductsCategory);

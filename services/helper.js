@@ -4,6 +4,7 @@ var validate = require('../config/messages');
 var excel = require('excel4node');
 const { errors } = require('formidable');
 var moment = require("moment")
+
 function useDB(db_name) {
     let db = global.userConnection.useDb(db_name);
     return db;
@@ -243,6 +244,7 @@ function getExcelHeader(type){
     }
     return headers
 }
+
 module.exports = {
     useDB: useDB,
     saveImage: saveImage,
