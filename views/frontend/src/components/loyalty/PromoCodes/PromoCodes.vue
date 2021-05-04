@@ -57,7 +57,8 @@ export default {
   methods:{
     submitPromo(newPromo){
       //this.promocodes.push(newPromo)
-      this.$store.dispatch('Promocode/addPromocode', newPromo);
+      console.log(this.axios);
+      this.$store.dispatch('Promocode/addPromocode', {'promocode':newPromo,'axios':this.axios});
 
     },
     removePromo(id){

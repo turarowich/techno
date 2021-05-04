@@ -87,10 +87,10 @@ export default {
   },
   methods:{
     onSubmit(){
-      const newPromo = this.addPromo
-      this.$emit('submitPromo', newPromo)
-      this.addPromo = {id:Date.now()
-      }
+      this.$store.dispatch('Promocode/addPromocode', {'promocode':this.addPromo,'axios':this.axios});
+      // const newPromo = this.addPromo
+      // this.$emit('submitPromo', newPromo)
+      // this.addPromo = {id:Date.now()}
     },
 
   }

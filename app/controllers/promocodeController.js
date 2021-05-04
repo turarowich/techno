@@ -21,7 +21,6 @@ class PromocodeController{
     };
 
     getPromocodes = async function (req, res) {
-        console.log(req)
         let db = useDB(req.db)
         let Promocode = db.model("Promocode");
 
@@ -42,19 +41,20 @@ class PromocodeController{
     addPromocode = async function (req, res) {
         let db = useDB(req.db)
         let Promocode = db.model("Promocode");
-
+        let new_promocode =  req.fields.promocode;
+        let new_promocode_name =  req.fields.promocode.name;
         let result = {
             'status': 200,
             'msg': 'Promocode added'
         }
         try {
             let promocode = await new Promocode({
-                name: req.fields.name,
-                code: req.fields.code,
-                percent: req.fields.percent,
-                bonus: req.fields.bonus,
-                startDate: req.fields.startDate,
-                endDate: req.fields.endDate
+                name: new_promocode.name || "No name",
+                code: new_promocode.code || "90909",
+                percent: new_promocode.percent || "99",
+                bonus: new_promocode.bonus || "99",
+                startDate: new_promocode.startDate || new Date(),
+                endDate: new_promocode.endDate || new Date(),
             }).save();
 
             result['object'] = promocode
