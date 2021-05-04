@@ -3,14 +3,46 @@
     <div class="searchAndButtons">
     <div class="d-flex justify-content-between app-buttons">
       <div class="d-flex align-items-center">
+        <button class="app-buttons-item adding-btns"  data-toggle="modal" data-target="#"><span>+ Add order</span></button>
         <button class="app-buttons-item" @click="deleteAllOrder"><img class="img-btn" src="../../assets/icons/trash_empty.svg" ><span>Remove</span></button>
         <button class="app-buttons-item" ><img class="img-btn" src="../../assets/icons/filter.svg"><span>Filter</span></button>
         <button class="app-buttons-item" @click="exportOrder"><img class="img-btn" src="../../assets/icons/set.svg"><span>Export to Excell </span></button>
+
+        <div class="dropdown filter-drops">
+          <button class="app-buttons-item dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+            <img class="img-btn" src="../../assets/icons/filter.svg"><span>Filter</span>
+          </button>
+
+          <div class="dropdown-menu general-dropdown" aria-labelledby="dropdownMenuButton">
+            <form class="filter-dropdown">
+                <h3 class="drop-title">By price</h3>
+                <div class="d-flex">
+                  <input class="drop-input">
+                  <div class="d-flex">
+                    <label class="mr-2 pl-2">to</label>
+                    <input class="drop-input">
+                  </div>
+                </div>
+
+              <select class="filter-select form-control form-control-sm mb-2" aria-label=".form-select-lg example">
+                <option>Done</option>
+                <option>In process</option>
+                <option>Canceled</option>
+                <option>New</option>
+
+
+              </select>
+            </form>
+          </div>
+        </div>
+
+
+        <button class="app-buttons-item" ><img class="img-btn" src="../../assets/icons/set.svg"><span>Export to Excell </span></button>
       </div>
       <div>
         <button class="app-buttons-item" @click="showYesterday"><img src="../../assets/icons/yesterday.svg"><span>Yesterday</span></button>
         <button class="app-buttons-item" @click="showTodayData"><img src="../../assets/icons/yesterday.svg"><span>Today</span></button>
-        <button class="app-buttons-item" @click="clickOnDate"><img src="../../assets/icons/yesterday.svg"><input  :value="filterByDate" placeholder="2021-12-03" class="date-pick" id="datepicker"></button>
+        <button class="app-buttons-item" @click="clickOnDate"><img src="../../assets/icons/yesterday.svg"><input  :value="filterByDate" class="date-pick" id="datepicker"></button>
       </div>
     </div>
 
@@ -21,8 +53,9 @@
     </div>
     <div class="d-flex main-content-header">
       <div class="table-head" style="width: 3%;"><label class="custom-checkbox"><input type="checkbox"  @click="toggleSelect" :checked="selectAll"><span class="checkmark"></span></label></div>
-      <div class="table-head" style="width: 20%;">Name order</div>
-      <div class="table-head" style="width: 14%;">Client</div>
+      <div class="table-head" style="width: 9%;">Name order</div>
+      <div class="table-head" style="width: 15%;">Product</div>
+      <div class="table-head" style="width: 10%;">Client</div>
       <div class="table-head" style="width: 12%;">Phone number</div>
       <div class="table-head table-link " style="width: 10%;" @click="sortByTotal()" >Total <img class="total-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
       <div class="table-head table-link" style="width: 10%; cursor: pointer" v-on:click="sortByDate" >Date <img class="date-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
@@ -63,7 +96,7 @@
 </template>
 
 <script>
-import OrderItem from "@/components/order-item/OrderItem";
+import OrderItem from "@/components/orders/OrderItem";
 import Swal from "sweetalert2";
 import $ from 'jquery';
 
@@ -204,13 +237,13 @@ name: "Orders",
         });
       }
     },
-    toggleSelect: function () {
-      var select = this.selectAll;
-      this.orderList.forEach(function (user) {
-        user.checked = !select;
-      });
-      this.selectAll = !select;
-    },
+    // toggleSelect: function () {
+    //   var select = this.selectAll;
+    //   this.orderList.forEach(function (user) {
+    //     user.checked = !select;
+    //   });
+    //   this.selectAll = !select;
+    // },
     deleteAllOrder() {
       if (this.selectAll) {
         this.orderList = [];
@@ -279,12 +312,7 @@ name: "Orders",
           closeButton:'close-btn'
 
         },
-        showClass: {
-          popup: 'animate__animated animate__zoomIn'
-        },
-        hideClass: {
-          popup: 'animate__animated animate__zoomOut'
-        }
+
       }).then((result) => {
         if (result.isConfirmed) {
           this.orderList = this.orderList.filter(el => el.id !== id);
@@ -336,22 +364,16 @@ name: "Orders",
         }
       })
     },
-    getProducts() {
 
-        this.axios.get(this.url('getProducts'))
-            .then((response) => {
-                console.log(response.data)
 
-            })
-    },
   },
 
 
   mounted(){
       this.totalOrders()
-      this.getProducts()
       this.countNewOrder()
       this.renderPaginationList()
+
 
 
     new this.$lightpick({
@@ -396,7 +418,8 @@ name: "Orders",
 }
 .orders{
   margin: 0 30px;
-  height:100%;
+  height:calc(100vh - 90px);
+  overflow: hidden;
 }
 .total-order img, .date-order img{
   margin-left: 0;
@@ -412,4 +435,19 @@ name: "Orders",
 .prevBtn{
   transform: rotate(180deg);
 }
+
+.filter-drops .general-dropdown{
+  width: 260px;
+}
+.filter-dropdown{
+  padding: 20px;
+}
+.filter-select{
+  height: 30px;
+  background-position-y: 50%;
+  padding: 0 10px;
+  font-size: 14px;
+  border: 1px solid #E3E3E3;
+}
+
 </style>

@@ -1,6 +1,6 @@
 <template>
 <footer >
-  <div class="d-flex justify-content-between align-items-center container">
+  <div class="d-flex justify-content-between align-items-center footer-container container">
   <div class="footer-contact">
     <h3>Contacts</h3>
     <p class="footer-info"><img src="../../../assets/clients/Call.svg"><a  href="/">+1 812 436 23 53</a></p>
@@ -32,7 +32,7 @@ name: "Footer"
 footer{
   padding:70px 0;
   background: #F4F4F4;
-  margin-top: 30px;
+  margin-top: 100px;
 }
 .footer-address h3, .footer-contact h3{
   color: #222222;
@@ -59,5 +59,8 @@ font-size: 16px;
 }
 .poweredby{
   color:#858585;
+}
+.footer-container{
+  max-width: calc(100vw - 240px);
 }
 </style>

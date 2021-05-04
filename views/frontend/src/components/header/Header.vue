@@ -19,54 +19,58 @@
           <ul class="list-group" >
             <li class="list-group-item">English</li>
             <li class="list-group-item">Russian</li>
-
           </ul>
         </div>
-
       </div>
 
       <div class="notification">
         <img src="../../assets/icons/ring.svg">
       </div>
 
-      <div class="user-info d-flex align-items-center">
-        <span class="user-logo">W</span>
-        <div class="user-text">
-          <h4 class="user-name">Wory Shop</h4>
-          <span class="user-tariff">Your tarif is lite</span>
+
+      <div class="profile dropdown">
+        <div class="d-flex align-items-center profile-cursor dropdown-toggle"   id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span class="profile-logo d-flex align-items-center justify-content-center">W</span>
+          <div>
+              <h3 class="mb-0 cashback-sub-title" style="font-weight:400">Woryshop</h3>
+              <span style="color:#8C94A5">Your tariff is lite</span>
+          </div>
+          <img class="profile-arrow" src="../../assets/icons/down.svg">
         </div>
 
+        <div class="dropdown-menu general-dropdown">
+          <div class="profile-dropdown">
+            <div class="d-flex align-items-center profile-header dropdown-toggle">
+              <span class="profile-logo d-flex align-items-center justify-content-center">W</span>
+              <div>
+                <h3 class="profile-title mb-0 cashback-sub-title">Woryshop</h3>
+                <span style="color:#8C94A5">Your tariff is lite</span>
+              </div>
+            </div>
+            <div class="warning d-flex align-items-center">
+                <span class="number">99</span>
+                <span class="mr-2 ml-2" style="color:#8C94A5;">|</span>
+                <span class="days">days lefts</span>
+            </div>
 
-        <div class="dropdown">
-         <div class="drop-img dropdown-toggle" id="dropdownProfile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <img src="../../assets/icons/Line.svg"  >
-         </div>
-          <div class="dropdown-menu profile-dropdown" aria-labelledby="dropdownProfile">
-           <form>
-             <div class="user-info d-flex align-items-center">
-               <span class="user-logo">W</span>
-               <div class="user-text">
-                 <h4 class="user-name ">Wory Shop</h4>
-                 <span class="user-tariff">Your tarif is lite</span>
-               </div>
-             </div>
+            <ul class="p-0">
+              <li class="profile-list"><img src="../../assets/clients/Edit.svg">Edit profile</li>
+              <li class="profile-list"><img src="../../assets/clients/DiscountBlack.svg">Choose tariff</li>
+            </ul>
 
-             <ul class="list-group">
-               <li class="profile-list list-group-item"><img src="../../assets/icons/edit-profile.svg">Edit pofile</li>
-               <li class="profile-list list-group-item"><img src="../../assets/icons/discountProfile.svg">Choose your tariff</li>
-             </ul>
-             <span class="logout" @click="logout">Log out</span>
-              <p class="profile-footer">Powered by ”Loy Gift” 2021</p>
-           </form>
+            <a class="log-out" @click="logout" >Log out</a>
+            <p class="powered">
+              Powered by ”Loy Gift” 2021
+            </p>
           </div>
         </div>
-
       </div>
       </div>
     </div>
-
 </template>
 
 <script>
+
 export default {
 name: "Header",
   props:{
@@ -79,7 +83,10 @@ name: "Header",
   logout(){
     this.$router.push('/')
     localStorage.removeItem('token')
-  }
+  },
+
+  },
+  mounted(){
   }
 
 }
@@ -87,20 +94,13 @@ name: "Header",
 
 <style scoped>
 
-.total-order span{
-  color: #8C94A5;
-  font-size: 14px;
-  line-height: 17px;
-}
-.total-order{
-  line-height: 17px;
-}
+
+
 .header{
   background: #fff;
   height: 60px;
   padding: 0 30px;
   margin-bottom: 30px;
-
 }
 .select-lang a{
   color: #525252;
@@ -110,99 +110,85 @@ name: "Header",
   margin:0 24px;
   cursor: pointer;
 }
-.user-name{
-  font-size: 16px;
-  margin-bottom: 0;
-  font-weight:500;
-  cursor:pointer;
-}
-.user-tariff{
-  color: #BABABA;
-  font-size: 14px;
-}
-.user-logo{
-  width: 40px;
-  height: 40px;
-  background: #4257D0;
-  color:#fff;
-  border-radius:50%;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 10px;
-  cursor:pointer;
-}
-.user-text{
-  line-height: 17px;
-  margin-right: 10px;
-}
-.user-info img{
-  cursor:pointer;
-}
 #sidebarCollapse{
   display: none;
-  padding: 0;
 }
-.profile-dropdown{
-  position: absolute;
-  width: 277px;
-  height: 386px;
-  background: #FFFFFF;
-  box-shadow: 2px 11px 35px rgba(0, 0, 0, 0.1);
-  border-radius: 7px;
-  transform: translate3d(-256px, 40px, 0px) !important;
-  padding:23px;
 
+.profile-logo{
+  width: 40px;
+  height: 40px;
+  background: #616CF5;
+  border-radius:50%;
+  color:#fff;
+  margin-right: 10px;
 }
-.profile-dropdown .user-info{
-  margin-bottom:40px;
-}
-.profile-dropdown .user-logo{
+.profile-dropdown .profile-logo{
   width: 50px;
   height: 50px;
 }
-.profile-dropdown .user-name{
-  font-size: 18px;
+.profile-arrow{
+  margin-left: 14px;
 }
-.drop-img{
-  width: 20px;
-  height: 20px;
+.profile-cursor{
   cursor:pointer;
-  text-align: center;
+
+}
+.profile-header{
+  margin-bottom: 20px;
+}
+.profile-dropdown{
+  padding:25px;
+}
+.profile-title{
+  font-size: 18px;
+  font-weight:400;
+}
+.warning{
+  background: #F8F9FF;
+  border-radius: 7px;
+  height: 40px;
+  padding:0 20px;
+  margin-bottom: 20px;
+}
+.warning .number{
+  font-weight: 500;
+  color: #616CF5;
+  font-size: 16px;
+}
+.warning .days{
+  color: #8C94A5;
+  font-size: 14px;
 }
 .profile-list{
-  font-size:16px;
+  list-style-type:none;
   color:#222;
-  display: flex;
-  align-items: center;
-  margin-bottom: 30px;
-  border-radius: 0;
+  font-size: 16px;
+  margin-bottom: 25px;
 }
 .profile-list:last-child{
-  border-bottom: 1px solid #e8e8e8;
+  border-bottom: 1px solid #E3E3E3;
 }
 .profile-list:hover{
   background: none;
 }
 .profile-list img{
-  margin-right:10px;
-  width: 13px;
-  height: 13px;
+  width: 16px;
+  height: 16px;
+  margin-right: 10px;
 }
-.logout{
+.log-out{
   color:#D81919;
-  font-size: 16px;
-  cursor:pointer;
+  display: block;
+  margin-bottom: 50px;
+  text-decoration: none;
+  cursor:pointer
 }
-.profile-footer{
-  color: #8C94A5;
+.powered{
+  color:#8C94A5;
   font-size: 14px;
-  position: absolute;
-  bottom:0;
-  left: 55px;
+  text-align: center;
+  margin-bottom: 0;
 }
-
 @media(max-width:992px){
   #sidebarCollapse{
     display: block;

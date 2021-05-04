@@ -137,8 +137,6 @@ export default {
 .analytics{
   padding-right: 30px;
   padding-left: 30px;
-  height:100vh;
-  overflow-y: auto;
   padding-bottom: 120px;
 }
 .analytics-wrapper{

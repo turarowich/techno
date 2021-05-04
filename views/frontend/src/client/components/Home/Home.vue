@@ -1,10 +1,17 @@
 <template>
   <div class="client">
-<div class="container">
-  <Navbar/>
+<div >
+
+  <div v-if="!['ClientLogin', 'ClientRegister'].includes($route.name)">
+    <Navbar/>
+
+  </div>
   <router-view/>
 </div>
-    <Footer/>
+    <div v-if="!['ClientLogin', 'ClientRegister'].includes($route.name)">
+      <Footer/>
+
+    </div>
   </div>
 </template>
 
@@ -23,6 +30,9 @@ name: "Home",
 </script>
 
 <style scoped>
+.client-container{
+  max-width: calc(100vw - 240px);
+}
 .client{
   overflow-y: auto;
   height: 100%;

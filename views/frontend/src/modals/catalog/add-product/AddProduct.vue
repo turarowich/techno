@@ -11,7 +11,7 @@
             </button>
           </div>
           <div class=" myModal-body">
-              <form  class="modal-form add-product">
+              <form  class="modal-form">
                 <label>Name</label>
                 <input v-model="newProduct.name" class="form-input cashback-input mb-3" name="name" placeholder="Enter a name">
 
@@ -24,14 +24,13 @@
                   <div  style="width: 50%;">
                     <label>Without category</label>
                    <select v-model="newProduct.category" class="form-control mb-3" name="category">
-                     <option value=''>Without category</option>
-                     <option v-for="cat in listCategory.slice(1)" v-bind:value="cat.name.toLowerCase()" v-bind:key="cat.id">{{cat.name}}</option>
+                     <option v-for="cat in listCategory.slice(1)" v-bind:value="cat._id"  v-bind:key="cat._id">{{cat.name}}</option>
                    </select>
                   </div>
                 </div>
 
                 <label>Description</label>
-                <textarea class="general-area mb-3" style="height:160px"  name="description"></textarea>
+                <textarea class="general-area mb-3" style="height:160px" v-model="newProduct.description"  name="description"></textarea>
 
                 <div class="d-flex mb-3">
                   <label class="custom-checkbox"><input data-toggle="collapse" data-target="#collapse-disc" aria-expanded="true" aria-controls="collapse-disc" type="checkbox" ><span class="checkmark"></span></label>
@@ -41,8 +40,6 @@
                   <label>Promotional price</label>
                   <input v-model="newProduct.promo" class="form-input cashback-input mb-3" placeholder="Promotional price"  name="promo">
                 </div>
-
-
                 <div class="d-flex ">
                   <div style=" width:50%; margin-right:8px;">
                     <label>Price</label>
@@ -58,6 +55,26 @@
                   </div>
                 </div>
 
+                <label class="valid-label">Validity period</label>
+                <div class=" product-calendar d-flex align-items-center ">
+                  <div class="d-flex align-items-center mr-2">
+                    <label >From</label>
+                    <div class="calendar d-flex align-items-center">
+                      <input class="calendar-input" id="from-purchase">
+                      <img src="../../../assets/icons/Calendar.svg">
+                    </div>
+                  </div>
+
+                  <div class="d-flex align-items-center">
+                    <label>to</label>
+                    <div class="calendar d-flex align-items-center">
+                      <input class="calendar-input" id="to-purchase">
+                      <img src="../../../assets/icons/Calendar.svg">
+                    </div>
+                  </div>
+
+                </div>
+
                 <div class="modal-img ">
                   <label>Photos</label>
                   
@@ -65,7 +82,7 @@
                   
                   <label for="imgArray">
                       <img src="../../../assets/img/modal-img.svg">
-                      <input class="d-none" multiple id="imgArray" type="file" name="">
+                      <input class="d-none" multiple id="imgArray" type="file" name="imgArray">
                   </label>
                 </div>
 
@@ -86,7 +103,17 @@ import $ from "jquery";
 
 export default {
 name: "AddProduct",
-  props:['listCategory'],
+  props:{
+      listCategory:{
+        type:Object,
+        required:true
+      },
+        getProducts:{
+           type:Function,
+           required:true
+        }
+
+  },
 
   data(){
     return{
@@ -95,30 +122,41 @@ name: "AddProduct",
         price: '',
         quantity: '',
         category:'',
+        img: '',
+        description:''
 
       },
     };
   },
   methods:{
   onSubmit(){
-    const new_product = this.newProduct;
-    const form  = new FormData;
-    $.each($("#imgArray")[0].files, function(i, file) {
+      let new_product = this.newProduct;
+      const form  = new FormData;
+      $.each($("#imgArray")[0].files, function(i, file) {
         form.append('imgArray'+i, file);
-    });
-    form.append('name', new_product.name)
-    form.append('price', new_product.price)
-    form.append('quantity', new_product.quantity)
-    this.axios.post(this.url('addProduct'), form)
-        .then((response) => {
+      });
+      form.append('name', new_product.name)
+      form.append('price', new_product.price)
+      form.append('quantity', new_product.quantity)
+      form.append('category', new_product.category)
+      form.append('description', new_product.description)
+      this.axios.post('http://localhost:8080/api/addProduct/', form)
+          .then((response) => {
             console.log("success", response)
-        }).catch((error) => {
+          }).catch((error) => {
             console.log("fail", error)
-        })
-    $('#add-products').modal("hide")
-    }
-  },
-
+          })
+    this.getProducts()
+     $('#add-products').modal("hide")
+      this.newProduct = {
+         name: '',
+        price:'',
+        quantity:'',
+        category: '',
+        img:''
+      }
+    },
+  }
 }
 </script>
 
@@ -128,10 +166,32 @@ name: "AddProduct",
   -webkit-transform: translate3d(0,0,0);
   transform: translate3d(0, 0, 0);
 }
-
-
+.valid-label{
+  margin-bottom: 22px !important;
+}
 .promotion-disc{
   display: none;
-
 }
+.product-calendar{
+  margin-bottom: 40px;
+}
+.calendar{
+  margin-bottom: 0;
+}
+.modal-form input{
+  width: 100%;
+  font-size: 16px;
+}
+.modal-form label{
+  margin-right: 10px;
+  margin-bottom: 8px;
+}
+.modal-img{
+  margin-bottom: 60px;
+}
+.modal-img p{
+  margin-bottom: 15px;
+}
+
+
 </style>

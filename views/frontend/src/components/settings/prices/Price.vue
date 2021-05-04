@@ -77,9 +77,8 @@
         <div class="validity-period" @click="checkBlock(price.id)">
           <div class="d-flex justify-content-between align-items-center mb-4">
             <h3 class="validity-title">{{price.month}} month</h3>
-            <div class="round">
-              <input type="checkbox" :id="`id${price.id}`" >
-              <label :for="`id${price.id}`"></label>
+            <div class="round-price">
+              <img src="../../../assets/icons/bird.svg">
             </div>
           </div>
           <div class="valid-desc"><span class="valid-desc-price">{{price.price}}</span>$/month</div>
@@ -149,16 +148,18 @@ name: "Price",
         return price.price = price.month * 299;
       })
     },
-    checkBlock(id){
-      this.prices.map(price=>{
-        if(price.id === id){
-          // this.$$('#id'+id).prop('checked',this.checked)
-          this.tobePaid = price.price;
-        }
-      })
+    addActive(){
+      $(document).ready(function() {
+        $('.validity-period').click(function() {
+          $('.validity-period.active').removeClass("active");
+          $(this).addClass("active");
+        });
+      });
     }
   },
-
+mounted(){
+  this.addActive()
+}
 
 
 
@@ -166,6 +167,15 @@ name: "Price",
 </script>
 
 <style scoped>
+.validity-period.active{
+  border: 1px solid #616cf5;
+  transition: .3s;
+
+}
+.validity-period.active .round-price{
+  background: #616cf5;
+  border:none;
+}
 .month{
   width: 76.6%;
 }
@@ -181,7 +191,7 @@ name: "Price",
   padding:20px;
   border: 1px solid #D3D3D3;
   border-radius: 7px;
-  height:360px;
+  height:390px;
   transition: .4s;
   cursor:pointer
 }
@@ -238,7 +248,8 @@ name: "Price",
 .validity-period{
   padding: 10px;
   border: 1px solid #D3D3D3;
-  border-radius: 7px
+  border-radius: 7px;
+  cursor:pointer;
 }
 .validity-title{
   font-size: 20px;
@@ -251,45 +262,7 @@ name: "Price",
   width:12px;
   height: 12px;
 }
-.round {
-  position: relative;
-}
 
-.round label {
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 50%;
-  cursor: pointer;
-  height: 20px;
-  right: 0;
-  position: absolute;
-  top: -5px;
-  width:20px;
-}
-
-.round label:after {
-  border: 2px solid #fff;
-  border-top: none;
-  border-right: none;
-  content: "";
-  height: 6px;
-  left: 4px;
-  opacity: 0;
-  position: absolute;
-  top: 4px;
-  transform: rotate(-45deg);
-  width: 10px;
-}
-.round input[type="checkbox"] {
-  visibility: hidden;
-}
-.round input[type="checkbox"]:checked + label {
-  background-color: #616CF5;
-  border-color: #616CF5;
-}
-.round input[type="checkbox"]:checked + label:after {
-  opacity: 1;
-}
 .total{
   border: 1px solid #D3D3D3;
   border-radius: 7px;
@@ -304,6 +277,15 @@ name: "Price",
   margin-right: 50px;
   padding-right: 50px;
 }
-
+.round-price{
+  width: 19px;
+  height: 19px;
+  background: #FFFFFF;
+  border-radius:50%;
+  display: flex;
+  align-items:center;
+  justify-content: center;
+  border: 1px solid #D3D3D3;
+}
 
 </style>
