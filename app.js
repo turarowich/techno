@@ -88,7 +88,13 @@ passport.use(new GoogleStrategy({
         done(null, profile._json,accessToken);
     }
 ));
-
+const io = require('socket.io')(httpsServer, {
+    cors: {
+        methods: ["GET", "POST"],
+        credentials: true
+    },
+    path: '/socket.io',
+});
 var cors = require("cors");
 app.use(passport.initialize());
 app.use(cors());
@@ -103,6 +109,7 @@ app.use('/images', express.static(__dirname + '/views/frontend/images'))
 app.use('/files', express.static(__dirname + '/views/frontend/files'))
 app.use('/api', VerifyToken, require('./routes/api.js')(router))
 app.use('/', require('./routes/home.js')(router, passport))
+require("./routes/socket.js")(io)
 
 
 
@@ -133,14 +140,6 @@ app.use((err, req, res, next) => {
     }
 });
 
-const io = require('socket.io')(httpsServer, {
-    cors: {
-        methods: ["GET", "POST"],
-        credentials: true
-    },
-    path: '/socket.io',
-});
-require("./app/controllers/chatController")(io)
 
 httpServer.listen(config.port_http, () => {
     console.log(`App listening at http://${config.localhost}:${config.port_http}`);

@@ -40,13 +40,7 @@
 import Conversation from "@/components/chats/conversation/Conversation";
 import Contacts from "@/components/chats/contacts/Contacts";
 import ChatProfile from "@/components/chats/chat-profile/ChatProfile";
-import io from "socket.io-client"
-const socket = io({
-    extraHeaders: {
-        token: localStorage.getItem('token')
-    },
-    withCredentials: true,
-})
+
 export default {
   name: "Chats",
   components:{
@@ -89,10 +83,10 @@ export default {
     startConversation(contact){
       this.selectedContact = contact
       this.messages = contact.messages
-      socket.emit('init', contact._id)
+      this.socket.emit('init', contact._id)
     },
     sendMessage(data){
-        socket.emit('message', data)
+        this.socket.emit('message', data)
         let message = {client:data.user, text:data.text, isIncoming: true}
         
         let index = this.contactList.findIndex(user => user._id === data.user );
@@ -105,7 +99,7 @@ export default {
   },
   created() {
         let that = this
-        socket.on("server message", function(data) {
+        this.socket.on("server message", function(data) {
             let message = {client:data.user , text:data.text, isIncoming: false}
             let index = that.contactList.findIndex(user => user._id === data.user );
             console.log(index);

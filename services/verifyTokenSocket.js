@@ -14,8 +14,17 @@ function verifyTokenSocket(socket, next) {
         if (err)
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
 
-        socket.handshake.headers.userID = decoded.id;
+        socket.handshake.headers.userID = decoded.user;
         socket.handshake.headers.db = "loygift" + decoded.id;
+        
+        // mainRoom is admin id so if he want send some notification for his client just need to use that room
+        socket.handshake.headers.mainRoom = "mainRoom" + decoded.id
+
+        // selfRoom is client id so if he want send some notification for his client just need to use that room
+        socket.handshake.headers.selfRoom = "selfRoom" + decoded.user
+        
+        socket.join(socket.handshake.headers.mainRoom)
+        socket.join(socket.handshake.headers.selfRoom)
         next();
     });
 }

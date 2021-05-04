@@ -1,0 +1,33 @@
+const { useDB } = require('../../services/helper')
+const user = require('../models/user');
+class SocketController {
+    addMessage = async function (socket, data) {
+        let db = useDB(socket.handshake.headers.db)
+        let Message = db.model("Message");
+        let Client = db.model("Client");
+        let message = await new Message({
+            client: data.user,
+            text: data.text,
+            isIncoming: data.isIncoming
+        }).save();
+
+        Client.findOneAndUpdate({ '_id': data.user }, { $push: { messages: message } }).exec()
+    }
+    getMessages = async function (io, socket, user) {
+        let db = useDB(socket.handshake.headers.db)
+        let Client = db.model("Client");
+        let client = await Client.findById(user).populate('messages').exec()
+        io.to(socket.id).emit("all messages", client.messages)
+    }
+
+    sendNewsNotification = async function (io, socket, id) {
+        let db = useDB(socket.handshake.headers.db)
+        let News = db.model("News");
+        let data = await News.findById(id)
+        if(data){
+            socket.to(socket.handshake.headers.mainRoom).emit("server news notification", data)
+        }
+    }
+}
+module.exports = new SocketController();
+
