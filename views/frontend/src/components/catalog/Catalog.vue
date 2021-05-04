@@ -3,7 +3,7 @@
     <div class="searchAndButtons">
     <div class="d-flex justify-content-between app-buttons">
       <div class="d-flex align-items-center">
-        <button class="app-buttons-item adding-btns" id="add-product" data-toggle="modal" data-target="#add-products"><span>+ Add product</span></button>
+        <button class="app-buttons-item adding-btns" id="add-product" @click="$router.push('/add-product-page')"><span>+ Add product</span></button>
         <button class="app-buttons-item adding-btns" @click="getProducts" data-toggle="modl" data-target="#add-service"><span>+ Add service</span></button>
         <button class="app-buttons-item adding-btns"  data-toggle="modal" data-target="#add-category"><span>+ Add category </span></button>
       </div>
@@ -22,8 +22,47 @@
             </ul>
           </div>
         </div>
-        <button class="app-buttons-item"><img src="../../assets/icons/import.svg"><span>Import</span></button>
-        <button class="app-buttons-item"><img src="../../assets/icons/filter.svg"><span>Filter</span></button> </div>
+        <button class="app-buttons-item" data-turbolinks="true"  data-toggle="modal" data-target="#import-client"><img src="../../assets/icons/import.svg"><span>Import</span></button>
+
+
+        <div class="dropdown">
+          <button class="app-buttons-item dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+            <img class="img-btn" src="../../assets/icons/filter.svg"><span>Filter</span>
+          </button>
+
+          <div class="dropdown-menu general-dropdown" aria-labelledby="dropdownMenuButton">
+            <form class="filter-product">
+              <label>By price</label>
+              <div class="d-flex">
+                <input class="drop-input">
+                <div class="d-flex">
+                  <label class="mr-2 pl-2">to</label>
+                  <input class="drop-input">
+                </div>
+              </div>
+
+              <label>By quantity</label>
+              <div class="d-flex">
+                <input class="drop-input">
+                <div class="d-flex">
+                  <label class="mr-2 pl-2">to</label>
+                  <input class="drop-input">
+                </div>
+              </div>
+
+              <label>Auction goods</label>
+              <div class="d-flex align-items-center mb-3">
+                <label class="custom-checkbox mr-2"><input type="checkbox"><span class="checkmark"></span></label>
+                <span style="font-size:14px">Show only auction items</span>
+              </div>
+
+              <label>By category</label>
+              <input class="drop-input">
+            </form>
+          </div>
+        </div>
+
+      </div>
     </div>
     <div class="main-search d-flex align-items-center">
       <img src="../../assets/icons/search-icon.svg">
@@ -34,15 +73,15 @@
       <div class="catalog-wrapper d-flex">
         <div class="catalog-menu" style="width:18%">
           <ul class="list-group" >
-            <li class="catalog-list" :id="category.name" :ref="'menu'+index"  v-for="(category,index) in listCategory" :key="category._id"  :class="{active: filtered === category.name.toLowerCase()}"  @click="changeFilter(category.name.toLowerCase())">
+            <li class="catalog-list" :id="category.name" :ref="'menu'+index"  v-for="(category,index) in listCategory" :key="category._id"  :class="{active: filtered === category._id}"  @click="filtered = category._id">
               <span>{{category.name}}</span>
-              <div class="dropleft dropMenu">
+              <div class="dropdown dropMenu">
                 <div class="dropdown-toggle" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <img src="../../assets/icons/three-dots.svg">
                 </div>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenu">
                   <ul class="list-group" >
-                    <li class="list-group-item" data-toggle="modal" data-target="#edit-category" @click="editCategory(category._id)">Edit</li>
+                    <li class="list-group-item" data-toggle="modal" data-target="#edit-category">Edit</li>
                     <li class="list-group-item" @click.stop.prevent="deleteCategory(category._id)">Delete</li>
                   </ul>
                 </div>
@@ -50,22 +89,34 @@
             </li>
           </ul>
         </div>
+        <ImportClient/>
+        <AddCategory
+            :listCategory="listCategory"
+            :getCategories="getCategories"
+
+        />
+        <EditCategory
+            :listCategory="listCategory"
+            :edit_category="edit_category"/>
+
         <div class="catalog-content" style="width:82%">
           <div class="d-flex main-content-header">
             <div class="table-head" style="width: 5%;"><label class="custom-checkbox"><input id="parent-check" type="checkbox"  @click="toggleSelect()" :checked="selectAll"><span class="checkmark"></span></label></div>
-            <div class="table-head" style="width: 42%;">Name</div>
+            <div class="table-head" style="width: 36%;">Name</div>
             <div class="table-head" style="width: 24%;">Article</div>
-            <div class="table-head table-link pr-3" style="width: 10%;" @click="sortByQunatity">Quantity<img class="date-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
-            <div class="table-head table-link" style="width: 10%;" @click="sortByPrice">Price<img class="total-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
+            <div class="table-head table-link pr-3" style="width: 13%;" @click="sortByQunatity">Quantity<img class="date-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
+            <div class="table-head table-link" style="width: 13%;" @click="sortByPrice">Price<img class="total-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
             <div class="table-head" style="width: 8%;"></div>
             <div class="table-head" style="width: 8%;"></div>
           </div>
           <div class="table-content" >
+
               <CatalogItem
                   v-bind:catalogList="catalogToDisplay"
-                  v-on:deleteCatalog="deleteCatalog"
+                  v-on:deleteProduct="deleteProduct"
                   v-on:editCatalog="editCatalog"
               />
+
           </div>
           <div class="pagination d-flex justify-content-between align-items-center">
             <div class="d-flex align-items-center">
@@ -86,56 +137,30 @@
         </div>
       </div>
     </div>
-    <AddService/>
-    <Edit :edit_catalog="edit_catalog"
-          :catalogList="catalogList"
-          @editedCatalogSubmit="editedCatalogSubmit"
-          :listCategory="listCategory"
-    />
-    <AddCategory
-      :listCategory="listCategory"
-    />
-    <AddProduct
 
-        :listCategory="listCategory"/>
-
-    <EditCategory
-        :listCategory="listCategory"
-        :edit_category="edit_category"/>
   </div>
 </template>
 
 <script>
-import CatalogItem from "@/components/catalog-item/CatalogItem";
-import AddProduct from "@/modals/catalog/add-product/AddProduct";
-import AddService from "@/modals/catalog/add-service/AddService";
-import Edit from "@/modals/catalog/edit/Edit";
+
+import CatalogItem from "@/components/catalog/CatalogItem";
 import AddCategory from "@/modals/catalog/add-category/AddCategory";
 import EditCategory from "@/modals/catalog/add-category/EditCategory";
+import ImportClient from "@/modals/client/ImportClient";
 import Swal from 'sweetalert2';
 import $ from 'jquery';
-
 export default {
 name: "Catalog",
   components:{
     CatalogItem,
-    AddProduct,
-    AddService,
-    Edit,
     AddCategory,
+    ImportClient,
     EditCategory
   },
   data(){
     return{
-      catalogList:[
-        {id:1,name:"Essential Shoes",article:"B3214PO", quantity:1, price: "450 $", category:'shoes'},
-        {id:2,name:"Football boots",article:"B3214PO", quantity:5, price: "350 $", category:'shoes'},
-        {id:3,name:"Sneakers",article:"B3214PO", quantity:4, price: "370 $", category:'shoes'},
-        {id:6,name:"Shoues",article:"B3214PO", quantity:4, price: "370 $", category:'shoes'},
-        {id:4,name:"T-shirts",article:"B3214PO", quantity:2, price: "220 $", category: 'clothes'},
-        {id:5,name:"Jackets",article:"B3214PO", quantity:2, price: "220 $", category: 'clothes'},
-      ],
-      listCategory:[{id:0,name:''}],
+      listCategory:[{_id:'', name:'All'}],
+      catalogList:[],
       search:'',
       sorting:true,
       filtered: '',
@@ -146,10 +171,10 @@ name: "Catalog",
       pageToOpen: 1,
       currentPage: 1,
       catalogToDisplay:[],
-
     }
   },
   computed:{
+
     selectAll: function() {
         return this.catalogList.every(function(user){
           return user.checked
@@ -212,23 +237,14 @@ name: "Catalog",
         });
       }
     },
-    changeFilter(name){
-      this.filtered = name;
-      this.catalogList.forEach(catalog=>{
-        return catalog.checked = false
-      })
-      $('#parent-check').prop('checked',false)
-
-    },
     moveCategory(value){
-        let  move = this.catalogList.filter(catalog => catalog.checked)
+      let  move = this.catalogList.filter(catalog => catalog.checked)
         move.every(catalog=>catalog.category = value)
         move.map(cat=>cat.checked = false);
         this.renderPaginationList()
        this.$informationAlert('Category has been changed')
 
     },
-
     editedCatalogSubmit(edited){
       var foundIndex = this.catalogList.findIndex(x => x.id === edited.id);
       this.catalogList[foundIndex] = edited;
@@ -236,7 +252,7 @@ name: "Catalog",
       this.$successAlert('Changes are saved')
     },
     editCatalog(id){
-     this.edit_catalog = this.catalogList.find((catalog)=>catalog.id === id)
+     this.edit_catalog = this.catalogList.find((catalog)=>catalog._id === id)
     },
     deleteAllOrder() {
       if(this.selectAll){
@@ -250,16 +266,12 @@ name: "Catalog",
 
       this.renderPaginationList()
     },
-    allCategory(){
-      $('.list-group .catalog-list').first().text('All');
-    },
     toggleSelect: function() {
-      let select = this.selectAll
-      this.catalogList.filter((user)=> {
-        if(this.filtered === '' || this.filtered === user.category){
-          user.checked = !select
-        }
-      });
+      let select = this.selectAll;
+      this.catalogList.forEach((user)=>{
+        user.checked = !select;
+
+      })
     },
     sortByQunatity() {
       if(this.catalogToDisplay.length === 0){
@@ -281,7 +293,7 @@ name: "Catalog",
      $('.date-pol').removeClass('active')
 
     },
-    deleteCatalog(id){
+    deleteProduct(id){
       Swal.fire({
         showConfirmButton: true,
         html: 'Are you sure to remove this <br>product',
@@ -306,69 +318,72 @@ name: "Catalog",
         }
       }).then((result) => {
         if (result.isConfirmed) {
-          this.catalogList = this.catalogList.filter(el=> el.id !== id);
-          this.renderPaginationList()
-          Swal.fire({
-            title:'Success',
-            timer:1500,
-            text:'Product has been removed',
-            showConfirmButton:false,
-            position: 'top-right',
-            customClass:{
-              popup:'success-popup',
-              content:'success-content',
-              title:'success-title',
-              header:'success-header',
-              image:'success-img'
-            },
-            showClass:{
-              popup: 'animate__animated animate__zoomIn'
-            },
+          this.axios.delete(this.url('deleteProduct',id))
+          .then(()=>{
+            this.getProducts()
+            Swal.fire({
+                  title:'Success',
+                  timer:1500,
+                  text:'Product has been removed',
+                  showConfirmButton:false,
+                  position: 'top-right',
+                  customClass:{
+                    popup:'success-popup',
+                    content:'success-content',
+                    title:'success-title',
+                    header:'success-header',
+                    image:'success-img'
+                  },
+                  showClass:{
+                    popup: 'animate__animated animate__zoomIn'
+                  },
 
-              }
-          )}
-      })
-
-    },
-    getProducts: function() {
-        this.axios.get(this.url('getProducts'))
-            .then((response) => {
-                this.products = response.data
-              console.log(response)
-            })
-    },
-    getCategories:function(){
-      this.axios.get(this.url('getCategories'))
-      .then((res)=>{
-        res.data.objects.map((item)=>{
-          this.listCategory.push(item)
-          console.log(res)
-        })
+                }
+            )
+          })
+       }
       })
     },
     deleteCategory(id){
       this.axios.delete(this.url('deleteCategory',id))
-      .then((response)=>{
-        console.log(response)
-      })
-
+      this.getCategories()
+      const idx = this.listCategory.findIndex(el=>el._id === id);
+      this.$refs[Object.keys(this.$refs)[idx-1]].click()
     },
+    async  getProducts(){
+      await this.axios.get(this.url('getProducts'))
+          .then((response) => {
+              this.catalogList = response.data.objects;
+              this.renderPaginationList()
+  })
+    },
+    async getCategories(){
+      await this.axios.get(this.url('getCategories'))
+          .then((res)=>{
+            this.listCategory = res.data.objects;
+            this.listCategory.unshift({_id:'', name: 'All'})
+
+          })
+    },
+
   },
+
+
   mounted(){
-    this.allCategory()
     this.getCategories()
     this.getProducts()
     this.renderPaginationList()
+    this.getProducts()
   },
   watch: {
     perPage: function(){
-      this. renderPaginationList();
+      this.renderPaginationList();
     },
     search: function (){
-      this. renderPaginationList()
+      this.renderPaginationList()
     },
     filtered:function(){
-      this. renderPaginationList()
+      this.renderPaginationList()
     },
 
   },
@@ -379,8 +394,20 @@ name: "Catalog",
 
 
 <style scoped>
+.filter-product{
+  padding: 20px;
+}
+.filter-product label{
+  font-weight: normal;
+}
+.general-dropdown{
+  width: 17rem;
+  transform: translate3d(-167px, -10px, 0px) !important;
+}
 .catalog{
   margin: 0 30px;
+  height: calc(100vh - 90px);
+  overflow: hidden;
 }
 .catalog-list{
   list-style-type: none;

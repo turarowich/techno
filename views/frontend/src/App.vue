@@ -4,18 +4,18 @@
    <SideBar v-bind:closeSideBar="closeSideBar"
               v-bind:count_order="count_order"
             v-if="!['SignIn', 'SignUp'].includes($route.name)"
-            v-show="!checkInclude"
+            v-show="!$route.path.includes('/home')"
+
 
     />
   </div>
-  <div class="main-content" v-bind:class="{hun: $route.name === 'SignUp' || $route.name === 'SignIn' || $route.path.includes('home')} ">
-    <Header  v-if="!['Settings', 'Loyalty','SignIn', 'SignUp','Home','News','About','CatalogDetail'].includes($route.name)"  v-bind:openSideBar="openSideBar"
+  <div class="main-content" v-bind:class="{hun: $route.name === 'SignUp' || $route.name === 'SignIn' || $route.path.includes('/home')} ">
+    <Header  v-if="homePage()"  v-bind:openSideBar="openSideBar"
               v-bind:total_order="total_order"
 
     />
       <div  class="router-view">
-          <router-view @countNewOrder="countNewOrder"
-                        @totalOrders="totalOrders"
+          <router-view
           />
        </div>
               </div>
@@ -42,24 +42,31 @@ export default {
       total_order:0,
     }
   },
-  computed:{
-   checkInclude(){
-     return this.$route.path.includes('home')
-   }
-  },
+
     methods: {
+    homePage(){
+      if(['Settings','SignIn', 'SignUp', 'OrderDetail','EditClientPage', 'PushNotification',
+            'EditProductPage','IndividualPush','AddPromoPage','AddProductPage'].includes(this.$route.name) || this.$route.path.startsWith("/home")
+          || this.$route.path.startsWith("/loyalty")
+      ){
+        return false
+      }
+      else{
+        return true
+      }
+    },
       openSideBar() {
         $('.siding-bar').addClass('active');
       },
       closeSideBar() {
         $('.siding-bar').removeClass('active')
       },
-      countNewOrder(count_order) {
-        this.count_order = count_order
-      },
-      totalOrders(total) {
-        this.total_order = total;
-      },
+      // countNewOrder(count_order) {
+      //   this.count_order = count_order
+      // },
+      // totalOrders(total) {
+      //   this.total_order = total;
+      // },
 
 
     },
@@ -76,16 +83,14 @@ export default {
  width: calc(100% - 250px);
   margin-left: 250px;
   font-size: 14px;
-overflow-y: hidden;
- height: 100vh;
+  /*overflow-y: hidden;*/
+  /* height: 100vh;*/
 }
 .hun{
   width: 100%;
   margin-left: 0;
 }
-.router-view{
-  height: 100%;
-}
+
 .siding-bar{
   min-width: 250px;
  max-width: 250px;

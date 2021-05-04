@@ -40,11 +40,20 @@
 </template>
 
 <script>
+
 import $ from 'jquery'
 export default {
 name: "AddCategory",
-  props:['listCategory'],
-
+  props:{
+    listCategory:{
+      type:Array,
+      required:true
+    },
+    getCategories:{
+      type:Function,
+      required:true
+    }
+  },
   data(){
     return{
       new_category: {
@@ -56,15 +65,17 @@ name: "AddCategory",
     onSubmit(){
       const data = new FormData();
       data.append('name', this.new_category.name)
-      this.axios.post(this.url('AddCategory'),data)
-        .then((response)=>{
-          console.log('Success ', response.data.object)
-        })
-        .catch((error)=>{
-          console.log("Error"+error)
-      })
+      this.axios.post(this.url('addCategory'),data)
+            .then((response)=>{
+              console.log('Success ', response.data.object)
+            })
+            .catch((error)=>{
+              console.log("Error"+error)
+            })
+      this.getCategories()
       $('#add-category').modal("hide")
-    }
+      this.new_category.name = ''
+      },
   }
 }
 </script>
@@ -75,8 +86,6 @@ name: "AddCategory",
   border:0;
   border-radius: 0;
   width: 562px;
-
-  margin-top: 50%;
 }
 .parent-modal{
   display: flex;
@@ -84,6 +93,9 @@ name: "AddCategory",
 .category-body{
   padding: 0 50px;
   padding-bottom: 34px;
+}
+.category-body input{
+  width: 100%;
 }
 .category-header{
   padding:34px 50px;

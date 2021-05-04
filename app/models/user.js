@@ -58,7 +58,7 @@ const userSchema = new Schema({
     },
     companyName: {
         type: String,
-        required: [true, 'Company name required'],
+        required: [false, 'Company name required'],
     },
     logo: {
         type: String,

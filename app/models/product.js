@@ -53,7 +53,7 @@ const productSchema = new Schema({
     },
     quantity: {
         type: Number,
-        required: false,
+        required: true,
         default: 0
     },
     price: {
