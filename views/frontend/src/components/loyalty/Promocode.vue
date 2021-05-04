@@ -3,7 +3,9 @@
   <div class="searchAndButtons">
     <div class="d-flex justify-content-between app-buttons">
       <div class="d-flex align-items-center">
-        <button class="app-buttons-item adding-btns" data-toggle="modal" data-target="#add-promocode"><span>+ Add promocode</span></button>
+        <button class="app-buttons-item adding-btns" @click="$router.push('/add-promo-page')"><span>+ Add promocode</span></button>
+
+        <button class="app-buttons-item"><img src="../../assets/icons/trash_empty.svg"><span>Remove</span></button>
       </div>
     </div>
     <div class="main-search d-flex align-items-center ">

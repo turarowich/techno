@@ -1,7 +1,7 @@
 <template>
 
-  <div class="modal fade right"  id="edit-client" tabindex="-1" role="dialog" aria-labelledby="client" aria-hidden="true">
-    <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: 580px;" role="document" >
+  <div class="modal fade right"  id="edit-client" tabindex="-1" role="dialog" aria-labelledby="edit-client" aria-hidden="true">
+    <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: 580px" role="document" >
       <div class="modal-content myModal-content h-100">
         <div class="modal-header align-items-center">
           <h3 class="modal-title">Edit user</h3>
@@ -42,26 +42,25 @@
             </div>
 
             <label>Birthday</label>
-            <div class="calendar d-flex">
+            <div class="calendar d-flex align-items-center">
               <input class="calendar-input" id="calendar">
-              <img src="../../assets/icons/Calendar.svg">
+              <img class="calendar-img" src="../../assets/icons/Calendar.svg">
             </div>
 
             <label class="gender-label">Gender</label>
 
             <div class="radio-toolbar">
               <div class="d-flex align-items-center mr-4">
-                <input type="radio" id="radioApple" name="radioFruit" value="apple" checked>
-                <label for="radioApple"></label>
+                <input type="radio" id="radioMale" name="radioFruit" value="apple" checked>
+                <label for="radioMale"></label>
                 <span class="male">Male</span>
               </div>
               <div class="d-flex align-items-center">
-                <input type="radio" id="radioOrange" name="radioFruit" value="orange">
-                <label for="radioOrange"></label>
-                <span class="male">Female</span>
+                <input type="radio" id="radioFemale" name="radioFruit" value="orange">
+                <label for="radioFemale"></label>
+                <span class="maled">Female</span>
               </div>
             </div>
-
             <div class="modal-btn d-flex">
               <button class="save">Save</button>
               <button class="remove">Remove</button>
@@ -80,6 +79,7 @@ export default {
     selectDate(){
       new this.$lightpick({
         field: document.getElementById('calendar'),
+        orientation:'top',
         onSelect: function(date){
           document.getElementById('calendar').innerHTML = date.format('Do MMMM YYYY');
         }
@@ -93,9 +93,21 @@ export default {
 </script>
 
 <style scoped>
+.calendar-img{
+  width: 20px;
+  height: 20px;
+}
 .modal-form label{
-  margin-bottom: 13px;
+  margin-bottom: 10px;
+}
+.modal.fade .modal-dialog{
+  transform: translate3d(100vw, 0, 0);
 
+}
+.modal.fade:not(.in).right .modal-dialog {
+  -webkit-transform: translate3d(0,0,0);
+  transform: translate3d(0, 0, 0);
+  transition:0.4s;
 }
 .phones{
   margin-bottom: 29px;
@@ -103,19 +115,7 @@ export default {
 .phones .cashback-input{
   margin-bottom: 0;
 }
-.calendar{
-  border: 1px solid #d3d3d3;
-  border-radius: 5px;
-  height:45px;
-  padding:0 20px;
-  width: 100%;
-  margin-bottom: 35px;
-}
-.calendar-input{
-  width: 100%;
-  height: 100%;
-  border:none;
-}
+
 .gender-label{
   margin-bottom: 25px;
 }
@@ -152,7 +152,7 @@ export default {
   width: 20%;
 }
 .margin-b{
-  margin-bottom: 36px;
+  margin-bottom: 25px;
 }
 /*==============Radio Button==============*/
 

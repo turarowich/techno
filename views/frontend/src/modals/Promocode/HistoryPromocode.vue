@@ -18,46 +18,51 @@
           <div class="modal-body category-body">
 
             <div class="d-flex main-content-header">
-              <div class="table-head" style="width: 90%;">Name</div>
-              <div class="table-head" style="width:10%">Use</div>
+              <div class="table-head" style="width: 50%;">Name</div>
+              <div class="table-head" style="width: 40%;">Date used</div>
+              <div class="table-head" style="width:10%">Used</div>
             </div>
             <div class="table-content">
               <div class="table-item d-flex align-items-center">
-                <div  class="d-flex align-items-center"  style="width: 90%;">
+                <div  class="d-flex align-items-center"  style="width: 50%;">
                   <span class="mr-3">1</span>
                   <div class="table-img">
                     <img src="../../assets/img/sneak.webp">
                   </div>
                   Tom Levins
                 </div>
+                <div style="width:40%">12.04.2021</div>
                 <div style="width:10%">
                   3
                 </div>
               </div>
               <div class="table-item d-flex align-items-center">
-                <div  class="d-flex align-items-center"  style="width: 90%;">
-                  <span class="mr-3">2</span>
+                <div  class="d-flex align-items-center"  style="width: 50%;">
+                  <span class="mr-3">1</span>
                   <div class="table-img">
                     <img src="../../assets/img/sneak.webp">
                   </div>
                   Tom Levins
                 </div>
+                <div style="width:40%">12.04.2021</div>
                 <div style="width:10%">
                   3
                 </div>
               </div>
               <div class="table-item d-flex align-items-center">
-                <div  class="d-flex align-items-center"  style="width: 90%;">
-                  <span class="mr-3">3</span>
+                <div  class="d-flex align-items-center"  style="width: 50%;">
+                  <span class="mr-3">1</span>
                   <div class="table-img">
                     <img src="../../assets/img/sneak.webp">
                   </div>
                   Tom Levins
                 </div>
+                <div style="width:40%">12.04.2021</div>
                 <div style="width:10%">
                   3
                 </div>
               </div>
+
             </div>
           </div>
         </div>
@@ -84,8 +89,8 @@ export default {
   color:#222;
 }
 .main-content-header{
-  padding-left:50px;
-  padding-right: 50px;
+  padding-left:35px;
+  padding-right: 35px;
 }
 .modal-header{
   padding: 27px 20px;

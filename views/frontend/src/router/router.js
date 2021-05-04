@@ -1,8 +1,9 @@
 import { createWebHistory, createRouter } from "vue-router";
-
+// import auth from '../middle-ware/auth';
 import SignIn from "@/components/sign-in/SignIn";
 import SignUp from "@/components/sign-up/SignUp";
 import Orders from "@/components/orders/Orders";
+import OrderDetail from "@/components/orders/OrderDetail";
 import Loaylty from "@/components/loyalty/Loaylty";
 import Chats from '@/components/chats/Chats';
 import Clients from "@/components/clients/Clients";
@@ -16,7 +17,6 @@ import News from "@/components/News/News";
 import CashBack from "@/components/loyalty/CashBack";
 import Discount from "@/components/loyalty/Discount";
 import PromoCode from "@/components/loyalty/Promocode";
-// import auth from '../middle-ware/auth';
 import CatalogDetail from "@/client/components/ClientCatalog/CatalogDetail";
 import NewsDetail from "@/client/components/ClientNews/NewsDetail";
 import ClientNews from "@/client/components/ClientNews/ClientNews";
@@ -27,6 +27,13 @@ import EditProfile from "@/client/components/EditProfile/EditProfile";
 import ProductInfo from "@/client/components/product-info/ProductInfo";
 import ClientLogin from "@/client/components/ClientLogin";
 import ClientRegister from "@/client/components/ClientRegister";
+import EditClientPage from "@/components/clients/EditClientPage";
+import PushNotification from "@/components/clients/PushNotification";
+import AddPromoPage from "@/components/loyalty/AddPromoPage";
+import AddProductPage from "@/components/catalog/AddProductPage";
+import EditProductPage from "@/components/catalog/EditProductPage";
+import IndividualPush from "@/components/clients/IndividualPush";
+
 
 
 
@@ -41,6 +48,48 @@ const routes = [
         path: "/orders",
         name: "Orders",
         component: Orders,
+
+    },
+    {
+        path: "/order-detail",
+        name: "OrderDetail",
+        component: OrderDetail,
+
+    },
+    {
+        path: "/edit-client-page",
+        name: "EditClientPage",
+        component: EditClientPage,
+
+    },
+    {
+        path: "/push-notification",
+        name: "PushNotification",
+        component: PushNotification,
+
+    },
+    {
+        path: "/add-promo-page",
+        name: "AddPromoPage",
+        component: AddPromoPage,
+
+    },
+    {
+        path: "/add-product-page",
+        name: "AddProductPage",
+        component: AddProductPage,
+
+    },
+    {
+        path: "/edit-product-page",
+        name: "EditProductPage",
+        component: EditProductPage,
+
+    },
+    {
+        path: "/individual-push",
+        name: "IndividualPush",
+        component: IndividualPush,
 
     },
 

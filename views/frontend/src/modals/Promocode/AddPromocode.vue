@@ -130,19 +130,7 @@ export default {
 .label-input{
   margin-bottom: 25px;
 }
-.reload-code{
-  border: 1px solid #d3d3d3;
-  border-radius: 5px;
-  height:45px;
-  padding:0 10px;
-  margin-right: 13px;
-  margin-bottom: 38px;
-}
-.reload-code input, .calendar-period input{
-  border:none;
-  width: 100%;
-  height: 100%;
-}
+
 .period-title{
   margin-bottom: 25px;
 }

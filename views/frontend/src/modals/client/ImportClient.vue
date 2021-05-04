@@ -85,7 +85,7 @@ export default {
   background: #FFFFFF;
   border-radius: 5px !important;
   width: 30rem;
-  margin-top: 45%;
+  height: 400px;
 }
 
 .category-body{

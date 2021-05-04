@@ -4,55 +4,195 @@
   <div class="d-flex justify-content-between app-buttons">
     <div class="d-flex align-items-center">
       <button class="app-buttons-item adding-btns" data-toggle="modal" data-target="#add-category"><span>+ Add category</span></button>
-      <button class="app-buttons-item" data-toggle="modal" data-target="#push-notification"><img src="../../assets/icons/bgNotification.svg"><span>Push notification</span></button>
+      <button class="app-buttons-item" @click="$router.push('/push-notification')"><img src="../../assets/icons/bgNotification.svg"><span>Push notification</span></button>
+      <button class="app-buttons-item" @click="$router.push('/individual-push')"><img src="../../assets/icons/send-individual.svg"><span>Individual push</span></button>
 
     </div>
     <div class="d-flex align-items-center">
       <button class="app-buttons-item" @click="deleteAllClient"><img src="../../assets/icons/trash_empty.svg"><span>Remove</span></button>
       <button class="app-buttons-item"><img src="../../assets/icons/moveto.svg"><span>Move to</span></button>
-      <button class="app-buttons-item"  data-toggle="modal" data-target="#import-client"><img src="../../assets/icons/import.svg"><span>Import</span></button>
-      <div class="dropdown filter">
+      <button class="app-buttons-item" ><img src="../../assets/icons/import.svg"><span>Import</span></button>
+      <div class="dropdown filter" >
         <button class="dropdown-toggle app-buttons-item mr-0" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="../../assets/icons/filter.svg"><span>Filter</span></button>
         <div class="dropdown-menu filter-box" aria-labelledby="dropdownMenuTotal">
-          <form id="form" ref="filterForm" @submit.prevent="filterSubmit">
-          <div class="filter-header d-flex justify-content-between align-items-center">
-            <h3>Filters</h3>
-            <div @click="resetFilter"><img src="../../assets/icons/redX.svg">Reset all</div>
-          </div>
+          <form id="form" ref="filterForm" @submit.prevent="filterSubmit" >
+              <div class="filter-header">
+                <h3>Filters</h3>
+              </div>
 
-           <div class="accordion" id="accordion-filter">
-             <div data-toggle="collapse" class="filter-list" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">Last purchase <img class="filter-img" src="../../assets/icons/down.svg"></div>
-             <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion-filter">
-<!--                <input ref="forms" v-model="lastPurchase" class="cashback-input" placeholder="Last-purchase">-->
-               <div class="d-flex">
-                 <input class="drop-input">
-                 <div class="d-flex">
-                   <label class="mr-2 pl-2">to</label>
-                   <input class="drop-input">
-                 </div>
+               <div class="row">
+                  <div class="col-lg-6">
+                    <div>
+                      <div class="filter-list" data-toggle="collapse" data-target="#register-collapse" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
+                        Registration date
+                      <img src="../../assets/icons/down.svg" class="filter-img">
+                      </div>
+                      <div class="collapse" id="register-collapse">
+                        <div class="filter-body d-flex">
+                          <div class="d-flex align-items-center mr-2">
+                            <label>From</label>
+                            <div class="calendar d-flex align-items-center">
+                              <input class="calendar-input"  id="from-date">
+                              <img src="../../assets/icons/Calendar.svg">
+                            </div>
+                          </div>
+
+                          <div class="d-flex align-items-center">
+                            <label>To</label>
+                            <div class="calendar d-flex align-items-center">
+                              <input class="calendar-input" id="to-date">
+                              <img src="../../assets/icons/Calendar.svg">
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="filter-list" data-toggle="collapse" data-target="#purchase-collapse" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
+                        Number of purchase
+                        <img src="../../assets/icons/down.svg" class="filter-img">
+                      </div>
+                      <div class="collapse" id="purchase-collapse">
+                        <div class="filter-body d-flex">
+                            <div class="d-flex align-items-center mr-2">
+                              <label>From</label>
+                              <input class="cashback-input">
+                            </div>
+
+                            <div class="d-flex align-items-center">
+                              <label>To</label>
+                              <input class="cashback-input">
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="filter-list" data-toggle="collapse" data-target="#category-collapse" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
+                        Category
+                        <img src="../../assets/icons/down.svg" class="filter-img">
+                      </div>
+                      <div class="collapse" id="category-collapse">
+                        <div class="filter-body">
+
+                          <div class="radio-toolbar-category">
+                            <div class="d-flex align-items-center mb-2 mr-5">
+                              <input type="radio" id="radioStandart"  name="radioCategory" @click="category='standart'">
+                              <label class="radio-checkbox" for="radioStandart"></label>
+                              <span class="male">Standart</span>
+                            </div>
+                            <div class="d-flex align-items-center">
+                              <input type="radio" id="radioVip" @click="category='vip'" name="radioCategory" >
+                              <label class="radio-checkbox" for="radioVip"></label>
+                              <span class="male">Vip</span>
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="filter-list" data-toggle="collapse" data-target="#birthday-collapse" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
+                       Birthday
+                        <img src="../../assets/icons/down.svg" class="filter-img">
+                      </div>
+                      <div class="collapse" id="birthday-collapse">
+                        <div class="filter-body">
+                          <div class="category"><label class="custom-checkbox"><input type="checkbox"><span class="checkmark"></span></label>Show only birthday people</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                      <div>
+                      <div class="filter-list" data-toggle="collapse" data-target="#recommendation-collapse" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
+                       Number of recommendations
+                        <img src="../../assets/icons/down.svg" class="filter-img">
+                      </div>
+                      <div class="collapse" id="recommendation-collapse">
+                        <div class="filter-body d-flex">
+                          <div class="d-flex align-items-center mr-2">
+                            <label>From</label>
+                            <input class="cashback-input">
+                          </div>
+
+                          <div class="d-flex align-items-center">
+                            <label>To</label>
+                            <input class="cashback-input">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                      <div>
+                      <div class="filter-list" data-toggle="collapse" data-target="#gender-collapse" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
+                       Gender
+                        <img src="../../assets/icons/down.svg" class="filter-img">
+                      </div>
+                      <div class="collapse" id="gender-collapse">
+                        <div class="filter-body">
+                          <div class="radio-toolbar-gender">
+                            <div class="d-flex align-items-center mb-2 mr-5">
+                              <input type="radio" id="radioApple" name="radioGender" @click="gender_client = 'male'">
+                              <label for="radioApple"></label>
+                              <span class="male">Male</span>
+                            </div>
+                            <div class="d-flex align-items-center">
+                              <input type="radio" id="radioOrange" name="radioGender" @click="gender_client='female'">
+                              <label for="radioOrange"></label>
+                              <span class="male">Female</span>
+                            </div>
+                          </div>
+                       </div>
+                      </div>
+                    </div>
+                      <div>
+                      <div class="filter-list" data-toggle="collapse" data-target="#discount-collapse" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
+                        Discount
+                        <img src="../../assets/icons/down.svg" class="filter-img">
+                      </div>
+                      <div class="collapse" id="discount-collapse">
+                        <div class="filter-body">
+                          <select class="filter-form  form-control long-form-control  form-control-lg" aria-label=".form-select-lg example">
+                            <option>Select from categories</option>
+                            <option>Russia</option>
+                            <option>USA</option>
+                            <option>Kyrgyzstan</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                      <div>
+                      <div class="filter-list" data-toggle="collapse" data-target="#last-collapse" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
+                        Last purchase
+                        <img src="../../assets/icons/down.svg" class="filter-img">
+                      </div>
+                      <div class="collapse" id="last-collapse">
+                        <div class="filter-body last-filter-body d-flex">
+                          <div class="d-flex align-items-center mr-2">
+                            <label>From</label>
+                            <div class="calendar d-flex align-items-center">
+                              <input class="calendar-input" id="from-purchase">
+                              <img src="../../assets/icons/Calendar.svg">
+                            </div>
+                          </div>
+
+                          <div class="d-flex align-items-center">
+                            <label>to</label>
+                            <div class="calendar d-flex align-items-center">
+                              <input class="calendar-input" id="to-purchase">
+                              <img src="../../assets/icons/Calendar.svg">
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                </div>
-             </div>
-
-             <div class="filter-list" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseOne">Bonus <img class="filter-img" src="../../assets/icons/down.svg"></div>
-             <div id="collapseTwo" class="collapse" aria-labelledby="headingOne" data-parent="#accordion-filter">
-               <input ref="forms" v-model="bonuss" class="cashback-input" placeholder="Bonus">
-             </div>
-
-             <div data-toggle="collapse" class="filter-list" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseOne">Category <img class="filter-img" src="../../assets/icons/down.svg"></div>
-             <div id="collapseThree" class="collapse" aria-labelledby="headingOne" data-parent="#accordion-filter">
-                  <select ref="forms" v-model="category" class="form-control-sm filter-select">
-                    <option value="" disabled selected>Select category</option>
-                    <option value="vip">vip</option>
-                    <option value="standart">standart</option>
-                  </select>
-             </div>
-
-             <div data-toggle="collapse" class="filter-list" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseOne">Total <img class="filter-img" src="../../assets/icons/down.svg"></div>
-             <div id="collapseFour" class="collapse" aria-labelledby="headingOne" data-parent="#accordion-filter">
-               <input ref="forms" v-model="total" class="cashback-input" placeholder="Total">
-             </div>
-           </div>
-            <button class="filter-submit">Submit</button>
+              <div class="d-flex justify-content-end align-items-center">
+                <div class="reset" @click="resetFilter"><img src="../../assets/icons/x.svg">Reset all</div>
+                <button class="save" type="submit">Apply</button>
+              </div>
           </form>
         </div>
       </div>
@@ -66,14 +206,15 @@
 
   <div class="main-content">
     <div class="d-flex main-content-header">
-      <div class="table-head" style="width: 3%;"><label class="custom-checkbox"><input type="checkbox"  @click="toggleSelect" :checked="selectAll"><span class="checkmark"></span></label></div>
-      <div class="table-head" style="width: 18%;">Name </div>
-      <div class="table-head" style="width: 14%;">Category</div>
-      <div class="table-head" style="width: 12%;">Phone number</div>
-      <div class="table-head table-link" style="width: 10%;" @click="sortByTotal">Total <img class="total-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
-      <div class="table-head table-link" style="width: 10%;" @click="sortByBonus">Bonus <img class="date-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
-      <div class="table-head" style="width: 18%;">Last purchase</div>
-      <div class="table-head" style="width: 12%;"></div>
+      <div class="d-flex" style="width:97%">
+        <div class="table-head" style="width: 3%;"><label class="custom-checkbox"><input type="checkbox"  @click="toggleSelect" :checked="selectAll"><span class="checkmark"></span></label></div>
+        <div class="table-head" style="width: 30%;">Name </div>
+        <div class="table-head" style="width: 14%;">Category</div>
+        <div class="table-head" style="width: 12%;">Phone number</div>
+        <div class="table-head table-link" style="width: 10%;" @click="sortByTotal">Total <img class="total-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
+        <div class="table-head table-link" style="width: 10%;" @click="sortByBonus">Bonus <img class="date-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
+        <div class="table-head" style="width: 18%;">Last purchase</div>
+      </div>
       <div class="table-head" style="width:3%"></div>
     </div>
     <div class="table-content">
@@ -81,10 +222,12 @@
                 v-on:deleteClient="deleteClient"
          />
     </div>
-    <ImportClient/>
-    <PushNotification/>
+
     <EditClient/>
-    <div class="pagination d-flex justify-content-between align-items-center">
+    <div class="pagination d-fl<div>
+
+                  </div>
+ex justify-content-between align-items-center">
       <div class="d-flex align-items-center">
         <span>Rows per page</span>
         <select class="form-control pagination-select" v-model='perPage'>
@@ -107,10 +250,9 @@
 
 
 <script>
-import ImportClient from "@/modals/client/ImportClient";
-import ClientItem from "@/components/client-item/ClientItem";
-import PushNotification from "@/modals/client/PushNotification";
+import ClientItem from "@/components/clients/ClientItem";
 import EditClient from "@/modals/client/EditClient";
+
 import Swal from "sweetalert2";
 import $ from 'jquery'
 
@@ -118,19 +260,18 @@ import $ from 'jquery'
 export default {
   name: "Clients",
   components:{
+    EditClient,
     ClientItem,
-    ImportClient,
-    PushNotification,
-    EditClient
+
   },
   data(){
     return {
-     clientList:[
-       { id:1, name:"Tomas Levins" , category: 'vip' ,phone: '996550425563', total:'450 $' ,bonus:'120' ,last_purchase:'12.08.2020', birthDate:'2021-12-03' },
-       { id:2, name:"Leo Messi" , category: 'standart' ,phone: '996550425563', total:'300 $' ,bonus:'340' ,last_purchase:'12.08.2020', birthDate:'2021-12-03'},
-       { id:3, name:"Bektemir Kudiaberdiev" , category: 'standart' ,phone: '996550425563', total:'350 $' ,bonus:'13' ,last_purchase:'12.08.2020', birthDate:'2021-03-22'},
-       { id:4, name:"Cristiano Ronaldo" , category: 'vip' ,phone: '996550425563', total:'100 $' ,bonus:'75' ,last_purchase:'12.08.2020', birthDate:'2021-03-22'},
-       { id:5, name:"Neymar" , category: 'standart' ,phone: '996550425563666', total:'200 $' ,bonus:'12000' ,last_purchase:'12-03-2020', birthDate:'2021-03-22'},
+      clientList:[
+       { id:1, name:"Tomas Levins" , category: 'vip' ,phone: '996550425563', total:'450 $' ,bonus:'120' ,last_purchase:'12.08.2020', birthDate:'2021-12-03' ,gender:'male'},
+       { id:2, name:"Rihana" , category: 'standart' ,phone: '996550425563', total:'300 $' ,bonus:'340' ,last_purchase:'12.08.2020', birthDate:'2021-12-03',gender:'female'},
+       { id:3, name:"Bektemir Kudiaberdiev" , category: 'standart' ,phone: '996550425563', total:'350 $' ,bonus:'13' ,last_purchase:'12.08.2020', birthDate:'2021-03-22',gender:'male'},
+       { id:4, name:"Cristiano Ronaldo" , category: 'vip' ,phone: '996550425563', total:'100 $' ,bonus:'75' ,last_purchase:'12.08.2020', birthDate:'2021-03-22',gender:'male'},
+       { id:5, name:"Dua Lipa" , category: 'standart' ,phone: '996550425563666', total:'200 $' ,bonus:'12000' ,last_purchase:'12-03-2020', birthDate:'2021-03-22',gender:'female'},
      ],
       search:'',
       sorting:true,
@@ -139,9 +280,8 @@ export default {
       currentPage: 1,
       clientToDisplay:[],
       category:'',
-      bonuss:'',
-      lastPurchase:'',
-      total:''
+      gender_client:''
+
     }
   },
   computed: {
@@ -184,6 +324,13 @@ export default {
   },
   methods: {
 
+    filterSubmit(){
+         this.clientToDisplay = this.filteredList.filter((item)=>{
+          return item.category === this.category && item.gender === this.gender_client
+
+      })
+
+    },
     renderPaginationList(pageNumber=1){
       //clear currently displayed list
       this.clientToDisplay = [];
@@ -275,26 +422,6 @@ export default {
       $('.custom-checkbox input').prop('checked', false)
       this.renderPaginationList()
     },
-    uncloseDropDown(){
-      $(document).click(function(){
-        $(".dropdown").removeClass('open');
-
-      });
-
-
-    },
-    filterSubmit(){
-      this.clientToDisplay =  this.filteredList.filter(client=>{
-        return client.bonus.includes(this.bonuss) && client.total.includes(this.total) && client.category.includes(this.category)
-        && client.last_purchase.includes(this.lastPurchase)
-      })
-      this.bonuss = '';
-      this.total = '';
-      this.category= '';
-      this.lastPurchase= ''
-
-
-    },
     resetFilter(){
       this.bonuss = '';
       this.total = '';
@@ -304,9 +431,30 @@ export default {
   },
   mounted(){
     this.renderPaginationList()
-    this.uncloseDropDown()
-
+    new this.$lightpick({
+      field: document.getElementById('from-date'),
+      autoclose:false,
+      footer:true,
+    });
+    new this.$lightpick({
+      field: document.getElementById('to-date'),
+      autoclose:false,
+      footer:true,
+    });
+    new this.$lightpick({
+      field: document.getElementById('from-purchase'),
+      orientation:'top',
+      autoclose:false,
+      footer:true,
+    });
+    new this.$lightpick({
+      field: document.getElementById('to-purchase'),
+      orientation:'top',
+      autoclose:false,
+      footer:true,
+    });
   },
+
   watch: {
     perPage: function () {
       this.renderPaginationList();
@@ -320,6 +468,29 @@ export default {
 </script>
 
 <style scoped>
+
+.last-filter-body{
+  margin-bottom: 40px !important;
+}
+
+.filter-body{
+  margin-bottom: 20px;
+}
+.filter-img{
+  position: absolute;
+  right: 0;
+  top:18%;
+}
+.filter-list{
+  font-weight: normal;
+  font-size: 14px;
+  border-bottom: 1px solid #F4F4F4;
+  padding-bottom: 13px;
+  position: relative;
+  margin-bottom: 15px;
+
+}
+
 .client{
   margin: 0 30px;
   height: calc(100vh - 90px);
@@ -331,12 +502,21 @@ export default {
 }
 
 .filter-box{
-  width: 18rem;
+  width: 662px;
   margin-right: 20px;
   margin-top: 10px;
-  padding:15px;
+  padding-left: 35px;
+  padding-right: 35px;
+  padding-top: 23px;
+  padding-bottom: 30px;
+  height: auto;
+  overflow-y: auto;
+  transform: translate3d(-565px, 33px, 0px) !important;
+  position: relative;
+}
+.save{
+  width: 120px;
 
-  transform: translate3d(-191px, 40px, 0px);
 }
 .filter-header h3{
   font-size: 16px;
@@ -344,55 +524,113 @@ export default {
 .filter-header{
   margin-bottom: 30px;
 }
-.filter-header div{
+.reset img{
+  width: 18px;
+  height: 18px;
+}
+.reset{
+  margin-right: 30px;
   font-size: 14px;
   display: flex;
   align-items: center;
-  color:#D81919;
+  color:#8C94A5;
   cursor:pointer;
 }
-.filter-list{
-  padding: 10px 0;
-  border-bottom:none;
-  color:#222;
-  background: #fff;
-  position: relative;
-  cursor:pointer;
-  font-size:14px;
-
-
+.calendar{
+  height: 27px;
+  padding: 0 10px;
+  margin-bottom: 0;
 }
-.filter-img{
-  position: absolute;
-  right: 0;
-  top: 10px;
+.calendar img{
+  width: 14px;
+  height: 14px;
 }
-.filter-submit{
-  border:none;
-  font-size: 14px;
-  background: none;
-  padding: 0;
-  color:#616CF5;
-  text-align: right;
-  margin-top: 10px;
+.filter-body label{
+  font-size: 12px;
+  margin-bottom: 0;
+  margin-right: 10px;
 }
-.accordion .cashback-input{
-  height: 30px;
-  font-size: 14px;
-  margin:5px 0;
+.calendar-input{
+  font-size: 12px;
+}
+.cashback-input{
+  height: 27px;
   width: 100%;
+  font-size: 12px;
 }
-.filter-select{
+.category{
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+.category:first-child{
+  margin-bottom: 10px;
+}
+.filter-form{
+  height: 27px;
+  padding: 0 20px;
+  font-size: 14px;
+  background-position-y:50%;
+  background-position-x:95%;;
+
+}
+
+
+/*=========radio button==========*/
+
+
+
+.radio-toolbar-gender input[type="radio"] {
+  opacity: 0;
+  position: fixed;
+  width: 0;
+}
+
+.radio-toolbar-gender label {
+  display: inline-block;
+  margin-bottom: 0;
+  margin-right: 10px;
+  width: 13px;
+  height: 13px;
   border: 1px solid #E3E3E3;
-  border-radius: 5px;
-  height:30px;
-  padding-left:10px;
-  margin: 5px 0;
-  width: 100%;
-  appearance: none;
-  background: #fff;
-  outline:none;
+  box-sizing: border-box;
+  border-radius: 50%;
 }
 
+.radio-toolbar-gender input[type="radio"]:checked + label {
+  background-color: #616cf5;
+  border: none;
+}
+.male{
+  font-size: 14px;
+}
+
+/*=====================Radio Toolbar Category=======================*/
+
+
+.radio-toolbar-category input[type="radio"] {
+  opacity: 0;
+  position: fixed;
+  width: 0;
+}
+
+.radio-toolbar-category label {
+  display: inline-block;
+  margin-bottom: 0;
+  margin-right: 10px;
+  width: 13px;
+  height: 13px;
+  border: 1px solid #E3E3E3;
+  box-sizing: border-box;
+  border-radius: 50%;
+}
+
+.radio-toolbar-category input[type="radio"]:checked + label {
+  background-color: #616cf5;
+  border: none;
+}
+.radio-toolbar-category .radio-checkbox{
+  border-radius:3px;
+}
 
 </style>

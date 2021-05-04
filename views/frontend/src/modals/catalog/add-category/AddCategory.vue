@@ -86,7 +86,6 @@ name: "AddCategory",
   border:0;
   border-radius: 0;
   width: 562px;
-  margin-top: 50%;
 }
 .parent-modal{
   display: flex;

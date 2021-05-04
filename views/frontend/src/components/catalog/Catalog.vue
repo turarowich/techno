@@ -3,7 +3,7 @@
     <div class="searchAndButtons">
     <div class="d-flex justify-content-between app-buttons">
       <div class="d-flex align-items-center">
-        <button class="app-buttons-item adding-btns" id="add-product" data-toggle="modal" data-target="#add-products"><span>+ Add product</span></button>
+        <button class="app-buttons-item adding-btns" id="add-product" @click="$router.push('/add-product-page')"><span>+ Add product</span></button>
         <button class="app-buttons-item adding-btns" @click="getProducts" data-toggle="modl" data-target="#add-service"><span>+ Add service</span></button>
         <button class="app-buttons-item adding-btns"  data-toggle="modal" data-target="#add-category"><span>+ Add category </span></button>
       </div>
@@ -22,8 +22,47 @@
             </ul>
           </div>
         </div>
-        <button class="app-buttons-item"><img src="../../assets/icons/import.svg"><span>Import</span></button>
-        <button class="app-buttons-item"><img src="../../assets/icons/filter.svg"><span>Filter</span></button> </div>
+        <button class="app-buttons-item" data-turbolinks="true"  data-toggle="modal" data-target="#import-client"><img src="../../assets/icons/import.svg"><span>Import</span></button>
+
+
+        <div class="dropdown">
+          <button class="app-buttons-item dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+            <img class="img-btn" src="../../assets/icons/filter.svg"><span>Filter</span>
+          </button>
+
+          <div class="dropdown-menu general-dropdown" aria-labelledby="dropdownMenuButton">
+            <form class="filter-product">
+              <label>By price</label>
+              <div class="d-flex">
+                <input class="drop-input">
+                <div class="d-flex">
+                  <label class="mr-2 pl-2">to</label>
+                  <input class="drop-input">
+                </div>
+              </div>
+
+              <label>By quantity</label>
+              <div class="d-flex">
+                <input class="drop-input">
+                <div class="d-flex">
+                  <label class="mr-2 pl-2">to</label>
+                  <input class="drop-input">
+                </div>
+              </div>
+
+              <label>Auction goods</label>
+              <div class="d-flex align-items-center mb-3">
+                <label class="custom-checkbox mr-2"><input type="checkbox"><span class="checkmark"></span></label>
+                <span style="font-size:14px">Show only auction items</span>
+              </div>
+
+              <label>By category</label>
+              <input class="drop-input">
+            </form>
+          </div>
+        </div>
+
+      </div>
     </div>
     <div class="main-search d-flex align-items-center">
       <img src="../../assets/icons/search-icon.svg">
@@ -36,7 +75,7 @@
           <ul class="list-group" >
             <li class="catalog-list" :id="category.name" :ref="'menu'+index"  v-for="(category,index) in listCategory" :key="category._id"  :class="{active: filtered === category._id}"  @click="filtered = category._id">
               <span>{{category.name}}</span>
-              <div class="dropleft dropMenu">
+              <div class="dropdown dropMenu">
                 <div class="dropdown-toggle" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <img src="../../assets/icons/three-dots.svg">
                 </div>
@@ -50,33 +89,23 @@
             </li>
           </ul>
         </div>
-        <AddService/>
-        <EditCatalog :edit_catalog="edit_catalog"
-              :catalogList="catalogList"
-              @editedCatalogSubmit="editedCatalogSubmit"
-              :listCategory="listCategory"
-        />
+        <ImportClient/>
         <AddCategory
             :listCategory="listCategory"
             :getCategories="getCategories"
 
         />
-        <AddProduct
-            :listCategory="listCategory"
-            :getProducts="getProducts"
-
-        />
-
         <EditCategory
             :listCategory="listCategory"
             :edit_category="edit_category"/>
+
         <div class="catalog-content" style="width:82%">
           <div class="d-flex main-content-header">
             <div class="table-head" style="width: 5%;"><label class="custom-checkbox"><input id="parent-check" type="checkbox"  @click="toggleSelect()" :checked="selectAll"><span class="checkmark"></span></label></div>
-            <div class="table-head" style="width: 42%;">Name</div>
+            <div class="table-head" style="width: 36%;">Name</div>
             <div class="table-head" style="width: 24%;">Article</div>
-            <div class="table-head table-link pr-3" style="width: 10%;" @click="sortByQunatity">Quantity<img class="date-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
-            <div class="table-head table-link" style="width: 10%;" @click="sortByPrice">Price<img class="total-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
+            <div class="table-head table-link pr-3" style="width: 13%;" @click="sortByQunatity">Quantity<img class="date-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
+            <div class="table-head table-link" style="width: 13%;" @click="sortByPrice">Price<img class="total-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
             <div class="table-head" style="width: 8%;"></div>
             <div class="table-head" style="width: 8%;"></div>
           </div>
@@ -114,22 +143,18 @@
 
 <script>
 
-import CatalogItem from "@/components/catalog-item/CatalogItem";
-import AddProduct from "@/modals/catalog/add-product/AddProduct";
-import AddService from "@/modals/catalog/add-service/AddService";
-import EditCatalog from "@/modals/catalog/edit-catalog/EditCatalog";
+import CatalogItem from "@/components/catalog/CatalogItem";
 import AddCategory from "@/modals/catalog/add-category/AddCategory";
 import EditCategory from "@/modals/catalog/add-category/EditCategory";
+import ImportClient from "@/modals/client/ImportClient";
 import Swal from 'sweetalert2';
 import $ from 'jquery';
 export default {
 name: "Catalog",
   components:{
     CatalogItem,
-    AddProduct,
-    AddService,
-    EditCatalog,
     AddCategory,
+    ImportClient,
     EditCategory
   },
   data(){
@@ -268,8 +293,6 @@ name: "Catalog",
      $('.date-pol').removeClass('active')
 
     },
-
-
     deleteProduct(id){
       Swal.fire({
         showConfirmButton: true,
@@ -370,6 +393,16 @@ name: "Catalog",
 
 
 <style scoped>
+.filter-product{
+  padding: 20px;
+}
+.filter-product label{
+  font-weight: normal;
+}
+.general-dropdown{
+  width: 17rem;
+  transform: translate3d(-167px, -10px, 0px) !important;
+}
 .catalog{
   margin: 0 30px;
   height: calc(100vh - 90px);

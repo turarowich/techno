@@ -55,6 +55,26 @@
                   </div>
                 </div>
 
+                <label class="valid-label">Validity period</label>
+                <div class=" product-calendar d-flex align-items-center ">
+                  <div class="d-flex align-items-center mr-2">
+                    <label >From</label>
+                    <div class="calendar d-flex align-items-center">
+                      <input class="calendar-input" id="from-purchase">
+                      <img src="../../../assets/icons/Calendar.svg">
+                    </div>
+                  </div>
+
+                  <div class="d-flex align-items-center">
+                    <label>to</label>
+                    <div class="calendar d-flex align-items-center">
+                      <input class="calendar-input" id="to-purchase">
+                      <img src="../../../assets/icons/Calendar.svg">
+                    </div>
+                  </div>
+
+                </div>
+
                 <div class="modal-img ">
                   <label>Photos</label>
                   
@@ -146,15 +166,18 @@ name: "AddProduct",
   -webkit-transform: translate3d(0,0,0);
   transform: translate3d(0, 0, 0);
 }
-
-
+.valid-label{
+  margin-bottom: 22px !important;
+}
 .promotion-disc{
   display: none;
-
 }
-
-
-
+.product-calendar{
+  margin-bottom: 40px;
+}
+.calendar{
+  margin-bottom: 0;
+}
 .modal-form input{
   width: 100%;
   font-size: 16px;

@@ -24,7 +24,6 @@ name: "Loaylty",
 
 .loyalty{
   padding:0 30px;
-  height:100vh;
-  overflow-y: auto;
+
 }
 </style>

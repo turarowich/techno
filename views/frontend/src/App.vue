@@ -45,7 +45,8 @@ export default {
 
     methods: {
     homePage(){
-      if(['Settings','SignIn', 'SignUp', ].includes(this.$route.name) || this.$route.path.startsWith("/home")
+      if(['Settings','SignIn', 'SignUp', 'OrderDetail','EditClientPage', 'PushNotification',
+            'EditProductPage','IndividualPush','AddPromoPage','AddProductPage'].includes(this.$route.name) || this.$route.path.startsWith("/home")
           || this.$route.path.startsWith("/loyalty")
       ){
         return false

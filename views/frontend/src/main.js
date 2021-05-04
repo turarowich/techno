@@ -24,6 +24,7 @@ import Lightpick from 'lightpick'
 import axios from "axios";
 import 'dropzone/dist/dropzone'
 import 'dropzone/dist/dropzone.css'
+
 const store = createStore({
 
     actions:{

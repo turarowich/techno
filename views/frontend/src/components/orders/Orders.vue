@@ -94,7 +94,7 @@
 </template>
 
 <script>
-import OrderItem from "@/components/order-item/OrderItem";
+import OrderItem from "@/components/orders/OrderItem";
 import Swal from "sweetalert2";
 import $ from 'jquery';
 
@@ -295,12 +295,7 @@ name: "Orders",
           closeButton:'close-btn'
 
         },
-        showClass: {
-          popup: 'animate__animated animate__zoomIn'
-        },
-        hideClass: {
-          popup: 'animate__animated animate__zoomOut'
-        }
+
       }).then((result) => {
         if (result.isConfirmed) {
           this.orderList = this.orderList.filter(el => el.id !== id);
@@ -352,19 +347,7 @@ name: "Orders",
         }
       })
     },
-    bektemir(){
-      let check = true;
-      let eventItems = this.$refs.bektemir.children
-      for (let i = 0; i <=eventItems.length ; i++) {
-        if(check){
-          eventItems[i].checked = true
-        }
-        else{
-          eventItems[i].checked = false
-        }
-        check = !check
-      }
-    }
+
 
   },
 

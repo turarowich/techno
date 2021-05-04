@@ -14,7 +14,7 @@
           </div>
           <div class="modal-body category-body">
             <form @submit.prevent="onSubmit" class="modal-form">
-              <label>Name</label>
+              <label>Name</label><br>
               <input v-model="currentCategory.name" class="form-input cashback-input mb-3"  placeholder="Enter a name">
               <div>
                 <label>Move to the Category</label>
@@ -57,22 +57,9 @@ export default {
 </script>
 
 <style scoped>
+.cashback-input{
+  width: 100%;
+}
 
-.category-content{
-  border:0;
-  border-radius: 0;
-  width: 562px;
 
-  margin-top: 50%;
-}
-.parent-modal{
-  display: flex;
-}
-.category-body{
-  padding: 0 50px;
-  padding-bottom: 34px;
-}
-.category-header{
-  padding:34px 50px;
-}
 </style>

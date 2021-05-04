@@ -1,18 +1,20 @@
 <template>
   <div  v-for="client in clientList" class="table-item d-flex align-items-center" :key="client.id">
-    <div  style="width: 3%;"><label class="custom-checkbox"><input  type="checkbox" :value="client.id" v-model="client.checked"><span class="checkmark"></span></label></div>
-    <div  style="width: 18%;" class="d-flex align-items-center pr-3">
-      <div class="table-img">
-        <img src="../../assets/img/criw.jpg">
+    <div class="d-flex align-items-center" style="width:97%" @click="$router.push('/edit-client-page')">
+      <div  style="width: 3%;"><label class="custom-checkbox"><input  type="checkbox" :value="client.id" v-model="client.checked"><span class="checkmark"></span></label></div>
+      <div  style="width: 30%;" class="d-flex align-items-center pr-3">
+        <div class="table-img">
+          <img src="../../assets/img/criw.jpg">
+        </div>
+        {{client.name}}
       </div>
-      {{client.name}}
+      <div  style="width: 14%;">{{client.category}}</div>
+      <div  style="width: 12%;">{{client.phone}}</div>
+      <div  style="width: 10%;">{{client.total}}</div>
+      <div  style="width: 10%;">{{client.bonus}}</div>
+      <div  style="width: 18%;">{{client.last_purchase}}</div>
     </div>
-    <div  style="width: 14%;">{{client.category}}</div>
-    <div  style="width: 12%;">{{client.phone}}</div>
-    <div  style="width: 10%;">{{client.total}}</div>
-    <div  style="width: 10%;">{{client.bonus}}</div>
-    <div  style="width: 18%;">{{client.last_purchase}}</div>
-    <div  style="width: 12%;"></div>
+
     <div  style="width:3%">
       <div class="dropleft dropMenu">
         <div class="dropdown-toggle" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

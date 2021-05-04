@@ -15,15 +15,15 @@
           <span class="checkmark"></span></label>
         </div>
 
-        <div  class="d-flex align-items-center"  style="width: 42%;">
+        <div  class="d-flex align-items-center"  style="width: 36%;">
           <div class="table-img">
             <img >
           </div>
           {{catalog.name}}
         </div>
         <div  style="width: 24%;"><div class="long-text">{{catalog.description}}</div></div>
-        <div  style="width: 9%;">{{catalog.quantity}}</div>
-        <div  style="width: 10%;">{{catalog.price}}</div>
+        <div  style="width: 13%;">{{catalog.quantity}}</div>
+        <div  style="width: 13%;">{{catalog.price}}</div>
         <div  style="width:8%;" class="see-catalog"><img @click="$emit('hideCatalog',catalog.id)" class="see-catalog" src="../../assets/icons/see.svg"><img class="nonsee-catalog" src="../../assets/icons/nonsee.svg"></div>
         <div  style="width:8%;">
           <div class="dropleft dropMenu">
@@ -33,7 +33,7 @@
             </div>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
               <ul class="list-group " >
-                <li class="list-group-item" data-toggle="modal" data-target="#edit" @click="$emit('editCatalog',catalog._id)">Edit</li>
+                <li class="list-group-item" @click="$router.push('/edit-product-page')">Edit</li>
                 <li class="list-group-item" v-on:click="$emit('deleteProduct' ,catalog._id)">Delete</li>
               </ul>
             </div>
