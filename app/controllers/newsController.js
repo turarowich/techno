@@ -53,6 +53,8 @@ class NewsController {
                 name_ru: req.fields.name_ru,
                 desc: req.fields.desc,
                 desc_ru: req.fields.desc_ru,
+                startDate: req.fields.startDate,
+                endDate: req.fields.endDate,
             });
             await news.validate()
 
