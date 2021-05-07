@@ -51,6 +51,8 @@ module.exports = function (app, network_information) {
     app.put('/updatePromocode/:promocode', promocodeController.updatePromocode);
     app.delete('/deletePromocode/:promocode', promocodeController.deletePromocode);
     app.get('/searchProductService', promocodeController.searchProductService);
+    app.get('/searchPromocode', promocodeController.searchPromocode);
+
     // Review url
     app.get('/getReview/:review', reviewController.getReview);
     app.get('/getReviews', reviewController.getReviews);

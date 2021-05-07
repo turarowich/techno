@@ -10,7 +10,7 @@
     </div>
     <div class="main-search d-flex align-items-center ">
       <img src="../../assets/icons/search-icon.svg">
-      <input class="main-input" type="text" placeholder="Search" v-model="search">
+      <input @input="searchPromocode" class="main-input" type="text" placeholder="Search" v-model="searchText">
     </div>
   </div>
   <div class="d-flex main-content-header">
@@ -40,11 +40,36 @@ import HistoryPromocode from "@/modals/Promocode/HistoryPromocode";
 import PromoCodeItem from "@/components/loyalty/PromoCodeItem";
 export default {
   name: "Promocode",
+  data(){
+    return{
+      searchText:'',
+      searchResult:[],
+    }
+  },
   components:{
     PromoCodeItem,
     AddPromocode,
     HistoryPromocode
-  }
+  },
+  methods:{
+    searchPromocode(){
+      console.log(this.searchText)
+      let that = this;
+      if(this.searchText.length ===0){
+        this.$store.dispatch("Promocode/setPromocodeAPI",this.axios);
+        return;
+      }
+      this.axios.get('https://localhost:8443/api/searchPromocode',{
+        params: {
+          "search":this.searchText,
+        }
+      }).then(function(response){
+        that.$store.dispatch("Promocode/setPromocodeFromSearch",response.data.objects);
+      });
+
+      console.log(that.searchResult);
+    },
+  },
 }
 </script>
 

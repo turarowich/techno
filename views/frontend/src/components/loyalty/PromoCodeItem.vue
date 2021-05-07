@@ -16,7 +16,7 @@
      <div  style="width: 12%;">25</div>
      <div  style="width: 13%;">{{promocode.percent}}</div>
      <div  style="width: 16%;">{{promocode.code}}</div>
-     <div  style="width: 16%;">{{promocode.toDate}}</div>
+     <div  style="width: 16%;">{{promocode.endDate.slice(0,10) }}</div>
      <div  style="width: 13%;" >
        <div class="history-btn" data-toggle="modal" data-target="#history-promocode">
          <img src="../../assets/icons/History.svg">

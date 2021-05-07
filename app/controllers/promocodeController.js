@@ -136,6 +136,24 @@ class PromocodeController{
         }
         res.json(result);
     };
+
+    searchPromocode= async function (req, res) {
+        let db = useDB(req.db)
+        let Promocode = db.model("Promocode");
+        let search = req.query.search;
+
+        let result = {
+            'status': 200,
+            'msg': 'Sending promocodes'
+        }
+        try {
+            result['objects'] = await Promocode.find( { "name": {$regex: search} } );
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.json(result);
+    };
+
 }
 
 

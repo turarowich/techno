@@ -32,6 +32,9 @@ export const PromocodeModule = {
                 .then(response => {
                     commit('SET_PromocodesAPI', response.data.objects)
                 })
+        },
+        setPromocodeFromSearch({ commit },array){
+            commit('SET_PromocodesAPI', array)
         }
     },
 
