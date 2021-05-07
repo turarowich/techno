@@ -100,7 +100,7 @@ name: "Basket",
 
 
   computed:{
-  ...mapGetters(["shoppingCart", ])
+  ...mapGetters(["Orders/shoppingCart", ])
   },
   methods:{
     confirm(){
@@ -121,7 +121,7 @@ name: "Basket",
     }
   },
   mounted(){
-    this.$store.dispatch('countOrders')
+    this.$store.dispatch('Orders/countOrders')
     this.addActive()
   }
 }

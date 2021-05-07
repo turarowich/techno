@@ -62,7 +62,7 @@ export default {
         }
     },
     addToCart() {
-      this.$store.dispatch('addToCart', this.getProduct)
+      this.$store.dispatch('Orders/addToCart', this.getProduct)
     },
     slide() {
       $('.product-img').slick({

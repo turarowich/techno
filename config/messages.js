@@ -33,7 +33,10 @@ const en_messages = {
     xl_created_at: 'Created at',
     xl_order_notes: 'Order notes',
     xl_order_status: 'Order status',
-    xl_product_result: 'Result'
+    xl_product_result: 'Result',
+    //Promocode
+    promo_code:'Code has to be at least 12 characters',
+    promo_name_unique:'Promocode with this name already exists',
 }
 const ru_messages = {
     // ERROR messages
@@ -71,6 +74,9 @@ const ru_messages = {
     xl_created_at: 'Дата заказа',
     xl_order_notes: 'Заметки',
     xl_order_status: 'Статус',
+    //Promocode
+    promo_code:'Код должен быть минимум 12 сиволов',
+    promo_name_unique:'Промокод с таким названием уже существует',
 }
 module.exports = {
     en: en_messages,

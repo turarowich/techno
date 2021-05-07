@@ -39,10 +39,10 @@ class PromocodeController{
     };
 
     addPromocode = async function (req, res) {
+        console.log(req.fields)
         let db = useDB(req.db)
         let Promocode = db.model("Promocode");
-        let new_promocode =  req.fields.promocode;
-        let new_promocode_name =  req.fields.promocode.name;
+        let new_promocode =  req.fields;
         let result = {
             'status': 200,
             'msg': 'Promocode added'
@@ -51,10 +51,16 @@ class PromocodeController{
             let promocode = await new Promocode({
                 name: new_promocode.name || "No name",
                 code: new_promocode.code || "90909",
-                percent: new_promocode.percent || "99",
+                percent: new_promocode.discount || "99",
                 bonus: new_promocode.bonus || "99",
-                startDate: new_promocode.startDate || new Date(),
-                endDate: new_promocode.endDate || new Date(),
+                startDate: new_promocode.fromDate || new Date(),
+                endDate: new_promocode.toDate || new Date(),
+                fixed_sum: new_promocode.fixedSum || '6',
+                min_sum: new_promocode.minSum || '6',
+                number_of_uses: new_promocode.numberOfUses || '6',
+                selected_type: new_promocode.selectedType || 'type',
+                selected_items_list: new_promocode.selectedItemsList || [1,2],
+
             }).save();
 
             result['object'] = promocode
@@ -101,6 +107,34 @@ class PromocodeController{
         }
 
         res.status(result.status).json(result);
+    };
+    searchProductService = async function (req, res) {
+        let db = useDB(req.db);
+        let type   = req.query.type;
+        let search = req.query.search;
+        let result = {
+            'status': 200,
+            'msg': 'Sending result'
+        }
+        try {
+            if(type ==="Product"){
+                let Model = db.model(type);
+                result['products'] = await Model.find( { "name": {$regex: search} } )
+            }else if(type ==="Service"){
+                let Model = db.model(type);
+                result['services'] = await Model.find( { "name": {$regex: search} } );
+            }else{
+                let products = await db.model('Product').find( { "name": {$regex: search} } );
+                let services = await db.model('Service').find( { "name": {$regex: search} } );
+                console.log(products);
+                result['products'] = products;
+                result['services'] = services;
+            }
+
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.json(result);
     };
 }
 

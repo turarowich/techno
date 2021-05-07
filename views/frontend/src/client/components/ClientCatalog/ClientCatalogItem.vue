@@ -24,7 +24,7 @@ name: "ClientCatalogItem",
 
   addToCart(id){
     const newCatalog = this.catalog.filter((el)=>el.id === id);
-    this.$store.dispatch('addToCart', newCatalog)
+    this.$store.dispatch('Orders/addToCart', newCatalog)
   },
     selectProduct(id){
       this.$router.push('/home/catalog-detail/:'+id);

@@ -5,9 +5,9 @@
   </div>
   <div class="loyalty-nav d-flex align-items-end">
     <ul class="loyalty-menu p-0 d-flex">
-      <li class="loaylty-list"><router-link class="loyalty-link active" to="/loyalty" exact>Cashback</router-link></li>
-      <li class="loaylty-list"><router-link class="loyalty-link" to="/loyalty/promocode">Promo code</router-link></li>
-      <li class="loaylty-list"><router-link class="loyalty-link" to="/loyalty/discount">Discount</router-link></li>
+      <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='CashBack' }" to="/loyalty" exact>Cashback</router-link></li>
+      <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='PromoCode' }" to="/loyalty/promocode">Promo code</router-link></li>
+      <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='Discount' }" to="/loyalty/discount">Discount</router-link></li>
     </ul>
   </div>
 </div>
@@ -15,22 +15,27 @@
 
 <script>
 
-import $ from "jquery";
+// import $ from "jquery";
 
 export default {
   name: "LoyaltyNavbar",
   methods:{
-    addActive(){
-      $(document).ready(function() {
-        $('.loyalty-link').click(function() {
-          $('.loyalty-link.active').removeClass("active");
-          $(this).addClass("active");
-        });
-      });
+    // addActive(){
+    //   $(document).ready(function() {
+    //     $('.loyalty-link').click(function() {
+    //       $('.loyalty-link.active').removeClass("active");
+    //       $(this).addClass("active");
+    //     });
+    //   });
+    // }
+  },
+  computed: {
+    currentRouteName() {
+      return this.$route.name;
     }
   },
   mounted(){
-    this.addActive()
+    // this.addActive()
   }
 
 }

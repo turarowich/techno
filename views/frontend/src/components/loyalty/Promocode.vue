@@ -23,7 +23,7 @@
     <div class="table-head" style="width: 13%;">History</div>
     <div class="table-head" style="width:3%"></div>
   </div>
-  <div class="table-content">
+  <div class="table-content tytyty">
    <PromoCodeItem/>
 
   </div>

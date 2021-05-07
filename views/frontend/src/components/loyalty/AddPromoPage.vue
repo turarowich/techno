@@ -1,6 +1,6 @@
 <template>
 <div class="add-promo">
-  <div class="notification-header"><img class="mr-2" src="../../assets/icons/xBlack.svg"><h3>Add promocode</h3></div>
+  <div class="notification-header"><router-link to="/loyalty/promocode"><img  class="mr-2" src="../../assets/icons/xBlack.svg"></router-link><h3>Add promocode</h3></div>
   <div class="container">
     <div class="row">
       <div class="col-11 m-auto">
@@ -8,18 +8,18 @@
           <div class="col-lg-8">
             <form  class="modal-form ">
               <div class="label-input">
-                <label class="promo-label">Name</label><br>
-                <input placeholder="Promocode for shoes" class="cashback-input promo-input"/>
+                <label class="promo-label">Name {{name}}</label><br>
+                <input v-model="name" placeholder="Promocode for shoes" class="cashback-input promo-input"/>
               </div>
 
               <div class="d-flex disc-box">
                 <div style="width:50%" class="mr-3">
                   <label class="promo-label">Discount</label><br>
-                  <input placeholder="0%" class="cashback-input promo-input">
+                  <input v-model="discount" type="number" min="0" placeholder="0%" class="cashback-input promo-input">
                 </div>
                 <div style="width:50%">
-                  <label class="promo-label">Fix price</label><br>
-                  <input class="cashback-input promo-input">
+                  <label  class="promo-label">Fixed sum</label><br>
+                  <input v-model="fixedSum" type="number" min="0" class="cashback-input promo-input">
                 </div>
               </div>
 
@@ -28,11 +28,17 @@
                 <div class="d-flex">
                   <div style="width:50%" class=" mr-2 d-flex align-items-center">
                     <label class="promo-label">From</label>
-                    <div class="calendar-period d-flex align-items-center"><input id="demo-1"><img src="../../assets/icons/Calendar.svg"></div>
+                    <div class="calendar-period d-flex align-items-center">
+                      <input v-model="fromDate.formatted" id="demo-1">
+                      <img src="../../assets/icons/Calendar.svg">
+                    </div>
                   </div>
                   <div style="width:50%" class="d-flex align-items-center mr-0">
                     <label class="promo-label">To</label>
-                    <div class=" calendar-period d-flex align-items-center"><input id="demo-2"><img src="../../assets/icons/Calendar.svg"></div>
+                    <div class="calendar-period d-flex align-items-center">
+                      <input v-model="toDate.formatted" id="demo-2">
+                      <img src="../../assets/icons/Calendar.svg">
+                    </div>
                   </div>
                 </div>
               </div>
@@ -40,28 +46,52 @@
               <div>
                 <label class="valid-for">Valid for</label>
                 <div class="personal-btns">
-                  <div class="btns-item active"><span class="btn-round"></span>services</div>
-                  <div class="btns-item"><span class="btn-round"></span>products</div>
-                  <div class="btns-item mr-0"><span class="btn-round"></span>on everything</div>
+                  <div type="Service" class="btns-item active"><span class="btn-round"></span>services</div>
+                  <div type="Product" class="btns-item"><span class="btn-round"></span>products</div>
+                  <div type="all" class="btns-item mr-0"><span class="btn-round"></span>on everything</div>
                 </div>
               </div>
 
               <div class="services">
                 <label class="promo-label">Select service</label><br>
                 <div class="d-flex">
-                  <input placeholder="+ all services or category" class="cashback-input promo-input mr-2">
-                  <button class="promo-btn"><img src="../../assets/icons/enable+.svg"></button>
+                  <div class="w-100 mr-2 position-relative">
+                    <input v-model="searchText" @input="searchProdSer" placeholder="+ all services or category" class="cashback-input promo-input">
+                    <div class="resultList">
+                      <div @click="setSelectedItem(prod.name,prod._id,'product')" v-for="prod in searchResult.products" :key="prod._id">
+                        {{prod.name}}
+                      </div>
+                      <div @click="setSelectedItem(serve.name,serve._id,'service')" v-for="serve in searchResult.services" :key="serve._id">
+                        {{serve.name}}
+                      </div>
+                    </div>
+                  </div>
+                  <button @click="addSelectedItem" type="button" class="promo-btn"><img src="../../assets/icons/enable+.svg"></button>
+                </div>
+                <div class="mt-3">
+                  <div class="selectedItems" v-for="item in selectedItemsList" :key="item._id">
+                    <div class="selectedItems_TEXT">
+                      <div>
+                        {{item.name}}
+                      </div>
+                      <div>
+                        {{item.type}}
+                      </div>
+                    </div>
+                    <div @click="removeSelectedItem(item.id)" :this_id="item.id" class="selectedItems_remove" style="flex: 0 0 44px;">
+                      <img alt="x" src="../../assets/icons/x.svg">
+                    </div>
+                  </div>
                 </div>
               </div>
-
               <div class="promo-time d-flex  align-items-end">
                 <div style="width:25%" class="terms">
                   <label class="promo-label">Terms of use</label>
-                  <div>1 human</div>
+                  <div>1 client</div>
                 </div>
                 <div style="width:27%" class="time">
                   <label class="promo-label">Number of times</label>
-                  <input class="cashback-input" placeholder="1">
+                  <input v-model="numberOfUses" type="number" min="0" class="cashback-input" placeholder="1">
                 </div>
                 <div style="width:50%">
                   <p class="time-text">
@@ -71,18 +101,19 @@
               </div>
 
               <div class="modal-btn d-flex">
-                <button class="save">Save</button>
-                <button class="cancel">Cancel</button>
+                <button type="button" @click="savePromocode" class="save">Save</button>
+                <router-link to="/loyalty/promocode"><button type="button" class="cancel">Cancel</button></router-link>
               </div>
             </form>
           </div>
-
           <div class="col-lg-4">
             <label class="promo-label">Code</label>
-            <div class="reload-code mr-0 mb-4 d-flex align-items-center"><input><img src="../../assets/icons/Reload.svg"></div>
-
+            <div class="reload-code mr-0 mb-4 d-flex align-items-center">
+              <input type="text" v-model="generatedCode">
+              <img @click="generateCode" src="../../assets/icons/Reload.svg">
+            </div>
             <label class="promo-label">Promo code is valid</label><br>
-            <input placeholder="minimum amount" class="cashback-input promo-input">
+            <input v-model="minSum" type="number" min="0" placeholder="minimum sum" class="cashback-input promo-input">
           </div>
         </div>
       </div>
@@ -93,33 +124,263 @@
 
 <script>
 import $ from "jquery";
-
+import Swal from "sweetalert2";
 export default {
   name: "AddPromoPage",
+  data(){
+    return{
+      name:'',
+      generatedCode:'',
+      discount:0,
+      fixedSum:0,
+      minSum:0,
+      fromDate:{
+        obj:'',
+        formatted:'',
+      },
+      toDate:{
+        obj:'',
+        formatted:'',
+      },
+      selectedType:'services',
+      numberOfUses:1,
+      searchText:'',
+      searchResult:[],
+      currentSelectedItem:{
+        type:'',
+        name:'',
+        id:'',
+      },
+      selectedItemsList:[],
+    }
+  },
 
   methods:{
     selectDates(){
+      let that=this;
       new this.$lightpick({
+        lang:'en',
+        format:'YYYY-MM-D',
         field: document.getElementById('demo-1'),
         onSelect: function(date){
-          document.getElementById('demo-1').innerHTML = date.format('Do MMMM YYYY');
+          // document.getElementById('demo-1').innerHTML = date.format('Do MMMM YYYY');
+          // that.fromDate = date.format('DD.MM.YYYY');
+          that.fromDate.obj = date;
+          that.fromDate.formatted = date.format('DD.MM.YYYY');
         }
       });
       new this.$lightpick({
         field: document.getElementById('demo-2'),
         onSelect: function(date){
-          document.getElementById('demo-2').innerHTML = date.format('Do MMMM YYYY');
+          // document.getElementById('demo-2').innerHTML = date.format('Do MMMM YYYY');
+          that.toDate.obj = date;
+          that.toDate.formatted = date.format('DD.MM.YYYY');
         }
       });
     },
     addActive(){
+      let that = this;
       $(document).ready(function() {
         $('.btns-item').click(function() {
           $('.btns-item.active').removeClass("active");
           $(this).addClass("active");
+          that.selectedType = $(this).attr('type');
         });
       });
-    }
+    },
+    generateCode(){
+      let length = 12;
+      let result           = [];
+      let characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let charactersLength = characters.length;
+      for ( var i = 0; i < length; i++ ) {
+        result.push(characters.charAt(Math.floor(Math.random() * charactersLength)));
+      }
+      this.generatedCode = result.join('');
+    },
+    searchProdSer(){
+      let that = this;
+      if(this.searchText.length ===0){
+        that.searchResult = [];
+        return;
+      }
+      this.axios.get('https://localhost:8443/api/searchProductService',{
+        params: {
+          "type":this.selectedType,
+          "search":this.searchText,
+        }
+      }).then(function(response){
+        let result_obj={
+          products: [],
+          services: [],
+        }
+        result_obj.products = response.data.products;
+        result_obj.services = response.data.services;
+        that.searchResult = result_obj;
+        // if(that.selectedType !=="all"){
+        //   that.searchResult = response.data.objects;
+        // }else{
+        //   console.log(response.data);
+        //   result_obj.products = response.data.products;
+        //   result_obj.services = response.data.services;
+        //
+        // }
+        console.log(that.searchResult)
+        // that.searchResult.forEach(function(item){
+        //   console.log(item,"iiii");
+        // })
+      });
+
+    },
+    setSelectedItem(name,id,type){
+      this.searchText = name;
+      this.currentSelectedItem.name = name;
+      this.currentSelectedItem.id = id;
+      this.currentSelectedItem.type = type;
+      this.searchResult = [];
+    },
+    addSelectedItem(){
+      if(this.currentSelectedItem.id !=='' && this.currentSelectedItem.name !=='' && this.currentSelectedItem.type !==''){
+        let copy = $.extend(true,{},this.currentSelectedItem);
+        //check if its already has been selected
+        let check = this.selectedItemsList.filter(function(e){
+          return e.id == copy.id;
+        })
+        if(check.length > 0){
+          Swal.fire({
+            timer:1500,
+            title:'Add item',
+            text:"Already selected",
+            showConfirmButton:false,
+            position: 'top-right',
+            customClass:{
+              popup:'success-popup information-popup',
+              content:'success-content',
+              title:'success-title',
+              header:'success-header',
+              image:'success-img'
+            },
+            showClass:{
+              popup: 'animate__animated animate__zoomIn'
+            }
+          })
+          return
+        }
+        this.selectedItemsList.push(copy)
+      }else{
+        Swal.fire({
+          timer:1500,
+          title:'Add item',
+          text:"Select an item",
+          showConfirmButton:false,
+          position: 'top-right',
+          customClass:{
+            popup:'success-popup information-popup',
+            content:'success-content',
+            title:'success-title',
+            header:'success-header',
+            image:'success-img'
+          },
+          showClass:{
+            popup: 'animate__animated animate__zoomIn'
+          }
+        })
+      }
+
+    },
+    removeSelectedItem(id){
+      this.selectedItemsList = this.selectedItemsList.filter(function(e){
+        return e.id !== id;
+      })
+    },
+    savePromocode(){
+      let messages = [];
+      if(this.name.length<0){messages.push('Fill in Name')}
+      if(this.generatedCode.length<0){messages.push('Fill in Code')}
+      if(this.discount<=0 && this.fixedSum<=0){
+        if(this.discount<=0){messages.push('Fill in Discount')}
+        if(this.fixedSum<=0){messages.push('Fill in FixedSum')}
+      }
+      if(this.minSum<=0){messages.push('Fill in MinSum')}
+      if(this.fromDate.formatted.length<=0){messages.push('Fill in FromDate')}
+      if(this.toDate.formatted.length<=0){messages.push('Fill in ToDate')}
+      if(this.selectedType.length<=0){messages.push('Fill in SelectedType')}
+      if(this.selectedItemsList.length<=0){messages.push('Select Services or Products')}
+      if(this.numberOfUses<=0){messages.push('NumberOfUses')}
+
+      if(messages.length>1){this.displayMessages(messages,"Errors");return}
+      let that=this;
+      this.axios.post('https://localhost:8443/api/addPromocode', {
+        'name': this.name,
+        'code': this.generatedCode,
+        'discount': this.discount,
+        'fixedSum': this.fixedSum,
+        'minSum': this.minSum,
+        'fromDate': this.fromDate.obj,
+        'toDate': this.toDate.obj,
+        'selectedType': this.selectedType,
+        'selectedItemsList': this.selectedItemsList,
+        'numberOfUses': this.numberOfUses,
+      }).then(function (response) {
+        console.log(response);
+        that.displayMessages(['Added'],"Success");
+        that.$router.push('/loyalty/promocode')
+      }).catch(function(error){
+        if (error.response) {
+          console.log(error.response.data);
+          // console.log(error.response.status);
+          // console.log(error.response.headers);
+          that.displayMessages(Object.values(error.response.data.errors),"Errors");
+        }
+      });
+    },
+    displayMessages(array,title){
+      let message = '';
+      array.forEach(item=>message+=`${item}<br>`)
+      Swal.fire({
+        timer:2000,
+        title:title,
+        showConfirmButton:false,
+        html: message,
+        position: 'top-right',
+        customClass:{
+          popup:'success-popup information-popup',
+          content:'success-content',
+          title:'success-title',
+          header:'success-header',
+          image:'success-img'
+        },
+        showClass:{
+          popup: 'animate__animated animate__zoomIn'
+        }
+      })
+    },
+  },
+  watch: {
+    selectedType: {
+      handler(val, oldVal) {
+        console.log('selectedType list changed',val, oldVal)
+      },
+      deep: true
+    },
+    discount: {
+      // eslint-disable-next-line no-unused-vars
+      handler(val, oldVal) {
+        if(val>0){
+          this.fixedSum = 0;
+        }
+      },
+      deep: true
+    },
+    fixedSum: {
+      // eslint-disable-next-line no-unused-vars
+      handler(val, oldVal) {
+        if(val>0){
+          this.discount = 0;
+        }
+      },
+      deep: true
+    },
   },
   mounted(){
     this.addActive()
@@ -207,5 +468,35 @@ export default {
   color:#B0B0B0;
   margin-bottom: 0;
 }
+.resultList{
+  position: absolute;
+  background: white;
+  width: 100%;
+  padding:5px;
+}
+.resultList div{
+  cursor: pointer;
+}
+.selectedItems{
+  height: 45px;
+  display: flex;
+}
+.selectedItems div{
+  flex: 1;
+}
 
+.selectedItems_TEXT{
+  border: 2px solid #252726;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  margin-right: 6px;
+}
+.selectedItems_remove{
+  border: 2px solid #252726;
+  border-radius: 5px;
+  flex: 0 0 44px;
+  display: flex;
+  justify-content: center;
+}
 </style>

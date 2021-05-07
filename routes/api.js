@@ -1,5 +1,6 @@
 var clientController = require('../app/controllers/clientController');
 var productController = require('../app/controllers/productController');
+var serviceController = require('../app/controllers/serviceController');
 var promocodeController = require('../app/controllers/promocodeController');
 var categoryController = require('../app/controllers/categoryController');
 var reviewController = require('../app/controllers/reviewController');
@@ -24,6 +25,17 @@ module.exports = function (app, network_information) {
     app.put('/updateProduct/:product', upload.single('file'), productController.updateProduct);
     app.delete('/deleteProduct/:product', productController.deleteProduct);
     app.delete('/deleteProducts', productController.deleteProducts);
+    app.get('/searchProduct', productController.searchProduct);
+
+
+    // Service url
+    app.get('/getService/:product', serviceController.getService);
+    app.get('/getServices', serviceController.getService);
+    app.post('/addService', upload.single('file'), serviceController.addService);
+    // app.put('/updateService/:product', upload.single('file'), serviceController.updateProduct);
+    // app.delete('/deleteService/:service', serviceController.deleteProduct);
+    // app.delete('/deleteServices', serviceController.deleteProducts);
+    // app.get('/searchService', serviceController.searchProduct);
 
     // Category url
     app.get('/getCategory/:category', categoryController.getCategory);
@@ -38,7 +50,7 @@ module.exports = function (app, network_information) {
     app.post('/addPromocode', promocodeController.addPromocode);
     app.put('/updatePromocode/:promocode', promocodeController.updatePromocode);
     app.delete('/deletePromocode/:promocode', promocodeController.deletePromocode);
-    
+    app.get('/searchProductService', promocodeController.searchProductService);
     // Review url
     app.get('/getReview/:review', reviewController.getReview);
     app.get('/getReviews', reviewController.getReviews);

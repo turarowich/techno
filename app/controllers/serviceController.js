@@ -1,20 +1,17 @@
-
-const fs = require('fs')
-const { useDB, sendError, saveImage } = require('../../services/helper')
+const { useDB, sendError, saveImage } = require('../../services/helper');
 var validate = require('../../config/messages');
-class ProductController{
+class ServiceController{
     
-    getProduct = async function (req, res) {
+    getService = async function (req, res) {
         let db = useDB(req.db)
-        let Product = db.model("Product");
-
+        let Service = db.model("Service");
         let result = {
             'status': 200,
-            'msg': 'Sending product'
+            'msg': 'Sending service'
         }
         try {
-            let product = await Product.findById(req.params.product)
-            result['object'] = product
+            let service = await Service.findById(req.params.product)
+            result['object'] = service
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
@@ -22,17 +19,17 @@ class ProductController{
         res.status(result.status).json(result);
     };
 
-    getProducts = async function (req, res) {
+    getService= async function (req, res) {
         let db = useDB(req.db)
-        let Product = db.model("Product");
+        let Service = db.model("Service");
 
         let result = {
             'status': 200,
             'msg': 'Sending products'
         }
         try {
-            let products = await Product.find()
-            result['objects'] = products
+            let service = await Service.find()
+            result['objects'] = service
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
@@ -40,13 +37,14 @@ class ProductController{
         res.status(result.status).json(result);
     };
 
-    addProduct = async function (req, res) {
+    addService = async function (req, res) {
+        console.log(req.db);
         let db = useDB(req.db)
-        let Product = db.model("Product");
+        let Service = db.model("Service");
         
         let result = {
             'status': 200,
-            'msg': 'Product added'
+            'msg': 'Service added'
         }
         let lang = req.headers["accept-language"]
         if (lang != 'ru') {
@@ -55,7 +53,7 @@ class ProductController{
         addProduct: try {
             let data = req.fields
             console.log(data)
-            let product = await new Product({
+            let service = await new Service({
                 name: data.name,
                 name_ru: data.name_ru,
                 secondary: data.secondary,
@@ -72,7 +70,7 @@ class ProductController{
                 category: data.category,
                 recommend: data.recommend,
             });
-            await product.validate()
+            await service.validate()
         
             if (req.files.img){
                 
@@ -87,7 +85,7 @@ class ProductController{
                     }
                     break addProduct
                 }else{
-                    product.img = filename   
+                    service.img = filename
                 }
             }
             
@@ -104,12 +102,12 @@ class ProductController{
                         }
                         break addProduct
                     } else {
-                        product.imgArray.push(filename)
+                        service.imgArray.push(filename)
                     }
                 }
-            }    
-            product.save()
-            result['object'] = product
+            }
+            service.save()
+            result['object'] = service
         } catch (error) {
             result = sendError(error, lang)
         }
@@ -117,21 +115,21 @@ class ProductController{
         res.status(result.status).json(result);
     };
 
-    updateProduct = async function (req, res) {
+    updateService = async function (req, res) {
         let db = useDB(req.db)
-        let Product = db.model("Product");
+        let Service = db.model("Service");
 
         let result = {
             'status': 200,
-            'msg': 'Product updated'
+            'msg': 'Service updated'
         }
-        updateProduct: try {
+        updateService: try {
             let data = req.fields
             let query = { '_id': req.params.product }
             data['updatedAt'] = new Date()
-            let product = await Product.findOneAndUpdate(query, data)
+            let service = await Service.findOneAndUpdate(query, data)
             if (req.files.img) {
-                let filename = saveImage(req.files.img, req.db, product.img)
+                let filename = saveImage(req.files.img, req.db, service.img)
                 if (filename == 'Not image') {
                     result = {
                         status: 500,
@@ -140,14 +138,14 @@ class ProductController{
                             img: validate[lang]['image_not_valid'],
                         },
                     }
-                    break updateProduct
+                    break updateService
                 } else {
-                    product.img = filename   
+                    service.img = filename
                 }
             }
             for (let $i = 0; $i < 3; $i++) {
                 if (req.files['imgArray' + $i]) {
-                    product.imgArray = []
+                    service.imgArray = []
                     let filename = saveImage(req.files['imgArray' + $i], req.db)
                     if (filename == 'Not image') {
                         result = {
@@ -157,14 +155,14 @@ class ProductController{
                                 imgArray: validate[lang]['image_not_valid'],
                             },
                         }
-                        break updateProduct
+                        break updateService
                     } else {
-                        product.imgArray.push(filename)
+                        service.imgArray.push(filename)
                     }
                 }
             }
-            product.save()
-            result['object'] = product
+            service.save()
+            result['object'] = service
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
@@ -172,30 +170,30 @@ class ProductController{
         res.status(result.status).json(result);
     };
 
-    deleteProduct = async function (req, res) {
+    deleteService= async function (req, res) {
         let db = useDB(req.db)
-        let Product = db.model("Product");
+        let Service = db.model("Service");
         
         let result = {
             'status': 200,
-            'msg': 'Product deleted'
+            'msg': 'Service deleted'
         }
         try {
             let query = { '_id': req.params.product }
-            await Product.findByIdAndRemove(query)
+            await Service.findByIdAndRemove(query)
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
 
         res.status(result.status).json(result);
     };
-    deleteProducts = async function (req, res) {
+    deleteServices = async function (req, res) {
         let db = useDB(req.db)
-        let Product = db.model("Product");
+        let Service = db.model("Service");
 
         let result = {
             'status': 200,
-            'msg': 'Product deleted'
+            'msg': 'Services deleted'
         }
         if (req.fields.objects.length){
             try {
@@ -204,7 +202,7 @@ class ProductController{
                         $in: req.fields.objects
                     }
                 }
-                await Product.deleteMany(query)
+                await Service.deleteMany(query)
             } catch (error) {
                 result = sendError(error, req.headers["accept-language"])
             }
@@ -218,9 +216,9 @@ class ProductController{
 
         res.status(result.status).json(result);
     };
-    searchProduct = async function (req, res) {
+    searchService = async function (req, res) {
         let db = useDB(req.db)
-        let Product = db.model("Product");
+        let Service = db.model("Service");
         let search = req.query.search;
 
         let result = {
@@ -228,8 +226,8 @@ class ProductController{
             'msg': 'Sending product'
         }
         try {
-            let product = await Product.find( { "name": {$regex: search} } )
-            result['objects'] = product
+            let service = await Service.find( { "name": {$regex: search} } )
+            result['objects'] = service
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
@@ -238,4 +236,4 @@ class ProductController{
 }
 
 
-module.exports = new ProductController();
+module.exports = new ServiceController();
