@@ -28,6 +28,7 @@ const initClientDbConnection = () => {
     require("../app/models/user.js")
     require("../app/models/message.js")
     require("../app/models/news.js")
+    require("../app/models/device.js")
     return db;
 };
 

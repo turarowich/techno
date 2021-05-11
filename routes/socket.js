@@ -11,6 +11,7 @@ module.exports = io => {
         socket.on("details", listener)
 
         socket.on('init', (user) => {
+            console.log(user)
             socket.join(user)
         });
 

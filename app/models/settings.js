@@ -4,11 +4,11 @@ const Schema = mongoose.Schema;
 const settingsSchema = new Schema({
     name: {
         type: String,
-        required: [true, 'Company name required'],
+        required: [true, 'company_name_required'],
     },
     slogan: {
         type: String,
-        required: [true, 'Slogan required'],
+        required: [true, 'slogan_required'],
     },
     phone: {
         type: String,
@@ -36,6 +36,10 @@ const settingsSchema = new Schema({
         type: String,
         required: false,
         default: ''
+    },
+    currency: {
+        type: String,
+        required: [true, 'currency_required'],
     },
     address: {
         type: String,

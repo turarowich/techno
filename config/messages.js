@@ -23,6 +23,15 @@ const en_messages = {
     client_user_not_found_title: 'User not found',
     client_user_not_found_msg: 'Probably u didnt sign up',
     image_not_valid: 'Not valid image format',
+    company_name_required: 'Company name required',
+    logo_required: 'Logo required',
+    slogan_required: 'Slogan required',
+    currency_required: 'Currency required',
+    type_required: 'Type required',
+    birthday_required: 'Birthday required',
+    code_required: 'Code required',
+    comment_required: 'Comment required',
+    description_required: 'Description required',
 
     // EXCEL messages
     xl_produt_name:'Product name',
@@ -68,6 +77,15 @@ const ru_messages = {
     client_user_not_found_title: 'Пользователь не найден',
     client_user_not_found_msg: 'Возможно вы ещё не зарегистрировались',
     image_not_valid: 'Неправильный формат изображения',
+    company_name_required: 'Название компании обязательное поле',
+    logo_required: 'Лого обязательное поле',
+    slogan_required: 'Слоган обязательное поле',
+    currency_required: 'Валюта обязательное поле',
+    type_required: 'Тип обязателен',
+    birthday_required: 'День рождения обязательное поле',
+    code_required: 'Кодовое слово обязательное поле',
+    comment_required: 'Коментарий обязательное поле',
+    description_required: 'Описание обязательное поле',
 
     // EXCEL messages
     xl_produt_name: 'Название',

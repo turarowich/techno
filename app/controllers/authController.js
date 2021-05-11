@@ -46,7 +46,6 @@ class AuthController{
     };
 
     login = async function (req, res) {
-        console.log(req.fields)
         let db = global.userConnection.useDb('loygift');
         let User = db.model("User");
         let result = []
@@ -72,7 +71,6 @@ class AuthController{
     };
 
     loginClient = async function (req, res) {
-        console.log('loygift' + req.headers['access_place'])
         let db = global.userConnection.useDb('loygift'+req.headers['access_place']);
         let Client = db.model("Client");
         let lang = req.headers["accept-language"]
@@ -110,7 +108,6 @@ class AuthController{
         let Client = db.model("Client");
         let result = []
         try {
-            console.log(req.fields)
             let hashedPassword = bcrypt.hashSync(req.fields.password, 8);
             var client = new Client({
                 name: req.fields.name,
@@ -158,7 +155,6 @@ class AuthController{
                 break socialAuth
             }
             let user = await Client.findOne(social_res.check)
-            console.log(user)
             if(user){
                 result = {
                     status: 500,
@@ -254,7 +250,6 @@ class AuthController{
         jwt.verify(token, config.secret_key, function (err, decoded) {
             if (err)
                 return res.status(200).send({status:200, auth: false, message: 'Failed to authenticate token.' });
-            console.log(decoded)
             let result = {
                 'status': 200,
                 'msg': 'Sending token',
@@ -391,7 +386,6 @@ async function twitterRegister(token, screen_name) {
         }
         return { error: result }
     })
-    console.log(response.data)
     if (response.error) {
         return response
     }
@@ -432,7 +426,6 @@ async function googleRegister(token) {
         }
         return { error: result }
     })
-    console.log(response.data, token)
     if (response.error) {
         return response
     }

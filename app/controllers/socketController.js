@@ -24,7 +24,9 @@ class SocketController {
         let db = useDB(socket.handshake.headers.db)
         let News = db.model("News");
         let data = await News.findById(id)
+        
         if(data){
+            console.log(socket.handshake.headers.mainRoom)
             socket.to(socket.handshake.headers.mainRoom).emit("server news notification", data)
         }
     }

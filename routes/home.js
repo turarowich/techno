@@ -21,7 +21,9 @@ module.exports = function(app, passport){
 
 
     app.get('*', function (req, res) {
+        console.log(req.url.includes('socket.io'))
         if (!req.url.includes('socket.io')){
+            console.log(req.url.includes('socket.io'))
             res.sendFile(path.resolve('views/frontend/dist/index.html'));
         } 
     });

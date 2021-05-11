@@ -6,6 +6,7 @@ var reviewController = require('../app/controllers/reviewController');
 var orderController = require('../app/controllers/orderController');
 var userController = require('../app/controllers/userController');
 var newsController = require('../app/controllers/newsController');
+var pushController = require('../app/controllers/pushController');
 
 var multer = require('multer');
 var upload = multer({ dest: '../public/product/' });
@@ -19,7 +20,8 @@ module.exports = function (app, network_information) {
     app.put('/updateClientsCategory', clientController.updateClientsCategory);
     app.delete('/deleteClient/:client', clientController.deleteClient);
     app.delete('/deleteClients', clientController.deleteClients);
-    
+    app.post('/addClientDevice', clientController.addClientDevice);
+
     // Products url
     app.get('/getProduct/:product', productController.getProduct);
     app.get('/getProducts', productController.getProducts);
@@ -76,6 +78,9 @@ module.exports = function (app, network_information) {
     app.get('/getUsers', userController.getUsers);
     app.put('/updateUser/:user', userController.updateUser);
     app.delete('/deleteUser/:user', userController.deleteUser);
+
+    // User url
+    app.get('/sendNewsPN/:id', pushController.sendNewsPN);
 
     return app;
 }

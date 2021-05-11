@@ -171,12 +171,12 @@ const ax = axios.create({
         port: 8443
     },
 });
-
-const socket = io({
+const socket = io(process.env.VUE_APP_SERVER_URL, {
     extraHeaders: {
         token: localStorage.getItem('token')
     },
     withCredentials: true,
+    reconnection: false
 })
 
 ax.defaults.headers.common['Authorization'] = 'Bearer '+ token

@@ -31,6 +31,11 @@ export default {
   name: "News",
   components:{
     NewsItem
+  },
+  created(){
+    this.socket.on("server news notification", function(data) {
+        console.log(data)
+    })
   }
 }
 </script>

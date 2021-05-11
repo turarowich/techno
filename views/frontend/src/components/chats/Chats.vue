@@ -63,7 +63,9 @@ export default {
     filteredContact() {
         if(this.contactList){
             return this.contactList.filter(contact => {
-                return contact.firstName.toLowerCase().includes(this.search.toLowerCase())
+                if(contact.name){
+                    return contact.name.toLowerCase().includes(this.search.toLowerCase())
+                }
             })
         }
         return []
@@ -74,7 +76,6 @@ export default {
         this.getClients()
     },
     getClients(){
-        console.log('got here')
         this.axios.get(this.url('getClients')).
         then(result =>{
             this.contactList = result.data.objects

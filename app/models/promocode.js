@@ -4,11 +4,11 @@ const Schema = mongoose.Schema;
 const promocodeSchema = new Schema({
     name: {
         type: String,
-        required: [true, 'Name required'],
+        required: [true, 'name_required'],
     },
     code: {
         type: String,
-        required: [true, 'Code required'],
+        required: [true, 'code_required'],
     },
     percent: {
         type: Number,
