@@ -73,9 +73,7 @@ class ProductController{
                 recommend: data.recommend,
             });
             await product.validate()
-        
             if (req.files.img){
-                
                 let filename = saveImage(req.files.img, req.db)
                 if (filename == 'Not image') {
                     result = {

@@ -44,6 +44,7 @@ app.config.globalProperties.$ = $
 app.config.globalProperties.axios = ax
 app.config.globalProperties.$api = process.env.VUE_APP_API_URL;
 app.config.globalProperties.$server = process.env.VUE_APP_SERVER_URL;
+app.config.globalProperties.format_price = function (sum){parseFloat(sum).toFixed(2)}
 
 app.config.globalProperties.scrollToBottom = function(obj){
     $("#"+obj).scrollTop(1000000)

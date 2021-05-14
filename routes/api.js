@@ -45,13 +45,14 @@ module.exports = function (app, network_information) {
     app.delete('/deleteCategory/:category', categoryController.deleteCategory);
 
     // Promocode url
-    app.get('/getPromocode/:promocode', promocodeController.getPromocode);
+    app.get('/getPromocode', promocodeController.getPromocode);
     app.get('/getPromocodes', promocodeController.getPromocodes);
     app.post('/addPromocode', promocodeController.addPromocode);
-    app.put('/updatePromocode/:promocode', promocodeController.updatePromocode);
+    app.post('/updatePromocode', promocodeController.updatePromocode);
     app.delete('/deletePromocode/:promocode', promocodeController.deletePromocode);
     app.get('/searchProductService', promocodeController.searchProductService);
     app.get('/searchPromocode', promocodeController.searchPromocode);
+    app.get('/searchPromocodeByCode', promocodeController.searchPromocodeByCode);
 
     // Review url
     app.get('/getReview/:review', reviewController.getReview);

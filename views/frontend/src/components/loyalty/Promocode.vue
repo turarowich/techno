@@ -3,7 +3,7 @@
   <div class="searchAndButtons">
     <div class="d-flex justify-content-between app-buttons">
       <div class="d-flex align-items-center">
-        <button class="app-buttons-item adding-btns" @click="$router.push('/add-promo-page')"><span>+ Add promocode</span></button>
+        <button class="app-buttons-item adding-btns" @click="getAddPromocode"><span>+ Add promocode</span></button>
 
         <button class="app-buttons-item"><img src="../../assets/icons/trash_empty.svg"><span>Remove</span></button>
       </div>
@@ -52,8 +52,11 @@ export default {
     HistoryPromocode
   },
   methods:{
+    getAddPromocode(){
+      this.$router.push('/add-promo-page');
+      this.$store.dispatch("Promocode/setEditState",false);
+    },
     searchPromocode(){
-      console.log(this.searchText)
       let that = this;
       if(this.searchText.length ===0){
         this.$store.dispatch("Promocode/setPromocodeAPI",this.axios);
@@ -66,8 +69,6 @@ export default {
       }).then(function(response){
         that.$store.dispatch("Promocode/setPromocodeFromSearch",response.data.objects);
       });
-
-      console.log(that.searchResult);
     },
   },
 }

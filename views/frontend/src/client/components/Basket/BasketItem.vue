@@ -1,61 +1,90 @@
 <template>
   <div>
-    <div class="text-center empty-basket" v-if="shoppingList.length === 0">
+    <div class="text-center empty-basket" v-if="shoppingCart.length === 0">
       <img src="../../../assets/clients/box.png">
       <h4>Your shopping cart is empty please choose your product from out catalog</h4>
     </div>
-    <div v-else class="client-table-item d-flex" v-for="cart in shoppingList" :key="cart.id">
+    <div v-else class="client-table-item d-flex" v-for="item in shoppingCart" :key="item.product._id">
       <div style="width:40%" class="d-flex align-items-center">
         <div class="client-table-img">
           <img src="../../../assets/clients/shirt.svg">
         </div>
         <div>
-          <h3 class="table-title">{{cart.name}}</h3>
-          <p class="table-parag">{{cart.code}}</p>
+          <h3 class="table-title">{{item.product.name}}</h3>
+          <p class="table-parag">{{item.product.article}}</p>
         </div>
       </div>
       <div style="width:20%">
-        <button class="decrease mb-0" @click="decrease(cart._id)">-</button>
-        <span class="count">{{cart.quantity}}</span>
-        <button class="increase mb-0" @click="increase(cart._id)">+</button>
+        <button class="decrease mb-0" @click="decrease(item.product._id)">-</button>
+        <span class="count">{{item.quantity}}</span>
+        <button class="increase mb-0" @click="increase(item.product._id)">+</button>
       </div>
-      <div style="width:14%">50%</div>
-      <div style="width:14%">{{cart.price}} $</div>
-      <div style="width:12%" class="d-flex justify-content-end pr-3"><img @click="deleteFromCart(cart.id)" src="../../../assets/clients/x.svg"></div>
+      <div style="width:14%">{{item.discount_percent}}%</div>
+      <div style="width:14%">{{item.discount_sum}}</div>
+      <div style="width:14%">{{item.current_price}} $</div>
+      <div style="width:12%" class="d-flex justify-content-end pr-3"><img @click="removeFromBasket(item.product._id)" src="../../../assets/clients/x.svg"></div>
     </div>
   </div>
 </template>
 
 <script>
+import Swal from "sweetalert2";
 export default {
-name: "BasketItem",
-  props:['shoppingList',],
+  name: "BasketItem",
+  computed:{
+    shoppingCart(){
+      return this.$store.state.Orders.shoppingCart;
+    },
+    basket_promocode(){
+      return this.$store.getters['Orders/getBasketPromocode'];
+    },
+  },
   methods: {
-      deleteFromCart(id) {
-          this.$store.dispatch('deleteFromCart', id);
-
-      },
-    increase(id){
-      this.shoppingList.map((item)=>{
-        if(item._id === id){
-            item.quantity+=1
-        }
+    removeFromBasket(id) {
+      Swal.fire({
+          showConfirmButton: true,
+          html: 'Are you sure u want to remove this <br>item',
+          showCloseButton: true,
+          showCancelButton: true,
+          confirmButtonText: 'Remove',
+          buttonsStyling:false,
+          customClass:{
+              popup: 'sweet-delete',
+              confirmButton: 'confirm-btn',
+              cancelButton:'cancel-btn',
+              actions:'btn-group',
+              content:'content-sweet',
+              closeButton:'close-btn'
+          },
+      }).then((result) => {
+          if (result.isConfirmed) {
+              this.$store.dispatch('Orders/removeFromBasket', id);
+              this.$emit('checkPromocode_child',this.basket_promocode);
+              Swal.fire({
+                  timer:1500,
+                  title:'Removed',
+                  text:"You have removed this product from your cart",
+                  showConfirmButton:false,
+                  position: 'top-right',
+                  customClass:{
+                      popup:'success-popup information-popup',
+                      content:'success-content',
+                      title:'success-title',
+                      header:'success-header',
+                      image:'success-img'
+                  },
+              })
+          }
       })
-
+    },
+    increase(id){
+        this.$store.dispatch('Orders/increaseQuantity', id);
+        this.$emit('checkPromocode_child',this.basket_promocode);
     },
     decrease(id){
-      this.shoppingList.map((item)=>{
-        if(item._id === id){
-          while(item.quantity !== 1){
-             return item.quantity-=1
-          }
-        }
-      })
-
-
+        this.$store.dispatch('Orders/decreaseQuantity', id);
+        this.$emit('checkPromocode_child',this.basket_promocode);
     }
-
-
   }
 }
 </script>

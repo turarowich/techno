@@ -1,6 +1,12 @@
 <template>
 <div class="add-promo">
-  <div class="notification-header"><router-link to="/loyalty/promocode"><img  class="mr-2" src="../../assets/icons/xBlack.svg"></router-link><h3>Add promocode</h3></div>
+  <div class="notification-header">
+    <router-link to="/loyalty/promocode">
+      <img  class="mr-2" src="../../assets/icons/xBlack.svg">
+    </router-link>
+    <h3 v-if="editState">Edit promocode</h3>
+    <h3 v-else>Add promocode</h3>
+  </div>
   <div class="container">
     <div class="row">
       <div class="col-11 m-auto">
@@ -15,14 +21,13 @@
               <div class="d-flex disc-box">
                 <div style="width:50%" class="mr-3">
                   <label class="promo-label">Discount</label><br>
-                  <input v-model="discount" type="number" min="0" placeholder="0%" class="cashback-input promo-input">
+                  <input v-model="discount" type="number" min="0" max="100" placeholder="0%" class="cashback-input promo-input">
                 </div>
                 <div style="width:50%">
                   <label  class="promo-label">Fixed sum</label><br>
                   <input v-model="fixedSum" type="number" min="0" class="cashback-input promo-input">
                 </div>
               </div>
-
               <div class="period">
                 <label class="period-title">Validity period</label>
                 <div class="d-flex">
@@ -42,7 +47,6 @@
                   </div>
                 </div>
               </div>
-
               <div>
                 <label class="valid-for">Valid for</label>
                 <div class="personal-btns">
@@ -51,7 +55,6 @@
                   <div type="all" class="btns-item mr-0"><span class="btn-round"></span>on everything</div>
                 </div>
               </div>
-
               <div class="services">
                 <label class="promo-label">Select service</label><br>
                 <div class="d-flex">
@@ -101,7 +104,8 @@
               </div>
 
               <div class="modal-btn d-flex">
-                <button type="button" @click="savePromocode" class="save">Save</button>
+                <button type="button" v-if="editState" @click="savePromocode" class="save">Update</button>
+                <button type="button" v-else @click="savePromocode" class="save">Save</button>
                 <router-link to="/loyalty/promocode"><button type="button" class="cancel">Cancel</button></router-link>
               </div>
             </form>
@@ -129,15 +133,18 @@ export default {
   name: "AddPromoPage",
   data(){
     return{
+      promocode_id:null,
       name:'',
       generatedCode:'',
       discount:0,
       fixedSum:0,
       minSum:0,
+      fromDateLightpick:{},
       fromDate:{
         obj:'',
         formatted:'',
       },
+      toDateLightpick:{},
       toDate:{
         obj:'',
         formatted:'',
@@ -154,25 +161,25 @@ export default {
       selectedItemsList:[],
     }
   },
-
+  computed:{
+    editState(){
+      console.log(this.$store.getters['Promocode/getEditState'],"ppppp-----------");
+      return this.$store.getters['Promocode/getEditState'];
+    }
+  },
   methods:{
     selectDates(){
       let that=this;
-      new this.$lightpick({
-        lang:'en',
-        format:'YYYY-MM-D',
+      this.fromDateLightpick = new this.$lightpick({
         field: document.getElementById('demo-1'),
         onSelect: function(date){
-          // document.getElementById('demo-1').innerHTML = date.format('Do MMMM YYYY');
-          // that.fromDate = date.format('DD.MM.YYYY');
           that.fromDate.obj = date;
           that.fromDate.formatted = date.format('DD.MM.YYYY');
         }
       });
-      new this.$lightpick({
+      this.toDateLightpick = new this.$lightpick({
         field: document.getElementById('demo-2'),
         onSelect: function(date){
-          // document.getElementById('demo-2').innerHTML = date.format('Do MMMM YYYY');
           that.toDate.obj = date;
           that.toDate.formatted = date.format('DD.MM.YYYY');
         }
@@ -217,18 +224,6 @@ export default {
         result_obj.products = response.data.products;
         result_obj.services = response.data.services;
         that.searchResult = result_obj;
-        // if(that.selectedType !=="all"){
-        //   that.searchResult = response.data.objects;
-        // }else{
-        //   console.log(response.data);
-        //   result_obj.products = response.data.products;
-        //   result_obj.services = response.data.services;
-        //
-        // }
-        console.log(that.searchResult)
-        // that.searchResult.forEach(function(item){
-        //   console.log(item,"iiii");
-        // })
       });
 
     },
@@ -301,33 +296,40 @@ export default {
         if(this.discount<=0){messages.push('Fill in Discount')}
         if(this.fixedSum<=0){messages.push('Fill in FixedSum')}
       }
+      if(parseInt(this.discount)<0){messages.push('Only positive discount')}
+      if(parseInt(this.discount)>100){messages.push('Discount cant be more than 100%')}
+
       if(this.minSum<=0){messages.push('Fill in MinSum')}
       if(this.fromDate.formatted.length<=0){messages.push('Fill in FromDate')}
       if(this.toDate.formatted.length<=0){messages.push('Fill in ToDate')}
       if(this.selectedType.length<=0){messages.push('Fill in SelectedType')}
-      if(this.selectedItemsList.length<=0){messages.push('Select Services or Products')}
+      // if(this.selectedItemsList.length<=0){messages.push('Select Services or Products')}
       if(this.numberOfUses<=0){messages.push('NumberOfUses')}
 
-      if(messages.length>1){this.displayMessages(messages,"Errors");return}
+      if(messages.length>=1){this.displayMessages(messages,"Errors");return}
       let that=this;
-      this.axios.post('https://localhost:8443/api/addPromocode', {
+      let url = 'https://localhost:8443/api/addPromocode';
+      if(this.editState){
+        url = 'https://localhost:8443/api/updatePromocode';
+      }
+      this.axios.post(url, {
         'name': this.name,
         'code': this.generatedCode,
-        'discount': this.discount,
-        'fixedSum': this.fixedSum,
-        'minSum': this.minSum,
-        'fromDate': this.fromDate.obj,
-        'toDate': this.toDate.obj,
-        'selectedType': this.selectedType,
-        'selectedItemsList': this.selectedItemsList,
-        'numberOfUses': this.numberOfUses,
+        'percent': this.discount,
+        'fixed_sum': this.fixedSum,
+        'min_sum': this.minSum,
+        'startDate': this.fromDate.obj,
+        'endDate': this.toDate.obj,
+        'selected_type': this.selectedType,
+        'selected_items_list': this.selectedItemsList,
+        'number_of_uses': this.numberOfUses,
+        'promocode_id':this.promocode_id,
       }).then(function (response) {
         console.log(response);
         that.displayMessages(['Added'],"Success");
         that.$router.push('/loyalty/promocode')
       }).catch(function(error){
         if (error.response) {
-          console.log(error.response.data);
           // console.log(error.response.status);
           // console.log(error.response.headers);
           that.displayMessages(Object.values(error.response.data.errors),"Errors");
@@ -385,6 +387,23 @@ export default {
   mounted(){
     this.addActive()
     this.selectDates()
+    if(this.editState ===true){
+      let promocode = this.$store.getters['Promocode/getPromocode'];
+      console.log(promocode,"9999999999999999999999990");
+      this.promocode_id=promocode._id;
+      this.name=promocode.name;
+      this.generatedCode=promocode.code;
+      this.discount=promocode.percent;
+      this.fixedSum=promocode.fixed_sum;
+      this.minSum=promocode.min_sum;
+      this.selectedType=promocode.selected_type;
+      this.numberOfUses=promocode.numberOfUses;
+      this.selectedItemsList=promocode.selected_items_list;
+      this.fromDateLightpick.setDate(promocode.startDate);
+      this.toDateLightpick.setDate(promocode.endDate);
+      $('.btns-item.active').removeClass("active");
+      $('.btns-item[type=' + this.selectedType + ']').addClass("active");
+    }
   }
 
 }

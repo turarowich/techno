@@ -5,13 +5,12 @@ class PromocodeController{
     getPromocode = async function (req, res) {
         let db = useDB(req.db)
         let Promocode = db.model("Promocode");
-
         let result = {
             'status': 200,
             'msg': 'Sending promocode'
         }
         try {
-            let promocode = await Promocode.findById(req.params.promocode)
+            let promocode = await Promocode.findById(req.query.promocode)
             result['object'] = promocode
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
@@ -80,7 +79,7 @@ class PromocodeController{
             'msg': 'Promocode updated'
         }
         try {
-            let query = { '_id': req.params.promocode }
+            let query = { '_id': req.fields.promocode_id }
             req.fields['updatedAt'] = new Date()
             let promocode = await Promocode.findOneAndUpdate(query, req.fields)
             result['object'] = promocode
@@ -141,13 +140,27 @@ class PromocodeController{
         let db = useDB(req.db)
         let Promocode = db.model("Promocode");
         let search = req.query.search;
-
         let result = {
             'status': 200,
             'msg': 'Sending promocodes'
         }
         try {
             result['objects'] = await Promocode.find( { "name": {$regex: search} } );
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.json(result);
+    };
+    searchPromocodeByCode= async function (req, res) {
+        let db = useDB(req.db)
+        let Promocode = db.model("Promocode");
+        let search = req.query.search;
+        let result = {
+            'status': 200,
+            'msg': 'Sending promocodes'
+        }
+        try {
+            result['object'] = await Promocode.findOne( { "code":  search} );
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }

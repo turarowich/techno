@@ -1,32 +1,27 @@
 export const PromocodeModule = {
     namespaced: true,
-
     state: {
-        promocodes: [],
+        promocodes: '',
+        promocode: {},
+        editStatus:false,
     },
 
     // Mutations are functions that effect the STATE.
     mutations: {
-        ADD_Promocode(state, promocode) {
-            state.promocodes.push(promocode);
-        },
         SET_PromocodesAPI(state, promocodes) {
             state.promocodes = promocodes;
+        },
+        SET_PromocodesObject(state, promocode) {
+            state.promocode = promocode;
+        },
+        SET_EditState(state, status) {
+            console.log('ssssss',status)
+            state.editStatus = status;
         },
     },
 
     // Actions are functions that you call throughout your application that call mutations.
     actions: {
-        addPromocode({ commit,dispatch }, obj) {
-            obj.axios.post('https://localhost:8443/api/addPromocode',{
-                "promocode":obj.promocode,
-                })
-                .then(response => {
-                    // commit('SET_PromocodesAPI', response.data.object)
-                    console.log(response.data.object,commit);
-                    dispatch("setPromocodeAPI",obj.axios)
-                })
-        },
         setPromocodeAPI({ commit },axios) {
             axios.get('https://localhost:8443/api/getPromocodes')
                 .then(response => {
@@ -34,13 +29,26 @@ export const PromocodeModule = {
                 })
         },
         setPromocodeFromSearch({ commit },array){
+            console.log('setPromocodeFromSearch');
             commit('SET_PromocodesAPI', array)
+        },
+        setPromocodeObject({ commit },obj){
+            console.log('SET_PromocodesObject');
+            commit('SET_PromocodesObject', obj);
+            commit('SET_EditState', true);
+        },
+        setEditState({ commit },status){
+            console.log('SET_EditState',status);
+            commit('SET_EditState', status)
         }
     },
 
     getters:{
-      allPromocodes(state){
-          return state.promocodes
-      }
+        getPromocode(state){
+            return state.promocode;
+        },
+        getEditState(state){
+            return state.editStatus;
+        },
     },
 }

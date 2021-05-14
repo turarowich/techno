@@ -8,7 +8,7 @@
       <li class="client-list"><router-link class="client-link" to="/home/signin"><img src="../assets/clients/Profile.svg"/>Login</router-link></li>
       <li class="client-list hoverBasket dropdown">
 
-          <router-link class="client-link  d-inline-flex align-items-center" to="/home/basket" data-toggle="dropdown" data-hover="dropdown">
+          <router-link class="client-link  d-inline-flex align-items-center" to="/home/basket" data-hover="dropdown">
             <img src="../assets/clients/Buy.svg"/>Basket
             <div class="bg-not d-flex align-items-center">
               <span class="basket-not" v-if="countOrders > 0">{{countOrders}}</span>
@@ -22,15 +22,16 @@
             </div>
             <div class="line"></div>
             <div class="scroll-basket">
-              <div v-for="shop in shoppingCart" @click="$router.push('/home/catalog-detail/:'+shop._id)" :key="shop._id" class="d-flex align-items-start">
+              <div v-for="item in shoppingCart" @click="$router.push('/home/catalog-detail/:'+item.product._id)" :key="item.product._id" class="d-flex align-items-start">
                 <div style="width:20%" class="basket-img">
                   <img src="../assets/clients/shirt.svg">
                 </div>
                 <div style="width:60%">
-                  <h3 class="basket-title">{{shop.name}}</h3>
-                  <span class="basket-code">1617W11F</span>
+                  <h3 class="basket-title">{{item.product.name}}</h3>
+                  <span class="basket-code">{{item.product.article}}</span>
                 </div>
-                <div class="basket-price " style="width:20%">{{shop.price}} $</div>
+                <div class="basket-price " style="width:20%">{{item.quantity}}x</div>
+                <div class="basket-price " style="width:20%">{{item.product.price}} $</div>
               </div>
             </div>
             <button class="save" @click="$router.push('/home/basket')" >Go to purchase</button>
@@ -45,12 +46,19 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
+// import {mapGetters} from 'vuex';
 
 export default {
 name: "Navbar",
   computed:{
-  ...mapGetters(["Orders/countOrders" ,"Orders/shoppingCart"])
+  // ...mapGetters(["Orders/countOrders" ,"Orders/shoppingCart"]),
+    countOrders(){
+      return this.$store.getters['Orders/countOrders'];
+    },
+    shoppingCart(){
+      console.log(this.$store.state.Orders.shoppingCart,"ee");
+      return this.$store.state.Orders.shoppingCart;
+    }
   },
 
 
