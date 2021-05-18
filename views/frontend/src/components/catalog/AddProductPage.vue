@@ -8,27 +8,18 @@
             <div class="d-flex align-items-center">
               <div style="width:50%" class="mr-3">
                 <label class="product-label">Name</label><br>
-                <input  style="width:100%" class="cashback-input">
+                <input  v-model="newProduct.name" style="width:100%" class="cashback-input">
               </div>
 
               <div class="quantity-category mr-3">
                 <label class="product-label">Quantity</label><br>
-                <input class="cashback-input">
+                <input v-model="newProduct.quantity" class="cashback-input">
               </div>
 
               <div style="width:25%;">
                 <label class="product-label">Select category</label><br>
-                <select  class="form-control mb-0 select-phone" aria-label="Default select example">
-                  <option>+996</option>
-                  <option>+792</option>
-                  <option>+996</option>
-                  <option>+792</option>
-                  <option>+996</option>
-                  <option>+792</option>
-                  <option>+996</option>
-                  <option>+792</option>
-                  <option>+996</option>
-                  <option>+792</option>
+                <select v-model="newProduct.category"  class="form-control mb-0 select-phone" aria-label="Default select example">
+                  <option :value="cat._id" v-for="cat in listCategory" :key="cat._id">{{cat.name}}</option>
                 </select>
               </div>
             </div>
@@ -36,7 +27,8 @@
             <a class="add-russian" href="/">+ Add in russian</a>
 
 
-            <div id="editor"></div>
+            <div id="editor">
+            </div>
 
 
             <div class="d-flex mb-3">
@@ -47,7 +39,7 @@
             <div class="d-flex prices-number ">
               <div style=" width:33.33%; margin-right:15px;">
                 <label>Price</label>
-                <input class="form-input cashback-input" placeholder="Price"  name="price">
+                <input v-model="newProduct.price" class="form-input cashback-input" placeholder="Price"  name="price">
               </div>
 
               <div class="show-price" style="width:33.33%; margin-right:15px;">
@@ -66,7 +58,7 @@
               <div class="d-flex align-items-center mr-2" style="width:50%">
                 <label >From</label>
                 <div class="calendar d-flex align-items-center">
-                  <input class="calendar-input" id="from-purchase">
+                  <input id="to-period" class="calendar-input" >
                   <img src="../../assets/icons/Calendar.svg">
                 </div>
               </div>
@@ -74,7 +66,7 @@
               <div class="d-flex align-items-center" style="width:50%">
                 <label>to</label>
                 <div class="calendar d-flex align-items-center">
-                  <input class="calendar-input" id="to-purchase">
+                  <input id="from-period" class="calendar-input" >
                   <img src="../../assets/icons/Calendar.svg">
                 </div>
               </div>
@@ -95,7 +87,7 @@
             </div>
 
             <div class="modal-btn d-flex">
-              <button  class="save">Save</button>
+              <button  class="save" @click.prevent="onSubmit">Save</button>
               <button class="cancel">Cancel</button>
             </div>
 
@@ -115,6 +107,19 @@ import 'quill/dist/quill.snow.css'
 import $ from 'jquery';
 export default {
   name: "AddProductPage",
+  data(){
+    return{
+      newProduct:{
+        name: '',
+        price: '',
+        quantity: '',
+        category:'',
+        img: '',
+        description:''
+
+      },
+    }
+  },
   methods:{
     showPrice(){
       if($('#show-price').prop('checked')){
@@ -124,9 +129,50 @@ export default {
         $('.show-price').removeClass('active')
       }
 
+    },
+    async getCategories(){
+      await this.axios.get(this.url('getCategories'))
+          .then((res)=>{
+            this.listCategory = res.data.objects;
+            this.listCategory.unshift({_id:'', name: 'All'})
+
+          })
+    },
+    onSubmit(){
+      let new_product = this.newProduct;
+      const form  = new FormData;
+      $.each($("#imgArray")[0].files, function(i, file) {
+        form.append('imgArray'+i, file);
+      });
+      form.append('name', new_product.name)
+      form.append('price', new_product.price)
+      form.append('quantity', new_product.quantity)
+      form.append('category', new_product.category)
+      form.append('description', new_product.description)
+      console.log(this.description)
+      this.axios.post('http://localhost:8080/api/addProduct/', form)
+          .then((response) => {
+            console.log("success", response)
+          }).catch((error) => {
+        console.log("fail", error)
+      })
+      this.$router.push('/catalog')
+      this.newProduct = {
+        name: '',
+        price:'',
+        quantity:'',
+        category: '',
+        img:'',
+        description: ''
+      }
+    },
+    update() {
+      this.$emit('input', this.description.getText() ? this.description.root.innerHTML : '');
     }
   },
   mounted() {
+    this.getCategories()
+
     var toolbarOptions = [
       ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
       ['blockquote', 'code-block'],
@@ -146,12 +192,28 @@ export default {
 
       ['clean']                                         // remove formatting button
     ];
-
-    new Quill('#editor', {
+    let quill = new Quill('#editor', {
       modules: { toolbar: toolbarOptions },
-      theme: 'snow'
+      theme: 'snow',
+
     });
-  }
+    this.description = quill.getText()
+
+    new this.$lightpick({
+      field: document.getElementById('to-period'),
+      format:'YYYY-MM-DD',
+      onSelect:(date)=>{
+        this.to_purchase_date = date.format('YYYY-MM-DD')
+      }
+    });
+    new this.$lightpick({
+      field: document.getElementById('from-period'),
+      format:'YYYY-MM-DD',
+        onSelect:(date)=>{
+        this.to_purchase_date = date.format('YYYY-MM-DD')
+      }
+    });
+  },
 }
 </script>
 
@@ -170,9 +232,7 @@ export default {
 .valid-label{
   margin-bottom: 15px;
 }
-.show-price{
-  display:none;
-}
+
 .show-price.active{
   display: block;
 }

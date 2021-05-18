@@ -1,27 +1,28 @@
 <template>
-
   <div>
     <div v-if="orderList.length === 0" class="text-center empty-box" >
       <img src="../../assets/icons/emptyOrder.svg">
       <p class="empty-page-text">You have no orders yet</p>
     </div>
-    <div v-else v-for="order in orderList" class="table-item d-flex align-items-center" :key="order.id">
-      <div  style="width: 3%;"><label class="custom-checkbox"><input  type="checkbox" :value="order.id" v-model="order.checked" ><span class="checkmark"></span></label></div>
+    <div v-else v-for="order in orderList" class="table-item d-flex justify-content-between align-items-center" :key="order.id">
 
-      <div  style="width: 9%;">34543</div>
-      <div  class="d-flex align-items-center"  style="width: 15%;">
+      <div class="table-child d-flex align-items-center"  style="width: 18%;">
+        <div><label class="custom-checkbox"><input  type="checkbox"  @click="checkMainSelect"  :ref="'select'+order.id" :value="order.id" ><span class="checkmark"></span></label></div>
+
+        34543</div>
+      <div  class="table-child d-flex align-items-center"  style="width: 30%;">
         <div class="table-img">
           <img src="../../assets/img/sneak.webp">
         </div>
         {{order.name}}
       </div>
 
-      <div  style="width: 10%;">{{order.client}}</div>
-      <div  style="width: 12%;">{{order.phone}}</div>
-      <div  style="width: 10%;">{{order.total}}</div>
-      <div  style="width: 10%;">{{order.date.split('').slice(0,10).join('')}}</div>
-      <div  style="width: 18%;"><div class="comment-width">{{order.notes}}</div></div>
-      <div  style="width: 10%;"
+      <div class="table-child" v-show="data_check.client_checked"  style="width: 25%;">{{order.client}}</div>
+      <div class="table-child" v-show="data_check.phone_checked" style="width: 20%;">{{order.phone}}</div>
+      <div class="table-child" style="width: 10%;">{{order.total}} $</div>
+      <div class="table-child" v-show="data_check.date_checked"  style="width: 15%;">{{order.date.split('').slice(0,10).join('')}}</div>
+      <div class="table-child pr-3" v-show="data_check.notes_checked" style="width: 10%;" ><div>{{order.notes}}</div></div>
+      <div class="table-child" style="width: 15%;"
             :class="[{red: order.status === 'Canceled'},
           {green: order.status === 'Done'},
           {orange: order.status === 'In Progress'},
@@ -31,7 +32,7 @@
         <i class=" circle-status fas fa-circle"></i>
         {{order.status}}
       </div>
-      <div  style="width:3%">
+      <div class="table-child" style="width:3%">
         <div class="dropleft dropMenu">
           <div class="dropdown-toggle" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <img  src="../../assets/icons/three-dots.svg"
@@ -40,7 +41,7 @@
           <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
             <ul class="list-group " >
               <li class="list-group-item" v-on:click="$emit('done',order.id)">Done</li>
-              <li class="list-group-item" @click="$router.push('/order-detail')">Edit</li>
+              <li class="list-group-item" data-toggle="modal" data-target="#edit-order">Edit</li>
               <li class="list-group-item" @click="$emit('canceled' ,order.id)">Cancel</li>
               <li class="list-group-item" v-on:click="$emit('deleteOrder',order.id)">Delete</li>
               <li class="list-group-item" v-on:click="$emit('inProgress',order.id)">In progress</li>
@@ -63,17 +64,36 @@ export default {
         return []
       },
     },
+    data_check: {
+      type: Object
+    },
+
+
   },
-  data(){
-    return{
-      count_order: 0,
+  data() {
+    return {
+      newCheck: false
     }
   },
+  methods: {
+    checkAll(item) {
+      return  this.$refs[`select${item.id}`].checked === true
+    },
+    checkMainSelect() {
+      if(this.orderList.every(this.checkAll)){
+        this.newCheck = true;
+        this.$emit('checkAll', this.newCheck)
+      }
+      else{
+        this.newCheck = false;
+        this.$emit('unCheckAll', this.newCheck)
+      }
 
-  methods:{
-
+    }
 
   }
+
+
 
 }
 
@@ -107,7 +127,7 @@ export default {
   color:#000;
 }
 .comment-width{
-  width: 200px;
+
   white-space: nowrap;
   overflow: hidden;
   text-overflow: clip;

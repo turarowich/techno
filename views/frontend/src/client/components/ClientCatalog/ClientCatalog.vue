@@ -21,7 +21,7 @@
 
     <h3 class="price">Categories:</h3>
     <ul class="list-group">
-      <li v-for="category in listCategory" :key="category.id" :class="{active: category._id === filtered}" class="catalog-list" @click="filtered=category._id">{{category.name}}</li>
+      <li v-for="category in listCategory" :key="category._id" :class="{active: category._id === filtered}" class="catalog-list" @click="filtered=category._id">{{category.name}}</li>
     </ul>
     </div>
   </div>

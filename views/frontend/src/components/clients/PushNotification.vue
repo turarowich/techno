@@ -1,6 +1,6 @@
 <template>
 <div class="push-notification">
-    <div class="notification-header"><img class="mr-2" src="../../assets/icons/xBlack.svg"><h3>Push notification</h3></div>
+    <div class="notification-header"><img @click="$router.go(-1)" class="mr-2" src="../../assets/icons/xBlack.svg"><h3>Push notification</h3></div>
 
     <div class="row">
       <div class="col-lg-8">
@@ -166,6 +166,9 @@ export default {
   height: 100%;
   width: 100%;
 
+}
+.form-control{
+  background: none;
 }
 .sale-title{
   font-size: 14px;

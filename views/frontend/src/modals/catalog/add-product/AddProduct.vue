@@ -1,96 +1,102 @@
 <template>
   <div class="modal fade right "  id="add-products" tabindex="-1" role="dialog" aria-labelledby="add-products" aria-hidden="true">
-      <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: 580px;" role="document" >
+      <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: 82%;" role="document" >
         <div class="modal-content myModal-content h-100">
-          <div class="modal-header align-items-center">
-            <h3 class="modal-title">Add Product</h3>
+          <div class="modal-header justify-content-start align-items-center">
             <button type="button" data-dismiss="modal" aria-label="Close" class="close">
               <span aria-hidden="true">
-                <img src="../../../assets/icons/x.svg" alt="">
+                <img src="../../../assets/icons/xBlack.svg" alt="">
               </span>
             </button>
+            <h3 class="modal-title">Add Product</h3>
           </div>
           <div class=" myModal-body">
-              <form  class="modal-form">
-                <label>Name</label>
-                <input v-model="newProduct.name" class="form-input cashback-input mb-3" name="name" placeholder="Enter a name">
+                <div class="row">
+                  <div class="col-11 m-auto">
+                    <form  class="modal-form">
+                      <div class="d-flex align-items-center">
+                        <div style="width:50%" class="mr-3">
+                          <label class="product-label">Name</label><br>
+                          <input  v-model="newProduct.name" style="width:100%" class="cashback-input">
+                        </div>
 
-                <div class="d-flex align-items-center">
-                  <div style="width: 50%; margin-right:8px;">
-                    <label>Quantity</label>
-                    <input v-model="newProduct.quantity" class="form-input cashback-input mb-3"  name="quantity" placeholder="Enter a quantity">
+                        <div class="quantity-category mr-3">
+                          <label class="product-label">Quantity</label><br>
+                          <input v-model="newProduct.quantity" class="cashback-input">
+                        </div>
 
-                  </div>
-                  <div  style="width: 50%;">
-                    <label>Without category</label>
-                   <select v-model="newProduct.category" class="form-control mb-3" name="category">
-                     <option v-for="cat in listCategory.slice(1)" v-bind:value="cat._id"  v-bind:key="cat._id">{{cat.name}}</option>
-                   </select>
+                        <div style="width:25%;">
+                          <label class="product-label">Select category</label><br>
+                          <select v-model="newProduct.category"  class="form-control mb-0 select-phone" aria-label="Default select example">
+                            <option :value="cat._id" v-for="cat in listCategory" :key="cat._id">{{cat.name}}</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <a class="add-russian" href="/">+ Add in russian</a>
+                      <label>Description</label>
+                      <textarea class="general-area mb-3" style="height:160px" v-model="newProduct.description"  name="description"></textarea>
+
+                      <div class="d-flex mb-3">
+                        <label class="custom-checkbox"><input @click="showPrice" id="show-price" type="checkbox" ><span class="checkmark"></span></label>
+                        <span>Discount</span>
+                      </div>
+
+                      <div class="d-flex ">
+                        <div style=" width:33.33%; margin-right:8px;">
+                          <label>Price</label>
+                          <input v-model="newProduct.price" class="form-input cashback-input mb-4" placeholder="Price"  name="price">
+                        </div>
+                        <div class="show-price" style="width:33.33%; margin-right:8px;">
+                          <label>Promotional prices</label>
+                          <input v-model="newProduct.promoPrice" class="form-input cashback-input mb-4" placeholder="Price">
+                        </div>
+                        <div style="width:33.33%;">
+                          <label>Vendor code</label>
+                          <input v-model="newProduct.vendorCode" class="form-input cashback-input mb-4" placeholder="Vendor code"  name="article">
+                        </div>
+                      </div>
+
+                      <label class="valid-label">Period of action</label>
+                      <div class=" product-calendar d-flex align-items-center ">
+                        <div class="d-flex align-items-center mr-2">
+                          <label >From</label>
+                          <div class="calendar d-flex align-items-center">
+                            <input @click="selectStart()" name="promoStart" v-model="newProduct.promoStart" class="calendar-input" id="promoStart">
+                            <img src="../../../assets/icons/Calendar.svg">
+                          </div>
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                          <label>to</label>
+                          <div class="calendar d-flex align-items-center">
+                            <input  @click="selectEnd()" name="promoEnd" v-model="newProduct.promoEnd"  class="calendar-input" id="promoEnd">
+                            <img src="../../../assets/icons/Calendar.svg">
+                          </div>
+                        </div>
+
+                      </div>
+
+                      <div class="modal-img ">
+                        <label> Photos</label>
+
+                        <p>
+                          You can upload 4 more JPG or PNG photos, the minimum resolution is 400*400px, the size is<br> not more than 3 MB. The first photo will be shown as the main one by default
+                          .</p>
+
+                        <label for="imgArray">
+                          <img src="../../../assets/img/modal-img.svg">
+                          <input class="d-none" multiple id="imgArray" type="file" name="imgArray">
+                        </label>
+                      </div>
+
+                      <div class="modal-btn d-flex">
+                        <button @click.prevent="onSubmit" class="save">Save</button>
+                        <button class="cancel">Cancel</button>
+                      </div>
+                    </form>
                   </div>
                 </div>
-
-                <label>Description</label>
-                <textarea class="general-area mb-3" style="height:160px" v-model="newProduct.description"  name="description"></textarea>
-
-                <div class="d-flex mb-3">
-                  <label class="custom-checkbox"><input data-toggle="collapse" data-target="#collapse-disc" aria-expanded="true" aria-controls="collapse-disc" type="checkbox" ><span class="checkmark"></span></label>
-                  <span>Discount</span>
-                </div>
-                <div class="collapse" id="collapse-disc">
-                  <label>Promotional price</label>
-                  <input v-model="newProduct.promo" class="form-input cashback-input mb-3" placeholder="Promotional price"  name="promo">
-                </div>
-                <div class="d-flex ">
-                  <div style=" width:50%; margin-right:8px;">
-                    <label>Price</label>
-                    <input v-model="newProduct.price" class="form-input cashback-input mb-4" placeholder="Price"  name="price">
-                  </div>
-                  <div class="promotion-disc" style="margin-right:8px;">
-                    <label>Promotional prices</label>
-                    <input class="form-input cashback-input mb-4" placeholder="Price">
-                  </div>
-                  <div style="width:50%;">
-                    <label>Article number</label>
-                    <input v-model="newProduct.article" class="form-input cashback-input mb-4" placeholder="Article number"  name="article">
-                  </div>
-                </div>
-
-                <label class="valid-label">Validity period</label>
-                <div class=" product-calendar d-flex align-items-center ">
-                  <div class="d-flex align-items-center mr-2">
-                    <label >From</label>
-                    <div class="calendar d-flex align-items-center">
-                      <input class="calendar-input" id="from-purchase">
-                      <img src="../../../assets/icons/Calendar.svg">
-                    </div>
-                  </div>
-
-                  <div class="d-flex align-items-center">
-                    <label>to</label>
-                    <div class="calendar d-flex align-items-center">
-                      <input class="calendar-input" id="to-purchase">
-                      <img src="../../../assets/icons/Calendar.svg">
-                    </div>
-                  </div>
-
-                </div>
-
-                <div class="modal-img ">
-                  <label>Photos</label>
-                  
-                  <p class="cashback-description">You can upload 4 more JPG or PNG photos, the minimum resolution is 400*400px, the size is not more than 3 MB.</p>
-                  
-                  <label for="imgArray">
-                      <img src="../../../assets/img/modal-img.svg">
-                      <input class="d-none" multiple id="imgArray" type="file" name="imgArray">
-                  </label>
-                </div>
-
-                <div class="modal-btn d-flex">
-                  <button @click.prevent="onSubmit" class="save">Save</button>
-                  <button class="cancel">Cancel</button>
-                </div>
-              </form>
           </div>
         </div>
       </div>
@@ -103,18 +109,7 @@ import $ from "jquery";
 
 export default {
 name: "AddProduct",
-  props:{
-      listCategory:{
-        type:Object,
-        required:true
-      },
-        getProducts:{
-           type:Function,
-           required:true
-        }
-
-  },
-
+props:['listCategory', 'getProducts'],
   data(){
     return{
       newProduct:{
@@ -123,12 +118,49 @@ name: "AddProduct",
         quantity: '',
         category:'',
         img: '',
-        description:''
+        description:'',
+        vendorCode:'',
+        promoStart:'',
+        promoEnd:'',
+        promoPrice:''
 
       },
     };
   },
   methods:{
+
+    selectStart(){
+      new this.$lightpick({
+        field: document.getElementById('promoStart'),
+        format:'',
+        lang:'en',
+        onSelect:(date)=>{
+          let promo_end = date.format().toString().slice(0,19)
+          this.promoStart = promo_end
+        }
+      });
+    },
+    selectEnd(){
+      new this.$lightpick({
+        field: document.getElementById('promoEnd'),
+        format:'',
+        lang:'en',
+        onSelect:(date)=>{
+          let promo_end = date.format().toString().slice(0,19)
+          this.promoEnd = promo_end
+
+        }
+      });
+    },
+    showPrice(){
+      if($('#show-price').prop('checked')){
+        $('.show-price').addClass('active')
+      }
+      else{
+        $('.show-price').removeClass('active')
+      }
+
+    },
   onSubmit(){
       let new_product = this.newProduct;
       const form  = new FormData;
@@ -140,13 +172,18 @@ name: "AddProduct",
       form.append('quantity', new_product.quantity)
       form.append('category', new_product.category)
       form.append('description', new_product.description)
+      form.append('promoStart', new_product.promoStart)
+      form.append('promoPrice', new_product.promoPrice)
+      form.append('promoEnd', new_product.promoEnd)
+      form.append('vendorCode', new_product.vendorCode)
       this.axios.post('http://localhost:8080/api/addProduct/', form)
           .then((response) => {
             console.log("success", response)
+            this.getProducts()
           }).catch((error) => {
             console.log("fail", error)
           })
-    this.getProducts()
+    this.$successAlert('Product has been added')
      $('#add-products').modal("hide")
       this.newProduct = {
          name: '',
@@ -156,6 +193,7 @@ name: "AddProduct",
         img:''
       }
     },
+
   }
 }
 </script>
@@ -169,14 +207,24 @@ name: "AddProduct",
 .valid-label{
   margin-bottom: 22px !important;
 }
-.promotion-disc{
-  display: none;
+.modal-header .close{
+  margin: 0;
+}
+.show-price{
+  display:none;
+}
+.show-price.active{
+  display: block;
 }
 .product-calendar{
   margin-bottom: 40px;
 }
+.product-calendar label{
+  color: #8C94A5;
+}
 .calendar{
   margin-bottom: 0;
+  padding: 0 10px;
 }
 .modal-form input{
   width: 100%;
@@ -191,7 +239,15 @@ name: "AddProduct",
 }
 .modal-img p{
   margin-bottom: 15px;
+  color: #828282;
+  font-size: 12px;
 }
-
-
+.add-russian{
+  display: block;
+  margin: 20px 0;
+  color:#616cf5;
+}
+.cashback-input{
+  font-size: 16px;
+}
 </style>

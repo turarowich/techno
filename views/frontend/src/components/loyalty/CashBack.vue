@@ -16,7 +16,7 @@
       <h3 class="cashback-sub-title">Minimum cashback amount</h3>
       <div class="d-flex align-items-center">
         <input style="width:40%" class="cashback-input mr-3">
-        <span style="width:40%" class="cashback-description mb-0">Enter the minimum amount to activate cashback</span>
+        <span style="width:50%" class="cashback-description mb-0">Enter the minimum amount to activate cashback</span>
       </div>
     </div>
 
@@ -177,9 +177,7 @@ data(){
 .box-switches{
   margin-bottom: 30px;
 }
-.enable-title{
-  margin-bottom: 10px;
-}
+
 .cashback{
   padding-bottom:60px;
 }

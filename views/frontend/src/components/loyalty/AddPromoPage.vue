@@ -1,6 +1,6 @@
 <template>
 <div class="add-promo">
-  <div class="notification-header"><img class="mr-2" src="../../assets/icons/xBlack.svg"><h3>Add promocode</h3></div>
+  <div class="notification-header"><img @click="$router.go(-1)" class="mr-2" src="../../assets/icons/xBlack.svg"><h3>Add promocode</h3></div>
   <div class="container">
     <div class="row">
       <div class="col-11 m-auto">

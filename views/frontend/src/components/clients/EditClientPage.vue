@@ -1,7 +1,8 @@
 <template>
 <div class="edit-client">
-  <div class="container my-container ">
+  <div>
     <div class="edit-header d-flex justify-content-between align-items-center">
+      <img class="close-edit" src="../../assets/icons/xBlack.svg" @click="$router.go(-1)">
       <div class="edit-header-left d-flex align-items-center">
         <div class="d-flex align-items-center edit-header-item">
           <img class="edit-img" src="../../assets/icons/editUserAvatar.svg">
@@ -11,8 +12,6 @@
             <span class="edit-user" data-toggle="modal" data-target="#edit-client">Edit user</span>
           </div>
         </div>
-
-
       </div>
 
       <div class="edit-header-right d-flex align-items-center">
@@ -203,7 +202,17 @@ export default {
 </script>
 
 <style scoped>
-
+.close-edit{
+  position: absolute;
+  top: 25%;
+  left: -30px;
+}
+.edit-header{
+  position: relative;
+}
+.edit-client{
+  padding: 0 60px;
+}
 .detail{
   color:#616cf5;
   cursor:pointer;
@@ -265,12 +274,7 @@ export default {
   padding-right: 30px;
 
 }
-@media(min-width:1200px){
-  .my-container{
-    max-width:calc(100vw - 420px);
 
-  }
-}
 .edit-user{
   color:#616CF5;
   font-size: 14px;

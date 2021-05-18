@@ -3,74 +3,87 @@
     <div class="searchAndButtons">
     <div class="d-flex justify-content-between app-buttons">
       <div class="d-flex align-items-center">
-        <button class="app-buttons-item adding-btns"  data-toggle="modal" data-target="#"><span>+ Add order</span></button>
+        <button class="app-buttons-item adding-btns" data-toggle="modal" data-target="#add-order"><span>+ Add order</span></button>
         <button class="app-buttons-item" @click="deleteAllOrder"><img class="img-btn" src="../../assets/icons/trash_empty.svg" ><span>Remove</span></button>
-        <button class="app-buttons-item" ><img class="img-btn" src="../../assets/icons/filter.svg"><span>Filter</span></button>
         <button class="app-buttons-item" @click="exportOrder"><img class="img-btn" src="../../assets/icons/set.svg"><span>Export to Excell </span></button>
-
         <div class="dropdown filter-drops">
           <button class="app-buttons-item dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
             <img class="img-btn" src="../../assets/icons/filter.svg"><span>Filter</span>
           </button>
 
           <div class="dropdown-menu general-dropdown" aria-labelledby="dropdownMenuButton">
-            <form class="filter-dropdown">
+            <div class="filter-dropdown">
                 <h3 class="drop-title">By price</h3>
                 <div class="d-flex">
-                  <input class="drop-input">
+                  <input placeholder="0" v-model="price_from"  type="number" class="drop-input">
                   <div class="d-flex">
                     <label class="mr-2 pl-2">to</label>
-                    <input class="drop-input">
+                    <input placeholder="0" v-model="price_to" type="number"  class="drop-input">
                   </div>
                 </div>
-
-              <select class="filter-select form-control form-control-sm mb-2" aria-label=".form-select-lg example">
-                <option>Done</option>
-                <option>In process</option>
-                <option>Canceled</option>
-                <option>New</option>
-
-
+              <h3 class="drop-title">Sort by</h3>
+              <select  v-model="filter_by_status" class="filter-select form-control form-control-sm mb-2" aria-label=".form-select-lg example">
+                <option value="">All</option>
+                <option value="Done">Done</option>
+                <option value="In Progress">In process</option>
+                <option value="Canceled">Canceled</option>
+                <option value="New">New</option>
               </select>
-            </form>
+            </div>
           </div>
         </div>
       </div>
       <div>
         <button class="app-buttons-item" @click="showYesterday"><img src="../../assets/icons/yesterday.svg"><span>Yesterday</span></button>
         <button class="app-buttons-item" @click="showTodayData"><img src="../../assets/icons/yesterday.svg"><span>Today</span></button>
-        <button class="app-buttons-item" @click="clickOnDate"><img src="../../assets/icons/yesterday.svg"><input  :value="filterByDate" class="date-pick" id="datepicker"></button>
+        <button class="app-buttons-item" @click="clickOnDate"><img src="../../assets/icons/yesterday.svg"><input placeholder="2021-03-01 to 2021-03-04"  class="date-pick" id="datepicker"></button>
       </div>
     </div>
-
-    <div class="main-search d-flex align-items-center">
+      <div class="main-search d-flex align-items-center">
       <img src="../../assets/icons/search-icon.svg">
       <input class="main-input" type="text" placeholder="Search" v-model="search">
     </div>
     </div>
-    <div class="d-flex main-content-header">
-      <div class="table-head" style="width: 3%;"><label class="custom-checkbox"><input type="checkbox"  @click="toggleSelect" :checked="selectAll"><span class="checkmark"></span></label></div>
-      <div class="table-head" style="width: 9%;">Name order</div>
-      <div class="table-head" style="width: 15%;">Product</div>
-      <div class="table-head" style="width: 10%;">Client</div>
-      <div class="table-head" style="width: 12%;">Phone number</div>
-      <div class="table-head table-link " style="width: 10%;" @click="sortByTotal()" >Total <img class="total-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
-      <div class="table-head table-link" style="width: 10%; cursor: pointer" v-on:click="sortByDate" >Date <img class="date-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
-      <div class="table-head" style="width: 18%; ">Notes</div>
-      <div class="table-head" style="width: 10%;">Status</div>
-      <div class="table-head" style="width:3%"></div>
+    <div class="d-flex main-content-header justify-content-between align-items-center">
+      <div class="table-head d-flex align-items-center" style="width: 18%;">
+        <div><label class="custom-checkbox"><input type="checkbox"  @click="toggleSelect" v-model="selectAll"><span class="checkmark"></span></label></div>
+
+        Name order</div>
+      <div class="table-head" style="width: 30%;">Product</div>
+      <div v-show="data_check.client_checked" class="table-head" style="width: 25%;">Client</div>
+      <div v-show="data_check.phone_checked" class="table-head" style="width: 20%;">Phone number</div>
+      <div class="table-head table-link d-flex align-items-center" style="width: 10%;" @click="sortByTotal()" >Total <img class="total-pol" style="margin-left:7px" src="../../assets/icons/polygon.svg"></div>
+      <div v-if="data_check.date_checked" class="table-head table-link d-flex align-items-center" style="width: 15%; cursor: pointer" v-on:click="sortByDate" >Date <img class="date-pol" style="margin-left:7px" src="../../assets/icons/polygon.svg"></div>
+      <div v-show="data_check.notes_checked" class="table-head" style="width: 10%;">Notes</div>
+      <div class="table-head" style="width: 15%;">Status</div>
+      <div style="width:3%" class="dropdown pl-3">
+        <div class="table-head text-right dropdown-toggle"  id="dropdownBlue" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:3%"><img src="../../assets/icons/BlueSetting.svg"></div>
+        <div class="dropdown-menu general-dropdown settings-dropdown" aria-labelledby="dropdownBlue">
+          <form>
+            <div><label class="custom-checkbox"><input v-model="data_check.client_checked" type="checkbox" ><span class="checkmark"></span></label> <span>Client</span></div>
+            <div><label class="custom-checkbox"><input v-model="data_check.phone_checked" type="checkbox" ><span class="checkmark"></span></label> <span>Phone number</span></div>
+            <div><label class="custom-checkbox"><input v-model="data_check.date_checked" type="checkbox" ><span class="checkmark"></span></label> <span>Date</span></div>
+            <div><label class="custom-checkbox"><input v-model="data_check.notes_checked" type="checkbox" ><span class="checkmark"></span></label> <span>Notes</span></div>
+       </form>
+        </div>
       </div>
-      <div class="table-content">
+    </div>
+
+    <div class="table-content">
         <OrderItem
+             ref="order_item"
+              v-on:unCheckAll="unCheckAll"
+              v-on:checkAll="checkAll"
               v-bind:orderList="orderToDisplay"
-              @countNewOrder="countNewOrder"
               v-on:deleteOrder="deleteOrder"
               v-on:inProgress="inProgress"
               v-on:done="done"
               v-on:canceled="canceled"
-        />
+              v-bind:data_check="data_check"/>
       </div>
 
+    <AddOrder/>
+    <EditOrder/>
     <div class="pagination d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-center">
         <span>Rows per page</span>
@@ -83,100 +96,112 @@
         </select>
       </div>
       <div class="d-flex align-items-center"><span>{{currentPage}}</span> <span class="mr-1 ml-1">of</span> <span class="mr-2">{{totalPages}}</span>
-        <div v-show='showPrev' @click.stop.prevent='renderPaginationList(currentPage-1)' class=" pagination-btns prevBtn " ><img src="../../assets/icons/side-arrow.svg"></div>
-        <div class=" pagination-btns" v-show='showNext' @click.stop.prevent='renderPaginationList(currentPage+1)'>  <img  src="../../assets/icons/side-arrow.svg"></div>
+        <div v-show='showPrev' @click.stop.prevent='currentPage-=1' class=" pagination-btns prevBtn " ><img src="../../assets/icons/side-arrow.svg"></div>
+        <div class=" pagination-btns" v-show='showNext' @click.stop.prevent='currentPage+=1'>  <img  src="../../assets/icons/side-arrow.svg"></div>
       </div>
     </div>
-
-    </div>
-
+  </div>
 </template>
 
 <script>
 import OrderItem from "@/components/orders/OrderItem";
+import AddOrder from "@/modals/orders/AddOrder";
+import EditOrder from "@/modals/orders/EditOrder";
 import Swal from "sweetalert2";
 import $ from 'jquery';
-
-
-
-
 export default {
 name: "Orders",
 
   components:{
     OrderItem,
+    AddOrder,
+    EditOrder
 
   },
   data(){
     return{
       orderList:[
-        {id:1,name:"Essential Shoes",client:"Tomas Levins", phone:"0550457834", total:"450 $",date:"2021-03-19T11:31:33.557+00:00",notes:"Please, can you sdfdsf sfs df sdfsdf sdfsdf sdf sdfsdfsd fsdf\n" + "do it quickly?",status:'New'},
-        {id:3,name:"AirForces",client:"Tomas Levins", phone:"0775896542", total:"13 $",date:this.$moment().format('YYYY-MM-DD'),notes:"Please, can you \n" + "do it quickly?" ,status:'New'},
-        {id:4,name:"Krosses",client:"Tomas Levins", phone:"0500687909", total:"120 $",date:this.$moment().format('YYYY-MM-DD'),notes:"Please, can you \n" + "do it quickly?",status:'New'},
-        {id:5,name:"Essentialsss",client:"Tomas Levins", phone:"0500687909", total:"120 $",date:this.$moment().format('YYYY-MM-DD'),notes:"Please, can you \n" + "do it quickly?",status:'Done'},
-        {id:6,name:"Ess",client:"Tomas Levins", phone:"0500687909", total:"120 $",date:"2021-03-19T11:31:33.557+00:00",notes:"Please, can you \n" + "do it quickly?",status:'Done'},
-        {id:7,name:"Ess",client:"Tomas Levins", phone:"0500687909", total:"120 $",date:"2021-03-08T11:31:33.557+00:00",notes:"Please, can you \n" + "do it quickly?",status:'Done'},
-        {id:8,name:"Ess",client:"Tomas Levins", phone:"0500687909", total:"120 $",date:"2021-03-05T11:31:33.557+00:00",notes:"Please, can you \n" + "do it quickly?",status:'Done'},
-        {id:9,name:"Jeans and Jackets ",client:"Tomas Levins", phone:"0500687909", total:"120 $",date:this.$moment().format('YYYY-MM-DD'),notes:"Please, can you \n" + "do it quickly?",status:'Done'},
+        {id:1,name:"Essential Shoes and bektemir kudaiberdiev",client:"Bektemir Kudaiberdiev Azzamkulovich", phone:"996550457834", total:"450",date:this.$moment().subtract(1, "days").format("YYYY-MM-DD"),notes:"Please?",status:'New'},
+        {id:3,name:"AirForces",client:"Tomas Levins", phone:"0775896542", total:"13",date:this.$moment().format('YYYY-MM-DD'),notes:"Please" ,status:'New'},
+        {id:4,name:"Krosses",client:"Tomas Levins", phone:"0500687909", total:"567",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'New'},
+        {id:5,name:"Essentialsss",client:"Tomas Levins", phone:"0500687909", total:"820",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
+        {id:6,name:"Ess",client:"Tomas Levins", phone:"0500687909", total:"200",date:this.$moment().subtract(1, "days").format("YYYY-MM-DD"),notes:"Please",status:'Done'},
+        {id:7,name:"Essss",client:"Tomas Levins", phone:"0500687909", total:"40",date:this.$moment().subtract(1, "days").format("YYYY-MM-DD"),notes:"Please?",status:'Done'},
+        {id:8,name:"Ess",client:"Tomas Levins", phone:"0500687909", total:"80",date:"2021-03-05T11:31:33.557+00:00",notes:"Please, can you \n" + "do it quickly?",status:'Done'},
+        {id:9,name:"Jeans and Jackets ",client:"Tomas Levins", phone:"0500687909", total:"12",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
       ],
+      data_check:{
+        client_checked:false,
+        phone_checked:false,
+        date_checked:false,
+        notes_checked:false
+      },
+      filter_by_status: '',
+      price_from:'',
+      price_to:'',
       sorting:true,
       search:'',
-      new_orders:0,
-      count_order:0,
-      yesterdayDate: this.$moment().subtract(1, "days").format("YYYY-MM-DD"),
-      todayDate:this.$moment().format("YYYY-MM-DD"),
-      perPage: 8,
-      pageToOpen: 1,
-      currentPage: 1,
-      orderToDisplay:[],
-      filterByDate:'2021-03-01 to 2021-03-04',
       filtered:this.$moment().format("YYYY-MM-DD"),
+      selectAll: false,
+      currentPage:1,
+      perPage:8,
 
     }
   },
 
   computed: {
-    selectAll: function() {
-      return this.orderList.every(function(user){
-        return user.checked
-      });
-    },
     filteredList:function() {
       return this.orderList
           .filter(order => {
             return order.name.toLowerCase().includes(this.search.toLowerCase()) || order.phone.includes(this.search)
           })
           .filter(order=>{
-            return !order.date.split('').slice(0,10).join('').indexOf(this.filtered)
-            || (new Date(order.date).getTime() >= new Date(this.filtered.split('').slice(0,10).join('')).getTime() &&
-                    new Date(order.date).getTime() < new Date(this.filtered.split('').slice(14,24).join('')).getTime())
+            return order.status.includes(this.filter_by_status)
+          })
+          .filter(order=>{
+            if(this.price_to.length>0){
+              return +order.total >= this.price_from && +order.total <= this.price_to
+            }
+            else if(this.price_to === ''){
+              return +order.total >=this.price_from;
+            }
+            else{
+              return order
+            }
+          })
+          .filter(order=>{
+            return order.date.slice(0,10).includes(this.filtered)
+                || (new Date(order.date).getTime() >= new Date(this.filtered.slice(0,10)).getTime() &&
+                    new Date(order.date).getTime() < new Date(this.filtered.slice(14,24)).getTime())
+
           })
     },
-    totalPages(){
-      //calculate the total number of pages based on the number of items to show per page and the total items we got from server
-      return this.filteredList.length && (this.filteredList.length > this.perPage) ? Math.ceil(this.filteredList.length/this.perPage) : 1;
+    orderToDisplay: function(){
+      let start = (this.currentPage - 1) * this.perPage
+      let end = this.currentPage * this.perPage
+      this.filteredList.map((value, index) =>{
+        value.index = index
+        return value
+      })
+      return this.filteredList.slice(start, end)
     },
-    start(){
-      return (this.pageToOpen - 1) * this.perPage;
-    },
-    stop(){
-      //stop at the end of the array if array length OR the items left are less than the number of items to show per page
-      //do the calculation if otherwise
-      if((this.filteredList.length - this.start) >= this.perPage){
-        return (this.pageToOpen * this.perPage) - 1;
-      }
-      else{
-        return this.filteredList.length - 1;
-      }
+    totalPages:function(){
+      return Math.ceil(this.filteredList.length / this.perPage)
     },
     showNext(){
       return this.currentPage < this.totalPages;
     },
     showPrev(){
       return this.currentPage > 1;
-    }
+    },
   },
   methods: {
+    checkAll(item){
+      this.selectAll = item
+    },
+    unCheckAll(item){
+      this.selectAll = item
+    },
     exportOrder(){
         this.axios.post(this.url('getOrderExcel'),{
             orders: ['608a5131405656e224436194', '608a5102405656e224436191']
@@ -196,51 +221,28 @@ name: "Orders",
         $('.date-pick').click()
     },
     showYesterday(){
-        this.filtered = this.yesterdayDate
-        this.renderPaginationList();
+        this.filtered = this.$moment().subtract(1, "days").format("YYYY-MM-DD")
 
     },
     showTodayData(){
-      this.filtered = this.todayDate;
-      this.renderPaginationList()
-
-
+      this.filtered = this.$moment().format("YYYY-MM-DD")
     },
     filteredBetweenDate(){
       const value = $('#datepicker').val();
       this.filtered = value
-      this.filterByDate = value
-      this.renderPaginationList()
     },
-    renderPaginationList(pageNumber=1){
-      //clear currently displayed list
-      this.orderToDisplay = [];
-      //set countries to display
-      if(this.filteredList.length){
-        let _this = this;
-        return new Promise(function(res){
-          //set the page to open to the pageNumber in the parameter in order to allow start and stop to update accordingly
-          _this.pageToOpen = pageNumber;
-          //add the necessary data to `countriesToDisplay` array
-          for(let i = _this.start; i <= _this.stop; i++){
-            _this.orderToDisplay.push(_this.filteredList[i]);
-          }
-          res();
-        }).then(function(){
-          //Now update the current page to the page we just loaded
-          _this.currentPage = _this.pageToOpen;
-        }).catch(function(){
-          console.log('render err');
-        });
-      }
+    toggleSelect: function () {
+      this.orderList.forEach((user)=> {
+        if(this.$refs.order_item.$refs[`select${user.id}`] !== undefined && this.$refs.order_item.$refs[`select${user.id}`] !== null){
+           if(this.selectAll === false){
+              this.$refs.order_item.$refs[`select${user.id}`].checked = true
+           }
+           else{
+             this.$refs.order_item.$refs[`select${user.id}`].checked = false
+           }
+         }
+      });
     },
-    // toggleSelect: function () {
-    //   var select = this.selectAll;
-    //   this.orderList.forEach(function (user) {
-    //     user.checked = !select;
-    //   });
-    //   this.selectAll = !select;
-    // },
     deleteAllOrder() {
       if (this.selectAll) {
         this.orderList = [];
@@ -248,11 +250,7 @@ name: "Orders",
       }
       else{
         this.orderList = this.filteredList.filter(catalog => !catalog.checked)
-
-
       }
-      this.renderPaginationList()
-
       $('.custom-checkbox input').prop('checked', false)
     },
     sortByDate() {
@@ -262,7 +260,6 @@ name: "Orders",
         this.orderList.sort((a, b) => {
           return this.sorting ? new Date(a.date) - new Date(b.date) : new Date(b.date) - new Date(a.date)
         })
-        this.renderPaginationList()
         this.sorting = !this.sorting;
        $('.date-pol').toggleClass('active')
         $('.total-pol').removeClass('active')
@@ -273,24 +270,10 @@ name: "Orders",
         return null;
       } else {
         this.orderList.sort((a, b) => this.sorting ? (parseInt(a.total) - parseInt(b.total)) : (parseInt(b.total) - parseInt(a.total)));
-        this.renderPaginationList()
         this.sorting = !this.sorting;
         $('.total-pol').toggleClass('active')
         $('.date-pol').removeClass('active')
       }
-    },
-    countNewOrder() {
-      let count = 0;
-      this.orderList.map((order) => {
-        if (order.status === 'New') {
-          count++;
-        }
-      })
-      this.count_order = count;
-      this.$emit('countNewOrder', this.count_order)
-    },
-    totalOrders() {
-      this.$emit("totalOrders", this.orderList.length)
     },
     deleteOrder(id) {
       Swal.fire({
@@ -361,22 +344,15 @@ name: "Orders",
         }
       })
     },
-
-
   },
-
-
   mounted(){
-      this.totalOrders()
-      this.countNewOrder()
-      this.renderPaginationList()
-
-
-
     new this.$lightpick({
-      field: document.getElementById('datepicker'),
-      singleDate: false,
-      onSelect: (start,end)=>{
+        field: document.getElementById('datepicker'),
+        singleDate: false,
+        numberOfMonths: 2,
+        numberOfColumns:2,
+        format:'YYYY-MM-DD',
+        onSelect: (start,end)=>{
           var str = '';
           str += start ? start.format('YYYY-MM-DD') + ' to ' : '';
           str += end ? end.format('YYYY-MM-DD') : '...';
@@ -386,23 +362,29 @@ name: "Orders",
     });
   },
 
-  watch: {
-    perPage: function(){
-      this.renderPaginationList();
-    },
-    search: function (){
-      this.renderPaginationList()
-    },
-
-
-
-  },
 
 }
 
 </script>
 
 <style scoped>
+.general-dropdown.settings-dropdown{
+  transform: translate3d(-166px, -19px, 0px) !important;
+  width: 190px;
+  padding: 20px;
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.general-dropdown.settings-dropdown div{
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+.general-dropdown.settings-dropdown .custom-checkbox{
+  margin-right: 10px;
+  width: 12px;
+}
 .date-pick{
   width:182px;
   height: 20px;
@@ -445,6 +427,7 @@ name: "Orders",
   padding: 0 10px;
   font-size: 14px;
   border: 1px solid #E3E3E3;
+  border-radius:5px;
 }
 
 </style>

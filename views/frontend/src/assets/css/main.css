@@ -25,7 +25,7 @@ img{
 .app-buttons-item{
     background: #F9F9F9;
     border-radius: 5px;
-    padding:10px 20px;
+    padding:10px 15px;
     border:none;
     color: #606877;
     font-size: 14px;
@@ -116,13 +116,18 @@ img{
     color: #787878;
     padding-bottom: 14px;
     padding-left: 10px;
-    padding-right: 10px;
+    padding-right: 20px;
 }
 
 .table-item{
-    padding:0 10px;
-    height: 60px;
+    padding:10px 10px;
     border-bottom: 1px solid #e8e8e8;
+}
+.table-child{
+    padding-right:10px;
+}
+.table-item .custom-checkbox{
+    margin-right: 20px;
 }
 .table-item:hover{
     background: #F8F9FF;
@@ -132,12 +137,14 @@ img{
     width: 40px;
     height: 40px;
     margin-right: 10px;
+    flex:0 0 auto;
 }
 .table-img img{
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
+
 }
 .table-link:hover{
     cursor: pointer;
@@ -156,9 +163,12 @@ img{
 .table-head{
     list-style: none;
 }
+.table-head .custom-checkbox{
+    margin-right: 20px;
+}
 .circle-status{
     font-size: 8px;
-    margin-right: 10px;
+    margin-right: 5px;
 }
 .status{
     display: flex;
@@ -168,7 +178,7 @@ img{
 
 /*============Search=================*/
 .searchAndButtons{
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 .main-input{
     border:none;
@@ -195,6 +205,7 @@ img{
     cursor:pointer;
 
 
+
 }
 .custom-checkbox .checkmark{
     height:100%;
@@ -203,10 +214,13 @@ img{
     box-sizing: border-box;
     border-radius: 3px;
     display: inline-block;
+    transition: .2s;
+
 }
 .custom-checkbox input:checked + .checkmark{
     background: #616CF5;
     border: 1px solid #616CF5;
+
 }
 .custom-checkbox input{
     display: none;
@@ -251,7 +265,7 @@ img{
 .slider:before {
     position: absolute;
     content: "";
-    height: 17px;
+    height: 16px;
     width: 17px;
     left: 3px;
     bottom: 2.5px;
@@ -305,6 +319,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     color:#222;
     font-weight:600;
     margin-bottom: 0;
+}
+.enable-title{
+    margin-bottom: 5px;
 }
 .cashback-description{
     font-size: 16px;
@@ -382,7 +399,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 }
 .sum-point{
-    margin-bottom:5px;
+    margin-bottom:8px;
     color:#222;
 }
 .color-p{
@@ -717,6 +734,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     display: flex;
     margin-bottom: 20px;
 }
+
 .client-table-head{
     color: #8C94A5;
     font-size: 14px;
@@ -889,7 +907,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .drop-title{
     font-size: 15px;
     font-weight: normal;
-    margin-bottom: 18px;
+    margin-bottom: 15px;
 }
 .drop-input:first-child{
     width: 65%;
@@ -901,7 +919,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     padding-left:10px;
     width: 100%;
     font-size:14px;
-    margin-bottom: 22px;
+    margin-bottom: 20px;
+    color: #767676;
 
 }
 .adding-btns{
@@ -1030,14 +1049,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 .empty-box{
     position: absolute;
-    left:50%;
-    top:50%;
+    left:55%;
+    top:55%;
 }
 .reload-code{
     border: 1px solid #d3d3d3;
     border-radius: 5px;
     height:45px;
-    padding:0 10px;
+    padding:0 5px;
     margin-right: 13px;
     margin-bottom: 38px;
 }
@@ -1106,3 +1125,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 }
 
+.catalog-list:hover{
+    background: #EBEEFF;
+    color: #616CF5;
+    cursor:pointer;
+}
+.catalog-list.active{
+    background: #EBEEFF;
+    color: #616CF5;
+}
+.catalog-list img{
+    width: 15px;
+    height: 15px;
+}

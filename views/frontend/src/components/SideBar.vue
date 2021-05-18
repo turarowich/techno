@@ -5,11 +5,11 @@
           <button v-on:click="closeSideBar" class="btn closing"><i class="fas fa-align-right "></i></button>
     </div>
     <div v-on:click="closeSideBar">
-      <router-link class="router-link" to="/orders"><span class="sider-bar-link"> <div class="left-line"></div><img src="../assets/icons/Plus.svg" >Orders</span> <span class="counters counters-order">{{count_order}}</span></router-link>
+      <router-link class="router-link" to="/orders"><span class="sider-bar-link"> <div class="left-line"></div><img src="../assets/icons/Plus.svg" >Orders</span> </router-link>
       <router-link class="router-link"  data-turbolinks="false" to="/clients" ><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Document.svg" >Clients</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
       <router-link class="router-link" to="/loyalty"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Game.svg" >Loyalty</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
       <router-link class="router-link" to="/catalog"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Discovery.svg" >Catalog</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
-      <router-link class="router-link" to="/chats"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/MoresSquare.svg" >Chats</span><span class="counters">2</span></router-link>
+      <router-link class="router-link" to="/chats"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/MoresSquare.svg" >Chats</span></router-link>
       <router-link class="router-link" to="/analytics"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/group.svg" >Analytics</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
       <router-link class="router-link" to="/news"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/group.svg" >News</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
      <div class="help-setting">
@@ -36,7 +36,7 @@ name: "SideBar",
   closeSideBar: {
     type:Function,
   },
-    count_order: Number,
+
 
 
 

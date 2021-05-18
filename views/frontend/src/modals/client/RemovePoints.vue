@@ -40,6 +40,9 @@ export default {
 .cashback-input{
   width: 100%;
 }
+.category-content{
+  margin-top: 20%;
+}
 .general-area{
   margin-bottom: 30px;
 }

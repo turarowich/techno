@@ -3,7 +3,6 @@ import { createWebHistory, createRouter } from "vue-router";
 import SignIn from "@/components/sign-in/SignIn";
 import SignUp from "@/components/sign-up/SignUp";
 import Orders from "@/components/orders/Orders";
-import OrderDetail from "@/components/orders/OrderDetail";
 import Loaylty from "@/components/loyalty/Loaylty";
 import Chats from '@/components/chats/Chats';
 import Clients from "@/components/clients/Clients";
@@ -17,6 +16,8 @@ import News from "@/components/News/News";
 import CashBack from "@/components/loyalty/CashBack";
 import Discount from "@/components/loyalty/Discount";
 import PromoCode from "@/components/loyalty/Promocode";
+import General from "@/components/settings/General";
+import Price from "@/components/settings/Price";
 import CatalogDetail from "@/client/components/ClientCatalog/CatalogDetail";
 import NewsDetail from "@/client/components/ClientNews/NewsDetail";
 import ClientNews from "@/client/components/ClientNews/ClientNews";
@@ -33,6 +34,13 @@ import AddPromoPage from "@/components/loyalty/AddPromoPage";
 import AddProductPage from "@/components/catalog/AddProductPage";
 import EditProductPage from "@/components/catalog/EditProductPage";
 import IndividualPush from "@/components/clients/IndividualPush";
+import CatalogSettings from "@/components/settings/CatalogSettings";
+import PersonalSettings from "@/components/settings/PersonalSettings";
+import AccessSettings from "@/components/settings/AccessSettings";
+import AddNews from "@/components/News/AddNews";
+import EditNews from "@/components/News/EditNews";
+
+import EditPromo from "@/components/loyalty/EditPromo";
 
 
 
@@ -50,12 +58,7 @@ const routes = [
         component: Orders,
 
     },
-    {
-        path: "/order-detail",
-        name: "OrderDetail",
-        component: OrderDetail,
 
-    },
     {
         path: "/edit-client-page",
         name: "EditClientPage",
@@ -72,6 +75,12 @@ const routes = [
         path: "/add-promo-page",
         name: "AddPromoPage",
         component: AddPromoPage,
+
+    },
+    {
+        path: "/edit-promo",
+        name: "EditPromo",
+        component: EditPromo,
 
     },
     {
@@ -206,6 +215,7 @@ const routes = [
         component: Chats,
 
     },
+
     {
         path: "/catalog",
         name: "Catalog",
@@ -219,15 +229,59 @@ const routes = [
 
     },
     {
+        path:'/access-settings',
+        name:"AccessSettings",
+        component: AccessSettings,
+
+    },
+    {
         path:'/settings',
         name:"Settings",
         component: Settings,
+        children: [
+            {
+                path:'',
+                name:'General',
+                component: General,
+
+            },
+            {
+                path:'price',
+                name:'Price',
+                component: Price,
+
+            },
+            {
+                path:'catalog-settings',
+                name:'CatalogSettings',
+                component: CatalogSettings,
+
+            },
+            {
+                path:'personal-settings',
+                name:'PersonalSettings',
+                component: PersonalSettings,
+
+            }
+        ]
 
     },
     {
         path: "/news",
         name: "News",
         component: News,
+
+    },
+    {
+        path: "/add-news",
+        name: "AddNews",
+        component: AddNews,
+
+    },
+    {
+        path: "/edit-news",
+        name: "EditNews",
+        component: EditNews,
 
     },
     {
