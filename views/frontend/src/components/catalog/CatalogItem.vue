@@ -11,7 +11,7 @@
 
     <div v-else>
       <div  v-for="catalog in  catalogList" class="catalog-item table-item d-flex align-items-center" :key="catalog._id">
-        <div  style="width: 5%;"><label class="custom-checkbox"><input ref="catalog" type="checkbox" :value="catalog" v-model="catalog.checked">
+        <div  style="width: 5%;"><label class="custom-checkbox"><input type="checkbox" :value="catalog" @click="checkMainSelect" :ref="`select${catalog._id}`">
           <span class="checkmark"></span></label>
         </div>
 
@@ -33,7 +33,7 @@
             </div>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
               <ul class="list-group " >
-                <li class="list-group-item" @click="$router.push('/edit-product-page')">Edit</li>
+                <li class="list-group-item"  data-toggle="modal" data-target="#edit-product" @click="$emit('selectProduct', catalog._id)">Edit</li>
                 <li class="list-group-item" v-on:click="$emit('deleteProduct' ,catalog._id)">Delete</li>
               </ul>
             </div>
@@ -51,12 +51,30 @@ import $ from 'jquery';
 export default {
   name: "CatalogItem",
   props:['catalogList', 'displayList'],
-
+  data(){
+    return {
+      newCheck:false
+    }
+  },
 
   methods:{
     addProduct(){
       $('#add-product').click()
     },
+    checkAll(item) {
+      return  this.$refs[`select${item._id}`].checked === true
+    },
+    checkMainSelect() {
+      if(this.catalogList.every(this.checkAll)){
+        this.newCheck = true;
+        this.$emit('checkAll', this.newCheck)
+      }
+      else{
+        this.newCheck = false;
+        this.$emit('unCheckAll', this.newCheck)
+      }
+
+    }
 
   },
 

@@ -25,7 +25,7 @@
       </div>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
         <ul class="list-group">
-          <li class="list-group-item">Edit</li>
+          <li class="list-group-item" @click="$router.push('/edit-news')">Edit</li>
           <li class="list-group-item">Delete</li>
         </ul>
       </div>

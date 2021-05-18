@@ -22,7 +22,6 @@
               <select class="form-control long-form-control modal-select mb-5">
                 <option value="">Without category</option>
                 <option v-for="cat in listCategory" :key="cat.id"  :value="cat.name.toLowerCase()">{{cat.name}}</option>
-
               </select>
             </div>
 
@@ -51,13 +50,13 @@ name: "AddCategory",
     },
     getCategories:{
       type:Function,
-      required:true
     }
   },
   data(){
     return{
       new_category: {
         name: '',
+        type:'product'
       }
     }
   },
@@ -65,14 +64,16 @@ name: "AddCategory",
     onSubmit(){
       const data = new FormData();
       data.append('name', this.new_category.name)
+      data.append('type', this.new_category.type)
       this.axios.post(this.url('addCategory'),data)
             .then((response)=>{
               console.log('Success ', response.data.object)
+              this.getCategories()
             })
             .catch((error)=>{
               console.log("Error"+error)
             })
-      this.getCategories()
+
       $('#add-category').modal("hide")
       this.new_category.name = ''
       },

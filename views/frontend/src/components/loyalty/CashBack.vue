@@ -427,9 +427,7 @@ export default {
 .box-switches{
   margin-bottom: 30px;
 }
-.enable-title{
-  margin-bottom: 10px;
-}
+
 .cashback{
   padding-bottom:60px;
 }

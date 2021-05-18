@@ -7,7 +7,7 @@
       </button>
       <div class="total-order">
         <h5 class="route-name">{{$route.name}}</h5>
-        <span class="total-order">Total orders: {{total_order}}</span>
+        <span class="total-order">Total orders: 0</span>
       </div>
       <div class="d-flex align-items-center">
       <div class="select-lang dropdown">
@@ -77,7 +77,7 @@ name: "Header",
   openSideBar:{
     type:Function
   },
-    total_order:Number,
+
   },
   methods:{
   logout(){

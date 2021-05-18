@@ -20,9 +20,9 @@
             </div>
 
             <label>Name</label><br>
-            <input class="cashback-input">
+            <input v-model="currentData.firstName" class="cashback-input">
             <label>Email</label><br>
-            <input class="cashback-input margin-b">
+            <input v-model="currentData.email" class="cashback-input margin-b">
 
             <label>Phone number</label>
             <div class="d-flex phones">
@@ -30,20 +30,14 @@
                 <option>+996</option>
                 <option>+792</option>
                 <option>+996</option>
-                <option>+792</option>
-                <option>+996</option>
-                <option>+792</option>
-                <option>+996</option>
-                <option>+792</option>
-                <option>+996</option>
-                <option>+792</option>
+
               </select>
-              <input class="cashback-input" style="width:80%">
+              <input v-model="currentData.phone" class="cashback-input" style="width:80%">
             </div>
 
             <label>Birthday</label>
             <div class="calendar d-flex align-items-center">
-              <input class="calendar-input" id="calendar">
+              <input v-model="currentData.birthDate" class="calendar-input" id="calendar">
               <img class="calendar-img" src="../../assets/icons/Calendar.svg">
             </div>
 
@@ -75,6 +69,12 @@
 <script>
 export default {
   name: "EditClient",
+  props:['select_client'],
+  data(){
+    return{
+      currentData:''
+    }
+  },
   methods:{
     selectDate(){
       new this.$lightpick({
@@ -88,7 +88,12 @@ export default {
   },
   mounted(){
     this.selectDate()
-  }
+  },
+  watch:{
+    select_client(newCat){
+      this.currentData = Object.assign({}, newCat)
+    }
+  },
 }
 </script>
 
@@ -150,6 +155,7 @@ export default {
 }
 .select-phone{
   width: 20%;
+  color:#222;
 }
 .margin-b{
   margin-bottom: 25px;

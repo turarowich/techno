@@ -3,7 +3,7 @@
     <div class="searchAndButtons">
     <div class="d-flex justify-content-between app-buttons">
       <div class="d-flex align-items-center">
-        <button class="app-buttons-item adding-btns" id="add-product" @click="$router.push('/add-product-page')"><span>+ Add product</span></button>
+        <button class="app-buttons-item adding-btns" id="add-product" data-toggle="modal" data-target="#add-products"><span>+ Add product</span></button>
         <button class="app-buttons-item adding-btns" @click="getProducts" data-toggle="modl" data-target="#add-service"><span>+ Add service</span></button>
         <button class="app-buttons-item adding-btns"  data-toggle="modal" data-target="#add-category"><span>+ Add category </span></button>
       </div>
@@ -34,19 +34,19 @@
             <form class="filter-product">
               <label>By price</label>
               <div class="d-flex">
-                <input class="drop-input">
+                <input v-model="price_from" class="drop-input">
                 <div class="d-flex">
                   <label class="mr-2 pl-2">to</label>
-                  <input class="drop-input">
+                  <input v-model="price_to" class="drop-input">
                 </div>
               </div>
 
               <label>By quantity</label>
               <div class="d-flex">
-                <input class="drop-input">
+                <input v-model="quantity_from" class="drop-input">
                 <div class="d-flex">
                   <label class="mr-2 pl-2">to</label>
-                  <input class="drop-input">
+                  <input v-model="quantity_to" class="drop-input">
                 </div>
               </div>
 
@@ -57,7 +57,7 @@
               </div>
 
               <label>By category</label>
-              <input class="drop-input">
+              <input v-model="filtered" class="drop-input">
             </form>
           </div>
         </div>
@@ -92,16 +92,22 @@
         <ImportClient/>
         <AddCategory
             :listCategory="listCategory"
-            :getCategories="getCategories"
+            :getCategories="getCategories"/>
+        <EditCategory
+            :listCategory="listCategory"/>
+        <AddProduct
+            :listCategory="listCategory"
+            :getProducts="getProducts"/>
+        <EditProduct
+           :listCategory="listCategory"
+           :select_product="select_product"
+           :getProducts="getProducts"
 
         />
-        <EditCategory
-            :listCategory="listCategory"
-            :edit_category="edit_category"/>
 
         <div class="catalog-content" style="width:82%">
           <div class="d-flex main-content-header">
-            <div class="table-head" style="width: 5%;"><label class="custom-checkbox"><input id="parent-check" type="checkbox"  @click="toggleSelect()" :checked="selectAll"><span class="checkmark"></span></label></div>
+            <div class="table-head" style="width: 5%;"><label class="custom-checkbox"><input id="parent-check" type="checkbox"  @click="toggleSelect" v-model="selectAll"><span class="checkmark"></span></label></div>
             <div class="table-head" style="width: 36%;">Name</div>
             <div class="table-head" style="width: 24%;">Article</div>
             <div class="table-head table-link pr-3" style="width: 13%;" @click="sortByQunatity">Quantity<img class="date-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
@@ -112,9 +118,13 @@
           <div class="table-content" >
 
               <CatalogItem
+                  ref="catalog_item"
+                  v-on:unCheckAll="unCheckAll"
+                  v-on:checkAll="checkAll"
+                  v-on:selectProduct="selectProduct"
                   v-bind:catalogList="catalogToDisplay"
                   v-on:deleteProduct="deleteProduct"
-                  v-on:editCatalog="editCatalog"
+
               />
 
           </div>
@@ -130,8 +140,8 @@
               </select>
             </div>
             <div><span>{{currentPage}}</span> of <span class="mr-3">{{totalPages}}</span>
-              <img v-show='showPrev' @click.stop.prevent='renderPaginationList(currentPage-1)' class="prevBtn mr-3" src="../../assets/icons/side-arrow.svg">
-              <img v-show='showNext' @click.stop.prevent='renderPaginationList(currentPage+1)' src="../../assets/icons/side-arrow.svg"></div>
+              <img v-show='showPrev' @click.stop.prevent='currentPage-=1' class="prevBtn mr-3" src="../../assets/icons/side-arrow.svg">
+              <img v-show='showNext' @click.stop.prevent='currentPage+=1' src="../../assets/icons/side-arrow.svg"></div>
 
           </div>
         </div>
@@ -142,9 +152,10 @@
 </template>
 
 <script>
-
+import EditProduct from "@/modals/catalog/edit-product/EditProduct";
 import CatalogItem from "@/components/catalog/CatalogItem";
 import AddCategory from "@/modals/catalog/add-category/AddCategory";
+import AddProduct from "@/modals/catalog/add-product/AddProduct";
 import EditCategory from "@/modals/catalog/add-category/EditCategory";
 import ImportClient from "@/modals/client/ImportClient";
 import Swal from 'sweetalert2';
@@ -155,8 +166,11 @@ name: "Catalog",
     CatalogItem,
     AddCategory,
     ImportClient,
-    EditCategory
+    EditCategory,
+    AddProduct,
+    EditProduct
   },
+
   data(){
     return{
       listCategory:[{_id:'', name:'All'}],
@@ -164,95 +178,94 @@ name: "Catalog",
       search:'',
       sorting:true,
       filtered: '',
-      className:'',
-      edit_catalog:'',
-      edit_category:'',
       perPage: 8,
-      pageToOpen: 1,
       currentPage: 1,
-      catalogToDisplay:[],
+      selectAll:false,
+      price_to:'',
+      price_from:'',
+      quantity_from:'',
+      quantity_to:'',
+      select_product:'',
     }
   },
   computed:{
-
-    selectAll: function() {
-        return this.catalogList.every(function(user){
-          return user.checked
-        });
-      },
     filteredList: function(){
       return  this.catalogList
+          .filter(catalog=>{
+            if(this.price_to.length>0){
+              return catalog.price >= this.price_from && catalog.price <= this.price_to
+            }
+            else if(this.price_to === ''){
+              return catalog.price >=this.price_from;
+            }
+            else{
+              return catalog
+            }
+          })
+          .filter(catalog=>{
+            if(this.quantity_to.length>0){
+              return catalog.quantity >= this.quantity_from && catalog.quantity <= this.quantity_to
+            }
+            else if(this.quantity_to === ''){
+              return catalog.quantity>=this.quantity_from;
+            }
+            else{
+              return catalog
+            }
+          })
           .filter(catalog => {
             return catalog.name.toLowerCase().includes(this.search.toLowerCase())
           })
           .filter(product => {
-            return !product.category.indexOf(this.filtered)
+
+            return product.category.includes(this.filtered)
           })
     },
-    totalPages(){
-      //calculate the total number of pages based on the number of items to show per page and the total items we got from server
-
-      return this.filteredList.length && (this.filteredList.length > this.perPage) ? Math.ceil(this.filteredList.length/this.perPage) : 1;
+    catalogToDisplay: function(){
+      let start = (this.currentPage - 1) * this.perPage
+      let end = this.currentPage * this.perPage
+      this.filteredList.map((value, index) =>{
+        value.index = index
+        return value
+      })
+      return this.filteredList.slice(start, end)
     },
-    start(){
-      return (this.pageToOpen - 1) * this.perPage;
-    },
-    stop(){
-      //stop at the end of the array if array length OR the items left are less than the number of items to show per page
-      //do the calculation if otherwise
-      if((this.filteredList.length - this.start) >= this.perPage){
-        return (this.pageToOpen * this.perPage) - 1;
-      }
-      else{
-        return this.filteredList.length - 1;
-      }
+    totalPages:function(){
+      return Math.ceil(this.filteredList.length / this.perPage)
     },
     showNext(){
       return this.currentPage < this.totalPages;
     },
     showPrev(){
       return this.currentPage > 1;
-    }
+    },
+
   },
   methods:{
-    renderPaginationList(pageNumber=1){
-      //clear currently displayed list
-      this.catalogToDisplay = [];
-      //set countries to display
-      if(this.filteredList.length){
-        let _this = this;
-        return new Promise(function(res){
-          //set the page to open to the pageNumber in the parameter in order to allow start and stop to update accordingly
-          _this.pageToOpen = pageNumber;
-          //add the necessary data to `countriesToDisplay` array
-          for(let i = _this.start; i <= _this.stop; i++){
-              _this.catalogToDisplay.push(_this.filteredList[i]);
+    checkAll(item){
+      this.selectAll = item
+    },
+    unCheckAll(item){
+      this.selectAll = item
+    },
+    toggleSelect: function () {
+      this.catalogList.forEach((user)=> {
+        if(this.$refs.catalog_item.$refs[`select${user._id}`] !== undefined && this.$refs.catalog_item.$refs[`select${user._id}`] !== null){
+          if(this.selectAll === false){
+            this.$refs.catalog_item.$refs[`select${user._id}`].checked = true
           }
-          res();
-        }).then(function(){
-          //Now update the current page to the page we just loaded
-          _this.currentPage = _this.pageToOpen;
-        }).catch(function(){
-          console.log('render err');
-        });
-      }
+          else{
+            this.$refs.catalog_item.$refs[`select${user._id}`].checked = false
+          }
+        }
+      });
     },
     moveCategory(value){
       let  move = this.catalogList.filter(catalog => catalog.checked)
         move.every(catalog=>catalog.category = value)
         move.map(cat=>cat.checked = false);
-        this.renderPaginationList()
-       this.$informationAlert('Category has been changed')
+        this.$informationAlert('Category has been changed')
 
-    },
-    editedCatalogSubmit(edited){
-      var foundIndex = this.catalogList.findIndex(x => x.id === edited.id);
-      this.catalogList[foundIndex] = edited;
-      this.renderPaginationList()
-      this.$successAlert('Changes are saved')
-    },
-    editCatalog(id){
-     this.edit_catalog = this.catalogList.find((catalog)=>catalog._id === id)
     },
     deleteAllOrder() {
       if(this.selectAll){
@@ -264,34 +277,32 @@ name: "Catalog",
        this.catalogList = this.catalogList.filter(catalog => !catalog.checked)
       }
 
-      this.renderPaginationList()
-    },
-    toggleSelect: function() {
-      let select = this.selectAll;
-      this.catalogList.forEach((user)=>{
-        user.checked = !select;
-
-      })
     },
     sortByQunatity() {
-      if(this.catalogToDisplay.length === 0){
+      if(this.catalogList.length === 0){
         return null;
       }
-      this.catalogToDisplay.sort((a, b) => this.sorting? (parseInt(a.quantity) - parseInt(b.quantity)) : (parseInt(b.quantity) - parseInt(a.quantity)));
+      this.catalogList.sort((a, b) => this.sorting? (parseInt(a.quantity) - parseInt(b.quantity)) : (parseInt(b.quantity) - parseInt(a.quantity)));
       this.sorting = !this.sorting;
       $('.date-pol').toggleClass('active')
       $('.total-pol').removeClass('active')
 
     },
     sortByPrice(){
-      if(this.catalogToDisplay.length === 0){
+      if(this.catalogList.length === 0){
         return null;
       }
-      this.catalogToDisplay.sort((a, b) => this.sorting? (parseInt(a.price) - parseInt(b.price)) : (parseInt(b.price) - parseInt(a.price)));
+      this.catalogList.sort((a, b) => this.sorting? (parseInt(a.price) - parseInt(b.price)) : (parseInt(b.price) - parseInt(a.price)));
       this.sorting = !this.sorting;
       $('.total-pol').toggleClass('active')
      $('.date-pol').removeClass('active')
-
+    },
+    selectProduct(id){
+      this.catalogList.map((product)=>{
+        if(product._id === id){
+          this.select_product = product
+        }
+      })
     },
     deleteProduct(id){
       Swal.fire({
@@ -308,14 +319,8 @@ name: "Catalog",
           actions:'btn-group',
           content:'content-sweet',
           closeButton:'close-btn'
+        },
 
-        },
-        showClass: {
-          popup: 'animate__animated animate__zoomIn'
-        },
-        hideClass: {
-          popup: 'animate__animated animate__zoomOut'
-        }
       }).then((result) => {
         if (result.isConfirmed) {
           this.axios.delete(this.url('deleteProduct',id))
@@ -346,19 +351,22 @@ name: "Catalog",
     },
     deleteCategory(id){
       this.axios.delete(this.url('deleteCategory',id))
-      this.getCategories()
-      const idx = this.listCategory.findIndex(el=>el._id === id);
-      this.$refs[Object.keys(this.$refs)[idx-1]].click()
+      .then(()=>{
+        this.getCategories()
+        const idx = this.listCategory.findIndex(el=>el._id === id);
+        this.$refs[`menu${idx-1}`].click()
+      })
     },
-    async  getProducts(){
-      await this.axios.get(this.url('getProducts'))
+    getProducts(){
+       this.axios.get(this.url('getProducts'))
           .then((response) => {
               this.catalogList = response.data.objects;
-              this.renderPaginationList()
+              console.log(this.catalogList)
+
   })
     },
-    async getCategories(){
-      await this.axios.get(this.url('getCategories'))
+    getCategories(){
+       this.axios.get(this.url('getCategories')+'?type=product')
           .then((res)=>{
             this.listCategory = res.data.objects;
             this.listCategory.unshift({_id:'', name: 'All'})
@@ -371,21 +379,10 @@ name: "Catalog",
 
   mounted(){
     this.getCategories()
-    this.renderPaginationList()
     this.getProducts()
+    console.log(this.catalogList)
   },
-  watch: {
-    perPage: function(){
-      this.renderPaginationList();
-    },
-    search: function (){
-      this.renderPaginationList()
-    },
-    filtered:function(){
-      this.renderPaginationList()
-    },
 
-  },
 }
 </script>￼
 
@@ -393,6 +390,9 @@ name: "Catalog",
 
 
 <style scoped>
+.filter-product label{
+  font-size: 15px;
+}
 .filter-product{
   padding: 20px;
 }
@@ -419,19 +419,7 @@ name: "Catalog",
   justify-content: space-between;
   align-items: center;
 }
-.catalog-list:hover{
-  background: #EBEEFF;
-  color: #616CF5;
-  cursor:pointer;
-}
-.catalog-list.active{
-  background: #EBEEFF;
-  color: #616CF5;
-}
-.catalog-list img{
-  width: 15px;
-  height: 15px;
-}
+
 .catalog-menu{
   margin-right: 25px;
 }

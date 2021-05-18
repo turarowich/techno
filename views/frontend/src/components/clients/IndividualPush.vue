@@ -1,7 +1,7 @@
 <template>
 <div class="individual-push">
   <div class="notification-header">
-    <img class="mr-2" src="../../assets/icons/xBlack.svg"><h3>Individual push</h3>
+    <img class="mr-2" @click="$router.go(-1)" src="../../assets/icons/xBlack.svg"><h3>Individual push</h3>
   </div>
   <span class="header-description">Configure Unique Push Notifications<br> to send to customers</span>
 

@@ -7,48 +7,48 @@
       <div class="col-lg-3 pr-0">
         <div class="card-price"  id="one" @click="addClassFree">
           <div class="price-head d-flex align-items-center mb-4">
-            <img class="price-img" src="../../../assets/icons/start-setting.svg">
+            <img class="price-img" src="../../assets/icons/start-setting.svg">
             <h1 class="price-title">Start</h1>
           </div>
           <div class="price-body">
             <ul class="price-menu">
               <li class="price-list"><span>Customer base</span><span>200</span></li>
-              <li class="price-list"><span>Link to the site</span><img src="../../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Link to the site</span><img src="../../assets/icons/true.svg"></li>
               <li class="price-list"><span>Users</span><span>1</span></li>
-              <li class="price-list"><span>Loyalty</span><img src="../../../assets/icons/x.svg"></li>
-              <li class="price-list"><span>Chats with clients</span><img src="../../../assets/icons/true.svg"></li>
-              <li class="price-list"><span>Push notification</span><img src="../../../assets/icons/true.svg"></li>
-              <li class="price-list"><span>Product catalog</span><img src="../../../assets/icons/true.svg"></li>
-              <li class="price-list"><span>Managing orders</span><img src="../../../assets/icons/true.svg"></li>
-              <li class="price-list"><span>Managing statuses</span><img src="../../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Loyalty</span><img src="../../assets/icons/x.svg"></li>
+              <li class="price-list"><span>Chats with clients</span><img src="../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Push notification</span><img src="../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Product catalog</span><img src="../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Managing orders</span><img src="../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Managing statuses</span><img src="../../assets/icons/true.svg"></li>
             </ul>
           </div>
           <div class="price-foot d-flex align-items-center">
-            <h1>free</h1>
+            <h1>Free</h1>
           </div>
         </div>
       </div>
       <div  class="col-lg-3 pr-0">
         <div class="card-price"  @click="addClassStart" id="two">
-          <div class="price-head d-flex align-items-center mb-4">
-            <img class="price-img " src="../../../assets/icons/pro.svg">
+          <div class="price-head d-flex align-items-end mb-4">
+            <img class="price-img " src="../../assets/icons/pro.svg">
             <h1 class="price-title">Pro</h1>
           </div>
           <div class="price-body">
             <ul class="price-menu">
               <li class="price-list"><span>Customer base</span><span>unlimited</span></li>
-              <li class="price-list"><span>Link to the site</span><img src="../../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Link to the site</span><img src="../../assets/icons/true.svg"></li>
               <li class="price-list"><span>Users</span><span>unlimited</span></li>
-              <li class="price-list"><span>Loyalty</span><img src="../../../assets/icons/true.svg"></li>
-              <li class="price-list"><span>Chats with clients</span><img src="../../../assets/icons/true.svg"></li>
-              <li class="price-list"><span>Push notification</span><img src="../../../assets/icons/true.svg"></li>
-              <li class="price-list"><span>Product catalog</span><img src="../../../assets/icons/true.svg"></li>
-              <li class="price-list"><span>Managing orders</span><img src="../../../assets/icons/true.svg"></li>
-              <li class="price-list"><span>Managing statuses</span><img src="../../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Loyalty</span><img src="../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Chats with clients</span><img src="../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Push notification</span><img src="../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Product catalog</span><img src="../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Managing orders</span><img src="../../assets/icons/true.svg"></li>
+              <li class="price-list"><span>Managing statuses</span><img src="../../assets/icons/true.svg"></li>
             </ul>
           </div>
           <div class="price-foot d-flex align-items-center">
-            <h1>29$</h1>
+            <h1>10$</h1>
             <span>/month</span>
           </div>
         </div>
@@ -56,15 +56,15 @@
       <div class="col-lg-3 pr-0">
         <div @click="addClassApp" id="three" class="card-price app d-flex align-items-center justify-content-center">
             <div class="text-center">
-              <img class="mb-2 app-img" src="../../../assets/icons/app.svg">
+              <img class="mb-2 app-img" src="../../assets/icons/app.svg">
               <h3>+ App</h3>
               <p>With this tariff, you will have
                 a unique mobile app
               </p>
             </div>
-          <div class="price-foot app-foot d-flex align-items-center">
+          <div class="price-foot app-foot d-flex align-items-end">
             <h1>299$</h1>
-            <span>/month</span>
+            <span>/first year</span>
           </div>
         </div>
 
@@ -74,33 +74,30 @@
     <h3 class="cashback-sub-title mb-4 mt-4">Select the validity period</h3>
     <div class="row month mb-4">
       <div class="col-3 pr-0"  v-for="price in prices" :key="price.id"  >
-        <div class="validity-period" @click="checkBlock(price.id)">
+        <div class="validity-period">
           <div class="d-flex justify-content-between align-items-center mb-4">
             <h3 class="validity-title">{{price.month}} month</h3>
             <div class="round-price">
-              <img src="../../../assets/icons/bird.svg">
+              <img src="../../assets/icons/bird.svg">
             </div>
           </div>
           <div class="valid-desc"><span class="valid-desc-price">{{price.price}}</span>$/month</div>
         </div>
       </div>
     </div>
+
     <h3 class="cashback-sub-title mb-3">Total</h3>
-      <div class="total justify-content-between d-flex align-items-center">
-        <div class="total-price d-flex ">
-          <div class="total-left">
-            <p class="valid-desc">Benefits:</p>
-            <h3>0$</h3>
-          </div>
-          <div>
-            <p class="valid-desc">To be paid:</p>
-            <h3>{{tobePaid}}$</h3>
-          </div>
+    <div class="total justify-content-between d-flex align-items-center">
+        <div>
+          <p class="valid-desc">To be paid:</p>
+          <h3>{{tobePaid}}$</h3>
         </div>
+
         <div>
           <button class="save">Pay</button>
+          </div>
         </div>
-      </div>
+
   </div>
 
 </div>
@@ -148,7 +145,7 @@ name: "Price",
         return price.price = price.month * 299;
       })
     },
-    addActive(){
+    addActiveMonth(){
       $(document).ready(function() {
         $('.validity-period').click(function() {
           $('.validity-period.active').removeClass("active");
@@ -158,7 +155,7 @@ name: "Price",
     }
   },
 mounted(){
-  this.addActive()
+  this.addActiveMonth()
 }
 
 
@@ -167,6 +164,9 @@ mounted(){
 </script>
 
 <style scoped>
+.save{
+  width: 120px;
+}
 .validity-period.active{
   border: 1px solid #616cf5;
   transition: .3s;
@@ -191,9 +191,10 @@ mounted(){
   padding:20px;
   border: 1px solid #D3D3D3;
   border-radius: 7px;
-  height:390px;
+  height:370px;
   transition: .4s;
-  cursor:pointer
+  cursor:pointer;
+  font-size:14px;
 }
 .card-price:hover{
   border: 1px solid #616CF5;
@@ -208,9 +209,11 @@ mounted(){
 .app h3{
   color: #616CF5;
   font-size: 20px;
+  margin-bottom: 10px;
 }
 .app p{
   color: #8C94A5;
+  font-size: 14px;
 }
 .app-foot{
   position: absolute;
@@ -235,6 +238,7 @@ mounted(){
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: 14px;
 }
 
 .price-foot h1{
@@ -257,6 +261,7 @@ mounted(){
 .valid-desc{
   color: #B0B0B0;
   margin-bottom: 10px;
+  font-size:14px;
 }
 .validity-period input{
   width:12px;

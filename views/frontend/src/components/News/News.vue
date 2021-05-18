@@ -3,7 +3,7 @@
   <div class="searchAndButtons">
     <div class="d-flex justify-content-between app-buttons">
       <div class="d-flex align-items-center">
-        <button class="app-buttons-item adding-btns" data-toggle="modal" data-target="#add-category"><span>+ Add news</span></button>
+        <button class="app-buttons-item adding-btns" @click="$router.push('/add-news')"><span>+ Add news</span></button>
       </div>
     </div>
     <div class="main-search d-flex align-items-center ">
@@ -20,8 +20,7 @@
   </div>
 
   <NewsItem/>
-  <NewsItem/>
-  <NewsItem/>
+
 </div>
 </template>
 

@@ -30,8 +30,10 @@ name: "Home",
 </script>
 
 <style scoped>
-.client-container{
-  max-width: calc(100vw - 240px);
+@media(min-width:1200px){
+  .client-container{
+    max-width: calc(100vw - 240px);
+  }
 }
 .client{
   overflow-y: auto;
