@@ -26,7 +26,7 @@
          <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
            <ul class="list-group " >
              <li class="list-group-item" @click="getEditPromocode(promocode._id)">Edit</li>
-             <li class="list-group-item">Delete</li>
+             <li @click="removeAddPromocode(promocode._id)" class="list-group-item">Delete</li>
            </ul>
          </div>
        </div>
@@ -62,6 +62,23 @@ export default {
       }).catch(function(error){
         console.log(error);
       });
+    },
+
+    removeAddPromocode(id){
+      let that = this;
+      let url = 'https://localhost:8443/api/deletePromocode/'+id;
+      this.axios.delete(url).then(function (response) {
+        console.log(response);
+        that.$store.dispatch("Promocode/setPromocodeAPI",that.axios);
+      }).catch(function(error){
+        if (error.response) {
+          // console.log(error.response.status);
+          // console.log(error.response.headers);
+          console.log(error.response.data.errors);
+        }
+      });
+
+
     },
   },
 }

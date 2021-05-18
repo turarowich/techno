@@ -387,8 +387,8 @@ export default {
   mounted(){
     this.addActive()
     this.selectDates()
-    if(this.editState ===true){
-      let promocode = this.$store.getters['Promocode/getPromocode'];
+    let promocode = this.$store.getters['Promocode/getPromocode'];
+    if(this.editState ===true && promocode){
       console.log(promocode,"9999999999999999999999990");
       this.promocode_id=promocode._id;
       this.name=promocode.name;

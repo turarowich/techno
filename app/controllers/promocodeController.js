@@ -91,6 +91,8 @@ class PromocodeController{
     };
 
     deletePromocode = async function (req, res) {
+        console.log(req.params,"ddd");
+
         let db = useDB(req.db)
         let Promocode = db.model("Promocode");
 
