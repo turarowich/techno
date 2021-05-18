@@ -14,7 +14,7 @@ class ClientController{
         }
         try {
             
-            let client = await Client.findById(req.params.client).populate('messages').execPopulate()
+            let client = await Client.findById(req.params.client).populate('messages').populate('category').exec()
             result['object'] = client
         
         } catch (error) {
@@ -34,7 +34,7 @@ class ClientController{
         }
         try {
             
-            let clients = await Client.find().populate('messages').exec()
+            let clients = await Client.find().populate('messages').populate('category').exec()
             result['objects'] = clients
         
         } catch (error) {
