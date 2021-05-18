@@ -16,7 +16,12 @@ var options = {
     production: false
 };
 
-var apnProvider = new apn.Provider(options);
+
+try {
+    var apnProvider = new apn.Provider(options);
+}catch (err){
+    console.log(err);
+}
 
 class PushController {
 

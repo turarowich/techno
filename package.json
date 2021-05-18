@@ -36,6 +36,6 @@
     "passport-google-oauth": "^2.0.0",
     "passport-twitter": "^1.0.4",
     "query-string": "^7.0.0",
-    "read-excel-file": "^5.1.0",
+    "read-excel-file": "^5.1.0"
   }
 }
