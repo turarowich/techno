@@ -1,5 +1,4 @@
 <template>
-
   <div class="parent-modal">
     <div class="modal myModal fade" id="add-client-category" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -21,7 +20,7 @@
                 <label>Select category</label>
                 <select class="form-control long-form-control modal-select mb-5">
                   <option value="">Without category</option>
-                  <option v-for="cat in listCategory" :key="cat.id"  :value="cat.name.toLowerCase()">{{cat.name}}</option>
+                  <option ></option>
                 </select>
               </div>
 
@@ -44,10 +43,6 @@ import $ from 'jquery'
 export default {
   name: "AddCategory",
   props:{
-    listCategory:{
-      type:Array,
-      required:true
-    },
     getCategories:{
       type:Function,
     }
@@ -56,6 +51,7 @@ export default {
     return{
       new_category: {
         name: '',
+        type:"client"
       }
     }
   },
@@ -63,6 +59,7 @@ export default {
     onSubmit(){
       const data = new FormData();
       data.append('name', this.new_category.name)
+      data.append('type', this.new_category.type)
       this.axios.post(this.url('addCategory'),data)
           .then((response)=>{
             console.log('Success ', response.data.object)
@@ -72,7 +69,7 @@ export default {
             console.log("Error"+error)
           })
 
-      $('#add-category').modal("hide")
+      $('#add-client-category').modal("hide")
       this.new_category.name = ''
     },
   }

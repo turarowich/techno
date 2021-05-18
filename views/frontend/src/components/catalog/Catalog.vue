@@ -297,7 +297,6 @@ name: "Catalog",
       $('.total-pol').toggleClass('active')
      $('.date-pol').removeClass('active')
     },
-
     selectProduct(id){
       this.catalogList.map((product)=>{
         if(product._id === id){
@@ -367,7 +366,7 @@ name: "Catalog",
   })
     },
     getCategories(){
-       this.axios.get(this.url('getCategories?type=product'))
+       this.axios.get(this.url('getCategories')+'?type=product')
           .then((res)=>{
             this.listCategory = res.data.objects;
             this.listCategory.unshift({_id:'', name: 'All'})

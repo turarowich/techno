@@ -83,12 +83,12 @@
 
                           <div class="radio-toolbar-category">
                             <div class="d-flex align-items-center mb-2 mr-5">
-                              <input ref="client-filter" type="radio" id="radioStandart"  name="radioCategory" @click="category='standart'">
+                              <input ref="client-filter" type="radio" id="radioStandart"  name="radioCategory" @click="selectStandart">
                               <label class="radio-checkbox" for="radioStandart"></label>
                               <span class="male">Standart</span>
                             </div>
                             <div class="d-flex align-items-center">
-                              <input ref="client-filter" type="radio" id="radioVip" @click="category='vip'" name="radioCategory" >
+                              <input ref="client-filter" type="radio" id="radioVip" @click="selectVip" name="radioCategory" >
                               <label class="radio-checkbox" for="radioVip"></label>
                               <span class="male">Vip</span>
                             </div>
@@ -215,8 +215,9 @@
         <input v-model="search_category" placeholder="Search" style="height:35px; margin-bottom:15px" class="cashback-input">
 
         <ul class="list-group" >
-          <li class="catalog-list"  v-for="category in filterCategory" :key="category.id"  @click="f_category = category.name.toLowerCase()">
+          <li class="catalog-list" :ref="`menu`+index"   v-for="(category,index) in filterCategory" :key="category._id" :class="{active: f_category === category._id}"  @click="f_category = category._id">
             <span>{{category.name}}</span>
+
             <div class="dropdown dropMenu">
               <div class="dropdown-toggle" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img src="../../assets/icons/three-dots.svg">
@@ -224,7 +225,7 @@
               <div class="dropdown-menu" aria-labelledby="dropdownMenu">
                 <ul class="list-group" >
                   <li class="list-group-item" data-toggle="modal" data-target="#edit-category">Edit</li>
-                  <li class="list-group-item">Delete</li>
+                  <li class="list-group-item" @click="deleteCategory(category._id)">Delete</li>
                 </ul>
               </div>
             </div>
@@ -269,16 +270,20 @@
           <ClientItem
               v-on:checkAll="checkAll"
               v-on:unCheckAll="unCheckAll"
+              v-on:selectClient="selectClient"
+              v-on:deleteClient="deleteClient"
               ref="client_item"
               :clientList="clientToDisplay"
               :data_check="data_check"
+
 
           />
 
         </div>
 
-        <EditClient/>
-        <AddCategory/>
+        <EditClient v-bind:select_client="select_client"/>
+        <AddCategory
+          :getCategories="getCategories"/>
         <div class="pagination d-flex justify-content-between align-items-center">
           <div class="d-flex align-items-center">
             <span>Rows per page</span>
@@ -321,6 +326,7 @@ export default {
     AddCategory
   },
 
+
   data(){
     return {
       clientList:[],
@@ -345,14 +351,13 @@ export default {
        discount_checked:false,
      },
       clientCategory:[
-          {id:1, name:'Standart'},
-          {id:2, name:'Vip'},
-          {id:3, name:'Gold'},
+        {_id:'',name:'All'}
       ],
       selectAll:false,
       search:'',
       sorting:true,
       search_category:'',
+      select_client:'',
 
       /*---------Sumbit values after choosing then ------------*/
 
@@ -392,10 +397,12 @@ export default {
             return client.firstName.toLowerCase().includes(this.search.toLowerCase()) || client.phone.includes(this.search)
           })
           .filter(client =>{
-            return(
-                client.category.includes(this.f_category) &&
-                client.birthDate.includes(this.f_birthday)
-            )
+              if(client.category !== null){
+                return(
+                    client.category._id.includes(this.f_category) &&
+                    client.birthDate.includes(this.f_birthday)
+                )
+              }
           })
           // .filter(client=>{
           //   if(this.f_to_register_date.length > 0){
@@ -469,6 +476,20 @@ export default {
   },
 
   methods: {
+    selectStandart(){
+      this.clientCategory.map((item)=>{
+        if(item.name.toLowerCase() === 'standart'){
+          this.category = item._id
+        }
+      })
+    },
+    selectVip(){
+      this.clientCategory.map((item)=>{
+        if(item.name.toLowerCase() === 'vip'){
+          this.category = item._id
+        }
+      })
+    },
     checkAll(item){
       this.selectAll = item
     },
@@ -534,6 +555,14 @@ export default {
       $('.total-pol').toggleClass('active')
       $('.date-pol').removeClass('active')
     },
+    selectClient(id){
+      this.clientList.map((item)=>{
+        if(item._id === id){
+          this.select_client = item
+        }
+      })
+
+    },
     deleteClient(id){
       Swal.fire({
         showConfirmButton: true,
@@ -554,22 +583,26 @@ export default {
 
       }).then((result) => {
         if (result.isConfirmed) {
-          this.clientLient = this.clientList.filter(el=> el.id !== id);
-          Swal.fire({
-                title:'Success',
-                timer:1500,
-                text:'Order has been removed',
-                showConfirmButton:false,
-                position: 'top-right',
-                customClass:{
-                  popup:'success-popup',
-                  content:'success-content',
-                  title:'success-title',
-                  header:'success-header',
-                  image:'success-img'
-                },
-              }
-          )}
+          this.axios.delete(this.url('deleteClient', id))
+          .then(()=>{
+            this.getClients()
+            Swal.fire({
+                  title:'Success',
+                  timer:1500,
+                  text:'Order has been removed',
+                  showConfirmButton:false,
+                  position: 'top-right',
+                  customClass:{
+                    popup:'success-popup',
+                    content:'success-content',
+                    title:'success-title',
+                    header:'success-header',
+                    image:'success-img'
+                  },
+                }
+            )
+          })
+        }
       })
      },
     deleteAllClient() {
@@ -590,12 +623,28 @@ export default {
         this.clientList = res.data.objects
 
       })
-    }
+    },
+    getCategories(){
+      this.axios.get(this.url('getCategories')+'?type=client')
+      .then((response)=>{
+        this.clientCategory = response.data.objects
+        this.clientCategory.unshift({_id:'',name:'All'})
+      })
+    },
+    deleteCategory(id){
+      this.axios.delete(this.url('deleteCategory',id))
+          .then(()=>{
+            this.getCategories()
+            const idx = this.listCategory.findIndex(el=>el._id === id);
+            this.$refs[`menu${idx-1}`].click()
+          })
+    },
+
 
   },
    mounted(){
-
     this.getClients()
+    this.getCategories()
     new this.$lightpick({
       field: document.getElementById('from-date'),
       format:'YYYY-MM-DD',
@@ -658,7 +707,6 @@ export default {
   list-style-type: none;
   border:none;
   height: 35px;
-
   padding:0 10px;
   border-radius:5px;
   font-size: 14px;
