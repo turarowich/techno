@@ -7,6 +7,7 @@ var reviewController = require('../app/controllers/reviewController');
 var orderController = require('../app/controllers/orderController');
 var userController = require('../app/controllers/userController');
 var newsController = require('../app/controllers/newsController');
+var pushController = require('../app/controllers/pushController');
 var cashbackController = require('../app/controllers/cashbackController');
 
 var multer = require('multer');
@@ -17,13 +18,22 @@ module.exports = function (app, network_information) {
     app.get('/getClients', clientController.getClients);
     app.post('/addClient', clientController.addClient);
     app.put('/updateClient/:client', clientController.updateClient);
+    app.put('/updateClient/:client', clientController.updateClient);
+    app.put('/updateClientsCategory', clientController.updateClientsCategory);
     app.delete('/deleteClient/:client', clientController.deleteClient);
-    
+    app.delete('/deleteClients', clientController.deleteClients);
+    app.post('/addClientDevice', clientController.addClientDevice);
+
     // Products url
     app.get('/getProduct/:product', productController.getProduct);
     app.get('/getProducts', productController.getProducts);
+    app.post('/getProductExcel', productController.getProductExcel);
+    app.post('/getProductImportExcel', productController.getProductImportExcel);
     app.post('/addProduct', upload.single('file'), productController.addProduct);
     app.put('/updateProduct/:product', upload.single('file'), productController.updateProduct);
+    app.put('/updateProductsCategory', productController.updateProductsCategory);
+
+
     app.delete('/deleteProduct/:product', productController.deleteProduct);
     app.delete('/deleteProducts', productController.deleteProducts);
     app.get('/searchProduct', productController.searchProduct);
@@ -73,6 +83,8 @@ module.exports = function (app, network_information) {
     app.delete('/deleteOrder/:order', orderController.deleteOrder);
     app.delete('/deleteOrders', orderController.deleteOrders);
     app.post('/getOrderExcel', orderController.getOrderExcel);
+
+
     // News url
     app.get('/getSingleNews/:news', newsController.getSingleNews);
     app.get('/getNews', newsController.getNews);
@@ -85,6 +97,9 @@ module.exports = function (app, network_information) {
     app.get('/getUsers', userController.getUsers);
     app.put('/updateUser/:user', userController.updateUser);
     app.delete('/deleteUser/:user', userController.deleteUser);
+
+    // User url
+    app.get('/sendNewsPN/:id', pushController.sendNewsPN);
 
     return app;
 }

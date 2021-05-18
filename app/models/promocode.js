@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const promocodeSchema = new Schema({
     name: {
         type: String,
-        required: [true, 'Name required'],
+        required: [true, 'name_required'],
         validate: {
             validator: async function (name) {
                 const promo = await this.constructor.findOne({ name });
@@ -21,8 +21,7 @@ const promocodeSchema = new Schema({
     },
     code: {
         type: String,
-        required: [true, 'Code required'],
-        minlength: [12, 'phone_min'],
+        required: [true, 'code_required'],
     },
     percent: {
         type: Number,

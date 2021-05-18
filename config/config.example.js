@@ -22,4 +22,7 @@ module.exports = {
     TWITTER_CONSUMER_KEY:'2COaXMimejAAhgtNKbP0OLh4W',
     TWITTER_SECRET_KEY:'o2xgzzJn5YXlmQnUs4KZAcaDm6centlvadyitvXXJsvDPZH56J',
     TWITTER_CALLBACK_URL: 'http://localhost:8080/auth/twitter/callback',
+    APNs: 'AuthKey_xxxxxxxx.p8',
+    APNsKeyID: 'Loyid',
+    APNsTeamID: 'F64P295594',
 };

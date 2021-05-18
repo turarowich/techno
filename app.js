@@ -106,6 +106,7 @@ app.use('/', require('./routes/home.js')(router, passport))
 
 
 
+
 // handles not found errors
 app.use((err, req, res, next) => {
     if (err.httpStatusCode === 404) {
@@ -133,14 +134,15 @@ app.use((err, req, res, next) => {
     }
 });
 
-const io = require('socket.io')(httpsServer, {
+const io = require('socket.io')(httpServer, {
     cors: {
+        origin: "http://localhost:3000",
         methods: ["GET", "POST"],
         credentials: true
     },
     path: '/socket.io',
 });
-require("./app/controllers/chatController")(io)
+require("./routes/socket.js")(io)
 
 httpServer.listen(config.port_http, () => {
     console.log(`App listening at http://${config.localhost}:${config.port_http}`);

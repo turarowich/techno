@@ -8,7 +8,7 @@ const orderProductSchema = new Schema({
     },
     name: {
         type: String,
-        required: [true, 'Name required'],
+        required: [true, 'name_required'],
     },
     name_ru: {
         type: String,

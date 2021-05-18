@@ -8,6 +8,7 @@ function verifyToken(req, res, next) {
     console.log(token);
     token = token.replace(/^Bearer\s+/, "");
 
+
     if (!token)
         return res.status(403).send({ auth: false, message: 'No token provided.' });
 

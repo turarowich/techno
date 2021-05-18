@@ -30,6 +30,7 @@ const initClientDbConnection = () => {
     require("../app/models/news.js")
     require("../app/models/service.js")
     require("../app/models/cashback.js")
+    require("../app/models/device.js")
     return db;
 };
 

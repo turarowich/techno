@@ -24,7 +24,7 @@ import axios from "axios";
 import store from './store';
 import 'dropzone/dist/dropzone'
 import 'dropzone/dist/dropzone.css'
-
+import io from "socket.io-client"
 const app = createApp(App)
 app.use(router);
 app.use(store);
@@ -37,6 +37,14 @@ const ax = axios.create({
         port: 8443
     },
 });
+const socket = io(process.env.VUE_APP_SERVER_URL, {
+    extraHeaders: {
+        token: localStorage.getItem('token')
+    },
+    withCredentials: true,
+    reconnection: false
+})
+
 ax.defaults.headers.common['Authorization'] = 'Bearer '+ token
 app.config.globalProperties.$moment = moment;
 app.config.globalProperties.$lightpick = Lightpick;
@@ -46,6 +54,7 @@ app.config.globalProperties.$api = process.env.VUE_APP_API_URL;
 app.config.globalProperties.$server = process.env.VUE_APP_SERVER_URL;
 app.config.globalProperties.format_price = function (sum){parseFloat(sum).toFixed(2)}
 
+app.config.globalProperties.socket = socket
 app.config.globalProperties.scrollToBottom = function(obj){
     $("#"+obj).scrollTop(1000000)
 }
@@ -53,6 +62,12 @@ var home_url = ['login', 'register', 'loginClient', 'registerClient']
 
 app.config.globalProperties.changeToken = function () {
     this.axios.defaults.headers.common['Authorization'] = 'Bearer '+ localStorage.getItem('token')
+    this.socket = io({
+        extraHeaders: {
+            token: localStorage.getItem('token')
+        },
+        withCredentials: true,
+    })
     console.log(this.axios.defaults.headers)
 }
 app.config.globalProperties.url = function (main, id = null, search = null) {
