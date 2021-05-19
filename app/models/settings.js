@@ -2,35 +2,17 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const settingsSchema = new Schema({
-    name: {
-        type: String,
-        required: [true, 'company_name_required'],
-    },
     slogan: {
         type: String,
         required: [true, 'slogan_required'],
     },
-    phone: {
+    logo: {
         type: String,
         required: false,
-        default: ''
     },
-    email: {
+    description: {
         type: String,
-        required: true,
-        validate: {
-            validator: async function (email) {
-                const user = await this.constructor.findOne({ email });
-                if (user) {
-                    if (this.id === user.id) {
-                        return true;
-                    }
-                    return false;
-                }
-                return true;
-            },
-            message: props => 'The specified email address is already in use.'
-        }
+        required: false,
     },
     country: {
         type: String,
@@ -39,21 +21,27 @@ const settingsSchema = new Schema({
     },
     currency: {
         type: String,
-        required: [true, 'currency_required'],
+        required: false
     },
-    address: {
+    delivery: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    catalogMode: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    foodMode: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    deliveryDescription: {
         type: String,
         required: false,
-        default: ''
-    },
-    description: {
-        type: Number,
-        required: true,
-        default: 0
-    },
-    category: {
-        type: Schema.Types.ObjectId,
-        ref: 'user'
+        default: ""
     },
     createdAt: {
         type: Date,

@@ -20,7 +20,6 @@ class AuthController{
                 email: req.fields.email,
                 password: hashedPassword,
                 companyName: req.fields.companyName,
-                description: req.fields.description,
                 rate: req.fields.rate,
             })
             await user.validate()

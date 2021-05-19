@@ -32,6 +32,9 @@ const initClientDbConnection = () => {
     require("../app/models/cashback.js")
     require("../app/models/device.js")
     require("../app/models/bekaDiscounts.js")
+    require("../app/models/delivery.js")
+    require("../app/models/branch.js")
+    require("../app/models/settings.js")
     return db;
 };
 
