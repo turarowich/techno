@@ -84,15 +84,19 @@ class ClientController{
         }
         try {
             let query = { '_id': req.params.client }
-            req.fields.password = bcrypt.hashSync(req.fields.password, 8);
+            if (req.fields.password){
+                req.fields.password = bcrypt.hashSync(req.fields.password, 8);
+            }
+            
 
-            let client = await Client.findOneAndUpdate(query, req.fields)
+            let client = await Client.findOneAndUpdate(query, req.fields, {
+                new: true
+            })
             
             if (req.fields.apns){
                 client.apns.push(req.fields.apns)
                 client.save()
             }
-            client.password = 'secured';
             result['object'] = client
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])

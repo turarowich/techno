@@ -8,12 +8,12 @@ const branchSchema = new Schema({
         default: ""
     },
     longitude: {
-        type: Number,
+        type: String,
         required: true,
         default: 0
     },
     latitude: {
-        type: Number,
+        type: String,
         required: true,
         default: 0
     },

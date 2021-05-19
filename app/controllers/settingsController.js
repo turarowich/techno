@@ -2,9 +2,50 @@ var bcrypt = require('bcryptjs');
 const { useDB, sendError } = require('../../services/helper')
 var validate = require('../../config/messages');
 const { query } = require('express');
-const delivery = require('../models/delivery');
+const mongoose = require("mongoose");
+
 class SettingsController{
     
+    getSettingsClient = async function (req, res) {
+        let db = useDB('loygift' + req.headers['Access-Place']);
+        let Settings = db.model("Settings");
+
+        let result = {
+            'status': 200,
+            'msg': 'Sending settings'
+        }
+        if (!req.headers['Access-Place']) {
+            result.msg = "Wrong access place"
+        } else {
+            mongoose.connection.db.listCollections({ name: req.headers['Access-Place'] })
+            .next( async function (err, collinfo) {
+                if (collinfo) {
+                    try {
+
+                        let settings = await Settings.find()
+                        settings = settings[0]
+                        if (!settings) {
+                            settings = await new Settings({
+                                slogan: " ",
+                            }).save();
+                        }
+                        result['object'] = settings
+
+                    } catch (error) {
+                        result = sendError(error, req.headers["accept-language"])
+                    }
+                }else{
+                    result.msg = "Access place not found"
+                }
+            });
+        
+            
+        }
+        
+
+        res.status(result.status).json(result);
+    };
+
     getSettings = async function (req, res) {
         let db = useDB(req.db)
         let Settings = db.model("Settings");
@@ -18,7 +59,8 @@ class SettingsController{
         try {
             
             let settings = await Settings.find()
-            if (!settings[0]){
+            settings = settings[0]
+            if (!settings){
                 settings = await new Settings({
                     slogan: " ",
                 }).save();
