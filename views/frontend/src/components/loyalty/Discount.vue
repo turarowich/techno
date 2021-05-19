@@ -63,6 +63,7 @@ export default {
       let messages = [];
       if(this.current_discount.name===''){messages.push('Enter the name of the discount')}
       if(this.current_discount.percentage==='' || this.current_discount.percentage<=0){messages.push('Enter discount percentage')}
+      if(this.current_discount.percentage>100){messages.push('Percentage cannot be more than 100')}
       if(this.current_discount.min_sum==='' || this.current_discount.min_sum<=0){messages.push('Enter discount min sum')}
       if(messages.length>=1){this.displayMessages(messages,"Errors");return}
       //if ok
