@@ -14,32 +14,18 @@ class SettingsController{
             'status': 200,
             'msg': 'Sending settings'
         }
-        if (!req.headers['Access-Place']) {
+        
+        if (!req.headers['access-place']) {
             result.msg = "Wrong access place"
         } else {
-            mongoose.connection.db.listCollections({ name: req.headers['Access-Place'] })
-            .next( async function (err, collinfo) {
-                if (collinfo) {
-                    try {
+            try {
+                let settings = await Settings.find()
+                settings = settings[0]
+                result['object'] = settings
 
-                        let settings = await Settings.find()
-                        settings = settings[0]
-                        if (!settings) {
-                            settings = await new Settings({
-                                slogan: " ",
-                            }).save();
-                        }
-                        result['object'] = settings
-
-                    } catch (error) {
-                        result = sendError(error, req.headers["accept-language"])
-                    }
-                }else{
-                    result.msg = "Access place not found"
-                }
-            });
-        
-            
+            } catch (error) {
+                result = sendError(error, req.headers["accept-language"])
+            }
         }
         
 

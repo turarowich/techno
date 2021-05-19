@@ -54,7 +54,7 @@ class OrderController{
             'msg': 'Order added'
         }
         try {
-            let client = await Client.findById(req.userID)
+            let client = await Client.findById(req.fields.client)
             if(client){
                 
                 let order = await new Order({

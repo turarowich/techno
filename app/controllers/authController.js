@@ -70,7 +70,7 @@ class AuthController{
     };
 
     loginClient = async function (req, res) {
-        let db = global.userConnection.useDb('loygift'+req.headers['Access-Place']);
+        let db = global.userConnection.useDb('loygift'+req.headers['access-place']);
         let Client = db.model("Client");
         let lang = req.headers["accept-language"]
         if (lang != 'ru') {
@@ -89,10 +89,10 @@ class AuthController{
             delete errors.phone
             if (!passwordIsValid) return res.status(401).json({ status: 401, msg: "Not valid password", auth: false, token: null, errors: errors });
 
-            var token = jwt.sign({ id: req.headers['Access-Place'], user: user._id }, config.secret_key, {
+            var token = jwt.sign({ id: req.headers['access-place'], user: user._id }, config.secret_key, {
                 expiresIn: 86400 // expires in 24 hours
             });
-            var refresh_token = jwt.sign({ id: req.headers['Access-Place'], user: user._id  }, config.secret_key, {
+            var refresh_token = jwt.sign({ id: req.headers['access-place'], user: user._id  }, config.secret_key, {
                 expiresIn: "30 days"
             });
             user.password = ""
@@ -103,7 +103,7 @@ class AuthController{
         }
     };
     registerClient = async function (req, res) {
-        let db = global.userConnection.useDb('loygift'+req.headers['Access-Place']);
+        let db = global.userConnection.useDb('loygift'+req.headers['access-place']);
         let Client = db.model("Client");
         let result = []
         try {
@@ -123,10 +123,10 @@ class AuthController{
                 'msg': 'Client added',
                 'auth': true,
                 'object': client,
-                'refresh_token': jwt.sign({ id: req.headers['Access-Place'], user: client._id  }, config.secret_key, {
+                'refresh_token': jwt.sign({ id: req.headers['access-place'], user: client._id  }, config.secret_key, {
                     expiresIn: "30 days"
                 }),
-                'token': jwt.sign({ id: req.headers['Access-Place'], user: client._id }, config.secret_key, {
+                'token': jwt.sign({ id: req.headers['access-place'], user: client._id }, config.secret_key, {
                     expiresIn: 86400 // expires in 24 hours
                 }),
             }
@@ -138,7 +138,7 @@ class AuthController{
     };
 
     registerClientSocial = async function (req, res) {
-        let db = global.userConnection.useDb('loygift' + req.headers['Access-Place']);
+        let db = global.userConnection.useDb('loygift' + req.headers['access-place']);
         let Client = db.model("Client");
         let result = []
         let social_res = []
@@ -173,10 +173,10 @@ class AuthController{
                 'msg': 'Client added',
                 'auth': true,
                 'object': client,
-                'refresh_token': jwt.sign({ id: req.headers['Access-Place'], user: client._id  }, config.secret_key, {
+                'refresh_token': jwt.sign({ id: req.headers['access-place'], user: client._id  }, config.secret_key, {
                     expiresIn: "30 days"
                 }),
-                'token': jwt.sign({ id: req.headers['Access-Place'], user: client._id }, config.secret_key, {
+                'token': jwt.sign({ id: req.headers['access-place'], user: client._id }, config.secret_key, {
                     expiresIn: 86400 // expires in 24 hours
                 }),
             }
@@ -188,7 +188,7 @@ class AuthController{
         res.status(result.status).json(result);
     };
     loginClientSocial = async function (req, res) {
-        let db = global.userConnection.useDb('loygift' + req.headers['Access-Place']);
+        let db = global.userConnection.useDb('loygift' + req.headers['access-place']);
         let Client = db.model("Client");
         let result = []
         let social_res = []
@@ -222,10 +222,10 @@ class AuthController{
                 'msg': 'Sending token',
                 'auth': true,
                 'object': client,
-                'refresh_token': jwt.sign({ id: req.headers['Access-Place'], user: client._id  }, config.secret_key, {
+                'refresh_token': jwt.sign({ id: req.headers['access-place'], user: client._id  }, config.secret_key, {
                     expiresIn: "30 days"
                 }),
-                'token': jwt.sign({ id: req.headers['Access-Place'], user: client._id }, config.secret_key, {
+                'token': jwt.sign({ id: req.headers['access-place'], user: client._id }, config.secret_key, {
                     expiresIn: 86400 // expires in 24 hours
                 }),
             }
