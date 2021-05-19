@@ -60,14 +60,6 @@ const userSchema = new Schema({
         type: String,
         required: [false, 'company_name_required'],
     },
-    logo: {
-        type: String,
-        required: [false, 'logo_required'],
-    },
-    description: {
-        type: String,
-        required: [true, 'description_required'],
-    },
     rate: {
         type: Number,
         required: true,
