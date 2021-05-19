@@ -7,6 +7,11 @@ const cashbackSchema = new Schema({
         required: false,
         default: false
     },
+    discounts_status: {
+        type: Boolean,
+        required: false,
+        default: false
+    },
     default_cashback: {
         type: Number,
         required: false,
@@ -19,7 +24,7 @@ const cashbackSchema = new Schema({
     },
     selectedItemsList : {
         type : Array ,
-        "default" : [],
+        default : [],
         required: false,
     },
     welcome_points_status: {
