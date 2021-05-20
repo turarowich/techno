@@ -7,8 +7,10 @@ const mongoose = require("mongoose");
 class SettingsController{
     
     getSettingsClient = async function (req, res) {
-        let db = useDB('loygift' + req.headers['Access-Place']);
+        let db = useDB('loygift' + req.headers['access-place']);
         let Settings = db.model("Settings");
+        let Delivery = db.model("Delivery");
+        let Branch = db.model("Branch");
 
         let result = {
             'status': 200,
@@ -21,7 +23,13 @@ class SettingsController{
             try {
                 let settings = await Settings.find()
                 settings = settings[0]
+
+                let branches = await Branch.find()
+                let deliveries = await Delivery.find()
+
                 result['object'] = settings
+                result['branches'] = branches
+                result['deliveries'] = deliveries
 
             } catch (error) {
                 result = sendError(error, req.headers["accept-language"])

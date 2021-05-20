@@ -48,10 +48,9 @@ class PromocodeController{
         }
         try {
             let promocode = await new Promocode({
-                name: new_promocode.name || "No name",
+                name: new_promocode.name || "No name 122 4",
                 code: new_promocode.code || "90909",
-                percent: new_promocode.discount || "99",
-                bonus: new_promocode.bonus || "99",
+                discount: new_promocode.discount || "99",
                 startDate: new_promocode.fromDate || new Date(),
                 endDate: new_promocode.toDate || new Date(),
                 fixed_sum: new_promocode.fixedSum || '6',
@@ -153,7 +152,7 @@ class PromocodeController{
         }
         res.json(result);
     };
-    searchPromocodeByCode= async function (req, res) {
+    searchPromocodeByCode = async function (req, res) {
         let db = useDB(req.db)
         let Promocode = db.model("Promocode");
         let search = req.query.search;

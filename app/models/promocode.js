@@ -22,12 +22,21 @@ const promocodeSchema = new Schema({
     code: {
         type: String,
         required: [true, 'code_required'],
+        validate: {
+            validator: async function (code) {
+                const promo = await this.constructor.findOne({ code });
+                if (promo) {
+                    if (this.id === promo.id) {
+                        return true;
+                    }
+                    return false;
+                }
+                return true;
+            },
+            message: props => 'promo_code_unique'
+        },
     },
-    percent: {
-        type: Number,
-        required: false,
-    },
-    bonus: {
+    discount: {
         type: Number,
         required: false,
     },

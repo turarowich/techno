@@ -55,6 +55,7 @@ const en_messages = {
     //Promocode
     promo_code:'Code has to be at least 12 characters',
     promo_name_unique:'Promocode with this name already exists',
+    promo_code_unique: 'Promocode with this code already exists'
 }
 const ru_messages = {
     // ERROR messages
@@ -112,6 +113,7 @@ const ru_messages = {
     //Promocode
     promo_code:'Код должен быть минимум 12 сиволов',
     promo_name_unique:'Промокод с таким названием уже существует',
+    promo_code_unique: 'Промокод с таким кодом уже существует'
 }
 module.exports = {
     en: en_messages,
