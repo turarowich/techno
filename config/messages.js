@@ -55,7 +55,11 @@ const en_messages = {
     //Promocode
     promo_code:'Code has to be at least 12 characters',
     promo_name_unique:'Promocode with this name already exists',
-    promo_code_unique: 'Promocode with this code already exists'
+    promo_code_unique: 'Promocode with this code already exists',
+    promo_404: 'Promocode not found',
+    promo_not_usable: 'Promocode is not usable',
+    promo_min_price: 'The amount for using the promo code has not been reached',
+    
 }
 const ru_messages = {
     // ERROR messages
@@ -113,7 +117,12 @@ const ru_messages = {
     //Promocode
     promo_code:'Код должен быть минимум 12 сиволов',
     promo_name_unique:'Промокод с таким названием уже существует',
-    promo_code_unique: 'Промокод с таким кодом уже существует'
+    promo_code_unique: 'Промокод с таким кодом уже существует',
+    promo_404: 'Промокод не найден',
+    promo_not_usable: 'Промокод не может быть использован',
+    promo_min_price: 'Не достигнута сумма для использования промокода',
+    
+    
 }
 module.exports = {
     en: en_messages,
