@@ -32,6 +32,9 @@
             </div>
           </div>
         </div>
+
+
+        <button class="app-buttons-item" @click="exportOrder"><img class="img-btn" src="../../assets/icons/set.svg"><span>Export to Excell </span></button>
       </div>
       <div>
         <button class="app-buttons-item" @click="showYesterday"><img src="../../assets/icons/yesterday.svg"><span>Yesterday</span></button>

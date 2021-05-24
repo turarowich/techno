@@ -15,12 +15,20 @@
 
      <h3 class="catalog-sub-title margin-10">Your url from online catalog</h3>
      <p class="catalog-description mb-3">You can send a link to your catalog to your clients</p>
-     <div class="reload-code d-flex align-items-center"><input><div class="url-icon"><img src="../../assets/icons/urlIcon.svg"></div></div>
+     <div class="reload-code d-flex align-items-center">
+       <input v-model="catalogUrl">
+       <div @click="updateCatalogUrl();generateQrcode();" class="url-icon">
+         <img src="../../assets/icons/check.svg">
+       </div>
+       <div class="url-icon">
+        <img src="../../assets/icons/urlIcon.svg">
+       </div>
+     </div>
 
 
      <h3 class="catalog-sub-title margin-20">QR code for online catalog</h3>
      <div class="d-flex align-items-center margin-50">
-       <img src="../../assets/icons/qr-code.svg" class="mr-3">
+       <img :src="require(`../../../${qrcodePath}`)" class="mr-3">
        <div>
          <p class="catalog-description mb-2">You can print this code - this is the<br> menu for users to quickly go online</p>
          <div><img src="../../assets/icons/printer.svg" class="mr-2"><a style="color:#616cf5" href="/">Print</a></div>
@@ -39,22 +47,6 @@
         This setting disables the ability to place an order, your catalog will work as an online menu,
        customers can also place an order only within your institution
      </p>
-
-
-
-
-
-     <div class="d-flex margin-10">
-       <label class="switch d-flex">
-         <input type="checkbox">
-         <span class="slider round"></span>
-       </label>
-       <h2 class="catalog-sub-title">Food mode</h2>
-     </div>
-     <p class="catalog-description margin-50">
-       Necessary if you want to use the catalog only as an online menu suitable for cafes, coffee houses, etc.
-     </p>
-
 
      <h3 class="catalog-sub-title mb-1">News</h3>
      <p class="catalog-description margin-30">Disable news in the directory</p>
@@ -81,7 +73,7 @@
 
 
 
-
+     <button type="button" class="save mb-3">Save</button>
    </div>
 
 <!------------------Right Side-------------------------------------   -->
@@ -95,9 +87,11 @@
      <div class="margin-30">
        <label>Logo</label>
        <div class="profile-img ">
-         <img class="profile-logo" src="../../assets/icons/profile-img.svg">
-         <input type="file" id="file" v-on:change="uploadPhoto">
-         <label class="addPhoto" for="file"><img src="../../assets/icons/addBtn.svg"></label>
+<!--         <img class="profile-logo" src="../../assets/icons/profile-img.svg">-->
+         <img class="profile-logo" :src="previewImage" >
+<!--         <input type="file" id="file" v-on:change="uploadPhoto">-->
+         <input type="file" id="logo_file" @change="uploadImage($event)">
+         <label class="addPhoto" for="logo_file"><img src="../../assets/icons/addBtn.svg"></label>
        </div>
      </div>
 
@@ -107,13 +101,11 @@
      <div class="profile-img big-profile-img margin-30">
        <img src="../../assets/icons/setting-icon/no-img.svg">
        <input type="file" id="big-img" >
-       <label class="addPhoto big-addPhoto"  for="file"><img src="../../assets/icons/addBtn.svg"></label>
+       <label class="addPhoto big-addPhoto"  for="big-img"><img src="../../assets/icons/addBtn.svg"></label>
      </div>
 
-     <label>Definition</label>
+     <label>Description</label>
      <textarea class="general-area definition-area margin-30"></textarea>
-
-
 
      <h3 class="catalog-sub-title mb-1">Accent colors</h3>
      <p class="catalog-description margin-20">You can supply any color</p>
@@ -158,7 +150,41 @@
 <script>
 export default {
   name: "CatalogSettings",
+  data(){
+    return{
+      id:'',
+      catalogUrl:'',
+      qrcode_container:'',
+      imgPath:'loygift605c615d55033f268c5d48ea',
+      previewImage:require('../../assets/icons/profile-img.svg'),
+    }
+  },
+  computed:{
+    catalogFullUrl(){
+      return window.location.origin+'/shop/'+this.catalogUrl;
+    },
+    qrcodePath(){
+      // return '../../../images/'+this.imgPath+'/qr/code.png';
+      return 'images/'+this.imgPath+'/qr/code.png';
+    },
+
+  },
   methods:{
+    uploadImage(e){
+      const image = e.target.files[0];
+      if(image.name.match(/\.(jpg|jpeg|png|gif|svg)$/)){
+        const reader = new FileReader();
+        reader.readAsDataURL(image);
+        reader.onload = e =>{
+          this.previewImage = e.target.result;
+          this.saveCatalogSettings(image);
+        };
+
+      }else{
+        console.log('wrong type',+image.type)
+      }
+    },
+
     uploadPhoto(){
       const file = document.querySelector('#file');
       let chooseFiles = file.files[0];
@@ -167,11 +193,77 @@ export default {
 
         reader.addEventListener('load', function(){
           const logo = document.querySelector('.profile-logo')
+          console.log(logo,"sdsdssdsd");
           logo.setAttribute('src', reader.result);
         })
         reader.readAsDataURL(chooseFiles)
       }
     },
+    updateCatalogUrl(){
+      // let that=this;
+      let url = this.base_url+'/api/updateSettings';
+      this.axios.put(url, {
+        catalogUrl:this.catalogUrl
+      }).then(function (response) {
+        console.log(response);
+      }).catch(function(error){
+        if (error.response) {
+          // console.log(error.response.status);
+          // console.log(error.response.headers);
+          // that.displayMessages(Object.values(error.response.data.errors),"Errors");
+        }
+      });
+    },
+    generateQrcode(){
+      let url = this.base_url+'/api/generateQrCodeFile';
+      console.log(this.catalogFullUrl);
+      this.axios.put(url, {
+        catalogUrl:this.catalogFullUrl
+      }).then(function (response) {
+        console.log(response);
+      }).catch(function(error){
+        if (error.response) {
+          // console.log(error.response.status);
+          // console.log(error.response.headers);
+          // that.displayMessages(Object.values(error.response.data.errors),"Errors");
+        }
+      });
+    },
+    saveCatalogSettings(){
+      // let that=this;
+      let url = this.base_url+'/api/saveSettingsFile';
+      let formData = new FormData();
+      formData.append('logo', this.previewImage);
+      this.axios.put(url, formData,{
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(function (response) {
+        console.log(response);
+      }).catch(function(error){
+        if (error.response) {
+          // console.log(error.response.status);
+          // console.log(error.response.headers);
+          // that.displayMessages(Object.values(error.response.data.errors),"Errors");
+        }
+      });
+    },
+  },
+  beforeCreate(){
+    let that = this;
+    this.axios
+        .get(this.base_url+'/api/getSettings')
+        .then(function (response){
+          let settings = response.data.object;
+          that.id= settings._id || '';
+          that.catalogUrl = settings.catalogUrl || '';
+          that.imgPath = response.data.imgPath || '';
+        })
+  },
+  mounted() {
+    var c = document.getElementById("qrcode_id");
+    // var ctx = c.getContext("2d");
+    this.qrcode_container = c;
   }
 }
 </script>

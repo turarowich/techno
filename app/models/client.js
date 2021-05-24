@@ -53,7 +53,7 @@ const clientSchema = new Schema({
     },
     birthDate: {
         type: Date,
-        required: [false, 'Birthdate required'],
+        required: [false, 'birthday_required'],
     },
     address: {
         type: String,
@@ -61,6 +61,11 @@ const clientSchema = new Schema({
         default: ''
     },
     balance: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+    points: {
         type: Number,
         required: true,
         default: 0

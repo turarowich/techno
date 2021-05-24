@@ -1,15 +1,15 @@
 <template>
   <div class="row ">
-    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 product-box" v-for="cat in catalog" :key="cat._id">
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 product-box" v-for="product in catalog" :key="product._id">
       <div class="product-img"  @click="selectProduct(cat._id)">
         <img src="../../../assets/clients/shirt.svg">
       </div>
       <div class="product-add">
-        <h2>{{cat.name}} </h2>
+        <h2>{{product.name}} </h2>
         <h3></h3>
-        <span >{{cat.price}}</span>
+        <span >{{product.price}}</span>
       </div>
-      <button class="add-to-card" @click="addToCart(cat._id)">Add to cart</button>
+      <button class="add-to-card" @click="addToCart(product._id)">Add to cart</button>
     </div>
   </div>
 
@@ -21,15 +21,24 @@ name: "ClientCatalogItem",
   props:['catalog'],
 
   methods:{
-
-  addToCart(id){
-    const newCatalog = this.catalog.filter((el)=>el.id === id);
-    this.$store.dispatch('addToCart', newCatalog)
-  },
-    selectProduct(id){
-      this.$router.push('/home/catalog-detail/:'+id);
+    addToCart(id){
+      let cart_object = {
+        product:{},
+        quantity:1,
+        promocode:'',
+        discount_percent:0,
+        discount_sum:0,
+        current_price:0,
+      }
+      const order = this.catalog.filter((el)=>el._id === id);
+      cart_object.product = order? order[0] : null;
+      cart_object.current_price = order? order[0].price : 0;
+      this.$store.dispatch('Orders/addToCart', cart_object)
     },
-  },
+      selectProduct(id){
+        this.$router.push('/home/catalog-detail/:'+id);
+      },
+    },
 }
 </script>
 

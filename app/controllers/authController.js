@@ -20,7 +20,6 @@ class AuthController{
                 email: req.fields.email,
                 password: hashedPassword,
                 companyName: req.fields.companyName,
-                description: req.fields.description,
                 rate: req.fields.rate,
             })
             await user.validate()
@@ -46,7 +45,6 @@ class AuthController{
     };
 
     login = async function (req, res) {
-        console.log(req.fields)
         let db = global.userConnection.useDb('loygift');
         let User = db.model("User");
         let result = []
@@ -72,8 +70,7 @@ class AuthController{
     };
 
     loginClient = async function (req, res) {
-        console.log('loygift' + req.headers['access_place'])
-        let db = global.userConnection.useDb('loygift'+req.headers['access_place']);
+        let db = global.userConnection.useDb('loygift'+req.headers['access-place']);
         let Client = db.model("Client");
         let lang = req.headers["accept-language"]
         if (lang != 'ru') {
@@ -92,10 +89,10 @@ class AuthController{
             delete errors.phone
             if (!passwordIsValid) return res.status(401).json({ status: 401, msg: "Not valid password", auth: false, token: null, errors: errors });
 
-            var token = jwt.sign({ id: req.headers['access_place'], user: user._id }, config.secret_key, {
+            var token = jwt.sign({ id: req.headers['access-place'], user: user._id }, config.secret_key, {
                 expiresIn: 86400 // expires in 24 hours
             });
-            var refresh_token = jwt.sign({ id: req.headers['access_place'], user: user._id  }, config.secret_key, {
+            var refresh_token = jwt.sign({ id: req.headers['access-place'], user: user._id  }, config.secret_key, {
                 expiresIn: "30 days"
             });
             user.password = ""
@@ -106,11 +103,10 @@ class AuthController{
         }
     };
     registerClient = async function (req, res) {
-        let db = global.userConnection.useDb('loygift'+req.headers['access_place']);
+        let db = global.userConnection.useDb('loygift'+req.headers['access-place']);
         let Client = db.model("Client");
         let result = []
         try {
-            console.log(req.fields)
             let hashedPassword = bcrypt.hashSync(req.fields.password, 8);
             var client = new Client({
                 name: req.fields.name,
@@ -127,10 +123,10 @@ class AuthController{
                 'msg': 'Client added',
                 'auth': true,
                 'object': client,
-                'refresh_token': jwt.sign({ id: req.headers['access_place'], user: client._id  }, config.secret_key, {
+                'refresh_token': jwt.sign({ id: req.headers['access-place'], user: client._id  }, config.secret_key, {
                     expiresIn: "30 days"
                 }),
-                'token': jwt.sign({ id: req.headers['access_place'], user: client._id }, config.secret_key, {
+                'token': jwt.sign({ id: req.headers['access-place'], user: client._id }, config.secret_key, {
                     expiresIn: 86400 // expires in 24 hours
                 }),
             }
@@ -142,7 +138,7 @@ class AuthController{
     };
 
     registerClientSocial = async function (req, res) {
-        let db = global.userConnection.useDb('loygift' + req.headers['access_place']);
+        let db = global.userConnection.useDb('loygift' + req.headers['access-place']);
         let Client = db.model("Client");
         let result = []
         let social_res = []
@@ -158,7 +154,6 @@ class AuthController{
                 break socialAuth
             }
             let user = await Client.findOne(social_res.check)
-            console.log(user)
             if(user){
                 result = {
                     status: 500,
@@ -178,10 +173,10 @@ class AuthController{
                 'msg': 'Client added',
                 'auth': true,
                 'object': client,
-                'refresh_token': jwt.sign({ id: req.headers['access_place'], user: client._id  }, config.secret_key, {
+                'refresh_token': jwt.sign({ id: req.headers['access-place'], user: client._id  }, config.secret_key, {
                     expiresIn: "30 days"
                 }),
-                'token': jwt.sign({ id: req.headers['access_place'], user: client._id }, config.secret_key, {
+                'token': jwt.sign({ id: req.headers['access-place'], user: client._id }, config.secret_key, {
                     expiresIn: 86400 // expires in 24 hours
                 }),
             }
@@ -193,7 +188,7 @@ class AuthController{
         res.status(result.status).json(result);
     };
     loginClientSocial = async function (req, res) {
-        let db = global.userConnection.useDb('loygift' + req.headers['access_place']);
+        let db = global.userConnection.useDb('loygift' + req.headers['access-place']);
         let Client = db.model("Client");
         let result = []
         let social_res = []
@@ -227,10 +222,10 @@ class AuthController{
                 'msg': 'Sending token',
                 'auth': true,
                 'object': client,
-                'refresh_token': jwt.sign({ id: req.headers['access_place'], user: client._id  }, config.secret_key, {
+                'refresh_token': jwt.sign({ id: req.headers['access-place'], user: client._id  }, config.secret_key, {
                     expiresIn: "30 days"
                 }),
-                'token': jwt.sign({ id: req.headers['access_place'], user: client._id }, config.secret_key, {
+                'token': jwt.sign({ id: req.headers['access-place'], user: client._id }, config.secret_key, {
                     expiresIn: 86400 // expires in 24 hours
                 }),
             }
@@ -254,7 +249,6 @@ class AuthController{
         jwt.verify(token, config.secret_key, function (err, decoded) {
             if (err)
                 return res.status(200).send({status:200, auth: false, message: 'Failed to authenticate token.' });
-            console.log(decoded)
             let result = {
                 'status': 200,
                 'msg': 'Sending token',
@@ -391,7 +385,6 @@ async function twitterRegister(token, screen_name) {
         }
         return { error: result }
     })
-    console.log(response.data)
     if (response.error) {
         return response
     }
@@ -415,13 +408,12 @@ async function twitterRegister(token, screen_name) {
 }
 async function googleRegister(token) {
     let response = await axios({
-        // url: 'https://www.googleapis.com/oauth2/v3/tokeninfo',
-        url: 'https://www.googleapis.com/oauth2/v3/userinfo',
-
+        url: 'https://www.googleapis.com/oauth2/v3/tokeninfo',
+        // url: 'https://www.googleapis.com/oauth2/v3/userinfo',
         method: 'get',
         params: {
             id_token: token,
-            access_token: token
+            // access_token: token
         }
     }).catch(error => {
         let result = {

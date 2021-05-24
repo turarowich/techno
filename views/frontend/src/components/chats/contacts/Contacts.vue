@@ -4,7 +4,7 @@
         <div class="contact-list d-flex align-items-center">
           <img src="../../../assets/img/chat.jpg" class="avatar mr-1">
           <div>
-            <p class="contact-name m-0">{{contact.firstName +' '+ contact.lastName}}</p>
+            <p class="contact-name m-0">{{contact.name +' '+ contact.lastName}}</p>
             <span  class="contact-span m-0">{{contact.email}}</span>
           </div>
         </div>

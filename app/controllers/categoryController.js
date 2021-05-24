@@ -31,7 +31,8 @@ class CategoryController {
             let query = {}
             if (req.query.type){
                 query = { 'type': req.query.type}
-            }
+            } 
+            
             let categories = await Category.find(query)
             result['objects'] = categories
         } catch (error) {

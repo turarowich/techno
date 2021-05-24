@@ -2,54 +2,63 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const settingsSchema = new Schema({
-    name: {
-        type: String,
-        required: [true, 'Company name required'],
-    },
     slogan: {
         type: String,
-        required: [true, 'Slogan required'],
+        required: [true, 'slogan_required'],
     },
-    phone: {
+    logo: {
         type: String,
         required: false,
-        default: ''
     },
-    email: {
+    description: {
         type: String,
-        required: true,
-        validate: {
-            validator: async function (email) {
-                const user = await this.constructor.findOne({ email });
-                if (user) {
-                    if (this.id === user.id) {
-                        return true;
-                    }
-                    return false;
-                }
-                return true;
-            },
-            message: props => 'The specified email address is already in use.'
-        }
+        required: false,
     },
     country: {
         type: String,
         required: false,
         default: ''
     },
-    address: {
+    currency: {
+        type: String,
+        required: false
+    },
+    chat: {
+        type: Boolean,
+        required: true,
+        default: true
+    },
+    delivery: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    catalogMode: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    catalogUrl: {
         type: String,
         required: false,
-        default: ''
+        default: "",
     },
-    description: {
-        type: Number,
+    filters_n_cat_status: {
+        type: Boolean,
         required: true,
-        default: 0
+        default: false
     },
-    category: {
-        type: Schema.Types.ObjectId,
-        ref: 'user'
+
+
+    foodMode: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    deliveryDescription: {
+        type: String,
+        required: false,
+        default: ""
     },
     createdAt: {
         type: Date,

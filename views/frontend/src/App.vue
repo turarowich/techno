@@ -21,13 +21,12 @@
  </div>
 </template>
 <script>
-import $ from 'jquery';
+import $ from "jquery";
 import Header from "@/components/header/Header";
 import SideBar from "@/components/SideBar";
 
-
 export default {
- name: 'App',
+  name: "App",
 
   components: {
     Header,

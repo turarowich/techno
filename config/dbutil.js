@@ -28,6 +28,14 @@ const initClientDbConnection = () => {
     require("../app/models/user.js")
     require("../app/models/message.js")
     require("../app/models/news.js")
+    require("../app/models/service.js")
+    require("../app/models/cashback.js")
+    require("../app/models/device.js")
+    require("../app/models/bekaDiscounts.js")
+    require("../app/models/delivery.js")
+    require("../app/models/branch.js")
+    require("../app/models/settings.js")
+    require("../app/models/catalogs.js")
     return db;
 };
 

@@ -106,7 +106,7 @@ const routes = [
     },
 
     {
-        path: "/home",
+        path: "/shop/:bekon",
         name: "Home",
         component: Home,
         children:[

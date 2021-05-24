@@ -13,7 +13,7 @@
     21.03.2021
   </div>
   <div style="width:30%">
-    <button class="news-btn">
+    <button class="news-btn" @click="sendNewsNotification('609104f146df229b42eb5d83')">
       <img src="../../assets/icons/notification1.svg">
     </button>
   </div>
@@ -37,7 +37,13 @@
 
 <script>
 export default {
-  name: "NewsItem"
+  name: "NewsItem",
+  methods:{
+      sendNewsNotification(newsID){
+          console.log(newsID)
+          this.socket.emit('send news notification', newsID)
+      }
+  }
 }
 </script>
 

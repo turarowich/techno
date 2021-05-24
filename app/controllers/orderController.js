@@ -54,7 +54,7 @@ class OrderController{
             'msg': 'Order added'
         }
         try {
-            let client = await Client.findById(req.userID)
+            let client = await Client.findById(req.fields.client)
             if(client){
                 
                 let order = await new Order({
@@ -179,7 +179,7 @@ class OrderController{
             'msg': 'Sending link'
         }
         try {
-            let objects = await Order.find().where('_id').in(req.fields.orders).populate('client').populate('products').exec()
+            let objects = await Order.find().where('_id').in(req.fields.objects).populate('client').populate('products').exec()
             createExcel("order", objects, lang, req.db)
             let file = 'https://localhost:8443/files/' + req.db + '/Excel.xlsx'
             result['object'] = file

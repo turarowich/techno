@@ -1,11 +1,16 @@
 var clientController = require('../app/controllers/clientController');
 var productController = require('../app/controllers/productController');
+var serviceController = require('../app/controllers/serviceController');
 var promocodeController = require('../app/controllers/promocodeController');
 var categoryController = require('../app/controllers/categoryController');
 var reviewController = require('../app/controllers/reviewController');
 var orderController = require('../app/controllers/orderController');
 var userController = require('../app/controllers/userController');
 var newsController = require('../app/controllers/newsController');
+var pushController = require('../app/controllers/pushController');
+var cashbackController = require('../app/controllers/cashbackController');
+var discountController = require('../app/controllers/discountController');
+var settingsController = require('../app/controllers/settingsController');
 
 var multer = require('multer');
 var upload = multer({ dest: '../public/product/' });
@@ -15,15 +20,35 @@ module.exports = function (app, network_information) {
     app.get('/getClients', clientController.getClients);
     app.post('/addClient', clientController.addClient);
     app.put('/updateClient/:client', clientController.updateClient);
+    app.put('/updateClient/:client', clientController.updateClient);
+    app.put('/updateClientsCategory', clientController.updateClientsCategory);
     app.delete('/deleteClient/:client', clientController.deleteClient);
-    
+    app.delete('/deleteClients', clientController.deleteClients);
+    app.post('/addClientDevice', clientController.addClientDevice);
+
     // Products url
     app.get('/getProduct/:product', productController.getProduct);
     app.get('/getProducts', productController.getProducts);
+    app.post('/getProductExcel', productController.getProductExcel);
+    app.post('/getProductImportExcel', productController.getProductImportExcel);
     app.post('/addProduct', upload.single('file'), productController.addProduct);
     app.put('/updateProduct/:product', upload.single('file'), productController.updateProduct);
+    app.put('/updateProductsCategory', productController.updateProductsCategory);
+
+
     app.delete('/deleteProduct/:product', productController.deleteProduct);
     app.delete('/deleteProducts', productController.deleteProducts);
+    app.get('/searchProduct', productController.searchProduct);
+
+
+    // Service url
+    app.get('/getService/:product', serviceController.getService);
+    app.get('/getServices', serviceController.getService);
+    app.post('/addService', upload.single('file'), serviceController.addService);
+    // app.put('/updateService/:product', upload.single('file'), serviceController.updateProduct);
+    // app.delete('/deleteService/:service', serviceController.deleteProduct);
+    // app.delete('/deleteServices', serviceController.deleteProducts);
+    // app.get('/searchService', serviceController.searchProduct);
 
     // Category url
     app.get('/getCategory/:category', categoryController.getCategory);
@@ -33,12 +58,22 @@ module.exports = function (app, network_information) {
     app.delete('/deleteCategory/:category', categoryController.deleteCategory);
 
     // Promocode url
-    app.get('/getPromocode/:promocode', promocodeController.getPromocode);
+    app.get('/getPromocode', promocodeController.getPromocode);
     app.get('/getPromocodes', promocodeController.getPromocodes);
     app.post('/addPromocode', promocodeController.addPromocode);
-    app.put('/updatePromocode/:promocode', promocodeController.updatePromocode);
+    app.post('/updatePromocode', promocodeController.updatePromocode);
     app.delete('/deletePromocode/:promocode', promocodeController.deletePromocode);
-    
+    app.get('/searchProductService', promocodeController.searchProductService);
+    app.get('/searchPromocode', promocodeController.searchPromocode);
+    app.get('/searchPromocodeByCode', promocodeController.searchPromocodeByCode);
+
+    // Cashback url
+    app.get('/getCashback', cashbackController.getCashback);
+    app.post('/updateCashback/:id', cashbackController.updateCashback);
+    // Discount url
+    app.post('/addDiscount', discountController.addDiscount);
+    app.get('/getDiscounts', discountController.getDiscounts);
+    app.delete('/deleteDiscount/:id', discountController.removeDiscount);
     // Review url
     app.get('/getReview/:review', reviewController.getReview);
     app.get('/getReviews', reviewController.getReviews);
@@ -54,6 +89,8 @@ module.exports = function (app, network_information) {
     app.delete('/deleteOrder/:order', orderController.deleteOrder);
     app.delete('/deleteOrders', orderController.deleteOrders);
     app.post('/getOrderExcel', orderController.getOrderExcel);
+
+
     // News url
     app.get('/getSingleNews/:news', newsController.getSingleNews);
     app.get('/getNews', newsController.getNews);
@@ -66,6 +103,17 @@ module.exports = function (app, network_information) {
     app.get('/getUsers', userController.getUsers);
     app.put('/updateUser/:user', userController.updateUser);
     app.delete('/deleteUser/:user', userController.deleteUser);
+
+    // User url
+    app.get('/sendNewsPN/:id', pushController.sendNewsPN);
+
+    // Settings url
+    app.get('/getSettings', settingsController.getSettings);
+    app.put('/updateSettings', settingsController.updateSettings);
+    app.delete('/deleteDelivery/:delivery', settingsController.deleteDelivery);
+    app.delete('/deleteBranch/:branch', settingsController.deleteBranch);
+    app.put('/generateQrCodeFile', settingsController.generateQrCodeFile);
+    app.put('/saveSettingsFile', settingsController.saveSettingsFile);
 
     return app;
 }

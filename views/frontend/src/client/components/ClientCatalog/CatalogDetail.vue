@@ -32,7 +32,7 @@
 
           <h3 class="price mt-0">Description</h3>
           <p class="product-text">{{getProduct.description}}</p>
-          <button class="catalog-btn"><a >Add to card +</a></button>
+          <button class="catalog-btn" @click="addToCart"><a >Add to card +</a></button>
         </div>
       </div>
     </div>
@@ -61,7 +61,9 @@ export default {
           }
         }
     },
-
+    addToCart() {
+      this.$store.dispatch('Orders/addToCart', this.getProduct)
+    },
     slide() {
       $('.product-img').slick({
         slidesToShow: 1,

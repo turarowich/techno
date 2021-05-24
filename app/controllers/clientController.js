@@ -1,6 +1,7 @@
 var bcrypt = require('bcryptjs');
 const { useDB, sendError } = require('../../services/helper')
 var validate = require('../../config/messages');
+const { query } = require('express');
 class ClientController{
     
     getClient = async function (req, res) {
@@ -12,7 +13,7 @@ class ClientController{
             'msg': 'Sending client'
         }
         try {
-
+            
             let client = await Client.findById(req.params.client).populate('messages').populate('category').exec()
             result['object'] = client
         
@@ -32,7 +33,7 @@ class ClientController{
             'msg': 'Sending clients'
         }
         try {
-
+            
             let clients = await Client.find().populate('messages').populate('category').exec()
             result['objects'] = clients
         
@@ -83,14 +84,42 @@ class ClientController{
         try {
             let query = { '_id': req.params.client }
             if (req.fields.password){
-                 req.fields.password = bcrypt.hashSync(req.fields.password, 8);
+                req.fields.password = bcrypt.hashSync(req.fields.password, 8);
             }
+            
 
             let client = await Client.findOneAndUpdate(query, req.fields, {
                 new: true
-              })
-
+            })
+            
+            if (req.fields.apns){
+                client.apns.push(req.fields.apns)
+                client.save()
+            }
             result['object'] = client
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+
+        res.status(result.status).json(result);
+    };
+
+    updateClientsCategory = async function (req, res) {
+        let db = useDB(req.db)
+        let Client = db.model("Client");
+
+        let result = {
+            'status': 200,
+            'msg': 'Sending clients'
+        }
+        try {
+            let  query = {}
+            if (req.fields.category){
+                req.fields.objects.forEach(async function(client, index){
+                    query = { '_id': client }
+                    await Client.findOneAndUpdate(query, req.fields)
+                })
+            }
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
@@ -117,6 +146,69 @@ class ClientController{
 
         res.status(result.status).json(result);
     };
+    
+    deleteClients = async function (req, res) {
+        let db = useDB(req.db)
+        let Client = db.model("Client");
+
+        let result = {
+            'status': 200,
+            'msg': 'Clients deleted'
+        }
+        if (req.fields.objects.length) {
+            try {
+                let query = {
+                    '_id': {
+                        $in: req.fields.objects
+                    }
+                }
+                await Client.deleteMany(query)
+            } catch (error) {
+                result = sendError(error, req.headers["accept-language"])
+            }
+        } else {
+            result = {
+                'status': 200,
+                'msg': 'Parametr objects is empty'
+            }
+        }
+
+
+        res.status(result.status).json(result);
+    };
+
+    addClientDevice = async function (req, res) {
+        let db = useDB(req.db)
+        let Client = db.model("Client");
+        let Device = db.model("Device");
+
+        let result = {
+            'status': 200,
+            'msg': 'Devce added'
+        }
+        try {
+            let client = await Client.findById(req.fields.client)
+            if (client) {
+                let device = await Device.findOne({ "token": req.fields.device_token})
+                if (device){
+                    device.client = req.fields.client
+                    device.save()
+                    result['msg'] = "Devce changed"
+                }else{
+                    device = await new Device({
+                        client: req.fields.client,
+                        token: req.fields.device_token,
+                        type: req.fields.type
+                    }).save();
+                }
+            }
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+
+        res.status(result.status).json(result);
+    };
+
 }
 
 

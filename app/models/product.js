@@ -2,9 +2,14 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const productSchema = new Schema({
+    model_type:{
+        type: String,
+        default:"Product",
+        immutable: true,
+    },
     name: {
         type: String,
-        required: [true, 'Name required'],
+        required: [true, 'name_required'],
     },
     name_ru: {
         type: String,
@@ -25,6 +30,11 @@ const productSchema = new Schema({
     status: {
         type: String,
         required: false,
+    },
+    active: {
+        type: Boolean,
+        required: false,
+        default: true
     },
     secondary: {
         type: String,

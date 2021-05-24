@@ -23,9 +23,19 @@ const en_messages = {
     client_user_not_found_title: 'User not found',
     client_user_not_found_msg: 'Probably u didnt sign up',
     image_not_valid: 'Not valid image format',
+    company_name_required: 'Company name required',
+    logo_required: 'Logo required',
+    slogan_required: 'Slogan required',
+    currency_required: 'Currency required',
+    type_required: 'Type required',
+    birthday_required: 'Birthday required',
+    code_required: 'Code required',
+    comment_required: 'Comment required',
+    description_required: 'Description required',
 
     // EXCEL messages
     xl_produt_name:'Product name',
+    xl_produt_name_ru: "Product name ru",
     xl_produt_price: 'Product price',
     xl_product_quantity: 'Product quantity',
     xl_client_name: 'Client name',
@@ -33,7 +43,23 @@ const en_messages = {
     xl_created_at: 'Created at',
     xl_order_notes: 'Order notes',
     xl_order_status: 'Order status',
-    xl_product_result: 'Result'
+    xl_product_result: 'Result',
+    xl_category_name: 'Category',
+    xl_product_vendorcode: 'Vendorcode',
+    xl_promo_name: 'Promocde',
+    xl_promo_price: 'Promocode discount',
+    xl_promo_start: 'Promocode start date',
+    xl_promo_end: 'Promocode end date',
+    xl_recommend: 'Recommended',
+    xl_product_result: 'Result',
+    //Promocode
+    promo_code:'Code has to be at least 12 characters',
+    promo_name_unique:'Promocode with this name already exists',
+    promo_code_unique: 'Promocode with this code already exists',
+    promo_404: 'Promocode not found',
+    promo_not_usable: 'Promocode is not usable',
+    promo_min_price: 'The amount for using the promo code has not been reached',
+    
 }
 const ru_messages = {
     // ERROR messages
@@ -60,9 +86,19 @@ const ru_messages = {
     client_user_not_found_title: 'Пользователь не найден',
     client_user_not_found_msg: 'Возможно вы ещё не зарегистрировались',
     image_not_valid: 'Неправильный формат изображения',
+    company_name_required: 'Название компании обязательное поле',
+    logo_required: 'Лого обязательное поле',
+    slogan_required: 'Слоган обязательное поле',
+    currency_required: 'Валюта обязательное поле',
+    type_required: 'Тип обязателен',
+    birthday_required: 'День рождения обязательное поле',
+    code_required: 'Кодовое слово обязательное поле',
+    comment_required: 'Коментарий обязательное поле',
+    description_required: 'Описание обязательное поле',
 
     // EXCEL messages
     xl_produt_name: 'Название',
+    xl_produt_name_ru: "Название ru",
     xl_produt_price: 'Цена',
     xl_product_quantity: 'Колличество',
     xl_product_result: 'Итого',
@@ -71,6 +107,22 @@ const ru_messages = {
     xl_created_at: 'Дата заказа',
     xl_order_notes: 'Заметки',
     xl_order_status: 'Статус',
+    xl_category_name: 'Категория',
+    xl_product_vendorcode: 'Артикул',
+    xl_promo_name: 'Промокод',
+    xl_promo_price: 'Скидка промодка',
+    xl_promo_start: 'Дата начало промокода',
+    xl_promo_end: 'Дата конца промокода',
+    xl_recommend: 'Рекомендовано',
+    //Promocode
+    promo_code:'Код должен быть минимум 12 сиволов',
+    promo_name_unique:'Промокод с таким названием уже существует',
+    promo_code_unique: 'Промокод с таким кодом уже существует',
+    promo_404: 'Промокод не найден',
+    promo_not_usable: 'Промокод не может быть использован',
+    promo_min_price: 'Не достигнута сумма для использования промокода',
+    
+    
 }
 module.exports = {
     en: en_messages,

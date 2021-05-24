@@ -4,18 +4,61 @@ const Schema = mongoose.Schema;
 const promocodeSchema = new Schema({
     name: {
         type: String,
-        required: [true, 'Name required'],
+        required: [true, 'name_required'],
+        validate: {
+            validator: async function (name) {
+                const promo = await this.constructor.findOne({ name });
+                if (promo) {
+                    if (this.id === promo.id) {
+                        return true;
+                    }
+                    return false;
+                }
+                return true;
+            },
+            message: props => 'promo_name_unique'
+        },
     },
     code: {
         type: String,
-        required: [true, 'Code required'],
+        required: [true, 'code_required'],
+        validate: {
+            validator: async function (code) {
+                const promo = await this.constructor.findOne({ code });
+                if (promo) {
+                    if (this.id === promo.id) {
+                        return true;
+                    }
+                    return false;
+                }
+                return true;
+            },
+            message: props => 'promo_code_unique'
+        },
     },
-    percent: {
+    discount: {
         type: Number,
         required: false,
     },
-    bonus: {
+    fixed_sum: {
         type: Number,
+        required: false,
+    },
+    min_sum: {
+        type: Number,
+        required: false,
+    },
+    number_of_uses: {
+        type: Number,
+        required: false,
+    },
+    selected_type: {
+        type: String,
+        required: false,
+    },
+    selected_items_list: {
+        type : Array ,
+        "default" : [],
         required: false,
     },
     usedBy: [{
