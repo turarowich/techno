@@ -31,6 +31,7 @@ app.use((req, res, next) => {
 })
 const formidableMiddleware = require('express-formidable');
 const VerifyToken = require('./services/verifyToken');
+const VerifyDB = require('./services/VerifyDB');
 
 global.appRoot = path.resolve(__dirname);
 global.userConnection = userConnection;
@@ -102,7 +103,7 @@ router.get("/auth/twitter", passport.authenticate("twitter", { authType: 'reauth
 app.use('/images', express.static(__dirname + '/views/frontend/images'))
 app.use('/files', express.static(__dirname + '/views/frontend/files'))
 app.use('/api', VerifyToken, require('./routes/api.js')(router))
-app.use('/', require('./routes/home.js')(router, passport))
+app.use('/', VerifyDB,require('./routes/home.js')(router, passport))
 
 
 

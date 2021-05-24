@@ -112,6 +112,8 @@ module.exports = function (app, network_information) {
     app.put('/updateSettings', settingsController.updateSettings);
     app.delete('/deleteDelivery/:delivery', settingsController.deleteDelivery);
     app.delete('/deleteBranch/:branch', settingsController.deleteBranch);
+    app.put('/generateQrCodeFile', settingsController.generateQrCodeFile);
+    app.put('/saveSettingsFile', settingsController.saveSettingsFile);
 
     return app;
 }

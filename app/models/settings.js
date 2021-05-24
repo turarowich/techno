@@ -33,6 +33,18 @@ const settingsSchema = new Schema({
         required: true,
         default: false
     },
+    catalogUrl: {
+        type: String,
+        required: false,
+        default: "",
+    },
+    filters_n_cat_status: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+
+
     foodMode: {
         type: Boolean,
         required: true,

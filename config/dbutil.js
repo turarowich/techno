@@ -35,6 +35,7 @@ const initClientDbConnection = () => {
     require("../app/models/delivery.js")
     require("../app/models/branch.js")
     require("../app/models/settings.js")
+    require("../app/models/catalogs.js")
     return db;
 };
 
