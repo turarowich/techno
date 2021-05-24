@@ -23,6 +23,11 @@ const settingsSchema = new Schema({
         type: String,
         required: false
     },
+    chat: {
+        type: Boolean,
+        required: true,
+        default: true
+    },
     delivery: {
         type: Boolean,
         required: true,

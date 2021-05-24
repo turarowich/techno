@@ -48,8 +48,8 @@ class PromocodeController{
         }
         try {
             let promocode = await new Promocode({
-                name: new_promocode.name || "No name 122 4",
-                code: new_promocode.code || "90909",
+                name: new_promocode.name || "No name",
+                code: new_promocode.code || "2",
                 discount: new_promocode.discount || "99",
                 startDate: new_promocode.fromDate || new Date(),
                 endDate: new_promocode.toDate || new Date(),
@@ -161,12 +161,12 @@ class PromocodeController{
         let result = {
             'status': 200,
             'msg': 'Sending promocodes',
-            'object': null
         }
         let lang = req.headers["accept-language"]
         if (lang != 'ru') {
             lang = 'en'
         }
+        console.log(search, sum, type, date)
         promocode: try {
             let promocode = await Promocode.findOne({ "code": search });
             if(promocode){
@@ -174,6 +174,7 @@ class PromocodeController{
                 var end = new Date(promocode.endDate);
                 if(date){
                     var now = new Date(date);
+                    console.log(now, date)
                     if (start >= now || now >= end) {
                         result['msg'] = validate[lang]['promo_not_usable']
                         break promocode

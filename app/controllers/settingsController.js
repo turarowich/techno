@@ -26,7 +26,6 @@ class SettingsController{
 
                 let branches = await Branch.find()
                 let deliveries = await Delivery.find()
-
                 result['object'] = settings
                 result['branches'] = branches
                 result['deliveries'] = deliveries
