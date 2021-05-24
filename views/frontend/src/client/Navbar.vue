@@ -55,7 +55,6 @@ name: "Navbar",
       return this.$store.getters['Orders/countOrders'];
     },
     shoppingCart(){
-      console.log(this.$store.state.Orders.shoppingCart,"ee");
       return this.$store.state.Orders.shoppingCart;
     }
   },

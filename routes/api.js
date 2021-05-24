@@ -9,6 +9,7 @@ var userController = require('../app/controllers/userController');
 var newsController = require('../app/controllers/newsController');
 var pushController = require('../app/controllers/pushController');
 var cashbackController = require('../app/controllers/cashbackController');
+var discountController = require('../app/controllers/discountController');
 var settingsController = require('../app/controllers/settingsController');
 
 var multer = require('multer');
@@ -69,7 +70,10 @@ module.exports = function (app, network_information) {
     // Cashback url
     app.get('/getCashback', cashbackController.getCashback);
     app.post('/updateCashback/:id', cashbackController.updateCashback);
-
+    // Discount url
+    app.post('/addDiscount', discountController.addDiscount);
+    app.get('/getDiscounts', discountController.getDiscounts);
+    app.delete('/deleteDiscount/:id', discountController.removeDiscount);
     // Review url
     app.get('/getReview/:review', reviewController.getReview);
     app.get('/getReviews', reviewController.getReviews);
@@ -108,6 +112,8 @@ module.exports = function (app, network_information) {
     app.put('/updateSettings', settingsController.updateSettings);
     app.delete('/deleteDelivery/:delivery', settingsController.deleteDelivery);
     app.delete('/deleteBranch/:branch', settingsController.deleteBranch);
+    app.put('/generateQrCodeFile', settingsController.generateQrCodeFile);
+    app.put('/saveSettingsFile', settingsController.saveSettingsFile);
 
     return app;
 }

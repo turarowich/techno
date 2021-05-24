@@ -5,9 +5,8 @@ function verifyToken(req, res, next) {
     // Header names in Express are auto-converted to lowercase
     let token = req.headers['x-access-token'] || req.headers['authorization'];
     // Remove Bearer from string
-    console.log(token);
+    console.log(token,"token");
     token = token.replace(/^Bearer\s+/, "");
-
 
     if (!token)
         return res.status(403).send({ auth: false, message: 'No token provided.' });

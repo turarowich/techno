@@ -13,16 +13,16 @@
     </div>
 
     <div class="minimum-cashback">
-      <h3 class="cashback-sub-title">Default cashback</h3>
+      <h3 class="cashback-sub-title">Default cashback %</h3>
       <div class="d-flex align-items-center">
-        <input v-model="default_cashback" style="width:40%" class="cashback-input mr-3">
+        <input type="number" v-model="default_cashback" style="width:40%" class="cashback-input mr-3">
         <span style="width:40%" class="cashback-description mb-0">Если ничего не выбрано, кэшбэк действует на все товары и услуги</span>
       </div>
     </div>
     <div class="minimum-cashback">
       <h3 class="cashback-sub-title">Minimum cashback amount</h3>
       <div class="d-flex align-items-center">
-        <input v-model="min_cashback" style="width:40%" class="cashback-input mr-3">
+        <input type="number" v-model="min_cashback" style="width:40%" class="cashback-input mr-3">
         <span style="width:40%" class="cashback-description mb-0">Enter the minimum amount to activate cashback</span>
       </div>
     </div>
@@ -73,7 +73,7 @@
         <h2 class="cashback-sub-title mb-0">Welcome points</h2>
       </div>
       <p class="cashback-description">Increase customer loyalty with the help of this tool</p>
-      <input v-model="welcome_points_quant" class="cashback-input" style="width:40%">
+      <input type="number" v-model="welcome_points_quant" class="cashback-input" style="width:40%">
   </div>
     <div class="box-switches">
       <div class="d-flex enable-title align-items-center">
@@ -84,7 +84,7 @@
         <h2 class="cashback-sub-title mb-0">Share with a friend</h2>
       </div>
       <p class="cashback-description">Increase customer loyalty with the help of this tool</p>
-      <input v-model="share_points_quant" class="cashback-input" style="width:40%">
+      <input type="number" v-model="share_points_quant" class="cashback-input" style="width:40%">
     </div>
     <div class="radio-toolbar">
       <div class="d-flex align-items-center mr-4">
@@ -117,7 +117,7 @@
     <p class="cashback-description">Automatic accrual of points to the client on his birthday.</p>
     <div class="mb-3">
         <label class="sum-point">Sum of points</label><br>
-        <input v-model="birthday_points_quant" class="cashback-input mb-2">
+        <input type="number" v-model="birthday_points_quant" class="cashback-input mb-2">
         <p class="cashback-description ">If the number of points awarded is zero, the client will receive a regular text greeting</p>
     </div>
     <div class="mb-3">
@@ -131,7 +131,7 @@
     <div class="d-flex enable-title">
       <div>
         <label class="switch">
-          <input type="checkbox" data-toggle="collapse" data-target="#collapse-limit" aria-expanded="true" aria-controls="collapse-limit" v-model="points_lifetime_status">
+          <input type="checkbox" data-toggle="collapse"  v-model="points_lifetime_status">
           <span class="slider round"></span>
         </label>
       </div>
@@ -140,9 +140,9 @@
     <p class="cashback-description mb-4">The period is counted from the first accrual of points.
       At the end of the term, all customer points will be canceled</p>
 
-    <div class="collapse"  id="collapse-limit">
-      <label>Points expires after:</label><br>
-      <input v-model="points_expiration_period" class="cashback-input" style="width:40%">
+    <div v-if="points_lifetime_status">
+      <label>Points expires after days:</label><br>
+      <input type="number" v-model="points_expiration_period" class="cashback-input" style="width:40%">
     </div>
 
   </div>
@@ -166,7 +166,6 @@ export default {
         min_cashback: 0,
         points_expiration_period: 0,
         points_lifetime_status: false,
-        // products: [],
         share_points_quant: 0,
         share_points_status: false,
         status: false,
@@ -175,7 +174,6 @@ export default {
         bday_message_body: '',
         bday_message_title: '',
         id: '',
-
         current_percentage_cashback:0,
         current_fixed_cashback:0,
         searchText:'',
@@ -311,20 +309,32 @@ export default {
     },
     save() {
       let that = this;
-      let url = 'https://localhost:8443/api/updateCashback/'+that.id;
+
+      let messages = [];
+      console.log(this.default_cashback);
+      if(this.default_cashback<0){messages.push('Default cashback has to be a positive number')}
+      if(this.default_cashback>100){messages.push('Percentage cannot be more than 100')}
+      if(0>this.min_cashback){messages.push('Min cashback amount has to be a positive number')}
+      if(0>this.welcome_points_quant){messages.push('Welcome points has to be a positive number')}
+      if(0>this.share_points_quant){messages.push('Share points has to be a positive number')}
+      if(0>this.birthday_points_quant){messages.push('Birthday points has to be a positive number')}
+
+      if(messages.length>=1){this.displayMessages(messages,"Errors");return}
+
+      let url = this.base_url+'/api/updateCashback/'+that.id;
       this.axios.post(url, {
-        birthday_points_quant:that.birthday_points_quant,
+        birthday_points_quant:that.birthday_points_quant || 0,
         birthday_points_status:that.birthday_points_status,
         grant_points_when:that.grant_points_when,
-        default_cashback:that.default_cashback,
-        min_cashback:that.min_cashback,
-        points_expiration_period:that.points_expiration_period,
+        default_cashback:that.default_cashback || 0,
+        min_cashback:that.min_cashback || 0,
+        points_expiration_period:that.points_expiration_period || 0,
         points_lifetime_status:that.points_lifetime_status,
         selectedItemsList:that.selectedItemsList,
-        share_points_quant:that.share_points_quant,
+        share_points_quant:that.share_points_quant || 0,
         share_points_status:that.share_points_status,
         status:that.status,
-        welcome_points_quant:that.welcome_points_quant,
+        welcome_points_quant:that.welcome_points_quant || 0,
         welcome_points_status:that.welcome_points_status,
         bday_message_body:that.bday_message_body,
         bday_message_title:that.bday_message_title,

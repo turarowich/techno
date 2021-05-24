@@ -25,4 +25,5 @@ module.exports = {
     APNs: 'AuthKey_xxxxxxxx.p8',
     APNsKeyID: 'Loyid',
     APNsTeamID: 'F64P295594',
+    Shoes:'shoes',
 };

@@ -1,6 +1,7 @@
 var path = require('path');
 var authController = require('../app/controllers/authController');
 var settingsController = require('../app/controllers/settingsController');
+var catalogController = require('../app/controllers/catalogController');
 
 module.exports = function(app, passport){    
     app.get('/', function(req, res){
@@ -20,6 +21,10 @@ module.exports = function(app, passport){
     app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login', session: false }), authController.callbackFB);
     app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login', session: false }), authController.callbackGG);
     app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/login', session: false }), authController.callbackTW);
+    //Catalog
+    app.get('/getCatalog', catalogController.getCatalog);
+    app.get('/getClientProducts', catalogController.getClientProducts);
+    app.get('/getClientCategories', catalogController.getClientCategories);
 
 
     app.get('*', function (req, res) {

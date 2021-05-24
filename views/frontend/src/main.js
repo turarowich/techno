@@ -30,6 +30,9 @@ app.use(router);
 app.use(store);
 let token = localStorage.getItem('token')
 
+import QRCode from 'qrcode';
+app.config.globalProperties.$QRCode = QRCode;
+
 const ax = axios.create({
     timeout: 1000,
     proxy: {
@@ -52,13 +55,14 @@ app.config.globalProperties.$ = $
 app.config.globalProperties.axios = ax
 app.config.globalProperties.$api = process.env.VUE_APP_API_URL;
 app.config.globalProperties.$server = process.env.VUE_APP_SERVER_URL;
-app.config.globalProperties.format_price = function (sum){parseFloat(sum).toFixed(2)}
+app.config.globalProperties.format_price = function (sum){parseFloat(sum).toFixed(2)};
+app.config.globalProperties.base_url = 'https://localhost:8443';
 
 app.config.globalProperties.socket = socket
 app.config.globalProperties.scrollToBottom = function(obj){
     $("#"+obj).scrollTop(1000000)
 }
-var home_url = ['login', 'register', 'loginClient', 'registerClient']
+var home_url = ['login', 'register', 'loginClient', 'registerClient','getClientProducts','getCatalog','getClientCategories']
 
 app.config.globalProperties.changeToken = function () {
     this.axios.defaults.headers.common['Authorization'] = 'Bearer '+ localStorage.getItem('token')

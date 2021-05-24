@@ -45,7 +45,7 @@ name: "Catalog",
   return{
     catalog:[],
     listCategory:[{_id:'', name:''}],
-    filtered: '',
+    filtered: 'all',
     from:0,
     to:0,
 
@@ -55,15 +55,19 @@ name: "Catalog",
     filteredList: function(){
       return  this.catalog
           .filter(product => {
-            return !product.category.indexOf(this.filtered)
+            if(this.filtered!=='all'){
+              return product.category===this.filtered;
+            }else{
+              return product;
+            }
           })
         .filter((product)=>{
-            return product.price >= this.from && product.price <= this.to
+            return product.price >= this.from && product.price <= this.to;
         })
     },
-
-
-
+    currentRouteName() {
+      return this.$route.params.bekon;
+    }
   },
   methods: {
     getRangeValues() {
@@ -86,18 +90,24 @@ name: "Catalog",
       });
     },
     async  getProducts(){
-      await this.axios.get(this.url('getProducts'))
+      const options = {
+        headers: {"company_url": this.currentRouteName}
+      }
+      await this.axios.get(this.url('getClientProducts'),options)
           .then((response) => {
+            console.log(response);
             this.catalog = response.data.objects;
-
           })
     },
 
     async getCategories() {
-      await this.axios.get('http://localhost:8080/api/getCategories')
+      const options = {
+        headers: {"company_url": this.currentRouteName}
+      }
+      await this.axios.get(this.url('getClientCategories'),options)
           .then((res) => {
             this.listCategory = res.data.objects;
-            this.listCategory.unshift({_id: '', name: 'All'})
+            this.listCategory.unshift({_id: 'all', name: 'All'})
           })
     },
   },

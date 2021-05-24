@@ -34,7 +34,7 @@ class ProductController{
             'msg': 'Sending products'
         }
         try {
-            let products = await Product.find().populate('category').exec()
+            let products = await Product.find()
             result['objects'] = products
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])

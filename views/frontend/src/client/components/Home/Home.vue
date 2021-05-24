@@ -22,10 +22,39 @@ export default {
 name: "Home",
   components:{
   Navbar,
+  Footer
+  },
+  computed: {
+    currentRouteName() {
+      return this.$route.name;
+    }
+  },
+  beforeCreate(){
+    console.log(this.currentRouteName,'ddddd beforeCreate');
+    console.log(this.$route.params.bekon,'ddddd  beforeCreate');
+    this.$store.dispatch("Catalog/setCompany_url",this.$route.params.bekon);
 
-    Footer
+  },
+  created(){
+    // console.log(this.currentRouteName,'ddddd  created');
+    // console.log(this.$route.params.bekon,'ddddd  created');
+
+    // this.axios.get(this.url('getCatalog'),{
+    //   params: {
+    //     'url': this.currentRouteName,
+    //   }
+    // }).then(function(response){
+    //   console.log(response);
+    // }).catch(function(error){
+    //   console.log(error);
+    // });
+  },
+  mounted() {
+
+
+
+
   }
-
 }
 </script>
 

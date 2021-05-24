@@ -15,12 +15,20 @@
 
      <h3 class="catalog-sub-title margin-10">Your url from online catalog</h3>
      <p class="catalog-description mb-3">You can send a link to your catalog to your clients</p>
-     <div class="reload-code d-flex align-items-center"><input><div class="url-icon"><img src="../../assets/icons/urlIcon.svg"></div></div>
+     <div class="reload-code d-flex align-items-center">
+       <input v-model="catalogUrl">
+       <div @click="updateCatalogUrl();generateQrcode();" class="url-icon">
+         <img src="../../assets/icons/check.svg">
+       </div>
+       <div class="url-icon">
+        <img src="../../assets/icons/urlIcon.svg">
+       </div>
+     </div>
 
 
      <h3 class="catalog-sub-title margin-20">QR code for online catalog</h3>
      <div class="d-flex align-items-center margin-50">
-       <img src="../../assets/icons/qr-code.svg" class="mr-3">
+       <img :src="require(`../../../${qrcodePath}`)" class="mr-3">
        <div>
          <p class="catalog-description mb-2">You can print this code - this is the<br> menu for users to quickly go online</p>
          <div><img src="../../assets/icons/printer.svg" class="mr-2"><a style="color:#616cf5" href="/">Print</a></div>
@@ -39,36 +47,6 @@
         This setting disables the ability to place an order, your catalog will work as an online menu,
        customers can also place an order only within your institution
      </p>
-
-
-     <div class="d-flex margin-10">
-       <label class="switch d-flex">
-         <input type="checkbox">
-         <span class="slider round"></span>
-       </label>
-       <h2 class="catalog-sub-title">Delivery</h2>
-     </div>
-     <p class="catalog-description margin-30">
-       You can customize the delivery method
-     </p>
-
-     <h3 class="catalog-sub-title margin-30">Delivery options</h3>
-     <label>Name</label>
-     <div class="d-flex">
-       <input class="cashback-input mr-2">
-        <button class="cash-btn"><img src="../../assets/icons/enable+.svg"></button>
-     </div>
-     <div class="d-flex margin-30">
-       <div style="width:30%" class="mr-3">
-         <label>Price</label>
-         <input class="cashback-input">
-       </div>
-
-       <div style="width:70%">
-         <label>Minimum order of amount</label>
-         <input class="cashback-input">
-       </div>
-     </div>
 
      <h3 class="catalog-sub-title mb-1">News</h3>
      <p class="catalog-description margin-30">Disable news in the directory</p>
@@ -104,7 +82,7 @@
      </p>
 
 
-
+     <button type="button" class="save mb-3">Save</button>
    </div>
 
 <!------------------Right Side-------------------------------------   -->
@@ -118,9 +96,11 @@
      <div class="margin-30">
        <label>Logo</label>
        <div class="profile-img ">
-         <img class="profile-logo" src="../../assets/icons/profile-img.svg">
-         <input type="file" id="file" v-on:change="uploadPhoto">
-         <label class="addPhoto" for="file"><img src="../../assets/icons/addBtn.svg"></label>
+<!--         <img class="profile-logo" src="../../assets/icons/profile-img.svg">-->
+         <img class="profile-logo" :src="previewImage" >
+<!--         <input type="file" id="file" v-on:change="uploadPhoto">-->
+         <input type="file" id="logo_file" @change="uploadImage($event)">
+         <label class="addPhoto" for="logo_file"><img src="../../assets/icons/addBtn.svg"></label>
        </div>
      </div>
 
@@ -130,58 +110,11 @@
      <div class="profile-img big-profile-img margin-30">
        <img src="../../assets/icons/setting-icon/no-img.svg">
        <input type="file" id="big-img" >
-       <label class="addPhoto big-addPhoto"  for="file"><img src="../../assets/icons/addBtn.svg"></label>
+       <label class="addPhoto big-addPhoto"  for="big-img"><img src="../../assets/icons/addBtn.svg"></label>
      </div>
 
-     <label>Definition</label>
+     <label>Description</label>
      <textarea class="general-area definition-area margin-30"></textarea>
-
-     <label class="margin-20">Working hours</label>
-     <div class="week" >
-       <div class="days active d-flex justify-content-center align-items-center">MO</div>
-       <div class="days d-flex justify-content-center align-items-center">TU</div>
-       <div class="days d-flex justify-content-center align-items-center">WE</div>
-       <div class="days d-flex justify-content-center align-items-center">TH</div>
-       <div class="days d-flex justify-content-center align-items-center">FR</div>
-       <div class="days d-flex justify-content-center align-items-center">SA</div>
-       <div class="days d-flex justify-content-center align-items-center">SU</div>
-     </div>
-
-    <div class="d-flex margin-50">
-        <div style="width:50%" class="mr-3 d-flex align-items-center">
-          <label class="mb-0 mr-3 working-label">From</label>
-          <select class="form-control " aria-label="Default select example">
-
-            <option>+996500457834</option>
-            <option>+996500457834</option>
-            <option>+996500457834</option>
-            <option>+996500457834</option>
-            <option>+996500457834</option>
-            <option>+996500457834</option>
-            <option>+996500457834</option>
-            <option>+996500457834</option>
-            <option>+996500457834</option>
-          </select>
-        </div>
-      <div style="width:50%" class="d-flex align-items-center">
-        <label class="mb-0 mr-3 working-label">Till</label>
-        <select class="form-control " aria-label="Default select example">
-          <option>+996500457834</option>
-          <option>+996500457834</option>
-          <option>+996500457834</option>
-          <option>+996500457834</option>
-          <option>+996500457834</option>
-          <option>+996500457834</option>
-          <option>+996500457834</option>
-          <option>+996500457834</option>
-          <option>+996500457834</option>
-          <option>+996500457834</option>
-          <option>+996500457834</option>
-          <option>+996500457834</option>
-
-        </select>
-      </div>
-    </div>
 
      <h3 class="catalog-sub-title mb-1">Accent colors</h3>
      <p class="catalog-description margin-20">You can supply any color</p>
@@ -202,25 +135,6 @@
        <button class="social-btns">Instagram</button>
        <button class="social-btns">Website</button>
      </div>
-
-     <h3 class="catalog-sub-title mb-1">Address</h3>
-     <p class="catalog-description margin-20">Enter the address manually or indicate on the map</p>
-
-     <input class="cashback-input" placeholder="Enter your company address">
-
-     <div class="map-address margin-20">
-       <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2923.5580245248984!2d74.60367225038095!3d42.88217200986009!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x389eb74559ed9e25%3A0x514fbb81abe4553e!2sOlolohausErkindik!5e0!3m2!1sen!2skg!4v1620191676519!5m2!1sen!2skg" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-     </div>
-
-     <label class="margin-10">Phone number</label>
-     <div class="phone-number margin-20">+996 555 45 45 45</div>
-
-     <div class="d-flex margin-30">
-       <input class="cashback-input mr-2" placeholder="Your phone number">
-       <button class="cash-btn"><img src="../../assets/icons/enable+.svg"></button>
-     </div>
-
-     <a style="color:#616cf5" href="/">+ Add branch</a>
    </div>
  </div>
 </div>
@@ -229,7 +143,41 @@
 <script>
 export default {
   name: "CatalogSettings",
+  data(){
+    return{
+      id:'',
+      catalogUrl:'',
+      qrcode_container:'',
+      imgPath:'loygift605c615d55033f268c5d48ea',
+      previewImage:require('../../assets/icons/profile-img.svg'),
+    }
+  },
+  computed:{
+    catalogFullUrl(){
+      return window.location.origin+'/shop/'+this.catalogUrl;
+    },
+    qrcodePath(){
+      // return '../../../images/'+this.imgPath+'/qr/code.png';
+      return 'images/'+this.imgPath+'/qr/code.png';
+    },
+
+  },
   methods:{
+    uploadImage(e){
+      const image = e.target.files[0];
+      if(image.name.match(/\.(jpg|jpeg|png|gif|svg)$/)){
+        const reader = new FileReader();
+        reader.readAsDataURL(image);
+        reader.onload = e =>{
+          this.previewImage = e.target.result;
+          this.saveCatalogSettings(image);
+        };
+
+      }else{
+        console.log('wrong type',+image.type)
+      }
+    },
+
     uploadPhoto(){
       const file = document.querySelector('#file');
       let chooseFiles = file.files[0];
@@ -238,11 +186,77 @@ export default {
 
         reader.addEventListener('load', function(){
           const logo = document.querySelector('.profile-logo')
+          console.log(logo,"sdsdssdsd");
           logo.setAttribute('src', reader.result);
         })
         reader.readAsDataURL(chooseFiles)
       }
     },
+    updateCatalogUrl(){
+      // let that=this;
+      let url = this.base_url+'/api/updateSettings';
+      this.axios.put(url, {
+        catalogUrl:this.catalogUrl
+      }).then(function (response) {
+        console.log(response);
+      }).catch(function(error){
+        if (error.response) {
+          // console.log(error.response.status);
+          // console.log(error.response.headers);
+          // that.displayMessages(Object.values(error.response.data.errors),"Errors");
+        }
+      });
+    },
+    generateQrcode(){
+      let url = this.base_url+'/api/generateQrCodeFile';
+      console.log(this.catalogFullUrl);
+      this.axios.put(url, {
+        catalogUrl:this.catalogFullUrl
+      }).then(function (response) {
+        console.log(response);
+      }).catch(function(error){
+        if (error.response) {
+          // console.log(error.response.status);
+          // console.log(error.response.headers);
+          // that.displayMessages(Object.values(error.response.data.errors),"Errors");
+        }
+      });
+    },
+    saveCatalogSettings(){
+      // let that=this;
+      let url = this.base_url+'/api/saveSettingsFile';
+      let formData = new FormData();
+      formData.append('logo', this.previewImage);
+      this.axios.put(url, formData,{
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(function (response) {
+        console.log(response);
+      }).catch(function(error){
+        if (error.response) {
+          // console.log(error.response.status);
+          // console.log(error.response.headers);
+          // that.displayMessages(Object.values(error.response.data.errors),"Errors");
+        }
+      });
+    },
+  },
+  beforeCreate(){
+    let that = this;
+    this.axios
+        .get(this.base_url+'/api/getSettings')
+        .then(function (response){
+          let settings = response.data.object;
+          that.id= settings._id || '';
+          that.catalogUrl = settings.catalogUrl || '';
+          that.imgPath = response.data.imgPath || '';
+        })
+  },
+  mounted() {
+    var c = document.getElementById("qrcode_id");
+    // var ctx = c.getContext("2d");
+    this.qrcode_container = c;
   }
 }
 </script>
