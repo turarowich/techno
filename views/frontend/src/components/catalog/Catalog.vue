@@ -117,17 +117,14 @@
             <div class="table-head" style="width: 8%;"></div>
           </div>
           <div class="table-content" >
-
-              <CatalogItem
+            <CatalogItem
                   ref="catalog_item"
                   v-on:unCheckAll="unCheckAll"
                   v-on:checkAll="checkAll"
                   v-on:selectProduct="selectProduct"
                   v-bind:catalogList="catalogToDisplay"
                   v-on:deleteProduct="deleteProduct"
-
               />
-
           </div>
           <div class="pagination d-flex justify-content-between align-items-center">
             <div class="d-flex align-items-center">
@@ -301,13 +298,6 @@ name: "Catalog",
           })
         }
       })
-
-
-
-
-
-
-
     },
     sortByQunatity() {
       if(this.catalogList.length === 0){
