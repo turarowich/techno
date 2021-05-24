@@ -1,6 +1,6 @@
 <template>
   <div class="modal fade right "  id="add-products" tabindex="-1" role="dialog" aria-labelledby="add-products" aria-hidden="true">
-      <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: 82%;" role="document" >
+      <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: calc(100% - 250px);" role="document" >
         <div class="modal-content myModal-content h-100">
           <div class="modal-header justify-content-start align-items-center">
             <button type="button" data-dismiss="modal" aria-label="Close" class="close">
@@ -53,7 +53,7 @@
                         </div>
                         <div style="width:33.33%;">
                           <label>Vendor code</label>
-                          <input v-model="newProduct.vendorCode" class="form-input cashback-input mb-4" placeholder="Vendor code"  name="article">
+                          <input v-model="newProduct.vendorCode" class="form-input cashback-input mb-4" placeholder="Vendor code"  name="vendorCode">
                         </div>
                       </div>
 
@@ -62,7 +62,7 @@
                         <div class="d-flex align-items-center mr-2">
                           <label >From</label>
                           <div class="calendar d-flex align-items-center">
-                            <input @click="selectStart()" name="promoStart" v-model="newProduct.promoStart" class="calendar-input" id="promoStart">
+                            <input  name="promoStart" v-model="newProduct.promoStart" class="calendar-input" id="promoStart">
                             <img src="../../../assets/icons/Calendar.svg">
                           </div>
                         </div>
@@ -70,7 +70,7 @@
                         <div class="d-flex align-items-center">
                           <label>to</label>
                           <div class="calendar d-flex align-items-center">
-                            <input  @click="selectEnd()" name="promoEnd" v-model="newProduct.promoEnd"  class="calendar-input" id="promoEnd">
+                            <input   name="promoEnd" v-model="newProduct.promoEnd"  class="calendar-input" id="promoEnd">
                             <img src="../../../assets/icons/Calendar.svg">
                           </div>
                         </div>
@@ -130,27 +130,10 @@ props:['listCategory', 'getProducts'],
   methods:{
 
     selectStart(){
-      new this.$lightpick({
-        field: document.getElementById('promoStart'),
-        format:'',
-        lang:'en',
-        onSelect:(date)=>{
-          let promo_end = date.format().toString().slice(0,19)
-          this.promoStart = promo_end
-        }
-      });
+
     },
     selectEnd(){
-      new this.$lightpick({
-        field: document.getElementById('promoEnd'),
-        format:'',
-        lang:'en',
-        onSelect:(date)=>{
-          let promo_end = date.format().toString().slice(0,19)
-          this.promoEnd = promo_end
 
-        }
-      });
     },
     showPrice(){
       if($('#show-price').prop('checked')){
@@ -172,18 +155,20 @@ props:['listCategory', 'getProducts'],
       form.append('quantity', new_product.quantity)
       form.append('category', new_product.category)
       form.append('description', new_product.description)
-      form.append('promoStart', new_product.promoStart)
-      form.append('promoPrice', new_product.promoPrice)
-      form.append('promoEnd', new_product.promoEnd)
+      // form.append('promoStart', new_product.promoStart)
+      // form.append('promoPrice', new_product.promoPrice)
+      // form.append('promoEnd', new_product.promoEnd)
       form.append('vendorCode', new_product.vendorCode)
       this.axios.post('http://localhost:8080/api/addProduct/', form)
-          .then((response) => {
-            console.log("success", response)
+          .then(() => {
+            console.log(this.promoStart)
+            console.log(this.promoEnd)
             this.getProducts()
+            this.$successAlert('Product has been added')
           }).catch((error) => {
             console.log("fail", error)
           })
-    this.$successAlert('Product has been added')
+
      $('#add-products').modal("hide")
       this.newProduct = {
          name: '',
@@ -194,7 +179,29 @@ props:['listCategory', 'getProducts'],
       }
     },
 
+  },
+  mounted(){
+    new this.$lightpick({
+      field: document.getElementById('promoStart'),
+      format:'',
+      lang:'en',
+      onSelect:(date)=>{
+        this.promoStart = date.format().toString().slice(0,16)
+        console.log(this.promoStart)
+      }
+    });
+    new this.$lightpick({
+      field: document.getElementById('promoEnd'),
+      format:'',
+      lang:'en',
+      onSelect:(date)=>{
+        this.promoEnd = date.format().toString().slice(0,16)
+        console.log(this.promoEnd)
+
+      }
+    });
   }
+
 }
 </script>
 
@@ -207,9 +214,7 @@ props:['listCategory', 'getProducts'],
 .valid-label{
   margin-bottom: 22px !important;
 }
-.modal-header .close{
-  margin: 0;
-}
+
 .show-price{
   display:none;
 }

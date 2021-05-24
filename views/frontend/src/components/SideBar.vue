@@ -11,7 +11,8 @@
       <router-link class="router-link" to="/catalog"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Discovery.svg" >Catalog</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
       <router-link class="router-link" to="/chats"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/MoresSquare.svg" >Chats</span></router-link>
       <router-link class="router-link" to="/analytics"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/group.svg" >Analytics</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
-      <router-link class="router-link" to="/news"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/group.svg" >News</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+      <router-link class="router-link" to="/news"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/VolumeUp.svg" >News</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+      <router-link class="router-link" to="/log"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/logs.svg" >Log</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
      <div class="help-setting">
         <router-link class="router-link help" to="/"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/question.svg" >Help</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
         <div class="line-side"></div>

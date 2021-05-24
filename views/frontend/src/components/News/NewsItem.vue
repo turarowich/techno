@@ -50,6 +50,6 @@ export default {
   height: 34px;
 }
 .table-item{
- padding: 0 40px;
+ padding: 10px 40px;
 }
 </style>

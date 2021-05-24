@@ -60,10 +60,10 @@
         <div class="table-head text-right dropdown-toggle"  id="dropdownBlue" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:3%"><img src="../../assets/icons/BlueSetting.svg"></div>
         <div class="dropdown-menu general-dropdown settings-dropdown" aria-labelledby="dropdownBlue">
           <form>
-            <div><label class="custom-checkbox"><input v-model="data_check.client_checked" type="checkbox" ><span class="checkmark"></span></label> <span>Client</span></div>
-            <div><label class="custom-checkbox"><input v-model="data_check.phone_checked" type="checkbox" ><span class="checkmark"></span></label> <span>Phone number</span></div>
-            <div><label class="custom-checkbox"><input v-model="data_check.date_checked" type="checkbox" ><span class="checkmark"></span></label> <span>Date</span></div>
-            <div><label class="custom-checkbox"><input v-model="data_check.notes_checked" type="checkbox" ><span class="checkmark"></span></label> <span>Notes</span></div>
+            <div><label class="custom-checkbox"><input v-model="data_check.client_checked" type="checkbox" id="client" ><span class="checkmark"></span></label> <label class="show-field" for="client">Client</label></div>
+            <div><label class="custom-checkbox"><input v-model="data_check.phone_checked" type="checkbox" id="phone"><span class="checkmark"></span></label> <label class="show-field" for="phone">Phone number</label></div>
+            <div><label class="custom-checkbox"><input v-model="data_check.date_checked" type="checkbox" id="date" ><span class="checkmark"></span></label> <label class="show-field" for="date">Date</label></div>
+            <div><label class="custom-checkbox"><input v-model="data_check.notes_checked" type="checkbox" id="notes" ><span class="checkmark"></span></label> <label class="show-field" for="notes">Notes</label></div>
        </form>
         </div>
       </div>
@@ -88,12 +88,11 @@
       <div class="d-flex align-items-center">
         <span>Rows per page</span>
         <select class="form-control pagination-select" v-model='perPage'>
-          <option value="2">2</option>
-          <option value="5">5</option>
           <option value="8">8</option>
-          <option value="50">50</option>
-          <option value="100">100</option>
+          <option value="16">16</option>
+          <option value="32">32</option>
         </select>
+        <img src="../../assets/icons/select.svg">
       </div>
       <div class="d-flex align-items-center"><span>{{currentPage}}</span> <span class="mr-1 ml-1">of</span> <span class="mr-2">{{totalPages}}</span>
         <div v-show='showPrev' @click.stop.prevent='currentPage-=1' class=" pagination-btns prevBtn " ><img src="../../assets/icons/side-arrow.svg"></div>
@@ -128,6 +127,14 @@ name: "Orders",
         {id:6,name:"Ess",client:"Tomas Levins", phone:"0500687909", total:"200",date:this.$moment().subtract(1, "days").format("YYYY-MM-DD"),notes:"Please",status:'Done'},
         {id:7,name:"Essss",client:"Tomas Levins", phone:"0500687909", total:"40",date:this.$moment().subtract(1, "days").format("YYYY-MM-DD"),notes:"Please?",status:'Done'},
         {id:8,name:"Ess",client:"Tomas Levins", phone:"0500687909", total:"80",date:"2021-03-05T11:31:33.557+00:00",notes:"Please, can you \n" + "do it quickly?",status:'Done'},
+        {id:9,name:"Jeans and Jackets ",client:"Tomas Levins", phone:"0500687909", total:"12",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
+        {id:9,name:"Jeans and Jackets ",client:"Tomas Levins", phone:"0500687909", total:"12",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
+        {id:9,name:"Jeans and Jackets ",client:"Tomas Levins", phone:"0500687909", total:"12",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
+        {id:9,name:"Jeans and Jackets ",client:"Tomas Levins", phone:"0500687909", total:"12",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
+        {id:9,name:"Jeans and Jackets ",client:"Tomas Levins", phone:"0500687909", total:"12",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
+        {id:9,name:"Jeans and Jackets ",client:"Tomas Levins", phone:"0500687909", total:"12",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
+        {id:9,name:"Jeans and Jackets ",client:"Tomas Levins", phone:"0500687909", total:"12",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
+        {id:9,name:"Jeans and Jackets ",client:"Tomas Levins", phone:"0500687909", total:"12",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
         {id:9,name:"Jeans and Jackets ",client:"Tomas Levins", phone:"0500687909", total:"12",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
       ],
       data_check:{
@@ -368,6 +375,12 @@ name: "Orders",
 </script>
 
 <style scoped>
+.pagination-select{
+  background:none;
+  padding-left:10px;
+  width:32px;
+  padding-right: 0;
+}
 .general-dropdown.settings-dropdown{
   transform: translate3d(-166px, -19px, 0px) !important;
   width: 190px;
@@ -392,8 +405,10 @@ name: "Orders",
   border:none;
   cursor:pointer;
   color:#606877;
-
-
+}
+.show-field{
+  margin-bottom: 0;
+  cursor:pointer;
 }
 .orders{
   margin: 0 30px;

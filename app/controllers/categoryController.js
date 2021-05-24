@@ -28,8 +28,11 @@ class CategoryController {
             'msg': 'Sending categories'
         }
         try {
-            
-            let categories = await Category.find()
+            let query = {}
+            if (req.query.type){
+                query = { 'type': req.query.type}
+            }
+            let categories = await Category.find(query)
             result['objects'] = categories
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])

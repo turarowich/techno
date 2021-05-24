@@ -9,17 +9,13 @@
       </div>
       <div class="d-flex align-items-center">
         <button class="app-buttons-item" @click="deleteAllOrder"><img src="../../assets/icons/trash_empty.svg"><span>Remove</span></button>
-
         <div class="dropdown">
-          <button class=" dropdown-toggle app-buttons-item" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button class="dropdown-toggle app-buttons-item" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <img src="../../assets/icons/moveto.svg"><span>Move to</span>
           </button>
 
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
-            <ul class="list-group " >
-              <li class="list-group-item">Select a category</li>
-              <li v-for="cat in listCategory.slice(1)" :key="cat.id" class="list-group-item" @click="moveCategory(cat.name.toLowerCase())" >{{cat.name}}</li>
-            </ul>
+          <div class="move-category dropdown-menu" aria-labelledby="dropdownMenuTotal">
+                <div class="move-category-item" v-for="cat in listCategory" :key="cat._id" @click="moveCategory(cat._id)">{{cat.name}}</div>
           </div>
         </div>
         <button class="app-buttons-item" data-turbolinks="true"  data-toggle="modal" data-target="#import-client"><img src="../../assets/icons/import.svg"><span>Import</span></button>
@@ -57,7 +53,9 @@
               </div>
 
               <label>By category</label>
-              <input v-model="filtered" class="drop-input">
+                <select v-model="filtered" class="select-category form-control">
+                  <option v-for="cat in listCategory" :key="cat._id" :value="cat._id">{{cat.name}}</option>
+                </select>
             </form>
           </div>
         </div>
@@ -81,7 +79,7 @@
                 </div>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenu">
                   <ul class="list-group" >
-                    <li class="list-group-item" data-toggle="modal" data-target="#edit-category">Edit</li>
+                    <li class="list-group-item" data-toggle="modal" data-target="#edit-category" @click="selectCategory(category._id)">Edit</li>
                     <li class="list-group-item" @click.stop.prevent="deleteCategory(category._id)">Delete</li>
                   </ul>
                 </div>
@@ -94,7 +92,10 @@
             :listCategory="listCategory"
             :getCategories="getCategories"/>
         <EditCategory
-            :listCategory="listCategory"/>
+            :listCategory="listCategory"
+            :select_category="select_category"
+            :getCategories="getCategories"
+        />
         <AddProduct
             :listCategory="listCategory"
             :getProducts="getProducts"/>
@@ -175,6 +176,8 @@ name: "Catalog",
     return{
       listCategory:[{_id:'', name:'All'}],
       catalogList:[],
+      deletedProducts:[],
+      movedCategories:[],
       search:'',
       sorting:true,
       filtered: '',
@@ -186,6 +189,7 @@ name: "Catalog",
       quantity_from:'',
       quantity_to:'',
       select_product:'',
+      select_category:''
     }
   },
   computed:{
@@ -217,8 +221,10 @@ name: "Catalog",
             return catalog.name.toLowerCase().includes(this.search.toLowerCase())
           })
           .filter(product => {
+            if(product.category !== null){
+              return product.category._id.includes(this.filtered)
 
-            return product.category.includes(this.filtered)
+            }
           })
     },
     catalogToDisplay: function(){
@@ -260,22 +266,47 @@ name: "Catalog",
         }
       });
     },
-    moveCategory(value){
-      let  move = this.catalogList.filter(catalog => catalog.checked)
-        move.every(catalog=>catalog.category = value)
-        move.map(cat=>cat.checked = false);
-        this.$informationAlert('Category has been changed')
-
-    },
     deleteAllOrder() {
-      if(this.selectAll){
-        this.catalogList = []
-        this.$successAlert('All products have been removed')
-        $('#parent-check').prop('checked', false)
-      }
-      else{
-       this.catalogList = this.catalogList.filter(catalog => !catalog.checked)
-      }
+      this.catalogList.forEach((user)=> {
+        if(this.$refs.catalog_item.$refs[`select${user._id}`] !== undefined && this.$refs.catalog_item.$refs[`select${user._id}`] !== null){
+          if(this.$refs.catalog_item.$refs[`select${user._id}`].checked === true){
+            this.deletedProducts.push(user._id)
+          }
+        }
+      });
+
+      Swal.fire({
+        showConfirmButton: true,
+        html: 'Are you sure to remove these<br>products',
+        showCloseButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Delete',
+        buttonsStyling:false,
+        customClass:{
+          popup: 'sweet-delete',
+          confirmButton: 'confirm-btn',
+          cancelButton:'cancel-btn',
+          actions:'btn-group',
+          content:'content-sweet',
+          closeButton:'close-btn'
+        },
+
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.axios.delete(this.url('deleteProducts'),{data:{objects: this.deletedProducts}})
+          .then(()=>{
+            this.getProducts()
+            $('#parent-check').prop('checked',false)
+              this.$successAlert('All products have been removed')
+          })
+        }
+      })
+
+
+
+
+
+
 
     },
     sortByQunatity() {
@@ -296,6 +327,13 @@ name: "Catalog",
       this.sorting = !this.sorting;
       $('.total-pol').toggleClass('active')
      $('.date-pol').removeClass('active')
+    },
+    selectCategory(id){
+      this.listCategory.map((item)=>{
+        if(item._id === id){
+          this.select_category = item
+        }
+      })
     },
     selectProduct(id){
       this.catalogList.map((product)=>{
@@ -350,18 +388,58 @@ name: "Catalog",
       })
     },
     deleteCategory(id){
-      this.axios.delete(this.url('deleteCategory',id))
-      .then(()=>{
-        this.getCategories()
-        const idx = this.listCategory.findIndex(el=>el._id === id);
-        this.$refs[`menu${idx-1}`].click()
+
+
+      Swal.fire({
+        showConfirmButton: true,
+        html: 'Are you sure to remove this <br>category',
+        showCloseButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Delete',
+        buttonsStyling:false,
+        customClass:{
+          popup: 'sweet-delete',
+          confirmButton: 'confirm-btn',
+          cancelButton:'cancel-btn',
+          actions:'btn-group',
+          content:'content-sweet',
+          closeButton:'close-btn'
+        },
+
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.axios.delete(this.url('deleteCategory',id))
+              .then(()=>{
+                this.getCategories()
+                const idx = this.listCategory.findIndex(el=>el._id === id);
+                this.$refs[`menu${idx-1}`].click()
+              })
+                Swal.fire({
+                      title:'Success',
+                      timer:1500,
+                      text:'Category has been removed',
+                      showConfirmButton:false,
+                      position: 'top-right',
+                      customClass:{
+                        popup:'success-popup',
+                        content:'success-content',
+                        title:'success-title',
+                        header:'success-header',
+                        image:'success-img'
+                      },
+
+
+                    }
+                )
+
+        }
       })
     },
     getProducts(){
        this.axios.get(this.url('getProducts'))
           .then((response) => {
               this.catalogList = response.data.objects;
-              console.log(this.catalogList)
+
 
   })
     },
@@ -373,6 +451,23 @@ name: "Catalog",
 
           })
     },
+    moveCategory(id){
+      this.catalogList.forEach((user)=> {
+        if(this.$refs.catalog_item.$refs[`select${user._id}`] !== undefined && this.$refs.catalog_item.$refs[`select${user._id}`] !== null){
+          if(this.$refs.catalog_item.$refs[`select${user._id}`].checked === true){
+            user.category._id = id
+            this.movedCategories.push(user.category._id)
+          }
+        }
+      });
+      this.axios.put(this.url('updateProductsCategory'), {data:{objects:this.movedCategories}})
+      .then(()=>{
+        this.getProducts()
+        this.$informationAlert("Change are saved")
+      })
+
+
+    }
 
   },
 
@@ -380,7 +475,6 @@ name: "Catalog",
   mounted(){
     this.getCategories()
     this.getProducts()
-    console.log(this.catalogList)
   },
 
 }
@@ -390,6 +484,24 @@ name: "Catalog",
 
 
 <style scoped>
+.move-category-item{
+  font-size: 14px;
+  cursor:pointer;
+  padding:5px 10px;
+}
+.move-category-item:hover{
+  background: #fafafa;
+}
+.move-category{
+  width:100px;
+  max-height:250px;
+  overflow-y: auto;
+}
+.select-category{
+  height: 35px;
+  background-position-y: 50%;
+  font-size: 14px;
+}
 .filter-product label{
   font-size: 15px;
 }

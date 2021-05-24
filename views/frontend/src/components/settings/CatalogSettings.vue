@@ -9,7 +9,7 @@
          <input type="checkbox">
          <span class="slider round"></span>
        </label>
-       <h2 class="catalog-title">Catalog</h2>
+       <h2 class="catalog-title">Web catalog</h2>
      </div>
      <p class="catalog-description margin-30">Here you can flexibly customize your online catalog</p>
 
@@ -41,55 +41,7 @@
      </p>
 
 
-     <div class="d-flex margin-10">
-       <label class="switch d-flex">
-         <input type="checkbox">
-         <span class="slider round"></span>
-       </label>
-       <h2 class="catalog-sub-title">Delivery</h2>
-     </div>
-     <p class="catalog-description margin-30">
-       You can customize the delivery method
-     </p>
 
-     <h3 class="catalog-sub-title margin-30">Delivery options</h3>
-     <label>Name</label>
-     <div class="d-flex">
-       <input class="cashback-input mr-2">
-        <button class="cash-btn"><img src="../../assets/icons/enable+.svg"></button>
-     </div>
-     <div class="d-flex margin-30">
-       <div style="width:30%" class="mr-3">
-         <label>Price</label>
-         <input class="cashback-input">
-       </div>
-
-       <div style="width:70%">
-         <label>Minimum order of amount</label>
-         <input class="cashback-input">
-       </div>
-     </div>
-
-     <h3 class="catalog-sub-title mb-1">News</h3>
-     <p class="catalog-description margin-30">Disable news in the directory</p>
-
-     <label>News title</label>
-     <input class="cashback-input">
-
-
-     <label>News description</label>
-     <textarea class="margin-50 general-area"></textarea>
-
-     <div class="d-flex margin-10">
-       <label class="switch d-flex">
-         <input type="checkbox">
-         <span class="slider round"></span>
-       </label>
-       <h2 class="catalog-sub-title">Filters and category</h2>
-     </div>
-     <p class="catalog-description margin-50">
-       Disable categories and filters in the catalog
-     </p>
 
 
      <div class="d-flex margin-10">
@@ -102,6 +54,31 @@
      <p class="catalog-description margin-50">
        Necessary if you want to use the catalog only as an online menu suitable for cafes, coffee houses, etc.
      </p>
+
+
+     <h3 class="catalog-sub-title mb-1">News</h3>
+     <p class="catalog-description margin-30">Disable news in the directory</p>
+
+     <label>News title</label>
+     <input class="cashback-input">
+
+
+     <label>News description</label>
+     <textarea class="margin-50 general-area"></textarea>
+
+<!--     <div class="d-flex margin-10">-->
+<!--       <label class="switch d-flex">-->
+<!--         <input type="checkbox">-->
+<!--         <span class="slider round"></span>-->
+<!--       </label>-->
+<!--       <h2 class="catalog-sub-title">Filters and category</h2>-->
+<!--     </div>-->
+<!--     <p class="catalog-description margin-50">-->
+<!--       Disable categories and filters in the catalog-->
+<!--     </p>-->
+
+     <button class="save">Save</button>
+
 
 
 
@@ -136,52 +113,7 @@
      <label>Definition</label>
      <textarea class="general-area definition-area margin-30"></textarea>
 
-     <label class="margin-20">Working hours</label>
-     <div class="week" >
-       <div class="days active d-flex justify-content-center align-items-center">MO</div>
-       <div class="days d-flex justify-content-center align-items-center">TU</div>
-       <div class="days d-flex justify-content-center align-items-center">WE</div>
-       <div class="days d-flex justify-content-center align-items-center">TH</div>
-       <div class="days d-flex justify-content-center align-items-center">FR</div>
-       <div class="days d-flex justify-content-center align-items-center">SA</div>
-       <div class="days d-flex justify-content-center align-items-center">SU</div>
-     </div>
 
-    <div class="d-flex margin-50">
-        <div style="width:50%" class="mr-3 d-flex align-items-center">
-          <label class="mb-0 mr-3 working-label">From</label>
-          <select class="form-control " aria-label="Default select example">
-
-            <option>+996500457834</option>
-            <option>+996500457834</option>
-            <option>+996500457834</option>
-            <option>+996500457834</option>
-            <option>+996500457834</option>
-            <option>+996500457834</option>
-            <option>+996500457834</option>
-            <option>+996500457834</option>
-            <option>+996500457834</option>
-          </select>
-        </div>
-      <div style="width:50%" class="d-flex align-items-center">
-        <label class="mb-0 mr-3 working-label">Till</label>
-        <select class="form-control " aria-label="Default select example">
-          <option>+996500457834</option>
-          <option>+996500457834</option>
-          <option>+996500457834</option>
-          <option>+996500457834</option>
-          <option>+996500457834</option>
-          <option>+996500457834</option>
-          <option>+996500457834</option>
-          <option>+996500457834</option>
-          <option>+996500457834</option>
-          <option>+996500457834</option>
-          <option>+996500457834</option>
-          <option>+996500457834</option>
-
-        </select>
-      </div>
-    </div>
 
      <h3 class="catalog-sub-title mb-1">Accent colors</h3>
      <p class="catalog-description margin-20">You can supply any color</p>
@@ -203,24 +135,21 @@
        <button class="social-btns">Website</button>
      </div>
 
-     <h3 class="catalog-sub-title mb-1">Address</h3>
-     <p class="catalog-description margin-20">Enter the address manually or indicate on the map</p>
+<!--     <h3 class="catalog-sub-title mb-1">Address</h3>-->
+<!--     <p class="catalog-description margin-20">Enter the address manually or indicate on the map</p>-->
 
-     <input class="cashback-input" placeholder="Enter your company address">
+<!--     <input class="cashback-input" placeholder="Enter your company address">-->
 
-     <div class="map-address margin-20">
-       <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2923.5580245248984!2d74.60367225038095!3d42.88217200986009!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x389eb74559ed9e25%3A0x514fbb81abe4553e!2sOlolohausErkindik!5e0!3m2!1sen!2skg!4v1620191676519!5m2!1sen!2skg" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-     </div>
 
-     <label class="margin-10">Phone number</label>
-     <div class="phone-number margin-20">+996 555 45 45 45</div>
+<!--     <label class="margin-10">Phone number</label>-->
+<!--     <div class="phone-number margin-20">+996 555 45 45 45</div>-->
 
-     <div class="d-flex margin-30">
-       <input class="cashback-input mr-2" placeholder="Your phone number">
-       <button class="cash-btn"><img src="../../assets/icons/enable+.svg"></button>
-     </div>
+<!--     <div class="d-flex margin-30">-->
+<!--       <input class="cashback-input mr-2" placeholder="Your phone number">-->
+<!--       <button class="cash-btn"><img src="../../assets/icons/enable+.svg"></button>-->
+<!--     </div>-->
 
-     <a style="color:#616cf5" href="/">+ Add branch</a>
+
    </div>
  </div>
 </div>
@@ -255,10 +184,7 @@ export default {
   color: #616CF5;
   font-size: 16px;
 }
-.map-address{
-  height: 144px;
-  border-radius: 10px;
-}
+
 .social-btns{
   border: 1px solid #D3D3D3;
   border-radius: 5px;
@@ -285,24 +211,11 @@ export default {
   background: #616cf5;
   border-radius:5px;
 }
-.week{
-  display: flex;
-  margin-bottom: 20px;
+
+.save{
+  width: 120px;
 }
-.days{
-  background: #F8F9FB;
-  border-radius: 4.64125px;
-  width: 48px;
-  height: 45px;
-  color:#858585;
-  cursor:pointer;
-  margin-right: 10px;
-}
-.days.active,.days:hover{
-  background: #616cf5;
-  transition: .3s;
-  color:#fff;
-}
+
 .catalog-title{
   font-size: 20px;
   font-weight: 600;
@@ -335,6 +248,7 @@ export default {
   display: flex;
   justify-content: center;
   border-radius: 10px;
+  padding: 10px;
 }
 .big-addPhoto{
   right: -18px !important;

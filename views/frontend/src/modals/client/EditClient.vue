@@ -20,7 +20,7 @@
             </div>
 
             <label>Name</label><br>
-            <input v-model="currentData.firstName" class="cashback-input">
+            <input v-model="currentData.name" class="cashback-input">
             <label>Email</label><br>
             <input v-model="currentData.email" class="cashback-input margin-b">
 
@@ -56,7 +56,7 @@
               </div>
             </div>
             <div class="modal-btn d-flex">
-              <button class="save">Save</button>
+              <button class="save" @click.prevent="onSubmit(currentData._id)">Save</button>
               <button class="remove">Remove</button>
             </div>
           </form>
@@ -67,27 +67,47 @@
 </template>
 
 <script>
+import $ from "jquery";
+
 export default {
   name: "EditClient",
-  props:['select_client'],
+  props:['select_client', 'getClients'],
   data(){
     return{
       currentData:''
     }
   },
   methods:{
+
+    onSubmit(id){
+        this.axios.put(this.url('updateClient',id),{
+              name:this.currentData.name,
+              email:this.currentData.email,
+              phone:this.currentData.phone,
+              birthDate:this.currentData.birthDate
+      })
+      .then(()=>{
+        this.$informationAlert("Change are saved")
+        this.getClients()
+        $('#edit-client').modal("hide")
+      })
+
+    },
     selectDate(){
       new this.$lightpick({
         field: document.getElementById('calendar'),
         orientation:'top',
+        format:'',
+        autoclose:true,
         onSelect: function(date){
-          document.getElementById('calendar').innerHTML = date.format('Do MMMM YYYY');
+          this.currentData.birthDate = date.format()
         }
       });
     }
   },
   mounted(){
     this.selectDate()
+
   },
   watch:{
     select_client(newCat){

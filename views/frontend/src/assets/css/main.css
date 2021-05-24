@@ -634,7 +634,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 /*===============Pagination Style====================*/
 .pagination-select{
-    width: 40px;
+    width: 46px;
     border:none
 }
 .prevBtn{
@@ -1137,4 +1137,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .catalog-list img{
     width: 15px;
     height: 15px;
+}
+.modal-header .close{
+    margin: 0;
+    padding: 0;
+    margin-right: 10px;
 }

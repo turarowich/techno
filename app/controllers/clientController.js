@@ -12,8 +12,8 @@ class ClientController{
             'msg': 'Sending client'
         }
         try {
-            
-            let client = await Client.findById(req.params.client).populate('messages').execPopulate()
+
+            let client = await Client.findById(req.params.client).populate('messages').populate('category').exec()
             result['object'] = client
         
         } catch (error) {
@@ -32,8 +32,8 @@ class ClientController{
             'msg': 'Sending clients'
         }
         try {
-            
-            let clients = await Client.find().populate('messages').exec()
+
+            let clients = await Client.find().populate('messages').populate('category').exec()
             result['objects'] = clients
         
         } catch (error) {
@@ -55,8 +55,7 @@ class ClientController{
             let hashedPassword = bcrypt.hashSync(req.fields.password, 8);
 
             let client = await new Client({
-                firstName: req.fields.firstName,
-                lastName: req.fields.lastName,
+                name: req.fields.name,
                 phone: req.fields.phone,
                 email: req.fields.email,
                 password: hashedPassword,
@@ -83,10 +82,14 @@ class ClientController{
         }
         try {
             let query = { '_id': req.params.client }
-            req.fields.password = bcrypt.hashSync(req.fields.password, 8);
+            if (req.fields.password){
+                 req.fields.password = bcrypt.hashSync(req.fields.password, 8);
+            }
 
-            let client = await Client.findOneAndUpdate(query, req.fields)
-            client.password = 'secured';
+            let client = await Client.findOneAndUpdate(query, req.fields, {
+                new: true
+              })
+
             result['object'] = client
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])

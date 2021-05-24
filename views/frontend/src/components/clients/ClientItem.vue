@@ -1,21 +1,21 @@
 <template>
-  <div v-for="client in clientList" class="table-item d-flex align-items-center justify-content-between" :key="client.id">
+  <div v-for="client in clientList" class="table-item d-flex align-items-center justify-content-between" :key="client._id">
       <div  class="client-names table-child d-flex align-items-center">
-          <div><label class="custom-checkbox"><input  type="checkbox"  @click="checkMainSelect" :ref="`select`+client.id"><span class="checkmark"></span></label></div>
+          <div><label class="custom-checkbox"><input  type="checkbox"  @click="checkMainSelect" :ref="`select`+client._id"><span class="checkmark"></span></label></div>
 
          <div class="d-flex align-items-center justify-content-between" @click="$router.push('/edit-client-page')" style="cursor:pointer">
            <div class="table-img">
              <img src="../../assets/img/criw.jpg">
            </div>
            <span>
-           {{client.firstName}}
+           {{client.name}}
            </span>
          </div>
       </div>
       <div class="table-child" v-show="data_check.birthday_checked" style="width: 12%;">{{client.birthDate.slice(0,10)}}</div>
       <div class="table-child" v-show="data_check.discount_checked" style="width: 10%;">10%</div>
-      <div class="table-child"   style="width: 14%;">{{client.category.name}}</div>
-      <div class="table-child" v-show="data_check.register_date_checked"  style="width: 18%;">{{client.createdAt.slice(1,10)}}</div>
+      <div class="table-child" style="width: 14%;">{{client.category.name}}</div>
+      <div class="table-child" v-show="data_check.register_date_checked"  style="width: 18%;">{{client.createdAt.slice(0,10)}}</div>
       <div class="client-phone table-child" style="width:14%" >{{client.phone}}</div>
       <div class="table-child"  style="width: 8%;">{{client.total}}</div>
       <div class="table-child" v-show="data_check.bonus_checked"  style="width: 8%;">{{client.bonus}}</div>
@@ -46,7 +46,7 @@ export default {
   },
   methods: {
     checkAll(item) {
-      return  this.$refs[`select${item.id}`].checked === true
+      return  this.$refs[`select${item._id}`].checked === true
     },
     checkMainSelect() {
       if(this.clientList.every(this.checkAll)){
