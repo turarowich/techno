@@ -10,7 +10,15 @@
     </div>
     <div class="d-flex align-items-center">
       <button class="app-buttons-item" @click="deleteAllClient"><img src="../../assets/icons/trash_empty.svg"><span>Remove</span></button>
-      <button class="app-buttons-item"><img src="../../assets/icons/moveto.svg"><span>Move to</span></button>
+      <div class="dropdown">
+        <button class="dropdown-toggle app-buttons-item" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <img src="../../assets/icons/moveto.svg"><span>Move to</span>
+        </button>
+
+        <div class="move-category dropdown-menu" aria-labelledby="dropdownMenuTotal">
+          <div class="move-category-item" v-for="cat in clientCategory" :key="cat._id" @click="moveCategory(cat._id)">{{cat.name}}</div>
+        </div>
+      </div>
       <button class="app-buttons-item" ><img src="../../assets/icons/import.svg"><span>Import</span></button>
       <div class="dropdown filter">
         <button class="dropdown-toggle app-buttons-item mr-0" id="dropdownFilterClient" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="../../assets/icons/filter.svg"><span>Filter</span></button>
@@ -334,19 +342,7 @@ export default {
   data(){
     return {
       clientList:[],
-     //  clientList:[
-     //   {register_date:'2021-03-14', number_of_purchase:'0', id:1, name:"Bektemir Kudaiberdiev Azzamkulovich ",  category: 'vip' ,phone: '996550425563', total:'450 $' ,bonus:'120' ,last_purchase:'2021-02-02', birthDate:this.$moment().format("YYYY-MM-DD") ,gender:'men'},
-     //   {register_date:'2021-03-14', number_of_purchase:'10', id:15, name:"Tomas Levins Birthday" , category: 'vip' ,phone: '996550425563', total:'450 $' ,bonus:'120' ,last_purchase:'2021-02-02', birthDate:this.$moment().format("YYYY-MM-DD") ,gender:'men'},
-     //   {register_date:'2021-04-12',number_of_purchase:'11', id:16, name:"Tomas Levins" , category: 'vip' ,phone: '996550425563', total:'450 $' ,bonus:'120' ,last_purchase:'2021-01-02', birthDate:'2021-12-03' ,gender:'men'},
-     //   {register_date:'2021-01-12',number_of_purchase:'3', id:17, name:"Tomas Levins" , category: 'vip' ,phone: '996550425563', total:'450 $' ,bonus:'120' ,last_purchase:'2021-05-10', birthDate:'2021-12-03' ,gender:'men'},
-     //   {register_date:'2021-03-10',number_of_purchase:'9', id:18, name:"Tomas Levins" , category: 'vip' ,phone: '996550425563', total:'450 $' ,bonus:'120' ,last_purchase:'2021-05-02', birthDate:'2021-12-03' ,gender:'men'},
-     //   {register_date:'2021-03-10',number_of_purchase:'13', id:19, name:"Tomas Levins" , category: 'vip' ,phone: '996550425563', total:'450 $' ,bonus:'120' ,last_purchase:'2021-04-22', birthDate:'2021-12-03' ,gender:'men'},
-     //   {register_date:'2021-03-10',number_of_purchase:'8', id:20, name:"Tomas Levins" , category: 'vip' ,phone: '996550425563', total:'450 $' ,bonus:'120' ,last_purchase:'2021-04-03', birthDate:'2021-12-03' ,gender:'men'},
-     //   {register_date:'2021-03-12',number_of_purchase:'2', id:2, name:"Rihana" , category: 'standart' ,phone: '996550425563', total:'300 $' ,bonus:'340' ,last_purchase:'2021-04-02', birthDate:'2021-12-03',gender:'woman'},
-     //   {register_date:'2021-04-12',number_of_purchase:'4', id:3, name:"Bektemir Kudiaberdiev" , category: 'standart' ,phone: '996550425563', total:'350 $' ,bonus:'13' ,last_purchase:'2021-03-16', birthDate:'2021-03-22',gender:'men'},
-     //   {register_date:'2021-04-08',number_of_purchase:'1', id:4, name:"Cristiano Ronaldo" , category: 'vip' ,phone: '996550425563', total:'100 $' ,bonus:'75' ,last_purchase:'2021-03-22', birthDate:'2021-03-22',gender:'men'},
-     //   {register_date:'2021-04-08',number_of_purchase:'5', id:5, name:"Dua Lipa Birthday" , category: 'standart' ,phone: '996550425563666', total:'200 $' ,bonus:'12000' ,last_purchase:'2021-03-02', birthDate:this.$moment().format("YYYY-MM-DD"),gender:'woman'},
-     // ],
+      movedCategories:[],
       data_check:{
        bonus_checked: false,
        last_purchase_checked: false,
@@ -625,33 +621,40 @@ export default {
           }
         }
       });
+      if(this.deletedClients.length > 0){
+        Swal.fire({
+          showConfirmButton: true,
+          html: 'Are you sure to remove these<br>clients',
+          showCloseButton: true,
+          showCancelButton: true,
+          confirmButtonText: 'Delete',
+          buttonsStyling:false,
+          customClass:{
+            popup: 'sweet-delete',
+            confirmButton: 'confirm-btn',
+            cancelButton:'cancel-btn',
+            actions:'btn-group',
+            content:'content-sweet',
+            closeButton:'close-btn'
+          },
 
-      Swal.fire({
-        showConfirmButton: true,
-        html: 'Are you sure to remove these<br>clients',
-        showCloseButton: true,
-        showCancelButton: true,
-        confirmButtonText: 'Delete',
-        buttonsStyling:false,
-        customClass:{
-          popup: 'sweet-delete',
-          confirmButton: 'confirm-btn',
-          cancelButton:'cancel-btn',
-          actions:'btn-group',
-          content:'content-sweet',
-          closeButton:'close-btn'
-        },
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.axios.delete(this.url('deleteClients'),{data:{objects: this.deletedClients}})
+                .then(()=>{
+                  this.deletedClients = []
+                  this.getClients()
+                  $('#parent-check').prop('checked',false)
+                  this.$successAlert('All clients have been removed')
+                })
+          }
+          else{
+            this.deletedClients = []
+          }
 
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.axios.delete(this.url('deleteClients'),{data:{objects: this.deletedClients}})
-              .then(()=>{
-                this.getClients()
-                $('#parent-check').prop('checked',false)
-                this.$successAlert('All clients have been removed')
-              })
-        }
-      })
+        })
+      }
+
 
 
 
@@ -706,6 +709,25 @@ export default {
         }
       })
     },
+    moveCategory(id){
+      this.clientList.forEach((user)=> {
+        if(this.$refs.client_item.$refs[`select${user._id}`] !== undefined && this.$refs.client_item.$refs[`select${user._id}`] !== null){
+          if(this.$refs.client_item.$refs[`select${user._id}`].checked === true){
+            this.movedCategories.push(user._id)
+          }
+        }
+      });
+      this.axios.put(this.url('updateClientsCategory'),{
+        objects: this.movedCategories,
+        category: id
+      })
+      .then(()=>{
+        this.getClients()
+        this.movedCategories = []
+        this.$informationAlert("Categories changed")
+      })
+    }
+
 
 
   },

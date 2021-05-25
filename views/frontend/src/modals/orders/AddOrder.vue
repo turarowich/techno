@@ -18,7 +18,48 @@
           <div class="row">
             <div class="col-lg-8">
               <h3 class="detail-product">Product</h3>
-              <input v-model="search" class="enter-name-input" placeholder="+ Enter the name of product">
+<!--              <input v-model="search" class="enter-name-input" placeholder="+ Enter the name of product">-->
+
+              <select class="js-example-basic-multiple" name="states[]" multiple="multiple">
+                    <option>
+                      <div class="table-child d-flex align-items-center"  >
+                        <div class="table-img">
+                          <img src="../../assets/img/sneak.jpg">
+                        </div>
+                        <img src="../../assets/icons/setting-icon/no-img.svg">
+                      </div>
+                          Air Forces
+                    </option>
+                <option>
+                  <div class="table-child d-flex align-items-center"  >
+                    <div class="table-img">
+                      <img src="../../assets/img/sneak.jpg">
+                    </div>
+                    <img src="../../assets/icons/setting-icon/no-img.svg">
+                  </div>
+                  Air Forces
+                </option>
+                <option>
+                  <div class="table-child d-flex align-items-center"  >
+                    <div class="table-img">
+                      <img src="../../assets/img/sneak.jpg">
+                    </div>
+                    <img src="../../assets/icons/setting-icon/no-img.svg">
+                  </div>
+                  Air Forces
+                </option>
+                <option>
+                  <div class="table-child d-flex align-items-center"  >
+                    <div class="table-img">
+                      <img src="../../assets/img/sneak.jpg">
+                    </div>
+                    <img src="../../assets/icons/setting-icon/no-img.svg">
+                  </div>
+                  Air Forces
+                </option>
+              </select>
+
+
               <div class="table">
                 <div class="d-flex main-content-header">
                   <div class="table-head" style="width: 50%;">Product</div>
@@ -149,6 +190,7 @@
 </template>
 
 <script>
+import $ from 'jquery'
 export default {
   name: "AddOrder",
   data(){
@@ -157,31 +199,19 @@ export default {
       search:''
     }
   },
-  computed:{
-    filteredList(){
-      return this.products.filter((item)=>{
-        return item.name.toLowerCase().includes(this.search.toLowerCase())
-      })
-    }
-  },
-  methods:{
-    getProducts(){
-      this.axios.get(this.url('getProducts'))
-          .then((response) => {
-            this.products = response.data.objects;
-
-
-          })
-    },
-  },
   mounted(){
-    this.getProducts()
+    $(document).ready(function() {
+      $('.js-example-basic-multiple').select2();
+    });
   }
+
+
 }
 </script>
 
 
 <style scoped>
+
 .modal-header .close{
   margin: 0;
   padding: 0;

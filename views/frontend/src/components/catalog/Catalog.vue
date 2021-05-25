@@ -271,7 +271,7 @@ name: "Catalog",
           }
         }
       });
-
+    if(this.deletedProducts.length>0){
       Swal.fire({
         showConfirmButton: true,
         html: 'Are you sure to remove these<br>products',
@@ -290,14 +290,23 @@ name: "Catalog",
 
       }).then((result) => {
         if (result.isConfirmed) {
-          this.axios.delete(this.url('deleteProducts'),{data:{objects: this.deletedProducts}})
-          .then(()=>{
-            this.getProducts()
-            $('#parent-check').prop('checked',false)
-              this.$successAlert('All products have been removed')
-          })
+          this.axios.delete(this.url('deleteProducts'),{data:{
+              objects: this.deletedProducts
+
+            }})
+              .then(()=>{
+                this.getProducts()
+                this.deletedProducts = []
+                $('#parent-check').prop('checked',false)
+                this.$successAlert('All products have been removed')
+              })
+        }
+        else{
+          this.deletedProducts = []
         }
       })
+    }
+
     },
     sortByQunatity() {
       if(this.catalogList.length === 0){
@@ -445,13 +454,16 @@ name: "Catalog",
       this.catalogList.forEach((user)=> {
         if(this.$refs.catalog_item.$refs[`select${user._id}`] !== undefined && this.$refs.catalog_item.$refs[`select${user._id}`] !== null){
           if(this.$refs.catalog_item.$refs[`select${user._id}`].checked === true){
-            user.category._id = id
-            this.movedCategories.push(user.category._id)
+            this.movedCategories.push(user._id)
           }
         }
       });
-      this.axios.put(this.url('updateProductsCategory'), {data:{objects:this.movedCategories}})
+      this.axios.put(this.url('updateProductsCategory'), {
+        objects:this.movedCategories,
+        category:id
+      })
       .then(()=>{
+        this.movedCategories = [];
         this.getProducts()
         this.$informationAlert("Change are saved")
       })
@@ -474,19 +486,7 @@ name: "Catalog",
 
 
 <style scoped>
-.move-category-item{
-  font-size: 14px;
-  cursor:pointer;
-  padding:5px 10px;
-}
-.move-category-item:hover{
-  background: #fafafa;
-}
-.move-category{
-  width:100px;
-  max-height:250px;
-  overflow-y: auto;
-}
+
 .select-category{
   height: 35px;
   background-position-y: 50%;

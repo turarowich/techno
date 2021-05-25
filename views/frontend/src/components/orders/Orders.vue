@@ -32,9 +32,6 @@
             </div>
           </div>
         </div>
-
-
-        <button class="app-buttons-item" @click="exportOrder"><img class="img-btn" src="../../assets/icons/set.svg"><span>Export to Excell </span></button>
       </div>
       <div>
         <button class="app-buttons-item" @click="showYesterday"><img src="../../assets/icons/yesterday.svg"><span>Yesterday</span></button>
@@ -122,24 +119,17 @@ name: "Orders",
   },
   data(){
     return{
-      orderList:[
-        {id:1,name:"Essential Shoes and bektemir kudaiberdiev",client:"Bektemir Kudaiberdiev Azzamkulovich", phone:"996550457834", total:"450",date:this.$moment().subtract(1, "days").format("YYYY-MM-DD"),notes:"Please?",status:'New'},
-        {id:3,name:"AirForces",client:"Tomas Levins", phone:"0775896542", total:"13",date:this.$moment().format('YYYY-MM-DD'),notes:"Please" ,status:'New'},
-        {id:4,name:"Krosses",client:"Tomas Levins", phone:"0500687909", total:"567",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'New'},
-        {id:5,name:"Essentialsss",client:"Tomas Levins", phone:"0500687909", total:"820",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
-        {id:6,name:"Ess",client:"Tomas Levins", phone:"0500687909", total:"200",date:this.$moment().subtract(1, "days").format("YYYY-MM-DD"),notes:"Please",status:'Done'},
-        {id:7,name:"Essss",client:"Tomas Levins", phone:"0500687909", total:"40",date:this.$moment().subtract(1, "days").format("YYYY-MM-DD"),notes:"Please?",status:'Done'},
-        {id:8,name:"Ess",client:"Tomas Levins", phone:"0500687909", total:"80",date:"2021-03-05T11:31:33.557+00:00",notes:"Please, can you \n" + "do it quickly?",status:'Done'},
-        {id:9,name:"Jeans and Jackets ",client:"Tomas Levins", phone:"0500687909", total:"12",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
-        {id:9,name:"Jeans and Jackets ",client:"Tomas Levins", phone:"0500687909", total:"12",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
-        {id:9,name:"Jeans and Jackets ",client:"Tomas Levins", phone:"0500687909", total:"12",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
-        {id:9,name:"Jeans and Jackets ",client:"Tomas Levins", phone:"0500687909", total:"12",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
-        {id:9,name:"Jeans and Jackets ",client:"Tomas Levins", phone:"0500687909", total:"12",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
-        {id:9,name:"Jeans and Jackets ",client:"Tomas Levins", phone:"0500687909", total:"12",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
-        {id:9,name:"Jeans and Jackets ",client:"Tomas Levins", phone:"0500687909", total:"12",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
-        {id:9,name:"Jeans and Jackets ",client:"Tomas Levins", phone:"0500687909", total:"12",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
-        {id:9,name:"Jeans and Jackets ",client:"Tomas Levins", phone:"0500687909", total:"12",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
-      ],
+     //  orderList:[
+     //    {id:1,name:"Essential Shoes and bektemir kudaiberdiev",client:"Bektemir Kudaiberdiev Azzamkulovich", phone:"996550457834", total:"450",date:this.$moment().subtract(1, "days").format("YYYY-MM-DD"),notes:"Please?",status:'New'},
+     //    {id:3,name:"AirForces",client:"Tomas Levins", phone:"0775896542", total:"13",date:this.$moment().format('YYYY-MM-DD'),notes:"Please" ,status:'New'},
+     //    {id:4,name:"Krosses",client:"Tomas Levins", phone:"0500687909", total:"567",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'New'},
+     //    {id:5,name:"Essentialsss",client:"Tomas Levins", phone:"0500687909", total:"820",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
+     //    {id:6,name:"Ess",client:"Tomas Levins", phone:"0500687909", total:"200",date:this.$moment().subtract(1, "days").format("YYYY-MM-DD"),notes:"Please",status:'Done'},
+     //    {id:7,name:"Essss",client:"Tomas Levins", phone:"0500687909", total:"40",date:this.$moment().subtract(1, "days").format("YYYY-MM-DD"),notes:"Please?",status:'Done'},
+     //    {id:8,name:"Ess",client:"Tomas Levins", phone:"0500687909", total:"80",date:"2021-03-05T11:31:33.557+00:00",notes:"Please, can you \n" + "do it quickly?",status:'Done'},
+     //    {id:9,name:"Jeans and Jackets ",client:"Tomas Levins", phone:"0500687909", total:"12",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
+     // ],
+      orderList:[],
       data_check:{
         client_checked:false,
         phone_checked:false,
@@ -163,28 +153,28 @@ name: "Orders",
     filteredList:function() {
       return this.orderList
           .filter(order => {
-            return order.name.toLowerCase().includes(this.search.toLowerCase()) || order.phone.includes(this.search)
+            return order.client_name.toLowerCase().includes(this.search.toLowerCase()) || order.client_phone.includes(this.search)
           })
           .filter(order=>{
             return order.status.includes(this.filter_by_status)
           })
-          .filter(order=>{
-            if(this.price_to.length>0){
-              return +order.total >= this.price_from && +order.total <= this.price_to
-            }
-            else if(this.price_to === ''){
-              return +order.total >=this.price_from;
-            }
-            else{
-              return order
-            }
-          })
-          .filter(order=>{
-            return order.date.slice(0,10).includes(this.filtered)
-                || (new Date(order.date).getTime() >= new Date(this.filtered.slice(0,10)).getTime() &&
-                    new Date(order.date).getTime() < new Date(this.filtered.slice(14,24)).getTime())
-
-          })
+          // .filter(order=>{
+          //   if(this.price_to.length>0){
+          //     return +order.total >= this.price_from && +order.total <= this.price_to
+          //   }
+          //   else if(this.price_to === ''){
+          //     return +order.total >=this.price_from;
+          //   }
+          //   else{
+          //     return order
+          //   }
+          // })
+          // .filter(order=>{
+          //   return order.date.slice(0,10).includes(this.filtered)
+          //       || (new Date(order.date).getTime() >= new Date(this.filtered.slice(0,10)).getTime() &&
+          //           new Date(order.date).getTime() < new Date(this.filtered.slice(14,24)).getTime())
+          //
+          // })
     },
     orderToDisplay: function(){
       let start = (this.currentPage - 1) * this.perPage
@@ -206,6 +196,13 @@ name: "Orders",
     },
   },
   methods: {
+    getOrders(){
+      this.axios.get(this.url('getOrders'))
+      .then((response)=>{
+        console.log("Orders response", response)
+        this.orderList = response.data.objects;
+      })
+    },
     checkAll(item){
       this.selectAll = item
     },
@@ -356,6 +353,7 @@ name: "Orders",
     },
   },
   mounted(){
+    this.getOrders();
     new this.$lightpick({
         field: document.getElementById('datepicker'),
         singleDate: false,
