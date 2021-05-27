@@ -26,15 +26,33 @@ const orderSchema = new Schema({
         type: String,
         required: false,
     },
+    address: {
+        type: String,
+        required: false,
+        default: ''
+    },
     status: {
         type: String,
         required: true,
         default: 'waiting'
     },
+    delivery: {
+        type: Schema.Types.ObjectId,
+        ref: 'Delivery'
+    },
+    branch: {
+        type: Schema.Types.ObjectId,
+        ref: 'Branch'
+    },
     deliveryType: {
         type: String,
         required: true,
         default: 'self'
+    },
+    points: {
+        type: Number,
+        required: true,
+        default: 0
     },
     createdAt: {
         type: Date,

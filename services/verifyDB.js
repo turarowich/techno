@@ -2,7 +2,6 @@ var jwt = require('jsonwebtoken');
 var config = require('../config/config');
 
 function verifyDB(req, res, next) {
-    console.log(req.headers['company_url'],"MIDLD",config.Shoes);
     let cat_url = req.headers['company_url'];
     let shoes = config.Shoes;
     let shoes_db = global.userConnection.useDb(shoes).model("catalogs");

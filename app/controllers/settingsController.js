@@ -16,6 +16,7 @@ class SettingsController{
         let Settings = db.model("Settings");
         let Delivery = db.model("Delivery");
         let Branch = db.model("Branch");
+        let Discount = db.model("Discount");
 
         let result = {
             'status': 200,
@@ -31,9 +32,12 @@ class SettingsController{
 
                 let branches = await Branch.find()
                 let deliveries = await Delivery.find()
+                let discounts = await Discount.find().sort({ "discount_percentage": "asc" })
+
                 result['object'] = settings
                 result['branches'] = branches
                 result['deliveries'] = deliveries
+                result['discounts'] = discounts;
 
             } catch (error) {
                 result = sendError(error, req.headers["accept-language"])
@@ -53,10 +57,11 @@ class SettingsController{
         let Settings = db.model("Settings");
         let Delivery = db.model("Delivery");
         let Branch = db.model("Branch");
+        let Discount = db.model("Discount");
 
         let result = {
             'status': 200,
-            'msg': 'Sending client'
+            'msg': 'Sending settings'
         }
         try {
             
@@ -74,11 +79,13 @@ class SettingsController{
             }
             let branches = await Branch.find()
             let deliveries = await Delivery.find()
+            let discounts = await Discount.find().sort({ "discount_percentage": "asc" })
 
             result['object'] = settings[0];
             result['imgPath'] = req.db;
             result['branches'] = branches;
             result['deliveries'] = deliveries;
+            result['discounts'] = discounts;
         
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
@@ -101,7 +108,11 @@ class SettingsController{
             'status': 200,
             'msg': 'Settings updated'
         }
-        try {
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
+        updateSettings: try {
             
             if(req.fields.deliveries){
                 for (let delivery of req.fields.deliveries){
@@ -144,6 +155,41 @@ class SettingsController{
                     new: true
                 })
             })
+            updateSettings = await Settings.find()
+            updateSettings = updateSettings[0]
+
+            if (req.files.logo) {
+                let filename = saveImage(req.files.logo, req.db)
+                if (filename == 'Not image') {
+                    result = {
+                        status: 500,
+                        msg: "Validation error",
+                        errors: {
+                            img: validate[lang]['image_not_valid'],
+                        },
+                    }
+                    break updateSettings
+                } else {
+                    updateSettings.logo = filename
+                    updateSettings.save()
+                }
+            }
+            if (req.files.backgroundImageApp) {
+                let filename = saveImage(req.files.backgroundImageApp, req.db)
+                if (filename == 'Not image') {
+                    result = {
+                        status: 500,
+                        msg: "Validation error",
+                        errors: {
+                            img: validate[lang]['image_not_valid'],
+                        },
+                    }
+                    break updateSettings
+                } else {
+                    updateSettings.backgroundImageApp = filename
+                    updateSettings.save()
+                }
+            }
 
 
             let branches = await Branch.find()

@@ -17,6 +17,9 @@ module.exports = function(app, passport){
     app.post('/registerClient', authController.registerClient);
     app.post('/registerClientSocial', authController.registerClientSocial);
     app.post('/refreshToken', authController.refreshToken);
+    app.post('/resetPasswordMessage', authController.resetPasswordMessage);
+    app.post('/resetPassword', authController.resetPassword);
+    app.post('/resetCheckCode', authController.resetCheckCode);
     app.get('/getSettingsClient', settingsController.getSettingsClient);
     app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login', session: false }), authController.callbackFB);
     app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login', session: false }), authController.callbackGG);

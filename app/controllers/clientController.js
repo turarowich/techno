@@ -1,5 +1,5 @@
 var bcrypt = require('bcryptjs');
-const { useDB, sendError } = require('../../services/helper')
+const { useDB, sendError, saveImage } = require('../../services/helper')
 var validate = require('../../config/messages');
 const { query } = require('express');
 class ClientController{
@@ -7,15 +7,30 @@ class ClientController{
     getClient = async function (req, res) {
         let db = useDB(req.db)
         let Client = db.model("Client");
-        
+        let Discount = db.model("Discount");
+
         let result = {
             'status': 200,
             'msg': 'Sending client'
         }
         try {
-            
+            let discounts = await Discount.find()
             let client = await Client.findById(req.params.client).populate('messages').populate('category').exec()
+            if(client){
+                let discount = null
+                for (let i = 0; i < discounts.length; i++) {
+                    if (client.balance >= discounts[i].min_sum_of_purchases) {
+                        discount = discounts[i]
+                    }
+                }
+                if (discount){
+                    result['discount'] = discount
+                }
+                
+            }
+            
             result['object'] = client
+
         
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
@@ -52,7 +67,11 @@ class ClientController{
             'status': 200,
             'msg': 'Client added'
         }
-        try {
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
+        addClient: try {
             let hashedPassword = bcrypt.hashSync(req.fields.password, 8);
 
             let client = await new Client({
@@ -65,6 +84,24 @@ class ClientController{
                 address: req.fields.address,
                 category: req.fields.category
             }).save();
+            
+            if (req.files.avatar) {
+                let filename = saveImage(req.files.avatar, req.db)
+                if (filename == 'Not image') {
+                    result = {
+                        status: 500,
+                        msg: "Validation error",
+                        errors: {
+                            img: validate[lang]['image_not_valid'],
+                        },
+                    }
+                    break addClient
+                } else {
+                    client.avatar = filename
+                    client.save()
+                }
+            }
+
             client.password = 'secured';
             result['object'] = client
         } catch (error) {
@@ -75,30 +112,64 @@ class ClientController{
     };
 
     updateClient = async function (req, res) {
+        console.log("got here")
         let db = useDB(req.db)
         let Client = db.model("Client");
-
+        
         let result = {
             'status': 200,
             'msg': 'Client updated'
         }
-        try {
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
+        updateClient: try {
             let query = { '_id': req.params.client }
-            if (req.fields.password){
-                req.fields.password = bcrypt.hashSync(req.fields.password, 8);
+            let client = null
+            if (req.fields.password) {
+                req.fields.password = req.fields.password.trim()
+                client = await Client.findOneAndUpdate(query, req.fields, {
+                    new: true
+                }).select('+password')
+                await client.save()
+                client.password = bcrypt.hashSync(req.fields.password, 8);
+                await client.save()
+
+            }else{
+                client = await Client.findOneAndUpdate(query, req.fields, {
+                    new: true
+                })
             }
             
-
-            let client = await Client.findOneAndUpdate(query, req.fields, {
-                new: true
-            })
+    
+            
+            if (req.files.avatar) {
+                let filename = saveImage(req.files.avatar, req.db)
+                if (filename == 'Not image') {
+                    result = {
+                        status: 500,
+                        msg: "Validation error",
+                        errors: {
+                            img: validate[lang]['image_not_valid'],
+                        },
+                    }
+                    break updateClient
+                } else {
+                    client.avatar = filename
+                    await client.save({
+                        new: true
+                    })
+                }
+            }
             
             if (req.fields.apns){
                 client.apns.push(req.fields.apns)
-                client.save()
+                await client.save()
             }
             result['object'] = client
         } catch (error) {
+            console.log(error)
             result = sendError(error, req.headers["accept-language"])
         }
 
