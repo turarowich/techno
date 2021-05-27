@@ -24,7 +24,7 @@
                   <div class="pl-4 pt-3 pb-3" v-if="filteredProducts.length === 0">
                         You don't have any products
                   </div>
-                  <div  v-else v-for="product in filteredProducts" :key="product.id" @click="selectProduct(product.id)" class="product-order  d-flex align-items-center justify-content-between">
+                  <div  v-else v-for="product in filteredProducts" :key="product._id" @click="selectProduct(product._id)" class="product-order  d-flex align-items-center justify-content-between">
                     <div class="table-child d-flex align-items-center">
                       <div class="table-img">
                         <img src="../../assets/img/sneak.webp">
@@ -53,7 +53,7 @@
                     <p class="empty-page-text">Add a product to start</p>
                   </div>
 
-                  <div  v-else  v-for="order in new_order.products" :key="order.id" class="table-item d-flex align-items-center" >
+                  <div  v-else  v-for="order in new_order.products" :key="order._id" class="table-item d-flex align-items-center" >
                     <div  class="d-flex align-items-center"  style="width: 50%;">
                       <div class="table-img">
                         <img src="../../assets/img/sneak.webp">
@@ -63,7 +63,7 @@
                     <div style="width:20%">{{order.price}}$</div>
                     <div style="width:20%"><input type="number" min="1" class="quantity" v-model="order.quantity"></div>
                     <div style="width:15%">{{order.quantity*order.price}} $</div>
-                    <div style="width:10%"><img @click="deleteFromOrder(order.id)" src="../../assets/icons/trash_empty.svg"></div>
+                    <div style="width:10%"><img @click="deleteFromOrder(order._id)" src="../../assets/icons/trash_empty.svg"></div>
                   </div>
 
                 </div>
@@ -217,7 +217,7 @@ export default {
     },
     selectProduct(id){
       this.products.map((product)=>{
-        if(product.id === id){
+        if(product._id === id){
           if(this.new_order.products.includes(product)){
             product.quantity= +product.quantity+1;
           }
@@ -238,22 +238,13 @@ export default {
       this.search_client = ''
     },
     deleteFromOrder(id){
-      this.new_order.products=this.new_order.products.filter((item)=>item.id !== id)
-      // var index = this.new_order.products.findIndex(function(o){
-      //   return o.id === id;
-      // })
-      // if (index !== -1) this.new_order.products.splice(index, 1)
+      this.new_order.products=this.new_order.products.filter((item)=>item._id !== id)
 
     },
     getProducts(){
       this.axios.get(this.url('getProducts'))
       .then((res)=>{
         this.products = res.data.objects;
-        this.products.map((product)=>{
-          product.id = product._id;
-          delete product._id;
-
-        })
       })
 
     },
@@ -282,55 +273,7 @@ export default {
 .general-title{
   margin-bottom: 3px;
 }
-.child-order-client .table-child{
-  padding: 7px 15px;
-  border-bottom: 1px solid #D3D3D3;
-  cursor:pointer;
-}
-.child-order-client .table-child:hover{
-  background: #F8F9FF;
-  transition:.3s;
 
-}
-.client-phone-order{
-  color:#8C94A5;
-  font-size: 14px;
-}
-.parent-order-client{
-  position: relative;
-}
-.child-order-client{
-  width: 100%;
-  overflow-y: auto;
-  max-height: 350px;
-  background: #fff;
-  box-shadow: 2px 11px 35px rgba(0, 0, 0, 0.1);
-  z-index:99;
-  position: absolute;
-  padding:10px 0;
-
-}
-.left-order{
-  position: relative;
-}
-.product-order{
-  cursor:pointer;
-  padding:10px 20px;
-}
-.product-order:hover{
-  background: #F8F9FF;
-  transition:.3s;
-}
-.search-product{
-  box-shadow: 2px 11px 35px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  width: 100%;
-  max-height:360px;
-  overflow-y: auto;
-  position: absolute;
-  background: #fff;
-
-}
 .modal-header .close{
   margin: 0;
   padding: 0;

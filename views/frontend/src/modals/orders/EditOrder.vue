@@ -26,7 +26,7 @@
                   <div class="pl-4 pt-3 pb-3" v-if="filteredProducts.length === 0">
                     You don't have any products
                   </div>
-                  <div  v-else v-for="product in filteredProducts" :key="product.id" @click="selectProduct(product.id)" class="product-order  d-flex align-items-center justify-content-between">
+                  <div  v-else v-for="product in filteredProducts" :key="product._id" @click="selectProduct(product._id)" class="product-order  d-flex align-items-center justify-content-between">
                     <div class="table-child d-flex align-items-center">
                       <div class="table-img">
                         <img src="../../assets/img/sneak.webp">
@@ -224,9 +224,9 @@ export default {
   methods:{
     selectProduct(id){
       this.products.map((product)=>{
-        if(product.id === id){
+        if(product._id === id){
           if(this.currentData.products.includes(product)){
-            product.quantity= +product.quantity+1;
+            this.$warningAlert("warning")
           }
           else{
             this.currentData.products.push(product)
@@ -248,10 +248,6 @@ export default {
       this.axios.get(this.url('getProducts'))
           .then((res)=>{
             this.products = res.data.objects;
-            this.products.map((product)=>{
-              product.id = product._id;
-              delete product._id;
-            })
           })
 
     },
