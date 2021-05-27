@@ -2,11 +2,27 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const settingsSchema = new Schema({
+    name: {
+        type: String,
+        required: [true, 'name_required'],
+    },
+    welcome: {
+        type: String,
+        required: true,
+    },
     slogan: {
         type: String,
         required: [true, 'slogan_required'],
     },
+    email: {
+        type: String,
+        required: true,
+    },
     logo: {
+        type: String,
+        required: false,
+    },
+    backgroundImageApp: {
         type: String,
         required: false,
     },
@@ -48,14 +64,27 @@ const settingsSchema = new Schema({
         required: true,
         default: false
     },
-
-
     foodMode: {
         type: Boolean,
         required: true,
         default: false
     },
     deliveryDescription: {
+        type: String,
+        required: false,
+        default: ""
+    },
+    instagram: {
+        type: String,
+        required: false,
+        default: ""
+    },
+    facebook: {
+        type: String,
+        required: false,
+        default: ""
+    },
+    website: {
         type: String,
         required: false,
         default: ""

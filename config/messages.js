@@ -32,6 +32,7 @@ const en_messages = {
     code_required: 'Code required',
     comment_required: 'Comment required',
     description_required: 'Description required',
+    code_invalid: 'Code is not valid',
 
     // EXCEL messages
     xl_produt_name:'Product name',
@@ -52,6 +53,7 @@ const en_messages = {
     xl_promo_end: 'Promocode end date',
     xl_recommend: 'Recommended',
     xl_product_result: 'Result',
+
     //Promocode
     promo_code:'Code has to be at least 12 characters',
     promo_name_unique:'Promocode with this name already exists',
@@ -95,6 +97,7 @@ const ru_messages = {
     code_required: 'Кодовое слово обязательное поле',
     comment_required: 'Коментарий обязательное поле',
     description_required: 'Описание обязательное поле',
+    code_invalid: 'Неравильный код',
 
     // EXCEL messages
     xl_produt_name: 'Название',

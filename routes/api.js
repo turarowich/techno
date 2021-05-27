@@ -20,7 +20,6 @@ module.exports = function (app, network_information) {
     app.get('/getClients', clientController.getClients);
     app.post('/addClient', clientController.addClient);
     app.put('/updateClient/:client', clientController.updateClient);
-    app.put('/updateClient/:client', clientController.updateClient);
     app.put('/updateClientsCategory', clientController.updateClientsCategory);
     app.delete('/deleteClient/:client', clientController.deleteClient);
     app.delete('/deleteClients', clientController.deleteClients);

@@ -5,7 +5,6 @@ function verifyToken(req, res, next) {
     // Header names in Express are auto-converted to lowercase
     let token = req.headers['x-access-token'] || req.headers['authorization'];
     // Remove Bearer from string
-    console.log(token,"token");
     token = token.replace(/^Bearer\s+/, "");
 
     if (!token)
@@ -16,7 +15,6 @@ function verifyToken(req, res, next) {
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
 
         // if everything good, save to request for use in other routes
-        console.log("ii");
         req.userID = decoded.user;
         req.db = "loygift" + decoded.id;
         next();

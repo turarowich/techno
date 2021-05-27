@@ -56,20 +56,30 @@ class OrderController{
         try {
             let client = await Client.findById(req.fields.client)
             if(client){
-                
+                if (req.fields.points){
+                    client.points -= req.fields.points
+                    client.save()
+                }
                 let order = await new Order({
                     client: client._id,
                     client_name: client.name,
                     client_phone: client.phone,
                     promoCode: req.fields.promoCode,
                     status: req.fields.status,
+                    address: req.fields.address,
+                    delivery: req.fields.delivery,
                     deliveryType: req.fields.deliveryType,
                     notes: req.fields.notes,
+                    points: req.fields.points,
                 });
                 var products = req.fields.products
                 for(let i=0; i < products.length; i++){
                     let product = products[i]
                     let search_product = await Product.findById(product.id)
+                    if(!product.id){
+                        search_product = await Product.findById(product._id)
+                    }
+                    
                     if (search_product) {
 
                         let order_product = await new OrderProduct({
@@ -96,13 +106,15 @@ class OrderController{
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
-
+        console.log(req.fields)
         res.status(result.status).json(result);
     };
 
     updateOrder = async function (req, res) {
         let db = useDB(req.db)
         let Order = db.model("Order");
+        let Product = db.model("Product");
+        let OrderProduct = db.model("OrderProduct");
 
         let result = {
             'status': 200,
@@ -111,7 +123,34 @@ class OrderController{
         try {
             let query = { '_id': req.params.order }
             req.fields['updatedAt'] = new Date()
+            var products = req.fields.products
+            req.fields.products = null
             let order = await Order.findOneAndUpdate(query, req.fields)
+            if(products && products.length){
+                order.products = []
+                for (let i = 0; i < products.length; i++) {
+                    let product = products[i]
+                    let search_product = await Product.findById(product.id)
+                    if (!product.id) {
+                        search_product = await Product.findById(product._id)
+                    }
+
+                    if (search_product) {
+
+                        let order_product = await new OrderProduct({
+                            product: product.id,
+                            name: search_product.name,
+                            name_ru: search_product.name_ru,
+                            secondary: search_product.secondary,
+                            secondary_ru: search_product.secondary_ru,
+                            img: search_product.img,
+                            price: search_product.price,
+                            quantity: product.quantity
+                        }).save();
+                        order.products.push(order_product._id)
+                    }
+                }
+            }
             result['object'] = await order.populate('client').populate('products').execPopulate()
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
