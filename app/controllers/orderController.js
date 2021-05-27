@@ -83,7 +83,7 @@ class OrderController{
                     if (search_product) {
 
                         let order_product = await new OrderProduct({
-                            product: product.id,
+                            product: product.id ? product.id : product._id,
                             name: search_product.name,
                             name_ru: search_product.name_ru,
                             secondary: search_product.secondary,
@@ -138,7 +138,7 @@ class OrderController{
                     if (search_product) {
 
                         let order_product = await new OrderProduct({
-                            product: product.id,
+                            product: product.id ? product.id : product._id,
                             name: search_product.name,
                             name_ru: search_product.name_ru,
                             secondary: search_product.secondary,
