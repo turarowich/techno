@@ -62,7 +62,7 @@ app.config.globalProperties.socket = socket
 app.config.globalProperties.scrollToBottom = function(obj){
     $("#"+obj).scrollTop(1000000)
 }
-var home_url = ['login', 'register', 'loginClient', 'registerClient','getClientProducts','getCatalog','getClientCategories']
+var home_url = ['login', 'register', 'loginClient', 'registerClient','getClientProducts','getCatalog','getClientCategories','getCatalogSettings']
 
 app.config.globalProperties.changeToken = function () {
     this.axios.defaults.headers.common['Authorization'] = 'Bearer '+ localStorage.getItem('token')

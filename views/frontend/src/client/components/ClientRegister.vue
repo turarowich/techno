@@ -4,27 +4,33 @@
       <div class="login">
         <h1 class="welcome-sign-in">Register</h1>
         <form >
-          <label class="label">Name</label>
-          <input name="name" class="login-input">
+          <label for="name" class="label">Name</label>
+          <input v-model="name" id="name" name="name" class="login-input">
           <label class="label">Email</label>
-          <input name="email" class="login-input">
+          <input v-model="email" name="email" class="login-input">
           <label class="label">Phone number</label>
-          <input name="email" class="login-input">
+          <input  v-model="phone" name="phone" class="login-input">
           <label class="label">Password</label>
-          <div class="password d-flex justify-space-between align-items-center"><input name="password" id="password"  class="login-input" type="password"><img @click="showPassword" id="hide-eye"  src="../../assets/icons/Hide.svg"><img @click="showPassword" id="show-eye"  src="../../assets/icons/eye.svg"></div>
-
+          <div class="password d-flex justify-space-between align-items-center">
+            <input v-model="password" name="password" id="password"  class="login-input" type="password">
+            <img @click="showPassword" id="hide-eye"  src="../../assets/icons/Hide.svg"><img @click="showPassword" id="show-eye"  src="../../assets/icons/eye.svg">
+          </div>
           <div class="remind ">
             <span>At least 8 characters, 1 uppercase letter, 1 number, 1 symbol</span>
           </div>
 
           <div class="remind mb-3 d-flex justify-content-between align-item-center">
             <div class="d-flex ">
-              <label class="custom-checkbox"><input type="checkbox"><span class="checkmark"></span></label>
+              <label class="custom-checkbox">
+                <input type="checkbox" v-model="read_pp">
+                <span class="checkmark">
+                </span>
+              </label>
               <span>I have read the Privacy Policy and accept its terms.</span>
             </div>
 
           </div>
-          <button class="sign-in-btn" type="submit">Register</button>
+          <button @click="register" v-bind:class="{ disabled_btn: !read_pp }" class="sign-in-btn" type="button">Register</button>
         </form>
 
         <div class="have-account">Sign up with Social of fill the form to continue. </div>
@@ -33,13 +39,8 @@
           <div class="social-icons">      <img src="../../assets/icons/twitter.svg"></div>
           <div class="social-icons">      <img src="../../assets/icons/facebook.svg"></div>
           <div class="social-icons">      <img src="../../assets/icons/google.svg"></div>
-
-
         </div>
-
-
       </div>
-
     </div>
   </div>
 </template>
@@ -49,6 +50,20 @@ import $ from "jquery";
 
 export default {
   name: "ClientRegister",
+  data(){
+    return{
+      name:'',
+      email:'',
+      phone:'',
+      password:'',
+      read_pp:false,
+    }
+  },
+  computed:{
+    currentCompanyCatalog() {
+      return this.$route.params.bekon;
+    },
+  },
   methods:{
     showPassword: function () {
       var x = document.getElementById("password");
@@ -62,6 +77,31 @@ export default {
         $('#hide-eye').css({'display':'block'})
 
       }
+    },
+    register(){
+      let that=this;
+      const options = {
+        headers: {"company_url": this.currentCompanyCatalog}
+      }
+      console.log(this.currentCompanyCatalog,"currentCompanyCatalog");
+      let url = this.url('registerClient');
+      let data = {
+        name:this.name,
+        phone:this.phone,
+        email:this.email,
+        password:this.password,
+      }
+      this.axios.post(url,data,options).then(function (response) {
+        console.log(response);
+        that.$successAlert('Registered');
+      }).catch(function(error){
+        if (error.response) {
+          // console.log(error.response.status);
+          // console.log(error.response.headers);
+          console.log(Object.values(error.response.data.errors));
+          // that.displayMessages(Object.values(error.response.data.errors),"Errors");
+        }
+      });
     },
   }
 }
@@ -153,6 +193,10 @@ form{
 .main-or{
   margin-top:15px;
   margin-bottom: 11px;
+}
+.disabled_btn{
+  pointer-events: none;
+  opacity: .5;
 }
 
 </style>

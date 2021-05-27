@@ -4,6 +4,7 @@ import {OrdersModule} from "@/store/Orders";
 import {LoyaltyModule} from "@/store/Loyalty";
 import createPersistedState from "vuex-persistedstate";
 import {CatalogModule} from "@/store/Catalog";
+import {ClientModule} from "@/store/modules/Client";
 // import * as Cookies from 'js-cookie';
 export default createStore({
     modules: {
@@ -11,6 +12,7 @@ export default createStore({
         Orders: OrdersModule,
         Loyalty: LoyaltyModule,
         Catalog: CatalogModule,
+        Client: ClientModule,
     },
     // plugins: [createPersistedState({
     //     storage: {

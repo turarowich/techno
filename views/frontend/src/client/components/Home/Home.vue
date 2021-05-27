@@ -1,16 +1,14 @@
 <template>
   <div class="client">
-<div >
+<div>
 
   <div v-if="!['ClientLogin', 'ClientRegister'].includes($route.name)">
     <Navbar/>
-
   </div>
   <router-view/>
 </div>
     <div v-if="!['ClientLogin', 'ClientRegister'].includes($route.name)">
       <Footer/>
-
     </div>
   </div>
 </template>
@@ -24,30 +22,26 @@ name: "Home",
   Navbar,
   Footer
   },
+  data(){
+   return{
+
+   }
+  },
   computed: {
-    currentRouteName() {
-      return this.$route.name;
+    currentCompanyCatalog() {
+      return this.$route.params.bekon;
     }
   },
+  methods:{
+
+  },
   beforeCreate(){
-    console.log(this.currentRouteName,'ddddd beforeCreate');
     console.log(this.$route.params.bekon,'ddddd  beforeCreate');
     this.$store.dispatch("Catalog/setCompany_url",this.$route.params.bekon);
 
   },
   created(){
-    // console.log(this.currentRouteName,'ddddd  created');
-    // console.log(this.$route.params.bekon,'ddddd  created');
 
-    // this.axios.get(this.url('getCatalog'),{
-    //   params: {
-    //     'url': this.currentRouteName,
-    //   }
-    // }).then(function(response){
-    //   console.log(response);
-    // }).catch(function(error){
-    //   console.log(error);
-    // });
   },
   mounted() {
 

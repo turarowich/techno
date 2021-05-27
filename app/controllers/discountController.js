@@ -18,7 +18,7 @@ class DiscountController{
     addDiscount = async function (req, res) {
         let db = useDB(req.db)
         let discount_model = db.model("Discount");
-        let discount = req.fields.copy;
+        let discount = req.fields;
         let result = {
             'status': 200,
             'msg': 'Sending Discount'

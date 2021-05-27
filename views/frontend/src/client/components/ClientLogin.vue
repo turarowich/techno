@@ -5,9 +5,13 @@
         <h1 class="welcome-sign-in">Log In</h1>
         <form >
           <label class="label">Email</label>
-          <input name="email" class="login-input">
+          <input v-model="email" name="email" class="login-input">
           <label class="label">Password</label>
-          <div class="password d-flex justify-space-between align-items-center"><input name="password" id="password"  class="login-input" type="password"><img @click="showPassword" id="hide-eye"  src="../../assets/icons/Hide.svg"><img @click="showPassword" id="show-eye"  src="../../assets/icons/eye.svg"></div>
+          <div class="password d-flex justify-space-between align-items-center">
+            <input v-model="password" name="password" id="password"  class="login-input" type="password">
+            <img @click="showPassword" id="hide-eye"  src="../../assets/icons/Hide.svg">
+            <img @click="showPassword" id="show-eye"  src="../../assets/icons/eye.svg">
+          </div>
 
           <div class="remind d-flex justify-content-between align-item-center">
             <div class="d-flex ">
@@ -16,7 +20,7 @@
             </div>
             <a href="/">Forgot your password?</a>
           </div>
-          <button class="sign-in-btn" type="submit">Sign In</button>
+          <button @click="login" class="sign-in-btn" type="button">Sign In</button>
         </form>
 
         <div class="have-account">Sign up with Social of fill the form to continue. </div>
@@ -32,7 +36,7 @@
           <span class="or-text">or</span>
           <div class="or-div"></div>
         </div>
-        <div class="have-account mb-0">Don't have an account? <a href="/home/signup">Sign up now</a></div>
+        <div class="have-account mb-0">Don't have an account? <router-link class="client-link" :to="`/shop/${currentCompanyCatalog}/signup`">Sign up now</router-link></div>
       </div>
 
     </div>
@@ -44,6 +48,17 @@ import $ from "jquery";
 
 export default {
   name: "SignIn",
+  data(){
+    return{
+      email:'',
+      password:'',
+    }
+  },
+  computed:{
+    currentCompanyCatalog() {
+      return this.$route.params.bekon;
+    }
+  },
   methods:{
     showPassword: function () {
       var x = document.getElementById("password");
@@ -57,6 +72,31 @@ export default {
         $('#hide-eye').css({'display':'block'})
 
       }
+    },
+    login(){
+      let that=this;
+      const options = {
+        headers: {"company_url": this.currentCompanyCatalog}
+      }
+      console.log(this.currentCompanyCatalog,"currentCompanyCatalog");
+      let url = this.url('loginClient');
+      let data = {
+        email:this.email,
+        password:this.password,
+      }
+      this.axios.post(url,data,options).then(function (response) {
+        console.log(response);
+        that.$successAlert('Logged in!');
+        that.$store.dispatch("Client/setUser",response.data);
+        that.$router.push("/shop/"+that.currentCompanyCatalog);
+      }).catch(function(error){
+        if (error.response) {
+          // console.log(error.response.status);
+          // console.log(error.response.headers);
+          that.$successAlert(Object.values(error.response.data.errors).join(', '));
+          console.log(Object.values(error.response.data.errors));
+        }
+      });
     },
   }
 }

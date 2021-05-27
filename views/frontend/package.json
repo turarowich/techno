@@ -35,11 +35,13 @@
     "socket.io-client": "^4.0.1",
     "sweetalert2": "^10.15.5",
     "vue": "^3.0.5",
+    "vue-color-kit": "^1.0.3",
     "vue-router": "^4.0.3",
     "vue-scroll-behavior": "^0.3.0",
     "vue-sweetalert2": "^4.2.0",
     "vue2-animate": "^2.1.4",
     "vuex": "^4.0.0",
+    "vuex-extensions": "^1.1.5",
     "vuex-persistedstate": "^4.0.0-beta.3"
   },
   "devDependencies": {

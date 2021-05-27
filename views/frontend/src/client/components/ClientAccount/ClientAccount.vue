@@ -6,11 +6,14 @@
           <div class="d-flex align-items-center">
             <img class="client-avatar" src="../../../assets/clients/clientProfile.svg">
             <div>
-              <h1 class="profile-title">Afsar Hossen <img src="../../../assets/clients/Edit.svg"></h1>
-              <span class="profile-phone">+1812 546 28 53</span>
+              <h1 class="profile-title">{{user.name}} <img src="../../../assets/clients/Edit.svg"></h1>
+              <span class="profile-phone">{{user.phone}}</span>
             </div>
           </div>
-          <div class="logout">Logout <img class="ml-2" src="../../../assets/clients/log-out.svg"></div>
+          <div @click="logout" class="logout">
+            Logout
+            <img class="ml-2" src="../../../assets/clients/log-out.svg">
+          </div>
         </div>
 
         <div class="bonus-notification">
@@ -65,10 +68,6 @@
           </div>
         </div>
 
-
-
-
-
       </div>
     </div>
 
@@ -97,6 +96,11 @@ name: "ClientAccount",
     sorting: true
   }
   },
+  computed:{
+    user(){
+      return this.$store.getters['Client/getUser'];
+    },
+  },
   methods:{
     sortByDate() {
       if (this.orderList.length === 0) {
@@ -119,6 +123,9 @@ name: "ClientAccount",
         $('.total-pol').toggleClass('active')
         $('.date-pol').removeClass('active')
       }
+    },
+    logout(){
+      this.$store.dispatch("Client/logout");
     },
   },
   mounted(){

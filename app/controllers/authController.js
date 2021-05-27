@@ -70,6 +70,15 @@ class AuthController{
     };
 
     loginClient = async function (req, res) {
+        let log_field = 'phone';
+        let filter = {
+            phone: req.fields.phone,
+        }
+        if(!req.fields.phone){
+            filter={
+                email: req.fields.email,
+            }
+        }
         let db = global.userConnection.useDb('loygift'+req.headers['access_place']);
         let Client = db.model("Client");
         let lang = req.headers["accept-language"]
@@ -77,7 +86,7 @@ class AuthController{
             lang = 'en'
         }
         try {
-            let user = await Client.findOne({ phone: req.fields.phone }).select('+password')
+            let user = await Client.findOne(filter).select('+password')
             let errors = {
                 phone: validate[lang]['user_not_found'],
                 password: validate[lang]['password_wrong']
@@ -102,8 +111,10 @@ class AuthController{
             res.status(result.status).json(result);
         }
     };
+
     registerClient = async function (req, res) {
         let db = global.userConnection.useDb('loygift'+req.headers['access_place']);
+
         let Client = db.model("Client");
         let result = []
         try {
@@ -115,6 +126,7 @@ class AuthController{
                 password: req.fields.password,
             })
             await client.validate()
+
             client.password = hashedPassword
             await client.save()
             client.password = ""
@@ -132,7 +144,7 @@ class AuthController{
             }
             
         } catch (error) {
-            let result = sendError(error, req.headers["accept-language"])
+            result = sendError(error, req.headers["accept-language"])
         }
         res.status(result.status).json(result);
     };

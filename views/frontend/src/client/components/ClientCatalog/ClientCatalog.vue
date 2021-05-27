@@ -65,7 +65,7 @@ name: "Catalog",
             return product.price >= this.from && product.price <= this.to;
         })
     },
-    currentRouteName() {
+    currentCompanyCatalog() {
       return this.$route.params.bekon;
     }
   },
@@ -91,7 +91,7 @@ name: "Catalog",
     },
     async  getProducts(){
       const options = {
-        headers: {"company_url": this.currentRouteName}
+        headers: {"company_url": this.currentCompanyCatalog}
       }
       await this.axios.get(this.url('getClientProducts'),options)
           .then((response) => {
@@ -102,7 +102,7 @@ name: "Catalog",
 
     async getCategories() {
       const options = {
-        headers: {"company_url": this.currentRouteName}
+        headers: {"company_url": this.currentCompanyCatalog}
       }
       await this.axios.get(this.url('getClientCategories'),options)
           .then((res) => {

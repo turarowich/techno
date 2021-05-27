@@ -1,11 +1,10 @@
 <template>
 <div class="container client-container">
-  <div class="main-box">
+  <div class="main-box" v-bind:style="{ backgroundImage: 'url(' + bannerPath + ')' }" >
     <div class="relatives">
       <h1>Modius </h1>
       <p>Brand clothing store</p>
     </div>
-
   </div>
   <div class="new">
     <div class="news">
@@ -14,7 +13,7 @@
           <h2 class="news-title">News</h2>
           <p class="news-texts">A light blue T-shirt from the spring-summer 2021 collection,
             as if faded in the sun, turned out to be as comfortable as possible. The cut of</p>
-          <router-link class="view-all" to="/home/client-news">View all</router-link>
+          <router-link class="view-all" :to="`/shop/${currentCompanyCatalog}/client-news`">View all</router-link>
         </div>
         <div class="col-lg-9">
           <div class="row">
@@ -65,11 +64,53 @@ name: "Dashboard",
   components:{
     ClientCatalog
   },
+  data(){
+    return{
+      settings:{},
+    }
+  },
+  computed:{
+    currentCompanyCatalog() {
+      return this.$route.params.bekon;
+    },
+    bannerPath(){
+      if(this.settings.banner){
+        try {
+          return this.base_url+'/'+ this.settings.banner;
+          // eslint-disable-next-line no-empty
+        }catch (e){
+          console.log(e)
+        }
+      }
+      return require("../../../assets/clients/main-box.svg");
+    },
+  },
   methods:{
     openNews(){
       this.$router.push('/home/news-detail')
     },
-  }
+    async  getCatalogSettings(){
+      let that = this;
+      const options = {
+        headers: {"company_url": this.currentCompanyCatalog}
+      }
+      await this.axios.get(this.url('getCatalogSettings'),options)
+          .then((response) => {
+            console.log(response,"cattttttsssssssss");
+            this.settings = response.data.object;
+          }).catch(function (error){
+            if (error.response) {
+              // console.log(error.response.status);
+              // console.log(error.response.headers);
+              that.$warningAlert('Requested shop was not found, check url')
+              // that.displayMessages(Object.values(error.response.data.errors),"Errors");
+            }
+          })
+    },
+  },
+  created(){
+    this.getCatalogSettings();
+  },
 }
 </script>
 
@@ -144,11 +185,10 @@ name: "Dashboard",
 }
 .main-box{
   height: 320px;
-  background: url('../../../assets/clients/main-box.svg');
+  /*background: url('../../../assets/clients/main-box.svg');*/
+  background-size: cover;
   position: relative;
   border-radius: 5px;
   margin-bottom: 50px;
-
-
 }
 </style>

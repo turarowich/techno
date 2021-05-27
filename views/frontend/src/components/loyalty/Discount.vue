@@ -72,9 +72,9 @@ export default {
 
       let that=this;
       let url = this.base_url+'/api/addDiscount';
-      this.axios.post(url, {
+      this.axios.post(url,
         copy
-      }).then(function (response) {
+      ).then(function (response) {
         that.list_of_discounts = response.data.discounts;
       }).catch(function(error){
         if (error.response) {

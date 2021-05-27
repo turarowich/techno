@@ -1,19 +1,20 @@
 const { useDB, sendError } = require('../../services/helper')
 var validate = require('../../config/messages');
+const config = require("../../config/config");
 class catalogController{
     getCatalog =  function (req, res) {
         console.log(req.cat_db,"099090909090900");
-        let db = useDB(req.cat_db);
+        let db = useDB('loygift'+req.cat_db);
         let result = {
             'status': 200,
-            'cat_db':req.cat_db,
+            'cat_db':'loygift'+req.cat_db,
         }
         res.status(result.status).json(result);
     };
 
     getClientProducts = async function (req, res) {
         console.log('clients catalog',req.cat_db)
-        let db = useDB(req.cat_db)
+        let db = useDB('loygift'+req.cat_db)
         let Product = db.model("Product");
 
         let result = {
@@ -30,7 +31,7 @@ class catalogController{
     };
 
     getClientCategories = async function (req, res) {
-        let db = useDB(req.db)
+        let db = useDB('loygift'+req.db)
         let Category = db.model("Category");
 
         let result = {
@@ -49,6 +50,41 @@ class catalogController{
             result = sendError(error, req.headers["accept-language"])
         }
 
+        res.status(result.status).json(result);
+    };
+
+    getCatalogSettings = async function (req, res) {
+        if(!req.cat_db){
+            console.log('should not come this far');
+            return res.status('404');
+        }
+        //
+        let shoes_db = useDB(config.Shoes);
+        let catalogs_model = shoes_db.model("catalogs");
+        //
+        console.log(req.cat_db,"catd90000000000000000000000000000")
+        let db = useDB('loygift'+req.cat_db)
+        let Settings = db.model("Settings");
+        let result = {
+            'status': 200,
+            'msg': 'Sending client'
+        }
+        try {
+            let settings = await Settings.find()
+            if (!settings[0]){
+                settings = await new Settings({
+                    slogan: " ",
+                }).save();
+                /////
+                await new catalogs_model({
+                    company: settings._id,
+                }).save();
+                /////
+            }
+            result['object'] = settings[0];
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
         res.status(result.status).json(result);
     };
 }

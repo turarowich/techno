@@ -1,14 +1,16 @@
 <template>
   <div class="container client-container">
 <nav class="navigation d-flex align-items-center justify-content-between">
-    <a href="/home" class="brand-navbar">Modius <span>Catalog</span></a>
+    <router-link :to="`/shop/${currentCompanyCatalog}`" class="brand-navbar">Modius <span>Catalog</span></router-link>
     <ul class="client-menu">
 
-      <li class="client-list"><router-link class="client-link" to="/home/about"><img src="../assets/clients/info.svg"/>About us</router-link></li>
-      <li class="client-list"><router-link class="client-link" to="/home/signin"><img src="../assets/clients/Profile.svg"/>Login</router-link></li>
+      <li class="client-list"><router-link class="client-link" :to="`/shop/${currentCompanyCatalog}/about`"><img src="../assets/clients/info.svg"/>About us</router-link></li>
+      <li v-if="!isLogged" class="client-list"><router-link class="client-link" :to="`/shop/${currentCompanyCatalog}/signin`"><img src="../assets/clients/Profile.svg"/>Login</router-link></li>
+      <li v-else class="client-list"><img src="../assets/clients/Profile.svg"/><router-link class="client-link" :to="`/shop/${currentCompanyCatalog}/client-account`">My Account</router-link></li>
+
       <li class="client-list hoverBasket dropdown">
 
-          <router-link class="client-link  d-inline-flex align-items-center" to="/home/basket" data-hover="dropdown">
+          <router-link class="client-link  d-inline-flex align-items-center" :to="`/shop/${currentCompanyCatalog}/basket`" data-hover="dropdown">
             <img src="../assets/clients/Buy.svg"/>Basket
             <div class="bg-not d-flex align-items-center">
               <span class="basket-not" v-if="countOrders > 0">{{countOrders}}</span>
@@ -34,7 +36,7 @@
                 <div class="basket-price " style="width:20%">{{item.product.price}} $</div>
               </div>
             </div>
-            <button class="save" @click="$router.push('/home/basket')" >Go to purchase</button>
+            <button class="save" @click="$router.push({ path: `/shop/${currentCompanyCatalog}/basket` })" >Go to purchasee</button>
           </div>
 
 
@@ -56,9 +58,19 @@ name: "Navbar",
     },
     shoppingCart(){
       return this.$store.state.Orders.shoppingCart;
-    }
+    },
+    currentCompanyCatalog() {
+      return this.$route.params.bekon;
+    },
+    isLogged(){
+      return this.$store.getters['Client/getUserStatus'];
+    },
   },
-
+  methods:{
+    logout(){
+      this.$store.dispatch("Client/logout");
+    },
+  },
 
 
 
@@ -86,6 +98,7 @@ font-size: 18px;
 .client-list{
   list-style-type:none ;
   margin-right: 42px;
+  cursor: pointer;
 }
 .client-list:last-child{
   margin-right: 0;

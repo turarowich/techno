@@ -2,10 +2,10 @@
   <div>
     <div class="loyalty-nav d-flex align-items-end">
       <ul class="loyalty-menu p-0 d-flex">
-        <li class="loaylty-list"><router-link class="loyalty-link active" to="/settings" exact>General</router-link></li>
-        <li class="loaylty-list"><router-link class="loyalty-link" to="/settings/price">Price</router-link></li>
-        <li class="loaylty-list"><router-link class="loyalty-link" to="/settings/catalog-settings">Catalog</router-link></li>
-        <li class="loaylty-list"><router-link class="loyalty-link" to="/settings/personal-settings">Personal settings</router-link></li>
+        <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='General' }" to="/settings" exact>General</router-link></li>
+        <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='Price' }" to="/settings/price">Price</router-link></li>
+        <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='CatalogSettings' }" to="/settings/catalog-settings">Catalog</router-link></li>
+        <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='PersonalSettings' }" to="/settings/personal-settings">Personal settings</router-link></li>
       </ul>
     </div>
   </div>
@@ -13,22 +13,27 @@
 
 <script>
 
-import $ from "jquery";
+// import $ from "jquery";
 
 export default {
   name: "SettingsNavbar",
-  methods:{
-    addActive(){
-      $(document).ready(function() {
-        $('.loyalty-link').click(function() {
-          $('.loyalty-link.active').removeClass("active");
-          $(this).addClass("active");
-        });
-      });
+  computed: {
+    currentRouteName() {
+      return this.$route.name;
     }
   },
+  methods:{
+    // addActive(){
+    //   $(document).ready(function() {
+    //     $('.loyalty-link').click(function() {
+    //       $('.loyalty-link.active').removeClass("active");
+    //       $(this).addClass("active");
+    //     });
+    //   });
+    // }
+  },
   mounted(){
-    this.addActive()
+    // this.addActive()
   }
 
 }

@@ -6,14 +6,6 @@ const settingsSchema = new Schema({
         type: String,
         required: [true, 'slogan_required'],
     },
-    logo: {
-        type: String,
-        required: false,
-    },
-    description: {
-        type: String,
-        required: false,
-    },
     country: {
         type: String,
         required: false,
@@ -28,33 +20,88 @@ const settingsSchema = new Schema({
         required: true,
         default: false
     },
-    catalogMode: {
+    deliveryDescription: {
+        type: String,
+        required: false,
+        default: ""
+    },
+    ////Catalog settings
+    catalogStatus: {
         type: Boolean,
-        required: true,
-        default: false
+        required: false,
     },
     catalogUrl: {
         type: String,
         required: false,
         default: "",
     },
-    filters_n_cat_status: {
+    catalogMode: {
         type: Boolean,
         required: true,
         default: false
     },
-
-
+    newsStatus: {
+        type: Boolean,
+        required: false,
+        default: false
+    },
+    newsTitle: {
+        type: String,
+        required: false,
+        default:'',
+    },
+    newsDescription: {
+        type: String,
+        required: false,
+        default:'',
+    },
+    filtersCategoryStatus: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
     foodMode: {
         type: Boolean,
         required: true,
         default: false
     },
-    deliveryDescription: {
+    logo: {
         type: String,
         required: false,
-        default: ""
     },
+    banner: {
+        type: String,
+        required: false,
+    },
+    description: {
+        type: String,
+        required: false,
+    },
+    color: {
+        type: String,
+        required: false,
+    },
+    whatsapp: {
+        type: String,
+        required: false,
+    },
+    telegram: {
+        type: String,
+        required: false,
+    },
+    facebook: {
+        type: String,
+        required: false,
+    },
+    instagram: {
+        type: String,
+        required: false,
+    },
+    website: {
+        type: String,
+        required: false,
+    },
+    //////catalog end
     createdAt: {
         type: Date,
         required: true,

@@ -24,15 +24,15 @@ class SettingsController{
             'msg': 'Sending client'
         }
         try {
-            
             let settings = await Settings.find()
             if (!settings[0]){
                 settings = await new Settings({
                     slogan: " ",
                 }).save();
                 /////
+                let company = req.db.slice(7);//removing loygift
                 await new catalogs_model({
-                    company: settings._id,
+                    company: company,
                 }).save();
                 /////
             }
@@ -40,7 +40,7 @@ class SettingsController{
             let deliveries = await Delivery.find()
 
             result['object'] = settings[0];
-            result['imgPath'] = req.db;
+            result['company'] = req.db;
             result['branches'] = branches;
             result['deliveries'] = deliveries;
         
@@ -66,7 +66,6 @@ class SettingsController{
             'msg': 'Settings updated'
         }
         try {
-            
             if(req.fields.deliveries){
                 for (let delivery of req.fields.deliveries){
                     if ('_id' in delivery){
@@ -104,7 +103,9 @@ class SettingsController{
                 new: true
             }).then(async function (set){
                 //new func
-                await catalogs_model.findOneAndUpdate({ 'company': req.db }, {cat_url:set.catalogUrl}, {
+                let company = req.db.slice(7);//removing loygift
+                console.log(company,"settings company");
+                await catalogs_model.findOneAndUpdate({ 'company': company }, {cat_url:set.catalogUrl}, {
                     new: true
                 })
             })
@@ -157,48 +158,50 @@ class SettingsController{
         res.status(result.status).json(result);
     }
     saveSettingsFile = async function (req, res) {
+        console.log(req.fields.type)
+        let type = req.fields.type;
+        let db = useDB(req.db)
+        let settings_model = db.model("Settings");
         let company = req.db;
-        //directory for the logo
+        let img = req.fields.logo;
+        let regex = /^data:.+\/(.+);base64,(.*)$/
+        let matches = img.match(regex);
+        let ext = matches[1];
+
         let dir = path.join(__dirname, '/../../views/frontend/images/' + company+'/logo');
+        let full_file_name = 'images/' + company+'/logo/logo.'+ext;
+        let file_name = 'logo.'+ext;
+        let update = {};
+        if(type==='banner'){
+            dir = path.join(__dirname, '/../../views/frontend/images/' + company+'/banner');
+            full_file_name = 'images/' + company+'/banner/banner.'+ext;
+            update.banner=full_file_name;
+        }else{
+            update.logo=full_file_name;
+        }
+
         let result = {
             'status': 200,
             'msg': '',
         }
         try {
+            // strip off the data: url prefix to get just the base64-encoded bytes
+            let data = img.replace(/^data:image\/\w+;base64,/, "");
+            let buf = Buffer.from(data, 'base64');
             if (!fs.existsSync(dir)) {
                 fs.mkdirSync(dir, {recursive: true}, err => {
                     console.log(err)
                 })
             }
-
-            //remove old
-            // fs.readdir(dir, (err, files) => {
-            //     files.forEach(file => {
-            //         console.log(file,'fileeeeeeeeee');
-            //         if(file.split('.')[0] === 'logo') fs.unlink( dir + file );
-            //     });
-            // });
-
-
-            let img = req.fields.logo;
-            let regex = /^data:.+\/(.+);base64,(.*)$/
-            let matches = img.match(regex)
-            let ext = matches[1]
-            // strip off the data: url prefix to get just the base64-encoded bytes
-            let data = img.replace(/^data:image\/\w+;base64,/, "");
-            let buf = Buffer.from(data, 'base64');
-            fs.writeFile(dir+ "/" + 'logo.'+ext, buf,function (out){
+            fs.writeFile(dir+ "/" + file_name, buf,function (out){
                 console.log(out,"9090099")
             });
-
+            await settings_model.findOneAndUpdate(req.fields.id, update);
             result.msg = 'Success';
         }catch (errr){
             result.msg = 'errr';
         }
-
-
         res.status(result.status).json(result);
-
     }
 
     deleteDelivery = async function (req, res) {
@@ -230,14 +233,12 @@ class SettingsController{
             'msg': 'Branch deleted'
         }
         try {
-
             let query = { '_id': req.params.branch }
             await Branch.findByIdAndRemove(query)
 
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
-
         res.status(result.status).json(result);
     };
 

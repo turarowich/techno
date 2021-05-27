@@ -3,12 +3,10 @@
  <div class="siding-bar">
    <SideBar v-bind:closeSideBar="closeSideBar"
             v-if="!['SignIn', 'SignUp'].includes($route.name)"
-            v-show="!$route.path.includes('/home')"
-
-
+            v-show="!$route.path.includes('/shop')"
     />
   </div>
-  <div class="main-content" v-bind:class="{hun: $route.name === 'SignUp' || $route.name === 'SignIn' || $route.path.includes('/home')} ">
+  <div class="main-content" v-bind:class="{hun: $route.name === 'SignUp' || $route.name === 'SignIn' || $route.path.includes('/shop')} ">
     <Header  v-if="homePage()"  v-bind:openSideBar="openSideBar"
 
 
@@ -36,7 +34,7 @@ export default {
     methods: {
     homePage(){
       if(['Settings','SignIn', 'SignUp', 'OrderDetail','EditClientPage', 'PushNotification',
-            'EditProductPage','IndividualPush','EditPromo','AddPromoPage','AddProductPage','AccessSettings','AddNews','EditNews','AddOrder'].includes(this.$route.name) || this.$route.path.startsWith("/home")
+            'EditProductPage','IndividualPush','EditPromo','AddPromoPage','AddProductPage','AccessSettings','AddNews','EditNews','AddOrder'].includes(this.$route.name) || this.$route.path.startsWith("/shop")
           || this.$route.path.startsWith("/loyalty")
       ){
         return false

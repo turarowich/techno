@@ -78,7 +78,7 @@
 
               <div class="d-flex justify-content-between ">
                 <button class="cancel">Continue shopping</button>
-                <button class="save" @click="$router.push('/home/personal-info')">Confirm order</button>
+                <button class="save" @click="$router.push({ path: `/shop/${currentCompanyCatalog}/personal-info` })">Confirm order</button>
               </div>
             </div>
           </div>
@@ -116,6 +116,9 @@ name: "Basket",
     },
     basket_promocode(){
       return this.$store.getters['Orders/getBasketPromocode'];
+    },
+    currentCompanyCatalog() {
+      return this.$route.params.bekon;
     },
   },
   methods:{

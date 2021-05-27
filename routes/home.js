@@ -20,6 +20,7 @@ module.exports = function(app, passport){
     app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login', session: false }), authController.callbackGG);
     app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/login', session: false }), authController.callbackTW);
     //Catalog
+    app.get('/getCatalogSettings', catalogController.getCatalogSettings);
     app.get('/getCatalog', catalogController.getCatalog);
     app.get('/getClientProducts', catalogController.getClientProducts);
     app.get('/getClientCategories', catalogController.getClientCategories);
