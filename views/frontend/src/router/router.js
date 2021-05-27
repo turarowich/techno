@@ -35,12 +35,15 @@ import AddProductPage from "@/components/catalog/AddProductPage";
 import EditProductPage from "@/components/catalog/EditProductPage";
 import IndividualPush from "@/components/clients/IndividualPush";
 import CatalogSettings from "@/components/settings/CatalogSettings";
-import PersonalSettings from "@/components/settings/PersonalSettings";
+import StaffSettings from "@/components/settings/StaffSettings";
 import AccessSettings from "@/components/settings/AccessSettings";
 import AddNews from "@/components/News/AddNews";
 import EditNews from "@/components/News/EditNews";
 
 import EditPromo from "@/components/loyalty/EditPromo";
+import PersonalSettings from "@/components/settings/PersonalSettings";
+import AddressDelivery from "@/components/settings/AddressDelivery";
+import Log from "@/components/Log/Log";
 
 
 
@@ -215,6 +218,12 @@ const routes = [
         component: Chats,
 
     },
+    {
+        path: "/log",
+        name: "log",
+        component: Log,
+
+    },
 
     {
         path: "/catalog",
@@ -252,9 +261,21 @@ const routes = [
 
             },
             {
+                path:'address-delivery',
+                name:'AddressDelivery',
+                component: AddressDelivery  ,
+
+            },
+            {
                 path:'catalog-settings',
                 name:'CatalogSettings',
                 component: CatalogSettings,
+
+            },
+            {
+                path:'staff-settings',
+                name:'StaffSettings',
+                component: StaffSettings,
 
             },
             {

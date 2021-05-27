@@ -32,9 +32,6 @@
             </div>
           </div>
         </div>
-
-
-        <button class="app-buttons-item" @click="exportOrder"><img class="img-btn" src="../../assets/icons/set.svg"><span>Export to Excell </span></button>
       </div>
       <div>
         <button class="app-buttons-item" @click="showYesterday"><img src="../../assets/icons/yesterday.svg"><span>Yesterday</span></button>
@@ -63,10 +60,10 @@
         <div class="table-head text-right dropdown-toggle"  id="dropdownBlue" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:3%"><img src="../../assets/icons/BlueSetting.svg"></div>
         <div class="dropdown-menu general-dropdown settings-dropdown" aria-labelledby="dropdownBlue">
           <form>
-            <div><label class="custom-checkbox"><input v-model="data_check.client_checked" type="checkbox" ><span class="checkmark"></span></label> <span>Client</span></div>
-            <div><label class="custom-checkbox"><input v-model="data_check.phone_checked" type="checkbox" ><span class="checkmark"></span></label> <span>Phone number</span></div>
-            <div><label class="custom-checkbox"><input v-model="data_check.date_checked" type="checkbox" ><span class="checkmark"></span></label> <span>Date</span></div>
-            <div><label class="custom-checkbox"><input v-model="data_check.notes_checked" type="checkbox" ><span class="checkmark"></span></label> <span>Notes</span></div>
+            <div><label class="custom-checkbox"><input v-model="data_check.client_checked" type="checkbox" id="client" ><span class="checkmark"></span></label> <label class="show-field" for="client">Client</label></div>
+            <div><label class="custom-checkbox"><input v-model="data_check.phone_checked" type="checkbox" id="phone"><span class="checkmark"></span></label> <label class="show-field" for="phone">Phone number</label></div>
+            <div><label class="custom-checkbox"><input v-model="data_check.date_checked" type="checkbox" id="date" ><span class="checkmark"></span></label> <label class="show-field" for="date">Date</label></div>
+            <div><label class="custom-checkbox"><input v-model="data_check.notes_checked" type="checkbox" id="notes" ><span class="checkmark"></span></label> <label class="show-field" for="notes">Notes</label></div>
        </form>
         </div>
       </div>
@@ -75,6 +72,7 @@
     <div class="table-content">
         <OrderItem
              ref="order_item"
+             v-on:selectOrder="selectOrder"
               v-on:unCheckAll="unCheckAll"
               v-on:checkAll="checkAll"
               v-bind:orderList="orderToDisplay"
@@ -85,18 +83,21 @@
               v-bind:data_check="data_check"/>
       </div>
 
-    <AddOrder/>
-    <EditOrder/>
+    <AddOrder
+      :getOrders="getOrders"
+    />
+    <EditOrder
+      :select_order="select_order"
+    />
     <div class="pagination d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-center">
         <span>Rows per page</span>
         <select class="form-control pagination-select" v-model='perPage'>
-          <option value="2">2</option>
-          <option value="5">5</option>
           <option value="8">8</option>
-          <option value="50">50</option>
-          <option value="100">100</option>
+          <option value="16">16</option>
+          <option value="32">32</option>
         </select>
+        <img src="../../assets/icons/select.svg">
       </div>
       <div class="d-flex align-items-center"><span>{{currentPage}}</span> <span class="mr-1 ml-1">of</span> <span class="mr-2">{{totalPages}}</span>
         <div v-show='showPrev' @click.stop.prevent='currentPage-=1' class=" pagination-btns prevBtn " ><img src="../../assets/icons/side-arrow.svg"></div>
@@ -123,18 +124,10 @@ name: "Orders",
   },
   data(){
     return{
-      orderList:[
-        {id:1,name:"Essential Shoes and bektemir kudaiberdiev",client:"Bektemir Kudaiberdiev Azzamkulovich", phone:"996550457834", total:"450",date:this.$moment().subtract(1, "days").format("YYYY-MM-DD"),notes:"Please?",status:'New'},
-        {id:3,name:"AirForces",client:"Tomas Levins", phone:"0775896542", total:"13",date:this.$moment().format('YYYY-MM-DD'),notes:"Please" ,status:'New'},
-        {id:4,name:"Krosses",client:"Tomas Levins", phone:"0500687909", total:"567",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'New'},
-        {id:5,name:"Essentialsss",client:"Tomas Levins", phone:"0500687909", total:"820",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
-        {id:6,name:"Ess",client:"Tomas Levins", phone:"0500687909", total:"200",date:this.$moment().subtract(1, "days").format("YYYY-MM-DD"),notes:"Please",status:'Done'},
-        {id:7,name:"Essss",client:"Tomas Levins", phone:"0500687909", total:"40",date:this.$moment().subtract(1, "days").format("YYYY-MM-DD"),notes:"Please?",status:'Done'},
-        {id:8,name:"Ess",client:"Tomas Levins", phone:"0500687909", total:"80",date:"2021-03-05T11:31:33.557+00:00",notes:"Please, can you \n" + "do it quickly?",status:'Done'},
-        {id:9,name:"Jeans and Jackets ",client:"Tomas Levins", phone:"0500687909", total:"12",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
-      ],
+      orderList:[],
+      select_order:'',
       data_check:{
-        client_checked:false,
+        client_checked:true,
         phone_checked:false,
         date_checked:false,
         notes_checked:false
@@ -156,28 +149,28 @@ name: "Orders",
     filteredList:function() {
       return this.orderList
           .filter(order => {
-            return order.name.toLowerCase().includes(this.search.toLowerCase()) || order.phone.includes(this.search)
+            return order.client_name.toLowerCase().includes(this.search.toLowerCase()) || order.client_phone.includes(this.search)
           })
           .filter(order=>{
             return order.status.includes(this.filter_by_status)
           })
-          .filter(order=>{
-            if(this.price_to.length>0){
-              return +order.total >= this.price_from && +order.total <= this.price_to
-            }
-            else if(this.price_to === ''){
-              return +order.total >=this.price_from;
-            }
-            else{
-              return order
-            }
-          })
-          .filter(order=>{
-            return order.date.slice(0,10).includes(this.filtered)
-                || (new Date(order.date).getTime() >= new Date(this.filtered.slice(0,10)).getTime() &&
-                    new Date(order.date).getTime() < new Date(this.filtered.slice(14,24)).getTime())
-
-          })
+          // .filter(order=>{
+          //   if(this.price_to.length>0){
+          //     return +order.total >= this.price_from && +order.total <= this.price_to
+          //   }
+          //   else if(this.price_to === ''){
+          //     return +order.total >=this.price_from;
+          //   }
+          //   else{
+          //     return order
+          //   }
+          // })
+          // .filter(order=>{
+          //   return order.date.slice(0,10).includes(this.filtered)
+          //       || (new Date(order.date).getTime() >= new Date(this.filtered.slice(0,10)).getTime() &&
+          //           new Date(order.date).getTime() < new Date(this.filtered.slice(14,24)).getTime())
+          //
+          // })
     },
     orderToDisplay: function(){
       let start = (this.currentPage - 1) * this.perPage
@@ -199,6 +192,20 @@ name: "Orders",
     },
   },
   methods: {
+    selectOrder(id){
+      this.orderList.map((item)=>{
+        if(item._id === id){
+          this.select_order = item;
+        }
+      })
+    },
+    getOrders(){
+      this.axios.get(this.url('getOrders'))
+      .then((response)=>{
+        console.log("Orders response", response)
+        this.orderList = response.data.objects;
+      })
+    },
     checkAll(item){
       this.selectAll = item
     },
@@ -298,36 +305,19 @@ name: "Orders",
 
       }).then((result) => {
         if (result.isConfirmed) {
-          this.orderList = this.orderList.filter(el => el.id !== id);
-          this.renderPaginationList()
-          Swal.fire({
-                title:'Success',
-                timer:1500,
-                text:'Order has been removed',
-                showConfirmButton:false,
-                position: 'top-right',
-                customClass:{
-                  popup:'success-popup',
-                  content:'success-content',
-                  title:'success-title',
-                  header:'success-header',
-                  image:'success-img'
-                },
-                showClass:{
-                  popup: 'animate__animated animate__zoomIn'
-                },
-
-              }
-          )}
+          this.axios.delete(this.url('deleteOrder',id))
+          .then(()=>{
+            this.getOrders()
+            this.$successAlert("Order deleted")
+          })
+        }
       })
-      this.countNewOrder()
-      this.totalOrders()
     },
     inProgress(id) {
       this.orderList.map((order) => {
         if (order.id === id) {
           order.status = 'In Progress';
-          this.countNewOrder();
+
         }
       })
     },
@@ -349,6 +339,7 @@ name: "Orders",
     },
   },
   mounted(){
+    this.getOrders();
     new this.$lightpick({
         field: document.getElementById('datepicker'),
         singleDate: false,
@@ -371,6 +362,12 @@ name: "Orders",
 </script>
 
 <style scoped>
+.pagination-select{
+  background:none;
+  padding-left:10px;
+  width:32px;
+  padding-right: 0;
+}
 .general-dropdown.settings-dropdown{
   transform: translate3d(-166px, -19px, 0px) !important;
   width: 190px;
@@ -395,8 +392,10 @@ name: "Orders",
   border:none;
   cursor:pointer;
   color:#606877;
-
-
+}
+.show-field{
+  margin-bottom: 0;
+  cursor:pointer;
 }
 .orders{
   margin: 0 30px;

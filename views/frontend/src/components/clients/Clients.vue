@@ -1,22 +1,24 @@
 <template>
 <div class="client">
-
-<!--  <div>-->
-<!--      <div><input type="checkbox" class="mr-3" @click="testingRef" v-model="bektemirCheck">Main Checkbox</div>-->
-<!--      <div v-for="i in 3"><input type="checkbox"  :id="'name'+i" class="mr-3"  :ref="'bektemir'+i">{{i}}</div>-->
-<!--  </div>-->
-
   <div class="searchAndButtons">
   <div class="d-flex justify-content-between app-buttons">
     <div class="d-flex align-items-center">
       <button class="app-buttons-item adding-btns" data-toggle="modal" data-target="#add-client-category"><span>+ Add category</span></button>
-      <button class="app-buttons-item" @click="$router.push('/push-notification')"><img src="../../assets/icons/bgNotification.svg"><span>Push notification</span></button>
-      <button class="app-buttons-item" @click="$router.push('/individual-push')"><img src="../../assets/icons/send-individual.svg"><span>Individual push</span></button>
+      <button class="app-buttons-item" data-toggle="modal" data-target="#push-notification "><img src="../../assets/icons/bgNotification.svg"><span>Push notification</span></button>
+      <button class="app-buttons-item" data-toggle="modal" data-target="#individual-push"><img src="../../assets/icons/send-individual.svg"><span>Individual push</span></button>
 
     </div>
     <div class="d-flex align-items-center">
       <button class="app-buttons-item" @click="deleteAllClient"><img src="../../assets/icons/trash_empty.svg"><span>Remove</span></button>
-      <button class="app-buttons-item"><img src="../../assets/icons/moveto.svg"><span>Move to</span></button>
+      <div class="dropdown">
+        <button class="dropdown-toggle app-buttons-item" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <img src="../../assets/icons/moveto.svg"><span>Move to</span>
+        </button>
+
+        <div class="move-category dropdown-menu" aria-labelledby="dropdownMenuTotal">
+          <div class="move-category-item" v-for="cat in clientCategory" :key="cat._id" @click="moveCategory(cat._id)">{{cat.name}}</div>
+        </div>
+      </div>
       <button class="app-buttons-item" ><img src="../../assets/icons/import.svg"><span>Import</span></button>
       <div class="dropdown filter">
         <button class="dropdown-toggle app-buttons-item mr-0" id="dropdownFilterClient" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="../../assets/icons/filter.svg"><span>Filter</span></button>
@@ -224,7 +226,7 @@
               </div>
               <div class="dropdown-menu" aria-labelledby="dropdownMenu">
                 <ul class="list-group" >
-                  <li class="list-group-item" data-toggle="modal" data-target="#edit-category">Edit</li>
+                  <li class="list-group-item" data-toggle="modal" data-target="#edit-client-category" @click="selectCategory(category._id)">Edit</li>
                   <li class="list-group-item" @click="deleteCategory(category._id)">Delete</li>
                 </ul>
               </div>
@@ -256,11 +258,11 @@
 
             <div class="dropdown-menu general-dropdown settings-dropdown" aria-labelledby="#dropdownBlue">
               <form>
-                <div><label class="custom-checkbox"><input v-model="data_check.last_purchase_checked" type="checkbox"><span class="checkmark"></span></label> <span>Last purchase</span></div>
-                <div><label class="custom-checkbox"><input v-model="data_check.bonus_checked" type="checkbox" id="show-bonus" ><span class="checkmark"></span></label> <span>Bonus</span></div>
-                <div><label class="custom-checkbox"><input v-model="data_check.register_date_checked" type="checkbox" ><span class="checkmark"></span></label> <span>Registration date</span></div>
-                <div><label class="custom-checkbox"><input v-model="data_check.discount_checked" type="checkbox" ><span class="checkmark"></span></label> <span>Discount</span></div>
-                <div class="mb-0"><label class="custom-checkbox"><input v-model="data_check.birthday_checked" type="checkbox" ><span class="checkmark"></span></label> <span>Birthday</span></div>
+                <div><label class="custom-checkbox"><input id="last" v-model="data_check.last_purchase_checked" type="checkbox"><span class="checkmark"></span></label><label class="show-fields" for="last">Last purchase</label></div>
+                <div><label class="custom-checkbox"><input v-model="data_check.bonus_checked" type="checkbox" id="show-bonus" ><span class="checkmark"></span></label> <label  class="show-fields" for="show-bonus">Bonus</label></div>
+                <div><label class="custom-checkbox"><input v-model="data_check.register_date_checked" id="date" type="checkbox" ><span class="checkmark"></span></label> <label  class="show-fields" for="date">Registration date</label></div>
+                <div><label class="custom-checkbox"><input v-model="data_check.discount_checked" type="checkbox" id="discount" ><span class="checkmark"></span></label> <label  class="show-fields" for="discount">Discount</label></div>
+                <div class="mb-0"><label class="custom-checkbox"><input v-model="data_check.birthday_checked" id="birthday" type="checkbox" ><span class="checkmark"></span></label> <label  class="show-fields" for="birthday">Birthday</label></div>
               </form>
             </div>
           </div>
@@ -275,25 +277,30 @@
               ref="client_item"
               :clientList="clientToDisplay"
               :data_check="data_check"
-
-
           />
 
         </div>
-
-        <EditClient v-bind:select_client="select_client"/>
+        <IndividualPush/>
+        <PushNotification/>
+        <EditClient
+            v-bind:getClients="getClients"
+            v-bind:select_client="select_client"/>
         <AddCategory
           :getCategories="getCategories"/>
+
+        <EditCategory
+          :select_category="select_category"
+        :getCategories="getCategories"/>
+
         <div class="pagination d-flex justify-content-between align-items-center">
           <div class="d-flex align-items-center">
             <span>Rows per page</span>
             <select class="form-control pagination-select" v-model='perPage'>
-              <option value="2">2</option>
-              <option value="5">5</option>
               <option value="8">8</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
+              <option value="16">16</option>
+              <option value="32">32</option>
             </select>
+
           </div>
           <div class="d-flex align-items-center"><span>{{currentPage}}</span> <span class="mr-1 ml-1">of</span> <span class="mr-2">{{totalPages}}</span>
             <div v-show='showPrev' @click.stop.prevent='currentPage-=1' class=" pagination-btns prevBtn " ><img src="../../assets/icons/side-arrow.svg"></div>
@@ -313,7 +320,9 @@
 import ClientItem from "@/components/clients/ClientItem";
 import EditClient from "@/modals/client/EditClient";
 import AddCategory from "@/modals/client/AddCategory";
-
+import EditCategory from "@/modals/client/EditCategory";
+import PushNotification from "@/modals/client/PushNotification";
+import IndividualPush from "@/modals/client/IndividualPush";
 import Swal from "sweetalert2";
 import $ from 'jquery'
 
@@ -323,26 +332,17 @@ export default {
   components:{
     EditClient,
     ClientItem,
-    AddCategory
+    AddCategory,
+    EditCategory,
+    PushNotification,
+    IndividualPush
   },
 
 
   data(){
     return {
       clientList:[],
-     //  clientList:[
-     //   {register_date:'2021-03-14', number_of_purchase:'0', id:1, name:"Bektemir Kudaiberdiev Azzamkulovich ",  category: 'vip' ,phone: '996550425563', total:'450 $' ,bonus:'120' ,last_purchase:'2021-02-02', birthDate:this.$moment().format("YYYY-MM-DD") ,gender:'men'},
-     //   {register_date:'2021-03-14', number_of_purchase:'10', id:15, name:"Tomas Levins Birthday" , category: 'vip' ,phone: '996550425563', total:'450 $' ,bonus:'120' ,last_purchase:'2021-02-02', birthDate:this.$moment().format("YYYY-MM-DD") ,gender:'men'},
-     //   {register_date:'2021-04-12',number_of_purchase:'11', id:16, name:"Tomas Levins" , category: 'vip' ,phone: '996550425563', total:'450 $' ,bonus:'120' ,last_purchase:'2021-01-02', birthDate:'2021-12-03' ,gender:'men'},
-     //   {register_date:'2021-01-12',number_of_purchase:'3', id:17, name:"Tomas Levins" , category: 'vip' ,phone: '996550425563', total:'450 $' ,bonus:'120' ,last_purchase:'2021-05-10', birthDate:'2021-12-03' ,gender:'men'},
-     //   {register_date:'2021-03-10',number_of_purchase:'9', id:18, name:"Tomas Levins" , category: 'vip' ,phone: '996550425563', total:'450 $' ,bonus:'120' ,last_purchase:'2021-05-02', birthDate:'2021-12-03' ,gender:'men'},
-     //   {register_date:'2021-03-10',number_of_purchase:'13', id:19, name:"Tomas Levins" , category: 'vip' ,phone: '996550425563', total:'450 $' ,bonus:'120' ,last_purchase:'2021-04-22', birthDate:'2021-12-03' ,gender:'men'},
-     //   {register_date:'2021-03-10',number_of_purchase:'8', id:20, name:"Tomas Levins" , category: 'vip' ,phone: '996550425563', total:'450 $' ,bonus:'120' ,last_purchase:'2021-04-03', birthDate:'2021-12-03' ,gender:'men'},
-     //   {register_date:'2021-03-12',number_of_purchase:'2', id:2, name:"Rihana" , category: 'standart' ,phone: '996550425563', total:'300 $' ,bonus:'340' ,last_purchase:'2021-04-02', birthDate:'2021-12-03',gender:'woman'},
-     //   {register_date:'2021-04-12',number_of_purchase:'4', id:3, name:"Bektemir Kudiaberdiev" , category: 'standart' ,phone: '996550425563', total:'350 $' ,bonus:'13' ,last_purchase:'2021-03-16', birthDate:'2021-03-22',gender:'men'},
-     //   {register_date:'2021-04-08',number_of_purchase:'1', id:4, name:"Cristiano Ronaldo" , category: 'vip' ,phone: '996550425563', total:'100 $' ,bonus:'75' ,last_purchase:'2021-03-22', birthDate:'2021-03-22',gender:'men'},
-     //   {register_date:'2021-04-08',number_of_purchase:'5', id:5, name:"Dua Lipa Birthday" , category: 'standart' ,phone: '996550425563666', total:'200 $' ,bonus:'12000' ,last_purchase:'2021-03-02', birthDate:this.$moment().format("YYYY-MM-DD"),gender:'woman'},
-     // ],
+      movedCategories:[],
       data_check:{
        bonus_checked: false,
        last_purchase_checked: false,
@@ -353,12 +353,13 @@ export default {
       clientCategory:[
         {_id:'',name:'All'}
       ],
+      select_category:'',
       selectAll:false,
       search:'',
       sorting:true,
       search_category:'',
       select_client:'',
-
+      deletedClients:[],
       /*---------Sumbit values after choosing then ------------*/
 
       gender_client:'',
@@ -394,7 +395,7 @@ export default {
     filteredList() {
       return this.clientList
           .filter(client => {
-            return client.firstName.toLowerCase().includes(this.search.toLowerCase()) || client.phone.includes(this.search)
+            return client.name.toLowerCase().includes(this.search.toLowerCase()) || client.phone.includes(this.search)
           })
           .filter(client =>{
               if(client.category !== null){
@@ -404,18 +405,18 @@ export default {
                 )
               }
           })
-          // .filter(client=>{
-          //   if(this.f_to_register_date.length > 0){
-          //     return (new Date(client.register_date).getTime() >= new Date(this.f_from_register_date).getTime() &&
-          //         new Date(client.register_date).getTime() <= new Date(this.f_to_register_date).getTime())
-          //   }
-          //   else if(this.f_to_register_date === ''){
-          //     return new Date(client.register_date).getTime() >= new Date(this.f_from_register_date).getTime()
-          //   }
-          //   else{
-          //     return client
-          //   }
-          // })
+          .filter(client=>{
+            if(this.f_to_register_date.length > 0){
+              return (new Date(client.createdAt).getTime() >= new Date(this.f_from_register_date).getTime() &&
+                  new Date(client.createdAt).getTime() <= new Date(this.f_to_register_date).getTime())
+            }
+            else if(this.f_to_register_date === ''){
+              return new Date(client.createdAt).getTime() >= new Date(this.f_from_register_date).getTime()
+            }
+            else{
+              return client
+            }
+          })
           // .filter(client=>{
           //   if(this.f_to_number_purchase.length>0){
           //     return +client.number_of_purchase >= this.f_from_number_purchase && +client.number_of_purchase <= this.f_to_number_purchase
@@ -476,6 +477,13 @@ export default {
   },
 
   methods: {
+    selectCategory(id){
+      this.clientCategory.map((item)=>{
+        if(item._id === id){
+        this.select_category = item
+        }
+      })
+    },
     selectStandart(){
       this.clientCategory.map((item)=>{
         if(item.name.toLowerCase() === 'standart'){
@@ -498,13 +506,13 @@ export default {
     },
     toggleSelect(){
     this.clientList.forEach((client)=>{
-    if(this.$refs.client_item.$refs[`select${client.id}`]!==undefined && this.$refs.client_item.$refs[`select${client.id}`] !== null){
+    if(this.$refs.client_item.$refs[`select${client._id}`]!==undefined && this.$refs.client_item.$refs[`select${client._id}`] !== null){
       if(this.selectAll === false){
-        this.$refs.client_item.$refs[`select${client.id}`].checked = true
+        this.$refs.client_item.$refs[`select${client._id}`].checked = true
 
       }
       else{
-        this.$refs.client_item.$refs[`select${client.id}`].checked = false
+        this.$refs.client_item.$refs[`select${client._id}`].checked = false
       }
     }
     })
@@ -606,12 +614,49 @@ export default {
       })
      },
     deleteAllClient() {
-      this.clientList = this.clientList.filter(client => {
-        // if(this.$refs.client_item.$refs[`select${client.id}`]!==undefined && this.$refs.client_item.$refs[`select${client.id}`] !== null){
-          return this.$refs.client_item.$refs[`select${client.id}`].checked !== true;
-        // }
-      })
-      this.$successAlert("Clients have been removed")
+      this.clientList.forEach((user)=> {
+        if(this.$refs.client_item.$refs[`select${user._id}`] !== undefined && this.$refs.client_item.$refs[`select${user._id}`] !== null){
+          if(this.$refs.client_item.$refs[`select${user._id}`].checked === true){
+            this.deletedClients.push(user._id)
+          }
+        }
+      });
+      if(this.deletedClients.length > 0){
+        Swal.fire({
+          showConfirmButton: true,
+          html: 'Are you sure to remove these<br>clients',
+          showCloseButton: true,
+          showCancelButton: true,
+          confirmButtonText: 'Delete',
+          buttonsStyling:false,
+          customClass:{
+            popup: 'sweet-delete',
+            confirmButton: 'confirm-btn',
+            cancelButton:'cancel-btn',
+            actions:'btn-group',
+            content:'content-sweet',
+            closeButton:'close-btn'
+          },
+
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.axios.delete(this.url('deleteClients'),{data:{objects: this.deletedClients}})
+                .then(()=>{
+                  this.deletedClients = []
+                  this.getClients()
+                  $('#parent-check').prop('checked',false)
+                  this.$successAlert('All clients have been removed')
+                })
+          }
+          else{
+            this.deletedClients = []
+          }
+
+        })
+      }
+
+
+
 
 
 
@@ -621,6 +666,7 @@ export default {
       this.axios.get(this.url('getClients'))
       .then((res)=>{
         this.clientList = res.data.objects
+        console.log(this.clientList)
 
       })
     },
@@ -632,13 +678,56 @@ export default {
       })
     },
     deleteCategory(id){
-      this.axios.delete(this.url('deleteCategory',id))
-          .then(()=>{
-            this.getCategories()
-            const idx = this.listCategory.findIndex(el=>el._id === id);
-            this.$refs[`menu${idx-1}`].click()
-          })
+      Swal.fire({
+        showConfirmButton: true,
+        html: 'Are you sure to remove this <br>category',
+        showCloseButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Delete',
+        buttonsStyling:false,
+        customClass:{
+          popup: 'sweet-delete',
+          confirmButton: 'confirm-btn',
+          cancelButton:'cancel-btn',
+          actions:'btn-group',
+          content:'content-sweet',
+          closeButton:'close-btn'
+
+        },
+
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.axios.delete(this.url('deleteCategory',id))
+              .then(()=>{
+                this.$successAlert('Category has been deleted')
+                this.getCategories()
+                const idx = this.clientCategory.findIndex(el=>el._id === id);
+                this.$refs[`menu${idx-1}`].click()
+
+
+              })
+        }
+      })
     },
+    moveCategory(id){
+      this.clientList.forEach((user)=> {
+        if(this.$refs.client_item.$refs[`select${user._id}`] !== undefined && this.$refs.client_item.$refs[`select${user._id}`] !== null){
+          if(this.$refs.client_item.$refs[`select${user._id}`].checked === true){
+            this.movedCategories.push(user._id)
+          }
+        }
+      });
+      this.axios.put(this.url('updateClientsCategory'),{
+        objects: this.movedCategories,
+        category: id
+      })
+      .then(()=>{
+        this.getClients()
+        this.movedCategories = []
+        this.$informationAlert("Categories changed")
+      })
+    }
+
 
 
   },
@@ -689,6 +778,10 @@ export default {
 <style scoped>
 .client-names{
   width: 33%;
+}
+.show-fields{
+  cursor:pointer;
+  margin-bottom: 0;
 }
 .category-box{
   border: 1px solid #E3E3E3;

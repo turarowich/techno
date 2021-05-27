@@ -23,7 +23,7 @@
                 </select>
               </div>
               <div class="d-flex justify-content-end">
-                <button  class="save">Save</button>
+                <button @click.prevent="onSubmit(currentCategory._id)" class="save">Save</button>
               </div>
             </form>
           </div>
@@ -34,9 +34,11 @@
 </template>
 
 <script>
+import $ from "jquery";
+
 export default {
   name: "EditCategory",
-  props:['edit_category', 'listCategory'],
+  props:['select_category', 'getCategories','listCategory'],
   data(){
     return{
       currentCategory: ''
@@ -44,12 +46,20 @@ export default {
     }
   },
   methods:{
-    onSubmit(){
-          console.log(this.currentCategory)
+    onSubmit(id){
+         this.axios.put(this.url('updateCategory',id),{
+           name: this.currentCategory.name,
+           type:'product'
+         })
+      .then(()=>{
+        this.getCategories()
+        this.$informationAlert('Category changed')
+        $('#edit-category').modal("hide")
+      })
     }
   },
   watch:{
-    edit_category(newCat){
+    select_category(newCat){
       this.currentCategory = Object.assign({}, newCat)
     }
   },

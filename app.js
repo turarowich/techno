@@ -31,7 +31,7 @@ app.use((req, res, next) => {
 })
 const formidableMiddleware = require('express-formidable');
 const VerifyToken = require('./services/verifyToken');
-const VerifyDB = require('./services/VerifyDB');
+const VerifyDB = require('./services/verifyDB');
 
 global.appRoot = path.resolve(__dirname);
 global.userConnection = userConnection;

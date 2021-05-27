@@ -9,7 +9,7 @@
          <input type="checkbox" v-model="catalog_status">
          <span class="slider round"></span>
        </label>
-       <h2 class="catalog-title">Catalog</h2>
+       <h2 class="catalog-title">Web catalog</h2>
      </div>
      <p class="catalog-description margin-30">Here you can flexibly customize your online catalog</p>
 
@@ -424,10 +424,7 @@ export default {
   color: #616CF5;
   font-size: 16px;
 }
-.map-address{
-  height: 144px;
-  border-radius: 10px;
-}
+
 .social-btns{
   border: 1px solid #D3D3D3;
   border-radius: 5px;
@@ -454,24 +451,11 @@ export default {
   /*background: #616cf5;*/
   border-radius:5px;
 }
-.week{
-  display: flex;
-  margin-bottom: 20px;
+
+.save{
+  width: 120px;
 }
-.days{
-  background: #F8F9FB;
-  border-radius: 4.64125px;
-  width: 48px;
-  height: 45px;
-  color:#858585;
-  cursor:pointer;
-  margin-right: 10px;
-}
-.days.active,.days:hover{
-  background: #616cf5;
-  transition: .3s;
-  color:#fff;
-}
+
 .catalog-title{
   font-size: 20px;
   font-weight: 600;
@@ -504,6 +488,7 @@ export default {
   display: flex;
   justify-content: center;
   border-radius: 10px;
+  padding: 10px;
 }
 .big-addPhoto{
   right: -18px !important;

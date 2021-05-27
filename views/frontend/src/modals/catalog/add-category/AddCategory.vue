@@ -66,8 +66,8 @@ name: "AddCategory",
       data.append('name', this.new_category.name)
       data.append('type', this.new_category.type)
       this.axios.post(this.url('addCategory'),data)
-            .then((response)=>{
-              console.log('Success ', response.data.object)
+            .then(()=>{
+              this.$successAlert('Category has been added')
               this.getCategories()
             })
             .catch((error)=>{

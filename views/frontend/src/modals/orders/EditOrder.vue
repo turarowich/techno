@@ -11,15 +11,36 @@
           </button>
           <div>
             <h3 class="modal-title">Order 343222</h3>
-            <span class="detail-date">Created 23 Apr 2021, 13:37</span>
+            <span class="detail-date">Created {{currentData.createdAt.slice(0,10)}} <span>{{currentData.createdAt.slice(11,19)}}</span></span>
           </div>
-          <div class="detail-status"><span></span>In process</div>
+          <div class="detail-status"><span></span>{{currentData.status}}</div>
         </div>
         <div class=" myModal-body">
           <div class="row">
             <div class="col-lg-8">
               <h3 class="detail-product">Product</h3>
-              <input v-model="search" class="enter-name-input" placeholder="+ Enter the name of product">
+              <input v-model="search_product" class="enter-name-input" placeholder="+ Enter the name of product">
+
+              <div class="left-order">
+                <div v-if="search_product.length !==0" class="search-product ">
+                  <div class="pl-4 pt-3 pb-3" v-if="filteredProducts.length === 0">
+                    You don't have any products
+                  </div>
+                  <div  v-else v-for="product in filteredProducts" :key="product._id" @click="selectProduct(product._id)" class="product-order  d-flex align-items-center justify-content-between">
+                    <div class="table-child d-flex align-items-center">
+                      <div class="table-img">
+                        <img src="../../assets/img/sneak.webp">
+                      </div>
+                      {{product.name}}
+                    </div>
+                    <div>
+                      {{product.price}} $
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
               <div class="table">
                 <div class="d-flex main-content-header">
                   <div class="table-head" style="width: 50%;">Product</div>
@@ -30,21 +51,21 @@
                 </div>
 
                 <div class="table-content">
-                  <div class="d-flex align-items-center h-100 justify-content-center flex-column" v-if="products.length === 0">
+                  <div class="d-flex align-items-center h-100 justify-content-center flex-column" v-if="currentData.products.length === 0">
                     <img class="empty-img" src="../../assets/icons/emptyOrder.svg">
                     <p class="empty-page-text">Add a product to start</p>
                   </div>
 
-                  <div v-else class="table-item d-flex align-items-center" v-for="detail in filteredList" :key="detail.id">
+                  <div v-else v-for="order in currentData.products" :key="order.id" class="table-item d-flex align-items-center">
                     <div  class="d-flex align-items-center"  style="width: 50%;">
                       <div class="table-img">
                         <img src="../../assets/img/sneak.webp">
                       </div>
-                      {{detail.name}}
+                      {{order.name}}
                     </div>
-                    <div style="width:20%">{{detail.price}} $</div>
-                    <div style="width:20%"><div class="quantity">{{detail.quantity}}</div></div>
-                    <div style="width:10%">{{detail.total}} $</div>
+                    <div style="width:20%">{{order.price}} $</div>
+                    <div style="width:20%"><div class="quantity">{{order.quantity}}</div></div>
+                    <div style="width:10%">{{order.price*order.quantity}} $</div>
                     <div style="width:10%"><img src="../../assets/icons/trash_empty.svg"></div>
                   </div>
 
@@ -55,23 +76,7 @@
                 <input class="cashback-input">
               </div>
 
-              <div class="d-flex">
 
-                <div class="dropup ">
-                  <div class="dropdown-toggle" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <button class="save mr-2">Edit order</button>
-                  </div>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
-                    <ul class="list-group " >
-                      <li class="list-group-item">Done</li>
-                      <li class="list-group-item" >Cancel</li>
-                      <li class="list-group-item">Delete</li>
-                      <li class="list-group-item">In progress</li>
-                    </ul>
-                  </div>
-                </div>
-                <button class="cancel">Close</button>
-              </div>
             </div>
 
 
@@ -79,18 +84,36 @@
             <div class="col-lg-4">
               <h3 class="client-sub-title">Client</h3>
 
+
               <div  class="client-box d-flex align-items-center">
-                <div  class="client-search d-flex align-items-center">
+                <div v-if="currentData.client === ''"  class="client-search d-flex align-items-center">
                   <img src="../../assets/icons/search-icon.svg" class="search-client-icon">
-                  <input placeholder="Enter clients name or phone number" class="search-client">
+                  <input v-model="search_client" placeholder="Enter clients name or number" class="search-client">
                 </div>
-                <div class=" d-none align-items-center">
+                <div v-else class="d-flex align-items-center">
                   <img class="client-avatar" src="../../assets/img/criw.jpg">
                   <div class="position-relative">
-                    <h2 class="name-client">Tomas Levins</h2>
-                    <div class="category">Category: <span>Vip</span> Points: <span>200</span></div>
+                    <h2 class="name-client">{{currentData.client.name}}</h2>
+                    <div class="category">Category: <span>{{currentData.client.category.name}}</span> Points: <span>{{currentData.client.points}}</span></div>
                   </div>
-                  <img class="close-client" src="../../assets/icons/deleteClient.svg">
+                  <img @click="currentData.client = ''" class="close-client" src="../../assets/icons/deleteClient.svg">
+                </div>
+              </div>
+              <div class="parent-order-client">
+                <div v-if="search_client.length !==0" class="child-order-client">
+                  <div v-if="filteredClients.length === 0">
+                    <div class="pl-3">There is not clients</div>
+                  </div>
+                  <div v-else v-for="client in filteredClients" :key="client._id"  @click="selectClient(client._id)" class="table-child d-flex align-items-center">
+                    <div class="table-img">
+                      <img src="../../assets/img/sneak.webp">
+                    </div>
+                    <div>
+                      <h4 class="general-title">{{client.name}}</h4>
+                      <span class="client-phone-order">{{client.phone}}</span>
+                    </div>
+                  </div>
+
                 </div>
               </div>
 
@@ -104,9 +127,9 @@
                 </select>
               </div>
 
-              <!--        <span class="category">-->
-              <!--        Branch: Manezhnaya pl., 1, bldg. 2, Bishkek, Kyrgyzystan, 125009-->
-              <!--      </span>-->
+              <span class="category">
+                   Branch: Manezhnaya pl., 1, bldg. 2, Bishkek, Kyrgyzystan, 125009
+              </span>
 
               <div class="line"></div>
               <h3 class="client-sub-title">Personal discount</h3>
@@ -138,6 +161,23 @@
               </div>
             </div>
           </div>
+
+          <div class="d-flex">
+            <div class="dropup ">
+              <div class="dropdown-toggle" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button class="save mr-2">Edit order</button>
+              </div>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
+                <ul class="list-group " >
+                  <li class="list-group-item">Done</li>
+                  <li class="list-group-item" >Cancel</li>
+                  <li class="list-group-item">Delete</li>
+                  <li class="list-group-item">In progress</li>
+                </ul>
+              </div>
+            </div>
+            <button class="cancel">Close</button>
+          </div>
         </div>
       </div>
     </div>
@@ -146,34 +186,87 @@
 </template>
 
 <script>
+
 export default {
-  name: "AddOrder",
+  name: "EditOrder",
+  props:['select_order'],
   data(){
     return {
       products:[],
+      clients:[],
+      search_product:'',
+      search_client:'',
+      currentData:{
+        products:[],
+        createdAt:'',
+        client:'',
+        promocode:'',
+        status:'',
+        deliveryType:''
+      },
       search:''
     }
   },
   computed:{
-    filteredList(){
-      return this.products.filter((item)=>{
-        return item.name.toLowerCase().includes(this.search.toLowerCase())
+    filteredProducts(){
+      return this.products.filter((product)=>{
+        return product.name.toLowerCase().includes(this.search_product.toLowerCase())
       })
-    }
+    },
+    filteredClients(){
+      return this.clients.filter((client)=>{
+        return client.name.toLowerCase().includes(this.search_client.toLowerCase())
+      })
+    },
+
+
   },
   methods:{
+    selectProduct(id){
+      this.products.map((product)=>{
+        if(product._id === id){
+          if(this.currentData.products.includes(product)){
+            this.$warningAlert("warning")
+          }
+          else{
+            this.currentData.products.push(product)
+
+          }
+        }
+      })
+      this.search_product = ''
+    },
+    selectClient(id){
+      this.clients.filter((client)=>{
+        if(client._id === id){
+          this.currentData.client = client
+        }
+      })
+      this.search_client = ''
+    },
     getProducts(){
       this.axios.get(this.url('getProducts'))
-          .then((response) => {
-            this.products = response.data.objects;
-
-
+          .then((res)=>{
+            this.products = res.data.objects;
           })
+
     },
+    getClients(){
+      this.axios.get(this.url('getClients'))
+          .then((res)=>{
+            this.clients = res.data.objects;
+          })
+    }
   },
   mounted(){
     this.getProducts()
-  }
+    this.getClients()
+  },
+  watch:{
+    select_order(newCat){
+      this.currentData = Object.assign({}, newCat)
+    }
+  },
 }
 </script>
 

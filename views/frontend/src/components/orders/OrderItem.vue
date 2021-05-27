@@ -10,17 +10,17 @@
         <div><label class="custom-checkbox"><input  type="checkbox"  @click="checkMainSelect"  :ref="'select'+order.id" :value="order.id" ><span class="checkmark"></span></label></div>
 
         34543</div>
-      <div  class="table-child d-flex align-items-center"  style="width: 30%;">
+      <div   class="table-child d-flex align-items-center"  style="width: 30%;">
         <div class="table-img">
           <img src="../../assets/img/sneak.webp">
         </div>
-        {{order.name}}
+     {{order.products[0].name}}
       </div>
 
-      <div class="table-child" v-show="data_check.client_checked"  style="width: 25%;">{{order.client}}</div>
-      <div class="table-child" v-show="data_check.phone_checked" style="width: 20%;">{{order.phone}}</div>
-      <div class="table-child" style="width: 10%;">{{order.total}} $</div>
-      <div class="table-child" v-show="data_check.date_checked"  style="width: 15%;">{{order.date.split('').slice(0,10).join('')}}</div>
+      <div class="table-child" v-show="data_check.client_checked"  style="width: 25%;">{{order.client_name}}</div>
+      <div class="table-child" v-show="data_check.phone_checked" style="width: 20%;">{{order.client_phone}}</div>
+      <div  class="table-child" style="width: 10%;">{{order.products[0].price*order.products[0].quantity}}$</div>
+      <div class="table-child" v-show="data_check.date_checked"  style="width: 15%;">{{order.createdAt.split('').slice(0,10).join('')}}</div>
       <div class="table-child pr-3" v-show="data_check.notes_checked" style="width: 10%;" ><div>{{order.notes}}</div></div>
       <div class="table-child" style="width: 15%;"
             :class="[{red: order.status === 'Canceled'},
@@ -41,9 +41,9 @@
           <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
             <ul class="list-group " >
               <li class="list-group-item" v-on:click="$emit('done',order.id)">Done</li>
-              <li class="list-group-item" data-toggle="modal" data-target="#edit-order">Edit</li>
+              <li class="list-group-item" data-toggle="modal" data-target="#edit-order" @click="$emit('selectOrder',order._id)">Edit</li>
               <li class="list-group-item" @click="$emit('canceled' ,order.id)">Cancel</li>
-              <li class="list-group-item" v-on:click="$emit('deleteOrder',order.id)">Delete</li>
+              <li class="list-group-item" v-on:click="$emit('deleteOrder',order._id)">Delete</li>
               <li class="list-group-item" v-on:click="$emit('inProgress',order.id)">In progress</li>
             </ul>
           </div>

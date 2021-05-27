@@ -75,8 +75,7 @@ class ClientController{
             let hashedPassword = bcrypt.hashSync(req.fields.password, 8);
 
             let client = await new Client({
-                firstName: req.fields.firstName,
-                lastName: req.fields.lastName,
+                name: req.fields.name,
                 phone: req.fields.phone,
                 email: req.fields.email,
                 password: hashedPassword,

@@ -6,6 +6,8 @@
         <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='Price' }" to="/settings/price">Price</router-link></li>
         <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='CatalogSettings' }" to="/settings/catalog-settings">Catalog</router-link></li>
         <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='PersonalSettings' }" to="/settings/personal-settings">Personal settings</router-link></li>
+        <li class="loaylty-list"><router-link class="loyalty-link" to="/settings/staff-settings">Staff settings</router-link></li>
+        <li class="loaylty-list"><router-link class="loyalty-link" to="/settings/address-delivery">Address and delivery</router-link></li>
       </ul>
     </div>
   </div>

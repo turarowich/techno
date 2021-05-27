@@ -1,5 +1,6 @@
 import {createApp} from 'vue'
 import App from './App.vue'
+import 'select2/dist/css/select2.min.css';
 import 'slick-carousel/slick/slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css'

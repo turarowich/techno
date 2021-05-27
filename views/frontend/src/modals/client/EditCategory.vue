@@ -1,10 +1,11 @@
 <template>
+
   <div class="parent-modal">
-    <div class="modal myModal fade" id="add-client-category" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal myModal fade" id="edit-client-category" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content category-content">
           <div class="modal-header category-header align-items-center">
-            <h3 class="modal-title">Add Category</h3>
+            <h3 class="modal-title">Edit category</h3>
             <button type="button" data-dismiss="modal" aria-label="Close" class="close">
               <span aria-hidden="true">
                 <img src="../../assets/icons/x.svg" alt="">
@@ -14,23 +15,21 @@
           <div class="modal-body category-body">
             <form @submit.prevent="onSubmit" class="modal-form">
               <label>Name</label>
-              <input class="form-input cashback-input mb-3" v-model="new_category.name" name="name" placeholder="Enter a name">
+              <input class="form-input cashback-input mb-3" v-model="currentCategory.name" name="name" placeholder="Enter a name">
 
               <div>
                 <label>Select category</label>
                 <select class="form-control long-form-control modal-select mb-5">
                   <option value="">Without category</option>
-                  <option ></option>
+                  <option v-for="cat in listCategory" :key="cat._id"  :value="cat._id">{{cat.name}}</option>
                 </select>
               </div>
 
               <div class="d-flex justify-content-end">
-                <button  class="save">Save</button>
+                <button @click.prevent="onSubmit(currentCategory._id)" class="save">Save</button>
               </div>
             </form>
-
           </div>
-
         </div>
       </div>
     </div>
@@ -42,37 +41,32 @@
 import $ from 'jquery'
 export default {
   name: "AddCategory",
-  props:{
-    getCategories:{
-      type:Function,
-    }
-  },
+ props:['listCategory', 'getCategories','select_category'],
   data(){
     return{
-      new_category: {
-        name: '',
-        type:"client"
-      }
+      currentCategory:''
     }
   },
   methods:{
-    onSubmit(){
-      const data = new FormData();
-      data.append('name', this.new_category.name)
-      data.append('type', this.new_category.type)
-      this.axios.post(this.url('addCategory'),data)
-          .then(()=>{
-            this.$successAlert('Category has been added')
-            this.getCategories()
-          })
-          .catch((error)=>{
-            console.log("Error"+error)
-          })
+    onSubmit(id){
+      this.axios.put(this.url('updateCategory',id),{
+        name: this.currentCategory.name,
+        type:'client'
+      })
+      .then(()=>{
+        this.getCategories()
+        $('#edit-client-category').modal("hide")
+        this.$informationAlert('Category changed')
+      })
 
-      $('#add-client-category').modal("hide")
-      this.new_category.name = ''
+
     },
-  }
+  },
+  watch:{
+    select_category(newCat){
+      this.currentCategory = Object.assign({}, newCat)
+    }
+  },
 }
 </script>
 
