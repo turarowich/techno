@@ -1,6 +1,6 @@
 <template>
-  <div class="modal fade right"  id="add-order" tabindex="-1" role="dialog" aria-labelledby="add-promocode" aria-hidden="true">
-    <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: 81%;" role="document" >
+  <div class="modal fade right"  id="add-order" tabindex="-1" role="dialog" aria-labelledby="add-order" aria-hidden="true">
+    <div class="modal-dialog  modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: 81%;" role="document" >
       <div class="modal-content myModal-content h-100">
         <div class="modal-header justify-content-start align-items-start">
 
@@ -16,76 +16,54 @@
         </div>
         <div class=" myModal-body">
           <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-8 ">
               <h3 class="detail-product">Product</h3>
-<!--              <input v-model="search" class="enter-name-input" placeholder="+ Enter the name of product">-->
-
-              <select class="js-example-basic-multiple" name="states[]" multiple="multiple">
-                    <option>
-                      <div class="table-child d-flex align-items-center"  >
-                        <div class="table-img">
-                          <img src="../../assets/img/sneak.jpg">
-                        </div>
-                        <img src="../../assets/icons/setting-icon/no-img.svg">
+              <input v-model="search_product" class="enter-name-input" placeholder="+ Enter the name of product">
+              <div class="left-order">
+                <div v-if="search_product.length !==0" class="search-product ">
+                  <div class="pl-4 pt-3 pb-3" v-if="filteredProducts.length === 0">
+                        You don't have any products
+                  </div>
+                  <div  v-else v-for="product in filteredProducts" :key="product.id" @click="selectProduct(product.id)" class="product-order  d-flex align-items-center justify-content-between">
+                    <div class="table-child d-flex align-items-center">
+                      <div class="table-img">
+                        <img src="../../assets/img/sneak.webp">
                       </div>
-                          Air Forces
-                    </option>
-                <option>
-                  <div class="table-child d-flex align-items-center"  >
-                    <div class="table-img">
-                      <img src="../../assets/img/sneak.jpg">
+                      {{product.name}}
                     </div>
-                    <img src="../../assets/icons/setting-icon/no-img.svg">
-                  </div>
-                  Air Forces
-                </option>
-                <option>
-                  <div class="table-child d-flex align-items-center"  >
-                    <div class="table-img">
-                      <img src="../../assets/img/sneak.jpg">
+                    <div>
+                      {{product.price}} $
                     </div>
-                    <img src="../../assets/icons/setting-icon/no-img.svg">
                   </div>
-                  Air Forces
-                </option>
-                <option>
-                  <div class="table-child d-flex align-items-center"  >
-                    <div class="table-img">
-                      <img src="../../assets/img/sneak.jpg">
-                    </div>
-                    <img src="../../assets/icons/setting-icon/no-img.svg">
-                  </div>
-                  Air Forces
-                </option>
-              </select>
-
+                </div>
+              </div>
 
               <div class="table">
                 <div class="d-flex main-content-header">
                   <div class="table-head" style="width: 50%;">Product</div>
                   <div class="table-head" style="width: 20%;">Price</div>
                   <div class="table-head" style="width: 20%;">Quantity</div>
-                  <div class="table-head" style="width: 10%;">Total</div>
+                  <div class="table-head" style="width: 15%;">Total</div>
                   <div class="table-head" style="width: 10%;"></div>
                 </div>
 
                 <div class="table-content">
-                  <div class="d-flex align-items-center h-100 justify-content-center flex-column" v-if="products.length === 0">
+                  <div v-if="new_order.products.length===0" class="d-flex align-items-center h-100 justify-content-center flex-column">
                     <img class="empty-img" src="../../assets/icons/emptyOrder.svg">
                     <p class="empty-page-text">Add a product to start</p>
                   </div>
 
-                  <div v-else class="table-item d-flex align-items-center" v-for="detail in filteredList" :key="detail.id">
+                  <div  v-else  v-for="order in new_order.products" :key="order.id" class="table-item d-flex align-items-center" >
                     <div  class="d-flex align-items-center"  style="width: 50%;">
                       <div class="table-img">
                         <img src="../../assets/img/sneak.webp">
                       </div>
-                      {{detail.name}}
+                      {{order.name}}
                     </div>
-                    <div style="width:20%">{{detail.price}} $</div>
-                    <div style="width:20%"><div class="quantity">{{detail.quantity}}</div></div>
-                    <div style="width:10%">{{detail.total}} $</div>
-                    <div style="width:10%"><img src="../../assets/icons/trash_empty.svg"></div>
+                    <div style="width:20%">{{order.price}}$</div>
+                    <div style="width:20%"><input type="number" min="1" class="quantity" v-model="order.quantity"></div>
+                    <div style="width:15%">{{order.quantity*order.price}} $</div>
+                    <div style="width:10%"><img @click="deleteFromOrder(order.id)" src="../../assets/icons/trash_empty.svg"></div>
                   </div>
 
                 </div>
@@ -95,23 +73,7 @@
                 <input class="cashback-input">
               </div>
 
-              <div class="d-flex">
 
-                <div class="dropup ">
-                  <div class="dropdown-toggle" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <button class="save mr-2 ">Edit order</button>
-                  </div>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
-                    <ul class="list-group " >
-                      <li class="list-group-item">Done</li>
-                      <li class="list-group-item" >Cancel</li>
-                      <li class="list-group-item">Delete</li>
-                      <li class="list-group-item">In progress</li>
-                    </ul>
-                  </div>
-                </div>
-                <button class="cancel">Close</button>
-              </div>
             </div>
 
 
@@ -120,33 +82,47 @@
               <h3 class="client-sub-title">Client</h3>
 
               <div  class="client-box d-flex align-items-center">
-                <div  class="client-search d-flex align-items-center">
+                <div v-if="new_order.client === ''"  class="client-search d-flex align-items-center">
                   <img src="../../assets/icons/search-icon.svg" class="search-client-icon">
-                  <input placeholder="Enter clients name or phone number" class="search-client">
+                  <input v-model="search_client" placeholder="Enter clients name or number" class="search-client">
                 </div>
-                <div class=" d-none align-items-center">
+                <div v-else class="d-flex align-items-center">
                   <img class="client-avatar" src="../../assets/img/criw.jpg">
                   <div class="position-relative">
-                    <h2 class="name-client">Tomas Levins</h2>
-                    <div class="category">Category: <span>Vip</span> Points: <span>200</span></div>
+                    <h2 class="name-client">{{new_order.client.name}}</h2>
+                    <div class="category">Category: <span>{{new_order.client.category.name}}</span> Points: <span>{{new_order.client.points}}</span></div>
                   </div>
-                  <img class="close-client" src="../../assets/icons/deleteClient.svg">
+                  <img @click="new_order.client = ''" class="close-client" src="../../assets/icons/deleteClient.svg">
                 </div>
               </div>
+             <div class="parent-order-client">
+               <div v-if="search_client.length !==0" class="child-order-client">
+                <div v-if="filteredClients.length === 0">
+                  <div class="pl-3">There is not clients</div>
+                </div>
+                 <div v-else v-for="client in filteredClients" :key="client._id"  @click="selectClient(client._id)" class="table-child d-flex align-items-center">
+                   <div class="table-img">
+                     <img src="../../assets/img/sneak.webp">
+                   </div>
+                   <div>
+                     <h4 class="general-title">{{client.name}}</h4>
+                     <span class="client-phone-order">{{client.phone}}</span>
+                   </div>
+                 </div>
 
+               </div>
+             </div>
               <h3 class="client-sub-title">Delivery method</h3>
               <div class="selects">
-                <select class=" form-control long-form-control  form-control-lg" aria-label=".form-select-lg example">
-                  <option>Pick up</option>
-                  <option>Russia</option>
-                  <option>USA</option>
-                  <option>Kyrgyzstan</option>
+                <select v-model="new_order.deliveryType" class=" form-control long-form-control  form-control-lg" aria-label=".form-select-lg example">
+                  <option value="self" >self</option>
+                  <option value="pickup">pick up</option>
                 </select>
               </div>
 
-              <!--        <span class="category">-->
-              <!--        Branch: Manezhnaya pl., 1, bldg. 2, Bishkek, Kyrgyzystan, 125009-->
-              <!--      </span>-->
+              <span class="category">
+              {{new_order.client.address}}
+              </span>
 
               <div class="line"></div>
               <h3 class="client-sub-title">Personal discount</h3>
@@ -174,13 +150,14 @@
 
               <div class="d-flex mb-5 justify-content-between align-items-center">
                 <h3 class="total-price">Total</h3>
-                <h3 class="total-price">0 $</h3>
+                <h3 class="total-price"> $</h3>
               </div>
-
-
             </div>
+          </div>
 
-
+          <div class="d-flex">
+            <button class="save mr-2 mb-5" @click.prevent="onSubmit">Add order</button>
+            <button class="cancel">Close</button>
           </div>
         </div>
       </div>
@@ -190,18 +167,109 @@
 </template>
 
 <script>
-import $ from 'jquery'
+
+import $ from "jquery";
+
 export default {
   name: "AddOrder",
+  props:['getOrders'],
+
   data(){
     return {
       products:[],
-      search:''
+      clients:[],
+      search_product:'',
+      search_client:'',
+
+      new_order:{
+        products:[],
+        client:'',
+        promocode:'',
+        status:'new',
+        deliveryType:''
+      }
+
     }
   },
+  computed:{
+    filteredProducts(){
+     return this.products.filter((product)=>{
+        return product.name.toLowerCase().includes(this.search_product.toLowerCase())
+      })
+    },
+    filteredClients(){
+      return this.clients.filter((client)=>{
+        return client.name.toLowerCase().includes(this.search_client.toLowerCase())
+      })
+    },
+
+  },
+  methods:{
+    onSubmit(){
+      this.axios.post(this.url('addOrder'),this.new_order)
+            .then(()=>{
+              this.getOrders()
+              this.new_order.products=[]
+              this.$successAlert('Order has been added')
+              $('#add-order').modal("hide")
+            })
+
+    },
+    selectProduct(id){
+      this.products.map((product)=>{
+        if(product.id === id){
+          if(this.new_order.products.includes(product)){
+            product.quantity= +product.quantity+1;
+          }
+          else{
+            this.new_order.products.push(product)
+            console.log(this.new_order.products)
+          }
+        }
+      })
+      this.search_product = ''
+    },
+    selectClient(id){
+      this.clients.filter((client)=>{
+        if(client._id === id){
+          this.new_order.client = client
+        }
+      })
+      this.search_client = ''
+    },
+    deleteFromOrder(id){
+      this.new_order.products=this.new_order.products.filter((item)=>item.id !== id)
+      // var index = this.new_order.products.findIndex(function(o){
+      //   return o.id === id;
+      // })
+      // if (index !== -1) this.new_order.products.splice(index, 1)
+
+    },
+    getProducts(){
+      this.axios.get(this.url('getProducts'))
+      .then((res)=>{
+        this.products = res.data.objects;
+        this.products.map((product)=>{
+          product.id = product._id;
+          delete product._id;
+
+        })
+      })
+
+    },
+    getClients(){
+      this.axios.get(this.url('getClients'))
+          .then((res)=>{
+            this.clients = res.data.objects;
+          })
+    }
+  },
+
   mounted(){
-    $(document).ready(function() {
-      $('.js-example-basic-multiple').select2();
+    this.getProducts()
+    this.getClients()
+    window.scrollTo({
+      top: 1000,
     });
   }
 
@@ -211,7 +279,58 @@ export default {
 
 
 <style scoped>
+.general-title{
+  margin-bottom: 3px;
+}
+.child-order-client .table-child{
+  padding: 7px 15px;
+  border-bottom: 1px solid #D3D3D3;
+  cursor:pointer;
+}
+.child-order-client .table-child:hover{
+  background: #F8F9FF;
+  transition:.3s;
 
+}
+.client-phone-order{
+  color:#8C94A5;
+  font-size: 14px;
+}
+.parent-order-client{
+  position: relative;
+}
+.child-order-client{
+  width: 100%;
+  overflow-y: auto;
+  max-height: 350px;
+  background: #fff;
+  box-shadow: 2px 11px 35px rgba(0, 0, 0, 0.1);
+  z-index:99;
+  position: absolute;
+  padding:10px 0;
+
+}
+.left-order{
+  position: relative;
+}
+.product-order{
+  cursor:pointer;
+  padding:10px 20px;
+}
+.product-order:hover{
+  background: #F8F9FF;
+  transition:.3s;
+}
+.search-product{
+  box-shadow: 2px 11px 35px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  width: 100%;
+  max-height:360px;
+  overflow-y: auto;
+  position: absolute;
+  background: #fff;
+
+}
 .modal-header .close{
   margin: 0;
   padding: 0;
@@ -320,6 +439,7 @@ export default {
   width: 100%;
   padding: 0 30px;
   margin-bottom: 20px;
+
 }
 .main-content-header{
   padding: 5px 20px;

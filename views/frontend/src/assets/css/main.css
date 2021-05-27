@@ -1161,24 +1161,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     overflow-y: auto;
 }
 
-.select2{
-    width: 100% !important;
-    margin-bottom: 20px;
-}
-.select2-selection{
-    border: 1px solid #616cf5 !important;
-    height: 45px !important;
-    padding-top: 6px;
-}
-.select2-container--default .select2-selection--multiple .select2-selection__choice{
-    display: none !important;
-}
-.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable{
-    background: #616cf5 !important;
-    padding:10px 20px !important;
-}
-
-.select2-dropdown {
-    border:none !important;
-    box-shadow: 2px 11px 35px rgba(0, 0, 0, 0.1);
+.general-title{
+    font-weight: normal;
+    font-size: 16px;
 }

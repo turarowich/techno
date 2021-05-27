@@ -72,6 +72,7 @@
     <div class="table-content">
         <OrderItem
              ref="order_item"
+             v-on:selectOrder="selectOrder"
               v-on:unCheckAll="unCheckAll"
               v-on:checkAll="checkAll"
               v-bind:orderList="orderToDisplay"
@@ -82,8 +83,12 @@
               v-bind:data_check="data_check"/>
       </div>
 
-    <AddOrder/>
-    <EditOrder/>
+    <AddOrder
+      :getOrders="getOrders"
+    />
+    <EditOrder
+      :select_order="select_order"
+    />
     <div class="pagination d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-center">
         <span>Rows per page</span>
@@ -119,19 +124,10 @@ name: "Orders",
   },
   data(){
     return{
-     //  orderList:[
-     //    {id:1,name:"Essential Shoes and bektemir kudaiberdiev",client:"Bektemir Kudaiberdiev Azzamkulovich", phone:"996550457834", total:"450",date:this.$moment().subtract(1, "days").format("YYYY-MM-DD"),notes:"Please?",status:'New'},
-     //    {id:3,name:"AirForces",client:"Tomas Levins", phone:"0775896542", total:"13",date:this.$moment().format('YYYY-MM-DD'),notes:"Please" ,status:'New'},
-     //    {id:4,name:"Krosses",client:"Tomas Levins", phone:"0500687909", total:"567",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'New'},
-     //    {id:5,name:"Essentialsss",client:"Tomas Levins", phone:"0500687909", total:"820",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
-     //    {id:6,name:"Ess",client:"Tomas Levins", phone:"0500687909", total:"200",date:this.$moment().subtract(1, "days").format("YYYY-MM-DD"),notes:"Please",status:'Done'},
-     //    {id:7,name:"Essss",client:"Tomas Levins", phone:"0500687909", total:"40",date:this.$moment().subtract(1, "days").format("YYYY-MM-DD"),notes:"Please?",status:'Done'},
-     //    {id:8,name:"Ess",client:"Tomas Levins", phone:"0500687909", total:"80",date:"2021-03-05T11:31:33.557+00:00",notes:"Please, can you \n" + "do it quickly?",status:'Done'},
-     //    {id:9,name:"Jeans and Jackets ",client:"Tomas Levins", phone:"0500687909", total:"12",date:this.$moment().format('YYYY-MM-DD'),notes:"Please,",status:'Done'},
-     // ],
       orderList:[],
+      select_order:'',
       data_check:{
-        client_checked:false,
+        client_checked:true,
         phone_checked:false,
         date_checked:false,
         notes_checked:false
@@ -196,6 +192,13 @@ name: "Orders",
     },
   },
   methods: {
+    selectOrder(id){
+      this.orderList.map((item)=>{
+        if(item._id === id){
+          this.select_order = item;
+        }
+      })
+    },
     getOrders(){
       this.axios.get(this.url('getOrders'))
       .then((response)=>{
@@ -302,36 +305,19 @@ name: "Orders",
 
       }).then((result) => {
         if (result.isConfirmed) {
-          this.orderList = this.orderList.filter(el => el.id !== id);
-          this.renderPaginationList()
-          Swal.fire({
-                title:'Success',
-                timer:1500,
-                text:'Order has been removed',
-                showConfirmButton:false,
-                position: 'top-right',
-                customClass:{
-                  popup:'success-popup',
-                  content:'success-content',
-                  title:'success-title',
-                  header:'success-header',
-                  image:'success-img'
-                },
-                showClass:{
-                  popup: 'animate__animated animate__zoomIn'
-                },
-
-              }
-          )}
+          this.axios.delete(this.url('deleteOrder',id))
+          .then(()=>{
+            this.getOrders()
+            this.$successAlert("Order deleted")
+          })
+        }
       })
-      this.countNewOrder()
-      this.totalOrders()
     },
     inProgress(id) {
       this.orderList.map((order) => {
         if (order.id === id) {
           order.status = 'In Progress';
-          this.countNewOrder();
+
         }
       })
     },
