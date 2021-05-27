@@ -4,11 +4,14 @@ const Schema = mongoose.Schema;
 const clientSchema = new Schema({
     name: {
         type: String,
+        trim: true,
         required: [true, 'name_required'],
+        minlength: [3, 'name_min'],
     },
     phone: {
         type: String,
         required: [true, 'phone_required'],
+        trim: true,
         validate: {
             validator: async function (phone) {
                 const user = await this.constructor.findOne({ phone });
@@ -27,6 +30,7 @@ const clientSchema = new Schema({
     },
     email: {
         type: String,
+        trim: true,
         required: [true, 'email_required'],
         validate: {
             validator: async function (email) {
@@ -65,6 +69,11 @@ const clientSchema = new Schema({
         required: true,
         default: 0
     },
+    points: {
+        type: Number,
+        required: true,
+        default: 0
+    },
     messages: [{
         type: Schema.Types.ObjectId,
         ref: 'Message'
@@ -87,6 +96,19 @@ const clientSchema = new Schema({
         type: String,
         required: false,
         default: ''
+    },
+    gender: {
+        type: String,
+        required: false,
+        default: ''
+    },
+    avatar: {
+        type: String,
+        required: false,
+    },
+    oneTimeCode: {
+        type: String,
+        required: false,
     },
     createdAt: {
         type: Date,

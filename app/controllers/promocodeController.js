@@ -49,9 +49,8 @@ class PromocodeController{
         try {
             let promocode = await new Promocode({
                 name: new_promocode.name || "No name",
-                code: new_promocode.code || "90909",
-                percent: new_promocode.discount || "99",
-                bonus: new_promocode.bonus || "99",
+                code: new_promocode.code || "2",
+                discount: new_promocode.discount || "99",
                 startDate: new_promocode.fromDate || new Date(),
                 endDate: new_promocode.toDate || new Date(),
                 fixed_sum: new_promocode.fixedSum || '6',
@@ -59,7 +58,6 @@ class PromocodeController{
                 number_of_uses: new_promocode.numberOfUses || '6',
                 selected_type: new_promocode.selectedType || 'type',
                 selected_items_list: new_promocode.selectedItemsList || [1,2],
-
             }).save();
 
             result['object'] = promocode
@@ -153,16 +151,49 @@ class PromocodeController{
         }
         res.json(result);
     };
-    searchPromocodeByCode= async function (req, res) {
+    searchPromocodeByCode = async function (req, res) {
         let db = useDB(req.db)
         let Promocode = db.model("Promocode");
         let search = req.query.search;
+        let sum = req.query.sum;
+        let type = req.query.type;
+        let date = req.query.date;
         let result = {
             'status': 200,
-            'msg': 'Sending promocodes'
+            'msg': 'Sending promocodes',
         }
-        try {
-            result['object'] = await Promocode.findOne( { "code":  search} );
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
+        console.log(search, sum, type, date)
+        promocode: try {
+            let promocode = await Promocode.findOne({ "code": search });
+            if(promocode){
+                var start = new Date(promocode.startDate);
+                var end = new Date(promocode.endDate);
+                if(date){
+                    var now = new Date(date);
+                    console.log(now, date)
+                    if (start >= now || now >= end) {
+                        result['msg'] = validate[lang]['promo_not_usable']
+                        break promocode
+                    }
+                }
+                if (sum < promocode.min_sum && sum){
+                    result['msg'] = validate[lang]['promo_min_price']
+                    break promocode
+                }
+                if(promocode.selected_items_list.length == 0 && type){
+                    if (promocode.selected_type != 'all' && promocode.selected_type != type) {
+                        result['msg'] = validate[lang]['promo_not_usable']
+                        break promocode
+                    }
+                }
+            }else{
+                result['msg'] = validate[lang]['promo_404']
+            }
+            result['object'] = promocode
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }

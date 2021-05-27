@@ -1,11 +1,20 @@
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 var config = require('../../config/config');
-const { sendError } = require('../../services/helper')
+const { sendError, randomNumber, randomPassword } = require('../../services/helper')
 var validate = require('../../config/messages');
 var axios = require('axios');
 const { response } = require('express');
 var queryString = require('query-string');
+const nodemailer = require('nodemailer');
+const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 587,
+    auth: {
+        user: 'moorestudio2@gmail.com',
+        pass: '123123123@@',
+    },
+});
 
 class AuthController{
     register = async function (req, res) {
@@ -98,10 +107,10 @@ class AuthController{
             delete errors.phone
             if (!passwordIsValid) return res.status(401).json({ status: 401, msg: "Not valid password", auth: false, token: null, errors: errors });
 
-            var token = jwt.sign({ id: req.headers['access_place'], user: user._id }, config.secret_key, {
+            var token = jwt.sign({ id: req.headers['access-place'], user: user._id }, config.secret_key, {
                 expiresIn: 86400 // expires in 24 hours
             });
-            var refresh_token = jwt.sign({ id: req.headers['access_place'], user: user._id  }, config.secret_key, {
+            var refresh_token = jwt.sign({ id: req.headers['access-place'], user: user._id  }, config.secret_key, {
                 expiresIn: "30 days"
             });
             user.password = ""
@@ -111,10 +120,8 @@ class AuthController{
             res.status(result.status).json(result);
         }
     };
-
     registerClient = async function (req, res) {
-        let db = global.userConnection.useDb('loygift'+req.headers['access_place']);
-
+        let db = global.userConnection.useDb('loygift'+req.headers['access-place']);
         let Client = db.model("Client");
         let result = []
         try {
@@ -126,7 +133,6 @@ class AuthController{
                 password: req.fields.password,
             })
             await client.validate()
-
             client.password = hashedPassword
             await client.save()
             client.password = ""
@@ -135,10 +141,10 @@ class AuthController{
                 'msg': 'Client added',
                 'auth': true,
                 'object': client,
-                'refresh_token': jwt.sign({ id: req.headers['access_place'], user: client._id  }, config.secret_key, {
+                'refresh_token': jwt.sign({ id: req.headers['access-place'], user: client._id  }, config.secret_key, {
                     expiresIn: "30 days"
                 }),
-                'token': jwt.sign({ id: req.headers['access_place'], user: client._id }, config.secret_key, {
+                'token': jwt.sign({ id: req.headers['access-place'], user: client._id }, config.secret_key, {
                     expiresIn: 86400 // expires in 24 hours
                 }),
             }
@@ -150,7 +156,7 @@ class AuthController{
     };
 
     registerClientSocial = async function (req, res) {
-        let db = global.userConnection.useDb('loygift' + req.headers['access_place']);
+        let db = global.userConnection.useDb('loygift' + req.headers['access-place']);
         let Client = db.model("Client");
         let result = []
         let social_res = []
@@ -185,10 +191,10 @@ class AuthController{
                 'msg': 'Client added',
                 'auth': true,
                 'object': client,
-                'refresh_token': jwt.sign({ id: req.headers['access_place'], user: client._id  }, config.secret_key, {
+                'refresh_token': jwt.sign({ id: req.headers['access-place'], user: client._id  }, config.secret_key, {
                     expiresIn: "30 days"
                 }),
-                'token': jwt.sign({ id: req.headers['access_place'], user: client._id }, config.secret_key, {
+                'token': jwt.sign({ id: req.headers['access-place'], user: client._id }, config.secret_key, {
                     expiresIn: 86400 // expires in 24 hours
                 }),
             }
@@ -200,7 +206,7 @@ class AuthController{
         res.status(result.status).json(result);
     };
     loginClientSocial = async function (req, res) {
-        let db = global.userConnection.useDb('loygift' + req.headers['access_place']);
+        let db = global.userConnection.useDb('loygift' + req.headers['access-place']);
         let Client = db.model("Client");
         let result = []
         let social_res = []
@@ -234,10 +240,10 @@ class AuthController{
                 'msg': 'Sending token',
                 'auth': true,
                 'object': client,
-                'refresh_token': jwt.sign({ id: req.headers['access_place'], user: client._id  }, config.secret_key, {
+                'refresh_token': jwt.sign({ id: req.headers['access-place'], user: client._id  }, config.secret_key, {
                     expiresIn: "30 days"
                 }),
-                'token': jwt.sign({ id: req.headers['access_place'], user: client._id }, config.secret_key, {
+                'token': jwt.sign({ id: req.headers['access-place'], user: client._id }, config.secret_key, {
                     expiresIn: 86400 // expires in 24 hours
                 }),
             }
@@ -278,6 +284,192 @@ class AuthController{
     };
     logout = async function (req, res) {
         res.status(200).json({ auth: false, token: null });
+    };
+
+    resetPasswordMessage = async function (req, res) {
+        let db = global.userConnection.useDb('loygift' + req.headers['access-place']);
+        let Client = db.model("Client");
+        let result = []
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
+        resetPassword: try {
+            if (!req.headers['access-place']) {
+                result = {
+                    status: 500,
+                    msg: "Wrong query",
+                }
+                break resetPassword
+            }
+            let client = await Client.findOne({"email": req.fields.email})
+
+            if (!client) {
+                result = {
+                    status: 500,
+                    msg: "Validation error",
+                    errors: {
+                        user: validate[lang]['user_not_found'],
+                    }
+                }
+                break resetPassword
+            }
+            let code = randomNumber(100000, 1000000)
+            client.oneTimeCode = code
+            client.save()
+            transporter.sendMail({
+                from: 'loygift', // sender address
+                to: req.fields.email, // list of receivers
+                subject: "New password", // Subject line
+                html: "<b> code: " + code + " </b>", // html body
+            }).catch(console.error);
+
+            result = {
+                'status': 200,
+                'msg': 'Sending token',
+            }
+
+        } catch (error) {
+
+            result = sendError(error, lang)
+        }
+
+        res.status(result.status).json(result);
+    };
+
+    resetCheckCode = async function (req, res) {
+        let db = global.userConnection.useDb('loygift' + req.headers['access-place']);
+        let Client = db.model("Client");
+        let result = []
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
+        resetPassword: try {
+            if (!req.headers['access-place']) {
+                result = {
+                    status: 500,
+                    msg: "Wrong query",
+                }
+                break resetPassword
+            }
+            let client = await Client.findOne({ "email": req.fields.email })
+
+            if (!client) {
+                result = {
+                    status: 500,
+                    msg: "Validation error",
+                    errors: {
+                        user: validate[lang]['user_not_found'],
+                    }
+                }
+                break resetPassword
+            }
+            if (client.oneTimeCode && client.oneTimeCode == req.fields.code) {
+                result = {
+                    'status': 200,
+                    'msg': 'Code math',
+                }
+            }else{
+                result = {
+                    status: 500,
+                    msg: "Validation error",
+                    errors: {
+                        code: validate[lang]['code_invalid'],
+                    }
+                }
+                break resetPassword
+            }
+        } catch (error) {
+
+            result = sendError(error, lang)
+        }
+        res.status(result.status).json(result);
+    };
+    resetPassword = async function (req, res) {
+        let db = global.userConnection.useDb('loygift' + req.headers['access-place']);
+
+        let Client = db.model("Client");
+        let result = []
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
+        resetPassword: try {
+            if (!req.headers['access-place']){
+                result = {
+                    status: 500,
+                    msg: "Wrong query",
+                }
+                break resetPassword
+            }
+            let client = await Client.findOne({ "email": req.fields.email }).select("+password")
+
+            if (!client) {
+                result = {
+                    status: 500,
+                    msg: "Validation error",
+                    errors: {
+                        user: validate[lang]['user_not_found'],
+                    }
+                }
+                break resetPassword
+            }
+
+            if (client.oneTimeCode &&  client.oneTimeCode == req.fields.code){
+
+                if (req.fields.password && req.fields.password.match(/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/) && req.fields.password.length < 64){
+                    client.password = bcrypt.hashSync(req.fields.password, 8);
+                    client.oneTimeCode = ""
+                    await client.save()
+                    client.password = "secured"
+                    result = {
+                        'status': 200,
+                        'msg': 'Sending token',
+                        'auth': true,
+                        'object': client,
+                        'refresh_token': jwt.sign({ id: req.headers['access-place'], user: client._id }, config.secret_key, {
+                            expiresIn: "30 days"
+                        }),
+                        'token': jwt.sign({ id: req.headers['access-place'], user: client._id }, config.secret_key, {
+                            expiresIn: 86400 // expires in 24 hours
+                        }),
+                    }
+                }else{
+                    let message = "password_valid"
+                    if (req.fields.password.length < 8) {
+                        message = "password_min"
+                    } else if (req.fields.password.length > 64) {
+                        message = "password_max"
+                    }
+                    result = {
+                        status: 500,
+                        msg: "Validation error",
+                        errors: {
+                            password: validate[lang][message],
+                        }
+                    }
+                    break resetPassword
+                }
+
+            }else{
+                result = {
+                    status: 500,
+                    msg: "Validation error",
+                    errors: {
+                        code: validate[lang]['code_invalid'],
+                    }
+                }
+                break resetPassword
+            }
+
+
+        } catch (error) {
+
+            result = sendError(error, lang)
+        }
+        console.log(result)
+        res.status(result.status).json(result);
     };
 
     callbackFB = async function (req, res) {

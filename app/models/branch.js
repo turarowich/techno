@@ -8,12 +8,12 @@ const branchSchema = new Schema({
         default: ""
     },
     longitude: {
-        type: Number,
+        type: String,
         required: true,
         default: 0
     },
     latitude: {
-        type: Number,
+        type: String,
         required: true,
         default: 0
     },
@@ -26,6 +26,104 @@ const branchSchema = new Schema({
         type: String,
         required: true,
         default: ""
+    },
+    monday: {
+        active:{
+            type: Boolean,
+            required: true
+        },
+        start: {
+            type: String,
+            required: true
+        },
+        end: {
+            type: String,
+            required: true
+        },
+    },
+    tuesday: {
+        active: {
+            type: Boolean,
+            required: true
+        },
+        start: {
+            type: String,
+            required: true
+        },
+        end: {
+            type: String,
+            required: true
+        },
+    },
+    wednesday: {
+        active: {
+            type: Boolean,
+            required: true
+        },
+        start: {
+            type: String,
+            required: true
+        },
+        end: {
+            type: String,
+            required: true
+        },
+    },
+    thursday: {
+        active: {
+            type: Boolean,
+            required: true
+        },
+        start: {
+            type: String,
+            required: true
+        },
+        end: {
+            type: String,
+            required: true
+        },
+    },
+    friday: {
+        active: {
+            type: Boolean,
+            required: true
+        },
+        start: {
+            type: String,
+            required: true
+        },
+        end: {
+            type: String,
+            required: true
+        },
+    },
+    saturday: {
+        active: {
+            type: Boolean,
+            required: true
+        },
+        start: {
+            type: String,
+            required: true
+        },
+        end: {
+            type: String,
+            required: true
+        },
+    },
+    sunday: {
+        active: {
+            type: Boolean,
+            required: true
+        },
+        start: {
+            type: String,
+            required: true
+        },
+        end: {
+            type: String,
+            required: true
+        },
     },
     createdAt: {
         type: Date,

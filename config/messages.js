@@ -32,6 +32,7 @@ const en_messages = {
     code_required: 'Code required',
     comment_required: 'Comment required',
     description_required: 'Description required',
+    code_invalid: 'Code is not valid',
 
     // EXCEL messages
     xl_produt_name:'Product name',
@@ -52,9 +53,15 @@ const en_messages = {
     xl_promo_end: 'Promocode end date',
     xl_recommend: 'Recommended',
     xl_product_result: 'Result',
+
     //Promocode
     promo_code:'Code has to be at least 12 characters',
     promo_name_unique:'Promocode with this name already exists',
+    promo_code_unique: 'Promocode with this code already exists',
+    promo_404: 'Promocode not found',
+    promo_not_usable: 'Promocode is not usable',
+    promo_min_price: 'The amount for using the promo code has not been reached',
+    
 }
 const ru_messages = {
     // ERROR messages
@@ -90,6 +97,7 @@ const ru_messages = {
     code_required: 'Кодовое слово обязательное поле',
     comment_required: 'Коментарий обязательное поле',
     description_required: 'Описание обязательное поле',
+    code_invalid: 'Неравильный код',
 
     // EXCEL messages
     xl_produt_name: 'Название',
@@ -112,6 +120,12 @@ const ru_messages = {
     //Promocode
     promo_code:'Код должен быть минимум 12 сиволов',
     promo_name_unique:'Промокод с таким названием уже существует',
+    promo_code_unique: 'Промокод с таким кодом уже существует',
+    promo_404: 'Промокод не найден',
+    promo_not_usable: 'Промокод не может быть использован',
+    promo_min_price: 'Не достигнута сумма для использования промокода',
+    
+    
 }
 module.exports = {
     en: en_messages,

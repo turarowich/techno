@@ -244,10 +244,19 @@ function getExcelHeader(type){
     }
     return headers
 }
-
+function randomNumber(min, max) {
+    return Math.floor(
+        Math.random() * (max - min + 1) + min
+    )
+}
+function randomPassword(letterCount) {
+    return Math.random().toString(36).slice(-letterCount);
+}
 module.exports = {
     useDB: useDB,
     saveImage: saveImage,
     sendError: sendError,
-    createExcel: createExcel
+    createExcel: createExcel,
+    randomNumber: randomNumber,
+    randomPassword: randomPassword
 }

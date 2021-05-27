@@ -2,9 +2,25 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const settingsSchema = new Schema({
+    name: {
+        type: String,
+        required: [true, 'name_required'],
+    },
+    welcome: {
+        type: String,
+        required: true,
+    },
     slogan: {
         type: String,
         required: [true, 'slogan_required'],
+    },
+    email: {
+        type: String,
+        required: true,
+    },
+    backgroundImageApp: {
+        type: String,
+        required: false,
     },
     country: {
         type: String,
@@ -14,6 +30,11 @@ const settingsSchema = new Schema({
     currency: {
         type: String,
         required: false
+    },
+    chat: {
+        type: Boolean,
+        required: true,
+        default: true
     },
     delivery: {
         type: Boolean,
@@ -84,22 +105,27 @@ const settingsSchema = new Schema({
     whatsapp: {
         type: String,
         required: false,
+        default: ""
     },
     telegram: {
         type: String,
         required: false,
+        default: ""
     },
     facebook: {
         type: String,
         required: false,
+        default: ""
     },
     instagram: {
         type: String,
         required: false,
+        default: ""
     },
     website: {
         type: String,
         required: false,
+        default: ""
     },
     //////catalog end
     createdAt: {

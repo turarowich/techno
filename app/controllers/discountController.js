@@ -24,6 +24,7 @@ class DiscountController{
             'msg': 'Sending Discount'
         }
         try {
+            
             await new discount_model({
                 name: discount.name,
                 discount_percentage: discount.percentage,

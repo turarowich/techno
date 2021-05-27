@@ -2,6 +2,8 @@ var bcrypt = require('bcryptjs');
 const { useDB, sendError,saveImage } = require('../../services/helper')
 var validate = require('../../config/messages');
 const { query } = require('express');
+const mongoose = require("mongoose");
+
 const delivery = require('../models/delivery');
 const config = require("../../config/config");
 const QRCode = require('qrcode');
@@ -9,6 +11,43 @@ var path = require('path');
 const fs = require('fs')
 class SettingsController{
     
+    getSettingsClient = async function (req, res) {
+        let db = useDB('loygift' + req.headers['access-place']);
+        let Settings = db.model("Settings");
+        let Delivery = db.model("Delivery");
+        let Branch = db.model("Branch");
+        let Discount = db.model("Discount");
+
+        let result = {
+            'status': 200,
+            'msg': 'Sending settings'
+        }
+
+        if (!req.headers['access-place']) {
+            result.msg = "Wrong access place"
+        } else {
+            try {
+                let settings = await Settings.find()
+                settings = settings[0]
+
+                let branches = await Branch.find()
+                let deliveries = await Delivery.find()
+                let discounts = await Discount.find().sort({ "discount_percentage": "asc" })
+
+                result['object'] = settings
+                result['branches'] = branches
+                result['deliveries'] = deliveries
+                result['discounts'] = discounts;
+
+            } catch (error) {
+                result = sendError(error, req.headers["accept-language"])
+            }
+        }
+
+
+        res.status(result.status).json(result);
+    };
+
     getSettings = async function (req, res) {
         //
         let shoes_db = useDB(config.Shoes);
@@ -18,14 +57,16 @@ class SettingsController{
         let Settings = db.model("Settings");
         let Delivery = db.model("Delivery");
         let Branch = db.model("Branch");
+        let Discount = db.model("Discount");
 
         let result = {
             'status': 200,
-            'msg': 'Sending client'
+            'msg': 'Sending settings'
         }
         try {
             let settings = await Settings.find()
-            if (!settings[0]){
+            settings = settings[0]
+            if (!settings){
                 settings = await new Settings({
                     slogan: " ",
                 }).save();
@@ -38,12 +79,14 @@ class SettingsController{
             }
             let branches = await Branch.find()
             let deliveries = await Delivery.find()
+            let discounts = await Discount.find().sort({ "discount_percentage": "asc" })
 
             result['object'] = settings[0];
             result['company'] = req.db;
             result['branches'] = branches;
             result['deliveries'] = deliveries;
-        
+            result['discounts'] = discounts;
+
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
@@ -65,7 +108,12 @@ class SettingsController{
             'status': 200,
             'msg': 'Settings updated'
         }
-        try {
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
+        updateSettings: try {
+            
             if(req.fields.deliveries){
                 for (let delivery of req.fields.deliveries){
                     if ('_id' in delivery){
@@ -109,6 +157,41 @@ class SettingsController{
                     new: true
                 })
             })
+            updateSettings = await Settings.find()
+            updateSettings = updateSettings[0]
+
+            if (req.files.logo) {
+                let filename = saveImage(req.files.logo, req.db)
+                if (filename == 'Not image') {
+                    result = {
+                        status: 500,
+                        msg: "Validation error",
+                        errors: {
+                            img: validate[lang]['image_not_valid'],
+                        },
+                    }
+                    break updateSettings
+                } else {
+                    updateSettings.logo = filename
+                    updateSettings.save()
+                }
+            }
+            if (req.files.backgroundImageApp) {
+                let filename = saveImage(req.files.backgroundImageApp, req.db)
+                if (filename == 'Not image') {
+                    result = {
+                        status: 500,
+                        msg: "Validation error",
+                        errors: {
+                            img: validate[lang]['image_not_valid'],
+                        },
+                    }
+                    break updateSettings
+                } else {
+                    updateSettings.backgroundImageApp = filename
+                    updateSettings.save()
+                }
+            }
 
 
             let branches = await Branch.find()
