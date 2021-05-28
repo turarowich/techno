@@ -159,7 +159,8 @@ props:['listCategory', 'getProducts'],
       // form.append('promoPrice', new_product.promoPrice)
       // form.append('promoEnd', new_product.promoEnd)
       form.append('vendorCode', new_product.vendorCode)
-      this.axios.post('http://localhost:8080/api/addProduct/', form)
+      
+      this.axios.post(this.url('addProduct'), form)
           .then(() => {
             console.log(this.promoStart)
             console.log(this.promoEnd)
