@@ -22,13 +22,18 @@
 
     <div class="col-lg-3">
         <div class="sales">
-          <h3 class="cashback-sub-title">Sales</h3>
-          <p class="sales-text">Take advantage of the points for additional discount</p>
-            <div class="bonus-notification">
-              <span class="bonus-span">My bonuses: 100</span>
-              <h3 class="bonus-number">90</h3>
-            </div>
-          <div class="sales-input d-flex">
+<!--          <h3 class="cashback-sub-title">Sales</h3>-->
+<!--          <p class="sales-text">Take advantage of the points for additional discount</p>-->
+<!--            <div class="bonus-notification">-->
+<!--              <span class="bonus-span">My bonuses: 100</span>-->
+<!--              <h3 class="bonus-number">90</h3>-->
+<!--            </div>-->
+          <h3 class="cashback-sub-title" style="color:#616CF5;">Log In or register, to receive points and/or use them</h3>
+          <div class="auth_btns_wrapper">
+              <span>Log In</span>
+              <span>Register</span>
+          </div>
+          <div class="mb-1 sales-input d-flex">
             <input v-model="searchText" class="cashback-input" placeholder="Enter a promocode">
             <img @click="searchPromocode" class="promocodeCheckBtn" src="../../../assets/icons/check_mark.svg">
           </div>
@@ -51,12 +56,20 @@
               <div style="width:50%" class="btns-item"><span class="btn-round"></span>Delivery</div>
               <div style="width:50%" class="btns-item mr-0"><span class="btn-round"></span>Pick-up service</div>
             </div>
-            <label class="cashback-label">Deliver address</label><br>
+            <label class="cashback-label">Delivery address</label><br>
             <input type="text" class="cashback-input" placeholder="Enter your address"/>
+            <label class="cashback-label">Delivery service</label><br>
 
-            <div class="d-flex align-items-center map-box">
-              <img class="mr-2" src="../../../assets/clients/map.svg"> <span class="on-map">Specify on the map</span>
-            </div>
+            <select class="delivery_service" name="delivery_service" >
+              <option selected disabled value="volvo">Select service</option>
+              <option value="saab">Saab</option>
+              <option value="mercedes">Mercedes</option>
+              <option value="audi">Audi</option>
+            </select>
+<!--            <input type="text" class="cashback-input" placeholder="Enter your address"/>-->
+<!--            <div class="d-flex align-items-center map-box">-->
+<!--              <img class="mr-2" src="../../../assets/clients/map.svg"> <span class="on-map">Specify on the map</span>-->
+<!--            </div>-->
 
             <div class="line"></div>
 
@@ -78,7 +91,7 @@
 
               <div class="d-flex justify-content-between ">
                 <button class="cancel">Continue shopping</button>
-                <button class="save" @click="$router.push({ path: `/shop/${currentCompanyCatalog}/personal-info` })">Confirm order</button>
+                <button class="save" @click="$router.push({ path: `/shop/${currentCompanyCatalog}/personal-info` })">Continue</button>
               </div>
             </div>
           </div>
@@ -372,5 +385,38 @@ name: "Basket",
   justify-content: center;
   align-items: center;
   cursor: pointer;
+}
+.auth_btns_wrapper{
+  display: flex;
+  width: 100%;
+  margin-bottom: 30px;
+}
+.auth_btns_wrapper span:first-child{
+  margin-right: 3px;
+}
+.auth_btns_wrapper span:last-child{
+  margin-left: 3px;
+}
+.auth_btns_wrapper span{
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  border: 1px solid #616CF5;
+  border-radius: 5px;
+  color: #616CF5;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  cursor: pointer;
+}
+.delivery_service{
+  width: 100%;
+  height: 40px;
+  border: 1px solid #E3E3E3;
+  box-sizing: border-box;
+  border-radius: 5px;
+  padding-left: 10px;
 }
 </style>

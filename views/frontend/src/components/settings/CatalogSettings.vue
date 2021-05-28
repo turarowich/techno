@@ -388,6 +388,7 @@ export default {
     this.axios
       .get(this.base_url+'/api/getSettings')
       .then(function (response){
+        console.log(response,"<><><>><><>>><<>");
         let settings = response.data.object;
         that.id= settings._id || '';
         that.company = response.data.company || '';

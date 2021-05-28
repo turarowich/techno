@@ -81,7 +81,7 @@ class SettingsController{
             let deliveries = await Delivery.find()
             let discounts = await Discount.find().sort({ "discount_percentage": "asc" })
 
-            result['object'] = settings[0];
+            result['object'] = settings;
             result['company'] = req.db;
             result['branches'] = branches;
             result['deliveries'] = deliveries;
@@ -241,7 +241,6 @@ class SettingsController{
         res.status(result.status).json(result);
     }
     saveSettingsFile = async function (req, res) {
-        console.log(req.fields.type)
         let type = req.fields.type;
         let db = useDB(req.db)
         let settings_model = db.model("Settings");
