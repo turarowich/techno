@@ -3,14 +3,16 @@ var config = require('../config/config');
 function verifyDB(req, res, next) {
     console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>ThePath",req.path,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     //check if its client url or company;
-    let company_url = ['/login/','/register/'];
+    // let company_url = ['/login/','/register/','/signup','/socket.io/',];
+    let catalog_urls = ['/getCatalogSettings/','/getClientCategories/','/getClientProducts/'];
+
     console.log(req.headers['company_url'],"MIDDLEWARE",config.Shoes);
     let cat_url = req.headers['company_url'];
     let shoes = config.Shoes;
     let shoes_db = global.userConnection.useDb(shoes).model("catalogs");
     let catalogs_model = shoes_db.model("catalogs");
     ///if already has access place
-    if(req.headers['access_place'] || company_url.includes(req.path)){
+    if(req.headers['access_place'] || !catalog_urls.includes(req.path)){
         console.log('already has access place');
         next();
     }else{
