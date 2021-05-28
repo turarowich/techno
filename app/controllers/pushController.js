@@ -44,7 +44,18 @@ class PushController {
                 alert: {
                     title: "Hi there",
                     subtitle: "We present our new clothes",
-                    body: "Check it our when it's in stock"
+                    body: "Check it our when it's in stock",
+                   
+                },
+                mutableContent: 1,
+                payload:{
+                    name: data.name,
+                    name_ru: data.name_ru,
+                    desc: data.desc,
+                    desc_ru: data.desc_ru,
+                    img: data.img,
+                    date: data.startDate,
+                    type: "news",
                 },
                 sound: "default",
                 topic: config.APNsTopic

@@ -110,6 +110,29 @@ const clientSchema = new Schema({
         type: String,
         required: false,
     },
+    QRCode:{
+        type: String,
+        required: false,
+        default: ""
+    },
+    uniqueCode: {
+        type: String,
+        required: true,
+        trim: true,
+        validate: {
+            validator: async function (uniqueCode) {
+                const user = await this.constructor.findOne({ uniqueCode });
+                if (user) {
+                    if (this.id === user.id) {
+                        return true;
+                    }
+                    return false;
+                }
+                return true;
+            },
+            message: props => 'code_unique'
+        },
+    },
     createdAt: {
         type: Date,
         required: true,

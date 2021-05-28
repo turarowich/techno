@@ -1,7 +1,8 @@
 var bcrypt = require('bcryptjs');
-const { useDB, sendError, saveImage } = require('../../services/helper')
+const { useDB, sendError, saveImage, createQrFile, randomNumber } = require('../../services/helper')
 var validate = require('../../config/messages');
 const { query } = require('express');
+
 class ClientController{
     
     getClient = async function (req, res) {
@@ -73,7 +74,8 @@ class ClientController{
         }
         addClient: try {
             let hashedPassword = bcrypt.hashSync(req.fields.password, 8);
-
+            let number = randomNumber(100000, 1000000)
+            let qrCode = createQrFile(number, req.db)
             let client = await new Client({
                 firstName: req.fields.firstName,
                 lastName: req.fields.lastName,
@@ -82,7 +84,9 @@ class ClientController{
                 password: hashedPassword,
                 birthDate: req.fields.birthDate,
                 address: req.fields.address,
-                category: req.fields.category
+                category: req.fields.category,
+                uniqueCode: number,
+                QRCode: qrCode 
             }).save();
             
             if (req.files.avatar) {

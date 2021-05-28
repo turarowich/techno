@@ -1,4 +1,4 @@
-const { useDB, sendError, createExcel } = require('../../services/helper')
+const { useDB, sendError, createExcel, randomNumber } = require('../../services/helper')
 var validate = require('../../config/messages');
 const fs = require('fs')
 class OrderController{
@@ -30,12 +30,22 @@ class OrderController{
             'msg': 'Sending orders'
         }
         try {
-            let orders = await Order.find().populate('client').populate('products').exec()
+            let query = {}
+            if (req.query.client) {
+                query = { 'client': req.query.client }
+            }
+            let orders = {}
+            if (req.query.populate == "client"){
+                orders = await Order.find(query).populate('client').populate('products').exec()
+            }else{
+                orders = await Order.find(query).populate('products').exec()
+            }
+            
             result['objects'] = orders
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
-
+        console.log(result)
         res.status(result.status).json(result);
     };
 
@@ -71,6 +81,7 @@ class OrderController{
                     deliveryType: req.fields.deliveryType,
                     notes: req.fields.notes,
                     points: req.fields.points,
+                    code: randomNumber(1000, 10000),
                 });
                 var products = req.fields.products
                 for(let i=0; i < products.length; i++){
@@ -138,7 +149,7 @@ class OrderController{
                     if (search_product) {
 
                         let order_product = await new OrderProduct({
-                            product: product.product,
+                            product: product.id ? product.id : product._id,
                             name: search_product.name,
                             name_ru: search_product.name_ru,
                             secondary: search_product.secondary,

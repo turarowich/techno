@@ -3,6 +3,7 @@ const fs = require('fs')
 var validate = require('../config/messages');
 var excel = require('excel4node');
 const { errors } = require('formidable');
+const QRCode = require('qrcode');
 var moment = require("moment")
 
 function useDB(db_name) {
@@ -252,11 +253,28 @@ function randomNumber(min, max) {
 function randomPassword(letterCount) {
     return Math.random().toString(36).slice(-letterCount);
 }
+function createQrFile(user_id, company) {
+    let link = 'images/' + company + '/qr'
+    let filename ='/' + user_id + '.png'
+    var dir = path.join(__dirname, '/../views/frontend/')
+    QRCode.toFile(dir + link + filename, user_id, {
+        color: {
+            dark: '#616CF5',  // Blue dots
+            light: '#0000' // Transparent background
+        },
+        width: 600
+    }, function (err) {
+        if (err) throw err
+        console.log('done')
+    })
+    return link + filename
+}
 module.exports = {
     useDB: useDB,
     saveImage: saveImage,
     sendError: sendError,
     createExcel: createExcel,
     randomNumber: randomNumber,
-    randomPassword: randomPassword
+    randomPassword: randomPassword,
+    createQrFile: createQrFile
 }
