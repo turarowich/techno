@@ -33,6 +33,7 @@ const en_messages = {
     comment_required: 'Comment required',
     description_required: 'Description required',
     code_invalid: 'Code is not valid',
+    code_unique: 'Code not unique',
 
     // EXCEL messages
     xl_produt_name:'Product name',
@@ -98,6 +99,7 @@ const ru_messages = {
     comment_required: 'Коментарий обязательное поле',
     description_required: 'Описание обязательное поле',
     code_invalid: 'Неравильный код',
+    code_unique: 'Не уникальный код',
 
     // EXCEL messages
     xl_produt_name: 'Название',

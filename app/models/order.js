@@ -10,6 +10,10 @@ const orderSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Client'
     },
+    code: {
+        type: String,
+        required: false,
+    },
     client_name: {
         type: String,
         required: false,
@@ -39,6 +43,26 @@ const orderSchema = new Schema({
     delivery: {
         type: Schema.Types.ObjectId,
         ref: 'Delivery'
+    },
+    deliveryPrice: {
+        type: Number,
+        required: false,
+        default: 0
+    },
+    totalDiscount:{
+        type: Number,
+        required: false,
+        default: 0
+    },
+    productsPrice: {
+        type: Number,
+        required: false,
+        default: 0
+    },
+    totalPrice: {
+        type: Number,
+        required: false,
+        default: 0
     },
     branch: {
         type: Schema.Types.ObjectId,

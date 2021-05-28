@@ -1,7 +1,7 @@
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 var config = require('../../config/config');
-const { sendError, randomNumber, randomPassword } = require('../../services/helper')
+const { sendError, randomNumber, randomPassword, createQrFile } = require('../../services/helper')
 var validate = require('../../config/messages');
 var axios = require('axios');
 const { response } = require('express');
@@ -124,13 +124,23 @@ class AuthController{
         let db = global.userConnection.useDb('loygift'+req.headers['access-place']);
         let Client = db.model("Client");
         let result = []
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
         try {
             let hashedPassword = bcrypt.hashSync(req.fields.password, 8);
+
+            // let number = randomNumber(100000, 1000000)
+            let number = 1000001
+            let qrCode = createQrFile(number.toString(), 'loygift' + req.headers['access-place'])
             var client = new Client({
                 name: req.fields.name,
                 phone: req.fields.phone,
                 email: req.fields.email,
                 password: req.fields.password,
+                uniqueCode: number.toString(),
+                QRCode: qrCode
             })
             await client.validate()
             client.password = hashedPassword
@@ -150,7 +160,7 @@ class AuthController{
             }
             
         } catch (error) {
-            result = sendError(error, req.headers["accept-language"])
+            result = sendError(error, lang)
         }
         res.status(result.status).json(result);
     };
@@ -184,7 +194,10 @@ class AuthController{
                 }
                 break socialAuth
             }
+            social_res.uniqueCode = randomNumber(100000, 1000000)
             var client = new Client(social_res.save)
+            let qrCode = createQrFile(client._id, 'loygift' + req.headers['access-place'])
+            client.QRCode = qrCode
             await client.save({ validateBeforeSave: false })
             result = {
                 'status': 200,
