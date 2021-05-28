@@ -202,7 +202,6 @@ name: "Orders",
     getOrders(){
       this.axios.get(this.url('getOrders'))
       .then((response)=>{
-        console.log("Orders response", response)
         this.orderList = response.data.objects;
       })
     },

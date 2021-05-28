@@ -56,7 +56,7 @@
                     <p class="empty-page-text">Add a product to start</p>
                   </div>
 
-                  <div v-else v-for="order in currentData.products" :key="order.id" class="table-item d-flex align-items-center">
+                  <div v-else v-for="order in currentData.products" :key="order._id" class="table-item d-flex align-items-center">
                     <div  class="d-flex align-items-center"  style="width: 50%;">
                       <div class="table-img">
                         <img src="../../assets/img/sneak.webp">
@@ -223,15 +223,16 @@ export default {
   },
   methods:{
     selectProduct(id){
-      this.products.map((product)=>{
-        if(product._id === id){
-          if(this.currentData.products.includes(product)){
-            this.$warningAlert("warning")
-          }
-          else{
-            this.currentData.products.push(product)
-
-          }
+      this.currentData.products.map((item)=>{
+        if(item.product === id){
+          item.quantity = +item.quantity+1
+        }
+        else{
+          this.products.map((product)=>{
+            if(product._id === id){
+              this.currentData.products.push(product)
+            }
+          })
         }
       })
       this.search_product = ''
