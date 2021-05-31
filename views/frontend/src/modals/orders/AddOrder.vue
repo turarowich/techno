@@ -150,7 +150,7 @@
 
               <div class="d-flex mb-5 justify-content-between align-items-center">
                 <h3 class="total-price">Total</h3>
-                <h3 class="total-price"> $</h3>
+                <h3 class="total-price">{{totalPrice}} $</h3>
               </div>
             </div>
           </div>
@@ -180,7 +180,6 @@ export default {
       clients:[],
       search_product:'',
       search_client:'',
-
       new_order:{
         products:[],
         client:'',
@@ -192,6 +191,14 @@ export default {
     }
   },
   computed:{
+    totalPrice(){
+      let sum = 0;
+      this.new_order.products.forEach((item)=>{
+        sum+=item.price*item.quantity
+      })
+      this.$emit('totalPrice', sum)
+      return sum
+    },
     filteredProducts(){
      return this.products.filter((product)=>{
         return product.name.toLowerCase().includes(this.search_product.toLowerCase())
@@ -223,7 +230,6 @@ export default {
           }
           else{
             this.new_order.products.push(product)
-            console.log(this.new_order.products)
           }
         }
       })
@@ -259,9 +265,7 @@ export default {
   mounted(){
     this.getProducts()
     this.getClients()
-    window.scrollTo({
-      top: 1000,
-    });
+
   }
 
 

@@ -11,7 +11,7 @@
           </button>
           <div>
             <h3 class="modal-title">Order 343222</h3>
-            <span class="detail-date">Created {{currentData.createdAt.slice(0,10)}} <span>{{currentData.createdAt.slice(11,19)}}</span></span>
+            <span class="detail-date">Created {{currentData.createdAt}} <span>{{currentData.createdAt}}</span></span>
           </div>
           <div class="detail-status"><span></span>{{currentData.status}}</div>
         </div>
@@ -46,7 +46,7 @@
                   <div class="table-head" style="width: 50%;">Product</div>
                   <div class="table-head" style="width: 20%;">Price</div>
                   <div class="table-head" style="width: 20%;">Quantity</div>
-                  <div class="table-head" style="width: 10%;">Total</div>
+                  <div class="table-head" style="width: 15%;">Total</div>
                   <div class="table-head" style="width: 10%;"></div>
                 </div>
 
@@ -56,7 +56,7 @@
                     <p class="empty-page-text">Add a product to start</p>
                   </div>
 
-                  <div v-else v-for="order in currentData.products" :key="order.id" class="table-item d-flex align-items-center">
+                  <div v-else v-for="order in currentData.products" :key="order._id" class="table-item d-flex align-items-center">
                     <div  class="d-flex align-items-center"  style="width: 50%;">
                       <div class="table-img">
                         <img src="../../assets/img/sneak.webp">
@@ -64,9 +64,9 @@
                       {{order.name}}
                     </div>
                     <div style="width:20%">{{order.price}} $</div>
-                    <div style="width:20%"><div class="quantity">{{order.quantity}}</div></div>
-                    <div style="width:10%">{{order.price*order.quantity}} $</div>
-                    <div style="width:10%"><img src="../../assets/icons/trash_empty.svg"></div>
+                    <div style="width:20%"><input class="quantity" v-model="order.quantity"></div>
+                    <div style="width:15%">{{order.price*order.quantity}} $</div>
+                    <div style="width:10%"><img @click="deleteFromOrder(order._id)" src="../../assets/icons/trash_empty.svg"></div>
                   </div>
 
                 </div>
@@ -113,7 +113,6 @@
                       <span class="client-phone-order">{{client.phone}}</span>
                     </div>
                   </div>
-
                 </div>
               </div>
 
@@ -121,9 +120,7 @@
               <div class="selects">
                 <select class=" form-control long-form-control  form-control-lg" aria-label=".form-select-lg example">
                   <option>Pick up</option>
-                  <option>Russia</option>
-                  <option>USA</option>
-                  <option>Kyrgyzstan</option>
+                  <option>self</option>
                 </select>
               </div>
 
@@ -157,7 +154,7 @@
 
               <div class="d-flex mb-5 justify-content-between align-items-center">
                 <h3 class="total-price">Total</h3>
-                <h3 class="total-price">0 $</h3>
+                <h3 class="total-price">{{totalPrice}} $</h3>
               </div>
             </div>
           </div>
@@ -165,7 +162,7 @@
           <div class="d-flex">
             <div class="dropup ">
               <div class="dropdown-toggle" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <button class="save mr-2">Edit order</button>
+                <button class="save mr-2" @click.prevent="onSubmit(select_order._id)">Edit order</button>
               </div>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
                 <ul class="list-group " >
@@ -198,7 +195,6 @@ export default {
       search_client:'',
       currentData:{
         products:[],
-        createdAt:'',
         client:'',
         promocode:'',
         status:'',
@@ -208,6 +204,13 @@ export default {
     }
   },
   computed:{
+    totalPrice(){
+      let sum = 0;
+      this.currentData.products.forEach((item)=>{
+        sum+=item.price*item.quantity
+      })
+      return sum
+    },
     filteredProducts(){
       return this.products.filter((product)=>{
         return product.name.toLowerCase().includes(this.search_product.toLowerCase())
@@ -222,24 +225,34 @@ export default {
 
   },
   methods:{
-    selectProduct(id){
-      this.products.map((product)=>{
-        if(product._id === id){
-          if(this.currentData.products.includes(product)){
-            this.$warningAlert("warning")
-          }
-          else{
-            this.currentData.products.push(product)
+    deleteFromOrder(id){
+      this.currentData.products=this.currentData.products.filter((item)=>item._id !== id)
 
-          }
-        }
+    },
+    onSubmit(id){
+      this.axios.put(this.url('updateOrder',id),this.currentData)
+      .then(()=>{
+        console.log("Success")
       })
+    },
+    selectProduct(id){
+    this.currentData.products.map((item)=>{
+      if(item._id === id){
+        item.quantity = +item.quantity+1
+      }
+      else{
+        const idx = this.products.findIndex(el=>el._id === id);
+        this.currentData.products.push(this.products[idx])
+
+      }
+    })
       this.search_product = ''
     },
     selectClient(id){
       this.clients.filter((client)=>{
         if(client._id === id){
           this.currentData.client = client
+          console.log(this.currentData)
         }
       })
       this.search_client = ''
