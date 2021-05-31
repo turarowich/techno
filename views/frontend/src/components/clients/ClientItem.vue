@@ -14,7 +14,7 @@
       </div>
       <div class="table-child" v-show="data_check.birthday_checked" style="width: 12%;">{{client.birthDate.slice(0,10)}}</div>
       <div class="table-child" v-show="data_check.discount_checked" style="width: 10%;">10%</div>
-      <div class="table-child" style="width: 14%;">{{client.category.name}}</div>
+      <div class="table-child" v-if="client.category !== undefined"  style="width: 14%;">{{client.category.name}}</div>
       <div class="table-child" v-show="data_check.register_date_checked"  style="width: 18%;">{{client.createdAt.slice(0,10)}}</div>
       <div class="client-phone table-child" style="width:14%" >{{client.phone}}</div>
       <div class="table-child"  style="width: 8%;">{{client.total}}</div>
