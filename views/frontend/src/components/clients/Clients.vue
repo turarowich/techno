@@ -397,14 +397,17 @@ export default {
           .filter(client => {
             return client.name.toLowerCase().includes(this.search.toLowerCase()) || client.phone.includes(this.search)
           })
-          .filter(client =>{
-            if(client.category !== null || client.category !== undefined || client !== null || client !== undefined
-            ){
+          .filter((item) =>{
+            if(item.category !== undefined){
               return(
-                  client.category._id.includes(this.f_category) &&
-                  client.birthDate.includes(this.f_birthday)
+                  item.category._id.includes(this.f_category) &&
+                  item.birthDate.includes(this.f_birthday)
               )
             }
+            else{
+              return item
+            }
+
           })
           .filter(client=>{
             if(this.f_to_register_date.length > 0){
@@ -468,13 +471,13 @@ export default {
     showPrev(){
       return this.currentPage > 1;
     },
-    addResetClass: function(){
-      return {
-        red: this.category.length >0 || this.gender_client.length >0 || this.birthday.length>0
-        || this.from_number_purchase.length >0 || this.to_number_purchase.length >0 || this.from_purchase_date !== '2000-01-01'
-        || this.to_purchase_date.length >0 || this.from_register_date !== '2000-01-01' || this.to_register_date.length>0
-      }
-    },
+    // addResetClass: function(){
+    //   return {
+    //     red: this.category.length >0 || this.gender_client.length >0 || this.birthday.length>0
+    //     || this.from_number_purchase.length >0 || this.to_number_purchase.length >0 || this.from_purchase_date !== '2000-01-01'
+    //     || this.to_purchase_date.length >0 || this.from_register_date !== '2000-01-01' || this.to_register_date.length>0
+    //   }
+    // },
 
 
   },
