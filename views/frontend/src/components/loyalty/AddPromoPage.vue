@@ -60,12 +60,9 @@
                 <div class="d-flex">
                   <div class="w-100 mr-2 position-relative">
                     <input v-model="searchText" @input="searchProdSer" placeholder="+ all services or category" class="cashback-input promo-input">
-                    <div class="resultList">
-                      <div @click="setSelectedItem(prod.name,prod._id,'product')" v-for="prod in searchResult.products" :key="prod._id">
+                    <div v-if="searchResult.length>0" class="resultList">
+                      <div @click="setSelectedItem(prod.name,prod._id,prod.type)" v-for="prod in searchResult" :key="prod._id">
                         {{prod.name}}
-                      </div>
-                      <div @click="setSelectedItem(serve.name,serve._id,'service')" v-for="serve in searchResult.services" :key="serve._id">
-                        {{serve.name}}
                       </div>
                     </div>
                   </div>
@@ -128,7 +125,6 @@
 
 <script>
 import $ from "jquery";
-import Swal from "sweetalert2";
 export default {
   name: "AddPromoPage",
   data(){
@@ -149,7 +145,7 @@ export default {
         obj:'',
         formatted:'',
       },
-      selectedType:'services',
+      selectedType:'service',
       numberOfUses:1,
       searchText:'',
       searchResult:[],
@@ -163,7 +159,6 @@ export default {
   },
   computed:{
     editState(){
-      console.log(this.$store.getters['Promocode/getEditState'],"ppppp-----------");
       return this.$store.getters['Promocode/getEditState'];
     }
   },
@@ -211,19 +206,13 @@ export default {
         that.searchResult = [];
         return;
       }
-      this.axios.get('https://localhost:8443/api/searchProductService',{
+      this.axios.get(this.url('searchProductService'),{
         params: {
           "type":this.selectedType,
           "search":this.searchText,
         }
       }).then(function(response){
-        let result_obj={
-          products: [],
-          services: [],
-        }
-        result_obj.products = response.data.products;
-        result_obj.services = response.data.services;
-        that.searchResult = result_obj;
+        that.searchResult = response.data.objects;
       });
 
     },
@@ -235,6 +224,7 @@ export default {
       this.searchResult = [];
     },
     addSelectedItem(){
+      let that = this;
       if(this.currentSelectedItem.id !=='' && this.currentSelectedItem.name !=='' && this.currentSelectedItem.type !==''){
         let copy = $.extend(true,{},this.currentSelectedItem);
         //check if its already has been selected
@@ -242,46 +232,13 @@ export default {
           return e.id == copy.id;
         })
         if(check.length > 0){
-          Swal.fire({
-            timer:1500,
-            title:'Add item',
-            text:"Already selected",
-            showConfirmButton:false,
-            position: 'top-right',
-            customClass:{
-              popup:'success-popup information-popup',
-              content:'success-content',
-              title:'success-title',
-              header:'success-header',
-              image:'success-img'
-            },
-            showClass:{
-              popup: 'animate__animated animate__zoomIn'
-            }
-          })
+          that.$warningAlert('Already selected');
           return
         }
         this.selectedItemsList.push(copy)
       }else{
-        Swal.fire({
-          timer:1500,
-          title:'Add item',
-          text:"Select an item",
-          showConfirmButton:false,
-          position: 'top-right',
-          customClass:{
-            popup:'success-popup information-popup',
-            content:'success-content',
-            title:'success-title',
-            header:'success-header',
-            image:'success-img'
-          },
-          showClass:{
-            popup: 'animate__animated animate__zoomIn'
-          }
-        })
+        that.$warningAlert('Select an item');
       }
-
     },
     removeSelectedItem(id){
       this.selectedItemsList = this.selectedItemsList.filter(function(e){
@@ -298,64 +255,49 @@ export default {
       }
       if(parseInt(this.discount)<0){messages.push('Only positive discount')}
       if(parseInt(this.discount)>100){messages.push('Discount cant be more than 100%')}
-
       if(this.minSum<=0){messages.push('Fill in MinSum')}
       if(this.fromDate.formatted.length<=0){messages.push('Fill in FromDate')}
       if(this.toDate.formatted.length<=0){messages.push('Fill in ToDate')}
       if(this.selectedType.length<=0){messages.push('Fill in SelectedType')}
       // if(this.selectedItemsList.length<=0){messages.push('Select Services or Products')}
       if(this.numberOfUses<=0){messages.push('NumberOfUses')}
-
-      if(messages.length>=1){this.displayMessages(messages,"Errors");return}
+      if(messages.length>=1){this.displayMessages(messages);return}
       let that=this;
-      let url = 'https://localhost:8443/api/addPromocode';
+      let product_service_ids = this.selectedItemsList.map(function(e){
+        return e.id
+      })
+      let url = this.url('addPromocode');
       if(this.editState){
-        url = 'https://localhost:8443/api/updatePromocode';
+        url = this.url('updatePromocode');
       }
       this.axios.post(url, {
         'name': this.name,
         'code': this.generatedCode,
-        'percent': this.discount,
+        'discount': this.discount,
         'fixed_sum': this.fixedSum,
         'min_sum': this.minSum,
         'startDate': this.fromDate.obj,
         'endDate': this.toDate.obj,
         'selected_type': this.selectedType,
-        'selected_items_list': this.selectedItemsList,
+        'selected_items_list': product_service_ids,
         'number_of_uses': this.numberOfUses,
         'promocode_id':this.promocode_id,
       }).then(function (response) {
         console.log(response);
-        that.displayMessages(['Added'],"Success");
+        that.displayMessages(['Added']);
         that.$router.push('/loyalty/promocode')
       }).catch(function(error){
         if (error.response) {
           // console.log(error.response.status);
           // console.log(error.response.headers);
-          that.displayMessages(Object.values(error.response.data.errors),"Errors");
+          that.displayMessages(Object.values(error.response.data.errors));
         }
       });
     },
-    displayMessages(array,title){
+    displayMessages(array){
       let message = '';
-      array.forEach(item=>message+=`${item}<br>`)
-      Swal.fire({
-        timer:2000,
-        title:title,
-        showConfirmButton:false,
-        html: message,
-        position: 'top-right',
-        customClass:{
-          popup:'success-popup information-popup',
-          content:'success-content',
-          title:'success-title',
-          header:'success-header',
-          image:'success-img'
-        },
-        showClass:{
-          popup: 'animate__animated animate__zoomIn'
-        }
-      })
+      array.forEach(item=>message+=`${item} `);
+      this.$warningAlert(message);
     },
   },
   watch: {
@@ -388,6 +330,15 @@ export default {
     this.addActive()
     this.selectDates()
     let promocode = this.$store.getters['Promocode/getPromocode'];
+    let selectedItemsList = this.$store.getters['Promocode/getSelectedObjects'];
+
+    let selectedItemsList_objects = selectedItemsList.map(elem => (
+        {
+          id: elem._id,
+          name: elem.name,
+          type: elem.type
+        }
+    ));
     if(this.editState ===true && promocode){
       this.promocode_id=promocode._id;
       this.name=promocode.name;
@@ -397,7 +348,7 @@ export default {
       this.minSum=promocode.min_sum;
       this.selectedType=promocode.selected_type;
       this.numberOfUses=promocode.numberOfUses;
-      this.selectedItemsList=promocode.selected_items_list;
+      this.selectedItemsList=selectedItemsList_objects;
       this.fromDateLightpick.setDate(promocode.startDate);
       this.toDateLightpick.setDate(promocode.endDate);
       $('.btns-item.active').removeClass("active");
@@ -491,6 +442,9 @@ export default {
   background: white;
   width: 100%;
   padding:5px;
+  border: 1px solid grey;
+  border-radius: 5px;
+  margin-top: 2px;
 }
 .resultList div{
   cursor: pointer;
@@ -509,6 +463,7 @@ export default {
   display: flex;
   align-items: center;
   margin-right: 6px;
+  padding: 5px;
 }
 .selectedItems_remove{
   border: 2px solid #252726;

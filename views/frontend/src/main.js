@@ -57,6 +57,7 @@ app.config.globalProperties.axios = ax
 app.config.globalProperties.$api = process.env.VUE_APP_API_URL;
 app.config.globalProperties.$server = process.env.VUE_APP_SERVER_URL;
 app.config.globalProperties.format_price = function (sum){parseFloat(sum).toFixed(2)};
+console.log(process.env.VUE_APP_SERVER_UR,"process.env.VUE_APP_SERVER_UR");
 app.config.globalProperties.base_url = process.env.VUE_APP_SERVER_URL;
 
 app.config.globalProperties.socket = socket

@@ -2,6 +2,7 @@ export const PromocodeModule = {
     namespaced: true,
     state: {
         promocodes: '',
+        seletected_objects:[],
         promocode: {},
         editStatus:false,
     },
@@ -14,8 +15,10 @@ export const PromocodeModule = {
         SET_PromocodesObject(state, promocode) {
             state.promocode = promocode;
         },
+        SET_PromocodesSelectedOjects(state, objects) {
+            state.seletected_objects = objects;
+        },
         SET_EditState(state, status) {
-            console.log('ssssss',status)
             state.editStatus = status;
         },
     },
@@ -37,6 +40,10 @@ export const PromocodeModule = {
             commit('SET_PromocodesObject', obj);
             commit('SET_EditState', true);
         },
+        setPromocodeSelectedObjects({ commit },obj){
+            console.log('SET_PromocodesSelectedOjects');
+            commit('SET_PromocodesSelectedOjects', obj);
+        },
         setEditState({ commit },status){
             console.log('SET_EditState',status);
             commit('SET_EditState', status)
@@ -46,6 +53,9 @@ export const PromocodeModule = {
     getters:{
         getPromocode(state){
             return state.promocode;
+        },
+        getSelectedObjects(state){
+            return state.seletected_objects;
         },
         getEditState(state){
             return state.editStatus;

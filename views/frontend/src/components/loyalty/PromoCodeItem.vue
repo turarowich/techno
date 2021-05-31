@@ -50,14 +50,14 @@ export default {
   methods:{
     getEditPromocode(id){
       let that = this;
-      this.axios.get('https://localhost:8443/api/getPromocode',{
+      this.axios.get(this.url('getPromocode'),{
         params: {
           "promocode":id,
         }
       }).then(function(response){
         that.$store.dispatch("Promocode/setPromocodeObject",response.data.object);
+        that.$store.dispatch("Promocode/setPromocodeSelectedObjects",response.data.products);
         that.$store.dispatch("Promocode/setEditState",true);
-        console.log('setssss')
         that.$router.push('/add-promo-page');
       }).catch(function(error){
         console.log(error);

@@ -2,6 +2,12 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const productSchema = new Schema({
+    //either product or service
+    type:{
+        type: String,
+        default:"",
+        required: false,
+    },
     model_type:{
         type: String,
         default:"Product",

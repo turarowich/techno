@@ -5,13 +5,19 @@ class PromocodeController{
     getPromocode = async function (req, res) {
         let db = useDB(req.db)
         let Promocode = db.model("Promocode");
+        let Products = db.model("Product");
         let result = {
             'status': 200,
             'msg': 'Sending promocode'
         }
         try {
-            let promocode = await Promocode.findById(req.query.promocode)
+            let promocode = await Promocode.findById(req.query.promocode);
+
+            let products = await Products.find({
+                '_id': { $in: promocode.selected_items_list}
+            });
             result['object'] = promocode
+            result['products'] = products
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
@@ -38,7 +44,6 @@ class PromocodeController{
     };
 
     addPromocode = async function (req, res) {
-        console.log(req.fields)
         let db = useDB(req.db)
         let Promocode = db.model("Promocode");
         let new_promocode =  req.fields;
@@ -50,14 +55,14 @@ class PromocodeController{
             let promocode = await new Promocode({
                 name: new_promocode.name || "No name",
                 code: new_promocode.code || "2",
-                discount: new_promocode.discount || "99",
+                discount: new_promocode.discount || "0",
                 startDate: new_promocode.fromDate || new Date(),
                 endDate: new_promocode.toDate || new Date(),
-                fixed_sum: new_promocode.fixedSum || '6',
-                min_sum: new_promocode.minSum || '6',
-                number_of_uses: new_promocode.numberOfUses || '6',
-                selected_type: new_promocode.selectedType || 'type',
-                selected_items_list: new_promocode.selectedItemsList || [1,2],
+                fixed_sum: new_promocode.fixed_sum || '0',
+                min_sum: new_promocode.min_sum || '0',
+                number_of_uses: new_promocode.number_of_uses || '0',
+                selected_type: new_promocode.selected_type || 'type',
+                selected_items_list: new_promocode.selected_items_list || [1,2],
             }).save();
 
             result['object'] = promocode
@@ -89,8 +94,6 @@ class PromocodeController{
     };
 
     deletePromocode = async function (req, res) {
-        console.log(req.params,"ddd");
-
         let db = useDB(req.db)
         let Promocode = db.model("Promocode");
 
@@ -109,27 +112,19 @@ class PromocodeController{
     };
     searchProductService = async function (req, res) {
         let db = useDB(req.db);
-        let type   = req.query.type;
+        let type   = req.query.type.toLowerCase();
+        let Model = db.model("Product");
         let search = req.query.search;
         let result = {
             'status': 200,
             'msg': 'Sending result'
         }
         try {
-            if(type ==="Product"){
-                let Model = db.model(type);
-                result['products'] = await Model.find( { "name": {$regex: search} } )
-            }else if(type ==="Service"){
-                let Model = db.model(type);
-                result['services'] = await Model.find( { "name": {$regex: search} } );
+            if(type !=="all") {
+                result['objects'] = await Model.find({"name": {$regex: search}, "type": type});
             }else{
-                let products = await db.model('Product').find( { "name": {$regex: search} } );
-                let services = await db.model('Service').find( { "name": {$regex: search} } );
-                console.log(products);
-                result['products'] = products;
-                result['services'] = services;
+                result['objects'] = await db.model('Product').find( { "name": {$regex: search} } );;
             }
-
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
@@ -166,7 +161,6 @@ class PromocodeController{
         if (lang != 'ru') {
             lang = 'en'
         }
-        console.log(search, sum, type, date)
         promocode: try {
             let promocode = await Promocode.findOne({ "code": search });
             if(promocode){
@@ -174,7 +168,6 @@ class PromocodeController{
                 var end = new Date(promocode.endDate);
                 if(date){
                     var now = new Date(date);
-                    console.log(now, date)
                     if (start >= now || now >= end) {
                         result['msg'] = validate[lang]['promo_not_usable']
                         break promocode
@@ -184,8 +177,8 @@ class PromocodeController{
                     result['msg'] = validate[lang]['promo_min_price']
                     break promocode
                 }
-                if(promocode.selected_items_list.length == 0 && type){
-                    if (promocode.selected_type != 'all' && promocode.selected_type != type) {
+                if(promocode.selected_items_list.length === 0 && type){
+                    if (promocode.selected_type !== 'all' && promocode.selected_type !== type) {
                         result['msg'] = validate[lang]['promo_not_usable']
                         break promocode
                     }
