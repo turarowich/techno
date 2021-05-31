@@ -290,7 +290,7 @@
 
         <EditCategory
           :select_category="select_category"
-        :getCategories="getCategories"/>
+          :getCategories="getCategories"/>
 
         <div class="pagination d-flex justify-content-between align-items-center">
           <div class="d-flex align-items-center">
@@ -398,12 +398,13 @@ export default {
             return client.name.toLowerCase().includes(this.search.toLowerCase()) || client.phone.includes(this.search)
           })
           .filter(client =>{
-              if(client.category !== null || client.category !== undefined){
-                return(
-                    client.category._id.includes(this.f_category) &&
-                    client.birthDate.includes(this.f_birthday)
-                )
-              }
+            if(client.category !== null || client.category !== undefined || client !== null || client !== undefined
+            ){
+              return(
+                  client.category._id.includes(this.f_category) &&
+                  client.birthDate.includes(this.f_birthday)
+              )
+            }
           })
           .filter(client=>{
             if(this.f_to_register_date.length > 0){
@@ -417,6 +418,8 @@ export default {
               return client
             }
           })
+
+
           // .filter(client=>{
           //   if(this.f_to_number_purchase.length>0){
           //     return +client.number_of_purchase >= this.f_from_number_purchase && +client.number_of_purchase <= this.f_to_number_purchase
