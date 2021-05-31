@@ -392,13 +392,13 @@ export default {
     }
   },
   computed: {
-    filteredList() {
+    filteredList:function() {
       return this.clientList
           .filter(client => {
             return client.name.toLowerCase().includes(this.search.toLowerCase()) || client.phone.includes(this.search)
           })
           .filter(client =>{
-              if(client.category !== null){
+              if(client.category !== null || client.category !== undefined){
                 return(
                     client.category._id.includes(this.f_category) &&
                     client.birthDate.includes(this.f_birthday)

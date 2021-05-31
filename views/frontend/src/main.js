@@ -66,7 +66,7 @@ app.config.globalProperties.scrollToBottom = function(obj){
 var home_url = ['login', 'register', 'loginClient', 'registerClient','getClientProducts','getCatalog','getClientCategories']
 app.config.globalProperties.addNewProperty = function(obj, key, value = "", copy) {
     obj.map(function(object) {
-        if (copy) {
+        if (copy) {                                                                                                                                                                                                                                                                                                                                                                                                                                             
             object[key] = object[copy]
         } else {
             object[key] = value

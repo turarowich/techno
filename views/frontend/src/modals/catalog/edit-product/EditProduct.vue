@@ -27,7 +27,7 @@
 
                   <div style="width:25%;">
                     <label class="product-label">Select category</label><br>
-                    <select v-model="currentData.category"  class="form-control mb-0 select-phone" aria-label="Default select example">
+                    <select v-model="currentData.category"  class="form-control mb-0 select-phone" >
                       <option :value="cat._id" v-for="cat in listCategory" :key="cat._id">{{cat.name}}</option>
                     </select>
                   </div>
@@ -115,7 +115,8 @@ export default {
   props: ['listCategory','select_product','getProducts'],
   data(){
     return{
-      currentData:''
+      currentData:'',
+
 
     }
   },
@@ -123,6 +124,7 @@ export default {
     editShowPrice(){
       if($('#edit-show-price').prop('checked')){
         $('.show-price').addClass('active')
+
       }
       else{
         $('.show-price').removeClass('active')
@@ -146,6 +148,7 @@ export default {
       $('#edit-product').modal("hide")
     }
   },
+
   watch:{
     select_product(newCat){
       this.currentData = Object.assign({}, newCat)

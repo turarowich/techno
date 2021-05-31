@@ -4,7 +4,7 @@
     <div class="d-flex justify-content-between app-buttons">
       <div class="d-flex align-items-center">
         <button class="app-buttons-item adding-btns" id="add-product" data-toggle="modal" data-target="#add-products"><span>+ Add product</span></button>
-        <button class="app-buttons-item adding-btns" @click="getProducts" data-toggle="modl" data-target="#add-service"><span>+ Add service</span></button>
+        <button class="app-buttons-item adding-btns" @click="getProducts" data-toggle="modal" data-target="#add-service"><span>+ Add service</span></button>
         <button class="app-buttons-item adding-btns"  data-toggle="modal" data-target="#add-category"><span>+ Add category </span></button>
       </div>
       <div class="d-flex align-items-center">
