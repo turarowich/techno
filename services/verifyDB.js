@@ -20,7 +20,7 @@ function verifyDB(req, res, next) {
             .then(repo => {
                 if(repo){
                     req.cat_db = repo.company;
-                    req.headers['access_place'] = repo.company;
+                    req.headers['access-place'] = repo.company;
                     console.log(repo.company,"repo.company");
                     next();
                 }else{
