@@ -133,8 +133,8 @@ class AuthController{
         try {
             let hashedPassword = bcrypt.hashSync(req.fields.password, 8);
 
-            // let number = randomNumber(100000, 1000000)
-            let number = 1000001
+            let number = randomNumber(100000, 1000000)
+            // let number = 1000001
             let qrCode = createQrFile(number.toString(), 'loygift' + req.headers['access-place'])
             var client = new Client({
                 name: req.fields.name,
