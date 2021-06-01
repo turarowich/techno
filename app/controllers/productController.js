@@ -44,6 +44,7 @@ class ProductController{
     };
 
     addProduct = async function (req, res) {
+        console.log(req.fields)
         let db = useDB(req.db)
         let Product = db.model("Product");
         
@@ -55,8 +56,10 @@ class ProductController{
         if (lang != 'ru') {
             lang = 'en'
         }
+        
         addProduct: try {
             let data = req.fields
+            
             let product = await new Product({
                 type:data.type || "product",
                 name: data.name,

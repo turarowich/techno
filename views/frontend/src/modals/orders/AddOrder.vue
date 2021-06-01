@@ -24,7 +24,7 @@
                   <div class="pl-4 pt-3 pb-3" v-if="filteredProducts.length === 0">
                         You don't have any products
                   </div>
-                  <div  v-else v-for="product in filteredProducts" :key="product._id" @click="selectProduct(product._id)" class="product-order  d-flex align-items-center justify-content-between">
+                  <div  v-else v-for="product in filteredProducts" :key="product._id" @click="selectProduct(product)" class="product-order  d-flex align-items-center justify-content-between">
                     <div class="table-child d-flex align-items-center">
                       <div class="table-img">
                         <img src="../../assets/img/sneak.webp">
@@ -90,7 +90,12 @@
                   <img class="client-avatar" src="../../assets/img/criw.jpg">
                   <div class="position-relative">
                     <h2 class="name-client">{{new_order.client.name}}</h2>
-                    <div class="category">Category: <span>{{new_order.client.category.name}}</span> Points: <span>{{new_order.client.points}}</span></div>
+                    <div class="category">
+                      Category:
+                      <span v-if="new_order.client.category !== undefined">{{new_order.client.category.name}}</span>
+                      <span v-else>no </span>
+                      Points: <span>{{new_order.client.points}}</span>
+                    </div>
                   </div>
                   <img @click="new_order.client = ''" class="close-client" src="../../assets/icons/deleteClient.svg">
                 </div>
@@ -150,7 +155,7 @@
 
               <div class="d-flex mb-5 justify-content-between align-items-center">
                 <h3 class="total-price">Total</h3>
-                <h3 class="total-price"> $</h3>
+                <h3 class="total-price">{{totalPrice}} $</h3>
               </div>
             </div>
           </div>
@@ -180,7 +185,6 @@ export default {
       clients:[],
       search_product:'',
       search_client:'',
-
       new_order:{
         products:[],
         client:'',
@@ -192,6 +196,14 @@ export default {
     }
   },
   computed:{
+    totalPrice(){
+      let sum = 0;
+      this.new_order.products.forEach((item)=>{
+        sum+=item.price*item.quantity
+      })
+      this.$emit('totalPrice', sum)
+      return sum
+    },
     filteredProducts(){
      return this.products.filter((product)=>{
         return product.name.toLowerCase().includes(this.search_product.toLowerCase())
@@ -215,18 +227,24 @@ export default {
             })
 
     },
-    selectProduct(id){
-      this.products.map((product)=>{
-        if(product._id === id){
-          if(this.new_order.products.includes(product)){
-            product.quantity= +product.quantity+1;
-          }
-          else{
-            this.new_order.products.push(product)
-            console.log(this.new_order.products)
-          }
-        }
-      })
+    selectProduct(selected){
+     if(this.new_order.products.length === 0){
+       this.new_order.products.push(selected)
+     }
+     else{
+       let product = null;
+       for (let i = 0; i < this.new_order.products.length; i++) {
+         if(this.new_order.products[i]._id === selected._id){
+           this.new_order.products[i].quantity = +this.new_order.products[i].quantity+1
+           product = null;
+           break;
+         }
+         product = selected
+       }
+       if(product){
+         this.new_order.products.push(product)
+       }
+     }
       this.search_product = ''
     },
     selectClient(id){
@@ -259,9 +277,7 @@ export default {
   mounted(){
     this.getProducts()
     this.getClients()
-    window.scrollTo({
-      top: 1000,
-    });
+
   }
 
 
@@ -433,7 +449,8 @@ export default {
 }
 .category span{
   color:#000;
-  text-transform: uppercase;
+  text-transform: capitalize;
+
 }
 
 .line{

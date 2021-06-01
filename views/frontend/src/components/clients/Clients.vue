@@ -222,7 +222,7 @@
 
             <div class="dropdown dropMenu">
               <div class="dropdown-toggle" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <img src="../../assets/icons/three-dots.svg">
+                <img v-if="category._id !== ''" src="../../assets/icons/three-dots.svg">
               </div>
               <div class="dropdown-menu" aria-labelledby="dropdownMenu">
                 <ul class="list-group" >
@@ -253,9 +253,7 @@
           <div v-if="data_check.bonus_checked" class="table-head table-link d-flex align-items-center" style="width: 8%;" @click="sortByBonus">Bonus <img class="date-pol" style="margin-left:5px" src="../../assets/icons/polygon.svg"></div>
           <div v-if="data_check.last_purchase_checked" class="table-head" style="width: 16%;">Last purchase</div>
           <div style="width:3%" class="dropdown dropdown-settings pl-3">
-
             <div class="table-head text-right dropdown-toggle"  id="dropdownBlue" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:5%"><img src="../../assets/icons/BlueSetting.svg"></div>
-
             <div class="dropdown-menu general-dropdown settings-dropdown" aria-labelledby="#dropdownBlue">
               <form>
                 <div><label class="custom-checkbox"><input id="last" v-model="data_check.last_purchase_checked" type="checkbox"><span class="checkmark"></span></label><label class="show-fields" for="last">Last purchase</label></div>
@@ -290,7 +288,7 @@
 
         <EditCategory
           :select_category="select_category"
-        :getCategories="getCategories"/>
+          :getCategories="getCategories"/>
 
         <div class="pagination d-flex justify-content-between align-items-center">
           <div class="d-flex align-items-center">
@@ -392,18 +390,22 @@ export default {
     }
   },
   computed: {
-    filteredList() {
+    filteredList:function() {
       return this.clientList
           .filter(client => {
-            return client.name.toLowerCase().includes(this.search.toLowerCase()) || client.phone.includes(this.search)
+            return  (client.name && client.name.toLowerCase().includes(this.search.toLowerCase())) ||  (client.phone && client.phone.includes(this.search))
           })
-          .filter(client =>{
-              if(client.category !== null){
-                return(
-                    client.category._id.includes(this.f_category) &&
-                    client.birthDate.includes(this.f_birthday)
-                )
-              }
+          .filter(client=>{
+            if(this.f_category){
+                return client.category && client.category._id.includes(this.f_category)
+            }
+            return true
+          })
+          .filter(client=>{
+            if(this.f_birthday){
+                return client.birthDate && client.birthDate.slice(5,10).includes(this.f_birthday.slice(5,10))
+            }
+            return true
           })
           .filter(client=>{
             if(this.f_to_register_date.length > 0){
@@ -413,11 +415,9 @@ export default {
             else if(this.f_to_register_date === ''){
               return new Date(client.createdAt).getTime() >= new Date(this.f_from_register_date).getTime()
             }
-            else{
-              return client
-            }
+            return true            
           })
-          // .filter(client=>{
+      // .filter(client=>{
           //   if(this.f_to_number_purchase.length>0){
           //     return +client.number_of_purchase >= this.f_from_number_purchase && +client.number_of_purchase <= this.f_to_number_purchase
           //   }

@@ -1,22 +1,18 @@
 <template>
-<div class="d-flex">
- <div class="siding-bar">
-   <SideBar v-bind:closeSideBar="closeSideBar"
-            v-if="!['SignIn', 'SignUp'].includes($route.name)"
-            v-show="!$route.path.includes('/shop')"
-    />
-  </div>
-  <div class="main-content" v-bind:class="{hun: $route.name === 'SignUp' || $route.name === 'SignIn' || $route.path.includes('/shop')} ">
-    <Header  v-if="homePage()"  v-bind:openSideBar="openSideBar"
-
-
-    />
+  <div class="d-flex">
+    <div class="siding-bar">
+      <SideBar v-bind:closeSideBar="closeSideBar"
+               v-if="!['SignIn', 'SignUp','Admin'].includes($route.name)"
+               v-show="!$route.path.includes('/shop')"
+      />
+    </div>
+    <div class="main-content" v-bind:class="{hun: $route.name === 'SignUp' || $route.name === 'Admin'  || $route.name === 'SignIn' || $route.path.includes('/shop') } ">
+      <Header  v-if="homePage()"  v-bind:openSideBar="openSideBar"/>
       <div  class="router-view">
-          <router-view
-          />
-       </div>
-              </div>
- </div>
+        <router-view/>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 import $ from "jquery";

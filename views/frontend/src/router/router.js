@@ -44,6 +44,7 @@ import EditPromo from "@/components/loyalty/EditPromo";
 import PersonalSettings from "@/components/settings/PersonalSettings";
 import AddressDelivery from "@/components/settings/AddressDelivery";
 import Log from "@/components/Log/Log";
+import Admin from "@/components/admin/Admin";
 
 
 
@@ -216,6 +217,12 @@ const routes = [
         path: "/chats",
         name: "Chats",
         component: Chats,
+
+    },
+    {
+        path: "/admin",
+        name: "Admin",
+        component: Admin,
 
     },
     {

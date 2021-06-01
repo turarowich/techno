@@ -80,9 +80,9 @@
               v-on:inProgress="inProgress"
               v-on:done="done"
               v-on:canceled="canceled"
-              v-bind:data_check="data_check"/>
-      </div>
-
+              v-bind:data_check="data_check"
+        />
+    </div>
     <AddOrder
       :getOrders="getOrders"
     />
@@ -141,6 +141,7 @@ name: "Orders",
       selectAll: false,
       currentPage:1,
       perPage:8,
+      total_price:'',
 
     }
   },
@@ -149,7 +150,7 @@ name: "Orders",
     filteredList:function() {
       return this.orderList
           .filter(order => {
-            return order.client_name.toLowerCase().includes(this.search.toLowerCase()) || order.client_phone.includes(this.search)
+            return order.client_name && order.client_name.toLowerCase().includes(this.search.toLowerCase()) || order.client_phone.includes(this.search)
           })
           .filter(order=>{
             return order.status.includes(this.filter_by_status)
@@ -165,12 +166,12 @@ name: "Orders",
           //     return order
           //   }
           // })
-          // .filter(order=>{
-          //   return order.date.slice(0,10).includes(this.filtered)
-          //       || (new Date(order.date).getTime() >= new Date(this.filtered.slice(0,10)).getTime() &&
-          //           new Date(order.date).getTime() < new Date(this.filtered.slice(14,24)).getTime())
-          //
-          // })
+          .filter(order=>{
+            return order.createdAt.slice(0,10).includes(this.filtered)
+                || (new Date(order.createdAt).getTime() >= new Date(this.filtered.slice(0,10)).getTime() &&
+                    new Date(order.createdAt).getTime() < new Date(this.filtered.slice(14,24)).getTime())
+
+          })
     },
     orderToDisplay: function(){
       let start = (this.currentPage - 1) * this.perPage
@@ -194,16 +195,17 @@ name: "Orders",
   methods: {
     selectOrder(id){
       this.orderList.map((item)=>{
-        if(item._id === id){
+        if(item._id === id) {
           this.select_order = item;
+          this.addNewProperty(this.select_order.products, "_id", 0, 'product')
         }
       })
     },
     getOrders(){
       this.axios.get(this.url('getOrders'))
       .then((response)=>{
-        console.log("Orders response", response)
         this.orderList = response.data.objects;
+        console.log(this.orderList)
       })
     },
     checkAll(item){
@@ -243,12 +245,12 @@ name: "Orders",
     },
     toggleSelect: function () {
       this.orderList.forEach((user)=> {
-        if(this.$refs.order_item.$refs[`select${user.id}`] !== undefined && this.$refs.order_item.$refs[`select${user.id}`] !== null){
+        if(this.$refs.order_item.$refs[`select${user._id}`] !== undefined && this.$refs.order_item.$refs[`select${user._id}`] !== null){
            if(this.selectAll === false){
-              this.$refs.order_item.$refs[`select${user.id}`].checked = true
+              this.$refs.order_item.$refs[`select${user._id}`].checked = true
            }
            else{
-             this.$refs.order_item.$refs[`select${user.id}`].checked = false
+             this.$refs.order_item.$refs[`select${user._id}`].checked = false
            }
          }
       });
