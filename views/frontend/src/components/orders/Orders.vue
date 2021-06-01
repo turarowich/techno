@@ -82,9 +82,7 @@
               v-on:canceled="canceled"
               v-bind:data_check="data_check"
         />
-
-      </div>
-
+    </div>
     <AddOrder
       :getOrders="getOrders"
     />
@@ -152,7 +150,7 @@ name: "Orders",
     filteredList:function() {
       return this.orderList
           .filter(order => {
-            return order.client.name.toLowerCase().includes(this.search.toLowerCase()) || order.client_phone.includes(this.search)
+            return order.client_name && order.client_name.toLowerCase().includes(this.search.toLowerCase()) || order.client_phone.includes(this.search)
           })
           .filter(order=>{
             return order.status.includes(this.filter_by_status)
@@ -247,12 +245,12 @@ name: "Orders",
     },
     toggleSelect: function () {
       this.orderList.forEach((user)=> {
-        if(this.$refs.order_item.$refs[`select${user.id}`] !== undefined && this.$refs.order_item.$refs[`select${user.id}`] !== null){
+        if(this.$refs.order_item.$refs[`select${user._id}`] !== undefined && this.$refs.order_item.$refs[`select${user._id}`] !== null){
            if(this.selectAll === false){
-              this.$refs.order_item.$refs[`select${user.id}`].checked = true
+              this.$refs.order_item.$refs[`select${user._id}`].checked = true
            }
            else{
-             this.$refs.order_item.$refs[`select${user.id}`].checked = false
+             this.$refs.order_item.$refs[`select${user._id}`].checked = false
            }
          }
       });
@@ -343,7 +341,6 @@ name: "Orders",
     },
   },
   mounted(){
-    console.log(this.orderList)
     this.getOrders();
     new this.$lightpick({
         field: document.getElementById('datepicker'),

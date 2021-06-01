@@ -27,6 +27,7 @@
 
                   <div style="width:25%;">
                     <label class="product-label">Select category</label><br>
+
                     <select v-model="currentData.category"  class="form-control mb-0 select-phone" >
                       <option :value="cat._id" v-for="cat in listCategory" :key="cat._id">{{cat.name}}</option>
                     </select>

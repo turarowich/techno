@@ -222,7 +222,7 @@
 
             <div class="dropdown dropMenu">
               <div class="dropdown-toggle" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <img src="../../assets/icons/three-dots.svg">
+                <img v-if="category._id !== ''" src="../../assets/icons/three-dots.svg">
               </div>
               <div class="dropdown-menu" aria-labelledby="dropdownMenu">
                 <ul class="list-group" >
@@ -253,9 +253,7 @@
           <div v-if="data_check.bonus_checked" class="table-head table-link d-flex align-items-center" style="width: 8%;" @click="sortByBonus">Bonus <img class="date-pol" style="margin-left:5px" src="../../assets/icons/polygon.svg"></div>
           <div v-if="data_check.last_purchase_checked" class="table-head" style="width: 16%;">Last purchase</div>
           <div style="width:3%" class="dropdown dropdown-settings pl-3">
-
             <div class="table-head text-right dropdown-toggle"  id="dropdownBlue" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:5%"><img src="../../assets/icons/BlueSetting.svg"></div>
-
             <div class="dropdown-menu general-dropdown settings-dropdown" aria-labelledby="#dropdownBlue">
               <form>
                 <div><label class="custom-checkbox"><input id="last" v-model="data_check.last_purchase_checked" type="checkbox"><span class="checkmark"></span></label><label class="show-fields" for="last">Last purchase</label></div>
@@ -419,17 +417,17 @@ export default {
             }
             return true            
           })
-        //   .filter(client=>{
-        //     if(this.f_to_number_purchase.length>0){
-        //       return +client.number_of_purchase >= this.f_from_number_purchase && +client.number_of_purchase <= this.f_to_number_purchase
-        //     }
-        //     else if(this.f_to_number_purchase === ''){
-        //       return +client.number_of_purchase >=this.f_from_number_purchase;
-        //     }
-        //     else{
-        //       return client
-        //     }
-        //   })
+      // .filter(client=>{
+          //   if(this.f_to_number_purchase.length>0){
+          //     return +client.number_of_purchase >= this.f_from_number_purchase && +client.number_of_purchase <= this.f_to_number_purchase
+          //   }
+          //   else if(this.f_to_number_purchase === ''){
+          //     return +client.number_of_purchase >=this.f_from_number_purchase;
+          //   }
+          //   else{
+          //     return client
+          //   }
+          // })
           // .filter(client=>{
           //   if(this.f_to_purchase_date.length > 0){
           //     return (new Date(client.last_purchase).getTime() >= new Date(this.f_from_purchase_date).getTime() &&
@@ -467,13 +465,13 @@ export default {
     showPrev(){
       return this.currentPage > 1;
     },
-    // addResetClass: function(){
-    //   return {
-    //     red: this.category.length >0 || this.gender_client.length >0 || this.birthday.length>0
-    //     || this.from_number_purchase.length >0 || this.to_number_purchase.length >0 || this.from_purchase_date !== '2000-01-01'
-    //     || this.to_purchase_date.length >0 || this.from_register_date !== '2000-01-01' || this.to_register_date.length>0
-    //   }
-    // },
+    addResetClass: function(){
+      return {
+        red: this.category.length >0 || this.gender_client.length >0 || this.birthday.length>0
+        || this.from_number_purchase.length >0 || this.to_number_purchase.length >0 || this.from_purchase_date !== '2000-01-01'
+        || this.to_purchase_date.length >0 || this.from_register_date !== '2000-01-01' || this.to_register_date.length>0
+      }
+    },
 
 
   },
