@@ -295,10 +295,8 @@ class SettingsController{
             'msg': 'Delivery deleted'
         }
         try {
-
             let query = { '_id': req.params.delivery }
             await Delivery.findByIdAndRemove(query)
-
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
@@ -318,6 +316,102 @@ class SettingsController{
             let query = { '_id': req.params.branch }
             await Branch.findByIdAndRemove(query)
 
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.status(result.status).json(result);
+    };
+    addBranch = async function (req, res) {
+        let new_branch = req.fields.branch;
+        let db = useDB(req.db)
+        let Branch = db.model("Branch");
+
+        let result = {
+            'status': 200,
+            'msg': 'Branch added'
+        }
+        try {
+            await new Branch(new_branch).save();
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.status(result.status).json(result);
+    };
+    getBranch = async function (req, res) {
+        let db = useDB(req.db)
+        let Branch = db.model("Branch");
+        let result = {
+            'status': 200,
+            'msg': 'Branch added'
+        }
+        try {
+            result['object']= await Branch.findById(req.query.branch);
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.status(result.status).json(result);
+    };
+    updateBranch = async function (req, res) {
+        let edit_branch = req.fields.branch;
+        let db = useDB(req.db)
+        let Branch = db.model("Branch");
+        let result = {
+            'status': 200,
+            'msg': 'Branch updated'
+        }
+        try {
+            let query = { '_id': edit_branch._id }
+            req.fields['updatedAt'] = new Date()
+            result['object'] = await Branch.findOneAndUpdate(query, edit_branch)
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.status(result.status).json(result);
+    };
+
+    addDeliveryOption = async function (req, res) {
+        console.log(req);
+        let new_option = req.fields.option;
+        let db = useDB(req.db)
+        let Delivery = db.model("Delivery");
+
+        let result = {
+            'status': 200,
+            'msg': 'Delivery option added'
+        }
+        try {
+            await new Delivery(new_option).save();
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.status(result.status).json(result);
+    };
+    getDeliveryOption = async function (req, res) {
+        let db = useDB(req.db)
+        let Delivery = db.model("Delivery");
+        let result = {
+            'status': 200,
+            'msg': 'Delivery on da way'
+        }
+        try {
+            result['object']= await Delivery.findById(req.query.delivery);
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.status(result.status).json(result);
+    };
+    updateDeliveryOption = async function (req, res) {
+        let edit_option = req.fields.option;
+        let db = useDB(req.db)
+        let Delivery = db.model("Delivery");
+        let result = {
+            'status': 200,
+            'msg': 'Branch updated'
+        }
+        try {
+            let query = { '_id': edit_option._id }
+            req.fields['updatedAt'] = new Date()
+            result['object'] = await Delivery.findOneAndUpdate(query, edit_option)
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
