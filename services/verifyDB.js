@@ -12,7 +12,7 @@ function verifyDB(req, res, next) {
     let shoes_db = global.userConnection.useDb(shoes).model("catalogs");
     let catalogs_model = shoes_db.model("catalogs");
     ///if already has access place
-    if(req.headers['access_place'] || !catalog_urls.includes(req.path)){
+    if(req.headers['access-place'] || !catalog_urls.includes(req.path)){
         console.log('already has access place');
         next();
     }else{
