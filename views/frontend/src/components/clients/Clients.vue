@@ -395,19 +395,19 @@ export default {
     filteredList:function() {
       return this.clientList
           .filter(client => {
-            return client.name.toLowerCase().includes(this.search.toLowerCase()) || client.phone.includes(this.search)
+            return  (client.name && client.name.toLowerCase().includes(this.search.toLowerCase())) ||  (client.phone && client.phone.includes(this.search))
           })
-          .filter((item) =>{
-            if(item.category !== undefined){
-              return(
-                  item.category._id.includes(this.f_category) &&
-                  item.birthDate.includes(this.f_birthday)
-              )
+          .filter(client=>{
+            if(this.f_category){
+                return client.category && client.category._id.includes(this.f_category)
             }
-            else{
-              return item
+            return true
+          })
+          .filter(client=>{
+            if(this.f_birthday){
+                return client.birthDate && client.birthDate.slice(5,10).includes(this.f_birthday.slice(5,10))
             }
-
+            return true
           })
           .filter(client=>{
             if(this.f_to_register_date.length > 0){
@@ -417,23 +417,19 @@ export default {
             else if(this.f_to_register_date === ''){
               return new Date(client.createdAt).getTime() >= new Date(this.f_from_register_date).getTime()
             }
-            else{
-              return client
-            }
+            return true            
           })
-
-
-          // .filter(client=>{
-          //   if(this.f_to_number_purchase.length>0){
-          //     return +client.number_of_purchase >= this.f_from_number_purchase && +client.number_of_purchase <= this.f_to_number_purchase
-          //   }
-          //   else if(this.f_to_number_purchase === ''){
-          //     return +client.number_of_purchase >=this.f_from_number_purchase;
-          //   }
-          //   else{
-          //     return client
-          //   }
-          // })
+        //   .filter(client=>{
+        //     if(this.f_to_number_purchase.length>0){
+        //       return +client.number_of_purchase >= this.f_from_number_purchase && +client.number_of_purchase <= this.f_to_number_purchase
+        //     }
+        //     else if(this.f_to_number_purchase === ''){
+        //       return +client.number_of_purchase >=this.f_from_number_purchase;
+        //     }
+        //     else{
+        //       return client
+        //     }
+        //   })
           // .filter(client=>{
           //   if(this.f_to_purchase_date.length > 0){
           //     return (new Date(client.last_purchase).getTime() >= new Date(this.f_from_purchase_date).getTime() &&
