@@ -61,6 +61,7 @@ class ProductController{
             let data = req.fields
             
             let product = await new Product({
+                type:data.type || "product",
                 name: data.name,
                 name_ru: data.name_ru,
                 secondary: data.secondary,

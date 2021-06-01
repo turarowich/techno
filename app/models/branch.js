@@ -7,6 +7,11 @@ const branchSchema = new Schema({
         required: [true, "name_required"],
         default: ""
     },
+    name: {
+        type: String,
+        required: false,
+        default: ""
+    },
     longitude: {
         type: String,
         required: true,

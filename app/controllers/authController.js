@@ -88,7 +88,7 @@ class AuthController{
                 email: req.fields.email,
             }
         }
-        
+
         let db = global.userConnection.useDb('loygift'+req.headers['access-place']);
         let Client = db.model("Client");
         let lang = req.headers["accept-language"]
@@ -97,7 +97,7 @@ class AuthController{
         }
         try {
             let user = await Client.findOne(filter).select('+password')
-            
+
             let errors = {
                 phone: validate[lang]['user_not_found'],
                 password: validate[lang]['password_wrong']

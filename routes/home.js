@@ -32,6 +32,7 @@ module.exports = function(app, passport){
 
 
     app.get('*', function (req, res) {
+        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>","Backup","<<<<<<<<<<<<<<<<<<<<<<<<<<<")
         console.log(req.url.includes('socket.io'))
         if (!req.url.includes('socket.io')){
             console.log(req.url.includes('socket.io'))

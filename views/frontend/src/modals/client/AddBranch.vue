@@ -4,7 +4,8 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content add_branch_modal_content">
           <div class="modal-header align-items-center">
-            <h3 class="modal-title">Add Branch</h3>
+            <h3 v-if="edit" class="modal-title">Edit Branch</h3>
+            <h3 v-else class="modal-title">Add Branch</h3>
             <button type="button" data-dismiss="modal" aria-label="Close" class="close">
               <span aria-hidden="true">
                 <img src="../../assets/icons/x.svg" alt="">
@@ -14,49 +15,49 @@
           <div class="modal-body add_branch_modal_body d-flex">
             <div class="add_branch_block">
               <h4 class="circle-question">Address</h4>
-              <input class="cashback-input company-input" placeholder="Enter your company address">
+              <input v-model="branch_object.address" class="cashback-input company-input" placeholder="Enter your company address">
               <div class="d-flex atitude">
                 <div class="mr-3">
                   <label>Longitude</label>
-                  <input class="cashback-input">
+                  <input v-model="branch_object.longitude" class="cashback-input">
                 </div>
                 <div>
                   <label>Latitude</label>
-                  <input class="cashback-input">
+                  <input v-model="branch_object.latitude" class="cashback-input">
                 </div>
               </div>
               <label>Name</label>
-              <input class="phone-input cashback-input">
+              <input v-model="branch_object.name" class="phone-input cashback-input">
               <label>Phone number</label>
-              <input class="phone-input cashback-input" placeholder="Branch phone number">
-              <input class="phone-input cashback-input" placeholder="Branch phone number">
+              <input v-model="branch_object.phone"  class="phone-input cashback-input" placeholder="Branch phone number">
+              <input v-model="branch_object.phone2"  class="phone-input cashback-input" placeholder="Branch phone number">
               <label class="working-hours">Working hours</label>
               <div class="week">
-                <div @click="setDay('monday')" :class="{active: branch_object.monday.active}" class="days active d-flex justify-content-center align-items-center">MO</div>
-                <div @click="setDay('tuesday')" :class="{active: branch_object.tuesday.active}" class="days d-flex justify-content-center align-items-center">TU</div>
-                <div @click="setDay('wednesday')" :class="{active: branch_object.wednesday.active}" class="days d-flex justify-content-center align-items-center">WE</div>
-                <div @click="setDay('thursday')" :class="{active: branch_object.thursday.active}" class="days d-flex justify-content-center align-items-center">TH</div>
-                <div @click="setDay('friday')" :class="{active: branch_object.friday.active}" class="days d-flex justify-content-center align-items-center">FR</div>
-                <div @click="setDay('saturday')" :class="{active: branch_object.saturday.active}" class="days d-flex justify-content-center align-items-center">SA</div>
-                <div @click="setDay('sunday')" :class="{active: branch_object.sunday.active}" class="days d-flex justify-content-center align-items-center">SU</div>
+                <div @click="setDay('monday')" :class="{active: branch_object.monday.active,selected_active:current_selected_day.day==='monday'}" class="days d-flex justify-content-center align-items-center">MO</div>
+                <div @click="setDay('tuesday')" :class="{active: branch_object.tuesday.active,selected_active:current_selected_day.day==='tuesday'}" class="days d-flex justify-content-center align-items-center">TU</div>
+                <div @click="setDay('wednesday')" :class="{active: branch_object.wednesday.active,selected_active:current_selected_day.day==='wednesday'}" class="days d-flex justify-content-center align-items-center">WE</div>
+                <div @click="setDay('thursday')" :class="{active: branch_object.thursday.active,selected_active:current_selected_day.day==='thursday'}" class="days d-flex justify-content-center align-items-center">TH</div>
+                <div @click="setDay('friday')" :class="{active: branch_object.friday.active,selected_active:current_selected_day.day==='friday'}" class="days d-flex justify-content-center align-items-center">FR</div>
+                <div @click="setDay('saturday')" :class="{active: branch_object.saturday.active,selected_active:current_selected_day.day==='saturday'}" class="days d-flex justify-content-center align-items-center">SA</div>
+                <div @click="setDay('sunday')" :class="{active: branch_object.sunday.active,selected_active:current_selected_day.day==='sunday'}" class="days d-flex justify-content-center align-items-center">SU</div>
               </div>
-              <div class="d-flex working-phones">
+              <div v-if="current_selected_day.day !==''" class="d-flex working-phones">
                 <div class="mr-3 d-flex align-items-center">
                   <label class="mb-0 mr-3 working-label">From</label>
-                  <select class="form-control" v-model="current_selected_day.start">
+                  <select class="form-control" v-model="current_selected_day.object.start">
                     <option v-for="(hour,index) in working_hours" :key="index" :value="hour">{{hour}}</option>
                   </select>
                 </div>
                 <div class="d-flex align-items-center">
                   <label class="mb-0 mr-3 working-label">To</label>
-                  <select class="form-control" v-model="current_selected_day.end" aria-label="Default select example">
+                  <select class="form-control" v-model="current_selected_day.object.end" aria-label="Default select example">
                     <option v-for="(hour,index) in working_hours" :key="index" :value="hour">{{hour}}</option>
                   </select>
                 </div>
                 <div style="display: flex;justify-content: center;align-items: center;margin-left: 2px;flex: 1;">
                   <span>Is a work day</span>
                   <label class="switch d-flex">
-                    <input v-model="current_selected_day.active" type="checkbox">
+                    <input v-model="current_selected_day.object.active" type="checkbox">
                     <span class="slider round"></span>
                   </label>
                 </div>
@@ -69,7 +70,11 @@
             </div>
 
           </div>
-          <button class="save">Save</button>
+          <div class="d-flex">
+            <button @click="saveBranch" class="save">Save</button>
+            <button v-if="edit" @click="removeBranch(branch_object._id)" class="remove_branch">Remove branch</button>
+          </div>
+
         </div>
       </div>
     </div>
@@ -77,11 +82,11 @@
 </template>
 
 <script>
-
+import $ from "jquery";
 export default {
   name: "AddBranch",
-  props:{
-
+  props:  {
+    edit_branch: Object,
   },
   data(){
     return{
@@ -91,12 +96,15 @@ export default {
       ],
       current_selected_day:{
         day:'',
-        active: true,
-        start: "",
-        end: "",
+        object:{
+          active: true,
+          start: "",
+          end: "",
+        },
       },
       branch_object:{
         address: "",
+        name: "",
         latitude: "",
         longitude: "",
         phone: "",
@@ -111,22 +119,104 @@ export default {
       },
     }
   },
+  computed:{
+    edit(){
+      return Object.keys(this.edit_branch).length !== 0;
+    },
+  },
   methods:{
     setDay(day){
-      let day_obj = this.branch_object[day];
-      this.current_selected_day=this.branch_object[day];
+      // let day_obj = this.branch_object[day];
+      this.current_selected_day.object=this.branch_object[day];
       this.current_selected_day.day = day;
+      // console.log(day_obj);
+    },
+    saveBranch(){
+      //check
+      let messages = [];
+      let that = this;
+      if(this.branch_object.address.length<1){messages.push('Fill in Address')}
+      if(messages.length>0){
+        messages.forEach(function (mess){
+          that.$warningAlert(mess);
+        })
+        return;
+      }
 
-      console.log(day_obj);
+      let url = this.url('addBranch');
+      let alert_text = "Added";
+      if(this.edit){
+        alert_text = 'Updated';
+        url = this.url('updateBranch');
+      }
+
+      this.axios.post(url, {
+        branch:this.branch_object,
+      }).then(function (response) {
+        that.$successAlert(alert_text);
+        $('#add_branch').modal('hide');
+        that.$emit('sendUpdate');
+        console.log(response);
+      }).catch(function(error){
+        if (error.response) {
+          // console.log(error.response.status);
+          // console.log(error.response.headers);
+          that.$warningAlert(Object.values(error.response.data.errors));
+        }
+      });
+    },
+
+    removeBranch(id){
+      let that = this;
+      let url = this.url('deleteBranch')+id;
+      this.axios.delete(url).then(function () {
+        that.$successAlert("Removed");
+        $('#add_branch').modal('hide');
+        that.$emit('sendUpdate');
+      }).catch(function(error){
+        if (error.response) {
+          // console.log(error.response.status);
+          // console.log(error.response.headers);
+          that.$warningAlert(Object.values(error.response.data.errors));
+        }
+      });
+
     },
   },
   watch:{
+    edit_branch:{
+      handler(val, oldVal) {
+        console.log('edit_branch list changed',val, oldVal)
+        if(this.edit){
+          let copy = $.extend(true,{},this.edit_branch);
+          this.branch_object = copy;
+        }else{
+          //duplicate redo later
+          this.branch_object ={
+            address: "",
+            name: "",
+            latitude: "",
+            longitude: "",
+            phone: "",
+            phone2: "",
+            monday: {active: true, start: "08:00", end: "17:00"},
+            tuesday: {active: true, start: "08:00", end: "17:00"},
+            wednesday: {active: true, start: "08:00", end: "17:00"},
+            thursday: {active: true, start: "08:00", end: "17:00"},
+            friday: {active: true, start: "08:00", end: "17:00"},
+            saturday: {active: true, start: "08:00", end: "17:00"},
+            sunday: {active: true, start: "08:00", end: "17:00"},
+          }
+        }
+      },
+      deep: true
+    },
     current_selected_day: {
+      // eslint-disable-next-line no-unused-vars
       handler(val, oldVal) {
         let day = val.day;
-        delete val.day;
-        this.branch_object[day]=val;
-        console.log('selectedType list changed',val, oldVal)
+        // delete val.day;
+        this.branch_object[day]=val.object;
       },
       deep: true
     },
@@ -154,7 +244,7 @@ export default {
 }
 .map-address{
   flex: 1;
-  height: 500px;
+  height: 510px;
   margin-left: 10px;
 }
 .add_branch_block{
@@ -170,8 +260,13 @@ export default {
   cursor:pointer;
   margin-right: 10px;
 }
-.days.active,.days:hover{
+.days.active{
   background: #616cf5;
+  transition: .3s;
+  color:#fff;
+}
+.days:hover{
+  background: #7479b5;
   transition: .3s;
   color:#fff;
 }
@@ -183,6 +278,7 @@ export default {
 }
 .working-phones{
   margin-bottom: 40px;
+  transition: 1s;
 }
 .working-phones div{
   flex: 1;
@@ -200,6 +296,20 @@ export default {
 .save{
   width: 120px;
 }
+.remove_branch{
+  background: #E9ECFF;
+  border-radius: 5px;
+  color: #616CF5;
+  height: 37px;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  transition: .3s;
+  border: none;
+  justify-content: center;
+  margin-left: 20px;
+  width: 170px;
+}
 .modal-content{
   border-bottom: none;
   padding: 18px 24px;
@@ -211,8 +321,7 @@ export default {
   padding: 0;
 }
 .selected_active{
-  box-shadow: 0px -6px 61px -1px rgba(46,21,143,0.98);
-  -webkit-box-shadow: 0px -6px 61px -1px rgba(46,21,143,0.98);
-  -moz-box-shadow: 0px -6px 61px -1px rgba(46,21,143,0.98);
+  color: black!important;
+  border:2px solid red;
 }
 </style>
