@@ -75,7 +75,7 @@
               <span>{{category.name}}</span>
               <div class="dropdown dropMenu">
                 <div class="dropdown-toggle" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <img src="../../assets/icons/three-dots.svg">
+                  <img v-if="category._id !== ''" src="../../assets/icons/three-dots.svg">
                 </div>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenu">
                   <ul class="list-group" >

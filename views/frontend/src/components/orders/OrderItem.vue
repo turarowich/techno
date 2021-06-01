@@ -4,16 +4,16 @@
       <img src="../../assets/icons/emptyOrder.svg">
       <p class="empty-page-text">You have no orders yet</p>
     </div>
-    <div v-else v-for="order in orderList" class="table-item d-flex justify-content-between align-items-center" :key="order.id">
+    <div v-else v-for="order in orderList" class="table-item d-flex justify-content-between align-items-center" :key="order._id">
 
       <div class="table-child d-flex align-items  -center"  style="width: 18%;">
-        <div><label class="custom-checkbox"><input  type="checkbox"  @click="checkMainSelect"  :ref="'select'+order.id" :value="order.id" ><span class="checkmark"></span></label></div>
+        <div><label class="custom-checkbox"><input  type="checkbox"  @click="checkMainSelect"  :ref="'select'+order._id" :value="order._id" ><span class="checkmark"></span></label></div>
         34543</div>
-      <div v-for="nam in order.products" :key="nam._id"  class="table-child d-flex align-items-center"  style="width: 30%;">
-        <div class="table-img">
-          <img src="../../assets/img/sneak.webp">
-        </div>
-        {{nam.name}}
+      <div v-for="nam in order.products" :key="nam._id" class="table-child d-flex align-items-center"  style="width: 30%;">
+        <div  class="table-img">
+           <img src="../../assets/img/sneak.webp">
+         </div>
+         <span>{{nam.name}}</span>
       </div>
       <div class="table-child" v-show="data_check.client_checked"  style="width: 25%;">{{order.client_name}}</div>
       <div class="table-child" v-show="data_check.phone_checked" style="width: 20%;">{{order.client_phone}}</div>
@@ -76,7 +76,7 @@ export default {
 
   methods: {
     checkAll(item) {
-      return  this.$refs[`select${item.id}`].checked === true
+      return  this.$refs[`select${item._id}`].checked === true
     },
     checkMainSelect() {
       if(this.orderList.every(this.checkAll)){

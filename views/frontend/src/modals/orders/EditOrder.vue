@@ -11,7 +11,7 @@
           </button>
           <div>
             <h3 class="modal-title">Order 343222</h3>
-            <span class="detail-date">Created {{currentData.createdAt}} <span>{{currentData.createdAt}}</span></span>
+            <span class="detail-date">Created {{currentData.createdAt}}</span>
           </div>
           <div class="detail-status"><span></span>{{currentData.status}}</div>
         </div>
@@ -26,7 +26,7 @@
                   <div class="pl-4 pt-3 pb-3" v-if="filteredProducts.length === 0">
                     You don't have any products
                   </div>
-                  <div  v-else v-for="product in filteredProducts" :key="product._id" @click="selectProduct(product._id)" class="product-order  d-flex align-items-center justify-content-between">
+                  <div  v-else v-for="product in filteredProducts" :key="product._id" @click="selectProduct(product)" class="product-order  d-flex align-items-center justify-content-between">
                     <div class="table-child d-flex align-items-center">
                       <div class="table-img">
                         <img src="../../assets/img/sneak.webp">
@@ -94,7 +94,12 @@
                   <img class="client-avatar" src="../../assets/img/criw.jpg">
                   <div class="position-relative">
                     <h2 class="name-client">{{currentData.client.name}}</h2>
-                    <div class="category">Category: <span>{{currentData.client.category.name}}</span> Points: <span>{{currentData.client.points}}</span></div>
+                    <div class="category">
+                      Category:
+                      <span v-if="currentData.client.category !== undefined">{{currentData.client.category.name}}</span>
+                      <span v-else>no</span>
+                      Points: <span>{{currentData.client.points}}</span>
+                    </div>
                   </div>
                   <img @click="currentData.client = ''" class="close-client" src="../../assets/icons/deleteClient.svg">
                 </div>
@@ -160,19 +165,7 @@
           </div>
 
           <div class="d-flex">
-            <div class="dropup ">
-              <div class="dropdown-toggle" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <button class="save mr-2" @click.prevent="onSubmit(select_order._id)">Edit order</button>
-              </div>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
-                <ul class="list-group " >
-                  <li class="list-group-item">Done</li>
-                  <li class="list-group-item" >Cancel</li>
-                  <li class="list-group-item">Delete</li>
-                  <li class="list-group-item">In progress</li>
-                </ul>
-              </div>
-            </div>
+            <button class="save mr-2" @click.prevent="onSubmit(currentData._id)">Edit order</button>
             <button class="cancel">Close</button>
           </div>
         </div>
@@ -183,6 +176,8 @@
 </template>
 
 <script>
+
+import $ from "jquery";
 
 export default {
   name: "EditOrder",
@@ -233,19 +228,28 @@ export default {
       this.axios.put(this.url('updateOrder',id),this.currentData)
       .then(()=>{
         console.log("Success")
+        $('#edit-order').modal("hide")
+        this.$informationAlert('Changes are saved')
       })
     },
-    selectProduct(id){
-    this.currentData.products.map((item)=>{
-      if(item._id === id){
-        item.quantity = +item.quantity+1
+    selectProduct(selected){
+      if(this.currentData.products.length === 0){
+        this.currentData.products.push(selected)
       }
       else{
-        const idx = this.products.findIndex(el=>el._id === id);
-        this.currentData.products.push(this.products[idx])
-
+        let product = null
+        for (let i = 0; i <this.currentData.products.length; i++) {
+          if(this.currentData.products[i]._id === selected._id){
+            this.currentData.products[i].quantity= +this.currentData.products[i].quantity+1;
+            product = null
+            break;
+          }
+          product = selected
+        }
+        if(product){
+          this.currentData.products.push(product)
+        }
       }
-    })
       this.search_product = ''
     },
     selectClient(id){
@@ -447,7 +451,7 @@ export default {
 }
 .category span{
   color:#000;
-  text-transform: uppercase;
+  text-transform: capitalize;
 }
 
 .line{
