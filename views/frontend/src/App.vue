@@ -48,9 +48,17 @@ export default {
 
 
     },
-
+    mounted(){
+        $(document).ready(function(){
+            $(document).tooltip({
+                selector: '.tool-tip'
+            });
+        });
+    }
 
   }
+
+
 </script>
 <style scoped>
 @font-face {

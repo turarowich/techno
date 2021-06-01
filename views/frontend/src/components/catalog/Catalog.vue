@@ -72,7 +72,7 @@
         <div class="catalog-menu" style="width:18%">
           <ul class="list-group" >
             <li class="catalog-list" :id="category.name" :ref="'menu'+index"  v-for="(category,index) in listCategory" :key="category._id"  :class="{active: filtered === category._id}"  @click="filtered = category._id">
-                <p class="category-text" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?">
+                <p class="category-text tool-tip" data-toggle="tooltip" data-placement="right" :title="category.name">
                   {{category.name}}
                 </p>
                 <div class="dropdown dropMenu">

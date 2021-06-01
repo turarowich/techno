@@ -218,8 +218,9 @@
 
         <ul class="list-group" >
           <li class="catalog-list" :ref="`menu`+index"   v-for="(category,index) in filterCategory" :key="category._id" :class="{active: f_category === category._id}"  @click="f_category = category._id">
-            <span>{{category.name}}</span>
-
+            <p class="category-text tool-tip" data-toggle="tooltip" data-placement="right" :title="category.name">
+                {{category.name}}
+            </p>
             <div class="dropdown dropMenu">
               <div class="dropdown-toggle" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img v-if="category._id !== ''" src="../../assets/icons/three-dots.svg">
