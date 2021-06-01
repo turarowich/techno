@@ -1215,3 +1215,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     background: #fff;
 
 }
+.category-text{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space:nowrap;
+    margin-bottom: 0;
+}
