@@ -8,8 +8,7 @@ function verifyDB(req, res, next) {
 
     console.log(req.headers['company_url'],"MIDDLEWARE",config.Shoes);
     let cat_url = req.headers['company_url'];
-    let shoes = config.Shoes;
-    let shoes_db = global.userConnection.useDb(shoes).model("catalogs");
+    let shoes_db = global.userConnection.useDb('loygift').model("catalogs");
     let catalogs_model = shoes_db.model("catalogs");
     ///if already has access place
     if(req.headers['access-place'] || !catalog_urls.includes(req.path)){

@@ -20,7 +20,8 @@ class AuthController{
     register = async function (req, res) {
         let db = global.userConnection.useDb('loygift');
         let User = db.model("User");
-        let result = []
+        let catalogs_model = db.model("catalogs");
+        let result = [];
         try {
             let hashedPassword = bcrypt.hashSync(req.fields.password, 8);
             let user = new User({
@@ -30,11 +31,16 @@ class AuthController{
                 password: hashedPassword,
                 companyName: req.fields.companyName,
                 rate: req.fields.rate,
-            })
-            await user.validate()
-            user._db = 'loygift' + user._id
-            user.save()
-            user.password = ""
+            });
+            await user.validate();
+            user._db = 'loygift' + user._id;
+            await user.save();
+            //////
+            await new catalogs_model({
+                company: user._id,
+            }).save();
+            //////
+            user.password = "";
             result = {
                 'status': 200,
                 'msg': 'User added',
@@ -48,7 +54,7 @@ class AuthController{
                 }),
             }
         } catch (error) {
-            result = sendError(error, req.headers["accept-language"])
+            result = sendError(error, req.headers["accept-language"]);
         }
         res.status(result.status).json(result);
     };

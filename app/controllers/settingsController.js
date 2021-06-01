@@ -50,7 +50,7 @@ class SettingsController{
 
     getSettings = async function (req, res) {
         //
-        let shoes_db = useDB(config.Shoes);
+        let shoes_db = useDB('loygift');
         let catalogs_model = shoes_db.model("catalogs");
         //
         let db = useDB(req.db)
@@ -64,8 +64,8 @@ class SettingsController{
             'msg': 'Sending settings'
         }
         try {
-            let settings = await Settings.find()
-            settings = settings[0]
+            let settings = await Settings.find();
+            settings = settings[0];
             if (!settings){
                 settings = await new Settings({
                     slogan: " ",
@@ -96,7 +96,7 @@ class SettingsController{
 
     updateSettings = async function (req, res) {
         //
-        let shoes_db = useDB(config.Shoes);
+        let shoes_db = useDB('loygift');
         let catalogs_model = shoes_db.model("catalogs");
         //
         let db = useDB(req.db)

@@ -5,18 +5,22 @@ const settingsSchema = new Schema({
     name: {
         type: String,
         required: [true, 'name_required'],
+        default:'CompanyName',
     },
     welcome: {
         type: String,
         required: true,
+        default:'WelcomeText',
     },
     slogan: {
         type: String,
         required: [true, 'slogan_required'],
+        default:'SloganText',
     },
     email: {
         type: String,
         required: true,
+        default:'example@org.com',
     },
     backgroundImageApp: {
         type: String,
@@ -29,7 +33,8 @@ const settingsSchema = new Schema({
     },
     currency: {
         type: String,
-        required: false
+        required: false,
+        default:'KGS',
     },
     chat: {
         type: Boolean,
