@@ -131,7 +131,7 @@ name: "SignUp",
           // this.$index.push('/')
       })
       .catch((error)=>{
-        that.$warningAlert(error);
+        that.$warningAlert(Object.values(error.response.data.errors));
       })
     this.register = ''
     }

@@ -86,8 +86,7 @@ name: "SignIn",
       })
       .catch((error)=>{
         localStorage.removeItem('token')
-        that.$warningAlert(error);
-
+        that.$warningAlert(error.response.data.msg);
       })
     }
   }
