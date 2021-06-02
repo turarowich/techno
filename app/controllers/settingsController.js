@@ -207,13 +207,36 @@ class SettingsController{
         res.status(result.status).json(result);
     };
     generateQrCodeFile = async function (req, res) {
+        let result = {
+            'status': 200,
+            'validation':1,
+            'msg': '',
+        }
+        //check
+        ///main_db _check
+        let main_db = global.userConnection.useDb('loygift');
+        let catalogs_model = main_db.model("catalogs");
+        ///new catalog route
+        let catalog = req.fields.catalog;
+        ///check
+        let found = await catalogs_model.find( { "cat_url": catalog } );
+        if(found.length>0){
+            result.msg = 'Url already exists';
+            result.validation = 0;
+            return res.status(200).json(result);
+        }
+
+        let company_id = req.db.slice(7);//removing loygift
+        await catalogs_model.findOneAndUpdate({ "company": company_id },{cat_url:catalog});
+
+        let this_company = useDB(req.db);
+        let Settings = this_company.model("Settings");
+
+        //
         let catalogUrl = req.fields.catalogUrl;
         let company = req.db;
         let dir = path.join(__dirname, '/../../views/frontend/images/' + company+'/qr')
-        let result = {
-            'status': 200,
-            'msg': '',
-        }
+
         try {
             function createQrFile(){
                 let filename = dir + '/' + 'code.png';
@@ -235,6 +258,7 @@ class SettingsController{
             }
             createQrFile();
             result.msg = 'Success';
+            await Settings.findOneAndUpdate(req.fields.settings_id, {catalogUrl:catalog});
         }catch (errr){
             result.msg = 'errr';
         }
@@ -258,6 +282,7 @@ class SettingsController{
             dir = path.join(__dirname, '/../../views/frontend/images/' + company+'/banner');
             full_file_name = 'images/' + company+'/banner/banner.'+ext;
             update.banner=full_file_name;
+            file_name='banner.'+ext;
         }else{
             update.logo=full_file_name;
         }

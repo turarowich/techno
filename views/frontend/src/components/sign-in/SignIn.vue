@@ -74,6 +74,7 @@ name: "SignIn",
       }
     },
     loginSubmit(){
+      let that = this;
       const data  = new FormData();
       data.append('email', this.login.email)
       data.append('password', this.login.password)
@@ -85,7 +86,7 @@ name: "SignIn",
       })
       .catch((error)=>{
         localStorage.removeItem('token')
-        console.log(error)
+        that.$warningAlert(error.response.data.msg);
       })
     }
   }
