@@ -29,7 +29,7 @@ class PushController {
         let db = useDB(req.db)
         let News = db.model("News");
         let Device = db.model("Device");
-
+        
         let data = await News.findById(req.params.id)
         let result = {
             'status': 500,
@@ -42,10 +42,9 @@ class PushController {
             let devicesIOS = await Device.find({'type': 'ios'})
             let noteIOS = new apn.Notification({
                 alert: {
-                    title: "Hi there",
-                    subtitle: "We present our new clothes",
-                    body: "Check it our when it's in stock",
-                   
+                    title: data.name,
+                    subtitle: "",
+                    body: data.desc,
                 },
                 mutableContent: 1,
                 payload:{

@@ -259,7 +259,7 @@ function createQrFile(user_id, company) {
     var dir = path.join(__dirname, '/../views/frontend/')
     QRCode.toFile(dir + link + filename, user_id, {
         color: {
-            dark: '#616CF5',  // Blue dots
+            dark: '#B0B0B0',  // Blue dots
             light: '#0000' // Transparent background
         },
         width: 600
