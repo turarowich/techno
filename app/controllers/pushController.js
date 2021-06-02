@@ -57,7 +57,8 @@ class PushController {
                     type: "news",
                 },
                 sound: "default",
-                topic: config.APNsTopic
+                topic: config.APNsTopic,
+                production: true
             });
             apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
                 console.log(response)
