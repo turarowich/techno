@@ -13,7 +13,7 @@ var options = {
         keyId: config.APNsKeyID,
         teamId: config.APNsTeamID
     },
-    production: false
+    production: true
 };
 
 
@@ -57,8 +57,7 @@ class PushController {
                     type: "news",
                 },
                 sound: "default",
-                topic: config.APNsTopic,
-                production: true
+                topic: config.APNsTopic
             });
             apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
                 console.log(response)
