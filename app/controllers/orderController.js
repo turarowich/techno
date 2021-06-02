@@ -45,7 +45,7 @@ class OrderController{
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
-        console.log(result)
+        
         res.status(result.status).json(result);
     };
 
@@ -117,7 +117,7 @@ class OrderController{
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
-        console.log(req.fields)
+        
         res.status(result.status).json(result);
     };
 

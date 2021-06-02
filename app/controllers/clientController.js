@@ -115,7 +115,6 @@ class ClientController{
     };
 
     updateClient = async function (req, res) {
-        console.log("got here")
         let db = useDB(req.db)
         let Client = db.model("Client");
         
@@ -130,7 +129,11 @@ class ClientController{
         updateClient: try {
             let query = { '_id': req.params.client }
             let client = null
-            if (req.fields.password) {
+            if (req.fields.birthDate) {
+                req.fields.birthDate = req.fields.birthDate.replace('\r\n', '');
+            }
+            console.log(req.fields)
+            if (req.fields.password && req.fields.password != "\r\n") {
                 req.fields.password = req.fields.password.trim()
                 client = await Client.findOneAndUpdate(query, req.fields, {
                     new: true
@@ -140,6 +143,8 @@ class ClientController{
                 await client.save()
 
             }else{
+                delete req.fields.password
+                
                 client = await Client.findOneAndUpdate(query, req.fields, {
                     new: true
                 })
