@@ -59,8 +59,8 @@ class PushController {
                 sound: "default",
                 topic: config.APNsTopic
             });
-            console.log(noteIOS)
             apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
+                console.log(response)
                 if (response.failed.length){
                     response.failed.forEach((fail) => {
                         if (fail.status == '400' && fail.response.reason == 'BadDeviceToken'){
