@@ -118,6 +118,7 @@ name: "SignUp",
       }
     },
     registerSubmit(){
+      let that = this;
       const data = new FormData()
       data.append('name', this.register.name);
       data.append('email', this.register.email);
@@ -126,10 +127,11 @@ name: "SignUp",
       data.append('password', this.register.password);
       this.axios.post(this.url('register'), data)
       .then(()=>{
-          this.$index.push('/')
+        that.$router.push('/')
+          // this.$index.push('/')
       })
       .catch((error)=>{
-        console.log("Error",error)
+        that.$warningAlert(error);
       })
     this.register = ''
     }

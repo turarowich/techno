@@ -62,7 +62,6 @@ class catalogController{
         let shoes_db = useDB(config.Shoes);
         let catalogs_model = shoes_db.model("catalogs");
         //
-        console.log(req.cat_db,"catd90000000000000000000000000000")
         let db = useDB('loygift'+req.cat_db)
         let Settings = db.model("Settings");
         let result = {

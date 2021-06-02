@@ -18,7 +18,8 @@
      <div class="reload-code d-flex align-items-center">
 <!--       <span>{{domainNameShop}}</span>-->
        <input v-model="catalogUrl">
-       <div @click="updateCatalogUrl();generateQrcode();" class="url-icon mr-1">
+<!--       <div @click="updateCatalogUrl();generateQrcode();" class="url-icon mr-1">-->
+       <div @click="generateQrcode();" class="url-icon mr-1">
          <img src="../../assets/icons/Setting.svg">
        </div>
        <div @click="copyCatalogUrl" class="url-icon">
@@ -295,10 +296,17 @@ export default {
       let that = this;
       let url = this.base_url+'/api/generateQrCodeFile';
       this.axios.put(url, {
-        catalogUrl:this.catalogFullUrl
+        catalogUrl:this.catalogFullUrl,
+        catalog:this.catalogUrl,
+        settings_id:this.id,
       }).then(function (response) {
-        console.log(response);
-        that.$successAlert('Generated new QR code');
+        let data = response.data;
+        if(data.validation == 1){
+          that.$successAlert(data.msg);
+        }else{
+          that.$warningAlert(data.msg);
+        }
+
       }).catch(function(error){
         if (error.response) {
           // console.log(error.response.status);

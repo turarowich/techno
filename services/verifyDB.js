@@ -5,7 +5,6 @@ function verifyDB(req, res, next) {
     //check if its client url or company;
     // let company_url = ['/login/','/register/','/signup','/socket.io/',];
     let catalog_urls = ['/getCatalogSettings/','/getClientCategories/','/getClientProducts/'];
-
     console.log(req.headers['company_url'],"MIDDLEWARE",config.Shoes);
     let cat_url = req.headers['company_url'];
     let shoes_db = global.userConnection.useDb('loygift').model("catalogs");
