@@ -19,7 +19,7 @@
 
   </div>
 
-  <NewsItem v-bind:newsList="newsList" v-on:selectNews="selectNews"/>
+  <NewsItem v-bind:newsList="newsList" v-on:selectNews="selectNews" v-on:deleteNews="deleteNews"/>
   <AddNews v-on:getNews="getNews"/>
   <EditNews v-bind:selectedNews="selectedNews" v-on:getNews="getNews"/>
 </div>
@@ -29,6 +29,7 @@
 import NewsItem from "@/components/News/NewsItem";
 import AddNews from "@/modals/news/AddNews";
 import EditNews from "@/modals/news/EditNews";
+import Swal from 'sweetalert2';
 export default {
   name: "News",
   components:{
@@ -62,7 +63,52 @@ export default {
     },
     selectNews(news){
         this.selectedNews = news
-    }
+    },
+    deleteNews(newsID){
+        Swal.fire({
+        showConfirmButton: true,
+        html: 'Are you sure to remove this <br>news',
+        showCloseButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Delete',
+        buttonsStyling:false,
+        customClass:{
+          popup: 'sweet-delete',
+          confirmButton: 'confirm-btn',
+          cancelButton:'cancel-btn',
+          actions:'btn-group',
+          content:'content-sweet',
+          closeButton:'close-btn'
+        },
+
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.axios.delete(this.url('deleteNews', newsID))
+          .then(()=>{
+            this.getNews()
+            Swal.fire({
+                  title:'Success',
+                  timer:1500,
+                  text:'News has been removed',
+                  showConfirmButton:false,
+                  position: 'top-right',
+                  customClass:{
+                    popup:'success-popup',
+                    content:'success-content',
+                    title:'success-title',
+                    header:'success-header',
+                    image:'success-img'
+                  },
+                  showClass:{
+                    popup: 'animate__animated animate__zoomIn'
+                  },
+                }
+            )
+          })
+       }
+      })
+          
+      },
   },
   mounted(){
     this.socket.on("server news notification", function(data) {

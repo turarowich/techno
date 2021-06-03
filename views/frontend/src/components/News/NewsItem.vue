@@ -29,7 +29,7 @@
             <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
                 <ul class="list-group">
                 <li class="list-group-item"  data-toggle="modal" data-target="#edit-news" @click="$emit('selectNews', news)">Edit</li>
-                <li class="list-group-item">Delete</li>
+                <li class="list-group-item" v-on:click="$emit('deleteNews' ,news._id)">Delete</li>
                 </ul>
             </div>
             </div>

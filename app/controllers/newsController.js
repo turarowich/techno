@@ -139,7 +139,7 @@ class NewsController {
             'msg': 'News deleted'
         }
         try {
-            let query = { '_id': req.params.category }
+            let query = { '_id': req.params.news }
             await News.findByIdAndRemove(query)
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
