@@ -27,7 +27,7 @@
                   <div  v-else v-for="product in filteredProducts" :key="product._id" @click="selectProduct(product)" class="product-order  d-flex align-items-center justify-content-between">
                     <div class="table-child d-flex align-items-center">
                       <div class="table-img">
-                        <img src="../../assets/img/sneak.webp">
+                        <img :src="imgSrc+'/'+product.img">
                       </div>
                       {{product.name}}
                     </div>
@@ -56,7 +56,7 @@
                   <div  v-else  v-for="order in new_order.products" :key="order._id" class="table-item d-flex align-items-center" >
                     <div  class="d-flex align-items-center"  style="width: 50%;">
                       <div class="table-img">
-                        <img src="../../assets/img/sneak.webp">
+                        <img :src="imgSrc+'/'+order.img">
                       </div>
                       {{order.name}}
                     </div>
@@ -94,10 +94,9 @@
                       Category:
                       <span v-if="new_order.client.category !== undefined">{{new_order.client.category.name}}</span>
                       <span v-else>no </span>
-                      Points: <span>{{new_order.client.points}}</span>
                     </div>
                   </div>
-                  <img @click="new_order.client = ''" class="close-client" src="../../assets/icons/deleteClient.svg">
+                  <img @click="new_order.client=''" class="close-client" src="../../assets/icons/deleteClient.svg">
                 </div>
               </div>
              <div class="parent-order-client">
@@ -120,8 +119,8 @@
               <h3 class="client-sub-title">Delivery method</h3>
               <div class="selects">
                 <select v-model="new_order.deliveryType" class=" form-control long-form-control  form-control-lg" aria-label=".form-select-lg example">
-                  <option value="self" >self</option>
-                  <option value="pickup">pick up</option>
+                  <option value="self" >Self</option>
+                  <option value="delivery">Delivery</option>
                 </select>
               </div>
 
@@ -152,7 +151,6 @@
               </ul>
 
               <div class="line"></div>
-
               <div class="d-flex mb-5 justify-content-between align-items-center">
                 <h3 class="total-price">Total</h3>
                 <h3 class="total-price">{{totalPrice}} $</h3>
@@ -162,7 +160,7 @@
 
           <div class="d-flex">
             <button class="save mr-2 mb-5" @click.prevent="onSubmit">Add order</button>
-            <button class="cancel">Close</button>
+            <button class="cancel" @click="close()">Close</button>
           </div>
         </div>
       </div>
@@ -181,16 +179,20 @@ export default {
 
   data(){
     return {
+      imgSrc:'',
       products:[],
       clients:[],
       search_product:'',
       search_client:'',
+      clientObj:'',
       new_order:{
         products:[],
         client:'',
         promocode:'',
         status:'new',
-        deliveryType:''
+        deliveryType:'',
+        totalPrice:this.totalPrice
+
       }
 
     }
@@ -201,7 +203,6 @@ export default {
       this.new_order.products.forEach((item)=>{
         sum+=item.price*item.quantity
       })
-      this.$emit('totalPrice', sum)
       return sum
     },
     filteredProducts(){
@@ -217,13 +218,14 @@ export default {
 
   },
   methods:{
+
     onSubmit(){
       this.axios.post(this.url('addOrder'),this.new_order)
             .then(()=>{
               this.getOrders()
-              this.new_order.products=[]
               this.$successAlert('Order has been added')
               $('#add-order').modal("hide")
+
             })
 
     },
@@ -243,14 +245,16 @@ export default {
        }
        if(product){
          this.new_order.products.push(product)
+
        }
      }
+
       this.search_product = ''
     },
     selectClient(id){
       this.clients.filter((client)=>{
         if(client._id === id){
-          this.new_order.client = client
+          this.new_order.client = client;
         }
       })
       this.search_client = ''
@@ -277,6 +281,7 @@ export default {
   mounted(){
     this.getProducts()
     this.getClients()
+    this.imgSrc = this.$server
 
   }
 

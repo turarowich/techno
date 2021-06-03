@@ -84,7 +84,6 @@
             <div class="col-lg-4">
               <h3 class="client-sub-title">Client</h3>
 
-
               <div  class="client-box d-flex align-items-center">
                 <div v-if="currentData.client === ''"  class="client-search d-flex align-items-center">
                   <img src="../../assets/icons/search-icon.svg" class="search-client-icon">
@@ -166,7 +165,7 @@
 
           <div class="d-flex">
             <button class="save mr-2" @click.prevent="onSubmit(currentData._id)">Edit order</button>
-            <button class="cancel">Close</button>
+            <button class="cancel" @click="close">Close</button>
           </div>
         </div>
       </div>
@@ -181,7 +180,7 @@ import $ from "jquery";
 
 export default {
   name: "EditOrder",
-  props:['select_order'],
+  props:['select_order','getOrders'],
   data(){
     return {
       products:[],
@@ -227,7 +226,7 @@ export default {
     onSubmit(id){
       this.axios.put(this.url('updateOrder',id),this.currentData)
       .then(()=>{
-        console.log("Success")
+        this.getOrders()
         $('#edit-order').modal("hide")
         this.$informationAlert('Changes are saved')
       })
@@ -248,6 +247,8 @@ export default {
         }
         if(product){
           this.currentData.products.push(product)
+
+
         }
       }
       this.search_product = ''
@@ -256,7 +257,6 @@ export default {
       this.clients.filter((client)=>{
         if(client._id === id){
           this.currentData.client = client
-          console.log(this.currentData)
         }
       })
       this.search_client = ''
@@ -278,6 +278,7 @@ export default {
   mounted(){
     this.getProducts()
     this.getClients()
+
   },
   watch:{
     select_order(newCat){

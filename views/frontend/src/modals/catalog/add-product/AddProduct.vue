@@ -77,18 +77,29 @@
 
                       </div>
 
+
                       <div class="modal-img ">
-                        <label> Photos</label>
+                          <label> Photos</label>
 
-                        <p>
-                          You can upload 4 more JPG or PNG photos, the minimum resolution is 400*400px, the size is<br> not more than 3 MB. The first photo will be shown as the main one by default
-                          .</p>
+                          <p>
+                            You can upload 4 more JPG or PNG photos, the minimum resolution is 400*400px, the size is<br> not more than 3 MB. The first photo will be shown as the main one by default
+                            .</p>
 
-                        <label for="imgArray">
-                          <img src="../../../assets/img/modal-img.svg">
-                          <input class="d-none" multiple id="imgArray" type="file" name="imgArray">
-                        </label>
-                      </div>
+                        <div class="d-flex">
+                          <label>
+                            <img src="../../../assets/img/modal-img.svg ">
+                            <input @change="onFileChange" class="d-none" multiple id="imgArray" type="file" name="imgArray">
+                          </label>
+                          <div class="d-flex" v-if="show_images.length !==0">
+                            <div  v-for="(img,index) in previewImage"  :key="index" class="selected-images">
+                              <img id="choosed-img"  :src="img" class="show-images mr-2" />
+                              <div class="selected-overlay">
+                                <img @click="removeImage(img)" src="../../../assets/icons/deleteClient.svg">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        </div>
 
                       <div class="modal-btn d-flex">
                         <button @click.prevent="onSubmit" class="save">Save</button>
@@ -112,6 +123,9 @@ name: "AddProduct",
 props:['listCategory', 'getProducts'],
   data(){
     return{
+      boolean:true,
+      show_images: [],
+      previewImage:[],
       newProduct:{
         name: '',
         price: '',
@@ -122,13 +136,16 @@ props:['listCategory', 'getProducts'],
         vendorCode:'',
         promoStart:'',
         promoEnd:'',
-        promoPrice:''
+        promoPrice:'',
+
 
       },
     };
   },
   methods:{
-
+  removeImage(img){
+    this.previewImage = this.previewImage.filter((item)=>item !== img)
+  },
     showPrice(){
       if($('#show-price').prop('checked')){
         $('.show-price').addClass('active')
@@ -136,22 +153,31 @@ props:['listCategory', 'getProducts'],
       else{
         $('.show-price').removeClass('active')
       }
-
     },
-  onSubmit(){
+    onFileChange() {
+      $.each($("#imgArray")[0].files, (i,file)=> {
+        console.log(i)
+        this.show_images.push(file)
+        this.previewImage.push(URL.createObjectURL(file))
+      })
+    },
+    onSubmit(){
       let new_product = this.newProduct;
       const form  = new FormData;
-      $.each($("#imgArray")[0].files, function(i, file) {
-        form.append('imgArray'+i, file);
-      });
+      for(let item in this.show_images){
+          if(item<1){
+           form.append('img', this.show_images[item])
+          }
+         else{
+           form.append('imgArray'+(item-1), this.show_images[item])
+          }
+        }
+
       form.append('name', new_product.name)
       form.append('price', new_product.price)
       form.append('quantity', new_product.quantity)
       form.append('category', new_product.category)
       form.append('description', new_product.description)
-      // form.append('promoStart', new_product.promoStart)
-      // form.append('promoPrice', new_product.promoPrice)
-      // form.append('promoEnd', new_product.promoEnd)
       form.append('vendorCode', new_product.vendorCode)
       this.axios.post(this.url('addProduct'), form)
           .then(() => {
@@ -162,8 +188,10 @@ props:['listCategory', 'getProducts'],
           })
 
      $('#add-products').modal("hide")
+    this.show_images = []
+    this.previewImage= []
       this.newProduct = {
-         name: '',
+        name: '',
         price:'',
         quantity:'',
         category: '',
@@ -199,6 +227,25 @@ props:['listCategory', 'getProducts'],
 
 <style scoped>
 
+.selected-images{
+  display: flex;
+  position: relative;
+
+}
+.selected-overlay{
+  width: 69px;
+  height: 69px;
+  background: rgba(0,0,0,0.2);
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.show-images{
+  width: 69px;
+  height: 69px;
+  border-radius:3px;
+}
 .modal.fade:not(.in).right .modal-dialog {
   -webkit-transform: translate3d(0,0,0);
   transform: translate3d(0, 0, 0);

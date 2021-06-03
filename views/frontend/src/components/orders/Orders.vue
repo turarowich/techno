@@ -46,7 +46,7 @@
     </div>
     <div class="d-flex main-content-header justify-content-between align-items-center">
       <div class="table-head d-flex align-items-center" style="width: 18%;">
-        <div><label class="custom-checkbox"><input type="checkbox"  @click="toggleSelect" v-model="selectAll"><span class="checkmark"></span></label></div>
+        <div><label class="custom-checkbox"><input type="checkbox" id="parent-check"  @click="toggleSelect" v-model="selectAll"><span class="checkmark"></span></label></div>
 
         Name order</div>
       <div class="table-head" style="width: 30%;">Product</div>
@@ -87,6 +87,7 @@
       :getOrders="getOrders"
     />
     <EditOrder
+        :getOrders="getOrders"
       :select_order="select_order"
     />
     <div class="pagination d-flex justify-content-between align-items-center">
@@ -124,6 +125,7 @@ name: "Orders",
   },
   data(){
     return{
+      deletedOrders:[],
       orderList:[],
       select_order:'',
       data_check:{
@@ -198,14 +200,14 @@ name: "Orders",
         if(item._id === id) {
           this.select_order = item;
           this.addNewProperty(this.select_order.products, "_id", 0, 'product')
+
         }
       })
     },
     getOrders(){
-      this.axios.get(this.url('getOrders'))
+      this.axios.get(this.url('getOrders')+'?populate=client')
       .then((response)=>{
         this.orderList = response.data.objects;
-        console.log(this.orderList)
       })
     },
     checkAll(item){
@@ -256,14 +258,47 @@ name: "Orders",
       });
     },
     deleteAllOrder() {
-      if (this.selectAll) {
-        this.orderList = [];
-        this.$successAlert('All order have been removed')
+      this.orderList.forEach((user)=> {
+        if(this.$refs.order_item.$refs[`select${user._id}`] !== undefined && this.$refs.order_item.$refs[`select${user._id}`] !== null){
+          if(this.$refs.order_item.$refs[`select${user._id}`].checked === true){
+            this.deletedOrders.push(user._id)
+          }
+        }
+      });
+
+      if(this.deletedOrders.length > 0){
+        Swal.fire({
+          showConfirmButton: true,
+          html: 'Are you sure to remove these<br>orders',
+          showCloseButton: true,
+          showCancelButton: true,
+          confirmButtonText: 'Delete',
+          buttonsStyling:false,
+          customClass:{
+            popup: 'sweet-delete',
+            confirmButton: 'confirm-btn',
+            cancelButton:'cancel-btn',
+            actions:'btn-group',
+            content:'content-sweet',
+            closeButton:'close-btn'
+          },
+
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.axios.delete(this.url('deleteOrders'),{data:{objects: this.deletedOrders}})
+                .then(()=>{
+                  this.deletedOrders = []
+                  this.getOrders()
+                  $('#parent-check').prop('checked',false)
+                  this.$successAlert('All orders have been removed')
+                })
+          }
+          else{
+            this.deletedOrders = []
+          }
+
+        })
       }
-      else{
-        this.orderList = this.filteredList.filter(catalog => !catalog.checked)
-      }
-      $('.custom-checkbox input').prop('checked', false)
     },
     sortByDate() {
       if (this.orderList.length === 0) {
