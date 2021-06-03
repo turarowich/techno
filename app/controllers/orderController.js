@@ -161,6 +161,7 @@ class OrderController{
                         order.products.push(order_product._id)
                     }
                 }
+                await order.save()
             }
             result['object'] = await order.populate('client').populate('products').execPopulate()
         } catch (error) {
