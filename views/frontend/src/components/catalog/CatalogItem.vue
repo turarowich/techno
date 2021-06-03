@@ -17,7 +17,7 @@
 
         <div  class="d-flex align-items-center"  style="width: 36%;">
           <div class="table-img">
-            <img >
+            <img :src="imgSrc+'/'+catalog.img">
           </div>
           {{catalog.name}}
         </div>
@@ -53,7 +53,8 @@ export default {
   props:['catalogList', 'displayList'],
   data(){
     return {
-      newCheck:false
+      newCheck:false,
+      imgSrc:''
     }
   },
 
@@ -77,8 +78,9 @@ export default {
     }
 
   },
-
-
+  mounted(){
+    this.imgSrc = this.$server
+  }
 }
 </script>
 

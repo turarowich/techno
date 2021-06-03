@@ -9,15 +9,15 @@
       <div class="table-child d-flex align-items  -center"  style="width: 18%;">
         <div><label class="custom-checkbox"><input  type="checkbox"  @click="checkMainSelect"  :ref="'select'+order._id" :value="order._id" ><span class="checkmark"></span></label></div>
         34543</div>
-      <div v-for="nam in order.products" :key="nam._id" class="table-child d-flex align-items-center"  style="width: 30%;">
+      <div  class="table-child d-flex align-items-center"  style="width: 30%;">
         <div  class="table-img">
            <img src="../../assets/img/sneak.webp">
          </div>
-         <span>{{nam.name}}</span>
+         <span>{{order.products[0].name}}</span>
       </div>
-      <div class="table-child" v-show="data_check.client_checked"  style="width: 25%;">{{order.client_name}}</div>
-      <div class="table-child" v-show="data_check.phone_checked" style="width: 20%;">{{order.client_phone}}</div>
-      <div  class="table-child"  style="width: 10%;">{{}}$</div>
+      <div class="table-child" v-show="data_check.client_checked"  style="width: 25%;">{{order.client.name}}</div>
+      <div class="table-child" v-show="data_check.phone_checked" style="width: 20%;">{{order.client.phone}}</div>
+      <div  class="table-child"  style="width: 10%;">{{order.totalPrice}} $</div>
       <div class="table-child" v-show="data_check.date_checked"  style="width: 15%;">{{order.createdAt.split('').slice(0,10).join('')}}</div>
       <div class="table-child pr-3" v-show="data_check.notes_checked" style="width: 10%;" ><div>{{order.notes}}</div></div>
       <div class="table-child" style="width: 15%;"

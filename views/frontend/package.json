@@ -33,6 +33,7 @@
     "slick": "^1.12.2",
     "slick-carousel": "^1.8.1",
     "socket.io-client": "^4.0.1",
+    "spartan-multi-image-picker": "^1.0.3-rc-1",
     "sweetalert2": "^10.15.5",
     "vue": "^3.0.5",
     "vue-color-kit": "^1.0.3",
