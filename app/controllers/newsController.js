@@ -47,8 +47,9 @@ class NewsController {
             'status': 200,
             'msg': 'News added'
         }
-        let category = ['news','promotions']
-        if (!category.includes(req.fields.category)){
+        if (req.fields.category){
+            req.fields.category = "promotions"
+        }else{
             req.fields.category = "news"
         }
         addNews: try {
@@ -100,10 +101,11 @@ class NewsController {
 
             let query = { '_id': req.params.news }
             req.fields['updatedAt'] = new Date()
-            let category = ['news', 'promotions']
-            if (!category.includes(req.fields.category)) {
+            if (req.fields.category) {
+                req.fields.category = "promotions"
+            } else {
                 req.fields.category = "news"
-            } 
+            }
             let news = await News.findOneAndUpdate(query, req.fields)
             if (req.files.img) {
                 let filename = saveImage(req.files.img, req.db, news.img)

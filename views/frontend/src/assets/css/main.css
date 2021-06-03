@@ -1221,3 +1221,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     white-space:nowrap;
     margin-bottom: 0;
 }
+.of-ellipsis{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space:nowrap;
+}

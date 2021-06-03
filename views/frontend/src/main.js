@@ -87,6 +87,9 @@ app.config.globalProperties.changeToken = function () {
     })
     console.log(this.axios.defaults.headers)
 }
+app.config.globalProperties.img = function (main) {
+    return this.$server + '/' + main
+}
 app.config.globalProperties.url = function (main, id = null, search = null) {
     let additional = '/'
     if (id) {

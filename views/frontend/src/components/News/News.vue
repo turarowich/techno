@@ -3,7 +3,7 @@
   <div class="searchAndButtons">
     <div class="d-flex justify-content-between app-buttons">
       <div class="d-flex align-items-center">
-        <button class="app-buttons-item adding-btns" @click="$router.push('/add-news')"><span>+ Add news</span></button>
+        <button class="app-buttons-item adding-btns" data-toggle="modal" data-target="#add-news"><span>+ Add news</span></button>
       </div>
     </div>
     <div class="main-search d-flex align-items-center ">
@@ -19,23 +19,58 @@
 
   </div>
 
-  <NewsItem/>
-
+  <NewsItem v-bind:newsList="newsList" v-on:selectNews="selectNews"/>
+  <AddNews v-on:getNews="getNews"/>
+  <EditNews v-bind:selectedNews="selectedNews" v-on:getNews="getNews"/>
 </div>
 </template>
 
 <script>
 import NewsItem from "@/components/News/NewsItem";
+import AddNews from "@/modals/news/AddNews";
+import EditNews from "@/modals/news/EditNews";
 export default {
   name: "News",
   components:{
-    NewsItem
+    NewsItem,
+    AddNews,
+    EditNews
   },
-  created(){
+  data(){
+    return{
+      newsListServer:[],
+      selectedNews:{},
+      search:""
+    }
+  },
+  computed:{
+        newsList() {
+            return this.newsListServer.filter((news) =>{
+                if(news.name.toLowerCase().includes(this.search.toLowerCase())){
+                    return true
+                }
+                return false
+            });
+        }
+  },
+  methods:{
+    getNews(){
+        this.axios.get(this.url('getNews'))
+            .then((response) => {
+                this.newsListServer = response.data.objects;
+            })
+    },
+    selectNews(news){
+        this.selectedNews = news
+    }
+  },
+  mounted(){
     this.socket.on("server news notification", function(data) {
         console.log(data)
     })
-  }
+    this.getNews()
+  },
+  
 }
 </script>
 

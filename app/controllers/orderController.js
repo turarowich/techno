@@ -1,6 +1,7 @@
 const { useDB, sendError, createExcel, randomNumber } = require('../../services/helper')
 var validate = require('../../config/messages');
-const fs = require('fs')
+const fs = require('fs');
+const { connect } = require('mongodb');
 class OrderController{
     
     getOrder = async function (req, res) {
@@ -145,11 +146,11 @@ class OrderController{
                     if (!product.id) {
                         search_product = await Product.findById(product._id)
                     }
-
+                    
                     if (search_product) {
 
                         let order_product = await new OrderProduct({
-                            product: product.id ? product.id : product._id,
+                            product: search_product._id,
                             name: search_product.name,
                             name_ru: search_product.name_ru,
                             secondary: search_product.secondary,
@@ -158,9 +159,11 @@ class OrderController{
                             price: search_product.price,
                             quantity: product.quantity
                         }).save();
+                        
                         order.products.push(order_product._id)
                     }
                 }
+                await order.save()
             }
             result['object'] = await order.populate('client').populate('products').execPopulate()
         } catch (error) {
