@@ -29,7 +29,7 @@
     </div>
     <div class="people-info">
       <div class="chat-line"></div>
-        <ChatProfile/>
+        <ChatProfile v-bind:contact="selectedContact"/>
     </div>
         </div>
   </div>

@@ -1226,3 +1226,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     overflow: hidden;
     white-space:nowrap;
 }
+.user-picture{
+    width:50px;
+    height:50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+}

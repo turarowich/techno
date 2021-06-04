@@ -1,35 +1,47 @@
 <template>
 <div class="chat-profile">
+  <div v-if="contact">
+    <img class="profile-img" v-if="contact.avatar" :src="makeImg(contact.avatar)" alt="">
+    <img class="profile-img" v-else src="../../../assets/icons/chat.svg" > 
+    <h3 class="profile-title">{{contact.name}}</h3>
+    <span>Last purchase {{contact.updatedAt ? contact.updatedAt.slice(0, 10) : ""}}</span>
+    <div class="chat-line"> </div>
 
-  <img class="profile-img" src="../../../assets/img/profile.webp">
-  <h3 class="profile-title">Cristiano Ronaldo</h3>
-  <span>Last purchase 16.02.2020</span>
-  <div class="chat-line"> </div>
-
-  <div class="d-flex justify-content-center mb-5">
-    <div class="paid-for">
-        <h4>300$</h4>
-      <span>Paid for</span>
+    <div class="d-flex justify-content-center mb-5">
+        <div class="paid-for">
+            <h4>{{contact.balance}}</h4>
+        <span>Paid for</span>
+        </div>
+        <div class="points">
+        <h4>{{contact.points}}</h4>
+        <span>Point</span>
+        </div>
     </div>
-    <div class="points">
-      <h4>200</h4>
-      <span>Point</span>
+
+    <div class="profile-contact">
+        <p><img src="../../../assets/icons/Call.svg">{{contact.phone}}</p>
+        <p><img src="../../../assets/icons/Message.svg">{{contact.email}}</p>
+        <p><img src="../../../assets/icons/Calendar.svg">{{contact.birthDate ? contact.birthDate.slice(0, 10) : ""}}</p>
     </div>
-  </div>
 
-  <div class="profile-contact">
-    <p><img src="../../../assets/icons/Call.svg">+1 812 546 28 53</p>
-    <p><img src="../../../assets/icons/Message.svg">milena@gmail.com</p>
-    <p><img src="../../../assets/icons/Calendar.svg">21.12.2021</p>
+    <button class="view-profile">View profile</button>
   </div>
-
-  <button class="view-profile">View profile</button>
 </div>
 </template>
 
 <script>
 export default {
-name: "ChatProfile"
+    name: "ChatProfile",
+    props:{
+        contact:{
+            type:Object
+        }
+    },
+    methods:{
+        makeImg(name){
+            return this.img(name)
+        }
+    },
 }
 </script>
 

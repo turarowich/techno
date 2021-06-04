@@ -2,9 +2,12 @@
     <div>  
         <li v-for="(contact,index) in contactList" :key="contact.id" :class="{'selected' : index === selected}" v-on:click="selectContact(index, contact)">
         <div class="contact-list d-flex align-items-center">
-          <img src="../../../assets/img/chat.jpg" class="avatar mr-1">
+            <div  class="overflow-hidden">
+                <img class="user-picture" v-if="contact.avatar" :src="makeImg(contact.avatar)" alt="">
+                <img class="user-picture" v-else src="../../../assets/icons/chat.svg" > 
+            </div>
           <div>
-            <p class="contact-name m-0">{{contact.name +' '+ contact.lastName}}</p>
+            <p class="contact-name m-0">{{contact.name}}</p>
             <span  class="contact-span m-0">{{contact.email}}</span>
           </div>
         </div>
@@ -28,6 +31,9 @@ name: "Contact",
       this.selected = index;
       this.$emit('selected',contact)
 
+    },
+    makeImg(name){
+        return this.img(name)
     }
 
   },

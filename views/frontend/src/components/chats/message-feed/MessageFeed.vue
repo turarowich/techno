@@ -1,14 +1,24 @@
 <template>
-   <ul id="chatToBottom" class="feed-list" v-if="contact">
-     <li  v-for="message in messages" :class="`message${message.isIncoming ? ' send' : ' received' }`" :key="message.id">
-      <div class="text">
-        {{message.text}}
-        <i class="send-text fas fa-check"></i>
+   <div id="chatToBottom" class="feed-list" v-if="contact">
+     <div class="w-100">
+          <div v-if="messages.length > show">
+            <button class="load-more" @click="show += 8">
+                load more
+            </button>
+          </div>
       </div>
-     </li>
-    <li class="emptySpace">
-    </li>
-   </ul>
+      <div  v-for="(msgs, date) in filteredMessages"  :key="date">
+        <div class="message-date my-1">
+            {{date}}
+        </div>
+        <div  v-for="message in msgs" :class="`message${message.isIncoming ? ' send' : ' received' }`" :key="message.id">
+            <div class="text my-1">
+                {{message.text}}
+                <i class="send-text fas fa-check"></i>
+            </div> 
+        </div>
+     </div>
+   </div>
 </template>
 
 <script>
@@ -24,16 +34,51 @@ name: "MessageFeed",
 
     }
   },
+    watch: {
+        messages: function (msgs) {
+            this.filteredMessages = msgs.slice(Math.max(msgs.length - this.show, 1)).reduce((groups, msg) => {
+                const date = msg.createdAt.split('T')[0];
+                if (!groups[date]) {
+                    groups[date] = [];
+                }
+                groups[date].push(msg);
+                return groups;
+            }, {});
+            this.show = 8
+        },
+        show: function (len) {
+            this.filteredMessages = this.messages.slice(Math.max(this.messages.length - len, 1)).reduce((groups, msg) => {
+                const date = msg.createdAt.split('T')[0];
+                if (!groups[date]) {
+                    groups[date] = [];
+                }
+                groups[date].push(msg);
+                return groups;
+            }, {});
+        },
+    },
+    data(){
+        return{
+            show: 8,
+            filteredMessages: []
+        }
+    },
 
 }
 </script>
 
 <style scoped>
+.message-date{
+    font-size: 14px;
+    line-height: 17px;
+    color: #8C94A5;
+    width: 100%;
+    text-align: center;
+}
 .message{
   font-size: 16px;
   list-style-type: none;
   position: relative;
-
 }
 .feed-list{
   width: 100%;
@@ -77,5 +122,19 @@ justify-content: flex-end;
 .emptySpace{
     display: flex;
     height: 50px;
+}
+.load-more{
+    background: 0;
+    border: 0;
+    width: 100%;
+    height: 40px;
+    font-size: 16px;
+    text-align: center;
+    color: #9ea8e6;
+    transition: 0.3s;
+}
+.load-more:hover{
+    color: #616CF5;
+    transition: 0.3s;
 }
 </style>
