@@ -80,7 +80,9 @@ class PushController {
     sendNewMessage = async function (req_db, client, message) {
         let db = useDB(req_db)
         let Device = db.model("Device");
+        console.log('here 2')
         if (client) {
+            console.log('here 3')
             let devicesIOS = await Device.find({ 'type': 'ios', 'client': client })
             let noteIOS = new apn.Notification({
                 alert: {
@@ -109,6 +111,7 @@ class PushController {
                 console.log("Faled to send message to ", error);
             });
         }
+        console.log('here 4')
     };
 
 
