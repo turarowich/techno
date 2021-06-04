@@ -24,7 +24,8 @@ name: "MessageComposer",
   },
   methods:{
     send(){
-        if(this.message === ''){
+        console.log(this.message.length)
+        if(this.message.length < 1){
             return;
         }else{
             this.$emit('send' ,this.message)
@@ -41,9 +42,9 @@ name: "MessageComposer",
         if(pos == 0){
             pos = textArea.selectionStart
         }
-        let output = [textArea.value.slice(0, pos), selection.emoji, textArea.value.slice(pos)].join('');
+        let output = [this.message.slice(0, pos), selection.emoji, this.message.slice(pos)].join('');
         
-        textArea.value = output
+        this.message = output
         pos += 2
     });
     picker.on('hidden', () => {

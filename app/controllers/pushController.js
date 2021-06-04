@@ -6,7 +6,7 @@ const { query } = require('express');
 var apn = require('apn');
 var path = require('path')
 var dir = path.join(__dirname, "../../keys/" + config.APNs)
-console.log(dir)
+
 var options = {
     token: {
         key: dir,
