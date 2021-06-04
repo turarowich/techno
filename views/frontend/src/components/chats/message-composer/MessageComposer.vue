@@ -25,10 +25,10 @@ name: "MessageComposer",
   methods:{
     send(){
         if(this.message === ''){
-        return;
+            return;
         }else{
-        this.$emit('send' ,this.message)
-        this.message = ''
+            this.$emit('send' ,this.message)
+            this.message = ''
         }
     }
   }, 

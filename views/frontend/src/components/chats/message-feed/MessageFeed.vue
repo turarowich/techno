@@ -24,27 +24,23 @@
 <script>
 export default {
 name: "MessageFeed",
-  props:{
-    contact:{
-      type:Object,
-    },
-    messages:{
-      type:Array,
-      required: function () { return [] }
-
-    }
-  },
+    props:['contact', 'messages'],
     watch: {
-        messages: function (msgs) {
-            this.filteredMessages = msgs.slice(Math.max(msgs.length - this.show, 1)).reduce((groups, msg) => {
-                const date = msg.createdAt.split('T')[0];
-                if (!groups[date]) {
-                    groups[date] = [];
-                }
-                groups[date].push(msg);
-                return groups;
-            }, {});
-            this.show = 8
+        
+        messages: {
+            handler: function (msgs) {
+                console.log("ther is new messages")
+                this.filteredMessages = msgs.slice(Math.max(msgs.length - this.show, 1)).reduce((groups, msg) => {
+                    const date = msg.createdAt.split('T')[0];
+                    if (!groups[date]) {
+                        groups[date] = [];
+                    }
+                    groups[date].push(msg);
+                    return groups;
+                }, {});
+                this.show = 8
+            },
+            deep: true
         },
         show: function (len) {
             this.filteredMessages = this.messages.slice(Math.max(this.messages.length - len, 1)).reduce((groups, msg) => {

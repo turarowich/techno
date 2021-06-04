@@ -20,16 +20,7 @@ name: "Conversation",
     MessageComposer,
     ConversationHeader
   },
-  props:{
-    contact:{
-      type:Object
-    },
-    messages:{
-      type:Array,
-      default: function () { return [] }
-    }
-
-  },
+  props:['contact', 'messages'],
   methods:{
     sendMessage(text){
         this.$emit('message', {user: this.contact._id, text: text, isIncoming: true })

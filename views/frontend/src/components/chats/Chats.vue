@@ -69,7 +69,7 @@ export default {
             })
         }
         return []
-    }
+    },
   },
   methods:{
     init () {
@@ -87,15 +87,13 @@ export default {
       this.socket.emit('init', contact._id)
     },
     sendMessage(data){
+        console.log("here")
         this.socket.emit('message', data)
-        let message = {client:data.user, text:data.text, isIncoming: true}
-        
+        let message = {client:data.user, text:data.text, isIncoming: true, createdAt: new Date().toJSON(), new:"its nw"}
         let index = this.contactList.findIndex(user => user._id === data.user );
         if(index != undefined){
             this.contactList[index].messages.push(message)
         }
-
-        this.scrollToBottom("chatToBottom")
     },
   },
   created() {
@@ -105,14 +103,8 @@ export default {
             let index = that.contactList.findIndex(user => user._id === data.user );
             console.log(index);
             if(index != undefined){
-                console.log(that.contactList[index].messages)
                 that.contactList[index].messages.push(message)
-                console.log(that.contactList[index].messages)
             }
-            if(that.selectedContact._id == data.user){
-                that.messages  = that.contactList[index].messages
-            }
-            
             that.scrollToBottom("chatToBottom")
         })
   },
