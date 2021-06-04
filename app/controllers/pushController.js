@@ -77,6 +77,39 @@ class PushController {
         }
         res.status(result.status).json(result);
     };
+    sendNewMessage = async function (req_db, client, message) {
+        let db = useDB(req_db)
+        let Device = db.model("Device");
+        if (client) {
+            let devicesIOS = await Device.find({ 'type': 'ios', 'client': client._id })
+            let noteIOS = new apn.Notification({
+                alert: {
+                    title: "New message",
+                    subtitle: "",
+                    body: message.text,
+                },
+                mutableContent: 1,
+                payload: {
+                    type: "message",
+                },
+                sound: "default",
+                topic: config.APNsTopic
+            });
+            apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
+                if (response.failed.length) {
+                    response.failed.forEach((fail) => {
+                        console.log(fail.response)
+                        if (fail.status == '400' && fail.response.reason == 'BadDeviceToken') {
+                            let device = devicesIOS.find(device => device.token == fail.device)
+                            if (device) device.deleteOne()
+                        }
+                    });
+                }
+            }).catch(function (error) {
+                console.log("Faled to send message to ", error);
+            });
+        }
+    };
 
 
     

@@ -99,7 +99,7 @@ export default {
   created() {
         let that = this
         this.socket.on("server message", function(data) {
-            let message = {client:data.user , text:data.text, isIncoming: false}
+            let message = {client:data.user , text:data.text, isIncoming: false, createdAt: new Date().toJSON(), new:"its nw"}
             let index = that.contactList.findIndex(user => user._id === data.user );
             console.log(index);
             if(index != undefined){

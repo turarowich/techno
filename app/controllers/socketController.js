@@ -1,5 +1,6 @@
 const { useDB } = require('../../services/helper')
 const user = require('../models/user');
+const pushController = require('./pushController');
 class SocketController {
     addMessage = async function (socket, data) {
         let db = useDB(socket.handshake.headers.db)
@@ -10,13 +11,15 @@ class SocketController {
             text: data.text,
             isIncoming: data.isIncoming
         }).save();
-
-        Client.findOneAndUpdate({ '_id': data.user }, { $push: { messages: message } }).exec()
+        
+        let client = await Client.findOneAndUpdate({ '_id': data.user }, { $push: { messages: message } }).exec()
+        pushController.sendNewMessage(socket.handshake.headers.db, client, message)
     }
     getMessages = async function (io, socket, user) {
         let db = useDB(socket.handshake.headers.db)
         let Client = db.model("Client");
         let client = await Client.findById(user).populate('messages').exec()
+        
         io.to(socket.id).emit("all messages", client.messages)
     }
 
