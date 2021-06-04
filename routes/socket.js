@@ -16,6 +16,7 @@ module.exports = io => {
         });
 
         socket.on('message', (data) => {
+            console.log(data)
             controller.addMessage(socket, data)
             socket.join(data.user)
             socket.broadcast.to(data.user).emit("server message", data)

@@ -42,12 +42,13 @@ const ax = axios.create({
         port: 8443
     },
 });
+console.log(process.env.VUE_APP_SERVER_URL)
 const socket = io(process.env.VUE_APP_SERVER_URL, {
     extraHeaders: {
         token: localStorage.getItem('token')
     },
     withCredentials: true,
-    reconnection: false
+    reconnection: true
 })
 
 ax.defaults.headers.common['Authorization'] = 'Bearer '+ token
@@ -80,7 +81,7 @@ app.config.globalProperties.addNewProperty = function(obj, key, value = "", copy
 }
 app.config.globalProperties.changeToken = function () {
     this.axios.defaults.headers.common['Authorization'] = 'Bearer '+ localStorage.getItem('token')
-    this.socket = io({
+    this.socket = io(this.$server,{
         extraHeaders: {
             token: localStorage.getItem('token')
         },
