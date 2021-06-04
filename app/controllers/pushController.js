@@ -107,6 +107,7 @@ class PushController {
                         }
                     });
                 }
+                console.log(response)
             }).catch(function (error) {
                 console.log("Faled to send message to ", error);
             });
