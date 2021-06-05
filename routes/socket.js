@@ -10,6 +10,7 @@ module.exports = io => {
     io.on('connection', (socket) => {
         socket.on("details", listener)
         socket.on('init_admin', () => {
+            console.log('init admin',socket.handshake.headers.db)
             socket.join(socket.handshake.headers.db)
         });
         socket.on('init', (user) => {
