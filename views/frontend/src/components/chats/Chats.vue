@@ -95,9 +95,8 @@ export default {
             console.log(index);
             if(index != undefined){
                 that.contactList[index].messages.push(message)
-                this.contactList[index].lastMessageAt = new Date()
+                that.contactList[index].lastMessageAt = new Date()
             }
-            that.scrollToBottom("chatToBottom")
         })
         this.socket.emit('init_admin')
   },
