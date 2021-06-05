@@ -76,7 +76,6 @@ export default {
     startConversation(contact){
       this.selectedContact = contact
       this.messages = contact.messages
-      this.socket.emit('init', contact._id)
     },
     sendMessage(data){
         this.socket.emit('message', data)
@@ -99,6 +98,7 @@ export default {
             }
             that.scrollToBottom("chatToBottom")
         })
+        this.socket.emit('init_admin')
   },
   mounted: function () {
     this.init()
@@ -133,6 +133,8 @@ export default {
 }
 .list-people{
   height:calc(100% - 40px);
+  max-width: 333px;
+  width: 100%;
   overflow-y: auto;
 }
 

@@ -9,7 +9,9 @@ module.exports = io => {
     });
     io.on('connection', (socket) => {
         socket.on("details", listener)
-
+        socket.on('init_admin', () => {
+            socket.join(socket.handshake.headers.db)
+        });
         socket.on('init', (user) => {
             console.log(user)
             socket.join(user)
@@ -21,7 +23,7 @@ module.exports = io => {
             console.log(data)
             controller.addMessage(socket, data)
             socket.join(data.user)
-            socket.broadcast.to(data.user).emit("server message", data)
+            socket.broadcast.to(data.user).to(socket.handshake.headers.db).emit("server message", data)
         });
 
         socket.on('get messages', (user) => {

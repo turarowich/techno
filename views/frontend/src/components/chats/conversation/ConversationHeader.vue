@@ -1,6 +1,6 @@
 <template>
   <div class="conversation-header d-flex align-items-center">
-    <div class="d-flex align-items-center"  v-if="contact" style="height:100%">
+    <div class="d-flex align-items-center"  v-if="contact" style="height:40px">
       <img class="user-picture" v-if="contact.avatar" :src="makeImg(contact.avatar)" alt="">
       <img class="user-picture" v-else src="../../../assets/icons/chat.svg" > 
       <h5>{{contact.name}}</h5>
@@ -29,7 +29,7 @@ export default {
 .conversation-header{
   border-bottom: 1px solid #e8e8e8;
   padding:0 20px;
-  height: 40px
+  height: 40px!important;
 }
 .conversation-header img{
   width: 25px;

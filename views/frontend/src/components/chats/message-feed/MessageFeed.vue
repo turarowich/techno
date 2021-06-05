@@ -29,7 +29,7 @@ name: "MessageFeed",
     props:['contact', 'messages'],
     watch: {
         contact: function(){
-            this.show = 5
+            this.show = 8
         },
         messages: {
             handler: function (msgs) {
@@ -63,7 +63,7 @@ name: "MessageFeed",
     },
     data(){
         return{
-            show: 5,
+            show: 8,
             filteredMessages: []
         }
     },
