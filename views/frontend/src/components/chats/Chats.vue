@@ -34,7 +34,6 @@
 import Conversation from "@/components/chats/conversation/Conversation";
 import Contacts from "@/components/chats/contacts/Contacts";
 import ChatProfile from "@/components/chats/chat-profile/ChatProfile";
-
 export default {
   name: "Chats",
   components:{
@@ -76,12 +75,12 @@ export default {
     },
     startConversation(contact){
       this.selectedContact = contact
-      this.messages = contact.messages.map(function(msg){ msg.new = false; return msg })
+      this.messages = contact.messages
       this.socket.emit('init', contact._id)
     },
     sendMessage(data){
         this.socket.emit('message', data)
-        let message = {client:data.user, text:data.text, isIncoming: true, createdAt: new Date().toJSON()}
+        let message = {client:data.user, text:data.text, isIncoming: true, createdAt: new Date().toJSON(), new: false}
         let index = this.contactList.findIndex(user => user._id === data.user );
         if(index != undefined){
             this.contactList[index].messages.push(message)
@@ -92,11 +91,7 @@ export default {
   created() {
         let that = this
         this.socket.on("server message", function(data) {
-            let status = true
-            if(that.selectedContact && that.selectedContact._id == data.user){
-                status = false
-            }
-            let message = {client:data.user , text:data.text, isIncoming: false, createdAt: new Date().toJSON(), new: status}
+            let message = {client:data.user , text:data.text, isIncoming: false, createdAt: new Date().toJSON(), new: true}
             let index = that.contactList.findIndex(user => user._id === data.user );
             console.log(index);
             if(index != undefined){
