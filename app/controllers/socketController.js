@@ -12,8 +12,7 @@ class SocketController {
             isIncoming: data.isIncoming
         }).save();
 
-        let client = Client.findOneAndUpdate({ '_id': data.user }, { $push: { messages: message }, 'lastMessageAt': new Date() }).exec()
-        await client.save({ validateBeforeSave: false })
+        Client.findOneAndUpdate({ '_id': data.user }, { $push: { messages: message }, 'lastMessageAt': new Date() }).exec()
         if (data.isIncoming){
             await pushController.sendNewMessage(socket.handshake.headers.db, data.user, message)
         }
