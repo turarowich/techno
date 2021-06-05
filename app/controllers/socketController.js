@@ -11,9 +11,12 @@ class SocketController {
             text: data.text,
             isIncoming: data.isIncoming
         }).save();
-        console.log('got here')
+
         Client.findOneAndUpdate({ '_id': data.user }, { $push: { messages: message } }).exec()
-        await pushController.sendNewMessage(socket.handshake.headers.db, data.user, message)
+        if (!data.isIncoming){
+            await pushController.sendNewMessage(socket.handshake.headers.db, data.user, message)
+        }
+        
     }
     getMessages = async function (io, socket, user) {
         let db = useDB(socket.handshake.headers.db)
