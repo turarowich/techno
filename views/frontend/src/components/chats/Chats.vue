@@ -93,7 +93,7 @@ export default {
         let that = this
         this.socket.on("server message", function(data) {
             let status = true
-            if(this.selectedContact && this.selectedContact._id == data.user){
+            if(that.selectedContact && that.selectedContact._id == data.user){
                 status = false
             }
             let message = {client:data.user , text:data.text, isIncoming: false, createdAt: new Date().toJSON(), new: status}
