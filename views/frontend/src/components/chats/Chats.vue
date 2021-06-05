@@ -95,6 +95,7 @@ export default {
             console.log(index);
             if(index != undefined){
                 that.contactList[index].messages.push(message)
+                this.contactList[index].lastMessageAt = new Date()
             }
             that.scrollToBottom("chatToBottom")
         })

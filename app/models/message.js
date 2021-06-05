@@ -15,7 +15,7 @@ const messageSchema = new Schema({
         required: true,
         default: false
     },
-    news: {
+    new: {
         type: Boolean,
         required: true,
         default: true

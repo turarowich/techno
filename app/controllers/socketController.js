@@ -9,7 +9,8 @@ class SocketController {
         let message = await new Message({
             client: data.user,
             text: data.text,
-            isIncoming: data.isIncoming
+            isIncoming: data.isIncoming,
+            new: true,
         }).save();
 
         Client.findOneAndUpdate({ '_id': data.user }, { $push: { messages: message }, 'lastMessageAt': new Date() }).exec()
