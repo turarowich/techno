@@ -4,21 +4,15 @@
     <div class="notification">
       <button class="app-buttons-item"><img class="img-btn" src="../../assets/icons/ring.svg"><span>Push notification</span></button>
     </div>
-      <div class="chat d-flex">
-
-
-    <div class="list-people">
-      <div class="search-chat d-flex align-items-center">
-        <img class="mr-3" src="../../assets/icons/search-icon.svg">
-        <input type="text" placeholder="Search, user or chat" v-model="search">
-      </div>
-
-      <ul class="list-group">
-        <Contacts v-bind:contactList="filteredContact"
-        @selected="startConversation"
-        />
-      </ul>
-
+    <div class="chat d-flex">
+    <div class="overflow-hidden">
+        <div class="d-flex align-items-center  search-chat">
+            <img class="mr-3" src="../../assets/icons/search-icon.svg">
+            <input type="text" placeholder="Search, user or chat" v-model="search">
+        </div>
+        <div class="list-people">
+            <Contacts v-bind:contactList="filteredContact" @selected="startConversation" />
+        </div>
     </div>
     <div class="conversation">
         <Conversation
@@ -51,7 +45,6 @@ export default {
   data(){
     return{
       contactList:[
-
       ],
       search:'',
       messages:[
@@ -87,19 +80,19 @@ export default {
       this.socket.emit('init', contact._id)
     },
     sendMessage(data){
-        console.log("here")
         this.socket.emit('message', data)
-        let message = {client:data.user, text:data.text, isIncoming: true, createdAt: new Date().toJSON(), new:"its nw"}
+        let message = {client:data.user, text:data.text, isIncoming: true, createdAt: new Date().toJSON()}
         let index = this.contactList.findIndex(user => user._id === data.user );
         if(index != undefined){
             this.contactList[index].messages.push(message)
+            this.contactList[index].lastMessageAt = new Date()
         }
     },
   },
   created() {
         let that = this
         this.socket.on("server message", function(data) {
-            let message = {client:data.user , text:data.text, isIncoming: false, createdAt: new Date().toJSON(), new:"its nw"}
+            let message = {client:data.user , text:data.text, isIncoming: false, createdAt: new Date().toJSON(), new: true}
             let index = that.contactList.findIndex(user => user._id === data.user );
             console.log(index);
             if(index != undefined){
@@ -116,21 +109,20 @@ export default {
 </script>
 
 <style scoped>
-
 .chat{
   height:calc(100vh - 169px)
 }
 .search-chat input{
   border:none;
   width:100%;
-
 }
 .search-chat{
   padding:0 15px;
   color:#e8e8e8;
-  height:40px;
+  height:41px;
+  border-top: 1px solid #e8e8e8;
   border-bottom: 1px solid #e8e8e8;
-  opacity: 0.5;
+  
 }
 .conversation{
   width: 45%;
@@ -141,8 +133,7 @@ export default {
   outline:none;
 }
 .list-people{
-  width: 30%;
-  border-top: 1px solid #e8e8e8;
+  height:calc(100% - 40px);
   overflow-y: auto;
 }
 

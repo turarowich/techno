@@ -2,6 +2,7 @@ var bcrypt = require('bcryptjs');
 const { useDB, sendError, saveImage, createQrFile, randomNumber } = require('../../services/helper')
 var validate = require('../../config/messages');
 const { query } = require('express');
+const client = require('../models/client');
 
 class ClientController{
     
@@ -282,6 +283,42 @@ class ClientController{
                     }).save();
                 }
             }
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+
+        res.status(result.status).json(result);
+    };
+    updatedMessagesStatus = async function (req, res) {
+        let db = useDB(req.db)
+        let Message = db.model("Message");
+
+        let result = {
+            'status': 200,
+            'msg': 'Messages updated'
+        }
+        try {
+            Message.updateMany({ client: req.params.client}, { new: false });
+            
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+
+        res.status(result.status).json(result);
+    };
+
+    clearMessages = async function (req, res) {
+        let db = useDB(req.db)
+        let Message = db.model("Message");
+
+        let result = {
+            'status': 200,
+            'msg': 'Messages cleared'
+        }
+        try {
+
+            Message.deleteMany({ client: req.params.client }, function (err) { })
+
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }

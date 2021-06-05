@@ -12,11 +12,18 @@ class SocketController {
             isIncoming: data.isIncoming
         }).save();
 
-        Client.findOneAndUpdate({ '_id': data.user }, { $push: { messages: message } }).exec()
+        let client = Client.findOneAndUpdate({ '_id': data.user }, { $push: { messages: message } }).exec()
+        client.lastMessageAt = new Date()
+        client.save()
         if (data.isIncoming){
             await pushController.sendNewMessage(socket.handshake.headers.db, data.user, message)
         }
         
+    }
+    readMessage = async function (socket, msg) {
+        let db = useDB(socket.handshake.headers.db)
+        let Message = db.model("Message");
+        Message.updateMany({ client: msg.client, isIncoming: msg.isIncoming }, { new: false });
     }
     getMessages = async function (io, socket, user) {
         let db = useDB(socket.handshake.headers.db)
@@ -32,7 +39,6 @@ class SocketController {
         let data = await News.findById(id)
         
         if(data){
-            console.log(socket.handshake.headers.mainRoom)
             socket.to(socket.handshake.headers.mainRoom).emit("server news notification", data)
         }
     }

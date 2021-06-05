@@ -13,8 +13,10 @@
         </div>
         <div  v-for="message in msgs" :class="`message${message.isIncoming ? ' send' : ' received' }`" :key="message.id">
             <div class="text my-1">
-                {{message.text}}
-                <i class="send-text fas fa-check"></i>
+                <span class="ml-1">{{message.text}}</span>
+                <div class="d-flex justify-content-end">
+                    <p class="mb-0 message-time">{{getTimeFromDate(message.createdAt)}}</p>
+                </div>
             </div> 
         </div>
      </div>
@@ -26,10 +28,12 @@ export default {
 name: "MessageFeed",
     props:['contact', 'messages'],
     watch: {
-        
+        contact: function(){
+            this.show = 5
+        },
         messages: {
             handler: function (msgs) {
-                console.log("ther is new messages")
+                this.socket.emit('read messages', {'client': this.contact._id, 'isIncoming': true})
                 this.filteredMessages = msgs.slice(Math.max(msgs.length - this.show, 1)).reduce((groups, msg) => {
                     const date = msg.createdAt.split('T')[0];
                     if (!groups[date]) {
@@ -38,7 +42,6 @@ name: "MessageFeed",
                     groups[date].push(msg);
                     return groups;
                 }, {});
-                this.show = 8
             },
             deep: true
         },
@@ -53,9 +56,14 @@ name: "MessageFeed",
             }, {});
         },
     },
+    methods:{
+        getTimeFromDate(date){
+            return this.$moment(date).format('HH:mm');
+        }
+    },
     data(){
         return{
-            show: 8,
+            show: 5,
             filteredMessages: []
         }
     },
@@ -70,6 +78,15 @@ name: "MessageFeed",
     color: #8C94A5;
     width: 100%;
     text-align: center;
+}
+.message-time{
+    font-size: 10px;
+    line-height: 130%;
+    color: #E4E4E4;
+}
+
+.message.received .message-time{
+    color: #858585;
 }
 .message{
   font-size: 16px;
@@ -102,7 +119,7 @@ justify-content: flex-end;
 .received .text{
   background: #F1F3F5;
   border-radius: 5px;
-  padding:10px 20px;
+  padding:5px 7px;
   margin-bottom: 10px;
   max-width: calc(100% - 50px);
   word-break: break-word;
@@ -110,7 +127,7 @@ justify-content: flex-end;
 .send .text{
   background: #616CF5;
   border-radius: 5px;
-  padding:10px 20px;
+  padding:5px 7px;
   color:#fff;
   margin-bottom: 10px;
   max-width: 50%;

@@ -14,7 +14,9 @@ module.exports = io => {
             console.log(user)
             socket.join(user)
         });
-
+        socket.on('read messages', (msg) => {
+            controller.readMessage(socket, msg)
+        });
         socket.on('message', (data) => {
             console.log(data)
             controller.addMessage(socket, data)

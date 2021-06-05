@@ -117,7 +117,8 @@ export default {
             this.$refs.uploadPhoto.click();
         },
     uploadPhoto(event) {
-        var valid = ["image/png", "image/jpg"];
+        var valid = ["image/png", "image/jpg", "image/jpeg"];
+        
         if(event.target.files[0] && event.target.files[0].size > 3000000){
             this.$warningAlert('Image size exceed 3 mb');
         }else if(event.target.files[0] && !valid.includes(event.target.files[0].type)){

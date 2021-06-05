@@ -15,6 +15,11 @@ const messageSchema = new Schema({
         required: true,
         default: false
     },
+    news: {
+        type: Boolean,
+        required: true,
+        default: true
+    },
     createdAt: {
         type: Date,
         required: true,

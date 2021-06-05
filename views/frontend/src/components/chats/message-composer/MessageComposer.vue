@@ -4,7 +4,7 @@
         <img src="../../../assets/img/emoji.svg" class="w-100">
     </button>
     <input class="text-area" v-model="message" v-on:keydown.enter="send" placeholder="Message">
-    <button class="send-message"><img src="../../../assets/icons/sendMessage.svg"></button>
+    <button class="send-message" @click="send"><img src="../../../assets/icons/sendMessage.svg"></button>
   </div>
 </template>
 

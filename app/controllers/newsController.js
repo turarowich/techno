@@ -120,6 +120,7 @@ class NewsController {
                     break updateNews
                 } else {
                     news.img = filename
+                    await news.save()
                 }
             }
             result['object'] = news
