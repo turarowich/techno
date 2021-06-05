@@ -49,7 +49,7 @@ export default {
     countNewMessages(messages){
         let val = ""
         if (messages.length){
-            val = messages.filter(msg => msg.new ).length 
+            val = messages.filter(msg => msg.new && !msg.isIncoming ).length 
             if (val == 0){
                 val = ""
             }
