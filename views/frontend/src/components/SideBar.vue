@@ -35,19 +35,18 @@ name: "SideBar",
   },
   computed:{
         msgsCount(){
-            this.$store.dispatch("Message/setMessages",{axios:this.axios, url:this.url('getNewMessages')});
             return this.$store.getters['Message/getMessages'];
         }
   },
   props:{
-  closeSideBar: {
-    type:Function,
+    closeSideBar: {
+        type:Function,
+    }
   },
-
-
-
-
-  }
+    created(){
+      console.log("")
+        this.$store.dispatch("Message/setMessages",{axios:this.axios, url:this.url('getNewMessages')});
+    }
 }
 </script>
 

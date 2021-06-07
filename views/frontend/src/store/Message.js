@@ -17,7 +17,6 @@ export const MessageModule = {
     // Actions are functions that you call throughout your application that call mutations.
     actions: {
         setMessages: function ({ commit }, obj){
-            console.log("gere")
             obj.axios.post(obj.url, {
                 client: '',
                 from: true
@@ -30,7 +29,6 @@ export const MessageModule = {
                 }
                 commit('setMessages', new_chats)
             });
-            
         },
     },
 
