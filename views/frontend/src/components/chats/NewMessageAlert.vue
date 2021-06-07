@@ -1,11 +1,11 @@
 <template>
     <div class="alert">
-        <div v-for="(message, index) in filteredMessage" class="notification d-flex mb-1 overflow-hidden" :ref="'notify-' + message.index"  :key="index" @click="goToChat">
-            <div class="pl-1 d-flex flex-wrap align-items-center justify-content-center" style="width:55px;">
+        <div v-for="(message, index) in filteredMessage" class="notification d-flex mb-1 overflow-hidden" :ref="'notify-' + message.index"  :key="index" >
+            <div class="pl-1 d-flex flex-wrap align-items-center justify-content-center" style="width:55px;" @click="goToChat">
                 <img class="user-picture m-0" v-if="message.client && message.client.avatar" :src="makeImg(message.client.avatar)" alt="">
                 <img class="user-picture m-0" v-else src="../../assets/icons/chat.svg" alt="">
             </div>
-            <div class="col px-1" style="max-width:225px; margin-top:12px">
+            <div class="col px-1" style="max-width:225px; margin-top:12px" @click="goToChat">
                 <p class="user-name mb-1">
                     {{ message.client.name }}
                 </p>
@@ -49,8 +49,9 @@ export default {
         removeMsg(index){
             $(this.$refs['notify-'+index]).animate({
                 opacity: '0',
-                height: '0'
-            }, 'slow', 'linear');
+            }, 'slow', 'linear', function() {
+                $(this).css('height','0')
+            });
         },
         makeImg(name){
             return this.img(name)
