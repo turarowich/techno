@@ -1,28 +1,42 @@
+
 //not used since child components were merged
 export const MessageModule = {
     namespaced: true,
 
     state: {
-        messages: [],
+        chats: [],
     },
 
     // Mutations are functions that effect the STATE.
     mutations: {
         setMessages(state, msgs) {
-            state.messages = msgs;
+            state.chats = msgs;
         },
     },
 
     // Actions are functions that you call throughout your application that call mutations.
     actions: {
-        setMessages: function ({ commit }, msgs){
-            commit('setMessages', msgs)
+        setMessages: function ({ commit }, obj){
+            console.log("gere")
+            obj.axios.post(obj.url, {
+                client: '',
+                from: true
+            }).then(result => {
+                let new_chats = []
+                for (let object of result.data.objects){
+                    if(!new_chats.includes(object.client)){
+                        new_chats.push(object.client)
+                    }
+                }
+                commit('setMessages', new_chats)
+            });
+            
         },
     },
 
     getters:{
         getMessages(state){
-            return state.messages
+            return state.chats.length ? state.chats.length : ''
         }
     },
 }

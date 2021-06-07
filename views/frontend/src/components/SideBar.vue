@@ -9,7 +9,7 @@
       <router-link class="router-link"  data-turbolinks="false" to="/clients" ><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Document.svg" >Clients</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
       <router-link class="router-link" to="/loyalty"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Game.svg" >Loyalty</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
       <router-link class="router-link" to="/catalog"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Discovery.svg"  data-turbolinks="false">Catalog</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
-      <router-link class="router-link" to="/chats"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/MoresSquare.svg" >Chats</span></router-link>
+      <router-link class="router-link" to="/chats"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/MoresSquare.svg" >Chats <span class="chats-quantity">{{msgsCount}}</span></span></router-link>
       <router-link class="router-link" to="/analytics"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/group.svg" >Analytics</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
       <router-link class="router-link" to="/news"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/VolumeUp.svg" >News</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
       <router-link class="router-link" to="/log"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/logs.svg" >Log</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
@@ -33,6 +33,12 @@ name: "SideBar",
       sideBarMenu: true,
     }
   },
+  computed:{
+        msgsCount(){
+            this.$store.dispatch("Message/setMessages",{axios:this.axios, url:this.url('getNewMessages')});
+            return this.$store.getters['Message/getMessages'];
+        }
+  },
   props:{
   closeSideBar: {
     type:Function,
@@ -55,7 +61,6 @@ name: "SideBar",
   min-height: 100vh;
   width: 100%;
   position: relative;
-
 }
 .side-bar-header{
   display: flex;
@@ -129,6 +134,10 @@ name: "SideBar",
 .arrow{
   position: absolute;
   right:20px;
+}
+.chats-quantity{
+    position: absolute;
+    right: 30px;
 }
 .help-setting{
   position: absolute;

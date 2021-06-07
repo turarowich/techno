@@ -26,6 +26,7 @@ module.exports = function (app, network_information) {
     app.post('/addClientDevice', clientController.addClientDevice);
     app.get('/updatedMessagesStatus/:client', clientController.updatedMessagesStatus);
     app.delete('/clearMessages/:client', clientController.clearMessages);
+    app.post('/getNewMessages', clientController.getNewMessages);
     
     // Products url
     app.get('/getProduct/:product', productController.getProduct);

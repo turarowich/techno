@@ -193,6 +193,7 @@ class ClientController{
             'status': 200,
             'msg': 'Sending clients'
         }
+        
         try {
             let  query = {}
             if (req.fields.category){
@@ -292,7 +293,10 @@ class ClientController{
     updatedMessagesStatus = async function (req, res) {
         let db = useDB(req.db)
         let Message = db.model("Message");
-
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
         let result = {
             'status': 200,
             'msg': 'Messages updated'
@@ -301,7 +305,7 @@ class ClientController{
             Message.updateMany({ client: req.params.client}, { new: false });
             
         } catch (error) {
-            result = sendError(error, req.headers["accept-language"])
+            result = sendError(error, lang)
         }
 
         res.status(result.status).json(result);
@@ -310,7 +314,10 @@ class ClientController{
     clearMessages = async function (req, res) {
         let db = useDB(req.db)
         let Message = db.model("Message");
-
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
         let result = {
             'status': 200,
             'msg': 'Messages cleared'
@@ -320,11 +327,42 @@ class ClientController{
             Message.deleteMany({ client: req.params.client }, function (err) { })
 
         } catch (error) {
-            result = sendError(error, req.headers["accept-language"])
+            result = sendError(error, lang)
         }
 
         res.status(result.status).json(result);
     };
+    getNewMessages = async function (req, res) {
+        let db = useDB(req.db)
+        let Message = db.model("Message");
+        
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
+        let result = {
+            'status': 200,
+            'msg': 'Messages send'
+        }
+        try {
+            let query = {
+                new: true
+            }
+            if (req.fields.client) {
+                query['client'] = req.fields.client
+            }
+
+            if (req.fields.from != '') {
+                query['isIncoming'] = req.fields.from
+            }
+            let messages = await Message.find(query)
+            result['objects'] = messages
+        } catch (error) {
+            result = sendError(error, lang)
+        }
+
+        res.status(result.status).json(result);
+    }
 
 }
 

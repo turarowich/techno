@@ -32,6 +32,10 @@ module.exports = io => {
             controller.getMessages(io, socket, user)
         });
 
+        socket.on('get new messages', (user, from) => {
+            controller.getNewMessages(io, socket, user, from)
+        });
+
         socket.on('send news notification', (newsID) => {
             controller.sendNewsNotification(io, socket, newsID)
         });
