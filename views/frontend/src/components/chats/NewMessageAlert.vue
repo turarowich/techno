@@ -1,6 +1,6 @@
 <template>
     <div class="alert">
-        <div v-for="(message, index) in filteredMessage" class="notification d-flex mb-1" :ref="'notify-' + message.index"  :key="index" @click="goToChat">
+        <div v-for="(message, index) in filteredMessage" class="notification d-flex mb-1 overflow-hidden" :ref="'notify-' + message.index"  :key="index" @click="goToChat">
             <div class="pl-1 d-flex flex-wrap align-items-center justify-content-center" style="width:55px;">
                 <img class="user-picture m-0" v-if="message.client && message.client.avatar" :src="makeImg(message.client.avatar)" alt="">
                 <img class="user-picture m-0" v-else src="../../assets/icons/chat.svg" alt="">
@@ -48,7 +48,8 @@ export default {
         },
         removeMsg(index){
             $(this.$refs['notify-'+index]).animate({
-                opacity: '0'
+                opacity: '0',
+                height: '0'
             }, 'slow', 'linear');
         },
         makeImg(name){
@@ -92,7 +93,7 @@ export default {
 
 <style scoped>
 .notification:nth-child(1){
-    opacity: 1;
+    background:#ABAFB8;
 }
 .user-picture{
     width: 40px;
@@ -115,7 +116,6 @@ export default {
     border-radius: 13px;
     width: 305px;
     height: 70px;
-    opacity: 0.75;
     /* padding: 11px 0; */
     
 }
