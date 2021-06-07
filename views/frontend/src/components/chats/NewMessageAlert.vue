@@ -75,11 +75,12 @@ export default {
         let that = this
         this.socket.on("server message", function(data) {
             let index = that.contactList.findIndex(user => user._id === data.user );
-            that.num += 1 
-            setTimeout(function(){ 
-                that.removeElement()
-            }, 10000);
+            
             if(!window.location.pathname.includes('chats')){
+                that.num += 1 
+                setTimeout(function(){ 
+                    that.removeElement()
+                }, 10000);
                 that.oldMessages.push({index:that.num,client: that.contactList[index] , text:data.text, isIncoming: false, createdAt: new Date().toJSON(), new: true})
             }
         })
