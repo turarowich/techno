@@ -12,7 +12,7 @@ export default createStore({
         Orders: OrdersModule,
         Loyalty: LoyaltyModule,
         Catalog: CatalogModule,
-        Client: ClientModule,
+        Client: ClientModule
     },
     // plugins: [createPersistedState({
     //     storage: {

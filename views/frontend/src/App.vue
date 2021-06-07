@@ -8,6 +8,7 @@
     </div>
     <div class="main-content" v-bind:class="{hun: $route.name === 'SignUp' || $route.name === 'Admin'  || $route.name === 'SignIn' || $route.path.includes('/shop') } ">
       <Header  v-if="homePage()"  v-bind:openSideBar="openSideBar"/>
+      <NewMessageAlert />
       <div  class="router-view">
         <router-view/>
       </div>
@@ -17,6 +18,7 @@
 <script>
 import $ from "jquery";
 import Header from "@/components/header/Header";
+import NewMessageAlert from "@/components/chats/NewMessageAlert";
 import SideBar from "@/components/SideBar";
 
 export default {
@@ -25,6 +27,7 @@ export default {
   components: {
     Header,
     SideBar,
+    NewMessageAlert
   },
 
     methods: {
