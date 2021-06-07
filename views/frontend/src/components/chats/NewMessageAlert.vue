@@ -135,6 +135,7 @@ export default {
     width: 305px;
     margin: 51px 29px 0 0;
     padding: 0;
+    z-index: 9999;
 }
 
 </style>
