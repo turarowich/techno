@@ -123,8 +123,8 @@ export default {
 .close-alert{
     background: none;
     border: 0;
-    width: 25px;
-    height: 25px;
+    width: 15px;
+    height: 15px;
 }
 .close-alert img{
     width: 100%;
@@ -134,7 +134,7 @@ export default {
     position: fixed;
     right: 0;
     top: 0;
-    width: 305px;
+    width: 330px;
     margin: 0 0;
     padding: 51px 29px 0 0;
     z-index: 9999;
