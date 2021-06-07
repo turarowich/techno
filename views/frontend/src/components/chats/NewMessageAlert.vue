@@ -1,6 +1,6 @@
 <template>
     <div class="alert">
-        <div v-for="(message, index) in filteredMessage" class="notification d-flex mb-1" :ref="'notify-' + message.index"  :key="index">
+        <div v-for="(message, index) in filteredMessage" class="notification d-flex mb-1" :ref="'notify-' + message.index"  :key="index" @click="goToChat">
             <div class="pl-1 d-flex flex-wrap align-items-center justify-content-center" style="width:55px;">
                 <img class="user-picture m-0" v-if="message.client && message.client.avatar" :src="makeImg(message.client.avatar)" alt="">
                 <img class="user-picture m-0" v-else src="../../assets/icons/chat.svg" alt="">
@@ -10,11 +10,11 @@
                     {{ message.client.name }}
                 </p>
                 <p class="new-message of-ellipsis mb-0">
-                    {{ message.index + '' +message.text }}
+                    {{ message.text }}
                 </p>
             </div>
             <div class="col-1 px-0">
-                <button class="close-alert mx-0 mt-2 p-0 d-flex">
+                <button class="close-alert mx-0 mt-2 p-0 d-flex" @click="removeMsg(message.index)">
                     <img class="m-0" src="../../assets/icons/greyX.svg" alt="">
                 </button>
             </div>
@@ -43,6 +43,14 @@ export default {
         init () {
             this.getClients()
         },
+        goToChat(){
+            this.$router.push('/chats')
+        },
+        removeMsg(index){
+            $(this.$refs['notify-'+index]).animate({
+                opacity: '0'
+            }, 'slow', 'linear');
+        },
         makeImg(name){
             return this.img(name)
         },
@@ -55,7 +63,6 @@ export default {
         removeElement(){
             let msg = this.oldMessages[this.oldMessages.length - 1]
             let that = this
-            console.log(this.$refs)
             $(this.$refs['notify-'+msg.index]).animate({
                 opacity: '0'
             }, 'slow', 'linear', function() {
@@ -63,20 +70,20 @@ export default {
             });
         }
     },
-    created() {
+    mounted: function () {
+        this.init()
         let that = this
         this.socket.on("server message", function(data) {
             let index = that.contactList.findIndex(user => user._id === data.user );
-            this.num += 1 
+            that.num += 1 
             setTimeout(function(){ 
                 that.removeElement()
-            }, 5000);
-            that.oldMessages.push({index:this.num,client: that.contactList[index] , text:data.text, isIncoming: false, createdAt: new Date().toJSON(), new: true})
+            }, 10000);
+            if(!window.location.pathname.includes('chats')){
+                that.oldMessages.push({index:that.num,client: that.contactList[index] , text:data.text, isIncoming: false, createdAt: new Date().toJSON(), new: true})
+            }
         })
         this.socket.emit('init_admin')
-    },
-    mounted: function () {
-        this.init()
     }
 
 }
