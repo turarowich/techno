@@ -15,7 +15,7 @@
             </div>
             <div class="col-1 px-0">
                 <button class="close-alert mx-0 mt-2 p-0 d-flex" @click="removeMsg(message.index)">
-                    <img class="m-0" src="../../assets/icons/greyX.svg" alt="">
+                    <img class="m-0" src="../../assets/icons/xGrey.svg" alt="">
                 </button>
             </div>
         </div>
@@ -93,7 +93,8 @@ export default {
 
 <style scoped>
 .notification:nth-child(1){
-    background:#ABAFB8;
+    background: #8C94A5;
+    
 }
 .user-picture{
     width: 40px;
@@ -112,7 +113,7 @@ export default {
     color: #E3E3E3;
 }
 .notification{
-    background: #8C94A5;
+    background:#ABAFB8;
     border-radius: 13px;
     width: 305px;
     height: 70px;
