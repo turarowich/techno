@@ -352,8 +352,8 @@ class ClientController{
                 query['client'] = req.fields.client
             }
 
-            if (req.fields.from != '') {
-                query['isIncoming'] = req.fields.from
+            if (req.fields.isIncoming != '') {
+                query['isIncoming'] = req.fields.isIncoming
             }
             let messages = await Message.find(query)
             result['objects'] = messages
