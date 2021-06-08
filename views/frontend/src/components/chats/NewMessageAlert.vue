@@ -84,9 +84,8 @@ export default {
                     that.removeElement()
                 }, 10000);
                 that.oldMessages.push({index:that.num,client: that.contactList[index] , text:data.text, isIncoming: false, createdAt: new Date().toJSON(), new: true})
-                this.$store.dispatch('Message/setDeliveryCost');
             }
-            this.$store.dispatch("Message/setMessages",{axios:this.axios, url:this.url('getNewMessages')});
+            that.$store.dispatch("Message/setMessages",{axios:that.axios, url:that.url('getNewMessages')});
         })
         this.socket.emit('init_admin')
     }
