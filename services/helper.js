@@ -10,7 +10,16 @@ function useDB(db_name) {
     let db = global.userConnection.useDb(db_name);
     return db;
 }
-
+function removeImage( old_file_name = null) {
+    if (old_file_name) {
+        old_file_name = path.join(__dirname, '/../views/frontend/' + old_file_name)
+        if (fs.existsSync(old_file_name)) {
+            fs.unlink(old_file_name, function (err) {
+                console.log(err)
+            });
+        }
+    }
+}
 function saveImage(file, company, old_file_name=null){
     let filename = 'images/' + company + '/' + Math.random().toString().substr(2, 8) + path.extname(file.name)
     var dir = path.join(__dirname, '/../views/frontend/images/' + company)
@@ -18,7 +27,7 @@ function saveImage(file, company, old_file_name=null){
         fs.mkdirSync(dir);
     }
     if (old_file_name){
-        old_file_name = path.join(__dirname, '/../views/frontend/images/' + old_file_name)
+        old_file_name = path.join(__dirname, '/../views/frontend/' + old_file_name)
         if (fs.existsSync(old_file_name)){
             fs.unlink(old_file_name, function(err){
                 console.log(err)
@@ -272,6 +281,7 @@ function createQrFile(user_id, company) {
 module.exports = {
     useDB: useDB,
     saveImage: saveImage,
+    removeImage: removeImage,
     sendError: sendError,
     createExcel: createExcel,
     randomNumber: randomNumber,
