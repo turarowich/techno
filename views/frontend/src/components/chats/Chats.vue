@@ -90,7 +90,8 @@ export default {
     getClients(){
         this.axios.get(this.url('getClients')).
         then(result =>{
-             this.contactList = result.data.objects
+            this.contactList = result.data.objects
+            this.selectAll = false
         });
     },
     checkSelection(){
