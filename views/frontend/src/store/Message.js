@@ -22,7 +22,6 @@ export const MessageModule = {
                 isIncoming: false
             }).then(result => {
                 let new_chats = []
-                console.log(result.data.objects)
                 for (let object of result.data.objects){
                     if(!new_chats.includes(object.client)){
                         new_chats.push(object.client)

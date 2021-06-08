@@ -24,7 +24,6 @@ name: "MessageComposer",
   },
   methods:{
     send(){
-        console.log(this.message.length)
         if(this.message.length < 1){
             return;
         }else{

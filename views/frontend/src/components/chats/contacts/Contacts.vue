@@ -94,7 +94,6 @@ export default {
   watch: {
         contactList: {
             handler: function (contacts) {
-                console.log("filter contact")
                 this.filteredContact = contacts.sort((a, b) =>  new Date(b.lastMessageAt) - new Date(a.lastMessageAt));
             },
             deep: true

@@ -667,8 +667,6 @@ export default {
       this.axios.get(this.url('getClients'))
       .then((res)=>{
         this.clientList = res.data.objects
-        console.log(this.clientList)
-
       })
     },
     getCategories(){

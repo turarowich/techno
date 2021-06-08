@@ -42,7 +42,6 @@ const ax = axios.create({
         port: 8443
     },
 });
-console.log(process.env.VUE_APP_SERVER_URL)
 const socket = io(process.env.VUE_APP_SERVER_URL, {
     extraHeaders: {
         token: localStorage.getItem('token')
@@ -59,7 +58,6 @@ app.config.globalProperties.axios = ax
 app.config.globalProperties.$api = process.env.VUE_APP_API_URL;
 app.config.globalProperties.$server = process.env.VUE_APP_SERVER_URL;
 app.config.globalProperties.format_price = function (sum){parseFloat(sum).toFixed(2)};
-console.log(process.env.VUE_APP_SERVER_UR,"process.env.VUE_APP_SERVER_UR");
 app.config.globalProperties.base_url = process.env.VUE_APP_SERVER_URL;
 
 app.config.globalProperties.socket = socket
@@ -87,7 +85,6 @@ app.config.globalProperties.changeToken = function () {
         },
         withCredentials: true,
     })
-    console.log(this.axios.defaults.headers)
 }
 app.config.globalProperties.img = function (main) {
     return this.$server + '/' + main
@@ -100,7 +97,6 @@ app.config.globalProperties.url = function (main, id = null, search = null) {
     if (search) {
         additional += '?' + search[0] + '=' + search[1]
     }
-    console.log(process.env.NODE_ENV, process.env.VUE_APP_API_URL)
     if (home_url.includes(main)){
         return this.$server + '/' + main + additional
     }

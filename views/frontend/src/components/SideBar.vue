@@ -44,7 +44,6 @@ name: "SideBar",
     }
   },
     created(){
-      console.log("")
         this.$store.dispatch("Message/setMessages",{axios:this.axios, url:this.url('getNewMessages')});
     }
 }
