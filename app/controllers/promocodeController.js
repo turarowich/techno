@@ -1,0 +1,199 @@
+const { useDB, sendError } = require('../../services/helper')
+var validate = require('../../config/messages');
+class PromocodeController{
+    
+    getPromocode = async function (req, res) {
+        let db = useDB(req.db)
+        let Promocode = db.model("Promocode");
+        let Products = db.model("Product");
+        let result = {
+            'status': 200,
+            'msg': 'Sending promocode'
+        }
+        try {
+            let promocode = await Promocode.findById(req.query.promocode);
+
+            let products = await Products.find({
+                '_id': { $in: promocode.selected_items_list}
+            });
+            result['object'] = promocode
+            result['products'] = products
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+
+        res.status(result.status).json(result);
+    };
+
+    getPromocodes = async function (req, res) {
+        let db = useDB(req.db)
+        let Promocode = db.model("Promocode");
+
+        let result = {
+            'status': 200,
+            'msg': 'Sending promocodes'
+        }
+        try {
+            let promocodes = await Promocode.find()
+            result['objects'] = promocodes
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+
+        res.status(result.status).json(result);
+    };
+
+    addPromocode = async function (req, res) {
+        let db = useDB(req.db)
+        let Promocode = db.model("Promocode");
+        let new_promocode =  req.fields;
+        let result = {
+            'status': 200,
+            'msg': 'Promocode added'
+        }
+        try {
+            let promocode = await new Promocode({
+                name: new_promocode.name || "No name",
+                code: new_promocode.code || "2",
+                discount: new_promocode.discount || "0",
+                startDate: new_promocode.fromDate || new Date(),
+                endDate: new_promocode.toDate || new Date(),
+                fixed_sum: new_promocode.fixed_sum || '0',
+                min_sum: new_promocode.min_sum || '0',
+                number_of_uses: new_promocode.number_of_uses || '0',
+                selected_type: new_promocode.selected_type || 'type',
+                selected_items_list: new_promocode.selected_items_list || [1,2],
+            }).save();
+
+            result['object'] = promocode
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+
+        res.status(result.status).json(result);
+    };
+
+    updatePromocode = async function (req, res) {
+        let db = useDB(req.db)
+        let Promocode = db.model("Promocode");
+
+        let result = {
+            'status': 200,
+            'msg': 'Promocode updated'
+        }
+        try {
+            let query = { '_id': req.fields.promocode_id }
+            req.fields['updatedAt'] = new Date()
+            let promocode = await Promocode.findOneAndUpdate(query, req.fields)
+            result['object'] = promocode
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+
+        res.status(result.status).json(result);
+    };
+
+    deletePromocode = async function (req, res) {
+        let db = useDB(req.db)
+        let Promocode = db.model("Promocode");
+
+        let result = {
+            'status': 200,
+            'msg': 'Promocode deleted'
+        }
+        try {
+            let query = { '_id': req.params.promocode }
+            await Promocode.findByIdAndRemove(query)
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+
+        res.status(result.status).json(result);
+    };
+    searchProductService = async function (req, res) {
+        let db = useDB(req.db);
+        let type   = req.query.type.toLowerCase();
+        let Model = db.model("Product");
+        let search = req.query.search;
+        let result = {
+            'status': 200,
+            'msg': 'Sending result'
+        }
+        try {
+            if(type !=="all") {
+                result['objects'] = await Model.find({"name": {$regex: search}, "type": type});
+            }else{
+                result['objects'] = await db.model('Product').find( { "name": {$regex: search} } );;
+            }
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.json(result);
+    };
+
+    searchPromocode= async function (req, res) {
+        let db = useDB(req.db)
+        let Promocode = db.model("Promocode");
+        let search = req.query.search;
+        let result = {
+            'status': 200,
+            'msg': 'Sending promocodes'
+        }
+        try {
+            result['objects'] = await Promocode.find( { "name": {$regex: search} } );
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.json(result);
+    };
+    searchPromocodeByCode = async function (req, res) {
+        let db = useDB(req.db)
+        let Promocode = db.model("Promocode");
+        let search = req.query.search;
+        let sum = req.query.sum;
+        let type = req.query.type;
+        let date = req.query.date;
+        let result = {
+            'status': 200,
+            'msg': 'Sending promocodes',
+        }
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
+        promocode: try {
+            let promocode = await Promocode.findOne({ "code": search });
+            if(promocode){
+                var start = new Date(promocode.startDate);
+                var end = new Date(promocode.endDate);
+                if(date){
+                    var now = new Date(date);
+                    if (start >= now || now >= end) {
+                        result['msg'] = validate[lang]['promo_not_usable']
+                        break promocode
+                    }
+                }
+                if (sum < promocode.min_sum && sum){
+                    result['msg'] = validate[lang]['promo_min_price']
+                    break promocode
+                }
+                if(promocode.selected_items_list.length === 0 && type){
+                    if (promocode.selected_type !== 'all' && promocode.selected_type !== type) {
+                        result['msg'] = validate[lang]['promo_not_usable']
+                        break promocode
+                    }
+                }
+            }else{
+                result['msg'] = validate[lang]['promo_404']
+            }
+            result['object'] = promocode
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.json(result);
+    };
+
+}
+
+
+module.exports = new PromocodeController();

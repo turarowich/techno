@@ -1,77 +1,44 @@
 {
-  "name": "crmoore",
-  "version": "0.1.0",
-  "private": true,
+  "name": "nodejs-project-structure",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "serve": "vue-cli-service serve --port 3000",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "serve": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "@popperjs/core": "^2.9.0",
-    "animate.css": "^4.1.1",
-    "ant-design-vue": "^1.7.4",
+    "apn": "^2.2.0",
     "axios": "^0.21.1",
-    "bootstrap": "^4.6.0",
-    "chart.js": "^2.9.4",
-    "ckeditor5": "^27.1.0",
-    "cookie": "^0.4.1",
-    "core-js": "^3.6.5",
-    "dropzone": "^5.9.2",
-    "dropzone-vue": "^0.1.8",
-    "ion-rangeslider": "^2.3.1",
-    "jquery": "^3.5.1",
-    "jquery-range": "^1.0.0",
-    "jrange": "^1.0.4",
-    "js-cookie": "^2.2.1",
-    "lightpick": "^1.6.2",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "excel4node": "^1.7.2",
+    "exceljs": "^4.2.1",
+    "express": "^4.17.1",
+    "express-formidable": "^1.2.0",
+    "express-session": "^1.17.1",
+    "formidable": "^1.2.2",
+    "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
-    "popper.js": "^1.16.1",
+    "mongodb": "^3.6.4",
+    "mongoose": "^5.11.16",
+    "multer": "^1.4.2",
+    "node-apn": "^3.0.0",
+    "node-schedule": "^1.3.2",
+    "nodemailer": "^6.6.1",
+    "nodemon": "^2.0.7",
+    "passport": "^0.4.1",
+    "passport-facebook": "^3.0.0",
+    "passport-google-oauth": "^2.0.0",
+    "passport-twitter": "^1.0.4",
     "qrcode": "^1.4.4",
-    "quill": "^1.3.7",
+    "query-string": "^7.0.0",
+    "read-excel-file": "^5.1.0",
     "select2": "^4.1.0-rc.0",
-    "slick": "^1.12.2",
-    "slick-carousel": "^1.8.1",
-    "socket.io-client": "^4.0.1",
-    "spartan-multi-image-picker": "^1.0.3-rc-1",
-    "sweetalert2": "^10.15.5",
-    "vue": "^3.0.5",
-    "vue-color-kit": "^1.0.3",
-    "vue-router": "^4.0.3",
-    "vue-scroll-behavior": "^0.3.0",
-    "vue-sweetalert2": "^4.2.0",
-    "vue2-animate": "^2.1.4",
-    "vuex": "^4.0.0",
-    "vuex-extensions": "^1.1.5",
-    "vuex-persistedstate": "^4.0.0-beta.3"
-  },
-  "devDependencies": {
-    "@fortawesome/fontawesome-free": "^5.15.2",
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
-    "@vue/compiler-sfc": "^3.0.0",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.8.0",
-    "eslint-plugin-vue": "^7.6.0"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/vue3-essential",
-      "eslint:recommended"
-    ],
-    "parserOptions": {
-      "parser": "babel-eslint"
-    },
-    "rules": {}
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ]
+    "socket.io": "^4.0.1"
+  }
 }
