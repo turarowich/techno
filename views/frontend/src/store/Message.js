@@ -19,7 +19,7 @@ export const MessageModule = {
         setMessages: function ({ commit }, obj){
             obj.axios.post(obj.url, {
                 client: '',
-                from: true
+                from: false
             }).then(result => {
                 let new_chats = []
                 for (let object of result.data.objects){
