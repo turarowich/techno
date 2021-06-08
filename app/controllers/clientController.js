@@ -355,6 +355,7 @@ class ClientController{
             if (req.fields.isIncoming != '') {
                 query['isIncoming'] = req.fields.isIncoming
             }
+            console.log(query, req.fields.isIncoming)
             let messages = await Message.find(query)
             result['objects'] = messages
         } catch (error) {
