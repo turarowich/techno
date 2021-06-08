@@ -352,7 +352,7 @@ class ClientController{
                 query['client'] = req.fields.client
             }
 
-            if (req.fields.isIncoming != '') {
+            if (req.fields.isIncoming !== '') {
                 query['isIncoming'] = req.fields.isIncoming
             }
             console.log(query, req.fields.isIncoming)
