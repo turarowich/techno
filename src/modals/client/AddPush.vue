@@ -56,6 +56,7 @@
                      </div>
                    </div>
 
+
                    <img src="../../assets/icons/deleteClient.svg">
                  </div>
                </div>
