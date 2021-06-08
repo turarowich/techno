@@ -323,8 +323,9 @@ class ClientController{
             'msg': 'Messages cleared'
         }
         try {
-
-            Message.deleteMany({ client: req.params.client }, function (err) { })
+            for (let client of req.fields.clients){
+                await Message.deleteMany({ client: client }, function (err) { })
+            }
 
         } catch (error) {
             result = sendError(error, lang)

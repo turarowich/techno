@@ -1,12 +1,15 @@
 <template>
     <div class="h-100 overflow-auto">  
-        <li v-for="(contact,index) in filteredContact" :key="contact.id" :class="{'selected' : index === selected}" v-on:click="selectContact(index, contact)" class="w-100">
+        <li v-for="(contact,index) in filteredContact" :key="contact.id" :class="{'selected' : index === selected}" class="w-100 pr-1 pl-0">
             <div class="contact-list d-flex align-items-center w-100">
-                <div  class="overflow-hidden">
+                <div class="pl-1"  style="width: 26px;"><label class="custom-checkbox mb-0"><input type="checkbox" v-model="contact.selected" @change="checkSelection">
+                    <span class="checkmark"></span></label>
+                </div>
+                <div  class="overflow-hidden" @click="selectContact(index, contact)">
                     <img class="user-picture" v-if="contact.avatar" :src="makeImg(contact.avatar)" alt="">
                     <img class="user-picture" v-else src="../../../assets/icons/chat.svg" > 
                 </div>
-            <div class="info overflow-hidden">
+            <div class="info overflow-hidden" @click="selectContact(index, contact)">
                 <p class="contact-name m-0 of-ellipsis">{{contact.name}}</p>
                 <div class="d-flex justify-content-between w-100">
                     <p class="contact-date m-0">{{lastMsgDate(contact.messages)}}</p>
@@ -39,9 +42,11 @@ export default {
   },
   methods:{
     selectContact(index,contact){
-      this.selected = index;
-      this.$emit('selected',contact)
-
+        this.selected = index;
+        this.$emit('selected',contact)
+    },
+    checkSelection(){
+        this.$emit('checkSelection')
     },
     makeImg(name){
         return this.img(name)

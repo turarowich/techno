@@ -96,7 +96,7 @@ export default {
 <style scoped>
 .notification:nth-child(1){
     background: #8C94A5;
-    
+    margin-top: 51px;
 }
 .user-picture{
     width: 40px;
@@ -138,9 +138,10 @@ export default {
     top: 0;
     width: 330px;
     margin: 0 0;
-    padding: 51px 29px 0 0;
+    padding: 0 29px 0 0;
     z-index: 9999;
-    height: 100%;
+    height: auto;
+    max-height: 100%;
     overflow: auto;
 }
 
