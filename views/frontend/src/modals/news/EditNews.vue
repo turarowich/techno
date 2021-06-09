@@ -90,7 +90,6 @@ export default {
     },
     watch: {
         selectedNews: function (val) {
-            
             this.news = Object.assign({}, val)
             if (this.news.category == "promotions"){
                 this.news.category = true

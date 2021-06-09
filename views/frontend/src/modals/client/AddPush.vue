@@ -1,6 +1,6 @@
 <template>
   <div class="modal fade right"  id="add-push" tabindex="-1" role="dialog" aria-labelledby="add-promocode" aria-hidden="true">
-    <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: 933px;" role="document" >
+    <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: calc(100% - 250px);" role="document" >
       <div class="modal-content myModal-content h-100">
         <div class="modal-header align-items-center">
           <h3 class="modal-title">Add push</h3>
@@ -24,20 +24,27 @@
 
                 <div class="main-search d-flex align-items-center ">
                   <img src="../../assets/icons/search-icon.svg">
-                  <input class="main-input" type="text" placeholder="Search" v-model="search">
+                  <input class="main-input" type="text" placeholder="Search" v-model="search_client">
+                </div>
+                <div class="parent-order-client">
+                  <div v-if="search_client.length !==0" class="child-order-client">
+                    <div v-if="filteredClients.length === 0">
+                      <div class="pl-3">There is not clients</div>
+                    </div>
+                    <div v-else v-for="client in filteredClients" :key="client._id"  @click="selectClient(client)" class="table-child d-flex align-items-center">
+                      <div class="table-img">
+                        <img src="../../assets/img/sneak.webp">
+                      </div>
+                      <div>
+                        <h4 class="general-title">{{client.name}}</h4>
+                        <span class="client-phone-order">{{client.phone}}</span>
+                      </div>
+                    </div>
+
+                  </div>
                 </div>
 
-                <div class="selects">
-                  <select class=" form-control long-form-control  form-control-lg" aria-label=".form-select-lg example">
-                    <option>1 month</option>
-                    <option>2 month</option>
-                    <option>3 month</option>
-                    <option>4 month</option>
-                    <option>5 month</option>
-                    <option>6 month</option>
-                    <option>12 month</option>
-                  </select>
-                </div>
+
 
                <div class="all-clients">
                  <div class="choosed-client d-flex justify-content-between align-items-center">
@@ -54,7 +61,7 @@
                </div>
 
                 <div class="d-flex">
-                  <button class="save mr-2">Save</button>
+                  <button class="save mr-2" @click.prevent="close">Save</button>
                   <button class="cancel">Cancel</button>
                 </div>
               </div>
@@ -66,28 +73,33 @@
 
                 <div class="radio-toolbar">
                   <div class="d-flex align-items-center mr-4">
-                    <input type="radio" id="radioWeek" name="week" >
+                    <input type="radio" id="radioWeek" @click="month_week = 'week'"  name="week"  >
                     <label for="radioWeek"></label>
                     <span class="male">By week</span>
                   </div>
                   <div class="d-flex align-items-center">
-                    <input type="radio" id="radioMonth" name="week" >
+                    <input type="radio" id="radioMonth" @click="month_week = 'month'" name="week" >
                     <label for="radioMonth"></label>
                     <span class="maled">By month</span>
                   </div>
                 </div>
 
-                <div class="week" >
-                  <div class="days active d-flex justify-content-center align-items-center">MO</div>
-                  <div class="days d-flex justify-content-center align-items-center">TU</div>
-                  <div class="days d-flex justify-content-center align-items-center">WE</div>
-                  <div class="days d-flex justify-content-center align-items-center">TH</div>
-                  <div class="days d-flex justify-content-center align-items-center">FR</div>
-                  <div class="days d-flex justify-content-center align-items-center">SA</div>
-                  <div class="days d-flex justify-content-center align-items-center">SU</div>
-                </div>
 
-<!--                <input id="month" class="cashback-input" placeholder="Select by month" style="width:100%">-->
+                <div>
+                  <div v-if="month_week === 'week'" class="week" >
+                    <div class="days active d-flex justify-content-center align-items-center">MO</div>
+                    <div class="days d-flex justify-content-center align-items-center">TU</div>
+                    <div class="days d-flex justify-content-center align-items-center">WE</div>
+                    <div class="days d-flex justify-content-center align-items-center">TH</div>
+                    <div class="days d-flex justify-content-center align-items-center">FR</div>
+                    <div class="days d-flex justify-content-center align-items-center">SA</div>
+                    <div class="days d-flex justify-content-center align-items-center">SU</div>
+                  </div>
+
+                  <div>
+                    <input id="push-date" class="cashback-input" placeholder="Select by month" style="width:100%">
+                  </div>
+                </div>
 
                <div class="d-flex mb-3">
                  <select class=" form-control long-form-control mr-2  form-control-lg" aria-label=".form-select-lg example">
@@ -146,11 +158,68 @@
 <script>
 export default {
   name: "AddPush",
+  data(){
+    return {
+      clients:[],
+      search_client:'',
+      month_week:'week',
+      clientCategory:[],
+      pushData:{
+        clients:[],
+        category:'',
+        by_month:''
+      },
+    }
+  },
+  computed:{
+    filteredClients(){
+      return this.clients.filter((client)=>{
+        return client.name.toLowerCase().includes(this.search_client.toLowerCase())
+      })
+    },
+
+  },
+  methods:{
+    getClients(){
+      this.axios.get(this.url('getClients'))
+          .then((res)=>{
+            this.clients = res.data.objects;
+          })
+    },
+    getCategories(){
+      this.axios.get(this.url('getCategories')+'?type=client')
+          .then((response)=>{
+            this.clientCategory = response.data.objects
+            this.clientCategory.unshift({_id:'',name:'All'})
+          })
+    },
+    selectClient(selected){
+      this.pushData.clients.push(selected)
+      this.search_client = ''
+    },
+  },
+  mounted(){
+    this.getCategories()
+    this.getClients();
+    new this.$lightpick({
+      field: document.getElementById('push-date'),
+      format:'',
+      lang:'en',
+      onSelect:(date)=>{
+        this.pushData.by_month = date.format().toString().slice(0,16)
+
+
+      }
+    });
+  }
 
 }
 </script>
 
 <style scoped>
+#push-date{
+  margin-bottom: 20px;
+}
 .cashback-input,.form-control{
   height: 40px;
 }

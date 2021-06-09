@@ -13,21 +13,21 @@
           <div class=" myModal-body">
                 <div class="row">
                   <div class="col-11 m-auto">
-                    <form  class="modal-form">
+                    <form @submit.prevent="onSubmit"  class="modal-form">
                       <div class="d-flex align-items-center">
                         <div style="width:50%" class="mr-3">
-                          <label class="product-label">Name</label><br>
-                          <input  v-model="newProduct.name" style="width:100%" class="cashback-input">
+                          <label class="product-label">Name</label><i class="fas fa-asterisk"></i><br>
+                          <input  v-model="newProduct.name" style="width:100%" required class="cashback-input">
                         </div>
 
                         <div class="quantity-category mr-3">
-                          <label class="product-label">Quantity</label><br>
-                          <input v-model="newProduct.quantity" class="cashback-input">
+                          <label class="product-label">Quantity</label><i class="fas fa-asterisk"></i><br>
+                          <input v-model="newProduct.quantity" required type="number"  class="cashback-input">
                         </div>
 
                         <div style="width:25%;">
-                          <label class="product-label">Select category</label><br>
-                          <select v-model="newProduct.category"  class="form-control mb-0 select-phone" aria-label="Default select example">
+                          <label class="product-label">Select category</label><i class="fas fa-asterisk"></i><br>
+                          <select v-model="newProduct.category" required class="form-control mb-0 select-phone" aria-label="Default select example">
                             <option :value="cat._id" v-for="cat in listCategory" :key="cat._id">{{cat.name}}</option>
                           </select>
                         </div>
@@ -44,16 +44,16 @@
 
                       <div class="d-flex ">
                         <div style=" width:33.33%; margin-right:8px;">
-                          <label>Price</label>
-                          <input v-model="newProduct.price" class="form-input cashback-input mb-4" placeholder="Price"  name="price">
+                          <label>Price</label><i class="fas fa-asterisk"></i>
+                          <input required   v-model="newProduct.price"  type="number" class="form-input cashback-input mb-4" placeholder="Price"  name="price">
                         </div>
                         <div class="show-price" style="width:33.33%; margin-right:8px;">
                           <label>Promotional prices</label>
                           <input v-model="newProduct.promoPrice" class="form-input cashback-input mb-4" placeholder="Price">
                         </div>
                         <div style="width:33.33%;">
-                          <label>Vendor code</label>
-                          <input v-model="newProduct.vendorCode" class="form-input cashback-input mb-4" placeholder="Vendor code"  name="vendorCode">
+                          <label>Vendor code</label><i class="fas fa-asterisk"></i>
+                          <input   v-model="newProduct.vendorCode" class="form-input cashback-input mb-4" required placeholder="Vendor code"  name="vendorCode">
                         </div>
                       </div>
 
@@ -62,7 +62,7 @@
                         <div class="d-flex align-items-center mr-2">
                           <label >From</label>
                           <div class="calendar d-flex align-items-center">
-                            <input  name="promoStart" v-model="newProduct.promoStart" class="calendar-input" id="promoStart">
+                            <input   name="promoStart" :value="newProduct.promoStart" class="calendar-input" id="promoStart">
                             <img src="../../../assets/icons/Calendar.svg">
                           </div>
                         </div>
@@ -70,7 +70,7 @@
                         <div class="d-flex align-items-center">
                           <label>to</label>
                           <div class="calendar d-flex align-items-center">
-                            <input   name="promoEnd" v-model="newProduct.promoEnd"  class="calendar-input" id="promoEnd">
+                            <input   name="promoEnd" :value="newProduct.promoEnd"  class="calendar-input" id="promoEnd">
                             <img src="../../../assets/icons/Calendar.svg">
                           </div>
                         </div>
@@ -80,30 +80,28 @@
 
                       <div class="modal-img ">
                           <label> Photos</label>
-
-                          <p>
+                        <p>
                             You can upload 4 more JPG or PNG photos, the minimum resolution is 400*400px, the size is<br> not more than 3 MB. The first photo will be shown as the main one by default
-                            .</p>
+                          </p>
 
                         <div class="d-flex">
                           <label>
                             <img src="../../../assets/img/modal-img.svg ">
                             <input @change="onFileChange" class="d-none" multiple id="imgArray" type="file" name="imgArray">
                           </label>
-                          <div class="d-flex" v-if="show_images.length !==0">
-                            <div  v-for="(img,index) in previewImage"  :key="index" class="selected-images">
+                          <div class="d-flex" v-if="newProduct.imgArray.length !==0">
+                            <div  v-for="(img,index) in imagePreview" :key="index" class="selected-images">
                               <img id="choosed-img"  :src="img" class="show-images mr-2" />
                               <div class="selected-overlay">
-                                <img @click="removeImage(img)" src="../../../assets/icons/deleteClient.svg">
+                                <img @click="removeImage(index)" class="remove-image" src="../../../assets/icons/deleteClient.svg">
                               </div>
                             </div>
                           </div>
                         </div>
                         </div>
-
                       <div class="modal-btn d-flex">
-                        <button @click.prevent="onSubmit" class="save">Save</button>
-                        <button class="cancel">Cancel</button>
+                        <button  type="submit" class="save">Save</button>
+                        <div class="cancel" @click="cancel">Cancel</div>
                       </div>
                     </form>
                   </div>
@@ -124,9 +122,10 @@ props:['listCategory', 'getProducts'],
   data(){
     return{
       boolean:true,
-      show_images: [],
+
       previewImage:[],
       newProduct:{
+        imgArray: [],
         name: '',
         price: '',
         quantity: '',
@@ -142,9 +141,30 @@ props:['listCategory', 'getProducts'],
       },
     };
   },
+  computed:{
+  imagePreview(){
+   return this.newProduct.imgArray.map((item)=>{
+     return URL.createObjectURL(item)
+   })
+  }
+  },
   methods:{
-  removeImage(img){
-    this.previewImage = this.previewImage.filter((item)=>item !== img)
+  cancel(){
+    $('#add-products').modal("hide");
+    this.newProduct = {
+      name: '',
+      price:'',
+      quantity:'',
+      category: '',
+      img:''
+    }
+  },
+    removeImage(idx){
+    this.newProduct.imgArray = this.newProduct.imgArray.filter((item,index)=>{
+      console.log(item);
+      return index !== idx
+    })
+      console.log(this.newProduct.imgArray)
   },
     showPrice(){
       if($('#show-price').prop('checked')){
@@ -157,19 +177,23 @@ props:['listCategory', 'getProducts'],
     onFileChange() {
       $.each($("#imgArray")[0].files, (i,file)=> {
         console.log(i)
-        this.show_images.push(file)
-        this.previewImage.push(URL.createObjectURL(file))
+      if(this.newProduct.imgArray.length<4){
+         this.newProduct.imgArray.push(file)
+      }
+      else{
+         this.$warningAlert("Maximum amount of images is 4")
+        }
       })
     },
     onSubmit(){
       let new_product = this.newProduct;
       const form  = new FormData;
-      for(let item in this.show_images){
+      for(let item in new_product.imgArray){
           if(item<1){
-           form.append('img', this.show_images[item])
+           form.append('img', new_product.imgArray[item])
           }
          else{
-           form.append('imgArray'+(item-1), this.show_images[item])
+           form.append('imgArray'+(item-1),new_product.imgArray[item])
           }
         }
 
@@ -226,26 +250,23 @@ props:['listCategory', 'getProducts'],
 </script>
 
 <style scoped>
+.selected-images:hover .remove-image{
+  opacity: 1;
+}
 
-.selected-images{
-  display: flex;
-  position: relative;
+.remove-image{
+  opacity:0;
+  transition:.3s;
+}
+.cancel{
+  cursor:pointer;
+}
+.fa-asterisk{
+  font-size: 8px;
+  margin-bottom: 2px;
+  color:red;
+}
 
-}
-.selected-overlay{
-  width: 69px;
-  height: 69px;
-  background: rgba(0,0,0,0.2);
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.show-images{
-  width: 69px;
-  height: 69px;
-  border-radius:3px;
-}
 .modal.fade:not(.in).right .modal-dialog {
   -webkit-transform: translate3d(0,0,0);
   transform: translate3d(0, 0, 0);

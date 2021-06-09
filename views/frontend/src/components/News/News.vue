@@ -16,7 +16,6 @@
     <div class="table-head" style="width: 30%;">Recent changes</div>
     <div class="table-head" style="width: 30%;">Action</div>
     <div class="table-head" style="width: 10%;"></div>
-
   </div>
 
   <NewsItem v-bind:newsList="newsList" v-on:selectNews="selectNews" v-on:deleteNews="deleteNews"/>

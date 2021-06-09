@@ -1215,6 +1215,29 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     background: #fff;
 
 }
+
+
+.selected-images{
+    display: flex;
+    position: relative;
+    cursor:pointer;
+
+}
+.selected-overlay{
+    width: 69px;
+    height: 69px;
+    background: rgba(0,0,0,0.2);
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.show-images {
+    width: 69px;
+    height: 69px;
+    border-radius: 3px;
+}
+
 .category-text{
     text-overflow: ellipsis;
     overflow: hidden;

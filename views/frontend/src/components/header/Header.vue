@@ -7,7 +7,7 @@
       </button>
       <div class="total-order">
         <h5 class="route-name">{{$route.name}}</h5>
-        <span class="total-order">Total orders: 0</span>
+        <span class="total-order"></span>
       </div>
       <div class="d-flex align-items-center">
       <div class="select-lang dropdown">
