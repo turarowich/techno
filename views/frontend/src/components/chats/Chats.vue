@@ -232,7 +232,6 @@ export default {
 }
 .list-people{
   height:calc(100% - 40px);
-  max-width: 333px;
   width: 100%;
   overflow-y: auto;
 }

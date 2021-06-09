@@ -266,14 +266,19 @@ function createQrFile(user_id, company) {
     let link = 'images/' + company + '/qr'
     let filename ='/' + user_id + '.png'
     var dir = path.join(__dirname, '/../views/frontend/')
-    QRCode.toFile(dir + link + filename, user_id, {
+    if (!fs.existsSync(dir + link)) {
+        console.log(dir + link)
+        fs.mkdirSync(dir + link);
+    }
+    
+    QRCode.toFile(dir + link + filename, String(user_id), {
         color: {
             dark: '#B0B0B0',  // Blue dots
             light: '#0000' // Transparent background
         },
         width: 600
     }, function (err) {
-        if (err) throw err
+        console.log(err)
         console.log('done')
     })
     return link + filename
