@@ -12,8 +12,8 @@
             {{date}}
         </div>
         <div  v-for="message in msgs" :class="`message${message.isIncoming ? ' send' : ' received' }`" :key="message.id">
-            <div class="text my-1">
-                <span class="ml-1">{{message.text}}</span>
+            <div class="text my-1 overflow-hidden">
+                <span class="ml-1 word-break">{{message.text}}</span>
                 <div class="d-flex justify-content-end">
                     <p class="mb-0 message-time">{{getTimeFromDate(message.createdAt)}}</p>
                 </div>

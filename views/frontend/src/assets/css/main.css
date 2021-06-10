@@ -1256,3 +1256,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     object-fit: cover;
     margin-right: 10px;
 }
+.word-break{
+    word-break: break-all;
+}

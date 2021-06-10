@@ -91,7 +91,6 @@ class PushController {
                     body: message.text,
                 },
                 badge: messages.length,
-                contentAvailable: 1,
                 mutableContent: 1,
                 payload: {
                     type: "message",

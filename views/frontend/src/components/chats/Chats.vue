@@ -1,9 +1,9 @@
 <template>
 
   <div class="main-chat">
-    <div class="notification">
+    <!-- <div class="notification">
       <button class="app-buttons-item"><img class="img-btn" src="../../assets/icons/ring.svg"><span>Push notification</span></button>
-    </div>
+    </div> -->
     <div class="chat d-flex">
     <div class="overflow-hidden contacts-container">
         <div class="d-flex align-items-center  search-chat">

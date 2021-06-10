@@ -22,9 +22,7 @@ class SocketController {
     readMessage = async function (socket, msg) {
         let db = useDB(socket.handshake.headers.db)
         let Message = db.model("Message");
-        console.log("updating")
         let updated = await Message.updateMany({ client: msg.client, isIncoming: msg.isIncoming }, { new: false });
-        console.log(updated)
     }
     getMessages = async function (io, socket, user) {
         let db = useDB(socket.handshake.headers.db)
