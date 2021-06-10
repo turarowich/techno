@@ -8,7 +8,7 @@ const newsSchema = new Schema({
     },
     name_ru: {
         type: String,
-        required: true,
+        required: false,
     },
     desc: {
         type: String,
@@ -16,7 +16,7 @@ const newsSchema = new Schema({
     },
     desc_ru: {
         type: String,
-        required: true,
+        required: false,
     },
     category: {
         type: String,
@@ -28,11 +28,11 @@ const newsSchema = new Schema({
     },
     startDate: {
         type: Date,
-        required: true,
+        required: false,
     },
     endDate: {
         type: Date,
-        required: true,
+        required: false,
     },
     createdAt: {
         type: Date,

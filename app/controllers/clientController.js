@@ -2,6 +2,7 @@ var bcrypt = require('bcryptjs');
 const { useDB, sendError, saveImage, createQrFile, randomNumber } = require('../../services/helper')
 var validate = require('../../config/messages');
 const { query } = require('express');
+const client = require('../models/client');
 
 class ClientController{
     
@@ -116,7 +117,6 @@ class ClientController{
     };
 
     updateClient = async function (req, res) {
-        console.log("got here")
         let db = useDB(req.db)
         let Client = db.model("Client");
         
@@ -131,7 +131,11 @@ class ClientController{
         updateClient: try {
             let query = { '_id': req.params.client }
             let client = null
-            if (req.fields.password) {
+            if (req.fields.birthDate) {
+                req.fields.birthDate = req.fields.birthDate.replace('\r\n', '');
+            }
+            console.log(req.fields)
+            if (req.fields.password && req.fields.password != "\r\n") {
                 req.fields.password = req.fields.password.trim()
                 client = await Client.findOneAndUpdate(query, req.fields, {
                     new: true
@@ -141,6 +145,8 @@ class ClientController{
                 await client.save()
 
             }else{
+                delete req.fields.password
+                
                 client = await Client.findOneAndUpdate(query, req.fields, {
                     new: true
                 })
@@ -188,6 +194,7 @@ class ClientController{
             'status': 200,
             'msg': 'Sending clients'
         }
+        
         try {
             let  query = {}
             if (req.fields.category){
@@ -284,6 +291,81 @@ class ClientController{
 
         res.status(result.status).json(result);
     };
+    updatedMessagesStatus = async function (req, res) {
+        let db = useDB(req.db)
+        let Message = db.model("Message");
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
+        let result = {
+            'status': 200,
+            'msg': 'Messages updated'
+        }
+        try {
+            Message.updateMany({ client: req.params.client}, { new: false });
+            
+        } catch (error) {
+            result = sendError(error, lang)
+        }
+
+        res.status(result.status).json(result);
+    };
+
+    clearMessages = async function (req, res) {
+        let db = useDB(req.db)
+        let Message = db.model("Message");
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
+        let result = {
+            'status': 200,
+            'msg': 'Messages cleared'
+        }
+        try {
+            for (let client of req.fields.clients){
+                await Message.deleteMany({ client: client }, function (err) { })
+            }
+
+        } catch (error) {
+            result = sendError(error, lang)
+        }
+
+        res.status(result.status).json(result);
+    };
+    getNewMessages = async function (req, res) {
+        let db = useDB(req.db)
+        let Message = db.model("Message");
+        
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
+        let result = {
+            'status': 200,
+            'msg': 'Messages send'
+        }
+        try {
+            let query = {
+                new: true
+            }
+            if (req.fields.client) {
+                query['client'] = req.fields.client
+            }
+
+            if (req.fields.isIncoming !== '') {
+                query['isIncoming'] = req.fields.isIncoming
+            }
+            console.log(query, req.fields.isIncoming)
+            let messages = await Message.find(query)
+            result['objects'] = messages
+        } catch (error) {
+            result = sendError(error, lang)
+        }
+
+        res.status(result.status).json(result);
+    }
 
 }
 

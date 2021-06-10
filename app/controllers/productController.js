@@ -1,7 +1,7 @@
 
 const fs = require('fs')
 var os = require("os");
-const { useDB, sendError, saveImage, createExcel } = require('../../services/helper')
+const { useDB, sendError, saveImage, createExcel, removeImage } = require('../../services/helper')
 var validate = require('../../config/messages');
 var readXlsxFile = require('read-excel-file/node')
 
@@ -44,7 +44,6 @@ class ProductController{
     };
 
     addProduct = async function (req, res) {
-        console.log(req.fields)
         let db = useDB(req.db)
         let Product = db.model("Product");
         
@@ -56,7 +55,6 @@ class ProductController{
         if (lang != 'ru') {
             lang = 'en'
         }
-        
         addProduct: try {
             let data = req.fields
             
@@ -113,7 +111,7 @@ class ProductController{
                     }
                 }
             }    
-            product.save()
+            // product.save()
             result['object'] = product
         } catch (error) {
             result = sendError(error, lang)
@@ -151,9 +149,8 @@ class ProductController{
                 }
             }
             for (let $i = 0; $i < 3; $i++) {
-                if (req.files['imgArray' + $i]) {
-                    product.imgArray = []
-                    let filename = saveImage(req.files['imgArray' + $i], req.db)
+                if (req.files['imgArray' + $i] != undefined && req.files['imgArray' + $i] != null) {
+                    let filename = saveImage(req.files['imgArray' + $i], req.db, product.imgArray[$i])
                     if (filename == 'Not image') {
                         result = {
                             status: 500,
@@ -164,11 +161,24 @@ class ProductController{
                         }
                         break updateProduct
                     } else {
-                        product.imgArray.push(filename)
+                        console.log(product.imgArray[$i], $i)
+                        if (product.imgArray[$i] != undefined){
+                            product.imgArray[$i] = filename
+                        }else{
+                            product.imgArray.push(filename)
+                        }
                     }
+                }else if (req.fields['imgArray' + $i] == "" && product.imgArray[$i]){
+                    removeImage(product.imgArray[$i])
+                    delete product.imgArray[$i]
                 }
             }
-            product.save()
+            for (let $i = 0; $i < 3; $i++) {
+                if(!product.imgArray[$i]){
+                    product.imgArray.splice($i, 1)
+                }
+            }
+            await product.save()
             result['object'] = product
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])

@@ -1,7 +1,7 @@
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 var config = require('../../config/config');
-const { sendError, randomNumber, randomPassword, createQrFile } = require('../../services/helper')
+const { sendError, randomNumber, randomPassword, createQrFile, useDB } = require('../../services/helper')
 var validate = require('../../config/messages');
 var axios = require('axios');
 const { response } = require('express');
@@ -18,7 +18,7 @@ const transporter = nodemailer.createTransport({
 
 class AuthController{
     register = async function (req, res) {
-        let db = global.userConnection.useDb('loygift');
+        let db = useDB('loygift');
         let User = db.model("User");
         let catalogs_model = db.model("catalogs");
         let result = [];
@@ -60,7 +60,7 @@ class AuthController{
     };
 
     login = async function (req, res) {
-        let db = global.userConnection.useDb('loygift');
+        let db = useDB('loygift');
         let User = db.model("User");
         let result = []
         try {
@@ -95,7 +95,7 @@ class AuthController{
             }
         }
 
-        let db = global.userConnection.useDb('loygift'+req.headers['access-place']);
+        let db = useDB('loygift'+req.headers['access-place']);
         let Client = db.model("Client");
         let lang = req.headers["accept-language"]
         if (lang != 'ru') {
@@ -129,7 +129,7 @@ class AuthController{
         }
     };
     registerClient = async function (req, res) {
-        let db = global.userConnection.useDb('loygift'+req.headers['access-place']);
+        let db = useDB('loygift'+req.headers['access-place']);
         let Client = db.model("Client");
         let result = []
         let lang = req.headers["accept-language"]
@@ -174,7 +174,7 @@ class AuthController{
     };
 
     registerClientSocial = async function (req, res) {
-        let db = global.userConnection.useDb('loygift' + req.headers['access-place']);
+        let db = useDB('loygift' + req.headers['access-place']);
         let Client = db.model("Client");
         let result = []
         let social_res = []
@@ -190,6 +190,7 @@ class AuthController{
                 break socialAuth
             }
             let user = await Client.findOne(social_res.check)
+            console.log(social_res.check)
             if(user){
                 result = {
                     status: 500,
@@ -204,7 +205,7 @@ class AuthController{
             }
             social_res.uniqueCode = randomNumber(100000, 1000000)
             var client = new Client(social_res.save)
-            let qrCode = createQrFile(client._id, 'loygift' + req.headers['access-place'])
+            let qrCode = createQrFile(social_res.uniqueCode, 'loygift' + req.headers['access-place'])
             client.QRCode = qrCode
             await client.save({ validateBeforeSave: false })
             result = {
@@ -227,7 +228,7 @@ class AuthController{
         res.status(result.status).json(result);
     };
     loginClientSocial = async function (req, res) {
-        let db = global.userConnection.useDb('loygift' + req.headers['access-place']);
+        let db = useDB('loygift' + req.headers['access-place']);
         let Client = db.model("Client");
         let result = []
         let social_res = []
@@ -308,7 +309,7 @@ class AuthController{
     };
 
     resetPasswordMessage = async function (req, res) {
-        let db = global.userConnection.useDb('loygift' + req.headers['access-place']);
+        let db = useDB('loygift' + req.headers['access-place']);
         let Client = db.model("Client");
         let result = []
         let lang = req.headers["accept-language"]
@@ -359,7 +360,7 @@ class AuthController{
     };
 
     resetCheckCode = async function (req, res) {
-        let db = global.userConnection.useDb('loygift' + req.headers['access-place']);
+        let db = useDB('loygift' + req.headers['access-place']);
         let Client = db.model("Client");
         let result = []
         let lang = req.headers["accept-language"]
@@ -408,7 +409,7 @@ class AuthController{
         res.status(result.status).json(result);
     };
     resetPassword = async function (req, res) {
-        let db = global.userConnection.useDb('loygift' + req.headers['access-place']);
+        let db = useDB('loygift' + req.headers['access-place']);
 
         let Client = db.model("Client");
         let result = []
@@ -549,8 +550,11 @@ async function fbRegister(token){
     if(fb_response.error){
         return fb_response
     }
-
-    let check = { $or: [{ fb_id: fb_response.data.id }, { email: fb_response.data.email }] }
+    let check = { fb_id: fb_response.data.id }
+    if (fb_response.data.email) {
+        check = { $or: [{ fb_id: fb_response.data.id }, { email: fb_response.data.email }] }
+    }
+    
     let save = {
         name: fb_response.data.first_name + ' ' + fb_response.data.last_name,
         email: fb_response.data.email,
@@ -653,7 +657,11 @@ async function googleRegister(token) {
     if (response.error) {
         return response
     }
-    let check = { $or: [{ google_id: response.data.sub }, { email: response.data.email }] }
+    let check = { google_id: response.data.sub }
+    if (response.data.email) {
+        check = { $or: [{ google_id: response.data.sub }, { email: response.data.email }] }
+    }
+
     let save = {
         name: response.data.name,
         email: response.data.email,
@@ -666,7 +674,7 @@ async function googleRegister(token) {
     return result
 }
 async function registerClientSocialWeb (type,token,lang,access_place,screen_name="") {
-    let db = global.userConnection.useDb('loygift' + access_place);
+    let db = useDB('loygift' + access_place);
     let Client = db.model("Client");
     let result = []
     if (lang != 'ru') {
@@ -716,7 +724,7 @@ async function registerClientSocialWeb (type,token,lang,access_place,screen_name
 };
 
 async function loginClientSocialWeb (type,token,lang,access_place,screen_name="") {
-    let db = global.userConnection.useDb('loygift' + access_place);
+    let db = useDB('loygift' + access_place);
     let Client = db.model("Client");
     let result = []
     if (lang != 'ru') {

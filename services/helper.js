@@ -10,7 +10,16 @@ function useDB(db_name) {
     let db = global.userConnection.useDb(db_name);
     return db;
 }
-
+function removeImage( old_file_name = null) {
+    if (old_file_name) {
+        old_file_name = path.join(__dirname, '/../views/frontend/' + old_file_name)
+        if (fs.existsSync(old_file_name)) {
+            fs.unlink(old_file_name, function (err) {
+                console.log(err)
+            });
+        }
+    }
+}
 function saveImage(file, company, old_file_name=null){
     let filename = 'images/' + company + '/' + Math.random().toString().substr(2, 8) + path.extname(file.name)
     var dir = path.join(__dirname, '/../views/frontend/images/' + company)
@@ -18,7 +27,7 @@ function saveImage(file, company, old_file_name=null){
         fs.mkdirSync(dir);
     }
     if (old_file_name){
-        old_file_name = path.join(__dirname, '/../views/frontend/images/' + old_file_name)
+        old_file_name = path.join(__dirname, '/../views/frontend/' + old_file_name)
         if (fs.existsSync(old_file_name)){
             fs.unlink(old_file_name, function(err){
                 console.log(err)
@@ -257,14 +266,19 @@ function createQrFile(user_id, company) {
     let link = 'images/' + company + '/qr'
     let filename ='/' + user_id + '.png'
     var dir = path.join(__dirname, '/../views/frontend/')
-    QRCode.toFile(dir + link + filename, user_id, {
+    if (!fs.existsSync(dir + link)) {
+        console.log(dir + link)
+        fs.mkdirSync(dir + link);
+    }
+    
+    QRCode.toFile(dir + link + filename, String(user_id), {
         color: {
-            dark: '#616CF5',  // Blue dots
+            dark: '#B0B0B0',  // Blue dots
             light: '#0000' // Transparent background
         },
         width: 600
     }, function (err) {
-        if (err) throw err
+        console.log(err)
         console.log('done')
     })
     return link + filename
@@ -272,6 +286,7 @@ function createQrFile(user_id, company) {
 module.exports = {
     useDB: useDB,
     saveImage: saveImage,
+    removeImage: removeImage,
     sendError: sendError,
     createExcel: createExcel,
     randomNumber: randomNumber,

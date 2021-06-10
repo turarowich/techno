@@ -3,7 +3,7 @@
   <div class="searchAndButtons">
     <div class="d-flex justify-content-between app-buttons">
       <div class="d-flex align-items-center">
-        <button class="app-buttons-item adding-btns" @click="$router.push('/add-news')"><span>+ Add news</span></button>
+        <button class="app-buttons-item adding-btns" data-toggle="modal" data-target="#add-news"><span>+ Add news</span></button>
       </div>
     </div>
     <div class="main-search d-flex align-items-center ">
@@ -16,26 +16,106 @@
     <div class="table-head" style="width: 30%;">Recent changes</div>
     <div class="table-head" style="width: 30%;">Action</div>
     <div class="table-head" style="width: 10%;"></div>
-
   </div>
 
-  <NewsItem/>
-
+  <NewsItem v-bind:newsList="newsList" v-on:selectNews="selectNews" v-on:deleteNews="deleteNews"/>
+  <AddNews v-on:getNews="getNews"/>
+  <EditNews v-bind:selectedNews="selectedNews" v-on:getNews="getNews"/>
 </div>
 </template>
 
 <script>
 import NewsItem from "@/components/News/NewsItem";
+import AddNews from "@/modals/news/AddNews";
+import EditNews from "@/modals/news/EditNews";
+import Swal from 'sweetalert2';
 export default {
   name: "News",
   components:{
-    NewsItem
+    NewsItem,
+    AddNews,
+    EditNews
   },
-  created(){
+  data(){
+    return{
+      newsListServer:[],
+      selectedNews:{},
+      search:""
+    }
+  },
+  computed:{
+        newsList() {
+            return this.newsListServer.filter((news) =>{
+                if(news.name.toLowerCase().includes(this.search.toLowerCase())){
+                    return true
+                }
+                return false
+            });
+        }
+  },
+  methods:{
+    getNews(){
+        this.axios.get(this.url('getNews'))
+            .then((response) => {
+                this.newsListServer = response.data.objects;
+            })
+    },
+    selectNews(news){
+        this.selectedNews = news
+    },
+    deleteNews(newsID){
+        Swal.fire({
+        showConfirmButton: true,
+        html: 'Are you sure to remove this <br>news',
+        showCloseButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Delete',
+        buttonsStyling:false,
+        customClass:{
+          popup: 'sweet-delete',
+          confirmButton: 'confirm-btn',
+          cancelButton:'cancel-btn',
+          actions:'btn-group',
+          content:'content-sweet',
+          closeButton:'close-btn'
+        },
+
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.axios.delete(this.url('deleteNews', newsID))
+          .then(()=>{
+            this.getNews()
+            Swal.fire({
+                  title:'Success',
+                  timer:1500,
+                  text:'News has been removed',
+                  showConfirmButton:false,
+                  position: 'top-right',
+                  customClass:{
+                    popup:'success-popup',
+                    content:'success-content',
+                    title:'success-title',
+                    header:'success-header',
+                    image:'success-img'
+                  },
+                  showClass:{
+                    popup: 'animate__animated animate__zoomIn'
+                  },
+                }
+            )
+          })
+       }
+      })
+          
+      },
+  },
+  mounted(){
     this.socket.on("server news notification", function(data) {
         console.log(data)
     })
-  }
+    this.getNews()
+  },
+  
 }
 </script>
 

@@ -72,16 +72,18 @@
         <div class="catalog-menu" style="width:18%">
           <ul class="list-group" >
             <li class="catalog-list" :id="category.name" :ref="'menu'+index"  v-for="(category,index) in listCategory" :key="category._id"  :class="{active: filtered === category._id}"  @click="filtered = category._id">
-              <span>{{category.name}}</span>
-              <div class="dropdown dropMenu">
-                <div class="dropdown-toggle" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <img v-if="category._id !== ''" src="../../assets/icons/three-dots.svg">
+                <p class="category-text tool-tip" data-toggle="tooltip" data-placement="right" :title="category.name">
+                  {{category.name}}
+                </p>
+                <div class="dropdown dropMenu">
+                    <div class="dropdown-toggle" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img v-if="category._id !== ''" src="../../assets/icons/three-dots.svg">
                 </div>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenu">
-                  <ul class="list-group" >
-                    <li class="list-group-item" data-toggle="modal" data-target="#edit-category" @click="selectCategory(category._id)">Edit</li>
-                    <li class="list-group-item" @click.stop.prevent="deleteCategory(category._id)">Delete</li>
-                  </ul>
+                    <ul class="list-group" >
+                        <li class="list-group-item" data-toggle="modal" data-target="#edit-category" @click="selectCategory(category._id)">Edit</li>
+                        <li class="list-group-item" @click.stop.prevent="deleteCategory(category._id)">Delete</li>
+                    </ul>
                 </div>
               </div>
             </li>

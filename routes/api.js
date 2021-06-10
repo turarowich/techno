@@ -24,7 +24,10 @@ module.exports = function (app, network_information) {
     app.delete('/deleteClient/:client', clientController.deleteClient);
     app.delete('/deleteClients', clientController.deleteClients);
     app.post('/addClientDevice', clientController.addClientDevice);
-
+    app.get('/updatedMessagesStatus/:client', clientController.updatedMessagesStatus);
+    app.post('/clearMessages', clientController.clearMessages);
+    app.post('/getNewMessages', clientController.getNewMessages);
+    
     // Products url
     app.get('/getProduct/:product', productController.getProduct);
     app.get('/getProducts', productController.getProducts);

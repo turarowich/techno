@@ -6,7 +6,7 @@ const { query } = require('express');
 var apn = require('apn');
 var path = require('path')
 var dir = path.join(__dirname, "../../keys/" + config.APNs)
-console.log(dir)
+
 var options = {
     token: {
         key: dir,
@@ -29,7 +29,7 @@ class PushController {
         let db = useDB(req.db)
         let News = db.model("News");
         let Device = db.model("Device");
-
+        
         let data = await News.findById(req.params.id)
         let result = {
             'status': 500,
@@ -42,10 +42,9 @@ class PushController {
             let devicesIOS = await Device.find({'type': 'ios'})
             let noteIOS = new apn.Notification({
                 alert: {
-                    title: "Hi there",
-                    subtitle: "We present our new clothes",
-                    body: "Check it our when it's in stock",
-                   
+                    title: data.name,
+                    subtitle: "",
+                    body: data.desc,
                 },
                 mutableContent: 1,
                 payload:{
@@ -60,19 +59,62 @@ class PushController {
                 sound: "default",
                 topic: config.APNsTopic
             });
-            
             apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
+                console.log(response)
                 if (response.failed.length){
+                    
                     response.failed.forEach((fail) => {
+                        console.log(fail.response)
                         if (fail.status == '400' && fail.response.reason == 'BadDeviceToken'){
                             let device = devicesIOS.find(device => device.token == fail.device)
                             if(device) device.deleteOne()
                         }
                     });
                 }
+            }).catch(function (error) {
+                console.log("Faled to send message to ", error);
             });
         }
         res.status(result.status).json(result);
+    };
+    sendNewMessage = async function (req_db, client, message) {
+        let db = useDB(req_db)
+        let Device = db.model("Device");
+        let Message = db.model("Message");
+        if (client) {
+            let messages = Message.find({ 'client': client, 'new': true })
+            console.log(messages, messages.length)
+            let devicesIOS = await Device.find({ 'type': 'ios', 'client': client })
+            let noteIOS = new apn.Notification({
+                alert: {
+                    title: "New message",
+                    subtitle: "",
+                    body: message.text,
+                },
+                badge: messages.length,
+                contentAvailable: 1,
+                mutableContent: 1,
+                payload: {
+                    type: "message",
+                },
+                sound: "default",
+                topic: config.APNsTopic
+            });
+            console.log(noteIOS)
+            apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
+                if (response.failed.length) {
+                    response.failed.forEach((fail) => {
+                        console.log(fail.response)
+                        if (fail.status == '400' && fail.response.reason == 'BadDeviceToken') {
+                            let device = devicesIOS.find(device => device.token == fail.device)
+                            if (device) device.deleteOne()
+                        }
+                    });
+                }
+            }).catch(function (error) {
+                console.log("Faled to send message to ", error);
+            });
+        }
     };
 
 

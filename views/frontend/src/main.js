@@ -1,5 +1,6 @@
 import {createApp} from 'vue'
 import App from './App.vue'
+
 import 'select2/dist/css/select2.min.css';
 import 'slick-carousel/slick/slick';
 import 'slick-carousel/slick/slick.css';
@@ -46,7 +47,7 @@ const socket = io(process.env.VUE_APP_SERVER_URL, {
         token: localStorage.getItem('token')
     },
     withCredentials: true,
-    reconnection: false
+    reconnection: true
 })
 
 ax.defaults.headers.common['Authorization'] = 'Bearer '+ token
@@ -57,7 +58,6 @@ app.config.globalProperties.axios = ax
 app.config.globalProperties.$api = process.env.VUE_APP_API_URL;
 app.config.globalProperties.$server = process.env.VUE_APP_SERVER_URL;
 app.config.globalProperties.format_price = function (sum){parseFloat(sum).toFixed(2)};
-console.log(process.env.VUE_APP_SERVER_UR,"process.env.VUE_APP_SERVER_UR");
 app.config.globalProperties.base_url = process.env.VUE_APP_SERVER_URL;
 
 app.config.globalProperties.getClientAuth = function(){
@@ -95,13 +95,15 @@ app.config.globalProperties.addNewProperty = function(obj, key, value = "", copy
 }
 app.config.globalProperties.changeToken = function () {
     this.axios.defaults.headers.common['Authorization'] = 'Bearer '+ localStorage.getItem('token')
-    this.socket = io({
+    this.socket = io(this.$server,{
         extraHeaders: {
             token: localStorage.getItem('token')
         },
         withCredentials: true,
     })
-    console.log(this.axios.defaults.headers)
+}
+app.config.globalProperties.img = function (main) {
+    return this.$server + '/' + main
 }
 app.config.globalProperties.url = function (main, id = null, search = null) {
     let additional = '/'
@@ -111,7 +113,6 @@ app.config.globalProperties.url = function (main, id = null, search = null) {
     if (search) {
         additional += '?' + search[0] + '=' + search[1]
     }
-    console.log(process.env.NODE_ENV, process.env.VUE_APP_API_URL)
     if (home_url.includes(main)){
         return this.$server + '/' + main + additional
     }

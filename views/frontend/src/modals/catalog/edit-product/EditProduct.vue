@@ -3,9 +3,9 @@
     <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: 82%;" role="document" >
       <div class="modal-content myModal-content h-100">
         <div class="modal-header justify-content-start align-items-center">
-          <button type="button" data-dismiss="modal" aria-label="Close" class="close">
+          <button type="button" data-dismiss="modal" aria-label="Close" class="close mr-2">
               <span aria-hidden="true">
-                <img src="../../../assets/icons/x.svg" alt="">
+                <img src="../../../assets/icons/xBlack.svg" alt="">
               </span>
           </button>
           <h3 class="modal-title">Edit</h3>
@@ -17,18 +17,18 @@
                 <div class="d-flex align-items-center mb-3">
                   <div style="width:50%" class="mr-3">
                     <label class="product-label">Name</label><br>
-                    <input  v-model="currentData.name" style="width:100%" class="cashback-input">
+                    <input name="name"  v-model="currentData.name" style="width:100%" class="cashback-input">
                   </div>
 
                   <div class="quantity-category mr-3">
                     <label class="product-label">Quantity</label><br>
-                    <input  v-model="currentData.quantity" class="cashback-input">
+                    <input name="quantity"  v-model="currentData.quantity" class="cashback-input">
                   </div>
 
                   <div style="width:25%;">
                     <label class="product-label">Select category</label><br>
 
-                    <select v-model="currentData.category"  class="form-control mb-0 select-phone" >
+                    <select name="category" v-model="currentData.category"  class="form-control mb-0 select-phone" >
                       <option :value="cat._id" v-for="cat in listCategory" :key="cat._id">{{cat.name}}</option>
                     </select>
                   </div>
@@ -50,15 +50,15 @@
                 <div class="d-flex ">
                   <div style=" width:33.33%; margin-right:8px;">
                     <label>Price</label>
-                    <input v-model="currentData.price" class="form-input cashback-input mb-4" placeholder="Price"  name="price">
+                    <input name="price" v-model="currentData.price" class="form-input cashback-input mb-4" placeholder="Price"  >
                   </div>
                   <div :class="{active:isDiscount}" class="show-price" style="width:33.33%; margin-right:8px;">
                     <label>Promotional prices</label>
-                    <input v-model="currentData.promoPrice" class="form-input cashback-input mb-4" placeholder="Price">
+                    <input name="promoPrice" v-model="currentData.promoPrice" class="form-input cashback-input mb-4" placeholder="Price">
                   </div>
                   <div style="width:33.33%;">
                     <label>Vendor Code</label>
-                    <input v-model="currentData.vendorCode"  class="form-input cashback-input mb-4" placeholder="Vendor code"  name="vendorCode">
+                    <input name="vendorCode" v-model="currentData.vendorCode"  class="form-input cashback-input mb-4" placeholder="Vendor code"  >
                   </div>
                 </div>
 
@@ -84,20 +84,35 @@
 
                 <div class="modal-img ">
                   <label>Photos</label>
-
                   <p>
                     You can upload 4 more JPG or PNG photos, the minimum resolution is 400*400px, the size is<br>
                     not more than 3 MB. The first photo will be shown as the main one by default .</p>
 
-                  <label >
-                    <img src="../../../assets/img/modal-img.svg">
-                    <input class="d-none" type="file" name="imgArray">
-                  </label>
+              <div class="d-flex">
+                <label >
+                  <img src="../../../assets/img/modal-img.svg">
+                  <input @change="onFileChange($event)" ref="addImage" class="d-none" multiple id="imgsArray" type="file" name="imgArray">
+                </label>
+                <div  class="d-flex">
+                  <img v-if="currentData.img !== ''" :src="imgSrc+'/'+currentData.img" class="show-images mr-2">
+                    <div v-if="currentData.img !== ''" class="selected-overlay">
+                      <img  @click="currentData.img = ''" class="remove-images" src="../../../assets/icons/deleteClient.svg">
+                    </div>
+                   <div v-for="(img, index) in imagePreview" :key="index" >
+                      <div v-if="img !== ''" class="selected-images">
+                        <img v-if="img.startsWith('images')" :src="imgSrc+'/'+img" class="show-images mr-2" />
+                        <img v-else   :src="img" class="show-images mr-2" />
+                        <div class="selected-overlay">
+                          <img @click="removeImage(index)" class="remove-image"  src="../../../assets/icons/deleteClient.svg">
+                        </div>
+                      </div>
+                    </div>
                 </div>
-
+              </div>
+                </div>
                 <div class="modal-btn d-flex">
-                  <button @click.prevent="onSubmit(currentData._id)" class="save">Save</button>
-                  <button class="cancel">Cancel</button>
+                  <button @click.prevent="onSubmit" class="save">Save</button>
+                  <button class="cancel" @click.prevent="close">Cancel</button>
                 </div>
               </form>
             </div>
@@ -119,7 +134,11 @@ export default {
   props: ['listCategory','select_product','getProducts'],
   data(){
     return{
-      currentData:{},
+      currentData:{
+        img:'',
+        imgArray:[]
+      },
+      imgSrc:'',
       promoStartLightpick:{},
       promoEndLightpick:{},
       promoStart: {
@@ -133,11 +152,27 @@ export default {
     }
   },
   computed:{
+    imagePreview(){
+    return  this.currentData.imgArray.map((item)=>{
+            if(typeof item == 'object'){
+              return URL.createObjectURL(item)
+            }
+            return item;
+          })
+        },
     isDiscount(){
       return this.currentData.promoPrice>0;
     },
   },
   methods:{
+    removeImage(idx){
+     this.currentData.imgArray.forEach((item,index)=>{
+       if(index === idx){
+         this.currentData.imgArray[index] = ""
+       }
+     })
+      console.log(this.currentData.imgArray)
+    },
     editShowPrice(){
       if($('#edit-show-price').prop('checked')){
         $('.show-price').addClass('active')
@@ -165,23 +200,53 @@ export default {
         }
       });
     },
-    onSubmit(id){
-      this.axios.put(this.url('updateProduct',id),{
-        name: this.currentData.name,
-        quantity:this.currentData.quantity,
-        category:this.currentData.category,
-        price:this.currentData.price,
-        description:this.currentData.description,
-        promoPrice: this.currentData.promoPrice,
-        vendorCode: this.currentData.vendorCode,
-        promoStart:this.promoStart.obj,
-        promoEnd:this.promoEnd.obj,
-      })
-      .then(()=>{
-        this.getProducts()
-      })
+    onFileChange() {
+      $.each($("#imgsArray")[0].files, (i,file)=> {
+        console.log(i)
+        for (let j = 0; j <=this.currentData.imgArray.length; j++) {
+          if(this.currentData.imgArray[j] === ""){
+            this.currentData.imgArray[j] = file;
+            break;
+          }
+          if(this.currentData.imgArray.length<3){
+            this.currentData.imgArray.push(file)
+            break;
+          }
+
+        }
+
+      });
+      console.log(this.currentData.imgArray, 'bektemir')
+    },
+    onSubmit(){
+      const updatedProduct = this.currentData;
+      const form = new FormData();
+
+      for(let item in updatedProduct.imgArray){
+        form.append('imgArray'+item, updatedProduct.imgArray[item])
+        console.log("imgArray"+item, updatedProduct.imgArray[item])
+      }
+
+      form.append("name", updatedProduct.name)
+      form.append("quantity", updatedProduct.quantity)
+      form.append("category", updatedProduct.category)
+      form.append("price", updatedProduct.price)
+      form.append("description", updatedProduct.description)
+      form.append("promoPrice", updatedProduct.promoPrice)
+      form.append("vendorCode", updatedProduct.vendorCode)
+      form.append("promoStart", this.promoStart.obj)
+      form.append("promoEnd", this.promoEnd.obj)
+
+      this.axios.put(this.url('updateProduct',updatedProduct._id),form)
+          .then(()=>{
+            this.getProducts()
+          })
       this.$informationAlert('Changes are saved')
       $('#edit-product').modal("hide")
+
+
+
+
     }
   },
 
@@ -196,12 +261,20 @@ export default {
   },
   mounted() {
     this.selectDates();
+    this.imgSrc = this.$server;
   }
 }
 </script>
 
 <style scoped>
+.selected-images:hover .remove-image{
+  opacity: 1;
+}
 
+.remove-image{
+  opacity:1;
+  transition:.3s;
+}
 .modal.fade:not(.in).right .modal-dialog {
   -webkit-transform: translate3d(0,0,0);
   transform: translate3d(0, 0, 0);

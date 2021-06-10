@@ -133,6 +133,11 @@ const clientSchema = new Schema({
             message: props => 'code_unique'
         },
     },
+    lastMessageAt: {
+        type: Date,
+        required: true,
+        default: Date.now,
+    },
     createdAt: {
         type: Date,
         required: true,
