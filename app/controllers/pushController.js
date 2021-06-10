@@ -100,6 +100,7 @@ class PushController {
                 sound: "default",
                 topic: config.APNsTopic
             });
+            console.log(noteIOS)
             apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
                 if (response.failed.length) {
                     response.failed.forEach((fail) => {
