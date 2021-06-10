@@ -30,7 +30,8 @@ class SocketController {
         let db = useDB(socket.handshake.headers.db)
         let Message = db.model("Message");
         await Message.updateMany({ client: user, isIncoming: false }, { new: false });
-        let messages = Message.find({ client: user})
+        let messages = await Message.find({ client: user }).reverse().limit(50)
+
         io.to(socket.id).emit("all messages", messages)
     }
 
