@@ -28,10 +28,10 @@ class SocketController {
     }
     getMessages = async function (io, socket, user) {
         let db = useDB(socket.handshake.headers.db)
-        let Client = db.model("Client");
-        let client = await Client.findById(user).populate('messages').exec()
-        
-        io.to(socket.id).emit("all messages", client.messages)
+        let Message = db.model("Message");
+        await Message.updateMany({ client: user, isIncoming: false }, { new: false });
+        let messages = Message.find({ client: user})
+        io.to(socket.id).emit("all messages", messages)
     }
 
     sendNewsNotification = async function (io, socket, id) {

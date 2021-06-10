@@ -80,12 +80,16 @@ class PushController {
     sendNewMessage = async function (req_db, client, message) {
         let db = useDB(req_db)
         let Device = db.model("Device");
+        let Message = db.model("Message");
         if (client) {
+            let messages = Message.find({ client: user, new: true })
+
             let devicesIOS = await Device.find({ 'type': 'ios', 'client': client })
             let noteIOS = new apn.Notification({
                 alert: {
                     title: "New message",
                     subtitle: "",
+                    badge: messages.count,
                     body: message.text,
                 },
                 mutableContent: 1,
