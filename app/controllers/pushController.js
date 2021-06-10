@@ -89,7 +89,7 @@ class PushController {
                 alert: {
                     title: "New message",
                     subtitle: "",
-                    badge: messages.count,
+                    badge: 10,
                     body: message.text,
                 },
                 mutableContent: 1,
