@@ -83,7 +83,7 @@ class PushController {
         let Message = db.model("Message");
         if (client) {
             let messages = Message.find({ client: client, new: true })
-            console.log(messages)
+            console.log(messages, messages.length)
             let devicesIOS = await Device.find({ 'type': 'ios', 'client': client })
             let noteIOS = new apn.Notification({
                 alert: {
