@@ -34,7 +34,11 @@ export const MessageModule = {
 
     getters:{
         getMessages(state){
-            return state.chats.length ? state.chats.length : ''
+            let num =  state.chats.length ? state.chats.length : ''
+            if(num != "" && num >= 100){
+                num = "+99"
+            }
+            return num
         }
     },
 }

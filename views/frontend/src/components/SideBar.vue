@@ -9,7 +9,7 @@
       <router-link class="router-link"  data-turbolinks="false" to="/clients" ><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Document.svg" >Clients</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
       <router-link class="router-link" to="/loyalty"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Game.svg" >Loyalty</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
       <router-link class="router-link" to="/catalog"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Discovery.svg"  data-turbolinks="false">Catalog</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
-      <router-link class="router-link" to="/chats"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/MoresSquare.svg" >Chats <span class="chats-quantity">{{msgsCount}}</span></span></router-link>
+      <router-link class="router-link" to="/chats"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/MoresSquare.svg" >Chats <span class="chats-quantity" v-if="msgsCount != ''">{{msgsCount}}</span></span><img v-if="msgsCount == ''" class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
       <router-link class="router-link" to="/analytics"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/group.svg" >Analytics</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
       <router-link class="router-link" to="/news"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/VolumeUp.svg" >News</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
       <router-link class="router-link" to="/log"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/logs.svg" >Log</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
@@ -136,6 +136,12 @@ name: "SideBar",
 .chats-quantity{
     position: absolute;
     right: 30px;
+    top: 13px;
+    background: #E94A4A;
+    border-radius: 5px;
+    width: 24px;
+    height: 24px;
+    text-align: center;
 }
 .help-setting{
   position: absolute;
