@@ -13,7 +13,7 @@ var options = {
         keyId: config.APNsKeyID,
         teamId: config.APNsTeamID
     },
-    production: false
+    production: true
 };
 
 
