@@ -6,8 +6,8 @@
       <p>Brand clothing store</p>
     </div>
   </div>
-  <div class="new">
-    <div class="news">
+  <div class="new">    <div class="news">
+
       <div class="row">
         <div class="col-lg-3 ">
           <h2 class="news-title">News</h2>
@@ -84,6 +84,12 @@ name: "Dashboard",
       }
       return require("../../../assets/clients/main-box.svg");
     },
+    user(){
+      return this.$store.getters['Client/getUser'];
+    },
+    userToken(){
+      return this.$store.getters['Client/getUserToken'];
+    },
   },
   methods:{
     openNews(){
@@ -97,13 +103,14 @@ name: "Dashboard",
       await this.axios.get(this.url('getCatalogSettings'),options)
           .then((response) => {
             console.log(response,"cattttttsssssssss");
+            this.$store.dispatch("Catalog/setCompany_addresses",response.data.branches);
+            this.$store.dispatch("Catalog/setCompany_delivery_options",response.data.deliveries);
             this.settings = response.data.object;
           }).catch(function (error){
             if (error.response) {
               // console.log(error.response.status);
               // console.log(error.response.headers);
               that.$warningAlert('Requested shop was not found, check url')
-              // that.displayMessages(Object.values(error.response.data.errors),"Errors");
             }
           })
     },
@@ -111,6 +118,17 @@ name: "Dashboard",
   created(){
     this.getCatalogSettings();
   },
+  mounted() {
+    const options = {
+      headers: {
+        "company_url": this.currentCompanyCatalog,
+        "x-access-token": this.userToken,
+      }
+    }
+    if(this.user){
+      this.$store.dispatch("Client/updateUserData",{axios:this.axios,url:this.url('getClient',this.user._id),options:options});
+    }
+  }
 }
 </script>
 

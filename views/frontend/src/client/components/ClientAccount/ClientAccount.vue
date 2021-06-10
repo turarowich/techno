@@ -5,9 +5,12 @@
         <div class="profile-info">
           <div class="d-flex align-items-center">
             <img class="client-avatar" src="../../../assets/clients/clientProfile.svg">
-            <div>
-              <h1 class="profile-title">{{user.name}} <img src="../../../assets/clients/Edit.svg"></h1>
-              <span class="profile-phone">{{user.phone}}</span>
+            <div v-if="user">
+              <h1 class="profile-title">
+                {{user.name}}
+                <img src="../../../assets/clients/Edit.svg"></h1>
+              <span class="profile-phone">{{user.phone}}</span><br>
+              <span class="user_status_class">{{userDiscountStatus.name || ''}} {{userDiscountStatus.discount_percentage || 0}}%</span>
             </div>
           </div>
           <div @click="logout" class="logout">
@@ -18,18 +21,17 @@
 
         <div class="bonus-notification">
           <div class="d-flex align-items-center">
-            <img class="mr-2" src="../../../assets/clients/Discount.svg"> <span class="bonus-span mb-0">My bonuses: 100</span>
+            <img class="mr-2" src="../../../assets/clients/Discount.svg"> <span class="bonus-span mb-0" v-if="user">My bonuses: {{user.points}}</span>
           </div>
           <p class="client-paragraph mb-0">You can spend your current points or continue to accumulate them</p>
         </div>
-
         <ul class="nav nav-tabs mb-5">
           <li>
             <a class="disable-underline" data-toggle="tab" href="#menu1">
               <div class="order-tab d-flex align-items-center mr-4">
                 <img src="../../../assets/clients/trash.svg">
                 <h2 class="orders-title">Orders</h2>
-                <div class="order-count">2</div>
+                <div class="order-count">{{userOrders.length}}</div>
               </div>
             </a>
           </li>
@@ -55,7 +57,7 @@
               <div class="table-head table-link" @click="sortByTotal" style="width: 11%;">Total <img class="total-pol" style="margin-left:10px" src="../../../assets/icons/polygon.svg"></div>
               <div class="table-head" style="width:10%">Status</div>
             </div>
-            <OrdersItem :orderList="orderList"/>
+            <OrdersItem :orderList="userOrders"/>
 
           </div>
           <div id="menu2" class="tab-pane fade">
@@ -100,6 +102,18 @@ name: "ClientAccount",
     user(){
       return this.$store.getters['Client/getUser'];
     },
+    userToken(){
+      return this.$store.getters['Client/getUserToken'];
+    },
+    userOrders(){
+      return this.$store.getters['Client/getUserOrders'];
+    },
+    userDiscountStatus(){
+      return this.$store.getters['Client/getUserDiscountStatus'];
+    },
+    currentCompanyCatalog() {
+      return this.$route.params.bekon;
+    },
   },
   methods:{
     sortByDate() {
@@ -126,10 +140,21 @@ name: "ClientAccount",
     },
     logout(){
       this.$store.dispatch("Client/logout");
+      this.$store.dispatch("Orders/clearAll");
     },
   },
   mounted(){
     $('.nav-tabs a:first').click();
+    const options = {
+      headers: {
+        "company_url": this.currentCompanyCatalog,
+        "x-access-token": this.userToken,
+      }
+    }
+    if(this.user){
+      this.$store.dispatch("Client/updateUserData",{axios:this.axios,url:this.url('getClient',this.user._id),options:options});
+    }
+
   }
 }
 </script>
@@ -185,5 +210,14 @@ name: "ClientAccount",
   align-items: center;
   justify-content: center;
   color:#616CF5;
+}
+.user_status_class{
+  height: 17px;
+  background: #616CF5;
+  border-radius: 10px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

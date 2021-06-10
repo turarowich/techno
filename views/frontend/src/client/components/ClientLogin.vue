@@ -87,8 +87,10 @@ export default {
       this.axios.post(url,data,options).then(function (response) {
         console.log(response);
         that.$successAlert('Logged in!');
-        that.$store.dispatch("Client/setUser",response.data);
-        that.$router.push("/shop/"+that.currentCompanyCatalog);
+        that.$store.dispatch("Client/setUserAuth",response.data);
+
+        // that.$router.push("/shop/"+that.currentCompanyCatalog);
+        that.$router.go(-1);
       }).catch(function(error){
         if (error.response) {
           // console.log(error.response.status);

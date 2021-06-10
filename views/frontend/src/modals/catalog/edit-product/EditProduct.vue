@@ -40,7 +40,10 @@
                 <textarea v-model="currentData.description" class="general-area p-3 mb-3" style="height:160px"   name="description"></textarea>
 
                 <div class="d-flex mb-3">
-                  <label class="custom-checkbox"><input @click="editShowPrice()" id="edit-show-price" type="checkbox" ><span class="checkmark"></span></label>
+                  <label class="custom-checkbox">
+                    <input @click="editShowPrice()"  id="edit-show-price" type="checkbox" :checked="isDiscount">
+                    <span class="checkmark"></span>
+                  </label>
                   <span>Discount</span>
                 </div>
 
@@ -49,7 +52,7 @@
                     <label>Price</label>
                     <input v-model="currentData.price" class="form-input cashback-input mb-4" placeholder="Price"  name="price">
                   </div>
-                  <div class="show-price" style="width:33.33%; margin-right:8px;">
+                  <div :class="{active:isDiscount}" class="show-price" style="width:33.33%; margin-right:8px;">
                     <label>Promotional prices</label>
                     <input v-model="currentData.promoPrice" class="form-input cashback-input mb-4" placeholder="Price">
                   </div>
@@ -64,7 +67,7 @@
                   <div class="d-flex align-items-center mr-2">
                     <label >From</label>
                     <div class="calendar d-flex align-items-center">
-                      <input v-model="currentData.promoStart" class="calendar-input">
+                      <input v-model="promoStart.formatted" id="promoStart_input" class="calendar-input">
                       <img src="../../../assets/icons/Calendar.svg">
                     </div>
                   </div>
@@ -72,7 +75,7 @@
                   <div class="d-flex align-items-center">
                     <label>to</label>
                     <div class="calendar d-flex align-items-center">
-                      <input v-model="currentData.promoEnd" class="calendar-input">
+                      <input v-model="promoEnd.formatted" id="promoEnd_input" class="calendar-input">
                       <img src="../../../assets/icons/Calendar.svg">
                     </div>
                   </div>
@@ -116,10 +119,23 @@ export default {
   props: ['listCategory','select_product','getProducts'],
   data(){
     return{
-      currentData:'',
-
-
+      currentData:{},
+      promoStartLightpick:{},
+      promoEndLightpick:{},
+      promoStart: {
+        obj:{},
+        formatted:'',
+      },
+      promoEnd: {
+        obj:{},
+        formatted:'',
+      },
     }
+  },
+  computed:{
+    isDiscount(){
+      return this.currentData.promoPrice>0;
+    },
   },
   methods:{
     editShowPrice(){
@@ -132,6 +148,23 @@ export default {
       }
 
     },
+    selectDates(){
+      let that=this;
+      this.promoStartLightpick = new this.$lightpick({
+        field: document.getElementById('promoStart_input'),
+        onSelect: function(date){
+          that.promoStart.obj = date;
+          that.promoStart.formatted = date.format('DD.MM.YYYY');
+        }
+      });
+      this.promoEndLightpick = new this.$lightpick({
+        field: document.getElementById('promoEnd_input'),
+        onSelect: function(date){
+          that.promoEnd.obj = date;
+          that.promoEnd.formatted = date.format('DD.MM.YYYY');
+        }
+      });
+    },
     onSubmit(id){
       this.axios.put(this.url('updateProduct',id),{
         name: this.currentData.name,
@@ -140,7 +173,9 @@ export default {
         price:this.currentData.price,
         description:this.currentData.description,
         promoPrice: this.currentData.promoPrice,
-        vendorCode: this.currentData.vendorCode
+        vendorCode: this.currentData.vendorCode,
+        promoStart:this.promoStart.obj,
+        promoEnd:this.promoEnd.obj,
       })
       .then(()=>{
         this.getProducts()
@@ -152,10 +187,16 @@ export default {
 
   watch:{
     select_product(newCat){
-      this.currentData = Object.assign({}, newCat)
+      this.currentData = Object.assign({}, newCat);
+      // this.promoStart.obj = this.currentData.promoStart;
+      this.promoStartLightpick.setDate(this.currentData.promoStart);
+      // this.promoEnd.obj = this.currentData.promoEnd;
+      this.promoEndLightpick.setDate(this.currentData.promoEnd);
     }
   },
-
+  mounted() {
+    this.selectDates();
+  }
 }
 </script>
 

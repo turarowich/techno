@@ -60,11 +60,27 @@ app.config.globalProperties.format_price = function (sum){parseFloat(sum).toFixe
 console.log(process.env.VUE_APP_SERVER_UR,"process.env.VUE_APP_SERVER_UR");
 app.config.globalProperties.base_url = process.env.VUE_APP_SERVER_URL;
 
+app.config.globalProperties.getClientAuth = function(){
+    //return true if catalog client is authen-ed
+    //undefined otherwise
+    return this.$store.getters['Client/getUserStatus'];
+}
 app.config.globalProperties.socket = socket
 app.config.globalProperties.scrollToBottom = function(obj){
     $("#"+obj).scrollTop(1000000)
 }
-var home_url = ['login', 'register', 'loginClient', 'registerClient', 'getClientProducts', 'getCatalog', 'getClientCategories', 'getCatalogSettings']
+var home_url = [
+    'login',
+    'register',
+    'loginClient',
+    'registerClient',
+    'getClientProducts',
+    'getCatalog',
+    'getClientCategories',
+    'getCatalogSettings',
+    'searchPromocodeByCode',
+    'addOrderWeb',
+]
 app.config.globalProperties.addNewProperty = function(obj, key, value = "", copy) {
     obj.map(function(object) {
         if (copy) {                                                                                                                                                                                                                                                                                                                                                                                                                                             

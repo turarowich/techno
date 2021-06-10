@@ -62,7 +62,7 @@
                         <div class="d-flex align-items-center mr-2">
                           <label >From</label>
                           <div class="calendar d-flex align-items-center">
-                            <input  name="promoStart" v-model="newProduct.promoStart" class="calendar-input" id="promoStart">
+                            <input  name="promoStart" v-model="newProduct.promoStart.formatted" class="calendar-input" id="promoStart">
                             <img src="../../../assets/icons/Calendar.svg">
                           </div>
                         </div>
@@ -70,7 +70,7 @@
                         <div class="d-flex align-items-center">
                           <label>to</label>
                           <div class="calendar d-flex align-items-center">
-                            <input   name="promoEnd" v-model="newProduct.promoEnd"  class="calendar-input" id="promoEnd">
+                            <input   name="promoEnd" v-model="newProduct.promoEnd.formatted"  class="calendar-input" id="promoEnd">
                             <img src="../../../assets/icons/Calendar.svg">
                           </div>
                         </div>
@@ -120,8 +120,14 @@ props:['listCategory', 'getProducts'],
         img: '',
         description:'',
         vendorCode:'',
-        promoStart:'',
-        promoEnd:'',
+        promoStart: {
+          obj:{},
+          formatted:'',
+        },
+        promoEnd: {
+          obj:{},
+          formatted:'',
+        },
         promoPrice:''
 
       },
@@ -149,9 +155,9 @@ props:['listCategory', 'getProducts'],
       form.append('quantity', new_product.quantity)
       form.append('category', new_product.category)
       form.append('description', new_product.description)
-      // form.append('promoStart', new_product.promoStart)
-      // form.append('promoPrice', new_product.promoPrice)
-      // form.append('promoEnd', new_product.promoEnd)
+      form.append('promoStart', new_product.promoStart.obj)
+      form.append('promoPrice', new_product.promoPrice)
+      form.append('promoEnd', new_product.promoEnd.obj)
       form.append('vendorCode', new_product.vendorCode)
       this.axios.post(this.url('addProduct'), form)
           .then(() => {
@@ -173,13 +179,15 @@ props:['listCategory', 'getProducts'],
 
   },
   mounted(){
+    let that = this;
     new this.$lightpick({
       field: document.getElementById('promoStart'),
       format:'',
       lang:'en',
       onSelect:(date)=>{
-        this.promoStart = date.format().toString().slice(0,16)
-        console.log(this.promoStart)
+        // that.promoStart = date.format().toString().slice(0,16)
+        that.newProduct.promoStart.obj = date;
+        that.newProduct.promoStart.formatted = date.format('DD.MM.YYYY');
       }
     });
     new this.$lightpick({
@@ -187,9 +195,8 @@ props:['listCategory', 'getProducts'],
       format:'',
       lang:'en',
       onSelect:(date)=>{
-        this.promoEnd = date.format().toString().slice(0,16)
-
-
+        that.newProduct.promoEnd.obj = date;
+        that.newProduct.promoEnd.formatted = date.format('DD.MM.YYYY');
       }
     });
   }

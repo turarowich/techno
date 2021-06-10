@@ -25,8 +25,8 @@ export const PromocodeModule = {
 
     // Actions are functions that you call throughout your application that call mutations.
     actions: {
-        setPromocodeAPI({ commit },axios) {
-            axios.get('https://localhost:8443/api/getPromocodes')
+        setPromocodeAPI({ commit },object) {
+            object.axios.get(object.url)
                 .then(response => {
                     commit('SET_PromocodesAPI', response.data.objects)
                 })

@@ -2,6 +2,9 @@ var path = require('path');
 var authController = require('../app/controllers/authController');
 var settingsController = require('../app/controllers/settingsController');
 var catalogController = require('../app/controllers/catalogController');
+var promocodeController = require('../app/controllers/promocodeController');
+var orderController = require('../app/controllers/orderController');
+var clientController = require('../app/controllers/clientController');
 
 module.exports = function(app, passport){    
     app.get('/', function(req, res){
@@ -29,6 +32,10 @@ module.exports = function(app, passport){
     app.get('/getCatalog', catalogController.getCatalog);
     app.get('/getClientProducts', catalogController.getClientProducts);
     app.get('/getClientCategories', catalogController.getClientCategories);
+
+    //same as in api
+    app.get('/searchPromocodeByCode', promocodeController.searchPromocodeByCode);
+    app.post('/addOrderWeb', orderController.addOrder);
 
 
     app.get('*', function (req, res) {

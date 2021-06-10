@@ -9,6 +9,7 @@ class ClientController{
         let db = useDB(req.db)
         let Client = db.model("Client");
         let Discount = db.model("Discount");
+        let Order = db.model("Order");
 
         let result = {
             'status': 200,
@@ -27,7 +28,7 @@ class ClientController{
                 if (discount){
                     result['discount'] = discount
                 }
-                
+                result['orders'] = await Order.find({client:client._id});
             }
             
             result['object'] = client

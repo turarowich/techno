@@ -45,7 +45,6 @@ class OrderController{
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
-        console.log(result)
         res.status(result.status).json(result);
     };
 
@@ -82,6 +81,12 @@ class OrderController{
                     notes: req.fields.notes,
                     points: req.fields.points,
                     code: randomNumber(1000, 10000),
+
+                    deliveryPrice: req.fields.deliveryPrice,
+                    totalDiscount: req.fields.totalDiscount,
+                    productsPrice: req.fields.productsPrice,
+                    totalPrice: req.fields.totalPrice,
+                    branch: req.fields.branch,
                 });
                 var products = req.fields.products
                 for(let i=0; i < products.length; i++){
@@ -92,7 +97,6 @@ class OrderController{
                     }
                     
                     if (search_product) {
-
                         let order_product = await new OrderProduct({
                             product: product.id ? product.id : product._id,
                             name: search_product.name,
@@ -111,13 +115,9 @@ class OrderController{
             }else{
                 result['msg'] = 'Cant find user'
             }
-            
-
-            
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
-        console.log(req.fields)
         res.status(result.status).json(result);
     };
 

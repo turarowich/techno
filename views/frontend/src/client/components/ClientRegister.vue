@@ -83,7 +83,6 @@ export default {
       const options = {
         headers: {"company_url": this.currentCompanyCatalog}
       }
-      console.log(this.currentCompanyCatalog,"currentCompanyCatalog");
       let url = this.url('registerClient');
       let data = {
         name:this.name,
@@ -94,8 +93,10 @@ export default {
       this.axios.post(url,data,options).then(function (response) {
         console.log(response);
         that.$successAlert('Registered');
+        that.$router.go(-1);
       }).catch(function(error){
         if (error.response) {
+          that.$warningAlert(Object.values(error.response.data.errors))
           // console.log(error.response.status);
           // console.log(error.response.headers);
           console.log(Object.values(error.response.data.errors));
