@@ -29,7 +29,7 @@ class SocketController {
     getMessages = async function (io, socket, user) {
         let db = useDB(socket.handshake.headers.db)
         let Message = db.model("Message");
-        await Message.updateMany({ client: user, isIncoming: false }, { new: false });
+        await Message.updateMany({ client: user, isIncoming: true }, { new: false });
         let messages = await Message.find({ client: user }).sort({ $natural: -1 }).limit(50);
 
         io.to(socket.id).emit("all messages", messages)
