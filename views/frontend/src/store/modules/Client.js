@@ -25,6 +25,8 @@ export const ClientModule = {
         },
         log_out(state) {
             state.user = {};
+            state.userDiscountStatus={};
+            state.orders=[];
         },
     },
 

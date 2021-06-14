@@ -176,7 +176,7 @@ name: "Basket",
       // usePoints:false,
       deliveryAddress:'',
       selectedDeliveryType:{
-        type:'delivery',
+        type:'Delivery service',
         object:{
           price:0,
         },
@@ -315,6 +315,7 @@ name: "Basket",
       });
     },
     checkPromocode(promocode){
+      console.log(promocode,"FOUND PROMOCODE");
       if(!promocode){return }
       let promocode_type = promocode.selected_type;
       let product_ids = [];
@@ -341,7 +342,7 @@ name: "Basket",
           })
         }
       }else if(promocode.selected_items_list.length>0){
-        let ids = promocode.selected_items_list.map(item=>item.id);
+        let ids = promocode.selected_items_list;
         //check if products in basket match the promo products
         this.shoppingCart.forEach(function (item){
           if(ids.includes(item.product._id)){
@@ -363,7 +364,8 @@ name: "Basket",
     removePromocode(){
       this.$store.dispatch('Orders/unsetPromocode');
     },
-    continueAsGuest(){
+    continueAsGuest(guest){
+      this.$store.dispatch('Orders/setGuest', guest);
       this.$router.push({ path: `/shop/${this.currentCompanyCatalog}/product-info` })
     },
     checkNcontinue(){
@@ -380,10 +382,13 @@ name: "Basket",
         }
         this.$warningAlert(text);
       }else{
-        if(this.getClientAuth){
+        console.log(this.clientAuth,"getClientAuth");
+        if(this.clientAuth){
           this.continueAsGuest();
         }else{
+          //for now only auth
           $('#confirmAsGuest').modal('show');
+          // this.$warningAlert("В данный момент только после авторизации");
         }
       }
     },
@@ -415,8 +420,7 @@ name: "Basket",
     deliveryTypeObject:{
       handler(val) {
         console.log(val,"deliveryTypeObject FROM STORE");
-        console.log(val.type,"TYYYYYYYYYYYYYYY");
-        if(val.type=="Delivery service"){
+        if(val.type=="Delivery service" ||val.type=="Delivery" ||val.type=="delivery"){
           this.deliveryService = true;
           this.pickUp = false;
         }else{

@@ -7,9 +7,20 @@
             <div style="font-size: 20px;" class="modal-title">Continue as a guest?</div>
             <div style="font-size: 16px;margin:0;">Guests can't use or receive points</div>
           </div>
-          <div class="modal-body confirmAsGuestClass">
-            <div @click="confirm" data-dismiss="modal" aria-label="Close">Continue</div>
-            <div data-dismiss="modal" aria-label="Close" >Cancel</div>
+          <div class="modal-body">
+            <div>
+              <label class="label">Name</label>
+              <input v-model="guest.name" class="login-input" placeholder="Your name">
+              <label  class="label">Phone number</label>
+              <input type="number" v-model="guest.phone" class="login-input" placeholder="Phone number">
+              <label class="label">Email</label>
+              <input type="email" v-model="guest.email" class="login-input" placeholder="Email address">
+            </div>
+
+            <div class="confirmAsGuestClass">
+              <div @click="confirm">Continue</div>
+              <div data-dismiss="modal" aria-label="Close" >Cancel</div>
+            </div>
           </div>
         </div>
       </div>
@@ -18,6 +29,7 @@
 </template>
 
 <script>
+import $ from "jquery";
 export default {
   name: "ConfirmAsGuestModal",
   props:  {
@@ -25,10 +37,10 @@ export default {
   },
   data(){
     return{
-      option_object:{
+      guest:{
         name: "",
-        price: "",
-        minPrice: "",
+        phone: "",
+        email: "",
       },
     }
   },
@@ -37,7 +49,16 @@ export default {
   },
   methods:{
     confirm(){
-      this.$emit('continueAsGuest_child');
+      let text = '';
+      if(this.guest.name===''){   text+="Fill in your name, "}
+      if(this.guest.phone===''){   text+="Fill in your phone number, "}
+      if(this.guest.email===''){   text+="Fill in your email, "}
+      if(text != ""){
+        this.$warningAlert(text);
+        return;
+      }
+      $('#confirmAsGuest').modal('hide');
+      this.$emit('continueAsGuest_child',this.guest);
     },
 
   },
@@ -57,7 +78,7 @@ export default {
 .add_branch_modal_content{
   width: 452px;
   max-width: 452px;
-  height: 213px;
+  /*height: 340px;*/
 }
 
 .modal-content{
@@ -103,5 +124,8 @@ export default {
   color: #616CF5;
   background: #E9ECFF;
   margin-left: 5px;
+}
+.modal-body {
+  margin-bottom: 40px;
 }
 </style>

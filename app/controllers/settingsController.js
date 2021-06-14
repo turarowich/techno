@@ -235,7 +235,7 @@ class SettingsController{
         //
         let catalogUrl = req.fields.catalogUrl;
         let company = req.db;
-        let dir = path.join(__dirname, '/../../views/frontend/images/' + company+'/qr')
+        let dir = path.join(__dirname, '/../../views/frontend/images/' + company+'/qr');
 
         try {
             function createQrFile(){

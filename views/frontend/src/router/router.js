@@ -1,3 +1,4 @@
+import store from '../store/index';
 import { createWebHistory, createRouter } from "vue-router";
 // import auth from '../middle-ware/auth';
 import SignIn from "@/components/sign-in/SignIn";
@@ -155,17 +156,26 @@ const routes = [
             {
                 path:'client-account',
                 name:"ClientAccount",
-                component:ClientAccount
+                component:ClientAccount,
+                meta: {
+                    requiresAuth: true
+                }
             },
             {
                 path:'personal-info',
                 name:'PersonalInfo',
-                component:PersonalInfo
+                component:PersonalInfo,
+                meta: {
+                    requiresAuth: true
+                }
             },
             {
                 path:'edit-profile',
                 name:'EditProfile',
-                component:EditProfile
+                component:EditProfile,
+                meta: {
+                    requiresAuth: true
+                }
             },
             {
                 path:'signin',
@@ -376,7 +386,16 @@ router.beforeEach((to, from, next) => {
 
     return next();
 });
+//WEB Catalog auth guard.
+router.beforeEach((to, from, next) => {
+    const authenticatedUser = store.state.Client.user.auth;
+    const current_company_url = store.state.Catalog.company_url;
+    console.log(authenticatedUser);
+    const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
-
+    // Check for protected route
+    if (requiresAuth && !authenticatedUser) next({ path: `/shop/${current_company_url}/signin` })
+    else next();
+});
 
 export default router;

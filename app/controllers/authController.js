@@ -18,6 +18,7 @@ const transporter = nodemailer.createTransport({
 
 class AuthController{
     register = async function (req, res) {
+        console.log(req.fields);
         let db = useDB('loygift');
         let User = db.model("User");
         let catalogs_model = db.model("catalogs");

@@ -1,8 +1,8 @@
 <template>
   <div class="row ">
     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 product-box" v-for="product in catalog" :key="product._id">
-      <div class="product-img"  @click="selectProduct(cat._id)">
-        <img src="../../../assets/clients/shirt.svg">
+      <div class="product-img"  @click="selectProduct(product._id)">
+        <img :src="server+'/'+product.img">
       </div>
       <div class="product-add">
         <h2>{{product.name}}</h2>
@@ -29,6 +29,12 @@ name: "ClientCatalogItem",
   computed:{
     userDiscountStatus(){
       return this.$store.getters['Client/getUserDiscountStatus'];
+    },
+    currentCompanyCatalog() {
+      return this.$route.params.bekon;
+    },
+    server(){
+      return this.$server;
     },
   },
   methods:{
@@ -75,7 +81,8 @@ name: "ClientCatalogItem",
       this.$store.dispatch('Orders/addToCart', cart_object)
     },
       selectProduct(id){
-        this.$router.push('/home/catalog-detail/:'+id);
+        // this.$router.push('/home/catalog-detail/:'+id);
+        this.$router.push({ path: `/shop/${this.currentCompanyCatalog}/catalog-detail/:${id}` });
       },
     },
 }

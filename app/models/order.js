@@ -78,6 +78,11 @@ const orderSchema = new Schema({
         required: true,
         default: 0
     },
+    earnedPoints: {
+        type: Number,
+        required: false,
+        default: 0
+    },
     createdAt: {
         type: Date,
         required: true,

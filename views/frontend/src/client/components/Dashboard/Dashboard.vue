@@ -9,15 +9,16 @@
   <div class="new">    <div class="news">
 
       <div class="row">
-        <div class="col-lg-3 ">
-          <h2 class="news-title">News</h2>
-          <p class="news-texts">A light blue T-shirt from the spring-summer 2021 collection,
-            as if faded in the sun, turned out to be as comfortable as possible. The cut of</p>
-          <router-link class="view-all" :to="`/shop/${currentCompanyCatalog}/client-news`">View all</router-link>
-        </div>
-        <div class="col-lg-9">
+<!--        <div class="col-lg-3 ">-->
+<!--          <h2 class="news-title">News</h2>-->
+<!--          <p class="news-texts">A light blue T-shirt from the spring-summer 2021 collection,-->
+<!--            as if faded in the sun, turned out to be as comfortable as possible. The cut of</p>-->
+<!--          <router-link class="view-all" :to="`/shop/${currentCompanyCatalog}/client-news`">View all</router-link>-->
+<!--        </div>-->
+
+        <div class="col-lg-12">
           <div class="row">
-            <div class="col-lg-4 col-md-4 col-sm-6 pl-0" @click="openNews">
+            <div class="col-lg-3 col-md-4 col-sm-6 pl-0" @click="openNews">
               <div class="new-img">
                 <img src="../../../assets/clients/mask3.svg">
               </div>
@@ -27,7 +28,7 @@
                 <p class="news-description">A light blue T-shirt from the spring-summer 2021 collection, as if faded in the sun, turned ou dettect...</p>
               </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-6 pl-0" @click="openNews">
+            <div class="col-lg-3 col-md-4 col-sm-6 pl-0" @click="openNews">
               <div class="new-img">
                 <img src="../../../assets/clients/mask3.svg">
               </div>
@@ -37,7 +38,17 @@
                 <p class="news-description">A light blue T-shirt from the spring-summer 2021 collection, as if faded in the sun, turned ou dettect...</p>
               </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-6 pl-0" @click="openNews">
+            <div class="col-lg-3 col-md-4 col-sm-6 pl-0" @click="openNews">
+              <div class="new-img">
+                <img src="../../../assets/clients/mask3.svg">
+              </div>
+              <div class="news-text">
+                <div class="d-flex align-items-center calendar-news" ><img src="../../../assets/icons/Calendar.svg"><span class="date">12.03.1992</span></div>
+                <h4 class="news-content">New promotion, buy everything with a 20% discount!!!</h4>
+                <p class="news-description">A light blue T-shirt from the spring-summer 2021 collection, as if faded in the sun, turned ou dettect...</p>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 pl-0" @click="openNews">
               <div class="new-img">
                 <img src="../../../assets/clients/mask3.svg">
               </div>

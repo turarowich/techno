@@ -38,7 +38,7 @@ function saveImage(file, company, old_file_name=null){
     if (file.name.match(/\.(jpg|jpeg|png|gif|svg)$/)) {
         fs.rename(file.path, upload, function (err) {
             if (err) {
-                console.log(err);
+                console.log(err,"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP");
             }
         });
     }else{

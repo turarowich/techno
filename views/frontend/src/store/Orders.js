@@ -12,12 +12,13 @@ export const OrdersModule = {
         usedPoints:0,
         selectedDelivery_Type:'delivery',
         selectedDeliveryType:{
-            type:'delivery',
+            type:'Delivery service',
             object:{
               price:0,
             },
         },
-        getProduct: {},
+        guest:{},
+        // getProduct: {},
         promocode:null,
         address:'',
     },
@@ -31,17 +32,18 @@ export const OrdersModule = {
             state.deliveryCost= 0,
             state.usedPoints=0,
             state.selectedDeliveryType={
-                type:'delivery',
+                type:'Delivery service',
                 object:{
                     price:0,
                 },
             },
-            state.getProduct={},
+            state.guest={},
+            // state.getProduct={},
             state.promocode=null
         },
-        getDetail(state, product){
-            state.getProduct = product
-        },
+        // getDetail(state, product){
+        //     state.getProduct = product
+        // },
         setSelectedDeliveryType(state, obj){
             state.selectedDeliveryType = obj
         },
@@ -71,11 +73,13 @@ export const OrdersModule = {
                 state.shoppingCart.splice(index, 1);
             }
         },
-
+        setGuest(state, obj){
+            state.guest = obj
+        },
         increaseQuantity(state, obj){
             let id = obj.id;
             let client_status_discount = obj.client_status_discount || 0;
-            console.log(client_status_discount,"increase-------------->");
+            console.log(client_status_discount,"increase-------------->",obj);
             let index = state.shoppingCart.findIndex(x => x.product._id === id);
             if(index !== -1){
                 state.shoppingCart[index].quantity +=1;
@@ -98,6 +102,12 @@ export const OrdersModule = {
                     console.log('clients');
                     sum = (item.product.price * item.quantity)-(item.product.price * item.quantity*(client_status_discount/100));
                     state.shoppingCart[index].discount_percent_sum = parseFloat(item.product.price * item.quantity*(client_status_discount/100)).toFixed(2);
+                    // console.log(sum,"THE SUM clients discount will apply");
+                    // console.log(item.product.price,"THE SUM clients discount will apply");
+                    // console.log(item.product.price * item.quantity*(client_status_discount/100),"THE SUM clients discount will apply");
+                    // console.log(item.product.price,"THE SUM clients discount will apply");
+                    // console.log(item.quantity*(client_status_discount/100),"THE SUM clients discount will apply");
+                    // console.log(client_status_discount/100,"THE SUM clients discount will apply");
                 }
 
                 if(sum<0){
@@ -212,10 +222,10 @@ export const OrdersModule = {
             //add new or increase quantity
             let index = state.shoppingCart.findIndex(x => x.product._id === order.product._id)
             let client_status_discount = rootState.Client.userDiscountStatus.discount_percentage;
-            let obj = {
-                id:order.product._id,
-                client_status_discount:client_status_discount,
-            }
+            // let obj = {
+            //     id:order.product._id,
+            //     client_status_discount:client_status_discount,
+            // }
             if(index === -1){
                 //add new
                 order.client_status_discount = client_status_discount;
@@ -241,6 +251,7 @@ export const OrdersModule = {
             else{
                 //increase quantity
                 console.log('INCREASE');
+                dispatch('increaseQuantity',order.product._id);
                 Swal.fire({
                     timer:1500,
                     title:'Added to cart',
@@ -258,11 +269,13 @@ export const OrdersModule = {
                         popup: 'animate__animated animate__zoomIn'
                     }
                 })
-                dispatch('increaseQuantity', obj);
             }
         },
         removeFromBasket: function({commit},id){
             commit('removeFromBasket',id)
+        },
+        setGuest: function({commit},obj){
+            commit('setGuest',obj)
         },
         increaseQuantity: function({commit,rootState},id){
             let client_status_discount = rootState.Client.userDiscountStatus.discount_percentage;
@@ -270,6 +283,7 @@ export const OrdersModule = {
                 id:id,
                 client_status_discount:client_status_discount,
             }
+            console.log(obj,"{}{{{}}}}}{{PPPPPPPddddddddddddddddddddddddddddddddddddddddddddd")
             commit('increaseQuantity',obj)
         },
         decreaseQuantity: function({commit,rootState},id){
@@ -293,7 +307,12 @@ export const OrdersModule = {
 
     getters:{
         getProduct(state){
-            return state.getProduct
+            // return state.getProduct
+            // return state.shoppingCart.filter((el)=>el.product._id === id)
+            console.log(state.shoppingCart,"shoppingCart");
+            return id => state.shoppingCart.filter(el =>{
+                return el.product._id === id;
+            });
         },
         shoppingCart(state){
             return state.shoppingCart
@@ -365,5 +384,11 @@ export const OrdersModule = {
         getAddress(state){
             return state.address;
         },
+        getGuest(state){
+            return state.guest;
+        },
+        // getProduct(state){
+        //     return state.address;
+        // },
     },
 }

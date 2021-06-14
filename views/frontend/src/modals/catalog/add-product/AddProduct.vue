@@ -214,7 +214,9 @@ props:['listCategory', 'getProducts'],
       this.axios.post(this.url('addProduct'), form)
           .then(() => {
             this.getProducts()
-            this.$successAlert('Product has been added')
+            this.$successAlert('Product has been added');
+
+
           }).catch((error) => {
             console.log("fail", error)
           })
@@ -223,11 +225,23 @@ props:['listCategory', 'getProducts'],
     this.show_images = []
     this.previewImage= []
       this.newProduct = {
+        imgArray: [],
         name: '',
-        price:'',
-        quantity:'',
-        category: '',
-        img:''
+        price: '',
+        quantity: '',
+        category:'',
+        img: '',
+        description:'',
+        vendorCode:'',
+        promoStart: {
+          obj:{},
+          formatted:'',
+        },
+        promoEnd: {
+          obj:{},
+          formatted:'',
+        },
+        promoPrice:''
       }
     },
 

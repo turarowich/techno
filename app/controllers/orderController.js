@@ -2,6 +2,56 @@ const { useDB, sendError, createExcel, randomNumber } = require('../../services/
 var validate = require('../../config/messages');
 const fs = require('fs');
 const { connect } = require('mongodb');
+
+async function calcCashback(products_full_data,cashback_model) {
+    //Cashback
+    //1 check if cashback is active,2 check if applies to everything or
+    //specific products,3 if all -apply & end ,else check if products match
+    let cashback_from_order = 0;
+    try {
+        let cashback = await cashback_model.find();
+        let first_cashback = cashback[0];
+        if (first_cashback) {
+            //1
+            let cashback_status = first_cashback.status;
+            let cashback_default_percent = parseFloat(first_cashback.default_cashback) / 100;
+            if (!cashback_status) {
+                return;
+            }
+            //2
+            let cashback_products = first_cashback.selectedItemsList;
+            //3
+            if (cashback_products.length === 0) {
+                //applies to all
+                products_full_data.forEach(function (prod) {
+                    //discounted price
+                    let sum = prod.current_price || 0;
+                    cashback_from_order += (parseFloat(sum) * cashback_default_percent).toFixed(2);
+                })
+            } else {
+                //applies to specific products
+                products_full_data.forEach(function (prod) {
+                    //check
+                    cashback_products.forEach(function (cash) {
+                        if (prod.product._id == cash.id) {
+                            console.log(prod, "CASHBACK MATCH");
+                            //discounted price
+                            let sum = prod.current_price || 0;
+                            let cashback_percent = parseFloat(cash.percentage_cashback) / 100 || 0;
+                            let cashback_sum = cash.fixed_cashback || 0;
+                            cashback_from_order = (parseFloat(cashback_from_order) + (parseFloat(sum) * cashback_percent) + parseFloat(cashback_sum)).toFixed(2);
+                        }
+                    })
+                })
+            }
+
+        }
+    } catch (e) {
+        console.log(e);
+    }
+    return cashback_from_order;
+}
+
 class OrderController{
     
     getOrder = async function (req, res) {
@@ -51,6 +101,7 @@ class OrderController{
     };
 
     addOrder = async function (req, res) {
+        console.log(req.fields);
         let db = useDB(req.db)
         let Order = db.model("Order");
         let Client = db.model("Client");  
@@ -65,65 +116,87 @@ class OrderController{
             'msg': 'Order added'
         }
         try {
-            let client = await Client.findById(req.fields.client)
-            if(client){
-                if (req.fields.points){
-                    client.points -= req.fields.points
-                    client.save()
-                }
-                let order = await new Order({
-                    client: client._id,
-                    client_name: client.name,
-                    client_phone: client.phone,
-                    promoCode: req.fields.promoCode,
-                    status: req.fields.status,
-                    address: req.fields.address,
-                    delivery: req.fields.delivery,
-                    deliveryType: req.fields.deliveryType,
-                    notes: req.fields.notes,
-                    points: req.fields.points,
-                    code: randomNumber(1000, 10000),
+            let order = await new Order({
+                // client: client._id,
+                // client_name: client.name,
+                // client_phone: client.phone,
+                promoCode: req.fields.promoCode,
+                status: req.fields.status,
+                address: req.fields.address,
+                delivery: req.fields.delivery,
+                deliveryType: req.fields.deliveryType,
+                notes: req.fields.notes,
+                points: req.fields.points,
+                code: randomNumber(1000, 10000),
 
-                    deliveryPrice: req.fields.deliveryPrice,
-                    totalDiscount: req.fields.totalDiscount,
-                    productsPrice: req.fields.productsPrice,
-                    totalPrice: req.fields.totalPrice,
-                    branch: req.fields.branch,
-                });
-                var products = req.fields.products
-                for(let i=0; i < products.length; i++){
-                    let product = products[i]
-                    let search_product = await Product.findById(product.id)
-                    if(!product.id){
-                        search_product = await Product.findById(product._id)
-                    }
-                    
-                    if (search_product) {
-                        let order_product = await new OrderProduct({
-                            product: product.id ? product.id : product._id,
-                            name: search_product.name,
-                            name_ru: search_product.name_ru,
-                            secondary: search_product.secondary,
-                            secondary_ru: search_product.secondary_ru,
-                            img: search_product.img,
-                            price: search_product.price,
-                            quantity: product.quantity
-                        }).save();
-                        order.products.push(order_product._id)
-                    }
+                deliveryPrice: req.fields.deliveryPrice,
+                totalDiscount: req.fields.totalDiscount,
+                productsPrice: req.fields.productsPrice,
+                totalPrice: req.fields.totalPrice,
+                branch: req.fields.branch,
+            });
+            var products = req.fields.products
+            for(let i=0; i < products.length; i++){
+                let product = products[i]
+                let search_product = await Product.findById(product.id)
+                if(!product.id){
+                    search_product = await Product.findById(product._id)
                 }
-                order.save()
-                result['object'] = await order.populate('products').execPopulate()
-            }else{
-                result['msg'] = 'Cant find user'
+                if (search_product) {
+                    let order_product = await new OrderProduct({
+                        product: product.id ? product.id : product._id,
+                        name: search_product.name,
+                        name_ru: search_product.name_ru,
+                        secondary: search_product.secondary,
+                        secondary_ru: search_product.secondary_ru,
+                        img: search_product.img,
+                        price: search_product.price,
+                        quantity: product.quantity
+                    }).save();
+                    order.products.push(order_product._id)
+                }
             }
+
+        //Cashback
+        let cashback_model = db.model("Cashback");
+        let products_full_data = req.fields.products_full_data;
+        let cashback_from_order = await calcCashback(products_full_data,cashback_model);
+        order.earnedPoints = parseFloat(cashback_from_order);
+
+        let client = await Client.findById(req.fields.client)
+        if(client){
+            if (req.fields.points){
+                client.points -= req.fields.points;
+                client.save()
+            }
+            client.points += parseFloat(cashback_from_order);
+            client.balance += parseFloat(order.totalPrice);
+            client.save();
+
+            order.client=client._id;
+            order.client_name=client.name;
+            order.client_phone=client.phone;
+        }else if(req.fields.guest){
+            let guest = req.fields.guest;
+            order.client_name=guest.name || '';
+            order.client_phone=guest.phone || '';
+        }
+        console.log('EARNED CASHBACK',cashback_from_order,order)
+        order.save();
+        result['object'] = await order.populate('products').execPopulate();
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
-
         res.status(result.status).json(result);
     };
 
+    getEarnedPoints = async function (req, res) {
+        let db = useDB(req.db)
+        let cashback_model = db.model("Cashback");
+        let products_full_data = req.fields.products_full_data;
+        let result = await calcCashback(products_full_data,cashback_model);
+        res.status(200).json(result);
+    }
     updateOrder = async function (req, res) {
         let db = useDB(req.db)
         let Order = db.model("Order");

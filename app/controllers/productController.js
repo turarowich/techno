@@ -44,6 +44,7 @@ class ProductController{
     };
 
     addProduct = async function (req, res) {
+        console.log(req.fields,req.db);
         let db = useDB(req.db)
         let Product = db.model("Product");
         
@@ -111,7 +112,7 @@ class ProductController{
                     }
                 }
             }    
-            // product.save()
+            product.save();
             result['object'] = product
         } catch (error) {
             result = sendError(error, lang)

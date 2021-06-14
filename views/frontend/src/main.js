@@ -47,7 +47,7 @@ const socket = io(process.env.VUE_APP_SERVER_URL, {
         token: localStorage.getItem('token')
     },
     withCredentials: true,
-    reconnection: true
+    reconnection: false
 })
 
 ax.defaults.headers.common['Authorization'] = 'Bearer '+ token
@@ -80,6 +80,8 @@ var home_url = [
     'getCatalogSettings',
     'searchPromocodeByCode',
     'addOrderWeb',
+    'getProductWeb',
+    'getEarnedPoints',
 ]
 app.config.globalProperties.addNewProperty = function(obj, key, value = "", copy) {
     obj.map(function(object) {
@@ -106,6 +108,7 @@ app.config.globalProperties.img = function (main) {
     return this.$server + '/' + main
 }
 app.config.globalProperties.url = function (main, id = null, search = null) {
+    console.log(main,'main');
     let additional = '/'
     if (id) {
         additional += id + '/'
@@ -114,6 +117,7 @@ app.config.globalProperties.url = function (main, id = null, search = null) {
         additional += '?' + search[0] + '=' + search[1]
     }
     if (home_url.includes(main)){
+        console.log(this.$server + '/' + main + additional);
         return this.$server + '/' + main + additional
     }
     return this.$api + '/' + main + additional

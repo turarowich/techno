@@ -46,11 +46,11 @@
             <div class="policy">
               <div class="rules d-flex">
                 <label class="custom-checkbox " ><input type="checkbox"><span class="checkmark"></span></label>
-                <span>I have read the <a href="/">Privacy Policy </a> and accept its terms.</span>
+                <span>I have read the <a href="#">Privacy Policy </a> and accept its terms.</span>
               </div>
               <div class="rules d-flex">
                 <label class="custom-checkbox " ><input type="checkbox"><span class="checkmark"></span></label>
-                <span>I have read and accept the <a href="/">Terms of the offer</a></span>
+                <span>I have read and accept the <a href="#">Terms of the offer</a></span>
               </div>
             </div>
           <div class="row align-items-center">
@@ -127,13 +127,20 @@ name: "SignUp",
       data.append('password', this.register.password);
       this.axios.post(this.url('register'), data)
       .then(()=>{
-        that.$router.push('/')
-          // this.$index.push('/')
+        that.$router.push('/orders')
+        this.register = {
+          name:'',
+          password:'',
+          email: '',
+          description:'',
+          phone:'',
+        };
       })
       .catch((error)=>{
+        console.log(error);
         that.$warningAlert(Object.values(error.response.data.errors));
       })
-    this.register = ''
+
     }
   }
 }

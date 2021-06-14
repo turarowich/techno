@@ -41,14 +41,14 @@
         <img src="../../assets/icons/enable+.svg">
       </div>
     </div>
-    <div v-if="searchResult.products &&(searchResult.products.length>0 || searchResult.services.length>0)" class="position-relative" style="margin-bottom: 30px">
+    <div v-if="searchResult &&(searchResult.length>0)" class="position-relative" style="margin-bottom: 30px">
       <div class="resultList">
-        <div @click="setSelectedItem(prod.name,prod._id,'product')" v-for="prod in searchResult.products" :key="prod._id">
+        <div @click="setSelectedItem(prod.name,prod._id)" v-for="prod in searchResult" :key="prod._id">
           {{prod.name}}
         </div>
-        <div @click="setSelectedItem(serve.name,serve._id,'service')" v-for="serve in searchResult.services" :key="serve._id">
-          {{serve.name}}
-        </div>
+<!--        <div @click="setSelectedItem(serve.name,serve._id,'service')" v-for="serve in searchResult.services" :key="serve._id">-->
+<!--          {{serve.name}}-->
+<!--        </div>-->
       </div>
     </div>
 
@@ -180,7 +180,6 @@ export default {
         searchResult:[],
         selectedItemsList:[],
         currentSelectedItem:{
-          type:'',
           name:'',
           id:'',
           percentage_cashback:0,
@@ -190,38 +189,31 @@ export default {
   },
   methods: {
     searchProdSer(){
-      console.log(this.searchText,'s');
       let that = this;
       if(this.searchText.length ===0){
         that.searchResult = [];
         return;
       }
-      this.axios.get('https://localhost:8443/api/searchProductService',{
+      this.axios.get(this.url('searchProductService'),{
         params: {
           "type":'all',
           "search":this.searchText,
         }
       }).then(function(response){
         console.log(response,"reponse");
-        let result_obj={
-          products: [],
-          services: [],
-        }
-        result_obj.products = response.data.products;
-        result_obj.services = response.data.services;
-        that.searchResult = result_obj;
+        that.searchResult = response.data.objects;
       });
 
     },
-    setSelectedItem(name,id,type){
+    setSelectedItem(name,id){
       this.searchText = name;
       this.currentSelectedItem.name = name;
       this.currentSelectedItem.id = id;
-      this.currentSelectedItem.type = type;
+      // this.currentSelectedItem.type = type;
       this.searchResult = [];
     },
     addSelectedItem(){
-      if(this.current_fixed_cashback+this.current_percentage_cashback<1){
+      if(parseFloat(this.current_fixed_cashback)+parseFloat(this.current_percentage_cashback)<1){
         Swal.fire({
           timer:1500,
           title:'Add item',
@@ -244,7 +236,7 @@ export default {
       this.currentSelectedItem.percentage_cashback = this.current_percentage_cashback;
       this.currentSelectedItem.fixed_cashback = this.current_fixed_cashback;
 
-      if(this.currentSelectedItem.id !=='' && this.currentSelectedItem.name !=='' && this.currentSelectedItem.type !==''){
+      if(this.currentSelectedItem.id !=='' && this.currentSelectedItem.name !==''){
         let copy = $.extend(true,{},this.currentSelectedItem);
         //check if its already has been selected
         let check = this.selectedItemsList.filter(function(e){
@@ -506,7 +498,9 @@ export default {
   padding: 5px;
 
 }
-
+.resultList div{
+  cursor: pointer;
+}
 .selectedItems_list{
   margin-bottom: 25px;
 }

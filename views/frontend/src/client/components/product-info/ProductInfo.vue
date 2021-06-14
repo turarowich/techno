@@ -86,8 +86,16 @@
                    <h4>{{getFinalSum}}</h4>
                  </div>
                </div>
+               <div class="d-flex">
+                 <div style="flex: 1;color: #616CF5;">
+                   <span v-if="clientAuth">You will receive {{futurePoints}} cashback points</span>
+                   <span v-else>Login to receive {{futurePoints}} cashback points</span>
+                 </div>
+<!--                 <div>-->
+<!--                   <h4>{{futurePoints}} points</h4>-->
+<!--                 </div>-->
+               </div>
              </div>
-
            </div>
          </div>
        </div>
@@ -111,9 +119,13 @@ export default {
   data(){
     return{
       today: new Date().toLocaleDateString(),
+      futurePoints:0,
     }
   },
   computed:{
+    clientAuth() {
+      return this.getClientAuth();
+    },
     currentCompanyCatalog() {
       return this.$route.params.bekon;
     },
@@ -124,7 +136,8 @@ export default {
       return this.$store.getters['Orders/getDeliveryTypeObject'];
     },
     getTotalPrice(){
-      return this.$store.getters['Orders/getTotalPriceWithDelivery'];
+      // return this.$store.getters['Orders/getTotalPriceWithDelivery'];
+      return this.$store.getters['Orders/getTotalPrice'];
     },
     getTotalPriceFull(){
       return this.$store.getters['Orders/getTotalPriceFull'];
@@ -144,6 +157,9 @@ export default {
     user(){
       return this.$store.getters['Client/getUser'];
     },
+    guest(){
+      return this.$store.getters['Orders/getGuest'];
+    },
     getPromocode(){
       return this.$store.getters['Orders/getPromocode'];
     },
@@ -162,10 +178,11 @@ export default {
         return {id:order.product._id,quantity:order.quantity}
       })
       let data = {
-        client:this.user._id,
+        guest:this.guest,
+        client:this.user ? this.user._id  : null,
         points:this.getUsedPoints || 0,
         promoCode:this.getPromocode,
-        status:"bekastus",
+        status:"In Progress",
         address:this.getAddress,
         deliveryType:this.deliveryType.type,
         notes:"notttttes",
@@ -175,6 +192,7 @@ export default {
         totalDiscount:this.getTotalDiscounts || 0,
         productsPrice:this.getTotalPriceFull || 0,
         totalPrice:this.getFinalSum || 0,
+        products_full_data:this.shoppingCart,
       }
       if(this.deliveryType.type ==="Delivery service"){
         data.delivery = this.deliveryType.object._id;
@@ -193,7 +211,28 @@ export default {
         }
       });
     },
+    getFuturePoints(){
+      let that=this;
+      const options = {
+        headers: {"company_url": this.currentCompanyCatalog}
+      }
+      let url = this.url('getEarnedPoints');
+      let data = {
+        products_full_data:this.shoppingCart,
+      }
+      this.axios.post(url,data,options).then(function (response) {
+        that.futurePoints = response.data;
+      }).catch(function(error){
+        if (error.response) {
+          console.log(error.response);
+          that.$warningAlert(Object.values(error.response.data.errors))
+        }
+      });
+    },
   },
+  mounted() {
+    this.getFuturePoints();
+  }
 }
 </script>
 
