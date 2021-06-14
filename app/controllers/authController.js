@@ -207,6 +207,7 @@ class AuthController{
             var client = new Client(social_res.save)
             let qrCode = createQrFile(social_res.uniqueCode, 'loygift' + req.headers['access-place'])
             client.QRCode = qrCode
+            client.uniqueCode = social_res.uniqueCode
             await client.save({ validateBeforeSave: false })
             result = {
                 'status': 200,
