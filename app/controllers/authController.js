@@ -190,7 +190,7 @@ class AuthController{
                 break socialAuth
             }
             let user = await Client.findOne(social_res.check)
-            console.log(social_res.check, user)
+            console.log(user)
             if(user){
                 result = {
                     status: 500,
@@ -491,7 +491,6 @@ class AuthController{
 
             result = sendError(error, lang)
         }
-        console.log(result)
         res.status(result.status).json(result);
     };
 
