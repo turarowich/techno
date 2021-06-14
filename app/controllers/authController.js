@@ -183,14 +183,14 @@ class AuthController{
             lang = 'en'
         }
         socialAuth: try {
-            let social_res = await socialRegister(req.fields.social, req.fields.token, req.fields.screen_name)
+            social_res = await socialRegister(req.fields.social, req.fields.token, req.fields.screen_name)
 
             if (social_res.error) {
                 result = social_res.error
                 break socialAuth
             }
             let user = await Client.findOne(social_res.check)
-            console.log(social_res.check)
+            console.log(social_res.check, user)
             if(user){
                 result = {
                     status: 500,
