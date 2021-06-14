@@ -267,7 +267,7 @@ function createQrFile(user_id, company) {
     let filename ='/' + user_id + '.png'
     var dir = path.join(__dirname, '/../views/frontend/')
 
-    if (!fs.existsSync(dir + company)) {
+    if (!fs.existsSync(dir + 'images/' +  company)) {
         fs.mkdirSync(dir + company);
     }
 
