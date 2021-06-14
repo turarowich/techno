@@ -268,7 +268,7 @@ function createQrFile(user_id, company) {
     var dir = path.join(__dirname, '/../views/frontend/')
 
     if (!fs.existsSync(dir + company)) {
-        fs.mkdirSync(dir + link);
+        fs.mkdirSync(dir + company);
     }
 
     if (!fs.existsSync(dir + link)) {
