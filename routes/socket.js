@@ -1,6 +1,7 @@
 var controller = require('../app/controllers/socketController');
 const verifyTokenSocket = require('./../services/verifyTokenSocket');
 module.exports = io => {
+    io.sockets.setMaxListeners(0);
     const listener = (...args) => {
         console.log(args);
     }
