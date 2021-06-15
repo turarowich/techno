@@ -47,7 +47,7 @@ const socket = io(process.env.VUE_APP_SERVER_URL, {
         token: localStorage.getItem('token')
     },
     withCredentials: true,
-    reconnection: true,
+    reconnection: false,
     reconnectionAttempts: 5,
     reconnectionDelayMax: 10000,
 })
