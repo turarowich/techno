@@ -6,8 +6,8 @@
       <p>Brand clothing store</p>
     </div>
   </div>
-  <div class="new">    <div class="news">
-
+  <div class="new">
+    <div class="news">
       <div class="row">
 <!--        <div class="col-lg-3 ">-->
 <!--          <h2 class="news-title">News</h2>-->
@@ -58,7 +58,6 @@
                 <p class="news-description">A light blue T-shirt from the spring-summer 2021 collection, as if faded in the sun, turned ou dettect...</p>
               </div>
             </div>
-
           </div>
         </div>
       </div>
@@ -78,6 +77,7 @@ name: "Dashboard",
   data(){
     return{
       settings:{},
+      newsArray:[],
     }
   },
   computed:{
@@ -104,7 +104,7 @@ name: "Dashboard",
   },
   methods:{
     openNews(){
-      this.$router.push('/home/news-detail')
+      this.$router.push(`/shop/${this.currentCompanyCatalog}/news-detail`)
     },
     async  getCatalogSettings(){
       let that = this;
