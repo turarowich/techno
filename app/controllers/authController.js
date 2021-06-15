@@ -226,13 +226,7 @@ class AuthController{
 
             result = sendError(error, lang)
         }
-        if (req.fields.custom){
-            req.fields.custom = req.fields.custom + 1
-        }else{
-            req.fields.custom = 1
-        }
         
-        console.log("here " + req.fields.custom)
         res.status(result.status).json(result);
     };
     loginClientSocial = async function (req, res) {
