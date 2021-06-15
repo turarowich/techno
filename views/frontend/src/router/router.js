@@ -1,183 +1,181 @@
 import { createWebHistory, createRouter } from "vue-router";
 // import auth from '../middle-ware/auth';
-const SignIn = "@/components/sign-in/SignIn";
-const SignUp = "@/components/sign-up/SignUp";
-const Orders = "@/components/orders/Orders";
-const Loaylty = "@/components/loyalty/Loaylty";
-const Chats = '@/components/chats/Chats';
-const Clients = "@/components/clients/Clients";
-const Catalog = "@/components/catalog/Catalog";
-const Analytics = "@/components/analytics/Analytics";
-const Settings = "@/components/settings/Settings";
-const Home = "@/client/components/Home/Home";
-const About = "@/client/components/About/About";
-const Dashboard = "@/client/components/Dashboard/Dashboard";
-const News = "@/components/News/News";
-const CashBack = "@/components/loyalty/CashBack";
-const Discount = "@/components/loyalty/Discount";
-const PromoCode = "@/components/loyalty/Promocode";
-const General = "@/components/settings/General";
-const Price = "@/components/settings/Price";
-const CatalogDetail = "@/client/components/ClientCatalog/CatalogDetail";
-const NewsDetail = "@/client/components/ClientNews/NewsDetail";
-const ClientNews = "@/client/components/ClientNews/ClientNews";
-const Basket = "@/client/components/Basket/Basket";
-const ClientAccount = "@/client/components/ClientAccount/ClientAccount";
-const PersonalInfo = "@/client/components/PersonalInfo/PersonalInfo";
-const EditProfile = "@/client/components/EditProfile/EditProfile";
-const ProductInfo = "@/client/components/product-info/ProductInfo";
-const ClientLogin = "@/client/components/ClientLogin";
-const ClientRegister = "@/client/components/ClientRegister";
-const EditClientPage = "@/components/clients/EditClientPage";
-const PushNotification = "@/components/clients/PushNotification";
-const AddPromoPage = "@/components/loyalty/AddPromoPage";
-const AddProductPage = "@/components/catalog/AddProductPage";
-const EditProductPage = "@/components/catalog/EditProductPage";
-const IndividualPush = "@/components/clients/IndividualPush";
-const CatalogSettings = "@/components/settings/CatalogSettings";
-const StaffSettings = "@/components/settings/StaffSettings";
-const AccessSettings = "@/components/settings/AccessSettings";
-const AddNews = "@/components/News/AddNews";
-const EditNews = "@/components/News/EditNews";
+import SignIn from "@/components/sign-in/SignIn";
+import SignUp from "@/components/sign-up/SignUp";
+import Orders from "@/components/orders/Orders";
+import Loaylty from "@/components/loyalty/Loaylty";
+import Chats from '@/components/chats/Chats';
+import Clients from "@/components/clients/Clients";
+import Catalog from "@/components/catalog/Catalog";
+import Analytics from "@/components/analytics/Analytics";
+import Settings from "@/components/settings/Settings";
+import Home from "@/client/components/Home/Home";
+import About from "@/client/components/About/About";
+import Dashboard from "@/client/components/Dashboard/Dashboard";
+import News from "@/components/News/News";
+import CashBack from "@/components/loyalty/CashBack";
+import Discount from "@/components/loyalty/Discount";
+import PromoCode from "@/components/loyalty/Promocode";
+import General from "@/components/settings/General";
+import Price from "@/components/settings/Price";
+import CatalogDetail from "@/client/components/ClientCatalog/CatalogDetail";
+import NewsDetail from "@/client/components/ClientNews/NewsDetail";
+import ClientNews from "@/client/components/ClientNews/ClientNews";
+import Basket from "@/client/components/Basket/Basket";
+import ClientAccount from "@/client/components/ClientAccount/ClientAccount";
+import PersonalInfo from "@/client/components/PersonalInfo/PersonalInfo";
+import EditProfile from "@/client/components/EditProfile/EditProfile";
+import ProductInfo from "@/client/components/product-info/ProductInfo";
+import ClientLogin from "@/client/components/ClientLogin";
+import ClientRegister from "@/client/components/ClientRegister";
+import EditClientPage from "@/components/clients/EditClientPage";
+import PushNotification from "@/components/clients/PushNotification";
+import AddPromoPage from "@/components/loyalty/AddPromoPage";
+import AddProductPage from "@/components/catalog/AddProductPage";
+import EditProductPage from "@/components/catalog/EditProductPage";
+import IndividualPush from "@/components/clients/IndividualPush";
+import CatalogSettings from "@/components/settings/CatalogSettings";
+import StaffSettings from "@/components/settings/StaffSettings";
+import AccessSettings from "@/components/settings/AccessSettings";
+import AddNews from "@/components/News/AddNews";
+import EditNews from "@/components/News/EditNews";
 
-const EditPromo = "@/components/loyalty/EditPromo";
-const PersonalSettings = "@/components/settings/PersonalSettings";
-const AddressDelivery = "@/components/settings/AddressDelivery";
-const Log = "@/components/Log/Log";
-const Admin = "@/components/admin/Admin";
+import EditPromo from "@/components/loyalty/EditPromo";
+import PersonalSettings from "@/components/settings/PersonalSettings";
+import AddressDelivery from "@/components/settings/AddressDelivery";
+import Log from "@/components/Log/Log";
+import Admin from "@/components/admin/Admin";
 
-function lazyLoad(view) {
-    return () => import(`${view}.vue`)
-}
+
 
 
 const routes = [
     {
         path: "/",
         name: "SignIn",
-        component: lazyLoad(SignIn),
+        component: SignIn,
 
     },
     {
         path: "/orders",
         name: "Orders",
-        component: lazyLoad(Orders),
+        component: Orders,
 
     },
 
     {
         path: "/edit-client-page",
         name: "EditClientPage",
-        component: lazyLoad(EditClientPage),
+        component: EditClientPage,
 
     },
     {
         path: "/push-notification",
         name: "PushNotification",
-        component: lazyLoad(PushNotification),
+        component: PushNotification,
 
     },
     {
         path: "/add-promo-page",
         name: "AddPromoPage",
-        component: lazyLoad(AddPromoPage),
+        component: AddPromoPage,
 
     },
     {
         path: "/edit-promo",
         name: "EditPromo",
-        component: lazyLoad(EditPromo),
+        component: EditPromo,
 
     },
     {
         path: "/add-product-page",
         name: "AddProductPage",
-        component: lazyLoad(AddProductPage),
+        component: AddProductPage,
 
     },
     {
         path: "/edit-product-page",
         name: "EditProductPage",
-        component: lazyLoad(EditProductPage),
+        component: EditProductPage,
 
     },
     {
         path: "/individual-push",
         name: "IndividualPush",
-        component: lazyLoad(IndividualPush),
+        component: IndividualPush,
 
     },
 
     {
         path: "/shop/:bekon",
         name: "Home",
-        component: lazyLoad(Home),
+        component: Home,
         children:[
             {
                 path:'',
                 name:"Home",
-                component:lazyLoad(Dashboard)
+                component:Dashboard
             },
             {
                 path:'about',
                 name:"About",
-                component: lazyLoad(About)
+                component:About
             },
             {
                 path:'news',
                 name:"News",
-                component:lazyLoad(News)
+                component:News
             },
             {
                 path:'client-news',
                 name:"ClientNews",
-                component:lazyLoad(ClientNews)
+                component:ClientNews
             },
             {
                 path:'product-info',
                 name:"ProductInfo",
-                component:lazyLoad(ProductInfo)
+                component:ProductInfo
             },
             {
                 path:'catalog-detail/:id',
                 name:"CatalogDetail",
-                component:lazyLoad(CatalogDetail),
+                component:CatalogDetail,
 
             },
             {
                 path:'news-detail',
                 name:"NewsDetail",
-                component:lazyLoad(NewsDetail)
+                component:NewsDetail
             },
             {
                 path:'basket',
                 name:"Shopping cart",
-                component:lazyLoad(Basket)
+                component:Basket
             },
             {
                 path:'client-account',
                 name:"ClientAccount",
-                component:lazyLoad(ClientAccount)
+                component:ClientAccount
             },
             {
                 path:'personal-info',
                 name:'PersonalInfo',
-                component: lazyLoad(PersonalInfo)
+                component:PersonalInfo
             },
             {
                 path:'edit-profile',
                 name:'EditProfile',
-                component: lazyLoad(EditProfile)
+                component:EditProfile
             },
             {
                 path:'signin',
                 name:'ClientLogin',
-                component: lazyLoad(ClientLogin)
+                component:ClientLogin
             },
             {
                 path:'signup',
                 name:'ClientRegister',
-                component: lazyLoad(ClientRegister)
+                component:ClientRegister
             },
         ],
 
@@ -187,28 +185,28 @@ const routes = [
     {
         path: "/clients",
         name: "Clients",
-        component: lazyLoad(Clients),
+        component: Clients,
 
     },
     {
         path: "/loyalty",
         name: "Loyalty",
-        component: lazyLoad(Loaylty),
+        component: Loaylty,
         children: [
             {
                 path: '',
                 name:'CashBack',
-                component: lazyLoad(CashBack)
+                component:CashBack
             },
             {
                 path: 'promocode',
                 name:'PromoCode',
-                component: lazyLoad(PromoCode)
+                component:PromoCode
             },
             {
                 path: 'discount',
                 name:'Discount',
-                component: lazyLoad(Discount)
+                component:Discount
             },
 
         ]
@@ -218,79 +216,79 @@ const routes = [
     {
         path: "/chats",
         name: "Chats",
-        component: lazyLoad(Chats),
+        component: Chats,
 
     },
     {
         path: "/admin",
         name: "Admin",
-        component: lazyLoad(Admin),
+        component: Admin,
 
     },
     {
         path: "/log",
         name: "log",
-        component: lazyLoad(Log),
+        component: Log,
 
     },
 
     {
         path: "/catalog",
         name: "Catalog",
-        component: lazyLoad(Catalog),
+        component: Catalog,
 
     },
     {
         path:'/analytics',
         name:"Analytics",
-        component: lazyLoad(Analytics),
+        component: Analytics,
 
     },
     {
         path:'/access-settings',
         name:"AccessSettings",
-        component: lazyLoad(AccessSettings),
+        component: AccessSettings,
 
     },
     {
         path:'/settings',
         name:"Settings",
-        component: lazyLoad(Settings),
+        component: Settings,
         children: [
             {
                 path:'',
                 name:'General',
-                component: lazyLoad(General),
+                component: General,
 
             },
             {
                 path:'price',
                 name:'Price',
-                component: lazyLoad(Price),
+                component: Price,
 
             },
             {
                 path:'address-delivery',
                 name:'AddressDelivery',
-                component: lazyLoad(AddressDelivery),
+                component: AddressDelivery  ,
 
             },
             {
                 path:'catalog-settings',
                 name:'CatalogSettings',
-                component: lazyLoad(CatalogSettings),
+                component: CatalogSettings,
 
             },
             {
                 path:'staff-settings',
                 name:'StaffSettings',
-                component: lazyLoad(StaffSettings),
+                component: StaffSettings,
 
             },
             {
                 path:'personal-settings',
                 name:'PersonalSettings',
-                component: lazyLoad(PersonalSettings),
+                component: PersonalSettings,
 
             }
         ]
@@ -299,25 +297,25 @@ const routes = [
     {
         path: "/news",
         name: "News",
-        component: lazyLoad(News),
+        component: News,
 
     },
     {
         path: "/add-news",
         name: "AddNews",
-        component: lazyLoad(AddNews),
+        component: AddNews,
 
     },
     {
         path: "/edit-news",
         name: "EditNews",
-        component: lazyLoad(EditNews),
+        component: EditNews,
 
     },
     {
         path:'/signup',
         name:"SignUp",
-        component: lazyLoad(SignUp)
+        component: SignUp
     },
     {
         path: '/:pathMatch(.*)*',
