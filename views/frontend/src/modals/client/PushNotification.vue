@@ -191,7 +191,10 @@ export default {
       })
     },
     checkAll(item) {
-      return  this.$refs[`select${item._id}`].checked === true
+      if(this.$refs[`select${item._id}`] !== null){
+        return  this.$refs[`select${item._id}`].checked === true
+      }
+
     },
     checkMainSelect() {
       if(this.clients.every(this.checkAll)){

@@ -28,7 +28,7 @@
                         <div style="width:25%;">
                           <label class="product-label">Select category</label><i class="fas fa-asterisk"></i><br>
                           <select v-model="newProduct.category" required class="form-control mb-0 select-phone" aria-label="Default select example">
-                            <option :value="cat._id" v-for="cat in listCategory" :key="cat._id">{{cat.name}}</option>
+                            <option :value="cat._id" v-for="cat in listCategory.slice(1)"  :key="cat._id" >{{cat.name}}</option>
                           </select>
                         </div>
                       </div>
@@ -161,7 +161,8 @@ props:['listCategory', 'getProducts'],
       price:'',
       quantity:'',
       category: '',
-      img:''
+      img:'',
+      imgArray: []
     }
   },
     removeImage(idx){
@@ -222,15 +223,13 @@ props:['listCategory', 'getProducts'],
           })
 
      $('#add-products').modal("hide")
-    this.show_images = []
-    this.previewImage= []
       this.newProduct = {
-        imgArray: [],
         name: '',
-        price: '',
-        quantity: '',
-        category:'',
-        img: '',
+        price:'',
+        quantity:'',
+        category: '',
+        img:'',
+        imgArray: [],
         description:'',
         vendorCode:'',
         promoStart: {
