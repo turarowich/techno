@@ -40,7 +40,7 @@
                           <div class="d-flex align-items-center mr-2">
                             <label>From</label>
                             <div class="calendar d-flex align-items-center">
-                              <input class="calendar-input"  id="from-date">
+                              <input v-model="from_register_date" class="calendar-input"  id="from-date">
                               <img src="../../assets/icons/Calendar.svg">
                             </div>
                           </div>
@@ -48,7 +48,7 @@
                           <div class="d-flex align-items-center">
                             <label>To</label>
                             <div class="calendar d-flex align-items-center">
-                              <input class="calendar-input" id="to-date">
+                              <input v-model="to_register_date" class="calendar-input" id="to-date">
                               <img src="../../assets/icons/Calendar.svg">
                             </div>
                           </div>
@@ -82,20 +82,9 @@
                       </div>
                       <div class="collapse" id="category-collapse">
                         <div class="filter-body">
-
-                          <div class="radio-toolbar-category">
-                            <div class="d-flex align-items-center mb-2 mr-5">
-                              <input ref="client-filter" type="radio" id="radioStandart"  name="radioCategory" @click="selectStandart">
-                              <label class="radio-checkbox" for="radioStandart"></label>
-                              <span class="male">Standart</span>
-                            </div>
-                            <div class="d-flex align-items-center">
-                              <input ref="client-filter" type="radio" id="radioVip" @click="selectVip" name="radioCategory" >
-                              <label class="radio-checkbox" for="radioVip"></label>
-                              <span class="male">Vip</span>
-                            </div>
-                          </div>
-
+                          <select v-model="category" class="filter-form  form-control long-form-control  form-control-lg" aria-label=".form-select-lg example">
+                            <option :value="cat._id"  v-for="cat in clientCategory" :key="cat._id">{{cat.name}}</option>
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -248,7 +237,7 @@
           <div class="table-head" style="width: 14%;">Category</div>
           <div v-if="data_check.register_date_checked" class="table-head" style="width: 18%;">Registration date</div>
           <div class="table-head client-phone" style="width:14%">Phone number</div>
-          <div class="table-head table-link d-flex align-item-center" style="width: 8%;" @click="sortByTotal">Total <img class="total-pol" style="margin-left:5px" src="../../assets/icons/polygon.svg"></div>
+          <div class="table-head table-link d-flex align-item-center" style="width: 8%;" @click="sortByTotal"><span>Total</span> <img class="total-pol total" style="margin-left:5px" src="../../assets/icons/polygon.svg"></div>
           <div v-if="data_check.bonus_checked" class="table-head table-link d-flex align-items-center" style="width: 8%;" @click="sortByBonus">Bonus <img class="date-pol" style="margin-left:5px" src="../../assets/icons/polygon.svg"></div>
           <div v-if="data_check.last_purchase_checked" class="table-head" style="width: 16%;">Last purchase</div>
           <div style="width:3%" class="dropdown dropdown-settings pl-3">
@@ -363,7 +352,7 @@ export default {
       birthday:'',
       category:'',
       discount:'',
-      from_register_date:'2000-01-01',
+      from_register_date:'',
       to_register_date:'',
       from_purchase_date:'2000-01-01',
       to_purchase_date:'',
@@ -483,20 +472,6 @@ export default {
         }
       })
     },
-    selectStandart(){
-      this.clientCategory.map((item)=>{
-        if(item.name.toLowerCase() === 'standart'){
-          this.category = item._id
-        }
-      })
-    },
-    selectVip(){
-      this.clientCategory.map((item)=>{
-        if(item.name.toLowerCase() === 'vip'){
-          this.category = item._id
-        }
-      })
-    },
     checkAll(item){
       this.selectAll = item
     },
@@ -530,6 +505,9 @@ export default {
 
     },
     filterSubmit(){
+      if(this.from_register_date === ''){
+        this.from_register_date = "2000-01-01"
+      }
         this.f_category = this.category;
         this.f_gender_client = this.gender_client;
         this.f_birthday = this.birthday;
@@ -775,6 +753,11 @@ export default {
 </script>
 
 <style scoped>
+.total{
+  width: 6px;
+  height: 6px;
+  margin-top: 8px;
+}
 .client-names{
   width: 33%;
 }

@@ -28,7 +28,7 @@
                         <div style="width:25%;">
                           <label class="product-label">Select category</label><i class="fas fa-asterisk"></i><br>
                           <select v-model="newProduct.category" required class="form-control mb-0 select-phone" aria-label="Default select example">
-                            <option :value="cat._id" v-for="cat in listCategory" :key="cat._id">{{cat.name}}</option>
+                            <option :value="cat._id" v-for="cat in listCategory.slice(1)"  :key="cat._id" >{{cat.name}}</option>
                           </select>
                         </div>
                       </div>
@@ -89,7 +89,7 @@
                             <img src="../../../assets/img/modal-img.svg ">
                             <input @change="onFileChange" class="d-none" multiple id="imgArray" type="file" name="imgArray">
                           </label>
-                          <div class="d-flex" v-if="newProduct.imgArray.length !==0">
+                          <div   class="d-flex">
                             <div  v-for="(img,index) in imagePreview" :key="index" class="selected-images">
                               <img id="choosed-img"  :src="img" class="show-images mr-2" />
                               <div class="selected-overlay">
@@ -156,7 +156,8 @@ props:['listCategory', 'getProducts'],
       price:'',
       quantity:'',
       category: '',
-      img:''
+      img:'',
+      imgArray: []
     }
   },
     removeImage(idx){
@@ -212,14 +213,14 @@ props:['listCategory', 'getProducts'],
           })
 
      $('#add-products').modal("hide")
-    this.show_images = []
-    this.previewImage= []
       this.newProduct = {
         name: '',
         price:'',
         quantity:'',
         category: '',
-        img:''
+        img:'',
+        imgArray: []
+
       }
     },
 

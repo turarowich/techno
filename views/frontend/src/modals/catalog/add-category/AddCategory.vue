@@ -1,6 +1,5 @@
 <template>
-
-<div class="parent-modal">
+  <div class="parent-modal">
   <div class="modal myModal fade" id="add-category" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content category-content">

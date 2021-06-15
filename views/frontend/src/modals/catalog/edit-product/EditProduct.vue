@@ -91,7 +91,11 @@
                   <input @change="onFileChange($event)" ref="addImage" class="d-none" multiple id="imgsArray" type="file" name="imgArray">
                 </label>
                 <div  class="d-flex">
-                  <img v-if="currentData.img !== ''" :src="imgSrc+'/'+currentData.img" class="show-images mr-2">
+                   <div v-if="currentData.img !== ''">
+                      <img v-if="typeof currentData.img === 'string'" :src="imgSrc+'/'+currentData.img" class="show-images mr-2">
+                      <img v-else :src="mainImg" class="show-images mr-2">
+                  
+                   </div>
                     <div v-if="currentData.img !== ''" class="selected-overlay">
                       <img  @click="currentData.img = ''" class="remove-images" src="../../../assets/icons/deleteClient.svg">
                     </div>
@@ -139,14 +143,21 @@ export default {
     }
   },
   computed:{
+    mainImg(){
+    if(typeof this.currentData.img === 'object'){
+      return URL.createObjectURL(this.currentData.img)
+    }
+    return this.currentData.img
+    },
     imagePreview(){
-    return  this.currentData.imgArray.map((item)=>{
-            if(typeof item == 'object'){
-              return URL.createObjectURL(item)
-            }
-            return item;
-          })
-        }
+      return  this.currentData.imgArray.map((item)=>{
+        if(typeof item === 'object'){
+         return URL.createObjectURL(item)
+       }
+         return item;
+
+      })
+    }
   },
   methods:{
     removeImage(idx){
@@ -165,26 +176,30 @@ export default {
       else{
         $('.show-price').removeClass('active')
       }
-
     },
 
+  
     onFileChange() {
       $.each($("#imgsArray")[0].files, (i,file)=> {
          console.log(i)
-        for (let j = 0; j <=this.currentData.imgArray.length; j++) {
-          if(this.currentData.imgArray[j] === ""){
-            this.currentData.imgArray[j] = file;
-            break;
+          if(this.currentData.img === ''){
+            console.log(this.currentData.img)
+            this.currentData.img = file
           }
-          if(this.currentData.imgArray.length<3){
-            this.currentData.imgArray.push(file)
-            break;
+          else{
+             for (let j = 0; j <=this.currentData.imgArray.length; j++) {
+                if(this.currentData.imgArray[j] === ""){
+                  this.currentData.imgArray[j] = file;
+                  break;
+                }
+                if(this.currentData.imgArray.length<3){
+                  this.currentData.imgArray.push(file)
+                  break;
+                }
+            }
           }
-
-        }
-
-      });
-  console.log(this.currentData.imgArray, 'bektemir')
+          console.log(this.currentData.imgArray)
+    });
     },
     onSubmit(){
       const updatedProduct = this.currentData;
@@ -192,9 +207,8 @@ export default {
 
     for(let item in updatedProduct.imgArray){
       form.append('imgArray'+item, updatedProduct.imgArray[item])
-      console.log("imgArray"+item, updatedProduct.imgArray[item])
-    }
-
+      }
+      form.append('img',updatedProduct.img)
       form.append("name", updatedProduct.name)
       form.append("quantity", updatedProduct.quantity)
       form.append("category", updatedProduct.category)
@@ -206,8 +220,9 @@ export default {
       this.axios.put(this.url('updateProduct',updatedProduct._id),form)
       .then(()=>{
         this.getProducts()
+         this.$informationAlert('Changes are saved')
       })
-      this.$informationAlert('Changes are saved')
+     
       $('#edit-product').modal("hide")
     },
 
