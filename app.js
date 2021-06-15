@@ -145,6 +145,7 @@ const io = require('socket.io')(httpsServer, {
     },
     path: '/socket.io',
 });
+io.sockets.setMaxListeners(0);
 require("./routes/socket.js")(io)
 
 httpServer.listen(config.port_http, () => {
