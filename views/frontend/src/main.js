@@ -86,6 +86,8 @@ app.config.globalProperties.changeToken = function () {
             token: localStorage.getItem('token')
         },
         withCredentials: true,
+        reconnectionAttempts: 5,
+        reconnectionDelayMax: 10000,
     })
 }
 app.config.globalProperties.img = function (main) {
