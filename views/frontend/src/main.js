@@ -17,16 +17,16 @@ import './assets/css/main.css'
 import 'sweetalert2/dist/sweetalert2.css';
 import 'lightpick/css/lightpick.css'
 import 'animate.css'
-const router = () => import('@/router/router')
-const Swal = () => import("sweetalert2");
-const $ = () => import( 'jquery');
-const moment = () => import('moment');
-const Lightpick = () => import('lightpick');
-const axios = () => import("axios");
-const store = () => import('./store');
+import router from '@/router/router'
+import Swal from "sweetalert2";
+import $ from 'jquery';
+import moment from 'moment';
+import Lightpick from 'lightpick'
+import axios from "axios";
+import store from './store';
 import 'dropzone/dist/dropzone'
 import 'dropzone/dist/dropzone.css'
-const io = () => import("socket.io-client")
+import io from "socket.io-client"
 const app = createApp(App)
 app.use(router);
 app.use(store);
