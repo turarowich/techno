@@ -1,50 +1,51 @@
 import { createWebHistory, createRouter } from "vue-router";
 // import auth from '../middle-ware/auth';
-const SignIn = () => import("@/components/sign-in/SignIn");
-const SignUp = () => import("@/components/sign-up/SignUp");
-const Orders = () => import("@/components/orders/Orders");
-const Loaylty = () => import("@/components/loyalty/Loaylty");
-const Chats = () => import('@/components/chats/Chats');
-const Clients = () => import("@/components/clients/Clients");
-const Catalog = () => import("@/components/catalog/Catalog");
-const Analytics = () => import("@/components/analytics/Analytics");
-const Settings = () => import("@/components/settings/Settings");
-const Home = () => import("@/client/components/Home/Home");
-const About = () => import("@/client/components/About/About");
-const Dashboard = () => import("@/client/components/Dashboard/Dashboard");
-const News = () => import("@/components/News/News");
-const CashBack = () => import("@/components/loyalty/CashBack");
-const Discount = () => import("@/components/loyalty/Discount");
-const PromoCode = () => import("@/components/loyalty/Promocode");
-const General = () => import("@/components/settings/General");
-const Price = () => import("@/components/settings/Price");
-const CatalogDetail = () => import("@/client/components/ClientCatalog/CatalogDetail");
-const NewsDetail = () => import("@/client/components/ClientNews/NewsDetail");
-const ClientNews = () => import("@/client/components/ClientNews/ClientNews");
-const Basket = () => import("@/client/components/Basket/Basket");
-const ClientAccount = () => import("@/client/components/ClientAccount/ClientAccount");
-const PersonalInfo = () => import("@/client/components/PersonalInfo/PersonalInfo");
-const EditProfile = () => import("@/client/components/EditProfile/EditProfile");
-const ProductInfo = () => import("@/client/components/product-info/ProductInfo");
-const ClientLogin = () => import("@/client/components/ClientLogin");
-const ClientRegister = () => import("@/client/components/ClientRegister");
-const EditClientPage = () => import("@/components/clients/EditClientPage");
-const PushNotification = () => import("@/components/clients/PushNotification");
-const AddPromoPage = () => import("@/components/loyalty/AddPromoPage");
-const AddProductPage = () => import("@/components/catalog/AddProductPage");
-const EditProductPage = () => import("@/components/catalog/EditProductPage");
-const IndividualPush = () => import("@/components/clients/IndividualPush");
-const CatalogSettings = () => import("@/components/settings/CatalogSettings");
-const StaffSettings = () => import("@/components/settings/StaffSettings");
-const AccessSettings = () => import("@/components/settings/AccessSettings");
-const AddNews = () => import("@/components/News/AddNews");
-const EditNews = () => import("@/components/News/EditNews");
+import SignIn from "@/components/sign-in/SignIn";
+import SignUp from "@/components/sign-up/SignUp";
+import Orders from "@/components/orders/Orders";
+import Loaylty from "@/components/loyalty/Loaylty";
+import Chats from '@/components/chats/Chats';
+import Clients from "@/components/clients/Clients";
+import Catalog from "@/components/catalog/Catalog";
+import Analytics from "@/components/analytics/Analytics";
+import Settings from "@/components/settings/Settings";
+import Home from "@/client/components/Home/Home";
+import About from "@/client/components/About/About";
+import Dashboard from "@/client/components/Dashboard/Dashboard";
+import News from "@/components/News/News";
+import CashBack from "@/components/loyalty/CashBack";
+import Discount from "@/components/loyalty/Discount";
+import PromoCode from "@/components/loyalty/Promocode";
+import General from "@/components/settings/General";
+import Price from "@/components/settings/Price";
+import CatalogDetail from "@/client/components/ClientCatalog/CatalogDetail";
+import NewsDetail from "@/client/components/ClientNews/NewsDetail";
+import ClientNews from "@/client/components/ClientNews/ClientNews";
+import Basket from "@/client/components/Basket/Basket";
+import ClientAccount from "@/client/components/ClientAccount/ClientAccount";
+import PersonalInfo from "@/client/components/PersonalInfo/PersonalInfo";
+import EditProfile from "@/client/components/EditProfile/EditProfile";
+import ProductInfo from "@/client/components/product-info/ProductInfo";
+import ClientLogin from "@/client/components/ClientLogin";
+import ClientRegister from "@/client/components/ClientRegister";
+import EditClientPage from "@/components/clients/EditClientPage";
+import PushNotification from "@/components/clients/PushNotification";
+import AddPromoPage from "@/components/loyalty/AddPromoPage";
+import AddProductPage from "@/components/catalog/AddProductPage";
+import EditProductPage from "@/components/catalog/EditProductPage";
+import IndividualPush from "@/components/clients/IndividualPush";
+import CatalogSettings from "@/components/settings/CatalogSettings";
+import StaffSettings from "@/components/settings/StaffSettings";
+import AccessSettings from "@/components/settings/AccessSettings";
+import AddNews from "@/components/News/AddNews";
+import EditNews from "@/components/News/EditNews";
 
-const EditPromo = () => import("@/components/loyalty/EditPromo");
-const PersonalSettings = () => import("@/components/settings/PersonalSettings");
-const AddressDelivery = () => import("@/components/settings/AddressDelivery");
-const Log = () => import("@/components/Log/Log");
-const Admin = () => import("@/components/admin/Admin") ;
+import EditPromo from "@/components/loyalty/EditPromo";
+import PersonalSettings from "@/components/settings/PersonalSettings";
+import AddressDelivery from "@/components/settings/AddressDelivery";
+import Log from "@/components/Log/Log";
+import Admin from "@/components/admin/Admin";
+
 
 
 
@@ -112,72 +113,72 @@ const routes = [
         path: "/shop/:bekon",
         name: "Home",
         component: Home,
-        children:[
+        children: [
             {
-                path:'',
-                name:"Home",
-                component:Dashboard
+                path: '',
+                name: "Home",
+                component: Dashboard
             },
             {
-                path:'about',
-                name:"About",
-                component:About
+                path: 'about',
+                name: "About",
+                component: About
             },
             {
-                path:'news',
-                name:"News",
-                component:News
+                path: 'news',
+                name: "News",
+                component: News
             },
             {
-                path:'client-news',
-                name:"ClientNews",
-                component:ClientNews
+                path: 'client-news',
+                name: "ClientNews",
+                component: ClientNews
             },
             {
-                path:'product-info',
-                name:"ProductInfo",
-                component:ProductInfo
+                path: 'product-info',
+                name: "ProductInfo",
+                component: ProductInfo
             },
             {
-                path:'catalog-detail/:id',
-                name:"CatalogDetail",
-                component:CatalogDetail,
+                path: 'catalog-detail/:id',
+                name: "CatalogDetail",
+                component: CatalogDetail,
 
             },
             {
-                path:'news-detail',
-                name:"NewsDetail",
-                component:NewsDetail
+                path: 'news-detail',
+                name: "NewsDetail",
+                component: NewsDetail
             },
             {
-                path:'basket',
-                name:"Shopping cart",
-                component:Basket
+                path: 'basket',
+                name: "Shopping cart",
+                component: Basket
             },
             {
-                path:'client-account',
-                name:"ClientAccount",
-                component:ClientAccount
+                path: 'client-account',
+                name: "ClientAccount",
+                component: ClientAccount
             },
             {
-                path:'personal-info',
-                name:'PersonalInfo',
-                component:PersonalInfo
+                path: 'personal-info',
+                name: 'PersonalInfo',
+                component: PersonalInfo
             },
             {
-                path:'edit-profile',
-                name:'EditProfile',
-                component:EditProfile
+                path: 'edit-profile',
+                name: 'EditProfile',
+                component: EditProfile
             },
             {
-                path:'signin',
-                name:'ClientLogin',
-                component:ClientLogin
+                path: 'signin',
+                name: 'ClientLogin',
+                component: ClientLogin
             },
             {
-                path:'signup',
-                name:'ClientRegister',
-                component:ClientRegister
+                path: 'signup',
+                name: 'ClientRegister',
+                component: ClientRegister
             },
         ],
 
@@ -197,18 +198,18 @@ const routes = [
         children: [
             {
                 path: '',
-                name:'CashBack',
-                component:CashBack
+                name: 'CashBack',
+                component: CashBack
             },
             {
                 path: 'promocode',
-                name:'PromoCode',
-                component:PromoCode
+                name: 'PromoCode',
+                component: PromoCode
             },
             {
                 path: 'discount',
-                name:'Discount',
-                component:Discount
+                name: 'Discount',
+                component: Discount
             },
 
         ]
@@ -243,55 +244,55 @@ const routes = [
 
     },
     {
-        path:'/analytics',
-        name:"Analytics",
+        path: '/analytics',
+        name: "Analytics",
         component: Analytics,
 
     },
     {
-        path:'/access-settings',
-        name:"AccessSettings",
+        path: '/access-settings',
+        name: "AccessSettings",
         component: AccessSettings,
 
     },
     {
-        path:'/settings',
-        name:"Settings",
+        path: '/settings',
+        name: "Settings",
         component: Settings,
         children: [
             {
-                path:'',
-                name:'General',
+                path: '',
+                name: 'General',
                 component: General,
 
             },
             {
-                path:'price',
-                name:'Price',
+                path: 'price',
+                name: 'Price',
                 component: Price,
 
             },
             {
-                path:'address-delivery',
-                name:'AddressDelivery',
-                component: AddressDelivery  ,
+                path: 'address-delivery',
+                name: 'AddressDelivery',
+                component: AddressDelivery,
 
             },
             {
-                path:'catalog-settings',
-                name:'CatalogSettings',
+                path: 'catalog-settings',
+                name: 'CatalogSettings',
                 component: CatalogSettings,
 
             },
             {
-                path:'staff-settings',
-                name:'StaffSettings',
+                path: 'staff-settings',
+                name: 'StaffSettings',
                 component: StaffSettings,
 
             },
             {
-                path:'personal-settings',
-                name:'PersonalSettings',
+                path: 'personal-settings',
+                name: 'PersonalSettings',
                 component: PersonalSettings,
 
             }
@@ -317,8 +318,8 @@ const routes = [
 
     },
     {
-        path:'/signup',
-        name:"SignUp",
+        path: '/signup',
+        name: "SignUp",
         component: SignUp,
         meta: {
             hideNavbar: true,
@@ -334,11 +335,11 @@ const routes = [
 
 const router = createRouter({
     history: createWebHistory(),
-    scrollBehavior (to,from ,savedPosition) {
-        if(savedPosition){
+    scrollBehavior(to, from, savedPosition) {
+        if (savedPosition) {
             return savedPosition
         }
-        return { top:0}
+        return { top: 0 }
     },
     routes,
 
@@ -360,7 +361,7 @@ function nextFactory(context, middleware, index) {
         // Than run the subsequent Middleware with a new
         // nextMiddleware() callback.
         const nextMiddleware = nextFactory(context, middleware, index + 1);
-        subsequentMiddleware({...context, next: nextMiddleware });
+        subsequentMiddleware({ ...context, next: nextMiddleware });
     };
 }
 
@@ -378,7 +379,7 @@ router.beforeEach((to, from, next) => {
         };
         const nextMiddleware = nextFactory(context, middleware, 1);
 
-        return middleware[0]({...context, next: nextMiddleware });
+        return middleware[0]({ ...context, next: nextMiddleware });
     }
 
     return next();
