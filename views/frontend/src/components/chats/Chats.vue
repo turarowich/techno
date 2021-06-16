@@ -4,7 +4,7 @@
     <!-- <div class="notification">
       <button class="app-buttons-item"><img class="img-btn" src="../../assets/icons/ring.svg"><span>Push notification</span></button>
     </div> -->
-    <div class="chat d-flex">
+    <div class="chat d-flex h-100">
     <div class="overflow-hidden contacts-container">
         <div class="d-flex align-items-center  search-chat">
             <img class="mr-3" src="../../assets/icons/search-icon.svg">
@@ -89,7 +89,7 @@ export default {
     },
     getClients(){
         this.axios.get(this.url('getClients')).
-        then(result =>{
+        then(result => {
             this.contactList = result.data.objects
             this.selectAll = false
         });
@@ -126,48 +126,48 @@ export default {
         confirmButtonText: 'Delete',
         buttonsStyling:false,
         customClass:{
-          popup: 'sweet-delete',
-          confirmButton: 'confirm-btn',
-          cancelButton:'cancel-btn',
-          actions:'btn-group',
-          content:'content-sweet',
-          closeButton:'close-btn'
+            popup: 'sweet-delete',
+            confirmButton: 'confirm-btn',
+            cancelButton:'cancel-btn',
+            actions:'btn-group',
+            content:'content-sweet',
+            closeButton:'close-btn'
         },
 
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.axios.post(this.url('clearMessages'),{
-                clients: this.contactList.filter(contact => {
-                    return contact.selected 
-                })
-            }).
-            then(() =>{
-                this.getClients()
-                Swal.fire({
-                    title:'Success',
-                    timer:1500,
-                    text:'Chats cleared',
-                    showConfirmButton:false,
-                    position: 'top-right',
-                    customClass:{
-                        popup:'success-popup',
-                        content:'success-content',
-                        title:'success-title',
-                        header:'success-header',
-                        image:'success-img'
-                    },
-                    showClass:{
-                        popup: 'animate__animated animate__zoomIn'
-                    },
-                    }
-                )
-            });
-       }
-      })
+        }).then((result) => {
+            if (result.isConfirmed) {
+            this.axios.post(this.url('clearMessages'),{
+                    clients: this.contactList.filter(contact => {
+                        return contact.selected 
+                    })
+                }).
+                then(() =>{
+                    this.getClients()
+                    Swal.fire({
+                        title:'Success',
+                        timer:1500,
+                        text:'Chats cleared',
+                        showConfirmButton:false,
+                        position: 'top-right',
+                        customClass:{
+                            popup:'success-popup',
+                            content:'success-content',
+                            title:'success-title',
+                            header:'success-header',
+                            image:'success-img'
+                        },
+                        showClass:{
+                            popup: 'animate__animated animate__zoomIn'
+                        },
+                        }
+                    )
+                });
+        }
+        })
         
-    }
-  },
-  created() {
+        }
+    },
+    created() {
         let that = this
         this.socket.on("server message", function(data) {
             let message = {client:data.user , text:data.text, isIncoming: false, createdAt: new Date().toJSON(), new: true}
@@ -178,10 +178,10 @@ export default {
             }
         })
         this.socket.emit('init_admin')
-  },
-  mounted: function () {
-    this.init()
- }
+    },
+    mounted: function () {
+        this.init()
+    }
 
 }
 </script>

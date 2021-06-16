@@ -1,10 +1,7 @@
 <template>
   <div class="d-flex">
-    <div class="siding-bar">
-      <SideBar v-bind:closeSideBar="closeSideBar"
-               v-if="!['SignIn', 'SignUp','Admin'].includes($route.name)"
-               v-show="!$route.path.includes('/shop')"
-      />
+    <div class="siding-bar" v-if="!$route.meta.hideNavbar">
+      <SideBar v-bind:closeSideBar="closeSideBar"  v-show="!$route.path.includes('/shop')"/>
     </div>
     <div class="main-content" v-bind:class="{hun: $route.name === 'SignUp' || $route.name === 'Admin'  || $route.name === 'SignIn' || $route.path.includes('/shop') } ">
         <Header  v-if="homePage()"  v-bind:openSideBar="openSideBar"/>

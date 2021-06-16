@@ -464,6 +464,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     width: 100%;
     min-height: 100vh;
     padding:23px 44px;
+    z-index: 9999;
 }
 .sign-in-header{
     margin-bottom: 30px;

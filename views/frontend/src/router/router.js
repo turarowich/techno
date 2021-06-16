@@ -1,50 +1,50 @@
 import { createWebHistory, createRouter } from "vue-router";
 // import auth from '../middle-ware/auth';
-import SignIn from "@/components/sign-in/SignIn";
-import SignUp from "@/components/sign-up/SignUp";
-import Orders from "@/components/orders/Orders";
-import Loaylty from "@/components/loyalty/Loaylty";
-import Chats from '@/components/chats/Chats';
-import Clients from "@/components/clients/Clients";
-import Catalog from "@/components/catalog/Catalog";
-import Analytics from "@/components/analytics/Analytics";
-import Settings from "@/components/settings/Settings";
-import Home from "@/client/components/Home/Home";
-import About from "@/client/components/About/About";
-import Dashboard from "@/client/components/Dashboard/Dashboard";
-import News from "@/components/News/News";
-import CashBack from "@/components/loyalty/CashBack";
-import Discount from "@/components/loyalty/Discount";
-import PromoCode from "@/components/loyalty/Promocode";
-import General from "@/components/settings/General";
-import Price from "@/components/settings/Price";
-import CatalogDetail from "@/client/components/ClientCatalog/CatalogDetail";
-import NewsDetail from "@/client/components/ClientNews/NewsDetail";
-import ClientNews from "@/client/components/ClientNews/ClientNews";
-import Basket from "@/client/components/Basket/Basket";
-import ClientAccount from "@/client/components/ClientAccount/ClientAccount";
-import PersonalInfo from "@/client/components/PersonalInfo/PersonalInfo";
-import EditProfile from "@/client/components/EditProfile/EditProfile";
-import ProductInfo from "@/client/components/product-info/ProductInfo";
-import ClientLogin from "@/client/components/ClientLogin";
-import ClientRegister from "@/client/components/ClientRegister";
-import EditClientPage from "@/components/clients/EditClientPage";
-import PushNotification from "@/components/clients/PushNotification";
-import AddPromoPage from "@/components/loyalty/AddPromoPage";
-import AddProductPage from "@/components/catalog/AddProductPage";
-import EditProductPage from "@/components/catalog/EditProductPage";
-import IndividualPush from "@/components/clients/IndividualPush";
-import CatalogSettings from "@/components/settings/CatalogSettings";
-import StaffSettings from "@/components/settings/StaffSettings";
-import AccessSettings from "@/components/settings/AccessSettings";
-import AddNews from "@/components/News/AddNews";
-import EditNews from "@/components/News/EditNews";
+const SignIn = () => import("@/components/sign-in/SignIn");
+const SignUp = () => import("@/components/sign-up/SignUp");
+const Orders = () => import("@/components/orders/Orders");
+const Loaylty = () => import("@/components/loyalty/Loaylty");
+const Chats = () => import('@/components/chats/Chats');
+const Clients = () => import("@/components/clients/Clients");
+const Catalog = () => import("@/components/catalog/Catalog");
+const Analytics = () => import("@/components/analytics/Analytics");
+const Settings = () => import("@/components/settings/Settings");
+const Home = () => import("@/client/components/Home/Home");
+const About = () => import("@/client/components/About/About");
+const Dashboard = () => import("@/client/components/Dashboard/Dashboard");
+const News = () => import("@/components/News/News");
+const CashBack = () => import("@/components/loyalty/CashBack");
+const Discount = () => import("@/components/loyalty/Discount");
+const PromoCode = () => import("@/components/loyalty/Promocode");
+const General = () => import("@/components/settings/General");
+const Price = () => import("@/components/settings/Price");
+const CatalogDetail = () => import("@/client/components/ClientCatalog/CatalogDetail");
+const NewsDetail = () => import("@/client/components/ClientNews/NewsDetail");
+const ClientNews = () => import("@/client/components/ClientNews/ClientNews");
+const Basket = () => import("@/client/components/Basket/Basket");
+const ClientAccount = () => import("@/client/components/ClientAccount/ClientAccount");
+const PersonalInfo = () => import("@/client/components/PersonalInfo/PersonalInfo");
+const EditProfile = () => import("@/client/components/EditProfile/EditProfile");
+const ProductInfo = () => import("@/client/components/product-info/ProductInfo");
+const ClientLogin = () => import("@/client/components/ClientLogin");
+const ClientRegister = () => import("@/client/components/ClientRegister");
+const EditClientPage = () => import("@/components/clients/EditClientPage");
+const PushNotification = () => import("@/components/clients/PushNotification");
+const AddPromoPage = () => import("@/components/loyalty/AddPromoPage");
+const AddProductPage = () => import("@/components/catalog/AddProductPage");
+const EditProductPage = () => import("@/components/catalog/EditProductPage");
+const IndividualPush = () => import("@/components/clients/IndividualPush");
+const CatalogSettings = () => import("@/components/settings/CatalogSettings");
+const StaffSettings = () => import("@/components/settings/StaffSettings");
+const AccessSettings = () => import("@/components/settings/AccessSettings");
+const AddNews = () => import("@/components/News/AddNews");
+const EditNews = () => import("@/components/News/EditNews");
 
-import EditPromo from "@/components/loyalty/EditPromo";
-import PersonalSettings from "@/components/settings/PersonalSettings";
-import AddressDelivery from "@/components/settings/AddressDelivery";
-import Log from "@/components/Log/Log";
-import Admin from "@/components/admin/Admin";
+const EditPromo = () => import("@/components/loyalty/EditPromo");
+const PersonalSettings = () => import("@/components/settings/PersonalSettings");
+const AddressDelivery = () => import("@/components/settings/AddressDelivery");
+const Log = () => import("@/components/Log/Log");
+const Admin = () => import("@/components/admin/Admin") ;
 
 
 
@@ -54,7 +54,9 @@ const routes = [
         path: "/",
         name: "SignIn",
         component: SignIn,
-
+        meta: {
+            hideNavbar: true,
+        }
     },
     {
         path: "/orders",
@@ -223,7 +225,9 @@ const routes = [
         path: "/admin",
         name: "Admin",
         component: Admin,
-
+        meta: {
+            hideNavbar: true,
+        }
     },
     {
         path: "/log",
@@ -315,7 +319,10 @@ const routes = [
     {
         path:'/signup',
         name:"SignUp",
-        component: SignUp
+        component: SignUp,
+        meta: {
+            hideNavbar: true,
+        }
     },
     {
         path: '/:pathMatch(.*)*',
