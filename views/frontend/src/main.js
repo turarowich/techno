@@ -48,8 +48,6 @@ const socket = io(process.env.VUE_APP_SERVER_URL, {
     },
     withCredentials: true,
     reconnection: false,
-    reconnectionAttempts: 5,
-    reconnectionDelayMax: 10000,
 })
 
 ax.defaults.headers.common['Authorization'] = 'Bearer '+ token
@@ -86,8 +84,7 @@ app.config.globalProperties.changeToken = function () {
             token: localStorage.getItem('token')
         },
         withCredentials: true,
-        reconnectionAttempts: 5,
-        reconnectionDelayMax: 10000,
+        reconnection: true
     })
 }
 app.config.globalProperties.img = function (main) {
