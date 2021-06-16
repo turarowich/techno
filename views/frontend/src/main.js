@@ -1,22 +1,22 @@
 import {createApp} from 'vue'
 import App from './App.vue'
 
-() => import('select2/dist/css/select2.min.css');
-() => import('slick-carousel/slick/slick');
-() => import('slick-carousel/slick/slick.css');
-() => import('slick-carousel/slick/slick-theme.css');
-() => import('ion-rangeslider/js/ion.rangeSlider');
-() => import('ion-rangeslider/css/ion.rangeSlider.min.css');
-() => import('bootstrap/dist/css/bootstrap.min.css');
-() => import('bootstrap/dist/js/bootstrap');
-() => import('@fortawesome/fontawesome-free/css/all.css');
-() => import('@fortawesome/fontawesome-free/js/all.js');
-() => import('select2/dist/css/select2.css');
-() => import('select2/dist/js/select2');
-() => import('./assets/css/main.css');
-() => import('sweetalert2/dist/sweetalert2.css');
-() => import('lightpick/css/lightpick.css');
-() => import('animate.css');
+import 'select2/dist/css/select2.min.css';
+import 'slick-carousel/slick/slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css'
+import 'ion-rangeslider/js/ion.rangeSlider';
+import 'ion-rangeslider/css/ion.rangeSlider.min.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap'
+import '@fortawesome/fontawesome-free/css/all.css'
+import '@fortawesome/fontawesome-free/js/all.js'
+import 'select2/dist/css/select2.css'
+import 'select2/dist/js/select2'
+import './assets/css/main.css'
+import 'sweetalert2/dist/sweetalert2.css';
+import 'lightpick/css/lightpick.css'
+import 'animate.css'
 const router = () => import('@/router/router')
 const Swal = () => import("sweetalert2");
 const $ = () => import( 'jquery');
