@@ -20,7 +20,7 @@ import 'animate.css'
 import router from '@/router/router'
 import Swal from "sweetalert2";
 import $ from 'jquery';
-// import moment from 'moment';
+import moment from 'moment';
 import Lightpick from 'lightpick'
 import axios from "axios";
 import store from './store';
@@ -51,7 +51,7 @@ const socket = io(process.env.VUE_APP_SERVER_URL, {
 })
 
 ax.defaults.headers.common['Authorization'] = 'Bearer '+ token
-// app.config.globalProperties.$moment = moment;
+app.config.globalProperties.$moment = moment;
 app.config.globalProperties.$lightpick = Lightpick;
 app.config.globalProperties.$ = $
 app.config.globalProperties.axios = ax
