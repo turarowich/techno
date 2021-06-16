@@ -38,12 +38,10 @@ function saveImage(file, company, old_file_name=null, resize=false){
     var upload = path.join(__dirname, '/../views/frontend/' + filename)
     if (file.name.match(/\.(jpg|jpeg|png|gif|svg)$/)) {
         if(resize){
-            file = async () => await sharp(file).resize(100, 100, {
-                fit: sharp.fit.inside,
-                withoutEnlargement: true
-            })
+            file = resizeImage(file)
             console.log(file)
         }
+
         fs.rename(file.path, upload, function (err) {
             if (err) {
                 console.log(err);
@@ -53,6 +51,13 @@ function saveImage(file, company, old_file_name=null, resize=false){
         filename = 'Not image'
     }
     return filename
+}
+async function resizeImage(file){
+    let newfile = await sharp(file).resize(100, 100, {
+        fit: sharp.fit.inside,
+        withoutEnlargement: true
+    })
+    return newfile
 }
 function sendError(error, lang) {
     let result = {
