@@ -38,7 +38,7 @@ function saveImage(file, company, old_file_name=null, resize=false){
     var upload = path.join(__dirname, '/../views/frontend/' + filename)
     if (file.name.match(/\.(jpg|jpeg|png|gif|svg)$/)) {
         if(resize){
-            file = sharp(file).resize(100, 100, {
+            file = async () => await sharp(file).resize(100, 100, {
                 fit: sharp.fit.inside,
                 withoutEnlargement: true
             })
