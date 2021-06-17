@@ -26,7 +26,6 @@
 
   <div class="table-content">
     <div  class="table-item d-flex align-items-center" >
-
         <div  style="width: 3%;"><label class="custom-checkbox"><input  type="checkbox" ><span class="checkmark"></span></label></div>
         <div  style="width: 36%;" class="d-flex align-items-center pr-3">
           <div class="table-img">
@@ -66,7 +65,22 @@ export default {
   name: "PersonalSettings",
   components:{
     AddCashier
-  }
+  },
+    data(){
+      return{
+        employees:[],
+      }
+  },
+
+  methods:{
+    getStaff(){
+      this.axios.get(this.url('getClients'))
+      .then((res)=>{
+        this.employees = res.data.objects
+        console.log(this.clientList, '000000000000000000')
+      })
+    }
+  },
 }
 </script>
 
