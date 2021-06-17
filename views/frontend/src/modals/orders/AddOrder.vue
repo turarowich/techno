@@ -157,7 +157,7 @@
 
           <div class="d-flex">
             <button class="save mr-2 mb-5" @click.prevent="onSubmit">Add order</button>
-            <button class="cancel" @click="close()">Close</button>
+            <button class="cancel" @click="cancel">Cancel</button>
           </div>
         </div>
       </div>
@@ -215,21 +215,41 @@ export default {
 
   },
   methods:{
-
+    cancel(){
+      $('#add-order').modal("hide")
+      this.new_order = {
+        products:[],
+        client:'',
+        status:'new',
+        deliveryType:'self',
+        notes:'',
+        promoCode:''
+      }
+      this.clientObj = ''
+    },
     onSubmit(){
-      console.log(this.new_order, "0000000000000000000000000")
       this.axios.post(this.url('addOrder'),this.new_order)
             .then(()=>{
               this.getOrders()
               this.$successAlert('Order has been added')
-              $('#add-order').modal("hide")
-
+              $('#add-order').modal("hide");
+              this.new_order = {
+                products:[],
+                client:'',
+                status:'new',
+                deliveryType:'self',
+                notes:'',
+                promoCode:''
+              }
+              this.clientObj = ''
             })
 
     },
     selectProduct(selected){
+
      if(this.new_order.products.length === 0){
        this.new_order.products.push(selected)
+       selected.quantity = 1;
      }
      else{
        let product = null;
@@ -242,6 +262,7 @@ export default {
          product = selected
        }
        if(product){
+         product.quantity = 1;
          this.new_order.products.push(product)
        }
      }
@@ -354,6 +375,7 @@ export default {
 }
 .enter-name-input::placeholder{
   color:#616cf5;
+  opacity: 1;
 }
 .promo-btn{
   background: #F4F4F4;

@@ -469,15 +469,20 @@ name: "Catalog",
           }
         }
       });
+    if(this.movedCategories.length === 0){
+      this.$warningAlert("Please choose a product")
+    }
+    else{
       this.axios.put(this.url('updateProductsCategory'), {
         objects:this.movedCategories,
         category:id
       })
-      .then(()=>{
-        this.movedCategories = [];
-        this.getProducts()
-        this.$informationAlert("Change are saved")
-      })
+          .then(()=>{
+            this.movedCategories = [];
+            this.getProducts()
+            this.$informationAlert("Change are saved")
+          })
+    }
 
 
     }

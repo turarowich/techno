@@ -757,6 +757,7 @@ export default {
 </script>
 
 <style scoped>
+
 .total{
   width: 6px;
   height: 6px;

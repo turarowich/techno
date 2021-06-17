@@ -77,6 +77,7 @@ class ProductController{
                 recommend: data.recommend,
                 active: data.active,
             });
+
             await product.validate()
             if (req.files.img){
                 let filename = saveImage(req.files.img, req.db)

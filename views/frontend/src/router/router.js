@@ -237,7 +237,7 @@ const routes = [
     },
     {
         path: "/log",
-        name: "log",
+        name: "Log",
         component: Log,
 
     },

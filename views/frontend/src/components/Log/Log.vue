@@ -73,7 +73,13 @@ export default {
 .log{
   margin: 0 30px;
 }
+.date-pick::placeholder{
+  color: #606877;
+  opacity: 1;
+}
+
 .date-pick{
+
   width:182px;
   height: 20px;
   background: none;

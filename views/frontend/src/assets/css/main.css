@@ -104,12 +104,8 @@ img{
     filter: brightness(0.5);
     transition: .3s;
 
-
-
 }
 /*=======================END OF DROPDOWN*/
-
-
 /*======================Main Content=============*/
 .main-content-header{
     border-bottom:1px solid #e8e8e8;
@@ -1256,4 +1252,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     border-radius: 50%;
     object-fit: cover;
     margin-right: 10px;
+}
+.swal2-close{
+    width: 13px !important;
+    height: 25px !important;
+    top: 18px !important;
+    right: 20px !important;
 }

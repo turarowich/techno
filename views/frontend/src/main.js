@@ -169,7 +169,7 @@ app.config.globalProperties.$warningAlert = function (text){
     Swal.fire({
             title:'Warning',
             text:text,
-            timer:1500,
+            timer:800,
             showConfirmButton:false,
             position: 'top-right',
             customClass:{
@@ -186,7 +186,7 @@ app.config.globalProperties.$warningAlert = function (text){
 }
 app.config.globalProperties.$informationAlert = function(text){
     Swal.fire({
-            timer:1500,
+            timer:800,
             title:'Information',
             text:text,
             showConfirmButton:false,
