@@ -145,6 +145,7 @@ name: "SignUp",
 
     }
 }
+}
 </script>
 
 <style scoped>
