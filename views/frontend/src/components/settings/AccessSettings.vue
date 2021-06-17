@@ -64,7 +64,7 @@
        <div class="d-flex align-items-center">
          <img class="settings-icon" src="../../assets/icons/setting-icon/Chart.svg">
          <div>
-           <h4 class="settings-title ">Access to Analytics</h4>
+           <h4 class="settings-title mb-0 ">Access to Analytics</h4>
          </div>
        </div>
 
@@ -325,6 +325,9 @@ export default {
   border: 1.5px solid #D3D3D3;
   border-radius:10px;
   margin-bottom: 15px;
+}
+.settings-box{
+  height: 80px;
 }
 .loyalty-box{
   height: 45px;
