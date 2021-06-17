@@ -8,6 +8,9 @@ async function calcCashback(products_full_data,cashback_model) {
     //1 check if cashback is active,2 check if applies to everything or
     //specific products,3 if all -apply & end ,else check if products match
     let cashback_from_order = 0;
+    if(!products_full_data){
+        return 0;
+    }
     try {
         let cashback = await cashback_model.find();
         let first_cashback = cashback[0];
@@ -117,9 +120,9 @@ class OrderController{
         }
         try {
             let order = await new Order({
-                // client: client._id,
-                // client_name: client.name,
-                // client_phone: client.phone,
+                 // client: client._id,
+                 // client_name: client.name,
+                 // client_phone: client.phone,
                 promoCode: req.fields.promoCode,
                 status: req.fields.status,
                 address: req.fields.address,
