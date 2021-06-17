@@ -77,10 +77,7 @@
               v-on:checkAll="checkAll"
               v-bind:orderList="orderToDisplay"
               v-on:deleteOrder="deleteOrder"
-              v-on:inProgress="inProgress"
-              v-on:done="done"
-              v-on:canceled="canceled"
-              v-bind:data_check="data_check"
+             v-bind:data_check="data_check"
         />
     </div>
     <AddOrder
@@ -351,34 +348,7 @@ name: "Orders",
         }
       })
     },
-    inProgress(id) {
-      this.orderList.map((order) => {
-        if (order._id === id) {
-          order.status = 'In Progress';
-          this.axios.put(this.url('updateOrder',id),order)
-        }
-      })
 
-    },
-    done(id) {
-      this.orderList.map((order) => {
-        if (order._id === id) {
-          order.status = 'Done';
-          return this.axios.put(this.url('updateOrder',id),order.status)
-
-        }
-      })
-    },
-    canceled(id) {
-      this.orderList.map((order) => {
-        if (order._id === id) {
-          order.status = 'Canceled';
-          this.axios.put(this.url('updateOrder',id),order)
-          this.axios.put(this.url('updateOrder',id),order)
-
-        }
-      })
-    },
   },
   mounted(){
     this.getOrders();
@@ -404,6 +374,10 @@ name: "Orders",
 </script>
 
 <style scoped>
+.date-pick::placeholder{
+  color: #606877;
+  opacity: 1;
+}
 .pagination-select{
   background:none;
   padding-left:10px;

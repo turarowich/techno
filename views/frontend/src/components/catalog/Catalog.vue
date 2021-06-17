@@ -359,6 +359,14 @@ name: "Catalog",
           content:'content-sweet',
           closeButton:'close-btn'
         },
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp'
+        }
+
+
 
       }).then((result) => {
         if (result.isConfirmed) {
