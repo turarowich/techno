@@ -16,9 +16,7 @@
      <h3 class="catalog-sub-title margin-10">Your url from online catalog</h3>
      <p class="catalog-description mb-3">You can send a link to your catalog to your clients</p>
      <div class="reload-code d-flex align-items-center">
-<!--       <span>{{domainNameShop}}</span>-->
        <input v-model="catalogUrl">
-<!--       <div @click="updateCatalogUrl();generateQrcode();" class="url-icon mr-1">-->
        <div @click="generateQrcode();" class="url-icon mr-1">
          <img src="../../assets/icons/Setting.svg">
        </div>
@@ -187,11 +185,11 @@ export default {
   },
   computed:{
     catalogFullUrl(){
-      return window.location.host+'/shop/'+this.catalogUrl;
+      return window.location.host+'/'+this.catalogUrl;
     },
-    domainNameShop(){
-      return window.location.host+'/shop/';
-    },
+    // domainNameShop(){
+    //   // return window.location.host+'/shop/';
+    // },
     qrcodePath(){
       if(this.company !=="" && this.id !==''){
         try {
@@ -207,7 +205,7 @@ export default {
       if(this.logo !=="" && this.id !==''){
         try {
           // return require("../../../"+this.logo);
-          return this.base_url+'/'+ this.logo;
+          return this.server+'/'+ this.logo;
           // eslint-disable-next-line no-empty
         }catch (e){
           console.log(e,"ddddddddddddddddddddddddddddddddd========================")
@@ -218,13 +216,16 @@ export default {
     bannerPath(){
       if(this.banner !=="" && this.id !==''){
         try {
-          return this.base_url+'/'+ this.banner;
+          return this.server +'/'+ this.banner;
           // eslint-disable-next-line no-empty
         }catch (e){
           console.log(e);
         }
       }
       return require("../../assets/icons/setting-icon/no-img.svg");
+    },
+    server(){
+      return this.$server;
     },
   },
   methods:{
@@ -279,7 +280,7 @@ export default {
     },
     updateCatalogUrl(){
       // let that=this;
-      let url = this.base_url+'/api/updateSettings';
+      let url = this.url('updateSettings');
       this.axios.put(url, {
         catalogUrl:this.catalogUrl
       }).then(function (response) {
@@ -294,7 +295,7 @@ export default {
     },
     generateQrcode(){
       let that = this;
-      let url = this.base_url+'/api/generateQrCodeFile';
+      let url = this.url('generateQrCodeFile');
       this.axios.put(url, {
         catalogUrl:this.catalogFullUrl,
         catalog:this.catalogUrl,
@@ -394,7 +395,7 @@ export default {
   beforeCreate(){
     let that = this;
     this.axios
-      .get(this.base_url+'/api/getSettings')
+      .get(this.url('getSettings'))
       .then(function (response){
         console.log(response,"<><><>><><>>><<>");
         let settings = response.data.object;

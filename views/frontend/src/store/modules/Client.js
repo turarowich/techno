@@ -5,6 +5,7 @@ export const ClientModule = {
         user:{},
         userDiscountStatus:{},
         orders:[],
+        history:[],
     },
 
     // Mutations are functions that effect the STATE.
@@ -14,6 +15,9 @@ export const ClientModule = {
         },
         set_user_orders(state, orders) {
             state.orders = orders;
+        },
+        set_user_history(state, history) {
+            state.history = history;
         },
         set_user_status(state, obj) {
             state.userDiscountStatus = obj;
@@ -27,6 +31,7 @@ export const ClientModule = {
             state.user = {};
             state.userDiscountStatus={};
             state.orders=[];
+            state.history=[];
         },
     },
 
@@ -44,6 +49,7 @@ export const ClientModule = {
                     console.log(response);
                     commit('set_user_object' ,response.data.object);
                     commit('set_user_orders' ,response.data.orders);
+                    commit('set_user_history' ,response.data.history);
                     commit('set_user_status' ,response.data.discount || {name:'',discount_percentage:0});
                 })
         },
@@ -61,6 +67,9 @@ export const ClientModule = {
         },
         getUserOrders(state){
             return state.orders;
+        },
+        getUserHistory(state){
+            return state.history;
         },
         getUserDiscountStatus(state){
             return state.userDiscountStatus;

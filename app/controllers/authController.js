@@ -16,6 +16,25 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+async function addWelcomePoints(db) {
+    let cashback_model = db.model("Cashback");
+    let cashbackAll = await cashback_model.find();
+    let points = 0;
+    if(cashbackAll.length===0){
+        return 0;
+    }
+    try{
+        let cashback = cashbackAll[0];
+        //check welcome points
+        if(cashback.welcome_points_status){
+            points = cashback.welcome_points_quant;
+        }
+    }catch (e){
+        console.log(e);
+    }
+    return points;
+}
+
 class AuthController{
     register = async function (req, res) {
         console.log(req.fields);
@@ -132,6 +151,7 @@ class AuthController{
     registerClient = async function (req, res) {
         let db = useDB('loygift'+req.headers['access-place']);
         let Client = db.model("Client");
+        let ClientBonusHistory = db.model("clientBonusHistory");
         let result = []
         let lang = req.headers["accept-language"]
         if (lang != 'ru') {
@@ -167,7 +187,14 @@ class AuthController{
                     expiresIn: 86400 // expires in 24 hours
                 }),
             }
-            
+
+            await new ClientBonusHistory({
+                client: client._id,
+                points: await addWelcomePoints(db),
+                source: 'Welcome points',
+                type: 'received',
+            }).save();
+
         } catch (error) {
             result = sendError(error, lang)
         }

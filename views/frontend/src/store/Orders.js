@@ -14,7 +14,7 @@ export const OrdersModule = {
         selectedDeliveryType:{
             type:'Delivery service',
             object:{
-              price:0,
+              // price:0,
             },
         },
         guest:{},

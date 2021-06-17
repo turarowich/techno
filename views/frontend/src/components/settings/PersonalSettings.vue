@@ -4,9 +4,9 @@
     <div class="row mb-5">
       <div class="col-lg-5">
         <label class="sum-point">Name</label>
-        <input class="form-input cashback-input mb-4" placeholder="Your name">
+        <input v-model="name" class="form-input cashback-input mb-4" placeholder="Your name">
         <label class="sum-point">Name of company</label>
-        <input class="form-input cashback-input mb-4" placeholder="Company">
+        <input v-model="companyName" class="form-input cashback-input mb-4" placeholder="Company">
         <label class="sum-point">Password</label>
         <div class="pswrd-input mb-4">
           <input id="show-password" type="password" placeholder="Password">
@@ -36,10 +36,10 @@
             <option>+996</option>
             <option>+792</option>
           </select>
-          <input class="cashback-input">
+          <input v-model="phone" class="cashback-input">
         </div>
         <label class="sum-point">Email</label>
-        <input class="form-input cashback-input mb-4" placeholder="Email">
+        <input v-model="email" class="form-input cashback-input mb-4" placeholder="Email">
       </div>
     </div>
 
@@ -53,6 +53,15 @@ import $ from "jquery";
 
 export default {
   name: "PersonalSettings",
+  data(){
+    return{
+      name:'',
+      phone:'',
+      companyName:'',
+      email:'',
+      password:'',
+    }
+  },
   methods:{
 
     showPassword() {
@@ -82,7 +91,19 @@ export default {
       }
     }
   },
-
+  beforeCreate(){
+    let that = this;
+    this.axios
+        .get(this.url('getPersonalSettings'))
+        .then(function (response){
+          console.log(response,"getPersonalSettings");
+          let user = response.data.user;
+          that.name= user.name || '';
+          that.phone= user.phone || '';
+          that.email= user.email || '';
+          that.companyName = user.companyName || '';
+        })
+  },
 }
 </script>
 

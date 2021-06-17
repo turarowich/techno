@@ -5,7 +5,7 @@
       <h2 class="cashback-title address-titles">Address delivery</h2>
       <div class="d-flex margin-10">
         <label class="switch d-flex">
-          <input type="checkbox">
+          <input v-model="delivery_status" type="checkbox">
           <span class="slider round"></span>
         </label>
         <h2 class="catalog-sub-title">Delivery</h2>
@@ -17,7 +17,7 @@
       <p class="catalog-description margin-20">
         Describe the possible delivery options
       </p>
-      <textarea class="general-area"></textarea>
+      <textarea v-model="deliveryDescription" class="general-area"></textarea>
 
       <div v-for="option in deliveryOptions" :key="option._id">
         <div class="catalog-sub-title">
@@ -33,7 +33,7 @@
       </div>
 
       <span @click="clearEditDelivery" class="add-branch" style="color:#616cf5;cursor: pointer;" data-toggle="modal" data-target="#add_delivery_option">+ Add delivery option</span>
-      <button class="save">Save</button>
+      <button @click="save" type="button" class="save">Save</button>
     </div>
 
     <div class="col-lg-5">
@@ -72,6 +72,8 @@ export default {
       deliveryOptions:[],
       edit_branch:{},
       edit_delivery:{},
+      delivery_status:false,
+      deliveryDescription:'',
     }
   },
   methods:{
@@ -130,7 +132,24 @@ export default {
           that.branches = response.data.branches || [];
           that.deliveryOptions = response.data.deliveries || [];
         })
-    }
+    },
+    save(){
+      let that=this;
+      let url = this.url('updateSettings');
+      this.axios.put(url, {
+        delivery:this.delivery_status,
+        deliveryDescription:this.deliveryDescription,
+      }).then(function (response) {
+        console.log(response);
+        that.$successAlert('Updated');
+      }).catch(function(error){
+        if (error.response) {
+          // console.log(error.response.status);
+          // console.log(error.response.headers);
+          that.$warningAlert(Object.values(error.response.data.errors),"Errors");
+        }
+      });
+    },
   },
   beforeCreate(){
     let that = this;
@@ -138,6 +157,8 @@ export default {
         .then(function (response){
           let settings = response.data.object;
           that.id= settings._id || '';
+          that.delivery_status= settings.delivery || false;
+          that.deliveryDescription= settings.deliveryDescription || '';
           that.branches = response.data.branches || [];
           that.deliveryOptions = response.data.deliveries || [];
         })

@@ -108,7 +108,8 @@ const routes = [
     },
 
     {
-        path: "/shop/:bekon",
+        // path: "/shop/:bekon",
+        path: "/:bekon",
         name: "Home",
         component: Home,
         children:[
@@ -144,7 +145,7 @@ const routes = [
 
             },
             {
-                path:'news-detail',
+                path:'news-detail/:id',
                 name:"NewsDetail",
                 component:NewsDetail
             },
@@ -390,12 +391,19 @@ router.beforeEach((to, from, next) => {
 router.beforeEach((to, from, next) => {
     const authenticatedUser = store.state.Client.user.auth;
     const current_company_url = store.state.Catalog.company_url;
-    console.log(authenticatedUser);
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
     // Check for protected route
     if (requiresAuth && !authenticatedUser) next({ path: `/shop/${current_company_url}/signin` })
     else next();
 });
+// router.beforeEach((to, from, next) => {
+//     console.log(from,"fromfromfromfrom");
+//     next((vm) => {
+//         console.log(vm,"yu");
+//         vm.fromRouter = from;
+//     });
+// });
+
 
 export default router;

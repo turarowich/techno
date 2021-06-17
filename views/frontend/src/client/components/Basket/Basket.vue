@@ -68,17 +68,17 @@
           </div>
           <div class="delivery">
             <h3 class="cashback-sub-title">Delivery</h3>
-            <div class="personal-btns">
+            <div v-if="showDeliveryChoice" class="personal-btns">
               <div style="width:50%" @click="setDeliveryType('delivery')" :class="{active:deliveryService}" class="btns-item"><span class="btn-round"></span>Delivery</div>
               <div style="width:50%" @click="setDeliveryType('pick_up')" :class="{active:pickUp}" class="btns-item mr-0"><span class="btn-round"></span>Pick-up</div>
             </div>
 
             <div v-if="deliveryService" class="delivery_block position-relative">
+              <div class="py-3">
+                {{catalog_settings ? catalog_settings.deliveryDescription : ''}}
+              </div>
               <label class="cashback-label">Delivery address</label><br>
               <input v-model="deliveryAddress" type="text" class="cashback-input" placeholder="Enter your address"/>
-
-
-
               <label class="cashback-label">Delivery service</label><br>
               <div class="selected_delivery_option w-100 d-flex" @click="showDeliveryOption= !showDeliveryOption">
                 <div style="flex: 1;">
@@ -166,6 +166,7 @@ name: "Basket",
   },
   data(){
     return {
+      showDeliveryChoice:true,
       searchText:'',
       pickUp:false,
       deliveryService:true,
@@ -178,7 +179,7 @@ name: "Basket",
       selectedDeliveryType:{
         type:'Delivery service',
         object:{
-          price:0,
+          // price:0,
         },
       }
     }
@@ -255,6 +256,9 @@ name: "Basket",
     },
     currentCompanyCatalog() {
       return this.$route.params.bekon;
+    },
+    catalog_settings(){
+      return this.$store.getters['Catalog/getCatalog_settings'];
     },
   },
   methods:{
@@ -463,6 +467,19 @@ name: "Basket",
       },
       deep: true
     },
+    catalog_settings:{
+      handler(val) {
+        if(!val.delivery){
+          this.setDeliveryType('pick_up');
+          this.showDeliveryChoice = false;
+        }else{
+          this.showDeliveryChoice = true;
+          this.setDeliveryType('delivery');
+        }
+      },
+      deep: true,
+      immediate:true,
+    },
   },
   mounted(){
 
@@ -498,9 +515,7 @@ name: "Basket",
   height: 40px;
   margin-bottom: 27px;
 }
-.delivery .personal-btns{
-  margin-bottom: 30px;
-}
+
 .delivery .map-box{
   margin-bottom: 48px;
 }
@@ -581,6 +596,9 @@ name: "Basket",
   font-weight: normal;
   font-size: 14px;
   cursor: pointer;
+}
+.personal-btns{
+  margin-bottom: 10px;
 }
 .delivery_service{
   width: 100%;

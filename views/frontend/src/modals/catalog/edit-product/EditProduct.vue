@@ -28,9 +28,10 @@
                   <div style="width:25%;">
                     <label class="product-label">Select category</label><br>
 
-                    <select name="category" v-model="currentData.category"  class="form-control mb-0 select-phone" >
+                    <select name="category" v-if="currentData.category ? currentData.category._id : ''"  v-model="currentData.category._id"  class="form-control mb-0 select-phone" >
                       <option :value="cat._id" v-for="cat in listCategory" :key="cat._id">{{cat.name}}</option>
                     </select>
+
                   </div>
                 </div>
 
@@ -242,7 +243,7 @@ export default {
       form.append('img',updatedProduct.img)
       form.append("name", updatedProduct.name)
       form.append("quantity", updatedProduct.quantity)
-      form.append("category", updatedProduct.category)
+      form.append("category", updatedProduct.category._id)
       form.append("price", updatedProduct.price)
       form.append("description", updatedProduct.description)
       form.append("promoPrice", updatedProduct.promoPrice)

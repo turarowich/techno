@@ -8,6 +8,9 @@ async function calcCashback(products_full_data,cashback_model) {
     //1 check if cashback is active,2 check if applies to everything or
     //specific products,3 if all -apply & end ,else check if products match
     let cashback_from_order = 0;
+    if(!products_full_data){
+        return 0;
+    }
     try {
         let cashback = await cashback_model.find();
         let first_cashback = cashback[0];
@@ -34,7 +37,6 @@ async function calcCashback(products_full_data,cashback_model) {
                     //check
                     cashback_products.forEach(function (cash) {
                         if (prod.product._id == cash.id) {
-                            console.log(prod, "CASHBACK MATCH");
                             //discounted price
                             let sum = prod.current_price || 0;
                             let cashback_percent = parseFloat(cash.percentage_cashback) / 100 || 0;
@@ -107,6 +109,7 @@ class OrderController{
         let Client = db.model("Client");  
         let Product = db.model("Product");
         let OrderProduct = db.model("OrderProduct");
+        let ClientBonusHistory = db.model("clientBonusHistory");
         let lang = req.headers["accept-language"]
         if (lang != 'ru') {
             lang = 'en'
@@ -153,7 +156,9 @@ class OrderController{
                         price: search_product.price,
                         quantity: product.quantity
                     }).save();
-                    order.products.push(order_product._id)
+                    order.products.push(order_product._id);
+                    search_product.quantity = parseFloat(search_product.quantity)-parseFloat(product.quantity);
+                    search_product.save();
                 }
             }
 
@@ -167,21 +172,36 @@ class OrderController{
         if(client){
             if (req.fields.points){
                 client.points -= req.fields.points;
-                client.save()
+                client.save();
+                await new ClientBonusHistory({
+                    client: client._id,
+                    points: req.fields.points,
+                    source: 'Points used order #'+order.code,
+                    order: order._id,
+                    type: 'used',
+                }).save();
             }
-            client.points += parseFloat(cashback_from_order);
-            client.balance += parseFloat(order.totalPrice);
+            client.points = (parseFloat(client.points)+parseFloat(cashback_from_order)).toFixed(2);
+            client.balance = (parseFloat(client.balance) +parseFloat(order.totalPrice)).toFixed(2);
             client.save();
 
             order.client=client._id;
             order.client_name=client.name;
             order.client_phone=client.phone;
+
+            await new ClientBonusHistory({
+                client: client._id,
+                points: cashback_from_order,
+                source: 'Points received order #'+order.code,
+                order: order._id,
+                type: 'received',
+            }).save();
         }else if(req.fields.guest){
             let guest = req.fields.guest;
             order.client_name=guest.name || '';
             order.client_phone=guest.phone || '';
         }
-        console.log('EARNED CASHBACK',cashback_from_order,order)
+        console.log('EARNED CASHBACK',cashback_from_order,order);
         order.save();
         result['object'] = await order.populate('products').execPopulate();
         } catch (error) {

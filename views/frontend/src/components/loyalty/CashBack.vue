@@ -313,7 +313,7 @@ export default {
 
       if(messages.length>=1){this.displayMessages(messages,"Errors");return}
 
-      let url = this.base_url+'/api/updateCashback/'+that.id;
+      let url = this.url('updateCashback',that.id);
       this.axios.post(url, {
         birthday_points_quant:that.birthday_points_quant || 0,
         birthday_points_status:that.birthday_points_status,
@@ -388,7 +388,7 @@ export default {
   beforeCreate(){
     let that = this;
     this.axios
-        .get('https://localhost:8443/api/getCashback')
+        .get(this.url('getCashback'))
         .then(function (response){
           let cashback = response.data.cashback;
           console.log(cashback);

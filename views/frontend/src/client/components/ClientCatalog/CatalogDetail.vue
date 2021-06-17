@@ -138,7 +138,7 @@ export default {
       const options = {
         headers: {"company_url": this.currentCompanyCatalog}
       }
-      await this.axios.get(this.url('getProductWeb',this.$route.params.id.slice(1)),options)
+      await this.axios.get(this.url('getProductWeb',this.$route.params.id),options)
           .then((response) => {
             console.log(response);
             this.getProduct = response.data.object;

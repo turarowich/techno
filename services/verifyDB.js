@@ -15,6 +15,8 @@ function verifyDB(req, res, next) {
         'addOrderWeb',
         'getProductWeb',
         'getEarnedPoints',
+        'getNewsWeb',
+        'getSingleNewsWeb',
     ];
     console.log(req.headers['company_url'],"MIDDLEWARE",config.Shoes);
     let cat_url = req.headers['company_url'];

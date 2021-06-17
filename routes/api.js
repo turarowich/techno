@@ -111,6 +111,7 @@ module.exports = function (app, network_information) {
 
     // Settings url
     app.get('/getSettings', settingsController.getSettings);
+    app.get('/getPersonalSettings', settingsController.getPersonalSettings);
     app.put('/updateSettings', settingsController.updateSettings);
     app.delete('/deleteDelivery/:delivery', settingsController.deleteDelivery);
     app.delete('/deleteBranch/:branch', settingsController.deleteBranch);

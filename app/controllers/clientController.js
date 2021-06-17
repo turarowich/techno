@@ -11,6 +11,7 @@ class ClientController{
         let Client = db.model("Client");
         let Discount = db.model("Discount");
         let Order = db.model("Order");
+        let ClientBonusHistory = db.model("clientBonusHistory");
 
         let result = {
             'status': 200,
@@ -30,6 +31,7 @@ class ClientController{
                     result['discount'] = discount
                 }
                 result['orders'] = await Order.find({client:client._id});
+                result['history'] = await ClientBonusHistory.find({client:client._id});
             }
             
             result['object'] = client

@@ -82,7 +82,7 @@ name: "ClientCatalogItem",
     },
       selectProduct(id){
         // this.$router.push('/home/catalog-detail/:'+id);
-        this.$router.push({ path: `/shop/${this.currentCompanyCatalog}/catalog-detail/:${id}` });
+        this.$router.push({ path: `/shop/${this.currentCompanyCatalog}/catalog-detail/${id}` });
       },
     },
 }

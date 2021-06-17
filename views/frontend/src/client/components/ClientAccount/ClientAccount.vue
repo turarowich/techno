@@ -8,7 +8,10 @@
             <div v-if="user">
               <h1 class="profile-title">
                 {{user.name}}
-                <img src="../../../assets/clients/Edit.svg"></h1>
+                <router-link :to="`/shop/${currentCompanyCatalog}/edit-profile`">
+                  <img src="../../../assets/clients/Edit.svg">
+                </router-link>
+              </h1>
               <span class="profile-phone">{{user.phone}}</span><br>
               <span class="user_status_class">{{userDiscountStatus.name || ''}} {{userDiscountStatus.discount_percentage || 0}}%</span>
             </div>
@@ -66,7 +69,7 @@
               <div class="table-head table-link " @click="sortByDate" style="width: 30%;">Date<img class="date-pol" style="margin-left:10px" src="../../../assets/icons/polygon.svg"></div>
               <div class="table-head d-flex justify-content-end" style="width:20%">Quantity</div>
             </div>
-            <HistoryBonus :orderList="orderList"/>
+            <HistoryBonus :orderList="userHistory"/>
           </div>
         </div>
 
@@ -107,6 +110,9 @@ name: "ClientAccount",
     },
     userOrders(){
       return this.$store.getters['Client/getUserOrders'];
+    },
+    userHistory(){
+      return this.$store.getters['Client/getUserHistory'];
     },
     userDiscountStatus(){
       return this.$store.getters['Client/getUserDiscountStatus'];

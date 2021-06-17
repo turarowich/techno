@@ -6,6 +6,7 @@ var promocodeController = require('../app/controllers/promocodeController');
 var orderController = require('../app/controllers/orderController');
 var clientController = require('../app/controllers/clientController');
 var productController = require('../app/controllers/productController');
+var newsController = require('../app/controllers/newsController');
 module.exports = function(app, passport){    
     app.get('/', function(req, res){
         res.sendFile(path.resolve('views/frontend/dist/index.html'));
@@ -41,6 +42,11 @@ module.exports = function(app, passport){
     app.post('/addOrderWeb', orderController.addOrder);
     //Casback from order
     app.post('/getEarnedPoints', orderController.getEarnedPoints);
+
+    // News url
+    app.get('/getSingleNewsWeb/:news', newsController.getSingleNews);
+    app.get('/getNewsWeb', newsController.getNews);
+
 
     app.get('*', function (req, res) {
         console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>","Backup","<<<<<<<<<<<<<<<<<<<<<<<<<<<")

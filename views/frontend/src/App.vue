@@ -2,11 +2,11 @@
   <div class="d-flex">
     <div class="siding-bar">
       <SideBar v-bind:closeSideBar="closeSideBar"
-               v-if="!['SignIn', 'SignUp','Admin'].includes($route.name)"
+               v-if="!['SignIn', 'SignUp','Admin','Home'].includes($route.name)"
                v-show="!$route.path.includes('/shop')"
       />
     </div>
-    <div class="main-content" v-bind:class="{hun: $route.name === 'SignUp' || $route.name === 'Admin'  || $route.name === 'SignIn' || $route.path.includes('/shop') } ">
+    <div class="main-content" v-bind:class="{hun: $route.name === 'SignUp' || $route.name === 'Admin'  || $route.name === 'SignIn' || $route.name==='Home' } ">
       <Header  v-if="homePage()"  v-bind:openSideBar="openSideBar"/>
       <NewMessageAlert />
       <div  class="router-view">
@@ -32,7 +32,7 @@ export default {
 
     methods: {
     homePage(){
-      if(['Settings','SignIn', 'SignUp', 'OrderDetail','EditClientPage', 'PushNotification',
+      if(['Home','Settings','SignIn', 'SignUp', 'OrderDetail','EditClientPage', 'PushNotification',
             'EditProductPage','IndividualPush','EditPromo','AddPromoPage','AddProductPage','AccessSettings','AddNews','EditNews','AddOrder'].includes(this.$route.name) || this.$route.path.startsWith("/shop")
           || this.$route.path.startsWith("/loyalty")
       ){

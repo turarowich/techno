@@ -443,6 +443,38 @@ class SettingsController{
         res.status(result.status).json(result);
     };
 
+    getPersonalSettings = async function (req, res) {
+        let users = useDB('loygift');
+        let personal_model = users.model("User");
+        let db = useDB(req.db)
+        let Settings = db.model("Settings");
+        let result = {
+            'status': 200,
+            'msg': 'Sending settings'
+        }
+        try {
+            let settings = await Settings.find();
+            settings = settings[0];
+            let company = req.db.slice(7);//removing loygift
+            if (!settings){
+                settings = await new Settings({
+                    slogan: " ",
+                }).save();
+                /////
+                await new catalogs_model({
+                    company: company,
+                }).save();
+                /////
+            }
+            result['object'] = settings;
+            ///////////////////////////////////////////////////////
+            let user = await personal_model.findById(company);
+            result['user'] = user;
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.status(result.status).json(result);
+    };
 }
 
 

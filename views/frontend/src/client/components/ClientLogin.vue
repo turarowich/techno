@@ -89,8 +89,8 @@ export default {
         that.$successAlert('Logged in!');
         that.$store.dispatch("Client/setUserAuth",response.data);
 
-        // that.$router.push("/shop/"+that.currentCompanyCatalog);
-        that.$router.go(-1);
+        that.$router.push({ path: `/shop/${that.currentCompanyCatalog}/client-account`});
+        // that.$router.go(-1);
       }).catch(function(error){
         if (error.response) {
           // console.log(error.response.status);

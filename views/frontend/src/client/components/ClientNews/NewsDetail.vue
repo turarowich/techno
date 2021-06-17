@@ -4,18 +4,19 @@
     <div class="d-flex align-items-center justify-content-between path-box ">
       <div class="d-flex align-items-center" @click="$router.go(-1)">
         <img class="mr-3" src="../../../assets/clients/slide.svg">
-        <h3 class="path-title">New promotion, buy with a 20% discount!!!</h3>
+        <h3 class="path-title">
+          {{newsObject.name}}
+        </h3>
       </div>
       <span class="news-date">12 Dec 2021</span>
     </div>
 
     <div class="new-item">
-      <img src="../../../assets/clients/mask3.svg">
+<!--      <img :src="server+'/'+newsObject.img" @error="$event.target.src=`http://example.com/default.jpg`">-->
+      <img :src="server+'/'+newsObject.img">
     </div>
     <p class="client-paragraph">
-      A light blue T-shirt from the spring-summer 2021 collection, as if faded in the sun,
-      turned out to be as comfortable as possible. The cut of the loose model with a round neck and short sleeves does not restrict movement, and the soft cotton jersey is well-permeable and quickly removes moisture.
-      The brand's ownership of the product was marked with a large white logo on the back.
+      {{newsObject.desc}}
     </p>
   </div>
 
@@ -24,7 +25,42 @@
 
 <script>
 export default {
-name: "NewsDetail"
+  name: "NewsDetail",
+  data(){
+    return{
+      newsObject:{
+        name:'',
+        desc:'',
+      },
+    }
+  },
+  computed:{
+    this_route(){
+      return this.$route.params.id;
+    },
+    currentCompanyCatalog() {
+      return this.$route.params.bekon;
+    },
+    server(){
+      return this.$server;
+    },
+  },
+  methods:{
+    async  getOneNews(){
+      const options = {
+        headers: {"company_url": this.currentCompanyCatalog}
+      }
+      await this.axios.get(this.url('getSingleNewsWeb',this.$route.params.id),options)
+          .then((response) => {
+            console.log(response);
+            this.newsObject = response.data.object;
+
+          })
+    },
+  },
+  mounted() {
+    this.getOneNews();
+  }
 }
 </script>
 

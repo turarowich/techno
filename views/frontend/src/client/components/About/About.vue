@@ -4,15 +4,16 @@
   <div class="col-lg-7 mr-4">
     <div class="about-left">
       <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg"><div @click="$router.go(-1)" class="mr-1">Back </div>  | <span>{{$route.name}}</span> </div>
-      <div class="main-box">
-        <div class="relatives">
-         </div>
+      <div class="main-box" v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.banner + ')' }">
+<!--        <img :src="server+'/'+catalog_settings.banner">-->
+<!--        <div class="relatives">-->
+<!--         </div>-->
       </div>
-
       <h3 class="about-title">About us</h3>
-      <p class="client-paragraph">Enter your real phone number and you will receive a confirmation codeEnter your real phone number and you will receive a confirmation
-        codeEnter your real phone number and you will receive a confirmation codeEnter your real phone number and you will recei...</p>
-      <button class=" catalog-btn" @click="$router.push('/home')"><a>Go to catalog</a></button>
+      <p class="client-paragraph">
+        {{catalog_settings.description}}
+      </p>
+      <button class=" catalog-btn" @click="$router.push(`/shop/${currentCompanyCatalog}`)">Go to catalog</button>
     </div>
   </div>
   <div class="col-lg-4">
@@ -32,9 +33,9 @@
 
       <h3 class="contact-title">Links</h3>
       <div class="contact-icon">
-        <img src="../../../assets/clients/Facebook.svg">
-        <img src="../../../assets/clients/Instagram.svg">
-        <img src="../../../assets/clients/ls_web.svg">
+        <a :href="catalog_settings.facebook" target="_blank"><img src="../../../assets/clients/Facebook.svg"></a>
+        <a :href="catalog_settings.instagram" target="_blank"><img src="../../../assets/clients/Instagram.svg"></a>
+        <a :href="catalog_settings.website" target="_blank"><img src="../../../assets/clients/ls_web.svg"></a>
 
       </div>
     </div>
@@ -45,7 +46,29 @@
 
 <script>
 export default {
-  name: "About"
+  name: "About",
+  data(){
+    return{
+
+    }
+  },
+  computed:{
+    currentCompanyCatalog() {
+      return this.$route.params.bekon;
+    },
+    company_description(){
+      return this.$store.getters['Catalog/getCompany_description'];
+    },
+    company_welcome_text(){
+      return this.$store.getters['Catalog/getCompany_welcome_text'];
+    },
+    catalog_settings(){
+      return this.$store.getters['Catalog/getCatalog_settings'];
+    },
+    server(){
+      return this.$server;
+    },
+  },
 }
 </script>
 

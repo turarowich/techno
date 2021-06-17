@@ -111,6 +111,8 @@ app.use('/', VerifyDB,require('./routes/home.js')(router, passport))
 
 // handles not found errors
 app.use((err, req, res, next) => {
+    console.log('NEIIIIIIIIIIIIIIIIIIIIIn');
+
     if (err.httpStatusCode === 404) {
         res.status(400).render('NotFound');
     }
