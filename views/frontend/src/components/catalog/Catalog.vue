@@ -367,7 +367,7 @@ name: "Catalog",
             this.getProducts()
             Swal.fire({
                   title:'Success',
-                  timer:1500,
+                  timer:800,
                   text:'Product has been removed',
                   showConfirmButton:false,
                   position: 'top-right',
@@ -417,7 +417,7 @@ name: "Catalog",
               })
                 Swal.fire({
                       title:'Success',
-                      timer:1500,
+                      timer:800,
                       text:'Category has been removed',
                       showConfirmButton:false,
                       position: 'top-right',

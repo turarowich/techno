@@ -120,9 +120,9 @@ class OrderController{
         }
         try {
             let order = await new Order({
-                // client: client._id,
-                // client_name: client.name,
-                // client_phone: client.phone,
+                 // client: client._id,
+                 // client_name: client.name,
+                 // client_phone: client.phone,
                 promoCode: req.fields.promoCode,
                 status: req.fields.status,
                 address: req.fields.address,

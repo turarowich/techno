@@ -211,14 +211,14 @@ class AuthController{
             lang = 'en'
         }
         socialAuth: try {
-            let social_res = await socialRegister(req.fields.social, req.fields.token, req.fields.screen_name)
+            social_res = await socialRegister(req.fields.social, req.fields.token, req.fields.screen_name)
 
             if (social_res.error) {
                 result = social_res.error
                 break socialAuth
             }
             let user = await Client.findOne(social_res.check)
-            console.log(social_res.check)
+            console.log(user, req.headers['access-place'], "sdfasdfasgsdfgsdfgdkfhjgkjdfhgkljhgjw43h4563456")
             if(user){
                 result = {
                     status: 500,
@@ -235,6 +235,7 @@ class AuthController{
             var client = new Client(social_res.save)
             let qrCode = createQrFile(social_res.uniqueCode, 'loygift' + req.headers['access-place'])
             client.QRCode = qrCode
+            client.uniqueCode = social_res.uniqueCode
             await client.save({ validateBeforeSave: false })
             result = {
                 'status': 200,
@@ -253,6 +254,7 @@ class AuthController{
 
             result = sendError(error, lang)
         }
+        
         res.status(result.status).json(result);
     };
     loginClientSocial = async function (req, res) {
@@ -518,7 +520,6 @@ class AuthController{
 
             result = sendError(error, lang)
         }
-        console.log(result)
         res.status(result.status).json(result);
     };
 

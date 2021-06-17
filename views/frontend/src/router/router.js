@@ -50,12 +50,15 @@ import Admin from "@/components/admin/Admin";
 
 
 
+
 const routes = [
     {
         path: "/",
         name: "SignIn",
         component: SignIn,
-
+        meta: {
+            hideNavbar: true,
+        }
     },
     {
         path: "/orders",
@@ -112,36 +115,36 @@ const routes = [
         path: "/:bekon",
         name: "Home",
         component: Home,
-        children:[
+        children: [
             {
-                path:'',
-                name:"Home",
-                component:Dashboard
+                path: '',
+                name: "Home",
+                component: Dashboard
             },
             {
-                path:'about',
-                name:"About",
-                component:About
+                path: 'about',
+                name: "About",
+                component: About
             },
             {
-                path:'news',
-                name:"News",
-                component:News
+                path: 'news',
+                name: "News",
+                component: News
             },
             {
-                path:'client-news',
-                name:"ClientNews",
-                component:ClientNews
+                path: 'client-news',
+                name: "ClientNews",
+                component: ClientNews
             },
             {
-                path:'product-info',
-                name:"ProductInfo",
-                component:ProductInfo
+                path: 'product-info',
+                name: "ProductInfo",
+                component: ProductInfo
             },
             {
-                path:'catalog-detail/:id',
-                name:"CatalogDetail",
-                component:CatalogDetail,
+                path: 'catalog-detail/:id',
+                name: "CatalogDetail",
+                component: CatalogDetail,
 
             },
             {
@@ -150,9 +153,9 @@ const routes = [
                 component:NewsDetail
             },
             {
-                path:'basket',
-                name:"Shopping cart",
-                component:Basket
+                path: 'basket',
+                name: "Shopping cart",
+                component: Basket
             },
             {
                 path:'client-account',
@@ -179,14 +182,14 @@ const routes = [
                 }
             },
             {
-                path:'signin',
-                name:'ClientLogin',
-                component:ClientLogin
+                path: 'signin',
+                name: 'ClientLogin',
+                component: ClientLogin
             },
             {
-                path:'signup',
-                name:'ClientRegister',
-                component:ClientRegister
+                path: 'signup',
+                name: 'ClientRegister',
+                component: ClientRegister
             },
         ],
 
@@ -206,18 +209,18 @@ const routes = [
         children: [
             {
                 path: '',
-                name:'CashBack',
-                component:CashBack
+                name: 'CashBack',
+                component: CashBack
             },
             {
                 path: 'promocode',
-                name:'PromoCode',
-                component:PromoCode
+                name: 'PromoCode',
+                component: PromoCode
             },
             {
                 path: 'discount',
-                name:'Discount',
-                component:Discount
+                name: 'Discount',
+                component: Discount
             },
 
         ]
@@ -234,7 +237,9 @@ const routes = [
         path: "/admin",
         name: "Admin",
         component: Admin,
-
+        meta: {
+            hideNavbar: true,
+        }
     },
     {
         path: "/log",
@@ -250,55 +255,55 @@ const routes = [
 
     },
     {
-        path:'/analytics',
-        name:"Analytics",
+        path: '/analytics',
+        name: "Analytics",
         component: Analytics,
 
     },
     {
-        path:'/access-settings',
-        name:"AccessSettings",
+        path: '/access-settings',
+        name: "AccessSettings",
         component: AccessSettings,
 
     },
     {
-        path:'/settings',
-        name:"Settings",
+        path: '/settings',
+        name: "Settings",
         component: Settings,
         children: [
             {
-                path:'',
-                name:'General',
+                path: '',
+                name: 'General',
                 component: General,
 
             },
             {
-                path:'price',
-                name:'Price',
+                path: 'price',
+                name: 'Price',
                 component: Price,
 
             },
             {
-                path:'address-delivery',
-                name:'AddressDelivery',
-                component: AddressDelivery  ,
+                path: 'address-delivery',
+                name: 'AddressDelivery',
+                component: AddressDelivery,
 
             },
             {
-                path:'catalog-settings',
-                name:'CatalogSettings',
+                path: 'catalog-settings',
+                name: 'CatalogSettings',
                 component: CatalogSettings,
 
             },
             {
-                path:'staff-settings',
-                name:'StaffSettings',
+                path: 'staff-settings',
+                name: 'StaffSettings',
                 component: StaffSettings,
 
             },
             {
-                path:'personal-settings',
-                name:'PersonalSettings',
+                path: 'personal-settings',
+                name: 'PersonalSettings',
                 component: PersonalSettings,
 
             }
@@ -324,9 +329,12 @@ const routes = [
 
     },
     {
-        path:'/signup',
-        name:"SignUp",
-        component: SignUp
+        path: '/signup',
+        name: "SignUp",
+        component: SignUp,
+        meta: {
+            hideNavbar: true,
+        }
     },
     {
         path: '/:pathMatch(.*)*',
@@ -338,11 +346,11 @@ const routes = [
 
 const router = createRouter({
     history: createWebHistory(),
-    scrollBehavior (to,from ,savedPosition) {
-        if(savedPosition){
+    scrollBehavior(to, from, savedPosition) {
+        if (savedPosition) {
             return savedPosition
         }
-        return { top:0}
+        return { top: 0 }
     },
     routes,
 
@@ -364,7 +372,7 @@ function nextFactory(context, middleware, index) {
         // Than run the subsequent Middleware with a new
         // nextMiddleware() callback.
         const nextMiddleware = nextFactory(context, middleware, index + 1);
-        subsequentMiddleware({...context, next: nextMiddleware });
+        subsequentMiddleware({ ...context, next: nextMiddleware });
     };
 }
 
@@ -382,7 +390,7 @@ router.beforeEach((to, from, next) => {
         };
         const nextMiddleware = nextFactory(context, middleware, 1);
 
-        return middleware[0]({...context, next: nextMiddleware });
+        return middleware[0]({ ...context, next: nextMiddleware });
     }
 
     return next();

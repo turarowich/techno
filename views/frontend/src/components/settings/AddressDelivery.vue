@@ -60,6 +60,7 @@
 import AddBranch from "@/modals/client/AddBranch";
 import AddDeliveryOption from "@/modals/client/AddDeliveryOption";
 import $ from "jquery";
+import Swal from "sweetalert2";
 export default {
   name: "AddressDelivery",
   components:{
@@ -111,16 +112,43 @@ export default {
     removeDeliveryOption(id){
       let that = this;
       let url = this.url('deleteDelivery')+id;
-      this.axios.delete(url).then(function () {
-        that.$successAlert("Removed");
-        that.updateData();
-      }).catch(function(error){
-        if (error.response) {
-          // console.log(error.response.status);
-          // console.log(error.response.headers);
-          that.$warningAlert(Object.values(error.response.data.errors));
+
+      Swal.fire({
+        showConfirmButton: true,
+        html: 'Are you sure to remove this <br>option',
+        showCloseButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Delete',
+        buttonsStyling:false,
+        customClass:{
+          popup: 'sweet-delete',
+          confirmButton: 'confirm-btn',
+          cancelButton:'cancel-btn',
+          actions:'btn-group',
+          content:'content-sweet',
+          closeButton:'close-btn'
+
+        },
+
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.axios.delete(url).then(function () {
+            that.$successAlert("Removed");
+            that.updateData();
+          }).catch(function(error){
+            if (error.response) {
+              // console.log(error.response.status);
+              // console.log(error.response.headers);
+              that.$warningAlert(Object.values(error.response.data.errors));
+            }
+          });
         }
-      });
+      })
+
+
+
+
+
     },
     updateData(){
       console.log('got emit');
@@ -203,6 +231,7 @@ export default {
 .branch_list_item {
   border-bottom: 1px solid #D3D3D3;
   margin-bottom: 22px;
+  padding-bottom: 10px;
 }
 .branch_list_item_number {
   flex: 1;

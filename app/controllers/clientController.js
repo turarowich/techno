@@ -93,7 +93,7 @@ class ClientController{
             }).save();
             
             if (req.files.avatar) {
-                let filename = saveImage(req.files.avatar, req.db)
+                let filename = saveImage(req.files.avatar, req.db, null, true)
                 if (filename == 'Not image') {
                     result = {
                         status: 500,
@@ -157,7 +157,7 @@ class ClientController{
     
             
             if (req.files.avatar) {
-                let filename = saveImage(req.files.avatar, req.db)
+                let filename = saveImage(req.files.avatar, req.db, null, true)
                 if (filename == 'Not image') {
                     result = {
                         status: 500,

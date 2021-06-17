@@ -200,7 +200,7 @@ img{
     outline:none
 }
 .custom-checkbox{
-    width: 13px;
+    width: 12px;
     height: 12px;
     cursor:pointer;
 
@@ -438,6 +438,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     width:100%;
     resize: none;
     height: 125px;
+    font-size: 16px;
 }
 /*=============================Login and register style =======================*/
 .login-input{
@@ -464,6 +465,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     width: 100%;
     min-height: 100vh;
     padding:23px 44px;
+    z-index: 9999;
 }
 .sign-in-header{
     margin-bottom: 30px;
@@ -1255,4 +1257,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     border-radius: 50%;
     object-fit: cover;
     margin-right: 10px;
+}
+.word-break{
+    word-break: break-all;
 }

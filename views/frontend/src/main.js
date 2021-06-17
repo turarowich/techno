@@ -47,7 +47,7 @@ const socket = io(process.env.VUE_APP_SERVER_URL, {
         token: localStorage.getItem('token')
     },
     withCredentials: true,
-    reconnection: false
+    reconnection: false,
 })
 
 ax.defaults.headers.common['Authorization'] = 'Bearer '+ token
@@ -104,6 +104,7 @@ app.config.globalProperties.changeToken = function () {
             token: localStorage.getItem('token')
         },
         withCredentials: true,
+        reconnection: true
     })
 }
 app.config.globalProperties.img = function (main) {
@@ -151,7 +152,7 @@ app.config.globalProperties.clearForm = function (formData) {
 app.config.globalProperties.$successAlert = function(text){
     Swal.fire({
             title:'Success',
-            timer:1500,
+            timer:800,
             text:text,
             showConfirmButton:false,
             position: 'top-right',
@@ -162,9 +163,7 @@ app.config.globalProperties.$successAlert = function(text){
                 header:'success-header',
                 image:'success-img'
             },
-            showClass:{
-                popup: 'animate__animated animate__zoomIn'
-            }
+
 
         }
     )

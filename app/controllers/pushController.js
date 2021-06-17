@@ -13,7 +13,7 @@ var options = {
         keyId: config.APNsKeyID,
         teamId: config.APNsTeamID
     },
-    production: false
+    production: true
 };
 
 
@@ -29,13 +29,15 @@ class PushController {
         let db = useDB(req.db)
         let News = db.model("News");
         let Device = db.model("Device");
-        
+        let Settings = db.model("Settings");
+        let settings = await Settings.find()
+        settings = settings[0]
         let data = await News.findById(req.params.id)
         let result = {
             'status': 500,
             'msg': 'Something went wrong'
         }
-        if (data) {
+        if (data && settings) {
             result['status'] = 200
             result['msg'] = "Sending news"
             result['object'] = data
@@ -57,8 +59,9 @@ class PushController {
                     type: "news",
                 },
                 sound: "default",
-                topic: config.APNsTopic
+                topic: settings.APNsTopic
             });
+            console.log('this is topic',settings.APNsTopic)
             apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
                 console.log(response)
                 if (response.failed.length){
@@ -81,9 +84,11 @@ class PushController {
         let db = useDB(req_db)
         let Device = db.model("Device");
         let Message = db.model("Message");
-        if (client) {
-            let messages = Message.find({ 'client': client, 'new': true })
-            console.log(messages, messages.length)
+        let Settings = db.model("Settings");
+        let settings = await Settings.find()
+        settings = settings[0]
+        if (client && settings) {
+            let messages = await Message.find({ 'client': client, 'new': true, 'isIncoming': true })
             let devicesIOS = await Device.find({ 'type': 'ios', 'client': client })
             let noteIOS = new apn.Notification({
                 alert: {
@@ -92,15 +97,13 @@ class PushController {
                     body: message.text,
                 },
                 badge: messages.length,
-                contentAvailable: 1,
                 mutableContent: 1,
                 payload: {
                     type: "message",
                 },
                 sound: "default",
-                topic: config.APNsTopic
+                topic: settings.APNsTopic
             });
-            console.log(noteIOS)
             apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
                 if (response.failed.length) {
                     response.failed.forEach((fail) => {

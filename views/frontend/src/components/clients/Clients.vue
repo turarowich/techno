@@ -40,7 +40,7 @@
                           <div class="d-flex align-items-center mr-2">
                             <label>From</label>
                             <div class="calendar d-flex align-items-center">
-                              <input v-model="from_register_date" class="calendar-input"  id="from-date">
+                              <input  class="calendar-input"  id="from-date">
                               <img src="../../assets/icons/Calendar.svg">
                             </div>
                           </div>
@@ -48,7 +48,7 @@
                           <div class="d-flex align-items-center">
                             <label>To</label>
                             <div class="calendar d-flex align-items-center">
-                              <input v-model="to_register_date" class="calendar-input" id="to-date">
+                              <input  class="calendar-input" id="to-date">
                               <img src="../../assets/icons/Calendar.svg">
                             </div>
                           </div>
@@ -405,6 +405,9 @@ export default {
             }
             return true            
           })
+          .filter(client=>{
+            return client.gender.includes(this.f_gender_client)
+          })
       // .filter(client=>{
           //   if(this.f_to_number_purchase.length>0){
           //     return +client.number_of_purchase >= this.f_from_number_purchase && +client.number_of_purchase <= this.f_to_number_purchase
@@ -505,9 +508,6 @@ export default {
 
     },
     filterSubmit(){
-      if(this.from_register_date === ''){
-        this.from_register_date = "2000-01-01"
-      }
         this.f_category = this.category;
         this.f_gender_client = this.gender_client;
         this.f_birthday = this.birthday;
@@ -643,6 +643,7 @@ export default {
       this.axios.get(this.url('getClients'))
       .then((res)=>{
         this.clientList = res.data.objects
+        console.log(this.clientList, '000000000000000000')
       })
     },
     getCategories(){
