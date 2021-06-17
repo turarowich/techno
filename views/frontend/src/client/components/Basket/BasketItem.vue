@@ -5,13 +5,12 @@
       <h4>Your shopping cart is empty please choose your product from out catalog</h4>
     </div>
     <div v-else class="client-table-item d-flex" v-for="item in shoppingCart" :key="item.product._id">
-      <div style="width:40%" class="d-flex align-items-center">
+      <div style="width:40%;overflow: hidden;text-overflow: ellipsis;" class="d-flex align-items-center">
         <div class="client-table-img">
           <img src="../../../assets/clients/shirt.svg">
         </div>
         <div>
           <h3 class="table-title">{{item.product.name}}</h3>
-          <p class="table-parag">{{item.product.article}}</p>
         </div>
       </div>
       <div style="width:20%">
@@ -19,10 +18,23 @@
         <span class="count">{{item.quantity}}</span>
         <button class="increase mb-0" @click="increase(item.product._id)">+</button>
       </div>
-      <div style="width:14%">{{item.discount_percent}}%</div>
-      <div style="width:14%">{{item.discount_sum}}</div>
-      <div style="width:14%">{{item.current_price}} $</div>
-      <div style="width:12%" class="d-flex justify-content-end pr-3"><img @click="removeFromBasket(item.product._id)" src="../../../assets/clients/x.svg"></div>
+<!--      <div style="width:14%">{{item.discount_percent}}%</div>-->
+<!--      <div style="width:14%">{{item.discount_sum}}</div>-->
+      <div style="width:30%">
+        <span>
+          {{item.current_price}} $
+        </span>
+        <br>
+        <div v-if="item.current_price<(item.product.price*item.quantity)" class="discounts_block">
+          <span class="lineThrough">{{item.product.price*item.quantity}}$ </span>
+          <span style="color: #E94A4A;" v-if="item.isDiscounted">Discount {{item.discount_sum}}$</span>
+          <span style="color: #E94A4A;" v-else>Discount {{item.discount_percent_sum}}$</span>
+        </div>
+<!--        <span v-if="checkDates(item.product.promoStart,item.product.promoEnd)" :class="{lineThrough:checkDates(item.product.promoStart,item.product.promoEnd)}">-->
+<!--          {{item.product.price}} $-->
+<!--        </span>-->
+      </div>
+      <div style="width:10%" class="d-flex justify-content-end pr-3"><img @click="removeFromBasket(item.product._id)" src="../../../assets/clients/x.svg"></div>
     </div>
   </div>
 </template>
@@ -31,6 +43,11 @@
 import Swal from "sweetalert2";
 export default {
   name: "BasketItem",
+  data(){
+    return{
+      today:new Date(),
+    }
+  },
   computed:{
     shoppingCart(){
       return this.$store.state.Orders.shoppingCart;
@@ -40,6 +57,15 @@ export default {
     },
   },
   methods: {
+    checkDates(start,end){
+      let itsPromo = false;
+      let startDate = new Date(start);
+      let endDate = new Date(end);
+      if(startDate<=this.today && endDate>=this.today){
+        itsPromo = true;
+      }
+      return itsPromo;
+    },
     removeFromBasket(id) {
       Swal.fire({
           showConfirmButton: true,
@@ -131,6 +157,10 @@ font-size:16px;
 .empty-basket img{
   width:80px;
   margin-bottom: 20px;
-
+}
+.lineThrough{
+  text-decoration: line-through;
+  font-size: 13px!important;
+  color: #B0B0B0;
 }
 </style>

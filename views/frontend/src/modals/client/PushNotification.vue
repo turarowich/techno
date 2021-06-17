@@ -41,7 +41,7 @@
                     </div>
                     {{client.name}}
                   </div>
-                  <div style="width:35%">{{client.category.name}}</div>
+                  <div style="width:35%">{{client.category ? client.category.name : "No cat" }}</div>
                   <div style="width:13%">{{client.bonus}}</div>
                 </div>
 
@@ -139,13 +139,20 @@ export default {
   },
   computed:{
     filteredClients(){
+
       return this.clients
           .filter((item)=>{
             return item.name.toLowerCase().includes(this.search_client.toLowerCase())
           })
       .filter((item)=>{
-        return item.category._id.includes(this.filterClient)
+        if(item.category){
+          return item.category._id.includes(this.filterClient);
+        }else{
+          return item;
+        }
       })
+
+
     },
     filteredCategories(){
       return this.clientCategory.filter((item)=>{
@@ -191,7 +198,10 @@ export default {
       })
     },
     checkAll(item) {
-      return  this.$refs[`select${item._id}`].checked === true
+      if(this.$refs[`select${item._id}`] !== null){
+        return  this.$refs[`select${item._id}`].checked === true
+      }
+
     },
     checkMainSelect() {
       if(this.clients.every(this.checkAll)){

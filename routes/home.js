@@ -2,7 +2,10 @@ var path = require('path');
 var authController = require('../app/controllers/authController');
 var settingsController = require('../app/controllers/settingsController');
 var catalogController = require('../app/controllers/catalogController');
-
+var promocodeController = require('../app/controllers/promocodeController');
+var orderController = require('../app/controllers/orderController');
+var clientController = require('../app/controllers/clientController');
+var productController = require('../app/controllers/productController');
 module.exports = function(app, passport){    
     app.get('/', function(req, res){
         res.sendFile(path.resolve('views/frontend/dist/index.html'));
@@ -28,8 +31,16 @@ module.exports = function(app, passport){
     app.get('/getCatalogSettings', catalogController.getCatalogSettings);
     app.get('/getCatalog', catalogController.getCatalog);
     app.get('/getClientProducts', catalogController.getClientProducts);
+    app.get('/getClientProducts', catalogController.getClientProducts);
+    //same as in api
+    app.get('/getProductWeb/:product', productController.getProduct);
     app.get('/getClientCategories', catalogController.getClientCategories);
 
+    //same as in api
+    app.get('/searchPromocodeByCode', promocodeController.searchPromocodeByCode);
+    app.post('/addOrderWeb', orderController.addOrder);
+    //Casback from order
+    app.post('/getEarnedPoints', orderController.getEarnedPoints);
 
     app.get('*', function (req, res) {
         console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>","Backup","<<<<<<<<<<<<<<<<<<<<<<<<<<<")

@@ -27,7 +27,7 @@
        </div>
      </div>
      <h3 class="catalog-sub-title margin-20">QR code for online catalog</h3>
-     <h3 class="catalog-sub-title " style="text-overflow: ellipsis;overflow: hidden">{{catalogFullUrl}}</h3>
+     <h3 class="catalog-sub-title mb-3" style="text-overflow: ellipsis;overflow: hidden">{{catalogFullUrl}}</h3>
      <div class="d-flex align-items-center margin-50">
        <img :src="qrcodePath" class="mr-3">
        <div>
@@ -357,7 +357,7 @@ export default {
     },
     saveCatalogSettings(){
       let that=this;
-      let url = this.base_url+'/api/updateSettings';
+      let url = this.url('updateSettings');
       this.axios.put(url, {
         catalogStatus:this.catalog_status,
         catalogUrl:this.catalogUrl,
@@ -400,7 +400,7 @@ export default {
         let settings = response.data.object;
         that.id= settings._id || '';
         that.company = response.data.company || '';
-        that.catalog_status = settings.catalogStatus || '';
+        that.catalog_status = settings.catalogStatus || false;
         that.catalogUrl = settings.catalogUrl || '';
         that.catalog_mode_status = settings.catalogMode;
         that.news_status = settings.newsStatus;

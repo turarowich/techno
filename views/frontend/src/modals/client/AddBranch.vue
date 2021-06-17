@@ -1,27 +1,26 @@
 <template>
   <div class="parent-modal">
-    <div class="modal myModal fade" id="add_branch" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog" role="document">
+    <div class="modal myModal  pr-0 fade" id="add_branch" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" role="document"  style="max-width: calc(100% - 250px);">
         <div class="modal-content add_branch_modal_content">
-          <div class="modal-header align-items-center">
+          <div class="modal-header justify-content-start align-items-center">
+
+          <img data-dismiss="modal" aria-label="Close" class="close"  src="../../assets/icons/xBlack.svg">
+
             <h3 v-if="edit" class="modal-title">Edit Branch</h3>
             <h3 v-else class="modal-title">Add Branch</h3>
-            <button type="button" data-dismiss="modal" aria-label="Close" class="close">
-              <span aria-hidden="true">
-                <img src="../../assets/icons/x.svg" alt="">
-              </span>
-            </button>
+
           </div>
           <div class="modal-body add_branch_modal_body d-flex">
             <div class="add_branch_block">
               <h4 class="circle-question">Address</h4>
               <input v-model="branch_object.address" class="cashback-input company-input" placeholder="Enter your company address">
               <div class="d-flex atitude">
-                <div class="mr-3">
+                <div class="mr-3" style="width:50%">
                   <label>Longitude</label>
                   <input v-model="branch_object.longitude" class="cashback-input">
                 </div>
-                <div>
+                <div style="width:50%">
                   <label>Latitude</label>
                   <input v-model="branch_object.latitude" class="cashback-input">
                 </div>
@@ -30,7 +29,7 @@
               <input v-model="branch_object.name" class="phone-input cashback-input">
               <label>Phone number</label>
               <input v-model="branch_object.phone"  class="phone-input cashback-input" placeholder="Branch phone number">
-              <input v-model="branch_object.phone2"  class="phone-input cashback-input" placeholder="Branch phone number">
+              <input v-model="branch_object.phone2"  class="phone-input mb-4 cashback-input" placeholder="Branch phone number">
               <label class="working-hours">Working hours</label>
               <div class="week">
                 <div @click="setDay('monday')" :class="{active: branch_object.monday.active,selected_active:current_selected_day.day==='monday'}" class="days d-flex justify-content-center align-items-center">MO</div>
@@ -55,7 +54,7 @@
                   </select>
                 </div>
                 <div style="display: flex;justify-content: center;align-items: center;margin-left: 2px;flex: 1;">
-                  <span>Is a work day</span>
+                  <span class="mr-2">Is a work day</span>
                   <label class="switch d-flex">
                     <input v-model="current_selected_day.object.active" type="checkbox">
                     <span class="slider round"></span>
@@ -83,6 +82,7 @@
 
 <script>
 import $ from "jquery";
+import Swal from "sweetalert2";
 export default {
   name: "AddBranch",
   props:  {
@@ -169,17 +169,46 @@ export default {
     removeBranch(id){
       let that = this;
       let url = this.url('deleteBranch')+id;
-      this.axios.delete(url).then(function () {
-        that.$successAlert("Removed");
-        $('#add_branch').modal('hide');
-        that.$emit('sendUpdate');
-      }).catch(function(error){
-        if (error.response) {
-          // console.log(error.response.status);
-          // console.log(error.response.headers);
-          that.$warningAlert(Object.values(error.response.data.errors));
+
+
+
+      Swal.fire({
+        showConfirmButton: true,
+        html: 'Are you sure to remove this <br>branch',
+        showCloseButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Delete',
+        buttonsStyling:false,
+        customClass:{
+          popup: 'sweet-delete',
+          confirmButton: 'confirm-btn',
+          cancelButton:'cancel-btn',
+          actions:'btn-group',
+          content:'content-sweet',
+          closeButton:'close-btn'
+
+        },
+
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.axios.delete(url).then(function () {
+            that.$successAlert("Removed");
+            $('#add_branch').modal('hide');
+            that.$emit('sendUpdate');
+          }).catch(function(error){
+            if (error.response) {
+              // console.log(error.response.status);
+              // console.log(error.response.headers);
+              that.$warningAlert(Object.values(error.response.data.errors));
+            }
+          });
         }
-      });
+      })
+
+
+
+
+
 
     },
   },
@@ -225,6 +254,7 @@ export default {
 </script>
 
 <style scoped>
+
 .week{
   display: flex;
   margin-bottom: 20px;
@@ -262,8 +292,7 @@ export default {
 }
 .days.active{
   background: #616cf5;
-  transition: .3s;
-  color:#fff;
+  color:white;
 }
 .days:hover{
   background: #7479b5;
@@ -276,6 +305,10 @@ export default {
 .working-hours{
   margin-bottom: 20px;
 }
+.working-phones label{
+  color:#858585;
+
+}
 .working-phones{
   margin-bottom: 40px;
   transition: 1s;
@@ -284,17 +317,18 @@ export default {
   flex: 1;
 }
 .working-phones select{
-  width: 70px;
+  width: 70%;
 }
 .margin-20{
   margin-bottom: 20px;
 }
 .add_branch_modal_content{
-  width: 856px;
-  max-width: 856px;
+  border-radius:0;
+  border:none;
 }
 .save{
   width: 120px;
+  margin-bottom: 30px;
 }
 .remove_branch{
   background: #E9ECFF;
@@ -315,13 +349,16 @@ export default {
   padding: 18px 24px;
 }
 .modal-content .modal-header{
-  padding: 0;
+  padding:0;
+  margin-bottom: 30px;
 }
 .add_branch_modal_body{
   padding: 0;
 }
 .selected_active{
-  color: black!important;
-  border:2px solid red;
+  border:1px solid #000;
+  transition: .3s;
+  color:#000 !important;
+
 }
 </style>

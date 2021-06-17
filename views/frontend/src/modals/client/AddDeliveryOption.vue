@@ -2,21 +2,22 @@
   <div class="parent-modal">
     <div class="modal myModal fade" id="add_delivery_option" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog" role="document">
-        <div class="modal-content add_branch_modal_content">
-          <div class="modal-header align-items-center">
+        <div class="modal-content category-content">
+          <div class="modal-header category-header align-items-center">
             <h3 v-if="edit" class="modal-title">Edit Delivery option</h3>
             <h3 v-else class="modal-title">Add Delivery option</h3>
-            <button type="button" data-dismiss="modal" aria-label="Close" class="close">
+            <button type="button" data-dismiss="modal" aria-label="Close" class="close mr-0">
               <span aria-hidden="true">
                 <img src="../../assets/icons/x.svg" alt="">
               </span>
             </button>
           </div>
-          <div class="modal-body add_branch_modal_body d-flex">
+          <div class="modal-body category-body add_branch_modal_body">
             <div class="add_branch_block">
+              <label>Name</label>
               <input v-model="option_object.name" class="cashback-input company-input" placeholder="Name of the option">
               <div class="d-flex atitude">
-                <div style="margin-right: 3px;flex: 1;">
+                <div style="margin-right: 5px;flex: 1;">
                   <label>Cost</label>
                   <input v-model="option_object.price" class="cashback-input">
                 </div>
@@ -26,10 +27,11 @@
                 </div>
               </div>
             </div>
+            <div class="d-flex">
+              <button @click="saveOption" class="save">Save</button>
+            </div>
           </div>
-          <div class="d-flex">
-            <button @click="saveOption" class="save">Save</button>
-          </div>
+
         </div>
       </div>
     </div>
@@ -143,22 +145,10 @@ export default {
 .working-phones select{
   width: 70px;
 }
-.add_branch_modal_content{
-  width: 500px;
-  max-width: 500px;
-}
+
 .save{
   width: 120px;
 }
 
-.modal-content{
-  border-bottom: none;
-  padding: 18px 24px;
-}
-.modal-content .modal-header{
-  padding: 0;
-}
-.add_branch_modal_body{
-  padding: 0;
-}
+
 </style>

@@ -3,7 +3,7 @@
   <div>
     <div v-if="catalogList.length === 0" class="d-flex justify-content-center align-items-center">
           <div class="no-product">
-            <img src="../../assets/img/noCatalog2.png">
+            <img src="../../assets/icons/no-catalog.svg">
             <p>There are no products in this category yet</p>
             <button class="save add-product" @click="addProduct">Add product</button>
           </div>

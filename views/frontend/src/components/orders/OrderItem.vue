@@ -2,7 +2,7 @@
   <div>
     <div v-if="orderList.length === 0" class="text-center empty-box" >
       <img src="../../assets/icons/emptyOrder.svg">
-      <p class="empty-page-text">You have no orders yet</p>
+      <p class="empty-page-text">There are no orders for the selected period</p>
     </div>
     <div v-else v-for="order in orderList" class="table-item d-flex justify-content-between align-items-center" :key="order._id">
 
@@ -11,12 +11,12 @@
         34543</div>
       <div  class="table-child d-flex align-items-center"  style="width: 30%;">
         <div  class="table-img">
-           <img src="../../assets/img/sneak.webp">
+           <img :src="imgSrc+'/'+order.products[0].img">
          </div>
          <span>{{order.products[0].name}}</span>
       </div>
-      <div class="table-child" v-show="data_check.client_checked"  style="width: 25%;">{{order.client.name}}</div>
-      <div class="table-child" v-show="data_check.phone_checked" style="width: 20%;">{{order.client.phone}}</div>
+      <div class="table-child" v-show="data_check.client_checked"  style="width: 25%;">{{order.client ? order.client.name : ''}}</div>
+      <div class="table-child" v-show="data_check.phone_checked" style="width: 20%;">{{order.client ? order.client.phone : ''}}</div>
       <div  class="table-child"  style="width: 10%;">{{order.totalPrice}} $</div>
       <div class="table-child" v-show="data_check.date_checked"  style="width: 15%;">{{order.createdAt.split('').slice(0,10).join('')}}</div>
       <div class="table-child pr-3" v-show="data_check.notes_checked" style="width: 10%;" ><div>{{order.notes}}</div></div>
@@ -38,11 +38,11 @@
           </div>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
             <ul class="list-group " >
-              <li class="list-group-item" v-on:click="$emit('done',order.id)">Done</li>
+              <li class="list-group-item" v-on:click="$emit('done',order._id)">Done</li>
               <li class="list-group-item" data-toggle="modal" data-target="#edit-order" @click="$emit('selectOrder',order._id)">Edit</li>
-              <li class="list-group-item" @click="$emit('canceled' ,order.id)">Cancel</li>
+              <li class="list-group-item" @click="$emit('canceled' ,order._id)">Cancel</li>
               <li class="list-group-item" v-on:click="$emit('deleteOrder',order._id)">Delete</li>
-              <li class="list-group-item" v-on:click="$emit('inProgress',order.id)">In progress</li>
+              <li class="list-group-item" v-on:click="$emit('inProgress',order._id)">In progress</li>
             </ul>
           </div>
         </div>
@@ -70,7 +70,8 @@ export default {
   },
   data() {
     return {
-      newCheck: false
+      newCheck: false,
+      imgSrc:''
     }
   },
 
@@ -91,15 +92,23 @@ export default {
     }
 
   }
-
-
-
+,
+mounted() {
+  this.imgSrc = this.$server
+}
 }
 
 </script>
 
 <style scoped>
-
+.empty-box{
+  left: 50%;
+}
+.empty-box img{
+  width: 63px;
+  height: 70px;
+  margin-bottom: 20px;
+}
 .name-info span{
   width:30px;
   height:30px;

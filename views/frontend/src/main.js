@@ -60,11 +60,29 @@ app.config.globalProperties.$server = process.env.VUE_APP_SERVER_URL;
 app.config.globalProperties.format_price = function (sum){parseFloat(sum).toFixed(2)};
 app.config.globalProperties.base_url = process.env.VUE_APP_SERVER_URL;
 
+app.config.globalProperties.getClientAuth = function(){
+    //return true if catalog client is authen-ed
+    //undefined otherwise
+    return this.$store.getters['Client/getUserStatus'];
+}
 app.config.globalProperties.socket = socket
 app.config.globalProperties.scrollToBottom = function(obj){
     $("#"+obj).scrollTop(1000000)
 }
-var home_url = ['login', 'register', 'loginClient', 'registerClient', 'getClientProducts', 'getCatalog', 'getClientCategories', 'getCatalogSettings']
+var home_url = [
+    'login',
+    'register',
+    'loginClient',
+    'registerClient',
+    'getClientProducts',
+    'getCatalog',
+    'getClientCategories',
+    'getCatalogSettings',
+    'searchPromocodeByCode',
+    'addOrderWeb',
+    'getProductWeb',
+    'getEarnedPoints',
+]
 app.config.globalProperties.addNewProperty = function(obj, key, value = "", copy) {
     obj.map(function(object) {
         if (copy) {                                                                                                                                                                                                                                                                                                                                                                                                                                             
@@ -91,6 +109,7 @@ app.config.globalProperties.img = function (main) {
     return this.$server + '/' + main
 }
 app.config.globalProperties.url = function (main, id = null, search = null) {
+    console.log(main,'main');
     let additional = '/'
     if (id) {
         additional += id + '/'
@@ -99,6 +118,7 @@ app.config.globalProperties.url = function (main, id = null, search = null) {
         additional += '?' + search[0] + '=' + search[1]
     }
     if (home_url.includes(main)){
+        console.log(this.$server + '/' + main + additional);
         return this.$server + '/' + main + additional
     }
     return this.$api + '/' + main + additional
@@ -130,7 +150,7 @@ app.config.globalProperties.clearForm = function (formData) {
 app.config.globalProperties.$successAlert = function(text){
     Swal.fire({
             title:'Success',
-            timer:1500,
+            timer:800,
             text:text,
             showConfirmButton:false,
             position: 'top-right',
@@ -141,9 +161,7 @@ app.config.globalProperties.$successAlert = function(text){
                 header:'success-header',
                 image:'success-img'
             },
-            showClass:{
-                popup: 'animate__animated animate__zoomIn'
-            }
+
 
         }
     )

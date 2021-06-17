@@ -111,7 +111,7 @@ class ProductController{
                     }
                 }
             }    
-            // product.save()
+            product.save()
             result['object'] = product
         } catch (error) {
             result = sendError(error, lang)

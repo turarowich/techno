@@ -3,11 +3,7 @@
     <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: 82%;" role="document" >
       <div class="modal-content myModal-content h-100">
         <div class="modal-header justify-content-start align-items-center">
-          <button type="button" data-dismiss="modal" aria-label="Close" class="close mr-2">
-              <span aria-hidden="true">
-                <img src="../../../assets/icons/xBlack.svg" alt="">
-              </span>
-          </button>
+          <img data-dismiss="modal" aria-label="Close" class="close mr-2" src="../../../assets/icons/xBlack.svg" alt="">
           <h3 class="modal-title">Edit</h3>
         </div>
         <div class="myModal-body">
@@ -16,45 +12,48 @@
               <form  class="modal-form">
                 <div class="d-flex align-items-center mb-3">
                   <div style="width:50%" class="mr-3">
-                    <label class="product-label">Name</label><br>
+                    <label class="product-label">Name</label><i class="fas fa-asterisk"></i><br>
                     <input name="name"  v-model="currentData.name" style="width:100%" class="cashback-input">
                   </div>
 
                   <div class="quantity-category mr-3">
-                    <label class="product-label">Quantity</label><br>
+                    <label class="product-label">Quantity</label><i class="fas fa-asterisk"></i><br>
                     <input name="quantity"  v-model="currentData.quantity" class="cashback-input">
                   </div>
 
                   <div style="width:25%;">
-                    <label class="product-label">Select category</label><br>
+                    <label class="product-label">Select category</label><i class="fas fa-asterisk"></i><br>
 
-                    <select name="category" v-model="currentData.category"  class="form-control mb-0 select-phone" >
+                    <select v-if="currentData.category ? currentData.category._id : ''" name="category" v-model="currentData.category._id"  class="form-control mb-0 select-phone" >
                       <option :value="cat._id" v-for="cat in listCategory" :key="cat._id">{{cat.name}}</option>
                     </select>
                   </div>
                 </div>
 
                 <label>Name in russian</label><br>
-                <input class="cashback-input mb-3" style="width:50%"><br>
+                <input v-model="currentData.name_ru" class="cashback-input mb-3" style="width:50%"><br>
                 <label>Description</label>
                 <textarea v-model="currentData.description" class="general-area p-3 mb-3" style="height:160px"   name="description"></textarea>
 
                 <div class="d-flex mb-3">
-                  <label class="custom-checkbox"><input @click="editShowPrice()" id="edit-show-price" type="checkbox" ><span class="checkmark"></span></label>
+                  <label class="custom-checkbox">
+                    <input @click="editShowPrice()"  id="edit-show-price" type="checkbox" :checked="isDiscount">
+                    <span class="checkmark"></span>
+                  </label>
                   <span>Discount</span>
                 </div>
 
                 <div class="d-flex ">
                   <div style=" width:33.33%; margin-right:8px;">
-                    <label>Price</label>
+                    <label>Price</label><i class="fas fa-asterisk"></i><br>
                     <input name="price" v-model="currentData.price" class="form-input cashback-input mb-4" placeholder="Price"  >
                   </div>
-                  <div class="show-price" style="width:33.33%; margin-right:8px;">
+                  <div :class="{active:isDiscount}" class="show-price" style="width:33.33%; margin-right:8px;">
                     <label>Promotional prices</label>
                     <input name="promoPrice" v-model="currentData.promoPrice" class="form-input cashback-input mb-4" placeholder="Price">
                   </div>
                   <div style="width:33.33%;">
-                    <label>Vendor Code</label>
+                    <label>Vendor Code</label><i class="fas fa-asterisk"></i><br>
                     <input name="vendorCode" v-model="currentData.vendorCode"  class="form-input cashback-input mb-4" placeholder="Vendor code"  >
                   </div>
                 </div>
@@ -64,7 +63,7 @@
                   <div class="d-flex align-items-center mr-2">
                     <label >From</label>
                     <div class="calendar d-flex align-items-center">
-                      <input v-model="currentData.promoStart" class="calendar-input">
+                      <input v-model="promoStart.formatted" id="promoStart_input" class="calendar-input">
                       <img src="../../../assets/icons/Calendar.svg">
                     </div>
                   </div>
@@ -72,7 +71,7 @@
                   <div class="d-flex align-items-center">
                     <label>to</label>
                     <div class="calendar d-flex align-items-center">
-                      <input v-model="currentData.promoEnd" class="calendar-input">
+                      <input v-model="promoEnd.formatted" id="promoEnd_input" class="calendar-input">
                       <img src="../../../assets/icons/Calendar.svg">
                     </div>
                   </div>
@@ -91,7 +90,11 @@
                   <input @change="onFileChange($event)" ref="addImage" class="d-none" multiple id="imgsArray" type="file" name="imgArray">
                 </label>
                 <div  class="d-flex">
-                  <img v-if="currentData.img !== ''" :src="imgSrc+'/'+currentData.img" class="show-images mr-2">
+                   <div v-if="currentData.img !== ''">
+                      <img v-if="typeof currentData.img === 'string'" :src="imgSrc+'/'+currentData.img" class="show-images mr-2">
+                      <img v-else :src="mainImg" class="show-images mr-2">
+
+                   </div>
                     <div v-if="currentData.img !== ''" class="selected-overlay">
                       <img  @click="currentData.img = ''" class="remove-images" src="../../../assets/icons/deleteClient.svg">
                     </div>
@@ -136,17 +139,37 @@ export default {
         imgArray:[]
       },
       imgSrc:'',
+      promoStartLightpick:{},
+      promoEndLightpick:{},
+      promoStart: {
+        obj:{},
+        formatted:'',
+      },
+      promoEnd: {
+        obj:{},
+        formatted:'',
+      },
     }
   },
   computed:{
+    mainImg(){
+    if(typeof this.currentData.img === 'object'){
+      return URL.createObjectURL(this.currentData.img)
+    }
+    return this.currentData.img
+    },
     imagePreview(){
-    return  this.currentData.imgArray.map((item)=>{
-            if(typeof item == 'object'){
-              return URL.createObjectURL(item)
-            }
-            return item;
-          })
-        }
+      return  this.currentData.imgArray.map((item)=>{
+        if(typeof item === 'object'){
+         return URL.createObjectURL(item)
+       }
+         return item;
+
+      })
+    },
+    isDiscount(){
+      return this.currentData.promoPrice>0;
+    },
   },
   methods:{
     removeImage(idx){
@@ -165,26 +188,44 @@ export default {
       else{
         $('.show-price').removeClass('active')
       }
-
     },
-
+    selectDates(){
+      let that=this;
+      this.promoStartLightpick = new this.$lightpick({
+        field: document.getElementById('promoStart_input'),
+        onSelect: function(date){
+          that.promoStart.obj = date;
+          that.promoStart.formatted = date.format('DD-MM-YYYY');
+        }
+      });
+      this.promoEndLightpick = new this.$lightpick({
+        field: document.getElementById('promoEnd_input'),
+        onSelect: function(date){
+          that.promoEnd.obj = date;
+          that.promoEnd.formatted = date.format('DD-MM-YYYY');
+        }
+      });
+    },
     onFileChange() {
       $.each($("#imgsArray")[0].files, (i,file)=> {
          console.log(i)
-        for (let j = 0; j <=this.currentData.imgArray.length; j++) {
-          if(this.currentData.imgArray[j] === ""){
-            this.currentData.imgArray[j] = file;
-            break;
+          if(this.currentData.img === ''){
+            this.currentData.img = file
           }
-          if(this.currentData.imgArray.length<3){
-            this.currentData.imgArray.push(file)
-            break;
+          else{
+             for (let j = 0; j <=this.currentData.imgArray.length; j++) {
+                if(this.currentData.imgArray[j] === ""){
+                  this.currentData.imgArray[j] = file;
+                  break;
+                }
+                if(this.currentData.imgArray.length<3){
+                  this.currentData.imgArray.push(file)
+                  break;
+                }
+            }
           }
-
-        }
-
-      });
-  console.log(this.currentData.imgArray, 'bektemir')
+          console.log(this.currentData.imgArray)
+    });
     },
     onSubmit(){
       const updatedProduct = this.currentData;
@@ -192,41 +233,56 @@ export default {
 
     for(let item in updatedProduct.imgArray){
       form.append('imgArray'+item, updatedProduct.imgArray[item])
-      console.log("imgArray"+item, updatedProduct.imgArray[item])
-    }
-
+      }
+      form.append('img',updatedProduct.img)
       form.append("name", updatedProduct.name)
+      form.append("name_ru", updatedProduct.name_ru)
       form.append("quantity", updatedProduct.quantity)
-      form.append("category", updatedProduct.category)
+      form.append("category", updatedProduct.category._id)
       form.append("price", updatedProduct.price)
       form.append("description", updatedProduct.description)
       form.append("promoPrice", updatedProduct.promoPrice)
       form.append("vendorCode", updatedProduct.vendorCode)
+      form.append("promoStart", this.promoStart.obj)
+      form.append("promoEnd", this.promoEnd.obj)
 
       this.axios.put(this.url('updateProduct',updatedProduct._id),form)
       .then(()=>{
         this.getProducts()
+         this.$informationAlert('Changes are saved')
       })
-      this.$informationAlert('Changes are saved')
+
       $('#edit-product').modal("hide")
-    },
 
-  },
-  mounted(){
-    this.imgSrc = this.$server;
 
-  },
-  watch:{
-    select_product(newCat){
-      this.currentData = Object.assign({}, newCat)
+
 
     }
   },
 
+  watch:{
+    select_product(newCat){
+      this.currentData = Object.assign({}, newCat);
+      // this.promoStart.obj = this.currentData.promoStart;
+      this.promoStartLightpick.setDate(this.currentData.promoStart);
+      // this.promoEnd.obj = this.currentData.promoEnd;
+      this.promoEndLightpick.setDate(this.currentData.promoEnd);
+    }
+  },
+  mounted() {
+    this.selectDates();
+    this.imgSrc = this.$server;
+  },
 }
 </script>
 
 <style scoped>
+.fa-asterisk{
+  font-size: 8px;
+  margin-bottom: 2px;
+  color:red;
+}
+
 .selected-images:hover .remove-image{
   opacity: 1;
 }

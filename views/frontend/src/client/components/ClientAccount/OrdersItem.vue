@@ -10,14 +10,14 @@
     <div class="table-img">
       <img src="../../../assets/img/sneak.webp">
     </div>
-    {{order.name}}
+    {{order.code}}
   </div>
-  <div style="width:14%"> {{order.client}}</div>
-  <div style="width:10%">{{order.phone}}</div>
-  <div style="width:12%">{{order.total}}</div>
-  <div style="width:12%">{{order.date}}</div>
-  <div style="width:12%">{{order.notes}}</div>
-  <div style="width:11%">10%</div>
+  <div style="width:14%"> {{order.address}}</div>
+  <div style="width:10%">{{new Date(order.createdAt).toDateString()}}</div>
+  <div style="width:12%">{{order.products.length}}</div>
+  <div style="width:12%">{{order.deliveryPrice}}</div>
+  <div style="width:12%">{{order.totalDiscount}}</div>
+  <div style="width:11%">{{order.totalPrice}}</div>
   <div style="width:10%">{{order.status}}</div>
 </div>
   </div>

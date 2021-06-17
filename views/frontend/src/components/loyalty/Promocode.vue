@@ -59,10 +59,10 @@ export default {
     searchPromocode(){
       let that = this;
       if(this.searchText.length ===0){
-        this.$store.dispatch("Promocode/setPromocodeAPI",this.axios);
+        this.$store.dispatch("Promocode/setPromocodeAPI",{axios:this.axios,url:this.url('getPromocodes')});
         return;
       }
-      this.axios.get('https://localhost:8443/api/searchPromocode',{
+      this.axios.get(this.url('searchPromocode'),{
         params: {
           "search":this.searchText,
         }

@@ -1,6 +1,6 @@
 <template>
   <div class="modal fade right"  id="edit-order" tabindex="-1" role="dialog" aria-labelledby="add-promocode" aria-hidden="true">
-    <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: 81%;" role="document" >
+    <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width:calc(100vw - 250px);" role="document" >
       <div class="modal-content myModal-content h-100">
         <div class="modal-header justify-content-start ">
 
@@ -96,8 +96,8 @@
                     <div class="category">
                       Category:
                       <span v-if="currentData.client.category !== undefined">{{currentData.client.category.name}}</span>
-                      <span v-else>no</span>
-                      Points: <span>{{currentData.client.points}}</span>
+                      <span v-else>No category</span>
+
                     </div>
                   </div>
                   <img @click="currentData.client = ''" class="close-client" src="../../assets/icons/deleteClient.svg">
@@ -122,14 +122,14 @@
 
               <h3 class="client-sub-title">Delivery method</h3>
               <div class="selects">
-                <select class=" form-control long-form-control  form-control-lg" aria-label=".form-select-lg example">
-                  <option>Pick up</option>
-                  <option>self</option>
+                <select v-model="currentData.deliveryType" class=" form-control long-form-control  form-control-lg" aria-label=".form-select-lg example">
+                  <option value="self">Self</option>
+                  <option value="delivery">Delivery</option>
                 </select>
               </div>
 
               <span class="category">
-                   Branch: Manezhnaya pl., 1, bldg. 2, Bishkek, Kyrgyzystan, 125009
+                 {{currentData.address}}
               </span>
 
               <div class="line"></div>
@@ -192,7 +192,8 @@ export default {
         client:'',
         promocode:'',
         status:'',
-        deliveryType:''
+        deliveryType:'',
+
       },
       search:''
     }

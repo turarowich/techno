@@ -30,9 +30,9 @@
 
       <div class="profile dropdown">
         <div class="d-flex align-items-center profile-cursor dropdown-toggle"   id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span class="profile-logo d-flex align-items-center justify-content-center">W</span>
+          <span class="profile-logo d-flex align-items-center justify-content-center">{{user_info ? user_info.name.charAt(0).toUpperCase() : ""}}</span>
           <div>
-              <h3 class="mb-0 cashback-sub-title" style="font-weight:400">Woryshop</h3>
+              <h3 class="mb-0 cashback-sub-title" style="font-weight:400">{{user_info ? user_info.name : ""}}</h3>
               <span style="color:#8C94A5">Your tariff is lite</span>
           </div>
           <img class="profile-arrow" src="../../assets/icons/down.svg">
@@ -41,9 +41,9 @@
         <div class="dropdown-menu general-dropdown">
           <div class="profile-dropdown">
             <div class="d-flex align-items-center profile-header dropdown-toggle">
-              <span class="profile-logo d-flex align-items-center justify-content-center">W</span>
+              <span class="profile-logo d-flex align-items-center justify-content-center">{{user_info ? user_info.name.charAt(0).toUpperCase() : ""}}</span>
               <div>
-                <h3 class="profile-title mb-0 cashback-sub-title">Woryshop</h3>
+                <h3 class="profile-title mb-0 cashback-sub-title">{{user_info ? user_info.name : ""}}</h3>
                 <span style="color:#8C94A5">Your tariff is lite</span>
               </div>
             </div>
@@ -54,12 +54,12 @@
             </div>
 
             <ul class="p-0">
-              <li class="profile-list"><img src="../../assets/clients/Edit.svg">Edit profile</li>
-              <li class="profile-list"><img src="../../assets/clients/DiscountBlack.svg">Choose tariff</li>
+              <li class="profile-list" @click="$router.push('/settings/personal-settings')"><img src="../../assets/clients/Edit.svg">Edit profile</li>
+              <li class="profile-list" @click="$router.push('/settings/price')"><img src="../../assets/clients/DiscountBlack.svg">Choose tariff</li>
             </ul>
 
-            <a class="log-out" @click="logout" >Log out</a>
-            <p class="powered">
+            <a class="log-out" @click="logout">Log out</a>
+            <p  class="powered">
               Powered by ”Loy Gift” 2021
             </p>
           </div>
@@ -77,16 +77,22 @@ name: "Header",
   openSideBar:{
     type:Function
   },
-
+data(){
+    return{
+      user_info:''
+    }
+}
   },
   methods:{
   logout(){
     this.$router.push('/')
     localStorage.removeItem('token')
   },
-
   },
-  mounted(){
+  beforeCreate(){
+    this.user_info = JSON.parse(localStorage.getItem('user'))
+
+
   }
 
 }
@@ -94,7 +100,12 @@ name: "Header",
 
 <style scoped>
 
-
+.profile-list:hover{
+  color:#616cf5;
+}
+.profile-list:hover img{
+  fill: #616cf5;
+}
 
 .header{
   background: #fff;

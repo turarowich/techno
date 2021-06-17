@@ -1,23 +1,34 @@
 var config = require('../config/config');
 
 function verifyDB(req, res, next) {
-    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>ThePath",req.path,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+    console.log(req.path);
+    let path = req.path.split('/')[1]
+    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>ThePath",path,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     //check if its client url or company;
-    // let company_url = ['/login/','/register/','/signup','/socket.io/',];
-    let catalog_urls = ['/getCatalogSettings/','/getClientCategories/','/getClientProducts/'];
+    let catalog_urls = [
+        'getCatalogSettings',
+        'getClientCategories',
+        'getClientProducts',
+        'registerClient',
+        'loginClient',
+        'searchPromocodeByCode',
+        'addOrderWeb',
+        'getProductWeb',
+        'getEarnedPoints',
+    ];
     console.log(req.headers['company_url'],"MIDDLEWARE",config.Shoes);
     let cat_url = req.headers['company_url'];
     let shoes_db = global.userConnection.useDb('loygift').model("catalogs");
     let catalogs_model = shoes_db.model("catalogs");
     ///if already has access place
-    if(req.headers['access-place'] || !catalog_urls.includes(req.path)){
+    if(req.headers['access-place'] || !catalog_urls.includes(path)){
         console.log('already has access place');
         next();
     }else{
         catalogs_model.findOne({ 'cat_url': cat_url })
             .then(repo => {
                 if(repo){
-                    req.cat_db = repo.company;
+                    req.db = "loygift" + repo.company;
                     req.headers['access-place'] = repo.company;
                     console.log(repo.company,"repo.company");
                     next();

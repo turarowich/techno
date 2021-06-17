@@ -1,13 +1,15 @@
 <template>
   <div class="row ">
     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 product-box" v-for="product in catalog" :key="product._id">
-      <div class="product-img"  @click="selectProduct(cat._id)">
-        <img src="../../../assets/clients/shirt.svg">
+      <div class="product-img"  @click="selectProduct(product._id)">
+        <img :src="server+'/'+product.img">
       </div>
       <div class="product-add">
-        <h2>{{product.name}} </h2>
+        <h2>{{product.name}}</h2>
         <h3></h3>
-        <span >{{product.price}}</span>
+        <span v-if="checkDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} %%</span>
+        <br>
+        <span :class="{lineThrough:checkDates(product.promoStart,product.promoEnd)}">{{product.price}}</span>
       </div>
       <button class="add-to-card" @click="addToCart(product._id)">Add to cart</button>
     </div>
@@ -19,24 +21,68 @@
 export default {
 name: "ClientCatalogItem",
   props:['catalog'],
-
+  data(){
+    return{
+      today:new Date(),
+    }
+  },
+  computed:{
+    userDiscountStatus(){
+      return this.$store.getters['Client/getUserDiscountStatus'];
+    },
+    currentCompanyCatalog() {
+      return this.$route.params.bekon;
+    },
+    server(){
+      return this.$server;
+    },
+  },
   methods:{
+    checkDates(start,end){
+      let itsPromo = false;
+      let startDate = new Date(start);
+      let endDate = new Date(end);
+      if(startDate<=this.today && endDate>=this.today){
+        itsPromo = true;
+      }
+
+      return itsPromo;
+    },
     addToCart(id){
       let cart_object = {
+        client_status_discount:this.userDiscountStatus.discount_percentage || 0,
         product:{},
+        isDiscounted:false,
         quantity:1,
         promocode:'',
         discount_percent:0,
+        discount_percent_sum:0,
         discount_sum:0,
         current_price:0,
       }
       const order = this.catalog.filter((el)=>el._id === id);
       cart_object.product = order? order[0] : null;
-      cart_object.current_price = order? order[0].price : 0;
+      //promo price check
+      let current_price = order? order[0].price : 0;
+      let old_price = order? order[0].price : 0;
+      if(this.checkDates(cart_object.product.promoStart,cart_object.product.promoEnd)){
+        current_price = order? order[0].promoPrice : 0;
+        let discount_sum = old_price - current_price;
+        cart_object.discount_sum = discount_sum>0? discount_sum:0;
+        cart_object.isDiscounted = true;
+      }else if(cart_object.client_status_discount>0){
+        let disc = (current_price*(cart_object.client_status_discount/100)).toFixed(2);
+        current_price = (current_price-disc).toFixed(2);
+        cart_object.discount_percent_sum =disc;
+      }
+
+      //
+      cart_object.current_price = current_price;
       this.$store.dispatch('Orders/addToCart', cart_object)
     },
       selectProduct(id){
-        this.$router.push('/home/catalog-detail/:'+id);
+        // this.$router.push('/home/catalog-detail/:'+id);
+        this.$router.push({ path: `/shop/${this.currentCompanyCatalog}/catalog-detail/:${id}` });
       },
     },
 }
@@ -103,5 +149,9 @@ name: "ClientCatalogItem",
   font-weight: normal;
   color:#b0b0b0;
   margin: 5px 0;
+}
+.lineThrough{
+  text-decoration: line-through;
+  font-size: 9px!important;
 }
 </style>

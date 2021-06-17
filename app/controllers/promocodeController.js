@@ -153,9 +153,10 @@ class PromocodeController{
         let sum = req.query.sum;
         let type = req.query.type;
         let date = req.query.date;
+        console.log(sum,date,search,req.db,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         let result = {
             'status': 200,
-            'msg': 'Sending promocodes',
+            'msg': 'Promocode is valid',
         }
         let lang = req.headers["accept-language"]
         if (lang != 'ru') {
@@ -163,6 +164,7 @@ class PromocodeController{
         }
         promocode: try {
             let promocode = await Promocode.findOne({ "code": search });
+            console.log(promocode);
             if(promocode){
                 var start = new Date(promocode.startDate);
                 var end = new Date(promocode.endDate);

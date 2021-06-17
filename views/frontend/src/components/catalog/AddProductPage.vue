@@ -56,7 +56,7 @@
             <label class="valid-label">Period of action</label>
             <div class=" product-calendar d-flex align-items-center" >
               <div class="d-flex align-items-center mr-2" style="width:50%">
-                <label >From</label>
+                <label >From45</label>
                 <div class="calendar d-flex align-items-center">
                   <input id="to-period" class="calendar-input" >
                   <img src="../../assets/icons/Calendar.svg">
@@ -115,8 +115,15 @@ export default {
         quantity: '',
         category:'',
         img: '',
-        description:''
-
+        description:'',
+        promoStart: {
+          obj:{},
+          formatted:'',
+        },
+        promoEnd: {
+          obj:{},
+          formatted:'',
+        },
       },
     }
   },
@@ -149,7 +156,8 @@ export default {
       form.append('quantity', new_product.quantity)
       form.append('category', new_product.category)
       form.append('description', new_product.description)
-      console.log(this.description)
+      console.log(this.description);
+
       this.axios.post('http://localhost:8080/api/addProduct/', form)
           .then((response) => {
             console.log("success", response)
@@ -171,6 +179,7 @@ export default {
     }
   },
   mounted() {
+    let that = this;
     this.getCategories()
 
     var toolbarOptions = [
@@ -203,14 +212,16 @@ export default {
       field: document.getElementById('to-period'),
       format:'YYYY-MM-DD',
       onSelect:(date)=>{
-        this.to_purchase_date = date.format('YYYY-MM-DD')
+        that.newProduct.promoStart.obj = date;
+        that.newProduct.promoStart.formatted = date.format('DD.MM.YYYY');
       }
     });
     new this.$lightpick({
       field: document.getElementById('from-period'),
       format:'YYYY-MM-DD',
         onSelect:(date)=>{
-        this.to_purchase_date = date.format('YYYY-MM-DD')
+          that.newProduct.promoEnd.obj = date;
+          that.newProduct.promoEnd.formatted = date.format('DD.MM.YYYY');
       }
     });
   },

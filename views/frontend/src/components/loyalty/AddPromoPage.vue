@@ -343,7 +343,7 @@ export default {
       this.promocode_id=promocode._id;
       this.name=promocode.name;
       this.generatedCode=promocode.code;
-      this.discount=promocode.percent;
+      this.discount=promocode.discount;
       this.fixedSum=promocode.fixed_sum;
       this.minSum=promocode.min_sum;
       this.selectedType=promocode.selected_type;

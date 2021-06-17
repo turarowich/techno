@@ -45,7 +45,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch("Promocode/setPromocodeAPI",this.axios);
+    this.$store.dispatch("Promocode/setPromocodeAPI",{axios:this.axios,url:this.url('getPromocodes')});
   },
   methods:{
     getEditPromocode(id){
@@ -66,10 +66,10 @@ export default {
 
     removeAddPromocode(id){
       let that = this;
-      let url = 'https://localhost:8443/api/deletePromocode/'+id;
+      let url = this.url('deletePromocode/'+id);
       this.axios.delete(url).then(function (response) {
         console.log(response);
-        that.$store.dispatch("Promocode/setPromocodeAPI",that.axios);
+        that.$store.dispatch("Promocode/setPromocodeAPI",{axios:that.axios,url:that.url('getPromocodes')});
       }).catch(function(error){
         if (error.response) {
           // console.log(error.response.status);

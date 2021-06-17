@@ -1,6 +1,7 @@
 const { useDB, sendError, saveImage } = require('../../services/helper')
 var validate = require('../../config/messages');
-
+var path = require('path');
+const fs = require('fs')
 class NewsController {
 
     getSingleNews = async function (req, res) {
@@ -65,7 +66,14 @@ class NewsController {
             await news.validate()
 
             if (req.files.img) {
-
+                //
+                let dir = path.join(__dirname, '/../../views/frontend/images/' + req.db);
+                if (!fs.existsSync(dir)) {
+                    fs.mkdirSync(dir, {recursive: true}, err => {
+                        console.log(err)
+                    })
+                }
+                //
                 let filename = saveImage(req.files.img, req.db)
                 if (filename == 'Not image') {
                     result = {

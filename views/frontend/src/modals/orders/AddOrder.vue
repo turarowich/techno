@@ -1,17 +1,12 @@
 <template>
   <div class="modal fade right"  id="add-order" tabindex="-1" role="dialog" aria-labelledby="add-order" aria-hidden="true">
-    <div class="modal-dialog  modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: 81%;" role="document" >
+    <div class="modal-dialog  modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: calc(100vw - 250px);" role="document" >
       <div class="modal-content myModal-content h-100">
         <div class="modal-header justify-content-start align-items-start">
-
-          <button type="button" data-dismiss="modal" aria-label="Close" class="close">
-              <span aria-hidden="true">
-                <img src="../../assets/icons/x.svg" alt="">
-              </span>
-          </button>
-         <div>
+            <img data-dismiss="modal" aria-label="Close" class="close" src="../../assets/icons/x.svg" alt="">
+          <div>
            <h3 class="modal-title">New order</h3>
-           <span class="detail-date">Created 23 Apr 2021, 13:37</span>
+           <span class="detail-date">{{new Date().toString()}}</span>
          </div>
         </div>
         <div class=" myModal-body">
@@ -49,7 +44,7 @@
 
                 <div class="table-content">
                   <div v-if="new_order.products.length===0" class="d-flex align-items-center h-100 justify-content-center flex-column">
-                    <img class="empty-img" src="../../assets/icons/emptyOrder.svg">
+                    <img class="empty-img mb-2" src="../../assets/icons/no-catalog.svg">
                     <p class="empty-page-text">Add a product to start</p>
                   </div>
 
@@ -70,7 +65,7 @@
               </div>
               <div class="notes">
                 <h3 class="detail-product">Notes</h3>
-                <input class="cashback-input">
+                <input class="cashback-input" v-model="new_order.notes">
               </div>
 
 
@@ -82,21 +77,22 @@
               <h3 class="client-sub-title">Client</h3>
 
               <div  class="client-box d-flex align-items-center">
-                <div v-if="new_order.client === ''"  class="client-search d-flex align-items-center">
+                <div v-if="clientObj === ''"  class="client-search d-flex align-items-center">
                   <img src="../../assets/icons/search-icon.svg" class="search-client-icon">
                   <input v-model="search_client" placeholder="Enter clients name or number" class="search-client">
                 </div>
                 <div v-else class="d-flex align-items-center">
-                  <img class="client-avatar" src="../../assets/img/criw.jpg">
+                  <img class="client-avatar" v-if="clientObj.avatar" :src="imgSrc+'/'+clientObj.avatar">
+                  <img class="client-avatar" v-else src="../../assets/icons/chat.svg">
                   <div class="position-relative">
-                    <h2 class="name-client">{{new_order.client.name}}</h2>
+                    <h2 class="name-client">{{clientObj.name}}</h2>
                     <div class="category">
                       Category:
-                      <span v-if="new_order.client.category !== undefined">{{new_order.client.category.name}}</span>
+                      <span v-if="clientObj.category !== undefined">{{clientObj.category.name}}</span>
                       <span v-else>no </span>
                     </div>
                   </div>
-                  <img @click="new_order.client=''" class="close-client" src="../../assets/icons/deleteClient.svg">
+                  <img @click="removeClient" class="close-client" src="../../assets/icons/deleteClient.svg">
                 </div>
               </div>
              <div class="parent-order-client">
@@ -106,7 +102,8 @@
                 </div>
                  <div v-else v-for="client in filteredClients" :key="client._id"  @click="selectClient(client._id)" class="table-child d-flex align-items-center">
                    <div class="table-img">
-                     <img src="../../assets/img/sneak.webp">
+                     <img v-if="client.avatar" :src="imgSrc+'/'+client.avatar">
+                     <img v-else src="../../assets/icons/chat.svg">
                    </div>
                    <div>
                      <h4 class="general-title">{{client.name}}</h4>
@@ -131,7 +128,7 @@
               <div class="line"></div>
               <h3 class="client-sub-title">Personal discount</h3>
               <input class="cashback-input" placeholder="Enter amount or percentage">
-              <div class="reload-code pr-2 d-flex align-items-center mr-0"><input placeholder="Enter a promocode"><button class="promo-btn"><img src="../../assets/icons/enable+.svg"></button></div>
+              <div class="reload-code pr-2 d-flex align-items-center mr-0"><input v-model="new_order.promoCode" placeholder="Enter a promocode"><button class="promo-btn"><img src="../../assets/icons/enable+.svg"></button></div>
 
               <div class="d-flex justify-content-between align-items-center">
                 <div><label class="custom-checkbox mr-2"><input  type="checkbox"><span class="checkmark"></span></label>Use point</div>
@@ -188,10 +185,10 @@ export default {
       new_order:{
         products:[],
         client:'',
-        promocode:'',
         status:'new',
-        deliveryType:'',
-        totalPrice:this.totalPrice
+        deliveryType:'self',
+        notes:'',
+        promoCode:''
 
       }
 
@@ -220,6 +217,7 @@ export default {
   methods:{
 
     onSubmit(){
+      console.log(this.new_order, "0000000000000000000000000")
       this.axios.post(this.url('addOrder'),this.new_order)
             .then(()=>{
               this.getOrders()
@@ -245,16 +243,15 @@ export default {
        }
        if(product){
          this.new_order.products.push(product)
-
        }
      }
-
       this.search_product = ''
     },
     selectClient(id){
       this.clients.filter((client)=>{
         if(client._id === id){
-          this.new_order.client = client;
+          this.new_order.client = client._id;
+          this.clientObj = client
         }
       })
       this.search_client = ''
@@ -262,6 +259,10 @@ export default {
     deleteFromOrder(id){
       this.new_order.products=this.new_order.products.filter((item)=>item._id !== id)
 
+    },
+    removeClient(){
+      this.new_order.client = '';
+      this.clientObj = ''
     },
     getProducts(){
       this.axios.get(this.url('getProducts'))
@@ -298,7 +299,7 @@ export default {
 .modal-header .close{
   margin: 0;
   padding: 0;
-  margin-top: 3px;
+  margin-top: 7px;
   margin-right: 8px;
 }
 .client-search{
