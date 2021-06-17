@@ -693,15 +693,20 @@ export default {
           }
         }
       });
-      this.axios.put(this.url('updateClientsCategory'),{
-        objects: this.movedCategories,
-        category: id
-      })
-      .then(()=>{
-        this.getClients()
-        this.movedCategories = []
-        this.$informationAlert("Categories changed")
-      })
+     if(this.movedCategories.length === 0){
+       this.$warningAlert('Please choose a clients');
+     }
+     else{
+       this.axios.put(this.url('updateClientsCategory'),{
+         objects: this.movedCategories,
+         category: id
+       })
+           .then(()=>{
+             this.getClients()
+             this.movedCategories = []
+             this.$informationAlert("Categories changed")
+           })
+     }
     }
 
 

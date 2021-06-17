@@ -10,12 +10,12 @@
           <h4 class="settings-title">Access to company settings</h4>
           <div class="radio-toolbar">
             <div class="d-flex align-items-center mr-3">
-              <input type="radio" id="setting-view" name="radioFruit" value="apple" checked>
+              <input type="radio" id="setting-view" name="company"  checked>
               <label for="setting-view"></label>
               <span class="male">View only</span>
             </div>
             <div class="d-flex align-items-center">
-              <input type="radio" id="setting-edit" name="radioFruit" value="orange">
+              <input type="radio" id="setting-edit" name="company" >
               <label for="setting-edit"></label>
               <span class="male">Edit access</span>
             </div>
@@ -31,18 +31,18 @@
     </div>
     <div class="col-lg-4">
       <div class="settings-box d-flex align-items-center justify-content-between">
-        <img class="settings-icon" src="../../assets/icons/setting-icon/Setting.svg">
+        <img class="settings-icon" src="../../assets/icons/setting-icon/Plus.svg">
 
         <div>
-          <h4 class="settings-title">Access to company settings</h4>
+          <h4 class="settings-title">Access to order</h4>
           <div class="radio-toolbar">
             <div class="d-flex align-items-center mr-3">
-              <input type="radio" id="client-view" name="radioFruit" value="apple" checked>
+              <input type="radio" id="client-view" name="order">
               <label for="client-view"></label>
               <span class="male">View only</span>
             </div>
             <div class="d-flex align-items-center">
-              <input type="radio" id="client-edit" name="radioFruit" value="orange">
+              <input type="radio" id="client-edit" name="order">
               <label for="client-edit"></label>
               <span class="male">Edit access</span>
             </div>
@@ -58,22 +58,9 @@
     </div>
     <div class="col-lg-4">
       <div class="settings-box d-flex align-items-center justify-content-between">
-        <img class="settings-icon" src="../../assets/icons/setting-icon/Setting.svg">
-
+        <img class="settings-icon" src="../../assets/icons/setting-icon/Chart.svg">
         <div>
-          <h4 class="settings-title">Access to company settings</h4>
-          <div class="radio-toolbar">
-            <div class="d-flex align-items-center mr-3">
-              <input type="radio" id="chat-view" name="radioFruit" value="apple" checked>
-              <label for="chat-view"></label>
-              <span class="male">View only</span>
-            </div>
-            <div class="d-flex align-items-center">
-              <input type="radio" id="chat-edit" name="radioFruit" value="orange">
-              <label for="chat-edit"></label>
-              <span class="male">Edit access</span>
-            </div>
-          </div>
+          <h4 class="settings-title">Access to Analytics</h4>
         </div>
 
         <label class="switch d-flex">
@@ -85,18 +72,18 @@
     </div>
     <div class="col-lg-4">
       <div class="settings-box d-flex align-items-center justify-content-between">
-        <img class="settings-icon" src="../../assets/icons/setting-icon/Setting.svg">
+        <img class="settings-icon" src="../../assets/icons/setting-icon/Document.svg">
 
         <div>
-          <h4 class="settings-title">Access to company settings</h4>
+          <h4 class="settings-title">Access to the clients base</h4>
           <div class="radio-toolbar">
             <div class="d-flex align-items-center mr-3">
-              <input type="radio" id="order-view" name="radioFruit" value="apple" checked>
+              <input type="radio" id="order-view" name="client">
               <label for="order-view"></label>
               <span class="male">View only</span>
             </div>
             <div class="d-flex align-items-center">
-              <input type="radio" id="order-edit" name="radioFruit" value="orange">
+              <input type="radio" id="order-edit" name="client">
               <label for="order-edit"></label>
               <span class="male">Edit access</span>
             </div>
@@ -112,18 +99,18 @@
     </div>
     <div class="col-lg-4">
       <div class="settings-box d-flex align-items-center justify-content-between">
-        <img class="settings-icon" src="../../assets/icons/setting-icon/Setting.svg">
+        <img class="settings-icon" src="../../assets/icons/setting-icon/VolumeUp.svg">
 
         <div>
-          <h4 class="settings-title">Access to company settings</h4>
+          <h4 class="settings-title">Access to news</h4>
           <div class="radio-toolbar">
             <div class="d-flex align-items-center mr-3">
-              <input type="radio" id="news-view" name="radioFruit" value="apple" checked>
+              <input type="radio" id="news-view" name="news" >
               <label for="news-view"></label>
               <span class="male">View only</span>
             </div>
             <div class="d-flex align-items-center">
-              <input type="radio" id="news-edit" name="radioFruit" value="orange">
+              <input type="radio" id="news-edit" name="news">
               <label for="news-edit"></label>
               <span class="male">Edit access</span>
             </div>
@@ -139,18 +126,18 @@
     </div>
     <div class="col-lg-4">
       <div class="settings-box d-flex align-items-center justify-content-between">
-        <img class="settings-icon" src="../../assets/icons/setting-icon/Setting.svg">
+        <img class="settings-icon" src="../../assets/icons/setting-icon/Discovery.svg">
 
         <div>
-          <h4 class="settings-title">Access to company settings</h4>
+          <h4 class="settings-title">Catalog Access</h4>
           <div class="radio-toolbar">
             <div class="d-flex align-items-center mr-3">
-              <input type="radio" id="loyalty-view" name="radioFruit" value="apple" checked>
+              <input type="radio" id="loyalty-view" name="catalog" >
               <label for="loyalty-view"></label>
               <span class="male">View only</span>
             </div>
             <div class="d-flex align-items-center">
-              <input type="radio" id="loyalty-edit" name="radioFruit" value="orange">
+              <input type="radio" id="loyalty-edit" name="catalog">
               <label for="loyalty-edit"></label>
               <span class="male">Edit access</span>
             </div>
@@ -166,18 +153,18 @@
     </div>
     <div class="col-lg-4">
       <div class="settings-box d-flex align-items-center justify-content-between">
-        <img class="settings-icon" src="../../assets/icons/setting-icon/Setting.svg">
+        <img class="settings-icon" src="../../assets/icons/setting-icon/MoreSquare.svg">
 
         <div>
-          <h4 class="settings-title">Access to company settings</h4>
+          <h4 class="settings-title">Chat access</h4>
           <div class="radio-toolbar">
             <div class="d-flex align-items-center mr-3">
-              <input type="radio" id="analatycs-view" name="radioFruit" value="apple" checked>
+              <input type="radio" id="analatycs-view" name="chat" >
               <label for="analatycs-view"></label>
               <span class="male">View only</span>
             </div>
             <div class="d-flex align-items-center">
-              <input type="radio" id="analatycs-edit" name="radioFruit" value="orange">
+              <input type="radio" id="analatycs-edit" name="chat">
               <label for="analatycs-edit"></label>
               <span class="male">Edit access</span>
             </div>
@@ -193,18 +180,18 @@
     </div>
     <div class="col-lg-4">
       <div class="settings-box d-flex align-items-center justify-content-between">
-        <img class="settings-icon" src="../../assets/icons/setting-icon/Setting.svg">
+        <img class="settings-icon" src="../../assets/icons/setting-icon/Game.svg">
 
         <div>
-          <h4 class="settings-title">Access to company settings</h4>
+          <h4 class="settings-title">Access to loyalty programs</h4>
           <div class="radio-toolbar">
             <div class="d-flex align-items-center mr-3">
-              <input type="radio" id="catalog-view" name="radioFruit" value="apple" checked>
+              <input type="radio" id="catalog-view" name="loyalty">
               <label for="catalog-view"></label>
               <span class="male">View only</span>
             </div>
             <div class="d-flex align-items-center">
-              <input type="radio" id="catalog-edit" name="radioFruit" value="orange">
+              <input type="radio" id="catalog-edit" name="loyalty">
               <label for="catalog-edit"></label>
               <span class="male">Edit access</span>
             </div>
@@ -220,17 +207,17 @@
     </div>
     <div class="col-lg-4">
       <div class="settings-box d-flex align-items-center justify-content-between">
-        <img class="settings-icon" src="../../assets/icons/setting-icon/Setting.svg">
+        <img class="settings-icon" src="../../assets/icons/setting-icon/paper.svg">
         <div>
-          <h4 class="settings-title">Access to company settings</h4>
+          <h4 class="settings-title">Access to operations</h4>
           <div class="radio-toolbar">
             <div class="d-flex align-items-center mr-3">
-              <input type="radio" id="operation-view" name="radioFruit" value="apple" checked>
+              <input type="radio" id="operation-view" name="operation" >
               <label for="operation-view"></label>
               <span class="male">View only</span>
             </div>
             <div class="d-flex align-items-center">
-              <input type="radio" id="operation-edit" name="radioFruit" value="orange">
+              <input type="radio" id="operation-edit" name="operation" >
               <label for="operation-edit"></label>
               <span class="male">Edit access</span>
             </div>
@@ -250,7 +237,7 @@
 
   <div class="row">
     <div class="col-lg-4">
-      <div class="loyalty-box d-flex justify-content-around align-items-center">
+      <div class="loyalty-box d-flex justify-content-between align-items-center">
         <h3 class="cashback-sub-title">Accruals of points</h3>
         <label class="switch d-flex">
           <input type="checkbox">
@@ -259,8 +246,8 @@
       </div>
     </div>
     <div class="col-lg-4">
-      <div class="loyalty-box d-flex justify-content-around align-items-center">
-        <h3 class="cashback-sub-title">Accruals of points</h3>
+      <div class="loyalty-box d-flex justify-content-between align-items-center">
+        <h3 class="cashback-sub-title">Writing off money</h3>
         <label class="switch d-flex">
           <input type="checkbox">
           <span class="slider round"></span>
@@ -268,8 +255,8 @@
       </div>
     </div>
     <div class="col-lg-4">
-      <div class="loyalty-box d-flex justify-content-around align-items-center">
-        <h3 class="cashback-sub-title">Accruals of points</h3>
+      <div class="loyalty-box d-flex justify-content-between align-items-center">
+        <h3 class="cashback-sub-title">Change status order</h3>
         <label class="switch d-flex">
           <input type="checkbox">
           <span class="slider round"></span>
@@ -277,8 +264,8 @@
       </div>
     </div>
     <div class="col-lg-4">
-      <div class="loyalty-box d-flex justify-content-around align-items-center">
-        <h3 class="cashback-sub-title">Accruals of points</h3>
+      <div class="loyalty-box d-flex justify-content-between align-items-center">
+        <h3 class="cashback-sub-title">Push notification</h3>
         <label class="switch d-flex">
           <input type="checkbox">
           <span class="slider round"></span>
@@ -286,8 +273,8 @@
       </div>
     </div>
     <div class="col-lg-4">
-      <div class="loyalty-box d-flex justify-content-around align-items-center">
-        <h3 class="cashback-sub-title">Accruals of points</h3>
+      <div class="loyalty-box d-flex justify-content-between align-items-center">
+        <h3 class="cashback-sub-title">Scan QR</h3>
         <label class="switch d-flex">
           <input type="checkbox">
           <span class="slider round"></span>
@@ -305,6 +292,9 @@ export default {
 </script>
 
 <style scoped>
+.cashback-sub-title{
+  font-weight: 400;
+}
 .access-settings{
   padding: 0 30px;
 }
@@ -318,14 +308,14 @@ export default {
   margin-bottom: 15px;
 }
 .loyalty-box{
-  height: 80px;
+  height: 45px;
 }
 .settings-icon{
   width: 30px;
   height: 30px;
 }
 .settings-title{
-  font-size: 15px;
+  font-size: 16px;
   margin-bottom: 7px;
 }
 .male{
