@@ -81,7 +81,8 @@ name: "SignIn",
       this.axios.post(this.url('login'), data)
       .then((resp)=>{
         localStorage.setItem('token', resp.data.token)
-        this.changeToken()
+        localStorage.setItem('user',JSON.stringify(resp.data.object))
+        this.changeToken();
         this.$router.push('/orders')
       })
       .catch((error)=>{

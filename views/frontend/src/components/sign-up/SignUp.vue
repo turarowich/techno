@@ -126,8 +126,10 @@ name: "SignUp",
       data.append('description', this.register.description);
       data.append('password', this.register.password);
       this.axios.post(this.url('register'), data)
-      .then(()=>{
+      .then((res)=>{
         that.$router.push('/orders')
+        localStorage.setItem(JSON.stringify(res.data.object))
+
         this.register = {
           name:'',
           password:'',

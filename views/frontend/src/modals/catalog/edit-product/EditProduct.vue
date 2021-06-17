@@ -3,11 +3,7 @@
     <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: 82%;" role="document" >
       <div class="modal-content myModal-content h-100">
         <div class="modal-header justify-content-start align-items-center">
-          <button type="button" data-dismiss="modal" aria-label="Close" class="close mr-2">
-              <span aria-hidden="true">
-                <img src="../../../assets/icons/xBlack.svg" alt="">
-              </span>
-          </button>
+          <img data-dismiss="modal" aria-label="Close" class="close mr-2" src="../../../assets/icons/xBlack.svg" alt="">
           <h3 class="modal-title">Edit</h3>
         </div>
         <div class="myModal-body">
@@ -16,26 +12,26 @@
               <form  class="modal-form">
                 <div class="d-flex align-items-center mb-3">
                   <div style="width:50%" class="mr-3">
-                    <label class="product-label">Name</label><br>
+                    <label class="product-label">Name</label><i class="fas fa-asterisk"></i><br>
                     <input name="name"  v-model="currentData.name" style="width:100%" class="cashback-input">
                   </div>
 
                   <div class="quantity-category mr-3">
-                    <label class="product-label">Quantity</label><br>
+                    <label class="product-label">Quantity</label><i class="fas fa-asterisk"></i><br>
                     <input name="quantity"  v-model="currentData.quantity" class="cashback-input">
                   </div>
 
                   <div style="width:25%;">
-                    <label class="product-label">Select category</label><br>
+                    <label class="product-label">Select category</label><i class="fas fa-asterisk"></i><br>
 
-                    <select name="category" v-model="currentData.category"  class="form-control mb-0 select-phone" >
+                    <select v-if="currentData.category ? currentData.category._id : ''" name="category" v-model="currentData.category._id"  class="form-control mb-0 select-phone" >
                       <option :value="cat._id" v-for="cat in listCategory" :key="cat._id">{{cat.name}}</option>
                     </select>
                   </div>
                 </div>
 
                 <label>Name in russian</label><br>
-                <input class="cashback-input mb-3" style="width:50%"><br>
+                <input v-model="currentData.name_ru" class="cashback-input mb-3" style="width:50%"><br>
                 <label>Description</label>
                 <textarea v-model="currentData.description" class="general-area p-3 mb-3" style="height:160px"   name="description"></textarea>
 
@@ -49,7 +45,7 @@
 
                 <div class="d-flex ">
                   <div style=" width:33.33%; margin-right:8px;">
-                    <label>Price</label>
+                    <label>Price</label><i class="fas fa-asterisk"></i><br>
                     <input name="price" v-model="currentData.price" class="form-input cashback-input mb-4" placeholder="Price"  >
                   </div>
                   <div :class="{active:isDiscount}" class="show-price" style="width:33.33%; margin-right:8px;">
@@ -57,7 +53,7 @@
                     <input name="promoPrice" v-model="currentData.promoPrice" class="form-input cashback-input mb-4" placeholder="Price">
                   </div>
                   <div style="width:33.33%;">
-                    <label>Vendor Code</label>
+                    <label>Vendor Code</label><i class="fas fa-asterisk"></i><br>
                     <input name="vendorCode" v-model="currentData.vendorCode"  class="form-input cashback-input mb-4" placeholder="Vendor code"  >
                   </div>
                 </div>
@@ -199,14 +195,14 @@ export default {
         field: document.getElementById('promoStart_input'),
         onSelect: function(date){
           that.promoStart.obj = date;
-          that.promoStart.formatted = date.format('DD.MM.YYYY');
+          that.promoStart.formatted = date.format('DD-MM-YYYY');
         }
       });
       this.promoEndLightpick = new this.$lightpick({
         field: document.getElementById('promoEnd_input'),
         onSelect: function(date){
           that.promoEnd.obj = date;
-          that.promoEnd.formatted = date.format('DD.MM.YYYY');
+          that.promoEnd.formatted = date.format('DD-MM-YYYY');
         }
       });
     },
@@ -214,7 +210,6 @@ export default {
       $.each($("#imgsArray")[0].files, (i,file)=> {
          console.log(i)
           if(this.currentData.img === ''){
-            console.log(this.currentData.img)
             this.currentData.img = file
           }
           else{
@@ -241,8 +236,9 @@ export default {
       }
       form.append('img',updatedProduct.img)
       form.append("name", updatedProduct.name)
+      form.append("name_ru", updatedProduct.name_ru)
       form.append("quantity", updatedProduct.quantity)
-      form.append("category", updatedProduct.category)
+      form.append("category", updatedProduct.category._id)
       form.append("price", updatedProduct.price)
       form.append("description", updatedProduct.description)
       form.append("promoPrice", updatedProduct.promoPrice)
@@ -281,6 +277,12 @@ export default {
 </script>
 
 <style scoped>
+.fa-asterisk{
+  font-size: 8px;
+  margin-bottom: 2px;
+  color:red;
+}
+
 .selected-images:hover .remove-image{
   opacity: 1;
 }

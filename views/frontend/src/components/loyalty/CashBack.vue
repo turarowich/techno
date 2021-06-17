@@ -43,10 +43,11 @@
     </div>
     <div v-if="searchResult &&(searchResult.length>0)" class="position-relative" style="margin-bottom: 30px">
       <div class="resultList">
-        <div @click="setSelectedItem(prod.name,prod._id)" v-for="prod in searchResult" :key="prod._id">
+
+        <div  class="result-item" @click="setSelectedItem(prod.name,prod._id)" v-for="prod in searchResult" :key="prod._id">
           {{prod.name}}
         </div>
-<!--        <div @click="setSelectedItem(serve.name,serve._id,'service')" v-for="serve in searchResult.services" :key="serve._id">-->
+<!--      <div @click="setSelectedItem(serve.name,serve._id,'service')" v-for="serve in searchResult.services" :key="serve._id">-->
 <!--          {{serve.name}}-->
 <!--        </div>-->
       </div>
@@ -414,6 +415,13 @@ export default {
 </script>
 
 <style scoped>
+.result-item{
+  padding:7px 10px;
+}
+.result-item:hover{
+  background: #F8F9FF;
+  transition:.3s;
+}
 .cashback-right .cashback-input{
   width: 100%;
 }
@@ -493,9 +501,9 @@ export default {
   background: white;
   width: 100%;
   z-index: 2;
-  border: 1px solid #005cbf;
-  border-radius: 5px;
-  padding: 5px;
+  box-shadow: 2px 11px 35px rgba(0, 0, 0, 0.1);
+
+
 
 }
 .resultList div{

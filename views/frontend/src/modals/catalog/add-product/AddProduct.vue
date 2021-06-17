@@ -1,16 +1,12 @@
 <template>
   <div class="modal fade right "  id="add-products" tabindex="-1" role="dialog" aria-labelledby="add-products" aria-hidden="true">
       <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: calc(100% - 250px);" role="document" >
-        <div class="modal-content myModal-content h-100">
+        <div class="modal-content  myModal-content h-100">
           <div class="modal-header justify-content-start align-items-center">
-            <button type="button" data-dismiss="modal" aria-label="Close" class="close">
-              <span aria-hidden="true">
-                <img src="../../../assets/icons/xBlack.svg" alt="">
-              </span>
-            </button>
+            <img  data-dismiss="modal" aria-label="Close" class="close" src="../../../assets/icons/xBlack.svg" alt="">
             <h3 class="modal-title">Add Product</h3>
           </div>
-          <div class=" myModal-body">
+          <div class="myModal-body">
                 <div class="row">
                   <div class="col-11 m-auto">
                     <form @submit.prevent="onSubmit"  class="modal-form">
@@ -33,7 +29,8 @@
                         </div>
                       </div>
 
-                      <a class="add-russian" href="/">+ Add in russian</a>
+                      <a @click="showRussian" class="add-russian">+ Add in russian</a>
+                      <input id="name_ru"  v-model="newProduct.name_ru" name="name_ru" style="width:50%; display: none"  class="cashback-input mb-4 "><br>
                       <label>Description</label>
                       <textarea class="general-area mb-3" style="height:160px" v-model="newProduct.description"  name="description"></textarea>
 
@@ -125,6 +122,7 @@ props:['listCategory', 'getProducts'],
 
       previewImage:[],
       newProduct:{
+        name_ru:'',
         imgArray: [],
         name: '',
         price: '',
@@ -141,7 +139,7 @@ props:['listCategory', 'getProducts'],
           obj:{},
           formatted:'',
         },
-        promoPrice:''
+        promoPrice:0
 
       },
     };
@@ -154,7 +152,10 @@ props:['listCategory', 'getProducts'],
   }
   },
   methods:{
-  cancel(){
+  showRussian(){
+    $('#name_ru').toggle();
+  },
+    cancel(){
     $('#add-products').modal("hide");
     this.newProduct = {
       name: '',
@@ -204,6 +205,7 @@ props:['listCategory', 'getProducts'],
         }
 
       form.append('name', new_product.name)
+      form.append('name_ru', new_product.name_ru)
       form.append('price', new_product.price)
       form.append('quantity', new_product.quantity)
       form.append('category', new_product.category)
@@ -229,6 +231,7 @@ props:['listCategory', 'getProducts'],
         quantity:'',
         category: '',
         img:'',
+        name_ru:'',
         imgArray: [],
         description:'',
         vendorCode:'',
@@ -254,7 +257,7 @@ props:['listCategory', 'getProducts'],
       onSelect:(date)=>{
         // that.promoStart = date.format().toString().slice(0,16)
         that.newProduct.promoStart.obj = date;
-        that.newProduct.promoStart.formatted = date.format('DD.MM.YYYY');
+        that.newProduct.promoStart.formatted = date.format('DD-MM-YYYY');
       }
     });
     new this.$lightpick({
@@ -263,7 +266,7 @@ props:['listCategory', 'getProducts'],
       lang:'en',
       onSelect:(date)=>{
         that.newProduct.promoEnd.obj = date;
-        that.newProduct.promoEnd.formatted = date.format('DD.MM.YYYY');
+        that.newProduct.promoEnd.formatted = date.format('DD-MM-YYYY');
       }
     });
   }
@@ -333,6 +336,7 @@ props:['listCategory', 'getProducts'],
   display: block;
   margin: 20px 0;
   color:#616cf5;
+  cursor:pointer;
 }
 .cashback-input{
   font-size: 16px;

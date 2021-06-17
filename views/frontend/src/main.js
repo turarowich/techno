@@ -149,7 +149,7 @@ app.config.globalProperties.clearForm = function (formData) {
 app.config.globalProperties.$successAlert = function(text){
     Swal.fire({
             title:'Success',
-            timer:1500,
+            timer:800,
             text:text,
             showConfirmButton:false,
             position: 'top-right',
@@ -160,9 +160,7 @@ app.config.globalProperties.$successAlert = function(text){
                 header:'success-header',
                 image:'success-img'
             },
-            showClass:{
-                popup: 'animate__animated animate__zoomIn'
-            }
+
 
         }
     )

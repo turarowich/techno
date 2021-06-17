@@ -208,6 +208,7 @@ name: "Orders",
       this.axios.get(this.url('getOrders')+'?populate=client')
       .then((response)=>{
         this.orderList = response.data.objects;
+        console.log(this.orderList)
       })
     },
     checkAll(item){
@@ -352,24 +353,28 @@ name: "Orders",
     },
     inProgress(id) {
       this.orderList.map((order) => {
-        if (order.id === id) {
+        if (order._id === id) {
           order.status = 'In Progress';
-
+          this.axios.put(this.url('updateOrder',id),order)
         }
       })
+
     },
     done(id) {
       this.orderList.map((order) => {
-        if (order.id === id) {
+        if (order._id === id) {
           order.status = 'Done';
+          return this.axios.put(this.url('updateOrder',id),order.status)
 
         }
       })
     },
     canceled(id) {
       this.orderList.map((order) => {
-        if (order.id === id) {
+        if (order._id === id) {
           order.status = 'Canceled';
+          this.axios.put(this.url('updateOrder',id),order)
+          this.axios.put(this.url('updateOrder',id),order)
 
         }
       })

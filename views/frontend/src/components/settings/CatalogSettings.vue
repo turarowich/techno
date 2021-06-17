@@ -27,7 +27,7 @@
        </div>
      </div>
      <h3 class="catalog-sub-title margin-20">QR code for online catalog</h3>
-     <h3 class="catalog-sub-title " style="text-overflow: ellipsis;overflow: hidden">{{catalogFullUrl}}</h3>
+     <h3 class="catalog-sub-title mb-3" style="text-overflow: ellipsis;overflow: hidden">{{catalogFullUrl}}</h3>
      <div class="d-flex align-items-center margin-50">
        <img :src="qrcodePath" class="mr-3">
        <div>
