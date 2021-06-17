@@ -376,6 +376,7 @@ name: "Orders",
 <style scoped>
 .date-pick::placeholder{
   color: #606877;
+  opacity: 1;
 }
 .pagination-select{
   background:none;

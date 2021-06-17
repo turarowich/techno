@@ -4,8 +4,11 @@
     <div class="d-flex justify-content-between app-buttons">
       <div class="d-flex align-items-center">
         <button class="app-buttons-item adding-btns" data-toggle="modal" data-target="#add-cashier"><span>+ Add cashier</span></button>
+      </div>
+      <div class="d-flex align-items-center">
         <button class="app-buttons-item"><img src="../../assets/icons/trash_empty.svg"><span>Remove</span></button>
-        <button class="app-buttons-item"><img src="../../assets/icons/redTrash.svg"><span>Block</span></button>
+        <button class="app-buttons-item"><img src="../../assets/icons/setting-icon/Lock.svg"><span>Block</span></button>
+        <button class="app-buttons-item"><img src="../../assets/icons/setting-icon/Unblock.svg"><span>Unblock</span></button>
       </div>
     </div>
     <div class="main-search d-flex align-items-center ">
