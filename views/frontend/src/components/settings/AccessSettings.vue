@@ -5,7 +5,6 @@
     <div class="col-lg-4">
       <div class="settings-box d-flex align-items-center justify-content-between">
         <img class="settings-icon" src="../../assets/icons/setting-icon/Setting.svg">
-
         <div>
           <h4 class="settings-title">Access to company settings</h4>
           <div class="radio-toolbar">
@@ -60,7 +59,7 @@
       <div class="settings-box d-flex align-items-center justify-content-between">
         <img class="settings-icon" src="../../assets/icons/setting-icon/Chart.svg">
         <div>
-          <h4 class="settings-title">Access to Analytics</h4>
+          <h4 class="settings-title analytics">Access to Analytics</h4>
         </div>
 
         <label class="switch d-flex">
@@ -292,6 +291,9 @@ export default {
 </script>
 
 <style scoped>
+.analytics{
+  margin-left: -50px;
+}
 .cashback-sub-title{
   font-weight: 400;
 }
