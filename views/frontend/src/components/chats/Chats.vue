@@ -8,7 +8,7 @@
     <div class="overflow-hidden contacts-container">
         <div class="d-flex align-items-center  search-chat">
             <img class="mr-3" src="../../assets/icons/search-icon.svg">
-            <input type="text" placeholder="Search, user or chat" v-model="search">
+            <input type="text" placeholder="Search, user or chat" v-model="search" @input="checkSelection">
         </div>
         <div class="d-flex align-items-center justify-content-between search-chat pl-0 pr-1">
             <div class="pl-1" style="width: 100px;"><label class="custom-checkbox checkbox-text w-100 d-flex align-items-center"><input id="parent-check" type="checkbox"  v-model="selectAll" @change="selectAllContact"><span class="checkmark"></span><p class="mb-0 pl-1">Select all</p>  </label></div>
@@ -95,10 +95,10 @@ export default {
         });
     },
     checkSelection(){
-        let selected =  this.contactList.filter(contact => {
+        let selected =  this.filteredContact.filter(contact => {
             return contact.selected 
         })
-        this.selectAll = selected.length == this.contactList.length
+        this.selectAll = selected.length == this.filteredContact.length
     },
     startConversation(contact){
       this.selectedContact = contact
@@ -115,7 +115,7 @@ export default {
         }
     },
     selectAllContact(){
-        this.contactList.map((contact) => contact['selected'] = this.selectAll);
+        this.filteredContact.map((contact) => contact['selected'] = this.selectAll);
     },
     clearChats(){
         Swal.fire({
@@ -137,7 +137,7 @@ export default {
         }).then((result) => {
             if (result.isConfirmed) {
             this.axios.post(this.url('clearMessages'),{
-                    clients: this.contactList.filter(contact => {
+                    clients: this.filteredContact.filter(contact => {
                         return contact.selected 
                     })
                 }).

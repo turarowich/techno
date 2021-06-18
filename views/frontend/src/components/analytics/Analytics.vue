@@ -12,9 +12,34 @@
     </div>
 
     <div class="analytics-wrapper">
-      <div class="analytics-box" v-for="item in analytics" :key="item.id">
-        <p><img class="mr-2" src="../../assets/icons/coin.svg">{{item.title}}</p>
-        <h2 class="analytics-title">{{item.number}}</h2>
+      <div class="analytics-box" >
+        <p><img class="mr-2" src="../../assets/icons/coin.svg">The amount of profit</p>
+        <h2 class="analytics-title">4000</h2>
+      </div>
+      <div class="analytics-box" >
+        <p><img class="mr-2" src="../../assets/icons/coin.svg">Number of clients</p>
+        <h2 class="analytics-title">1020</h2>
+      </div>
+      <div class="analytics-box" >
+        <p><img class="mr-2" src="../../assets/icons/coin.svg">Middle age</p>
+        <h2 class="analytics-title">25</h2>
+      </div>
+      <div class="analytics-box" >
+        <p><img class="mr-2" src="../../assets/icons/coin.svg">Spent with bonuses</p>
+        <h2 class="analytics-title">13445</h2>
+      </div>
+      <div class="analytics-box" >
+        <p><img class="mr-2" src="../../assets/icons/coin.svg">The amount of discounts</p>
+        <h2 class="analytics-title">111234</h2>
+      </div>
+      <div class="analytics-box" >
+        <p><img class="mr-2" src="../../assets/icons/coin.svg">Number of orders</p>
+        <h2 class="analytics-title">11111</h2>
+      </div>
+      <div class="analytics-box" >
+        <p><img class="mr-2" src="../../assets/icons/coin.svg">
+        Average check</p>
+        <h2 class="analytics-title">44444</h2>
       </div>
     </div>
 
@@ -32,20 +57,7 @@ import Chart from 'chart.js'
 
 export default {
   name: "Analytics",
-  data(){
-    return{
-      analytics:[
-        {id:1,title:'The amount of profit', number:4000},
-        {id:2,title:'The amount of profit', number:1020},
-        {id:3,title:'The amount of profit', number:2000},
-        {id:4,title:'The amount of profit', number:12000},
-        {id:5,title:'The amount of profit', number:12445},
-        {id:6,title:'The amount of profit', number:111234},
-        {id:7,title:'The amount of profit', number:44444},
-        {id:8,title:'The amount of profit', number:11111},
-      ]
-    }
-  },
+
 
   methods: {
    createChart(){
@@ -157,7 +169,7 @@ export default {
 }
 .analytics-box:before{
   content:'';
-  left: 65%;
+  left: 70%;
   top: 50%;
   border: 1px solid #d3d3d3;
   transform: rotate(90deg);

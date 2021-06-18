@@ -24,7 +24,7 @@
             :class="[{red: order.status === 'Canceled'},
           {green: order.status === 'Done'},
           {orange: order.status === 'In Progress'},
-          {new: order.status === 'New'}
+          {new: order.status === 'new'}
           ]">
 
         <i class=" circle-status fas fa-circle"></i>
@@ -38,11 +38,11 @@
           </div>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
             <ul class="list-group " >
-              <li class="list-group-item" v-on:click="$emit('done',order._id)">Done</li>
+              <li class="list-group-item" v-on:click="statusDone(order)">Done</li>
               <li class="list-group-item" data-toggle="modal" data-target="#edit-order" @click="$emit('selectOrder',order._id)">Edit</li>
-              <li class="list-group-item" @click="$emit('canceled' ,order._id)">Cancel</li>
+              <li class="list-group-item" @click="statusCancel(order)">Cancel</li>
               <li class="list-group-item" v-on:click="$emit('deleteOrder',order._id)">Delete</li>
-              <li class="list-group-item" v-on:click="$emit('inProgress',order._id)">In progress</li>
+              <li class="list-group-item" v-on:click="statusProgress(order)">In progress</li>
             </ul>
           </div>
         </div>
@@ -76,6 +76,21 @@ export default {
   },
 
   methods: {
+    statusDone(order){
+      order.status = 'Done';
+      this.axios.put(this.url('updateProduct',order._id), order)
+
+    },
+    statusCancel(order){
+      order.status = 'Canceled';
+      this.axios.put(this.url('updateProduct',order._id), order)
+
+    },
+    statusProgress(order){
+      order.status = 'In progress';
+      this.axios.put(this.url('updateProduct',order._id), order)
+
+    },
     checkAll(item) {
       return  this.$refs[`select${item._id}`].checked === true
     },

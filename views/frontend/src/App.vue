@@ -54,6 +54,18 @@ export default {
                 selector: '.tool-tip'
             });
         });
+        $(document).on("input", '.value-error' , function () {
+            if(!$(this).hasClass('not-handle-error')){
+                
+                $(this).removeClass('value-error');
+                
+                if($(this).next().hasClass('value-error-text')){
+                
+                    $(this).next().remove();
+                }
+
+            }
+        })
     }
 
   }

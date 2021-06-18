@@ -1,9 +1,9 @@
 <template>
-  <div class="modal fade right"  id="add-cashier" tabindex="-1" role="dialog" aria-labelledby="add-cashier" aria-hidden="true">
+  <div class="modal fade right"  id="edit-cashier" tabindex="-1" role="dialog" aria-labelledby="edit-cashier" aria-hidden="true">
     <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: 587px;" role="document" >
       <div class="modal-content myModal-content h-100">
         <div class="modal-header align-items-center">
-          <h3 class="modal-title">Add Cashier</h3>
+          <h3 class="modal-title">Edit Cashier</h3>
           <button type="button" data-dismiss="modal" aria-label="Close" class="close">
               <span aria-hidden="true">
                 <img src="../../assets/icons/x.svg" alt="">
@@ -11,11 +11,12 @@
           </button>
         </div>
         <div class=" myModal-body">
-          <form  class="modal-form addEmployee">
-
+          <form  class="modal-form editEmployee">
             <div class="user-img">
-                <img class="image-preview" v-if="employee.avatar" :src="imagePreview">
+                <img class="image-preview" v-if="newImage" :src="imagePreview">
+                <img class="image-preview" v-else-if="employee.avatar" :src="makeImg(employee.avatar)">
                 <img v-else src="../../assets/icons/clientUser.svg">
+
                 <input class="d-none" type="file" name="" ref="uploadPhoto" accept="image/*" @change="uploadPhoto($event)">
                 <img src="../../assets/icons/addBtn.svg" class="add-btn" @click="selectPhoto">
             </div>
@@ -27,7 +28,7 @@
             <input name="email" class="cashback-input" v-model="employee.email">
 
             <label class="li-label">Birthday</label><br>
-            <input id="birthDate" name="birthDate" class="cashback-input calendar-input" v-model="employee.birthDate" readonly>
+            <input id="birthDateEdit" name="birthDate" class="cashback-input calendar-input" v-model="employee.birthDate" readonly>
             
             <label class="li-label">Password</label><br>
             <input name="password" type="password" class="cashback-input" v-model="employee.password">
@@ -54,18 +55,23 @@
 <script>
 import $ from "jquery";
 export default {
-  name: "AddCashier",
+  name: "EditCashier",
+    props: ['selectedEmployee'],
     data(){
         return{
-            employee:{
-                name: "",
-                email: "",
-                password: "",
-                repeatPassword: "",
-                comment: "",
-                birthDate: this.currentDate( -365 * 16),
-                avatar: ""
-            },
+            employee:{},
+            newImage: false
+        }
+    },
+    watch: {
+        selectedEmployee: function (val) {
+            this.employee = Object.assign({}, val)
+            if(this.employee.birthDate){
+                this.employee.birthDate = this.employee.birthDate.slice(0, 10)
+            }else{
+                this.employee.birthDate = this.currentDate( -365 * 16)
+            }
+            this.newImage = false
         }
     },
     computed:{
@@ -98,6 +104,7 @@ export default {
             }else if(event.target.files[0] && !valid.includes(event.target.files[0].type)){
                 this.$warningAlert('Image type can be jpg or png');
             }else{
+                this.newImage = true
                 this.employee.avatar = event.target.files[0]
             }
             this.$refs.uploadPhoto.value = ""
@@ -108,14 +115,14 @@ export default {
                 email: "",
                 password: "",
                 repeatPassword: "",
-                birthDate: this.currentDate( -365 * 16),
+                birthDate: "",
                 comment: "",
                 avatar: ""
             }
             $('#add-cashier').modal("hide")
         },
         addEmployee(){
-            if(this.comparePassword != "value-success"){
+            if(this.comparePassword != "value-success" && this.password){
                 this.$warningAlert('Passwords not the same');
                 return;
             }
@@ -125,38 +132,45 @@ export default {
             if(new_employee.avatar){
                 form.append('avatar', new_employee.avatar)
             }
+            if(new_employee.password){
+                form.append('password', new_employee.password)
+            }
+
             form.append('name', new_employee.name)
             form.append('email', new_employee.email)
-            form.append('password', new_employee.password)
             form.append('comment', new_employee.comment)
             form.append('birthDate', new_employee.birthDate)
 
-            this.axios.post(this.url('addEmployee'), form)
+            this.axios.put(this.url('updateEmployee', new_employee._id), form)
                 .then(() => {
                     setTimeout(()=>{ 
                         this.$emit('getEmployees')
-                        $('#add-cashier').modal("hide")
-                    }, 500);
+                        $('#edit-cashier').modal("hide")    
+                    }, 300);
                     this.$successAlert('Employee has been added')
                     this.new_employee = {
                         name: '',
                         email:'',
                         password:'',
                         comment: '',
-                        birthDate: this.currentDate( -365 * 16),
+                        birthDate: "",
                         avatar:"",
                     }
                 }).catch((error) => {
-                    this.setErrors($('.addEmployee'), error)
+                    this.setErrors($('.editEmployee'), error)
                     console.log("fail", error.response)
                 })
+        },
+        makeImg(name){
+            return this.img(name)
         }
+
 
     },
     mounted(){
         if(document.getElementById('birthDate')){
             new this.$lightpick({
-                field: document.getElementById('birthDate'),
+                field: document.getElementById('birthDateEdit'),
                 format:'',
                 lang:'en',
                 minDate: "01 01 1900",
