@@ -5,7 +5,9 @@
         <div class="row">
             <div class="col-4  news-box" v-for="newss in news" :key="newss._id" @click="openNews(newss._id)">
               <div class="new-img">
-                <img :src="server+'/'+newss.img">
+<!--                <img :src="server+'/'+newss.img">-->
+                <img v-if="!newss.error" :src="server+'/'+newss.img" @error="newss.error=true">
+                <img v-else src="../../../assets/img/default.svg" >
               </div>
              <div class="news-text">
                <div class="d-flex align-items-center calendar-news" ><img src="../../../assets/icons/Calendar.svg">
@@ -39,7 +41,7 @@ export default {
   },
   methods:{
     openNews(id){
-      this.$router.push(`/shop/${this.currentCompanyCatalog}/news-detail/${id}`)
+      this.$router.push(`/${this.currentCompanyCatalog}/news-detail/${id}`)
     },
   }
 }

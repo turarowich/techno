@@ -13,30 +13,38 @@
       <p class="client-paragraph">
         {{catalog_settings.description}}
       </p>
-      <button class=" catalog-btn" @click="$router.push(`/shop/${currentCompanyCatalog}`)">Go to catalog</button>
+      <button class=" catalog-btn" @click="$router.push(`/${currentCompanyCatalog}`)">Go to catalog</button>
     </div>
   </div>
   <div class="col-lg-4">
     <div class="about-right">
-      <h2 class="shop-name">Modius Catalog</h2>
+      <h2 class="shop-name">{{catalog_settings.name || ""}}</h2>
       <div class="line mt-0"></div>
 
       <h3 class="contact-title">Contacts</h3>
+      <div v-if="companyAddresses.length>1">
+
       <div class="contact-box">
-        <p><img src="../../../assets/clients/call-about.svg"><a href="/">+1 812 436 23 53</a></p>
-        <p class="mb-0"><img src="../../../assets/clients/message-about.svg"><a href="/">modius@support.com</a></p>
+        <p><img src="../../../assets/clients/call-about.svg">{{companyAddresses[0].phone}}</p>
+        <p><img src="../../../assets/clients/call-about.svg">{{companyAddresses[0].phone2}}</p>
+        <p class="mb-0"><img src="../../../assets/clients/message-about.svg">{{catalog_settings.email}}</p>
       </div>
 
-      <p class="contact-address">135, st. Toktogula, Bishkek, Kyrgyzstan</p>
-      <p class="contact-time mb-0">Mn-Fr 08:00 - 19:00</p>
-      <p class="contact-time">Sd 08:00 - 17:00</p>
+        <p class="contact-address">{{ companyAddresses[0].address }}</p>
+        <p v-if="companyAddresses[0].monday.active" class="contact-time mb-0">Mon {{companyAddresses[0].monday.start}}-{{companyAddresses[0].monday.end}}</p>
+        <p v-if="companyAddresses[0].monday.active" class="contact-time mb-0">Tue {{companyAddresses[0].tuesday.start}}-{{companyAddresses[0].tuesday.end}}</p>
+        <p v-if="companyAddresses[0].wednesday.active" class="contact-time mb-0">Wed {{companyAddresses[0].wednesday.start}}-{{companyAddresses[0].wednesday.end}}</p>
+        <p v-if="companyAddresses[0].thursday.active" class="contact-time mb-0">Thr {{companyAddresses[0].thursday.start}}-{{companyAddresses[0].thursday.end}}</p>
+        <p v-if="companyAddresses[0].friday.active" class="contact-time mb-0">Fr {{companyAddresses[0].friday.start}}-{{companyAddresses[0].friday.end}}</p>
+        <p v-if="companyAddresses[0].saturday.active" class="contact-time mb-0">Sat {{companyAddresses[0].saturday.start}}-{{companyAddresses[0].saturday.end}}</p>
+        <p v-if="companyAddresses[0].sunday.active" class="contact-time mb-0">Sun {{companyAddresses[0].sunday.start}}-{{companyAddresses[0].sunday.end}}</p>
+      </div>
 
       <h3 class="contact-title">Links</h3>
       <div class="contact-icon">
         <a :href="catalog_settings.facebook" target="_blank"><img src="../../../assets/clients/Facebook.svg"></a>
         <a :href="catalog_settings.instagram" target="_blank"><img src="../../../assets/clients/Instagram.svg"></a>
         <a :href="catalog_settings.website" target="_blank"><img src="../../../assets/clients/ls_web.svg"></a>
-
       </div>
     </div>
   </div>
@@ -56,6 +64,9 @@ export default {
     currentCompanyCatalog() {
       return this.$route.params.bekon;
     },
+    currentCompanyCatalogStorage() {
+      return this.$store.getters['Catalog/getCompany_ur'];
+    },
     company_description(){
       return this.$store.getters['Catalog/getCompany_description'];
     },
@@ -65,10 +76,57 @@ export default {
     catalog_settings(){
       return this.$store.getters['Catalog/getCatalog_settings'];
     },
+
+    companyAddresses(){
+      return this.$store.getters['Catalog/getCompanyAddresses'];
+    },
     server(){
       return this.$server;
     },
   },
+  beforeCreate() {
+    (async () => {
+      const options = {
+        headers: {"company_url": this.$route.params.bekon}
+      }
+      await this.axios.get(this.url('getCatalogSettings'),options)
+          .then((response) => {
+            let settings = response.data.object;
+            this.$store.dispatch("Catalog/setCompany_addresses",response.data.branches);
+            this.$store.dispatch("Catalog/setCompany_delivery_options",response.data.deliveries);
+            let catalog_settings={
+              name:settings.name,
+              email:settings.email,
+              banner:settings.banner,
+              description:settings.description,
+              welcome:settings.welcome,
+              delivery:settings.delivery,
+              deliveryDescription:settings.deliveryDescription,
+              telegram:settings.telegram,
+              facebook:settings.facebook,
+              instagram:settings.instagram,
+              whatsapp:settings.whatsapp,
+              website:settings.website,
+            }
+            this.$store.dispatch("Catalog/setCatalog_settings",catalog_settings);
+            // $('.overlay_404').show();
+          }).catch(function (error){
+            if (error.response) {
+              console.log('eeeeeeeeeeeeee',error.response)
+              // let err_page = `
+              // <div>--->404</div>
+              // `
+              // $('.overlay_404').html(err_page).show();
+            }
+          })
+    })().catch(err => {
+      console.error(err);
+    });
+  },
+  created() {
+    console.log(this.currentCompanyCatalogStorage);
+    console.log(this.currentCompanyCatalog);
+  }
 }
 </script>
 

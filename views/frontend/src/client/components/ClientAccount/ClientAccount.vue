@@ -8,7 +8,7 @@
             <div v-if="user">
               <h1 class="profile-title">
                 {{user.name}}
-                <router-link :to="`/shop/${currentCompanyCatalog}/edit-profile`">
+                <router-link :to="`/${currentCompanyCatalog}/edit-profile`">
                   <img src="../../../assets/clients/Edit.svg">
                 </router-link>
               </h1>

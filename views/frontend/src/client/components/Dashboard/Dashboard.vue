@@ -1,16 +1,17 @@
 <template>
 <div class="container client-container">
-  <div class="main-box" v-bind:style="{ backgroundImage: 'url(' + bannerPath + ')' }" >
+<!--  <div class="main-box" v-bind:style="{ backgroundImage: 'url(' + bannerPath + ')' }" >-->
+  <div class="main-box" v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.banner + ')' }" >
     <div class="relatives">
-      <h1>Modius </h1>
-      <p>Brand clothing store</p>
+      <h1>{{catalog_settings.name || 'Company Name'}}</h1>
+      <p>{{catalog_settings.welcome || 'Welcome to our thingy'}}</p>
     </div>
   </div>
   <div class="new">
     <div class="news">
       <div class="d-flex justify-content-between mb-3" >
         <div style="font-weight: bold;font-size: 20px;">News</div>
-        <div><router-link class="view-all" :to="`/shop/${currentCompanyCatalog}/client-news`">View all</router-link></div>
+        <div><router-link class="view-all" :to="`/${currentCompanyCatalog}/client-news`">View all</router-link></div>
       </div>
       <div class="row">
 <!--        <div class="col-lg-3 ">-->
@@ -24,11 +25,15 @@
           <div class="row">
             <div v-for="(news,index) in newsArray.slice(0,4)" :key="index"  class="col-lg-3 col-md-4 col-sm-6 pl-0" @click="openNews(news._id)">
               <div class="new-img">
-<!--                <img src="../../../assets/clients/mask3.svg">-->
-                <img :src="server+'/'+news.img">
+                <img v-if="!news.error" :src="server+'/'+news.img" @error="news.error=true">
+                <img v-else src="../../../assets/img/default.svg" >
               </div>
               <div class="news-text">
-                <div class="d-flex align-items-center calendar-news" ><img src="../../../assets/icons/Calendar.svg"><span class="date">{{new Date(news.createdAt).toDateString()}}</span></div>
+                <div class="d-flex align-items-center calendar-news" >
+                  <img src="../../../assets/icons/Calendar.svg">
+                  <span class="date">
+                    {{new Date(news.createdAt).toDateString()}}
+                  </span></div>
                 <h4 class="news-content">{{news.name}}</h4>
                 <p class="news-description">{{news.desc}}</p>
               </div>
@@ -44,6 +49,7 @@
 
 <script>
 import ClientCatalog from "@/client/components/ClientCatalog/ClientCatalog";
+// import $ from 'jquery';
 export default {
 name: "Dashboard",
   components:{
@@ -51,7 +57,7 @@ name: "Dashboard",
   },
   data(){
     return{
-      settings:{},
+      // settings:{},
       newsArray:[],
     }
   },
@@ -76,13 +82,16 @@ name: "Dashboard",
     userToken(){
       return this.$store.getters['Client/getUserToken'];
     },
+    catalog_settings(){
+      return this.$store.getters['Catalog/getCatalog_settings'];
+    },
     server(){
       return this.$server;
     },
   },
   methods:{
     openNews(id){
-      this.$router.push(`/shop/${this.currentCompanyCatalog}/news-detail/${id}`)
+      this.$router.push(`/${this.currentCompanyCatalog}/news-detail/${id}`)
     },
     async  getNews(){
       const options = {
@@ -94,18 +103,20 @@ name: "Dashboard",
             this.newsArray = response.data.objects;
           })
     },
-    async  getCatalogSettings(){
-      // let that = this;
+  },
+  beforeCreate() {
+    (async () => {
       const options = {
-        headers: {"company_url": this.currentCompanyCatalog}
+        headers: {"company_url": this.$route.params.bekon}
       }
       await this.axios.get(this.url('getCatalogSettings'),options)
           .then((response) => {
             let settings = response.data.object;
-            console.log(response,"cattttttsssssssss");
             this.$store.dispatch("Catalog/setCompany_addresses",response.data.branches);
             this.$store.dispatch("Catalog/setCompany_delivery_options",response.data.deliveries);
             let catalog_settings={
+              name:settings.name,
+              email:settings.email,
               banner:settings.banner,
               description:settings.description,
               welcome:settings.welcome,
@@ -118,18 +129,22 @@ name: "Dashboard",
               website:settings.website,
             }
             this.$store.dispatch("Catalog/setCatalog_settings",catalog_settings);
-            this.settings = settings;
+            // $('.overlay_404').show();
           }).catch(function (error){
             if (error.response) {
-              // console.log(error.response.status);
-              // console.log(error.response.headers);
-              // that.$warningAlert('Requested shop was not found, check url')
+              console.log('eeeeeeeeeeeeee',error.response)
+              // let err_page = `
+              // <div>--->404</div>
+              // `
+              // $('.overlay_404').html(err_page).show();
             }
           })
-    },
+    })().catch(err => {
+      console.error(err);
+    });
   },
   created(){
-    this.getCatalogSettings();
+    // this.getCatalogSettings();
   },
   mounted() {
     this.getNews();

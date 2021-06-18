@@ -15,7 +15,7 @@
 <script>
 import Navbar from "@/client/Navbar";
 import Footer from "@/client/components/footer/Footer";
-import $ from 'jquery';
+// import $ from 'jquery';
 export default {
 name: "Home",
   components:{
@@ -37,25 +37,42 @@ name: "Home",
   },
   beforeCreate(){
     ///Ahahah ahahhah
-    (async () => {
-      const options = {
-        headers: {"company_url": this.$route.params.bekon}
-      }
-      await this.axios.get(this.url('getCatalogSettings'),options)
-          .then((response) => {
-            console.log(response,"HOMMEEEEE SElf");
-            $('.overlay_404').show();
-          }).catch(function (error){
-            if (error.response) {
-              let err_page = `
-              <div>--->404</div>
-              `
-              $('.overlay_404').html(err_page).show();
-            }
-          })
-    })().catch(err => {
-      console.error(err,"tehh selfllf");
-    });
+    // (async () => {
+    //   const options = {
+    //     headers: {"company_url": this.$route.params.bekon}
+    //   }
+    //   await this.axios.get(this.url('getCatalogSettings'),options)
+    //       .then((response) => {
+    //         let settings = response.data.object;
+    //         this.$store.dispatch("Catalog/setCompany_addresses",response.data.branches);
+    //         this.$store.dispatch("Catalog/setCompany_delivery_options",response.data.deliveries);
+    //         let catalog_settings={
+    //           name:settings.name,
+    //           email:settings.email,
+    //           banner:settings.banner,
+    //           description:settings.description,
+    //           welcome:settings.welcome,
+    //           delivery:settings.delivery,
+    //           deliveryDescription:settings.deliveryDescription,
+    //           telegram:settings.telegram,
+    //           facebook:settings.facebook,
+    //           instagram:settings.instagram,
+    //           whatsapp:settings.whatsapp,
+    //           website:settings.website,
+    //         }
+    //         this.$store.dispatch("Catalog/setCatalog_settings",catalog_settings);
+    //         $('.overlay_404').show();
+    //       }).catch(function (error){
+    //         if (error.response) {
+    //           let err_page = `
+    //           <div>--->404</div>
+    //           `
+    //           $('.overlay_404').html(err_page).show();
+    //         }
+    //       })
+    // })().catch(err => {
+    //   console.error(err);
+    // });
     this.$store.dispatch("Catalog/setCompany_url",this.$route.params.bekon);
   },
   created(){
@@ -77,7 +94,7 @@ name: "Home",
   }
 }
 .overlay_404{
-  display: none;
+  /*display: none;*/
 }
 .client{
   overflow-y: auto;

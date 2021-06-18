@@ -193,7 +193,8 @@ export default {
     qrcodePath(){
       if(this.company !=="" && this.id !==''){
         try {
-          return require("../../../images/"+this.company+'/qr/code.png');
+          // return require("../../../images/"+this.company+'/qr/code.png');
+          return this.server+"/images/"+this.company+'/qr/code.png';
           // eslint-disable-next-line no-empty
         }catch (e){
           console.log(e,"ddddddddddddd");

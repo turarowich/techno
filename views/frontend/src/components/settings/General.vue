@@ -4,156 +4,86 @@
     <div class="row ">
       <div class="col-lg-5 mr-5">
         <label class="sum-point">Currency</label><br>
-        <input class="form-input cashback-input mb-4" placeholder="USD">
+        <input v-model="currency" class="form-input cashback-input mb-2" placeholder="USD">
 
         <label class="sum-point">Your country</label>
-        <select class="form-control long-form-control  form-control-lg mb-2" aria-label=".form-select-lg example">
-          <option>Kyrgyzstan</option>
-          <option>Russia</option>
-          <option>USA</option>
+        <select v-model="country" class="form-control long-form-control  form-control-lg mb-2" aria-label=".form-select-lg example">
+          <option val="Kyrgyzstan">Kyrgyzstan</option>
+          <option val="Russia">Russia</option>
+          <option val="USA">USA</option>
         </select>
+        <label class="sum-point">Name of the company</label><br>
+        <input v-model="name" class="form-input cashback-input mb-2" placeholder="Company">
+        <label class="sum-point">Email</label><br>
+        <input v-model="email" class="form-input cashback-input mb-2" placeholder="Company email">
       </div>
 
       <div class="col-lg-5">
-        <h2 class="cashback-title">Chat settings</h2>
-                <div class="d-flex enable-title">
-                  <label class="switch d-flex">
-                    <input type="checkbox" @click="disabled = (disabled + 1) % 2" >
-                    <span class="slider round"></span>
-                  </label>
-                  <h2 class="cashback-sub-title">Chat</h2>
-                </div>
-                <p class="cashback-description mb-5">Disables the ability to write to you in the chat</p>
+        <h2 class="cashback-title">
+          Chat settings
+        </h2>
+        <div class="d-flex enable-title">
+          <label class="switch d-flex">
+            <input v-model="chat" type="checkbox" >
+            <span class="slider round"></span>
+          </label>
+          <h2 class="cashback-sub-title">Chat</h2>
+        </div>
+        <p class="cashback-description mb-5">Disables the ability to write to you in the chat</p>
       </div>
     </div>
-    <button class="save">Save</button>
+    <button type="button" @click="updateSettings" class="save">Save</button>
   </form>
-<!--      <form>-->
-<!--        <div class="row mb-2">-->
-<!--          <div class="col-lg-5">-->
-<!--            <div class="general-left">-->
-<!--              <div class="form">-->
-<!--                <label class="sum-point">Name</label>-->
-<!--                <input class="form-input cashback-input mb-4" placeholder="Your name">-->
-<!--                <label class="sum-point">Name of company</label>-->
-<!--                <input class="form-input cashback-input mb-4" placeholder="Company">-->
-<!--                <label class="sum-point">Password</label>-->
-<!--                <div class="pswrd-input mb-4">-->
-<!--                  <input id="show-password" type="password" placeholder="Password">-->
-<!--                  <img class="hide-eye" @click="showPassword" src="../../assets/icons/Hide.svg">-->
-<!--                  <img class="show-eye"  @click="showPassword" src="../../assets/icons/eye.svg">-->
-<!--                </div>-->
-<!--                <label class="sum-point">Repeat password</label>-->
-<!--                <div class="pswrd-input">-->
-<!--                  <input id="show-repeat" type="password" placeholder="Password">-->
-<!--                  <img id="hide-eye" @click="showRepeat" src="../../assets/icons/Hide.svg">-->
-<!--                  <img id="show-eye"  @click="showRepeat" src="../../assets/icons/eye.svg">-->
-
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
-
-<!--&lt;!&ndash;-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;Right Side&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
-
-<!--          <div class="col-lg-5">-->
-<!--            <div class="general-right">-->
-<!--              <div class="form">-->
-<!--                <label class="sum-point">Phone number</label>-->
-<!--                <div class="d-flex mb-4">-->
-<!--                  <select class="form-control select-phone" aria-label="Default select example">-->
-<!--                    <option>+996</option>-->
-<!--                    <option>+792</option>-->
-<!--                    <option>+996</option>-->
-<!--                    <option>+792</option>-->
-<!--                    <option>+996</option>-->
-<!--                    <option>+792</option>-->
-<!--                    <option>+996</option>-->
-<!--                    <option>+792</option>-->
-<!--                    <option>+996</option>-->
-<!--                    <option>+792</option>-->
-<!--                  </select>-->
-<!--                  <input class="cashback-input">-->
-<!--                </div>-->
-
-<!--                <div class="mb-4">-->
-<!--                  <p class="sum-point">Email</p>-->
-<!--                  <input class="cashback-input">-->
-<!--                </div>-->
-
-<!--                <div class="mb-4">-->
-<!--                  <label class="sum-point">Your country</label>-->
-<!--                  <select class=" form-control long-form-control  form-control-lg mb-2" aria-label=".form-select-lg example">-->
-<!--                    <option>Kyrgyzstan</option>-->
-<!--                    <option>Russia</option>-->
-<!--                    <option>USA</option>-->
-<!--                  </select>-->
-<!--                </div>-->
-
-<!--                <div class="mb-4">-->
-<!--                  <label class="sum-point">Select currency</label>-->
-<!--                  <select class=" form-control long-form-control  form-control-lg mb-2" aria-label=".form-select-lg example">-->
-<!--                    <option>USD</option>-->
-<!--                    <option>RU</option>-->
-<!--                    <option>SOM</option>-->
-<!--                  </select>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-
-<!--        <h2 class="cashback-title">Help settings</h2>-->
-<!--        <div class="row help-settings">-->
-
-<!--          <div class="col-lg-5">-->
-<!--            <label class="sum-point">Question</label>-->
-<!--            <input class="cashback-input" placeholder="Add question">-->
-<!--          </div>-->
-
-<!--          <div class="col-lg-5">-->
-<!--            <label class="sum-point">Answer</label>-->
-<!--            <input class="cashback-input" placeholder="Add answer">-->
-<!--          </div>-->
-
-<!--        </div>-->
-<!--        <div class="row help-settings">-->
-
-<!--          <div class="col-lg-5">-->
-<!--            <label class="sum-point">Question</label>-->
-<!--            <input class="cashback-input" placeholder="Add question">-->
-<!--          </div>-->
-
-<!--          <div class="col-lg-5">-->
-<!--            <label class="sum-point">Answer</label>-->
-<!--            <input class="cashback-input" placeholder="Add answer">-->
-<!--            <img class="rm-question" src="../../assets/icons/x.svg">-->
-<!--          </div>-->
-
-<!--        </div>-->
-
-<!--        <a href="/" class="add-more mt-3">+ Add more</a>-->
-<!--        <h2 class="cashback-title">Chat settings</h2>-->
-<!--        <div class="d-flex enable-title">-->
-<!--          <label class="switch d-flex">-->
-<!--            <input type="checkbox" @click="disabled = (disabled + 1) % 2" >-->
-<!--            <span class="slider round"></span>-->
-<!--          </label>-->
-<!--          <h2 class="cashback-sub-title">Chat</h2>-->
-<!--        </div>-->
-<!--        <p class="cashback-description mb-5">Disables the ability to write to you in the chat</p>-->
-
-
-<!--        <button class="save mb-3">Save</button>-->
-<!--      </form>-->
 </div>
 </template>
 
 <script>
 
 export default {
-name: "General",
-
+  name: "General",
+  data(){
+    return{
+      currency:'',
+      country:'',
+      chat:false,
+      name:'',
+      email:'',
+    }
+  },
+  methods:{
+    updateSettings(){
+      let that=this;
+      let url = this.url('updateSettings');
+      this.axios.put(url, {
+        currency:this.currency,
+        country:this.country,
+        chat:this.chat,
+        name:this.name,
+        email:this.email,
+      }).then(function (response) {
+        console.log(response);
+        that.$successAlert('Updated');
+      }).catch(function(error){
+        if (error.response) {
+          that.$warningAlert('Something went wrong');
+          that.$warningAlert(Object.values(error.response.data.errors),"Errors");
+        }
+      });
+    },
+  },
+  beforeCreate(){
+    let that = this;
+    this.axios
+      .get(this.url('getSettings'))
+      .then(function (response){
+        let settings = response.data.object;
+        that.currency = settings.currency || '';
+        that.country = settings.country || '';
+        that.chat = settings.chat || '';
+        that.name = settings.name || '';
+        that.email = settings.email || '';
+      })
+  },
 }
 
 </script>

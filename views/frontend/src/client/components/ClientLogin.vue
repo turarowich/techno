@@ -36,7 +36,7 @@
           <span class="or-text">or</span>
           <div class="or-div"></div>
         </div>
-        <div class="have-account mb-0">Don't have an account? <router-link class="client-link" :to="`/shop/${currentCompanyCatalog}/signup`">Sign up now</router-link></div>
+        <div class="have-account mb-0">Don't have an account? <router-link class="client-link" :to="`/${currentCompanyCatalog}/signup`">Sign up now</router-link></div>
       </div>
 
     </div>
@@ -89,7 +89,7 @@ export default {
         that.$successAlert('Logged in!');
         that.$store.dispatch("Client/setUserAuth",response.data);
 
-        that.$router.push({ path: `/shop/${that.currentCompanyCatalog}/client-account`});
+        that.$router.push({ path: `/${that.currentCompanyCatalog}/client-account`});
         // that.$router.go(-1);
       }).catch(function(error){
         if (error.response) {

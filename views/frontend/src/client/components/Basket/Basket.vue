@@ -25,8 +25,8 @@
           <div v-if="!clientAuth">
             <h3 class="cashback-sub-title" style="color:#616CF5;">Log In or register, to receive points and/or use them</h3>
             <div  class="auth_btns_wrapper">
-              <router-link style="flex: 1;" :to="`/shop/${currentCompanyCatalog}/signin`"><span>Log In</span></router-link>
-              <router-link style="flex: 1;" :to="`/shop/${currentCompanyCatalog}/signup`"><span>Register</span></router-link>
+              <router-link style="flex: 1;" :to="`/${currentCompanyCatalog}/signin`"><span>Log In</span></router-link>
+              <router-link style="flex: 1;" :to="`/${currentCompanyCatalog}/signup`"><span>Register</span></router-link>
             </div>
           </div>
           <div v-else>
@@ -137,7 +137,7 @@
               </div>
 
               <div class="d-flex justify-content-between ">
-                <button @click="$router.push({ path: `/shop/${currentCompanyCatalog}` })" class="cancel">Continue shopping</button>
+                <button @click="$router.push({ path: `/${currentCompanyCatalog}` })" class="cancel">Continue shopping</button>
                 <button @click="checkNcontinue()" class="save">
                   Continue
                 </button>
@@ -370,7 +370,7 @@ name: "Basket",
     },
     continueAsGuest(guest){
       this.$store.dispatch('Orders/setGuest', guest);
-      this.$router.push({ path: `/shop/${this.currentCompanyCatalog}/product-info` })
+      this.$router.push({ path: `/${this.currentCompanyCatalog}/product-info` })
     },
     checkNcontinue(){
       let text = '';
@@ -480,6 +480,9 @@ name: "Basket",
       deep: true,
       immediate:true,
     },
+  },
+  beforeCreate() {
+
   },
   mounted(){
 

@@ -1,12 +1,12 @@
 <template>
   <div class="container client-container">
 <nav class="navigation d-flex align-items-center justify-content-between">
-    <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar">Modius <span>Catalog</span></router-link>
+    <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar">{{catalog_settings.name || 'Company Name'}} <span>Catalog</span></router-link>
     <ul class="client-menu">
 
       <li class="client-list"><router-link class="client-link" :to="`/${currentCompanyCatalog}/about`"><img src="../assets/clients/info.svg"/>About us</router-link></li>
       <li v-if="!isLogged" class="client-list"><router-link class="client-link" :to="`/${currentCompanyCatalog}/signin`"><img src="../assets/clients/Profile.svg"/>Login</router-link></li>
-      <li v-else class="client-list"><img src="../assets/clients/Profile.svg"/><router-link class="client-link" :to="`/shop/${currentCompanyCatalog}/client-account`">My Account</router-link></li>
+      <li v-else class="client-list"><img src="../assets/clients/Profile.svg"/><router-link class="client-link" :to="`/${currentCompanyCatalog}/client-account`">My Account</router-link></li>
 
       <li class="client-list hoverBasket dropdown">
 
@@ -28,7 +28,7 @@
                 <div style="width:20%" class="basket-img">
                   <img src="../assets/clients/shirt.svg">
                 </div>
-                <div style="width:60%">
+                <div style="width:50%">
                   <h3 class="basket-title">{{item.product.name}}</h3>
                   <span class="basket-code">{{item.product.article}}</span>
                 </div>
@@ -60,12 +60,18 @@ name: "Navbar",
     currentCompanyCatalog() {
       return this.$route.params.bekon;
     },
+    catalog_settings(){
+      return this.$store.getters['Catalog/getCatalog_settings'];
+    },
     isLogged(){
       return this.$store.getters['Client/getUserStatus'];
     },
   },
   methods:{
     logout(){
+      this.$store.dispatch("Client/logout");
+    },
+    close_drop(){
       this.$store.dispatch("Client/logout");
     },
   },
@@ -175,6 +181,8 @@ font-size: 14px;
   font-size:16px;
   font-weight: normal;
   margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .basket-code{
   color: #B0B0B0;

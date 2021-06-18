@@ -7,19 +7,25 @@
       <div class="row">
         <div class="col-lg-7 detail-right">
           <div class="product-img" id="container">
-            <img :src="server+'/'+getProduct.img">
-            <img v-for="(img,index) in getProduct.imgArray" :key="index" :src="server+'/'+img">
-            <img src="../../../assets/clients/hodie2.svg">
-<!--            <img src="../../../assets/clients/hodie3.svg">-->
-<!--            <img src="../../../assets/clients/hodie4.svg">-->
-          </div>
+<!--            <img :src="server+'/'+getProduct.img">-->
+            <img v-if="!getProduct.error" :src="server+'/'+getProduct.img" @error="getProduct.error=true">
+            <img v-else src="../../../assets/img/default.svg" >
 
+
+            <img v-for="(img,index) in getProduct.imgArray" :key="index" :src="server+'/'+img">
+          </div>
           <div v-if="getProduct.imgArray.length>0" class="multiple-items">
-            <div class="slider-item"> <img :src="server+'/'+getProduct.img"></div>
-            <div v-for="(img,index) in getProduct.imgArray" :key="index" class="slider-item"> <img :src="server+'/'+img"></div>
-            <div class="slider-item"> <img src="../../../assets/clients/hodie2.svg"></div>
-<!--           <div class="slider-item"> <img src="../../../assets/clients/hodie3.svg"></div>-->
-<!--           <div class="slider-item"> <img src="../../../assets/clients/hodie4.svg"></div>-->
+            <div class="slider-item">
+              <img v-if="!getProduct.error" :src="server+'/'+getProduct.img" @error="getProduct.error=true">
+              <img v-else src="../../../assets/img/default.svg" >
+            </div>
+
+
+            <div v-for="(img,index) in getProduct.imgArray" :key="index" class="slider-item">
+              <img :src="server+'/'+img">
+
+
+            </div>
           </div>
         </div>
         <div class="col-lg-5">

@@ -2,6 +2,7 @@ import Swal from "sweetalert2";
 export const OrdersModule = {
     namespaced: true,
     state: {
+        company_url: '',
         shoppingCart:[],
         countOrders: 0,
         //with discounts
@@ -41,9 +42,9 @@ export const OrdersModule = {
             // state.getProduct={},
             state.promocode=null
         },
-        // getDetail(state, product){
-        //     state.getProduct = product
-        // },
+        set_company_url(state, url) {
+            state.company_url = url;
+        },
         setSelectedDeliveryType(state, obj){
             state.selectedDeliveryType = obj
         },
@@ -196,6 +197,9 @@ export const OrdersModule = {
     actions: {
         clearAll:function ({commit}){
             commit('clearAll')
+        },
+        setCompany_url_basket: function({commit},url){
+            commit('set_company_url' ,url)
         },
         getDetail: function({commit},product){
             commit('getDetail' ,product)
@@ -387,8 +391,8 @@ export const OrdersModule = {
         getGuest(state){
             return state.guest;
         },
-        // getProduct(state){
-        //     return state.address;
-        // },
+        getCompany_url_basket(state){
+            return state.company_url;
+        },
     },
 }

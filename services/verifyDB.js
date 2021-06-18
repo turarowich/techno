@@ -1,9 +1,9 @@
-var config = require('../config/config');
+// var config = require('../config/config');
 
 function verifyDB(req, res, next) {
-    console.log(req.path);
     let path = req.path.split('/')[1]
     console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>ThePath",path,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>TheFullPath",req.path,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     //check if its client url or company;
     let catalog_urls = [
         'getCatalogSettings',
@@ -18,7 +18,7 @@ function verifyDB(req, res, next) {
         'getNewsWeb',
         'getSingleNewsWeb',
     ];
-    console.log(req.headers['company_url'],"MIDDLEWARE",config.Shoes);
+    console.log(req.headers['company_url'],"MIDDLEWARE");
     let cat_url = req.headers['company_url'];
     let shoes_db = global.userConnection.useDb('loygift').model("catalogs");
     let catalogs_model = shoes_db.model("catalogs");

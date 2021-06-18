@@ -100,7 +100,7 @@ export default {
       this.axios.put(url,data,options).then(function (response) {
         console.log(response);
         that.$successAlert('Updated');
-        that.$router.push({ path: `/shop/${that.currentCompanyCatalog}/client-account`});
+        that.$router.push({ path: `/${that.currentCompanyCatalog}/client-account`});
       }).catch(function(error){
         if (error.response) {
           console.log(error.response);

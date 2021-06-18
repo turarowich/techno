@@ -95,7 +95,7 @@ export default {
         that.$successAlert('Registered');
         that.$store.dispatch("Client/setUserAuth",response.data);
         // that.$router.go(-1);
-        that.$router.push({ path: `/shop/${that.currentCompanyCatalog}/client-account`});
+        that.$router.push({ path: `/${that.currentCompanyCatalog}/client-account`});
       }).catch(function(error){
         if (error.response) {
           that.$warningAlert(Object.values(error.response.data.errors))

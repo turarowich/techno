@@ -115,6 +115,9 @@ const routes = [
         path: "/:bekon",
         name: "Home",
         component: Home,
+        meta: {
+            hideNavbar: true,
+        },
         children: [
             {
                 path: '',
@@ -124,7 +127,10 @@ const routes = [
             {
                 path: 'about',
                 name: "About",
-                component: About
+                component: About,
+                meta: {
+                    hideNavbar: true,
+                },
             },
             {
                 path: 'news',
@@ -405,13 +411,5 @@ router.beforeEach((to, from, next) => {
     if (requiresAuth && !authenticatedUser) next({ path: `/shop/${current_company_url}/signin` })
     else next();
 });
-// router.beforeEach((to, from, next) => {
-//     console.log(from,"fromfromfromfrom");
-//     next((vm) => {
-//         console.log(vm,"yu");
-//         vm.fromRouter = from;
-//     });
-// });
-
 
 export default router;

@@ -13,7 +13,8 @@
 
     <div class="new-item">
 <!--      <img :src="server+'/'+newsObject.img" @error="$event.target.src=`http://example.com/default.jpg`">-->
-      <img :src="server+'/'+newsObject.img">
+      <img v-if="!newsObject.error" :src="server+'/'+newsObject.img" @error="newsObject.error=true">
+      <img v-else src="../../../assets/img/default.svg" >
     </div>
     <p class="client-paragraph">
       {{newsObject.desc}}

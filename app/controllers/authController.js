@@ -80,6 +80,7 @@ class AuthController{
     };
 
     login = async function (req, res) {
+        console.log(req.fields);
         let db = useDB('loygift');
         let User = db.model("User");
         let result = []

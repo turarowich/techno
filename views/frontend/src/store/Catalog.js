@@ -4,6 +4,8 @@ export const CatalogModule = {
     state: {
         company_url: '',
         catalog_settings: {
+            name:'',
+            email:'',
             banner:'',
             description:'',
             welcome:'',

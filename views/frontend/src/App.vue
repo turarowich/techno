@@ -3,7 +3,7 @@
     <div class="siding-bar" v-if="!$route.meta.hideNavbar">
       <SideBar v-bind:closeSideBar="closeSideBar"  v-show="!$route.path.includes('/shop')"/>
     </div>
-    <div class="main-content" v-bind:class="{hun: $route.name === 'SignUp' || $route.name === 'Admin'  || $route.name === 'SignIn' || $route.path.includes('/shop') } ">
+    <div class="main-content" v-bind:class="{hun: $route.name === 'SignUp' || $route.name === 'Admin'  || $route.name === 'SignIn' || $route.name === 'Home' || $route.meta.hideNavbar} ">
         <Header  v-if="homePage()"  v-bind:openSideBar="openSideBar"/>
         <NewMessageAlert v-if="homePage()"/>
         <div  class="router-view">
@@ -30,7 +30,7 @@ export default {
     methods: {
     homePage(){
       if(['Home','Settings','SignIn', 'SignUp', 'OrderDetail','EditClientPage', 'PushNotification',
-            'EditProductPage','IndividualPush','EditPromo','AddPromoPage','AddProductPage','AccessSettings','AddNews','EditNews','AddOrder'].includes(this.$route.name) || this.$route.path.startsWith("/shop")
+            'EditProductPage','IndividualPush','EditPromo','AddPromoPage','AddProductPage','AccessSettings','AddNews','EditNews','AddOrder'].includes(this.$route.name) || this.$route.meta.hideNavbar
           || this.$route.path.startsWith("/loyalty")
       ){
         return false

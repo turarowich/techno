@@ -203,7 +203,7 @@ export default {
         console.log(response);
         that.$successAlert('Order sent');
         that.$store.dispatch('Orders/clearAll');
-        that.$router.push({ path: `/shop/${that.currentCompanyCatalog}`});
+        that.$router.push({ path: `/${that.currentCompanyCatalog}`});
       }).catch(function(error){
         if (error.response) {
           console.log(error.response);
