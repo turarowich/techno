@@ -192,6 +192,11 @@ const routes = [
                 component: ClientLogin
             },
             {
+                path: 'signin2',
+                name: 'ClientLogin2',
+                component: ClientLogin
+            },
+            {
                 path: 'signup',
                 name: 'ClientRegister',
                 component: ClientRegister
@@ -401,7 +406,7 @@ router.beforeEach((to, from, next) => {
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
     // Check for protected route
-    if (requiresAuth && !authenticatedUser) next({ path: `/shop/${current_company_url}/signin` })
+    if (requiresAuth && !authenticatedUser) next({ path: `/${current_company_url}/signin` })
     else next();
 });
 

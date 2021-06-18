@@ -132,7 +132,11 @@ class ProductController{
             let data = req.fields
             let query = { '_id': req.params.product }
             data['updatedAt'] = new Date()
-            
+            console.log(data)
+            if (data['category'] == ""){
+                data['category'] = null
+            }
+            console.log(data)
             let product = await Product.findOneAndUpdate(query, data)
             if (req.files.img) {
                 let filename = saveImage(req.files.img, req.db, product.img)
@@ -179,7 +183,7 @@ class ProductController{
                     product.imgArray.splice($i, 1)
                 }
             }
-            await product.save()
+            await product.save({new:true})
             result['object'] = product
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
