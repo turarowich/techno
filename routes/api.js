@@ -130,7 +130,7 @@ module.exports = function (app, network_information) {
     app.post('/addEmployee', employeeController.addEmployee);
     app.put('/updateEmployee/:employee', employeeController.updateEmployee);
     app.put('/updateEmployees', employeeController.updateEmployees);
-    app.delete('/deleteEmployees', employeeController.deleteEmployees);
+    app.post('/deleteEmployees', employeeController.deleteEmployees);
 
     return app;
 }

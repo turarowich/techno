@@ -10,7 +10,7 @@ const employeeSchema = new Schema({
     },
     phone: {
         type: String,
-        required: [true, 'phone_required'],
+        required: false,
         trim: true,
         validate: {
             validator: async function (phone) {
@@ -68,10 +68,15 @@ const employeeSchema = new Schema({
         type: Date,
         required: [false, 'birthday_required'],
     },
-    active: {
+    averageCheck: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+    isBlocked: {
         type: Boolean,
         required: false,
-        default: true
+        default: false
     },
     orders: {
         active: {
@@ -182,6 +187,11 @@ const employeeSchema = new Schema({
         },
     },
     canAddPoint: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    canDeductPoint: {
         type: Boolean,
         required: true,
         default: false

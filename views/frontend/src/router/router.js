@@ -37,7 +37,6 @@ import EditProductPage from "@/components/catalog/EditProductPage";
 import IndividualPush from "@/components/clients/IndividualPush";
 import CatalogSettings from "@/components/settings/CatalogSettings";
 import StaffSettings from "@/components/settings/StaffSettings";
-import AccessSettings from "@/components/settings/AccessSettings";
 import AddNews from "@/components/News/AddNews";
 import EditNews from "@/components/News/EditNews";
 
@@ -257,12 +256,6 @@ const routes = [
         path: '/analytics',
         name: "Analytics",
         component: Analytics,
-
-    },
-    {
-        path: '/access-settings',
-        name: "AccessSettings",
-        component: AccessSettings,
 
     },
     {

@@ -81,7 +81,7 @@ class EmployeeController{
                     break addEmployee
                 } else {
                     employee.avatar = filename
-                    employee.save()
+                    await employee.save()
                 }
             }
 
@@ -166,7 +166,7 @@ class EmployeeController{
             'status': 200,
             'msg': 'Employees deleted'
         }
-        if (req.fields.objects.length) {
+        if (req.fields.objects && req.fields.objects.length) {
             try {
                 let query = {
                     '_id': {
@@ -174,6 +174,8 @@ class EmployeeController{
                     }
                 }
                 await Employee.deleteMany(query)
+                let employees = await Employee.find()
+                result['objects'] = employees
             } catch (error) {
                 result = sendError(error, req.headers["accept-language"])
             }
@@ -199,12 +201,12 @@ class EmployeeController{
         if (req.fields.objects.length) {
             try {
                 let query = {}
-                if (req.fields.category) {
-                    req.fields.objects.forEach(async function (employee, index) {
-                        query = { '_id': employee }
-                        await Employee.findOneAndUpdate(query, req.fields)
-                    })
+                for (let employee of req.fields.objects){
+                    query = { '_id': employee._id }
+                    await Employee.findOneAndUpdate(query, req.fields)
                 }
+                let employees = await Employee.find()
+                result['objects'] = employees
             } catch (error) {
                 result = sendError(error, req.headers["accept-language"])
             }
@@ -218,9 +220,6 @@ class EmployeeController{
 
         res.status(result.status).json(result);
     };
-
-    
-
 }
 
 
