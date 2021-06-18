@@ -220,10 +220,10 @@ name: "Catalog",
             return catalog.name.toLowerCase().includes(this.search.toLowerCase())
           })
           .filter(product => {
-            if(product.category !== null){
-              return product.category._id.includes(this.filtered)
-
+            if(this.filtered){
+              return product.category && product.category._id.includes(this.filtered)
             }
+            return true;
           })
     },
     catalogToDisplay: function(){
@@ -457,7 +457,7 @@ name: "Catalog",
        this.axios.get(this.url('getCategories')+'?type=product')
           .then((res)=>{
             this.listCategory = res.data.objects;
-            this.listCategory.unshift({_id:'', name: 'All'})
+            this.listCategory.unshift({_id:"", name: 'All'})
 
           })
     },
@@ -473,20 +473,22 @@ name: "Catalog",
       this.$warningAlert("Please choose a product")
     }
     else{
-      this.axios.put(this.url('updateProductsCategory'), {
+      const submitObj = {
         objects:this.movedCategories,
         category:id
-      })
+      }
+      if(id === ""){
+        submitObj['category'] = null;
+      }
+
+      this.axios.put(this.url('updateProductsCategory'), submitObj)
           .then(()=>{
             this.movedCategories = [];
             this.getProducts()
             this.$informationAlert("Change are saved")
           })
     }
-
-
     }
-
   },
 
 

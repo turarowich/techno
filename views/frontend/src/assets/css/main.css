@@ -1256,6 +1256,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .swal2-close{
     width: 13px !important;
     height: 25px !important;
-    top: 18px !important;
+    top: 15px !important;
     right: 20px !important;
+
 }

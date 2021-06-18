@@ -16,7 +16,7 @@
                     <h3 class="news-title mb-1">Cover Art <span>(Optional)</span></h3>
                     <p class="news-description margin-bottom-20">You can upload JPG or PNG, the minimum resolution is<br> 540*405 px, the size is not more than 3 MB.</p>
                     <button class="upload-photo margin-bottom-30" @click="selectPhoto">+ Upload photo</button><br>        
-                    <input class="d-none" type="file" name="" ref="uploadPhoto" @change="uploadPhoto($event)">
+                    <input accept="image/*" class="d-none" type="file" name="" ref="uploadPhoto" @change="uploadPhoto($event)">
                     <div class="image-preview position-relative" v-if="news.img">
                         <img :src="imagePreview" alt="" class="w-100 d-block" accept="image/png, image/jpeg">
                         <button class="deleteImage" @click="clearInput">
@@ -107,7 +107,7 @@ name: "AddNews",
 
     },
     uploadPhoto(event) {
-        var valid = ["image/png", "image/jpg"];
+        var valid = ["image/png", "image/jpg", "image/jpeg"];
         if(event.target.files[0] && event.target.files[0].size > 3000000){
             this.$warningAlert('Image size exceed 3 mb');
         }else if(event.target.files[0] && !valid.includes(event.target.files[0].type)){

@@ -19,7 +19,6 @@
           <div class="move-category-item" v-for="cat in clientCategory" :key="cat._id" @click="moveCategory(cat._id)">{{cat.name}}</div>
         </div>
       </div>
-      <button class="app-buttons-item" ><img src="../../assets/icons/import.svg"><span>Import</span></button>
       <div class="dropdown filter">
         <button class="dropdown-toggle app-buttons-item mr-0" id="dropdownFilterClient" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="../../assets/icons/filter.svg"><span>Filter</span></button>
         <div class="dropdown-menu filter-box" aria-labelledby="dropdownFilterClient">

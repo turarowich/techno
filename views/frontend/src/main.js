@@ -149,7 +149,7 @@ app.config.globalProperties.clearForm = function (formData) {
 app.config.globalProperties.$successAlert = function(text){
     Swal.fire({
             title:'Success',
-            timer:800,
+            timer:1000,
             text:text,
             showConfirmButton:false,
             position: 'top-right',
@@ -160,8 +160,6 @@ app.config.globalProperties.$successAlert = function(text){
                 header:'success-header',
                 image:'success-img'
             },
-
-
         }
     )
 }
@@ -169,7 +167,7 @@ app.config.globalProperties.$warningAlert = function (text){
     Swal.fire({
             title:'Warning',
             text:text,
-            timer:800,
+            timer:1200,
             showConfirmButton:false,
             position: 'top-right',
             customClass:{

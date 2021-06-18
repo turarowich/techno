@@ -57,7 +57,9 @@ class ProductController{
         }
         addProduct: try {
             let data = req.fields
-            
+            if(data['category'] === ""){
+                data['category'] = null
+            }
             let product = await new Product({
                 type:data.type || "product",
                 name: data.name,
@@ -133,7 +135,11 @@ class ProductController{
             let data = req.fields
             let query = { '_id': req.params.product }
             data['updatedAt'] = new Date()
+            if(data['category'] === ""){
+                data['category'] = null
+            }
             let product = await Product.findOneAndUpdate(query, data)
+
             if (req.files.img) {
                 let filename = saveImage(req.files.img, req.db, product.img)
                 if (filename == 'Not image') {
@@ -179,7 +185,7 @@ class ProductController{
                     product.imgArray.splice($i, 1)
                 }
             }
-            await product.save()
+            await product.save({new:true})
             result['object'] = product
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
@@ -197,12 +203,11 @@ class ProductController{
         }
         try {
             let query = {}
-            if (req.fields.category) {
-                req.fields.objects.forEach(async function (product, index) {
+            req.fields.objects.forEach(async function (product, index) {
                     query = { '_id': product }
                     await Product.findOneAndUpdate(query, req.fields)
                 })
-            }
+
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
