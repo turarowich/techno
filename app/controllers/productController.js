@@ -132,6 +132,7 @@ class ProductController{
             let data = req.fields
             let query = { '_id': req.params.product }
             data['updatedAt'] = new Date()
+            
             let product = await Product.findOneAndUpdate(query, data)
             if (req.files.img) {
                 let filename = saveImage(req.files.img, req.db, product.img)
@@ -196,12 +197,10 @@ class ProductController{
         }
         try {
             let query = {}
-            if (req.fields.category) {
-                req.fields.objects.forEach(async function (product, index) {
-                    query = { '_id': product }
-                    await Product.findOneAndUpdate(query, req.fields)
-                })
-            }
+            req.fields.objects.forEach(async function (product, index) {
+                query = { '_id': product }
+                await Product.findOneAndUpdate(query, req.fields)
+            })
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
