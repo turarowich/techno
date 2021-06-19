@@ -6,14 +6,15 @@
     </div>
     <div v-else v-for="order in orderList" class="table-item d-flex justify-content-between align-items-center" :key="order._id">
 
-      <div class="table-child d-flex align-items  -center"  style="width: 18%;">
+      <div class="table-child d-flex align-items-center"  style="width: 18%;">
         <div><label class="custom-checkbox"><input  type="checkbox"  @click="checkMainSelect"  :ref="'select'+order._id" :value="order._id" ><span class="checkmark"></span></label></div>
         {{order.code}}</div>
       <div  class="table-child d-flex align-items-center"  style="width: 30%;">
         <div  class="table-img">
-           <img :src="imgSrc+'/'+order.products[0].img">
+           <img v-if="order.products !==null" :src="imgSrc+'/'+order.products[0].img">
+
          </div>
-         <span>{{order.products[0].name}}</span>
+         <span>{{order.products?order.products[0].name:'No'}}</span>
       </div>
       <div class="table-child" v-show="data_check.client_checked"  style="width: 25%;">{{order.client ? order.client.name : ''}}</div>
       <div class="table-child" v-show="data_check.phone_checked" style="width: 20%;">{{order.client ? order.client.phone : ''}}</div>
@@ -38,11 +39,11 @@
           </div>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
             <ul class="list-group " >
-              <li class="list-group-item" v-on:click="statusDone(order)">Done</li>
+              <li class="list-group-item" v-on:click="statusChange(order,'Done')">Done</li>
               <li class="list-group-item" data-toggle="modal" data-target="#edit-order" @click="$emit('selectOrder',order._id)">Edit</li>
-              <li class="list-group-item" @click="statusCancel(order)">Cancel</li>
+              <li class="list-group-item" @click="statusChange(order, 'Canceled')">Cancel</li>
               <li class="list-group-item" v-on:click="$emit('deleteOrder',order._id)">Delete</li>
-              <li class="list-group-item" v-on:click="statusProgress(order)">In progress</li>
+              <li class="list-group-item" v-on:click="statusChange(order, 'In Progress')">In progress</li>
             </ul>
           </div>
         </div>
@@ -76,21 +77,11 @@ export default {
   },
 
   methods: {
-    statusDone(order){
-      order.status = 'Done';
-      this.axios.put(this.url('updateOrder',order._id), order)
-
-
-    },
-    statusCancel(order){
-      order.status = 'Canceled';
-      this.axios.put(this.url('updateOrder',order._id), order)
-
-    },
-    statusProgress(order){
-      order.status = 'In proccess';
-      this.axios.put(this.url('updateOrder',order._id), order)
-
+    statusChange(order,status){
+      order.status = status
+      this.axios.put(this.url('updateOrder',order._id), order).then(()=>{
+        console.log("GGGGGGGGGG", order)
+      })
     },
     checkAll(item) {
       return  this.$refs[`select${item._id}`].checked === true
@@ -110,7 +101,8 @@ export default {
   }
 ,
 mounted() {
-  this.imgSrc = this.$server
+  this.imgSrc = this.$server;
+
 }
 }
 

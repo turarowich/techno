@@ -17,7 +17,11 @@
 
         <div  class="d-flex align-items-center"  style="width: 36%;">
           <div class="table-img">
-            <img :src="imgSrc+'/'+catalog.img">
+            <div  v-if="!catalog.img" class="no-img-product">
+              <img src="../../assets/icons/profile-img.svg"/>
+            </div>
+            <img v-else :src="imgSrc+'/'+catalog.img">
+
           </div>
           {{catalog.name}}
         </div>
@@ -87,6 +91,19 @@ export default {
 <style scoped>
 .see-catalog{
   cursor:pointer;
+}
+.no-img-product{
+  background: #F4F4F4;
+  border-radius:50%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.no-img-product img{
+  width:30px;
+  height:30px;
+  object-fit: contain;
 }
 .nonsee-catalog{
   display: none;

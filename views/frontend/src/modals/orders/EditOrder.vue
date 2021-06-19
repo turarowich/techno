@@ -166,7 +166,7 @@
           </div>
 
           <div class="d-flex">
-            <button class="save mr-2" @click.prevent="onSubmit(currentData._id)">Edit order</button>
+            <button class="save mr-2" @click="onSubmit(currentData._id)">Edit order</button>
             <button class="cancel" @click="cancel">Cancel</button>
           </div>
         </div>

@@ -11,12 +11,12 @@
 
   <div class="login">
    <h1 class="welcome-sign-in">Welcome<br> to loy <span>Gift</span></h1>
-
+    <div  v-if=" addErrorClass === true" class="text-left d-flex justify-content-between mb-3"><span>Incorrect username or password</span><img @click="closeErrorClass" src="../../assets/icons/redX.svg"/></div>
     <form @submit.prevent="loginSubmit">
       <label class="label">Login</label>
       <input v-model="login.email" name="email" class="login-input">
       <label class="label">Password</label>
-      <div class="password d-flex justify-space-between align-items-center"><input name="password" v-model="login.password" id="password"  class="login-input" type="password"><img id="hide-eye" @click="showPassword" src="../../assets/icons/Hide.svg"><img id="show-eye"  @click="showPassword" src="../../assets/icons/eye.svg"></div>
+      <div class="password d-flex justify-space-between align-items-center "><input  name="password" v-model="login.password" id="password"  class="login-input" style="background: transparent" type="password"><img id="hide-eye" @click="showPassword" src="../../assets/icons/Hide.svg"><img id="show-eye"  @click="showPassword" src="../../assets/icons/eye.svg"></div>
 
         <div class="remind d-flex justify-content-between align-item-center">
           <div class="d-flex ">
@@ -56,13 +56,23 @@ name: "SignIn",
   return{
     login:{
       email:'',
-      password:''
-    }
+      password:'',
+
+    },
+    errorClass:false
   }
+  },
+  computed:{
+    addErrorClass(){
+      return this.errorClass;
+    }
   },
 
 
   methods:{
+    closeErrorClass(){
+      this.errorClass = false;
+    },
     showPassword: function () {
       var x = document.getElementById("password");
       if (x.type === "password") {
@@ -90,6 +100,8 @@ name: "SignIn",
       })
       .catch(()=>{
         localStorage.removeItem('token')
+        this.errorClass= true;
+        this.login.password = ''
 
       })
     }
@@ -98,7 +110,12 @@ name: "SignIn",
 </script>
 
 <style scoped>
-
+.login .text-left{
+  color:#E94A4A;
+  background: #FFECEC;
+  padding: 10px 15px;
+  border-radius:5px;
+}
 .login{
   width: 586px;
   background: #FFFFFF;
