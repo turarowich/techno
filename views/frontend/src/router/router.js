@@ -39,6 +39,7 @@ import CatalogSettings from "@/components/settings/CatalogSettings";
 import StaffSettings from "@/components/settings/StaffSettings";
 import AddNews from "@/components/News/AddNews";
 import EditNews from "@/components/News/EditNews";
+import EmployeeLogin from "@/client/components/EmployeeLogin";
 
 import EditPromo from "@/components/loyalty/EditPromo";
 import PersonalSettings from "@/components/settings/PersonalSettings";
@@ -192,9 +193,12 @@ const routes = [
                 component: ClientLogin
             },
             {
-                path: 'signin2',
-                name: 'ClientLogin2',
-                component: ClientLogin
+                path: 'login',
+                name: 'EmployeeLogin',
+                component: EmployeeLogin,
+                meta: {
+                    hideNavbar: true
+                }
             },
             {
                 path: 'signup',

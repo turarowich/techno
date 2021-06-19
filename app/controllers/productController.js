@@ -10,6 +10,9 @@ class ProductController{
     getProduct = async function (req, res) {
         let db = useDB(req.db)
         let Product = db.model("Product");
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, "catalog", "active", db, res)
+        }
 
         let result = {
             'status': 200,
@@ -28,7 +31,9 @@ class ProductController{
     getProducts = async function (req, res) {
         let db = useDB(req.db)
         let Product = db.model("Product");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, "catalog", "active", db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Sending products'

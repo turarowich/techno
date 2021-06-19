@@ -1,4 +1,4 @@
-const { useDB, sendError, createExcel, randomNumber } = require('../../services/helper')
+const { useDB, sendError, createExcel, randomNumber, checkAccess } = require('../../services/helper')
 var validate = require('../../config/messages');
 const fs = require('fs');
 const { connect } = require('mongodb');
@@ -59,7 +59,9 @@ class OrderController{
     getOrder = async function (req, res) {
         let db = useDB(req.db)
         let Order = db.model("Order");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "orders", parametr: "active" }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Sending order'
@@ -77,10 +79,12 @@ class OrderController{
     getOrders = async function (req, res) {
         let db = useDB(req.db)
         let Order = db.model("Order");
-
         let result = {
             'status': 200,
             'msg': 'Sending orders'
+        }
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "orders", parametr: "active" }, db, res)
         }
         try {
             let query = {}
@@ -113,6 +117,9 @@ class OrderController{
         let lang = req.headers["accept-language"]
         if (lang != 'ru') {
             lang = 'en'
+        }
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "orders", parametr: "active", parametr2: 'canEdit'}, db, res)
         }
         let result = {
             'status': 200,
@@ -166,9 +173,12 @@ class OrderController{
         let cashback_model = db.model("Cashback");
         let products_full_data = req.fields.products_full_data;
         let cashback_from_order = await calcCashback(products_full_data,cashback_model);
-        order.earnedPoints = parseFloat(cashback_from_order);
-
+        order.earnedPoints = parseFloat(cashback_from_order) || 0;
+        if(!req.fields.client){
+            req.fields.client = null
+        }
         let client = await Client.findById(req.fields.client)
+        
         if(client){
             if (req.fields.points){
                 client.points -= req.fields.points;
@@ -183,7 +193,7 @@ class OrderController{
             }
             client.points = (parseFloat(client.points)+parseFloat(cashback_from_order)).toFixed(2);
             client.balance = (parseFloat(client.balance) +parseFloat(order.totalPrice)).toFixed(2);
-            client.save();
+            await client.save();
 
             order.client=client._id;
             order.client_name=client.name;
@@ -202,9 +212,10 @@ class OrderController{
             order.client_phone=guest.phone || '';
         }
         console.log('EARNED CASHBACK',cashback_from_order,order);
-        order.save();
+        await order.save();
         result['object'] = await order.populate('products').execPopulate();
         } catch (error) {
+            console.log("errror")
             result = sendError(error, req.headers["accept-language"])
         }
         res.status(result.status).json(result);

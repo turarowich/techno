@@ -126,6 +126,16 @@ app.config.globalProperties.url = function (main, id = null, search = null) {
     return this.$api + '/' + main + additional
     
 }
+app.config.globalProperties.url_home = function (main, id = null, search = null) {
+    let additional = '/'
+    if (id) {
+        additional += id + '/'
+    }
+    if (search) {
+        additional += '?' + search[0] + '=' + search[1]
+    }
+    return this.$server + '/' + main + additional
+}
 app.config.globalProperties.formToJson = function (formData) {
     let obj = {}
     formData.find('.alert-danger').remove()
