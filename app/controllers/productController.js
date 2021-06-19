@@ -1,7 +1,7 @@
 
 const fs = require('fs')
 var os = require("os");
-const { useDB, sendError, saveImage, createExcel, removeImage } = require('../../services/helper')
+const { useDB, sendError, saveImage, createExcel, removeImage, checkAccess } = require('../../services/helper')
 var validate = require('../../config/messages');
 var readXlsxFile = require('read-excel-file/node')
 
@@ -11,7 +11,7 @@ class ProductController{
         let db = useDB(req.db)
         let Product = db.model("Product");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, "catalog", "active", db, res)
+            await checkAccess(req.userID, { access: "catalog", parametr: "active" }, db, res)
         }
 
         let result = {
@@ -31,8 +31,8 @@ class ProductController{
     getProducts = async function (req, res) {
         let db = useDB(req.db)
         let Product = db.model("Product");
-        if (req.userType == "employee") {
-            await checkAccess(req.userID, "catalog", "active", db, res)
+        if(req.userType == "employee") {
+            await checkAccess(req.userID, { access: "catalog", parametr: "active" }, db, res)
         }
         let result = {
             'status': 200,
@@ -51,7 +51,9 @@ class ProductController{
     addProduct = async function (req, res) {
         let db = useDB(req.db)
         let Product = db.model("Product");
-        
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Product added'
@@ -131,7 +133,9 @@ class ProductController{
     updateProduct = async function (req, res) {
         let db = useDB(req.db)
         let Product = db.model("Product");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Product updated'
@@ -201,7 +205,9 @@ class ProductController{
     updateProductsCategory = async function (req, res) {
         let db = useDB(req.db)
         let Product = db.model("Product");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Sending objects'
@@ -221,7 +227,9 @@ class ProductController{
     deleteProduct = async function (req, res) {
         let db = useDB(req.db)
         let Product = db.model("Product");
-        
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Product deleted'
@@ -238,7 +246,9 @@ class ProductController{
     deleteProducts = async function (req, res) {
         let db = useDB(req.db)
         let Product = db.model("Product");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Product deleted'
@@ -276,6 +286,9 @@ class ProductController{
             'status': 200,
             'msg': 'Sending link'
         }
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         try {
             let objects = await Product.find().where('_id').in(req.fields.objects).populate('category').exec()
             createExcel("product", objects, lang, req.db)
@@ -296,6 +309,9 @@ class ProductController{
         let lang = req.headers["accept-language"]
         if (lang != 'ru') {
             lang = 'en'
+        }
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
         }
         let result = {
             'status': 200,
@@ -350,7 +366,9 @@ class ProductController{
         let db = useDB(req.db)
         let Product = db.model("Product");
         let search = req.query.search;
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Sending product'

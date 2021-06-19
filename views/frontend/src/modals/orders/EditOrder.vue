@@ -85,20 +85,17 @@
               <h3 class="client-sub-title">Client</h3>
 
               <div  class="client-box d-flex align-items-center">
-                <div v-if="currentData.client === ''"  class="client-search d-flex align-items-center">
+                <div v-if="selectedClient.isDefault"  class="client-search d-flex align-items-center">
                   <img src="../../assets/icons/search-icon.svg" class="search-client-icon">
                   <input v-model="search_client" placeholder="Enter clients name or number" class="search-client">
                 </div>
                 <div v-else class="d-flex align-items-center">
-                  <img v-if="!currentData.client.avatar" class="client-avatar" src="../../assets/icons/chat.svg">
-                  <img v-else class="client-avatar" :src="imgSrc+'/'+currentData.client.avatar">
+                  <img  class="client-avatar" :src="selectedClient.avatar">
                   <div class="position-relative">
-                    <h2 class="name-client">{{currentData.client.name}}</h2>
+                    <h2 class="name-client">{{selectedClient.name}}</h2>
                     <div class="category">
                       Category:
-                      <span v-if="currentData.client.category !== undefined">{{currentData.client.category.name}}</span>
-                      <span v-else>No category</span>
-
+                      <span>{{selectedClient.category.name}}</span>
                     </div>
                   </div>
                   <img @click="currentData.client = ''" class="close-client" src="../../assets/icons/deleteClient.svg">
@@ -209,6 +206,24 @@ export default {
       })
       return sum
     },
+    selectedClient(){
+        let client =  {
+            avatar:"../../assets/icons/chat.svg",
+            name: "empty",
+            category:{
+                name: 'No category'
+            },
+            isDefault: true
+        }
+        if(this.currentData.client){
+            client = this.currentData.client 
+            client.avatar =  this.imgSrc+'/'+client.avatar
+            client.isDefault = false
+        }
+        
+        return client
+
+    },
     filteredProducts(){
       return this.products.filter((product)=>{
         return product.name.toLowerCase().includes(this.search_product.toLowerCase())
@@ -236,7 +251,11 @@ export default {
         this.getOrders()
         $('#edit-order').modal("hide")
         this.$informationAlert('Changes are saved')
-      })
+      }).catch((error)=>{
+            if(error.response && error.response.data){
+                this.$warningAlert(error.response.data.msg)
+            }
+      });
     },
     selectProduct(selected){
       if(this.currentData.products.length === 0){

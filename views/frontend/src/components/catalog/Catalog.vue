@@ -306,7 +306,11 @@ name: "Catalog",
         else{
           this.deletedProducts = []
         }
-      })
+      }).catch((error)=>{
+            if(error.response && error.response.data){
+                this.$warningAlert(error.response.data.msg)
+            }
+      });
     }
 
     },
@@ -394,7 +398,11 @@ name: "Catalog",
             )
           })
        }
-      })
+      }).catch((error)=>{
+            if(error.response && error.response.data){
+                this.$warningAlert(error.response.data.msg)
+            }
+      });
     },
     deleteCategory(id){
 
@@ -486,7 +494,11 @@ name: "Catalog",
             this.movedCategories = [];
             this.getProducts()
             this.$informationAlert("Change are saved")
-          })
+          }).catch((error)=>{
+            if(error.response && error.response.data){
+                this.$warningAlert(error.response.data.msg)
+            }
+      });
     }
     }
   },

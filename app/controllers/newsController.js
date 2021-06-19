@@ -1,4 +1,4 @@
-const { useDB, sendError, saveImage } = require('../../services/helper')
+const { useDB, sendError, saveImage, checkAccess } = require('../../services/helper')
 var validate = require('../../config/messages');
 var path = require('path');
 const fs = require('fs')
@@ -7,7 +7,9 @@ class NewsController {
     getSingleNews = async function (req, res) {
         let db = useDB(req.db)
         let News = db.model("News");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "news", parametr: "active" }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Sending news'
@@ -24,7 +26,9 @@ class NewsController {
     getNews = async function (req, res) {
         let db = useDB(req.db)
         let News = db.model("News");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "news", parametr: "active" }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Sending news'
@@ -43,7 +47,9 @@ class NewsController {
     addNews = async function (req, res) {
         let db = useDB(req.db)
         let News = db.model("News");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "news", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'News added'
@@ -100,7 +106,9 @@ class NewsController {
     updateNews = async function (req, res) {
         let db = useDB(req.db)
         let News = db.model("News");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "news", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'News updated'
@@ -142,7 +150,9 @@ class NewsController {
     deleteNews = async function (req, res) {
         let db = useDB(req.db)
         let News = db.model("News");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "news", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'News deleted'

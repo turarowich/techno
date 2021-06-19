@@ -182,7 +182,7 @@ class OrderController{
         if(client){
             if (req.fields.points){
                 client.points -= req.fields.points;
-                client.save();
+                client.save({ validateBeforeSave: false });
                 await new ClientBonusHistory({
                     client: client._id,
                     points: req.fields.points,
@@ -193,7 +193,7 @@ class OrderController{
             }
             client.points = (parseFloat(client.points)+parseFloat(cashback_from_order)).toFixed(2);
             client.balance = (parseFloat(client.balance) +parseFloat(order.totalPrice)).toFixed(2);
-            await client.save();
+            await client.save({ validateBeforeSave: false });
 
             order.client=client._id;
             order.client_name=client.name;
@@ -233,7 +233,9 @@ class OrderController{
         let Order = db.model("Order");
         let Product = db.model("Product");
         let OrderProduct = db.model("OrderProduct");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "orders", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Order updated'
@@ -282,7 +284,9 @@ class OrderController{
     deleteOrder = async function (req, res) {
         let db = useDB(req.db)
         let Order = db.model("Order");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "orders", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Order deleted'
@@ -300,7 +304,9 @@ class OrderController{
     deleteOrders = async function (req, res) {
         let db = useDB(req.db)
         let Order = db.model("Order");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "orders", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Orders deleted'
@@ -329,6 +335,9 @@ class OrderController{
     getOrderExcel = async function (req, res) {
         let db = useDB(req.db)
         let Order = db.model("Order");
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "orders", parametr: "active" }, db, res)
+        }
         let lang = req.headers["accept-language"]
         if (lang != 'ru') {
             lang = 'en'

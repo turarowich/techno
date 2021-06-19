@@ -317,6 +317,7 @@ async function checkAccess(user_id, settings, db, res){
     }
     if(employee){
         if (employee[settings.access]) {
+            console.log(employee[settings.access][settings.parametr], settings, employee[settings.access])
             if(!employee[settings.access][settings.parametr]){
                 res.status(result.status).json(result);
             }

@@ -237,13 +237,13 @@ props:['listCategory', 'getProducts'],
           .then(() => {
             this.getProducts()
             this.$successAlert('Product has been added');
-
-
+            $('#add-products').modal("hide")
           }).catch((error) => {
+            if(error.response && error.response.data){
+                this.$warningAlert(error.response.data.msg)
+            }
             console.log("fail", error)
           })
-
-     $('#add-products').modal("hide")
       this.newProduct = {
         name: '',
         price:'',

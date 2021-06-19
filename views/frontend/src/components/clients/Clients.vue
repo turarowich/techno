@@ -585,7 +585,11 @@ export default {
                   },
                 }
             )
-          })
+          }).catch((error)=>{
+                    if(error.response && error.response.data){
+                        this.$warningAlert(error.response.data.msg)
+                    }
+                });
         }
       })
      },
@@ -622,7 +626,11 @@ export default {
                   this.getClients()
                   $('#parent-check').prop('checked',false)
                   this.$successAlert('All clients have been removed')
-                })
+                }).catch((error)=>{
+                    if(error.response && error.response.data){
+                        this.$warningAlert(error.response.data.msg)
+                    }
+                });
           }
           else{
             this.deletedClients = []
