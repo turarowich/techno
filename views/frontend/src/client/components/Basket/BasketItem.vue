@@ -49,7 +49,16 @@ export default {
     }
   },
   computed:{
+    company_url_basket(){
+      return this.$store.getters['Orders/getCompany_url_basket'];
+    },
+    currentCompanyCatalog() {
+      return this.$route.params.bekon;
+    },
     shoppingCart(){
+      if(this.currentCompanyCatalog!==this.company_url_basket){
+        return [];
+      }
       return this.$store.state.Orders.shoppingCart;
     },
     basket_promocode(){

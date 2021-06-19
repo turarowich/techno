@@ -36,6 +36,7 @@ name: "Home",
 
   },
   beforeCreate(){
+    console.log("BeforeCreate HOME VUE");
     ///Ahahah ahahhah
     // (async () => {
     //   const options = {
@@ -74,6 +75,7 @@ name: "Home",
     //   console.error(err);
     // });
     this.$store.dispatch("Catalog/setCompany_url",this.$route.params.bekon);
+    // this.$store.dispatch("Orders/setCompany_url_basket",this.$route.params.bekon);
   },
   created(){
 

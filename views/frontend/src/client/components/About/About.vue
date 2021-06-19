@@ -67,12 +67,6 @@ export default {
     currentCompanyCatalogStorage() {
       return this.$store.getters['Catalog/getCompany_ur'];
     },
-    company_description(){
-      return this.$store.getters['Catalog/getCompany_description'];
-    },
-    company_welcome_text(){
-      return this.$store.getters['Catalog/getCompany_welcome_text'];
-    },
     catalog_settings(){
       return this.$store.getters['Catalog/getCatalog_settings'];
     },

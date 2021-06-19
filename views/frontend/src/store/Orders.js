@@ -311,8 +311,6 @@ export const OrdersModule = {
 
     getters:{
         getProduct(state){
-            // return state.getProduct
-            // return state.shoppingCart.filter((el)=>el.product._id === id)
             console.log(state.shoppingCart,"shoppingCart");
             return id => state.shoppingCart.filter(el =>{
                 return el.product._id === id;

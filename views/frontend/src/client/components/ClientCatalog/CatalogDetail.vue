@@ -31,7 +31,9 @@
         <div class="col-lg-5">
           <h3 class="product-name">{{getProduct.name}}</h3>
           <h5 class="product-code">{{getProduct.code}}</h5>
-          <h1 class="product-price">{{getProduct.price}} $</h1>
+          <h1 v-if="checkDates(getProduct.promoStart,getProduct.promoEnd)" class="product-price">{{getProduct.promoPrice}} $</h1>
+          <h3 :class="{lineThrough:checkDates(getProduct.promoStart,getProduct.promoEnd)}" class="product-price">{{getProduct.price}} $</h3>
+          <br>
           <button class="decrease" @click="decrease(getProduct._id)">-</button>
           <span v-if="getProductFromStore" class="count">{{getProductFromStore.quantity}}</span>
           <span v-else class="count">0</span>
@@ -52,6 +54,7 @@ export default {
   name: "CatalogDetail",
   data(){
     return{
+      today:new Date(),
       getProduct: {
         imgArray:[],
       },
@@ -90,10 +93,18 @@ export default {
       if(startDate<=this.today && endDate>=this.today){
         itsPromo = true;
       }
-
+      console.log(itsPromo,"itsPromoitsPromoitsPromo");
       return itsPromo;
     },
     addToCart(){
+      //check if its the same company
+      console.log(this.company_url_basket,this.$route.params.bekon);
+      if(this.company_url_basket !==this.$route.params.bekon){
+        //clear local storage
+        this.$store.dispatch("Orders/clearAll");
+      }
+
+      let that = this;
       let cart_object = {
         client_status_discount:this.userDiscountStatus.discount_percentage || 0,
         product:{},
@@ -121,7 +132,8 @@ export default {
       }
       //
       cart_object.current_price = current_price;
-      this.$store.dispatch('Orders/addToCart', cart_object)
+      this.$store.dispatch('Orders/addToCart', cart_object);
+      this.$store.dispatch('Orders/setCompany_url_basket', that.$route.params.bekon);
     },
     slide() {
       $('.product-img').slick({
@@ -165,7 +177,10 @@ export default {
   height: 440px;
 
 }
-
+.lineThrough{
+  text-decoration: line-through;
+  font-size: 20px!important;
+}
 .product-img img{
   width: 100%;
   height: 100%;
@@ -183,7 +198,7 @@ export default {
 .product-price{
   font-size: 28px;
   font-weight: 700;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 .product-text{
   color: #999999;

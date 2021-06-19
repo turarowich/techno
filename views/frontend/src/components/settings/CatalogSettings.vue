@@ -296,6 +296,20 @@ export default {
     },
     generateQrcode(){
       let that = this;
+      ///check
+      let list_of_router_js_routes = this.$router.options.routes;
+      let found = 0;
+      list_of_router_js_routes.forEach(function (component){
+        if(component.path.search(that.catalogUrl)!==-1){
+          found++;
+        }
+      })
+      if(found>0){
+        that.$warningAlert('Reserved route');
+        return;
+      }
+      //end check
+
       let url = this.url('generateQrCodeFile');
       this.axios.put(url, {
         catalogUrl:this.catalogFullUrl,

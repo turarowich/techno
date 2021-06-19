@@ -88,8 +88,8 @@ name: "ClientCatalogItem",
       }
       //
       cart_object.current_price = current_price;
-      this.$store.dispatch('Orders/addToCart', cart_object)
-      this.$store.dispatch('Orders/setCompany_url_basket', that.$route.params.bekon)
+      this.$store.dispatch('Orders/addToCart', cart_object);
+      this.$store.dispatch('Orders/setCompany_url_basket', that.$route.params.bekon);
     },
       selectProduct(id){
         this.$router.push({ path: `/${this.currentCompanyCatalog}/catalog-detail/${id}` });

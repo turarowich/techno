@@ -51,10 +51,21 @@ export default {
 name: "Navbar",
   computed:{
   // ...mapGetters(["Orders/countOrders" ,"Orders/shoppingCart"]),
+    company_url_basket(){
+      return this.$store.getters['Orders/getCompany_url_basket'];
+    },
     countOrders(){
+      if(this.currentCompanyCatalog!==this.company_url_basket){
+        return 0;
+      }
       return this.$store.getters['Orders/countOrders'];
+
     },
     shoppingCart(){
+
+      if(this.currentCompanyCatalog!==this.company_url_basket){
+        return [];
+      }
       return this.$store.state.Orders.shoppingCart;
     },
     currentCompanyCatalog() {

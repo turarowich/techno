@@ -20,7 +20,7 @@
     </div>
 
     <div class="col-lg-3">
-        <div class="sales">
+        <div v-if="countOrders>0" class="sales">
 
           <div v-if="!clientAuth">
             <h3 class="cashback-sub-title" style="color:#616CF5;">Log In or register, to receive points and/or use them</h3>
@@ -188,6 +188,9 @@ name: "Basket",
     clientAuth(){
       return this.getClientAuth()
     },
+    company_url_basket(){
+      return this.$store.getters['Orders/getCompany_url_basket'];
+    },
     branches(){
       return this.$store.getters['Catalog/getCompanyAddresses'];
     },
@@ -200,6 +203,10 @@ name: "Basket",
       return options;
     },
     shoppingCart(){
+      console.log(this.currentCompanyCatalog,this.company_url_basket,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.");
+      if(this.currentCompanyCatalog!==this.company_url_basket){
+        return [];
+      }
       return this.$store.state.Orders.shoppingCart;
     },
     total_discounts(){
@@ -259,6 +266,13 @@ name: "Basket",
     },
     catalog_settings(){
       return this.$store.getters['Catalog/getCatalog_settings'];
+    },
+    countOrders(){
+      if(this.currentCompanyCatalog!==this.company_url_basket){
+        return 0;
+      }
+      return this.$store.getters['Orders/countOrders'];
+
     },
   },
   methods:{

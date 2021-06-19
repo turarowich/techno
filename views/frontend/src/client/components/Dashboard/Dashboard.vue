@@ -49,7 +49,7 @@
 
 <script>
 import ClientCatalog from "@/client/components/ClientCatalog/ClientCatalog";
-// import $ from 'jquery';
+import $ from 'jquery';
 export default {
 name: "Dashboard",
   components:{
@@ -66,7 +66,7 @@ name: "Dashboard",
       return this.$route.params.bekon;
     },
     bannerPath(){
-      if(this.settings.banner){
+      if(this.catalog_settings.banner){
         try {
           return this.base_url+'/'+ this.settings.banner;
           // eslint-disable-next-line no-empty
@@ -133,10 +133,15 @@ name: "Dashboard",
           }).catch(function (error){
             if (error.response) {
               console.log('eeeeeeeeeeeeee',error.response)
-              // let err_page = `
-              // <div>--->404</div>
-              // `
-              // $('.overlay_404').html(err_page).show();
+              let err_page = `
+              <div>
+              <marquee>
+                <span style="font-size: 30px">404</span>
+              </marquee>
+
+              </div>
+              `
+              $('.overlay_404').html(err_page).show();
             }
           })
     })().catch(err => {

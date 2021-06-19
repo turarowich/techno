@@ -166,7 +166,7 @@ class OrderController{
         let cashback_model = db.model("Cashback");
         let products_full_data = req.fields.products_full_data;
         let cashback_from_order = await calcCashback(products_full_data,cashback_model);
-        order.earnedPoints = parseFloat(cashback_from_order);
+        order.earnedPoints = parseFloat(cashback_from_order) || 0;
 
         let client = await Client.findById(req.fields.client)
         if(client){
