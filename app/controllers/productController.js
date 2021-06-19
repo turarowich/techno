@@ -62,7 +62,9 @@ class ProductController{
         }
         addProduct: try {
             let data = req.fields
-            
+            if(data['category'] === ""){
+                data['category'] = null
+            }
             let product = await new Product({
                 type:data.type || "product",
                 name: data.name,
@@ -82,6 +84,7 @@ class ProductController{
                 recommend: data.recommend,
                 active: data.active,
             });
+
             await product.validate()
             if (req.files.img){
                 let filename = saveImage(req.files.img, req.db)
@@ -137,12 +140,11 @@ class ProductController{
             let data = req.fields
             let query = { '_id': req.params.product }
             data['updatedAt'] = new Date()
-            console.log(data)
-            if (data['category'] == ""){
+            if(data['category'] === ""){
                 data['category'] = null
             }
-            console.log(data)
             let product = await Product.findOneAndUpdate(query, data)
+
             if (req.files.img) {
                 let filename = saveImage(req.files.img, req.db, product.img)
                 if (filename == 'Not image') {

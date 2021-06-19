@@ -104,12 +104,8 @@ img{
     filter: brightness(0.5);
     transition: .3s;
 
-
-
 }
 /*=======================END OF DROPDOWN*/
-
-
 /*======================Main Content=============*/
 .main-content-header{
     border-bottom:1px solid #e8e8e8;
@@ -1275,4 +1271,11 @@ input.value-success, select.value-success, textarea.value-success{
     color: #E94A4A;
     margin-top: 10px;
     margin-bottom: 0;
+}
+.swal2-close{
+    width: 13px !important;
+    height: 25px !important;
+    top: 15px !important;
+    right: 20px !important;
+
 }

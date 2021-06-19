@@ -26,7 +26,6 @@
         <div class="have-account">Sign up with Social of fill the form to continue. </div>
 
         <div class="social-link">
-          <img src="../../assets/icons/twitter.svg">
           <img src="../../assets/icons/facebook.svg">
           <img src="../../assets/icons/google.svg">
         </div>

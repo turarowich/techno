@@ -1,6 +1,6 @@
 <template>
   <div class="modal fade right "  id="edit-product" tabindex="-1" role="dialog" aria-labelledby="edit-product" aria-hidden="true">
-    <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: 82%;" role="document" >
+    <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width:calc(100% - 250px)" role="document" >
       <div class="modal-content myModal-content h-100">
         <div class="modal-header justify-content-start align-items-center">
           <img data-dismiss="modal" aria-label="Close" class="close mr-2" src="../../../assets/icons/xBlack.svg" alt="">
@@ -12,19 +12,23 @@
               <form  class="modal-form">
                 <div class="d-flex align-items-center mb-3">
                   <div style="width:50%" class="mr-3">
-                    <label class="product-label">Name</label><i class="fas fa-asterisk"></i><br>
+                    <label class="product-label">Name</label>
                     <input name="name"  v-model="currentData.name" style="width:100%" class="cashback-input">
                   </div>
 
                   <div class="quantity-category mr-3">
-                    <label class="product-label">Quantity</label><i class="fas fa-asterisk"></i><br>
+                    <label class="product-label">Quantity</label>
                     <input name="quantity"  v-model="currentData.quantity" class="cashback-input">
                   </div>
 
                   <div style="width:25%;">
-                    <label class="product-label">Select category</label><i class="fas fa-asterisk"></i><br>
+                    <label class="product-label">Select category</label>
 
-                    <select v-if="currentData.category ? currentData.category._id : ''" name="category" v-model="currentData.category._id"  class="form-control mb-0 select-phone" >
+                    <select v-if="currentData.category ? currentData.category._id : ''"   name="category" v-model="currentData.category._id"  class="form-control mb-0 select-phone" >
+                      <option :value="cat._id" v-for="cat in listCategory" :key="cat._id">{{cat.name}}</option>
+                    </select>
+
+                    <select v-else  name="category" v-model="no_category"  class="form-control mb-0 select-phone" >
                       <option :value="cat._id" v-for="cat in listCategory" :key="cat._id">{{cat.name}}</option>
                     </select>
                   </div>
@@ -45,7 +49,7 @@
 
                 <div class="d-flex ">
                   <div style=" width:33.33%; margin-right:8px;">
-                    <label>Price</label><i class="fas fa-asterisk"></i><br>
+                    <label>Price</label>
                     <input name="price" v-model="currentData.price" class="form-input cashback-input mb-4" placeholder="Price"  >
                   </div>
                   <div :class="{active:isDiscount}" class="show-price" style="width:33.33%; margin-right:8px;">
@@ -53,7 +57,7 @@
                     <input name="promoPrice" v-model="currentData.promoPrice" class="form-input cashback-input mb-4" placeholder="Price">
                   </div>
                   <div style="width:33.33%;">
-                    <label>Vendor Code</label><i class="fas fa-asterisk"></i><br>
+                    <label>Vendor Code</label>
                     <input name="vendorCode" v-model="currentData.vendorCode"  class="form-input cashback-input mb-4" placeholder="Vendor code"  >
                   </div>
                 </div>
@@ -79,7 +83,7 @@
                 </div>
 
                 <div class="modal-img ">
-                  <label>Photos</label>
+                  <label @click="beka">Photos</label>
                   <p>
                     You can upload 4 more JPG or PNG photos, the minimum resolution is 400*400px, the size is<br>
                     not more than 3 MB. The first photo will be shown as the main one by default .</p>
@@ -134,6 +138,7 @@ export default {
   props: ['listCategory','select_product','getProducts'],
   data(){
     return{
+      no_category:'',
       currentData:{
         img:'',
         imgArray:[]
@@ -172,6 +177,9 @@ export default {
     },
   },
   methods:{
+    beka(){
+      console.log(this.currentData)
+    },
     removeImage(idx){
      this.currentData.imgArray.forEach((item,index)=>{
        if(index === idx){
@@ -231,14 +239,20 @@ export default {
       const updatedProduct = this.currentData;
       const form = new FormData();
 
-    for(let item in updatedProduct.imgArray){
-      form.append('imgArray'+item, updatedProduct.imgArray[item])
+     for(let item in updatedProduct.imgArray){
+         form.append('imgArray'+item, updatedProduct.imgArray[item])
       }
+
+     if(updatedProduct.category){
+       form.append('category',updatedProduct.category._id)
+     }
+     else{
+       form.append('category',this.no_category)
+     }
       form.append('img',updatedProduct.img)
       form.append("name", updatedProduct.name)
       form.append("name_ru", updatedProduct.name_ru)
       form.append("quantity", updatedProduct.quantity)
-      form.append("category", updatedProduct.category._id)
       form.append("price", updatedProduct.price)
       form.append("description", updatedProduct.description)
       form.append("promoPrice", updatedProduct.promoPrice)
@@ -277,12 +291,9 @@ export default {
 </script>
 
 <style scoped>
-.fa-asterisk{
-  font-size: 8px;
-  margin-bottom: 2px;
-  color:red;
+.show-images{
+  object-fit: contain;
 }
-
 .selected-images:hover .remove-image{
   opacity: 1;
 }

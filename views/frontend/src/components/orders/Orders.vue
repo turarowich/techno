@@ -12,7 +12,7 @@
           </button>
 
           <div class="dropdown-menu general-dropdown" aria-labelledby="dropdownMenuButton">
-            <div class="filter-dropdown">
+            <form class="filter-dropdown">
                 <h3 class="drop-title">By price</h3>
                 <div class="d-flex">
                   <input placeholder="0" v-model="price_from"  type="number" class="drop-input">
@@ -29,7 +29,7 @@
                 <option value="Canceled">Canceled</option>
                 <option value="New">New</option>
               </select>
-            </div>
+            </form>
           </div>
         </div>
       </div>

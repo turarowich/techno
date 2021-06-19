@@ -8,7 +8,7 @@
 
       <div class="table-child d-flex align-items  -center"  style="width: 18%;">
         <div><label class="custom-checkbox"><input  type="checkbox"  @click="checkMainSelect"  :ref="'select'+order._id" :value="order._id" ><span class="checkmark"></span></label></div>
-        34543</div>
+        {{order.code}}</div>
       <div  class="table-child d-flex align-items-center"  style="width: 30%;">
         <div  class="table-img">
            <img :src="imgSrc+'/'+order.products[0].img">
@@ -78,17 +78,18 @@ export default {
   methods: {
     statusDone(order){
       order.status = 'Done';
-      this.axios.put(this.url('updateProduct',order._id), order)
+      this.axios.put(this.url('updateOrder',order._id), order)
+
 
     },
     statusCancel(order){
       order.status = 'Canceled';
-      this.axios.put(this.url('updateProduct',order._id), order)
+      this.axios.put(this.url('updateOrder',order._id), order)
 
     },
     statusProgress(order){
-      order.status = 'In progress';
-      this.axios.put(this.url('updateProduct',order._id), order)
+      order.status = 'In proccess';
+      this.axios.put(this.url('updateOrder',order._id), order)
 
     },
     checkAll(item) {

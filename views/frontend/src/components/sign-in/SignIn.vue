@@ -11,9 +11,7 @@
 
   <div class="login">
    <h1 class="welcome-sign-in">Welcome<br> to loy <span>Gift</span></h1>
-    <a href="http://localhost:8080/auth/facebook">Facebook</a>
-    <a href="http://localhost:8080/auth/google">Google</a>
-    <a href="http://localhost:8080/auth/twitter">Twitter</a>
+
     <form @submit.prevent="loginSubmit">
       <label class="label">Login</label>
       <input v-model="login.email" name="email" class="login-input">
@@ -37,6 +35,11 @@
     </div>
 
     <div class="have-account">Don't have an account? <a href="/signup">Sign up now</a></div>
+
+    <div class="social-link">
+      <a href="http://localhost:8080/auth/facebook"><img src="../../assets/icons/facebook.svg"></a>
+      <a href="http://localhost:8080/auth/google"><img src="../../assets/icons/google.svg"></a>
+    </div>
   </div>
 
   <p class="footer-text">Cashback. Loyalty program. Client base. Offline cashback.
@@ -74,7 +77,7 @@ name: "SignIn",
       }
     },
     loginSubmit(){
-      let that = this;
+
       const data  = new FormData();
       data.append('email', this.login.email)
       data.append('password', this.login.password)
@@ -85,9 +88,9 @@ name: "SignIn",
         this.changeToken();
         this.$router.push('/orders')
       })
-      .catch((error)=>{
+      .catch(()=>{
         localStorage.removeItem('token')
-        that.$warningAlert(error.response.data.msg);
+
       })
     }
   }
@@ -167,5 +170,26 @@ form{
 
   background-position-x:80%;
   background-position-y: 12px;
+}
+.social-link{
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+
+}
+.social-link a{
+  margin-right: 16px;
+  border: 0.5px solid rgba(18, 18, 29, 0.1);
+  background: #fff;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  justify-content: center;
+  align-items:center;
+  border-radius:50%;
+
+}
+.social-link a:last-child{
+  margin-right: 0;
 }
 </style>
