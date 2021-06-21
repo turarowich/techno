@@ -25,11 +25,11 @@
                     <label class="product-label">Select category</label>
 
                     <select v-if="currentData.category ? currentData.category._id : ''"   name="category" v-model="currentData.category._id"  class="form-control mb-0 select-phone" >
-                      <option :value="cat._id" v-for="cat in listCategory" :key="cat._id">{{cat.name}}</option>
+                      <option :value="cat._id" v-for="cat in listCategory.slice(1)" :key="cat._id">{{cat.name}}</option>
                     </select>
 
                     <select v-else  name="category" v-model="no_category"  class="form-control mb-0 select-phone" >
-                      <option :value="cat._id" v-for="cat in listCategory" :key="cat._id">{{cat.name}}</option>
+                      <option :value="cat._id" v-for="cat in listCategory.slice(1)" :key="cat._id">{{cat.name}}</option>
                     </select>
                   </div>
                 </div>
@@ -94,12 +94,12 @@
                   <input @change="onFileChange($event)" ref="addImage" class="d-none" multiple id="imgsArray" type="file" name="imgArray">
                 </label>
                 <div  class="d-flex">
-                   <div v-if="currentData.img !== ''">
+                   <div v-if="currentData.img">
                       <img v-if="typeof currentData.img === 'string'" :src="imgSrc+'/'+currentData.img" class="show-images mr-2">
                       <img v-else :src="mainImg" class="show-images mr-2">
 
                    </div>
-                    <div v-if="currentData.img !== ''" class="selected-overlay">
+                    <div v-if="currentData.img" class="selected-overlay">
                       <img  @click="currentData.img = ''" class="remove-images" src="../../../assets/icons/deleteClient.svg">
                     </div>
                    <div v-for="(img, index) in imagePreview" :key="index" >
@@ -177,9 +177,7 @@ export default {
     },
   },
   methods:{
-    beka(){
-      console.log(this.currentData)
-    },
+
     removeImage(idx){
      this.currentData.imgArray.forEach((item,index)=>{
        if(index === idx){

@@ -5,7 +5,7 @@
   <div class="container-fluid pl-0">
     <div class="row">
       <div class="col-lg-3 pr-0">
-        <div class="card-price"  id="one" @click="addClassFree">
+        <div class="card-price" :class="{active: activeClass === 'start'}" @click="chooseTariff('start')"  id="one" >
           <div class="price-head d-flex align-items-center mb-4">
             <img class="price-img" src="../../assets/icons/start-setting.svg">
             <h1 class="price-title">Start</h1>
@@ -29,7 +29,7 @@
         </div>
       </div>
       <div  class="col-lg-3 pr-0">
-        <div class="card-price"  @click="addClassStart" id="two">
+        <div class="card-price" :class="{active: activeClass === 'pro'}" @click="chooseTariff('pro')"   id="two">
           <div class="price-head d-flex align-items-end mb-4">
             <img class="price-img " src="../../assets/icons/pro.svg">
             <h1 class="price-title">Pro</h1>
@@ -47,14 +47,14 @@
               <li class="price-list"><span>Managing statuses</span><img src="../../assets/icons/true.svg"></li>
             </ul>
           </div>
-          <div class="price-foot d-flex align-items-center">
-            <h1>10$</h1>
+          <div class="price-foot d-flex align-items-end">
+            <h1>15$</h1>
             <span>/month</span>
           </div>
         </div>
       </div>
       <div class="col-lg-3 pr-0">
-        <div @click="addClassApp" id="three" class="card-price app d-flex align-items-center justify-content-center">
+        <div  id="three" :class="{active: activeClass === 'app'}" @click="chooseTariff('app')" class="card-price app d-flex align-items-center justify-content-center">
             <div class="text-center">
               <img class="mb-2 app-img" src="../../assets/icons/app.svg">
               <h3>+ App</h3>
@@ -115,36 +115,33 @@ name: "Price",
           {id:3 ,month:12, price:0},
           {id:4 ,month:24, price:0},
         ],
-        checked:true,
+        activeClass:'start',
         tobePaid:0
       }
   },
 
   methods:{
-    addClassFree() {
-    $('#two').removeClass('active');
-    $('#three').removeClass('active');
-    $('#one').addClass('active');
+  chooseTariff(item){
+    if(item === 'start'){
+        this.prices.map(price=>{
+          return price.price = 0
+        })
+      this.activeClass = 'start'
+    }
+    else if(item === 'pro'){
       this.prices.map(price=>{
-        return price.price = 0
+        return price.price = price.month * 15
       })
-    },
-    addClassStart() {
-      $('#one').removeClass('active');
-      $('#three').removeClass('active');
-      $('#two').addClass('active')
-      this.prices.map(price=>{
-       return price.price = price.month * 29
-      })
-    },
-    addClassApp() {
-      $('#two').removeClass('active');
-      $('#one').removeClass('active');
-      $('#three').addClass('active');
+      this.activeClass = 'pro'
+    }
+    else{
       this.prices.map(price=>{
         return price.price = price.month * 299;
       })
-    },
+      this.activeClass = 'app'
+    }
+
+  },
     addActiveMonth(){
       $(document).ready(function() {
         $('.validity-period').click(function() {

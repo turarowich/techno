@@ -10,11 +10,10 @@
         <div><label class="custom-checkbox"><input  type="checkbox"  @click="checkMainSelect"  :ref="'select'+order._id" :value="order._id" ><span class="checkmark"></span></label></div>
         {{order.code}}</div>
       <div  class="table-child d-flex align-items-center"  style="width: 30%;">
-        <div  class="table-img">
-           <img v-if="order.products !==null" :src="imgSrc+'/'+order.products[0].img">
-
-         </div>
-         <span>{{order.products?order.products[0].name:'No'}}</span>
+        <div v-if="order.products.length>0" class="table-img">
+           <img :src="imgSrc+'/'+order.products[0].img">
+        </div>
+         <span>{{order.products.length>0 ? order.products[0].name : 'No'}}</span>
       </div>
       <div class="table-child" v-show="data_check.client_checked"  style="width: 25%;">{{order.client ? order.client.name : ''}}</div>
       <div class="table-child" v-show="data_check.phone_checked" style="width: 20%;">{{order.client ? order.client.phone : ''}}</div>
@@ -22,10 +21,10 @@
       <div class="table-child" v-show="data_check.date_checked"  style="width: 15%;">{{order.createdAt.split('').slice(0,10).join('')}}</div>
       <div class="table-child pr-3" v-show="data_check.notes_checked" style="width: 10%;" ><div>{{order.notes}}</div></div>
       <div class="table-child" style="width: 15%;"
-            :class="[{red: order.status === 'Canceled'},
+           :class="[{red: order.status === 'Canceled'},
           {green: order.status === 'Done'},
           {orange: order.status === 'In Progress'},
-          {new: order.status === 'new'}
+          {new: order.status === 'New'}
           ]">
 
         <i class=" circle-status fas fa-circle"></i>
@@ -80,7 +79,6 @@ export default {
     statusChange(order,status){
       order.status = status
       this.axios.put(this.url('updateOrder',order._id), order).then(()=>{
-        console.log("GGGGGGGGGG", order)
       })
     },
     checkAll(item) {
@@ -127,18 +125,7 @@ mounted() {
   align-items: center;
   justify-content: center;
 }
-.red{
-  color:red;
-}
-.green{
-  color:#5CBD85;
-}
-.orange{
-  color:orange;
-}
-.new{
-  color:#616CF5;
-}
+
 .status{
   color:#000;
 }

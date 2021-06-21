@@ -17,11 +17,8 @@
 
         <div  class="d-flex align-items-center"  style="width: 36%;">
           <div class="table-img">
-            <div  v-if="!catalog.img" class="no-img-product">
-              <img src="../../assets/icons/profile-img.svg"/>
-            </div>
+            <img v-if="!catalog.img" src="../../assets/icons/no-catalog.svg">
             <img v-else :src="imgSrc+'/'+catalog.img">
-
           </div>
           {{catalog.name}}
         </div>

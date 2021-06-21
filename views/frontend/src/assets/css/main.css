@@ -1264,3 +1264,17 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     border: 1px solid #E94A4A;
     background: #FFECEC;
 }
+
+
+.red{
+    color:red;
+}
+.green{
+    color:#5CBD85;
+}
+.orange{
+    color:orange;
+}
+.new{
+    color:#616CF5;
+}

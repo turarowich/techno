@@ -179,7 +179,7 @@ name: "Catalog",
       movedCategories:[],
       search:'',
       sorting:true,
-      filtered: '',
+      filtered: null,
       perPage: 8,
       currentPage: 1,
       selectAll:false,
@@ -221,10 +221,17 @@ name: "Catalog",
           })
           .filter(product => {
             if(this.filtered){
-              return product.category && product.category._id.includes(this.filtered)
+              return product.category && product.category._id.includes(this.filtered);
             }
             return true;
           })
+          .filter(product=>{
+            if(this.filtered === ""){
+              return product.category === null
+            }
+            return true
+          })
+
     },
     catalogToDisplay: function(){
       let start = (this.currentPage - 1) * this.perPage
@@ -457,7 +464,8 @@ name: "Catalog",
        this.axios.get(this.url('getCategories')+'?type=product')
           .then((res)=>{
             this.listCategory = res.data.objects;
-            this.listCategory.unshift({_id:"", name: 'All'})
+            this.listCategory.unshift({_id:"", name: 'Without category'})
+            this.listCategory.unshift({_id:null, name: 'All'})
 
           })
     },

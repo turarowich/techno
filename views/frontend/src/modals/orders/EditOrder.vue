@@ -2,7 +2,7 @@
   <div class="modal fade right"  id="edit-order" tabindex="-1" role="dialog" aria-labelledby="add-promocode" aria-hidden="true">
     <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width:calc(100vw - 250px);" role="document" >
       <div class="modal-content myModal-content h-100">
-        <div class="modal-header justify-content-start ">
+        <div class="modal-header justify-content-start">
 
           <button type="button" data-dismiss="modal" aria-label="Close" class="close">
               <span aria-hidden="true">
@@ -10,10 +10,21 @@
               </span>
           </button>
           <div>
-            <h3 class="modal-title">Order {{currentData.code}}</h3>
-            <span class="detail-date">Created {{currentData.createdAt}}</span>
+            <h3 class="modal-title d-flex align-items-center">
+              Order {{currentData.code}}
+              <div class="ml-4 d-flex align-items-center  detail-status"
+                   :class="[{red: currentData.status === 'Canceled'},
+                    {green: currentData.status=== 'Done'},
+                    {orange: currentData.status === 'In Progress'},
+                    {new: currentData.status === 'New'}
+                    ]">
+                <i class=" circle-status fas fa-circle"></i>
+                {{currentData.status}}
+              </div>
+            </h3>
+            <span  v-if="currentData.createdAt"  class="detail-date">Created {{currentData.createdAt.toString().slice(0,10)}}, <span>{{currentData.createdAt.toString().slice(11,16)}}</span></span>
           </div>
-          <div class="detail-status"><span></span>{{currentData.status}}</div>
+
         </div>
         <div class=" myModal-body">
           <div class="row">
@@ -241,6 +252,7 @@ export default {
     selectProduct(selected){
       if(this.currentData.products.length === 0){
         this.currentData.products.push(selected)
+        selected.quantity = 1;
       }
       else{
         let product = null
@@ -253,6 +265,7 @@ export default {
           product = selected
         }
         if(product){
+          product.quantity = 1;
           this.currentData.products.push(product)
 
 
@@ -307,10 +320,7 @@ export default {
 .client-search{
   width: 100%;
 }
-.detail-status{
-  color:#F19C4B;
-  margin-top: 4px;
-}
+
 .client-search input{
   width: 100%;
   border:none;
@@ -347,7 +357,10 @@ export default {
   position: relative;
 
 }
-
+.detail-status{
+  font-weight: normal;
+  font-size: 14px;
+}
 .form-control{
   margin-bottom: 15px;
   background: #F8F9FB;
@@ -385,14 +398,7 @@ export default {
   color:#616cf5;
   font-weight: normal;
 }
-.detail-status span{
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  border-radius:50%;
-  background: #F19C4B;
-  margin-right: 5px;
-}
+
 
 .detail-date{
   color: #8C94A5;

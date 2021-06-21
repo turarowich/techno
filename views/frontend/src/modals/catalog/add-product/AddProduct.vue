@@ -1,7 +1,7 @@
 <template>
   <div class="modal fade right "  id="add-products" tabindex="-1" role="dialog" aria-labelledby="add-products" aria-hidden="true">
       <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: calc(100% - 250px);" role="document" >
-        <div class="modal-content  myModal-content h-100">
+        <div id="modal-content" class="modal-content  myModal-content h-100">
           <div class="modal-header justify-content-start align-items-center">
             <img  data-dismiss="modal" aria-label="Close" class="close" src="../../../assets/icons/xBlack.svg" alt="">
             <h3 class="modal-title">Add Product</h3>
@@ -19,14 +19,14 @@
 
                         <div class="quantity-category mr-3">
                           <label class="product-label">Quantity</label><br>
-                          <input v-model="newProduct.quantity" :class="{errorInput: validateQuantity === true}" type="number"  class="cashback-input">
+                          <input v-model="newProduct.quantity" :class="{errorInput: validateQuantity === true}" type="number" min="1"  class="cashback-input">
                           <div class="fill-fields" v-if="validateQuantity === true">Fill in the fields</div>
                         </div>
 
                         <div style="width:25%;">
                           <label class="product-label">Select category</label><br>
                           <select v-model="newProduct.category" class="form-control mb-0 select-phone" aria-label="Default select example">
-                            <option :value="cat._id" v-for="cat in listCategory"  :key="cat._id" >{{cat.name}}</option>
+                            <option :value="cat._id" v-for="cat in listCategory.slice(1)"  :key="cat._id" >{{cat.name}}</option>
                           </select>
                         </div>
                       </div>
@@ -223,9 +223,7 @@ props:['listCategory', 'getProducts'],
       }
       if(new_product.promoEnd !== ""){
         form.append('promoEnd', new_product.promoEnd.obj)
-
       }
-
       if(new_product.name === ""){
         this.validateName = true
       }
@@ -282,13 +280,14 @@ props:['listCategory', 'getProducts'],
             this.validateQuantity = false;
             this.validateName = false;
             this.validatePrice = false;
-
-
           }).catch((error) => {
             console.log("fail", error)
 
           })
-      window.scroll(0,0)
+      $('#add-products').on('shown', function () {
+        $("#modal-content").scrollTop(0);
+      });
+
 
 
 

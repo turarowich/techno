@@ -185,7 +185,7 @@ export default {
       new_order:{
         products:[],
         client:'',
-        status:'new',
+        status:'New',
         deliveryType:'self',
         notes:'',
         promoCode:''
@@ -236,7 +236,7 @@ export default {
               this.new_order = {
                 products:[],
                 client:'',
-                status:'new',
+                status:'New',
                 deliveryType:'self',
                 notes:'',
                 promoCode:''
