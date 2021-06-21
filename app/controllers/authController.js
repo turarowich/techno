@@ -104,7 +104,45 @@ class AuthController{
             res.status(result.status).json(result);
         }
     };
+    
+    loginEmployee = async function (req, res) {
+        let filter = {
+            email: req.fields.email,
+        }
 
+        let db = useDB('loygift' + req.headers['access-place']);
+        let Employee = db.model("Employee");
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
+        try {
+            let user = await Employee.findOne(filter).select('+password')
+            console.log(user)
+            let errors = {
+                email: validate[lang]['user_not_found'],
+                password: validate[lang]['password_wrong']
+            }
+
+            if (!user) return res.status(400).json({ status: 404, msg: 'No user found', errors: errors });
+
+            var passwordIsValid = bcrypt.compareSync(req.fields.password, user.password);
+            delete errors.phone
+            if (!passwordIsValid) return res.status(401).json({ status: 401, msg: "Not valid password", auth: false, token: null, errors: errors });
+
+            var token = jwt.sign({ id: req.headers['access-place'], user: user._id, type: "employee" }, config.secret_key, {
+                expiresIn: 86400 // expires in 24 hours
+            });
+            var refresh_token = jwt.sign({ id: req.headers['access-place'], user: user._id, type: "employee" }, config.secret_key, {
+                expiresIn: "30 days"
+            });
+            user.password = ""
+            res.status(200).json({ status: 200, auth: true, msg: "Sending token", token: token, refresh_token: refresh_token, object: user });
+        } catch (error) {
+            let result = sendError(error, req.headers["accept-language"])
+            res.status(result.status).json(result);
+        }
+    };
     loginClient = async function (req, res) {
         let log_field = 'phone';
         let filter = {

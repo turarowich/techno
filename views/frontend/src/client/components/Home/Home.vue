@@ -1,7 +1,7 @@
 <template>
   <div class="client overlay_404">
     <div>
-      <div v-if="!['ClientLogin', 'ClientRegister'].includes($route.name)">
+      <div v-if="!['ClientLogin', 'ClientRegister', 'EmployeeLogin'].includes($route.name)">
         <Navbar/>
       </div>
       <router-view/>

@@ -6,6 +6,7 @@ const { errors } = require('formidable');
 const QRCode = require('qrcode');
 var moment = require("moment")
 const sharp = require('sharp');
+const { isNullOrUndefined } = require('util');
 
 function useDB(db_name) {
     let db = global.userConnection.useDb(db_name);
@@ -305,6 +306,32 @@ function createQrFile(user_id, company) {
     })
     return link + filename
 }
+async function checkAccess(user_id, settings, db, res){
+    let Employee = db.model("Employee");
+    let employee = await Employee.findById(user_id)
+    let result = {
+        'status': 400,
+        'msg': 'Not have a permission for this action',
+        'objects': [],
+        'object': null
+    }
+    if(employee){
+        if (employee[settings.access]) {
+            console.log(employee[settings.access][settings.parametr], settings, employee[settings.access])
+            if(!employee[settings.access][settings.parametr]){
+                res.status(result.status).json(result);
+            }
+            if (settings.parametr2 != undefined && !employee[settings.access][settings.parametr2]) {
+                res.status(result.status).json(result);
+            }
+            if (settings.parametr3 != undefined && !employee[settings.access][settings.parametr3]) {
+                res.status(result.status).json(result);
+            }
+        }
+        return null
+    }
+    res.status(result.status).json(result);
+}
 module.exports = {
     useDB: useDB,
     saveImage: saveImage,
@@ -313,5 +340,6 @@ module.exports = {
     createExcel: createExcel,
     randomNumber: randomNumber,
     randomPassword: randomPassword,
-    createQrFile: createQrFile
+    createQrFile: createQrFile,
+    checkAccess: checkAccess
 }

@@ -9,22 +9,22 @@
           <div class="myModal-body">
                 <div class="row">
                   <div class="col-11 m-auto">
-                    <form @submit.prevent="onSubmit"  class="modal-form">
+                    <form id="myForm" @submit.prevent="onSubmit"  class="modal-form">
                       <div class="d-flex align-items-center">
                         <div style="width:50%" class="mr-3">
-                          <label class="product-label">Name</label><i class="fas fa-asterisk"></i><br>
-                          <input  v-model="newProduct.name" style="width:100%" required class="cashback-input">
+                          <label class="product-label">Name</label><br>
+                          <input  v-model="newProduct.name" style="width:100%"  class="cashback-input">
                         </div>
 
                         <div class="quantity-category mr-3">
-                          <label class="product-label">Quantity</label><i class="fas fa-asterisk"></i><br>
-                          <input v-model="newProduct.quantity" required type="number"  class="cashback-input">
+                          <label class="product-label">Quantity</label><br>
+                          <input v-model="newProduct.quantity"  type="number"  class="cashback-input">
                         </div>
 
                         <div style="width:25%;">
-                          <label class="product-label">Select category</label><i class="fas fa-asterisk"></i><br>
-                          <select v-model="newProduct.category" required class="form-control mb-0 select-phone" aria-label="Default select example">
-                            <option :value="cat._id" v-for="cat in listCategory.slice(1)"  :key="cat._id" >{{cat.name}}</option>
+                          <label class="product-label">Select category</label><br>
+                          <select v-model="newProduct.category" class="form-control mb-0 select-phone" aria-label="Default select example">
+                            <option :value="cat._id" v-for="cat in listCategory"  :key="cat._id" >{{cat.name}}</option>
                           </select>
                         </div>
                       </div>
@@ -41,16 +41,16 @@
 
                       <div class="d-flex ">
                         <div style=" width:33.33%; margin-right:8px;">
-                          <label>Price</label><i class="fas fa-asterisk"></i>
-                          <input required   v-model="newProduct.price"  type="number" class="form-input cashback-input mb-4" placeholder="Price"  name="price">
+                          <label>Price</label>
+                          <input  v-model="newProduct.price"  type="number" class="form-input cashback-input mb-4" placeholder="Price"  name="price">
                         </div>
                         <div class="show-price" style="width:33.33%; margin-right:8px;">
                           <label>Promotional prices</label>
                           <input v-model="newProduct.promoPrice" class="form-input cashback-input mb-4" placeholder="Price">
                         </div>
                         <div style="width:33.33%;">
-                          <label>Vendor code</label><i class="fas fa-asterisk"></i>
-                          <input   v-model="newProduct.vendorCode" class="form-input cashback-input mb-4" required placeholder="Vendor code"  name="vendorCode">
+                          <label>Vendor code</label>
+                          <input   v-model="newProduct.vendorCode" class="form-input cashback-input mb-4"  placeholder="Vendor code"  name="vendorCode">
                         </div>
                       </div>
 
@@ -84,11 +84,11 @@
                         <div class="d-flex">
                           <label>
                             <img src="../../../assets/img/modal-img.svg ">
-                            <input @change="onFileChange" class="d-none" multiple id="imgArray" type="file" name="imgArray">
+                            <input @change="onFileChange($event)" class="d-none" ref="uploadPhoto" accept="image/*" multiple id="imgArray" type="file" name="imgArray">
                           </label>
                           <div class="d-flex" v-if="newProduct.imgArray.length !==0">
                             <div  v-for="(img,index) in imagePreview" :key="index" class="selected-images">
-                              <img id="choosed-img"  :src="img" class="show-images mr-2" />
+                              <img id="choosed-img" :src="img" class="show-images mr-2" />
                               <div class="selected-overlay">
                                 <img @click="removeImage(index)" class="remove-image" src="../../../assets/icons/deleteClient.svg">
                               </div>
@@ -132,11 +132,11 @@ props:['listCategory', 'getProducts'],
         description:'',
         vendorCode:'',
         promoStart: {
-          obj:{},
+          obj:'',
           formatted:'',
         },
         promoEnd: {
-          obj:{},
+          obj:'',
           formatted:'',
         },
         promoPrice:0
@@ -182,10 +182,19 @@ props:['listCategory', 'getProducts'],
       }
     },
     onFileChange() {
+      var valid = ["image/png", "image/jpg", "image/jpeg"];
       $.each($("#imgArray")[0].files, (i,file)=> {
         console.log(i)
       if(this.newProduct.imgArray.length<4){
-         this.newProduct.imgArray.push(file)
+         if(file && file.size > 3000000){
+            this.$warningAlert('Image size exceeds 3 mb ')
+         }
+         else if(file && !valid.includes(file.type)){
+            this.$warningAlert('Image type not png or jpg')
+         }
+        else{
+           this.newProduct.imgArray.push(file)
+         }
       }
       else{
          this.$warningAlert("Maximum amount of images is 4")
@@ -193,6 +202,7 @@ props:['listCategory', 'getProducts'],
       })
     },
     onSubmit(){
+
       let new_product = this.newProduct;
       const form  = new FormData;
       for(let item in new_product.imgArray){
@@ -204,27 +214,36 @@ props:['listCategory', 'getProducts'],
           }
         }
 
+      if(new_product.promoStart.obj !== ""){
+        form.append('promoStart', new_product.promoStart.obj)
+
+      }
+      if(new_product.promoEnd !== ""){
+        form.append('promoEnd', new_product.promoEnd.obj)
+
+      }
+
+      form.append('category', new_product.category)
       form.append('name', new_product.name)
       form.append('name_ru', new_product.name_ru)
       form.append('price', new_product.price)
       form.append('quantity', new_product.quantity)
-      form.append('category', new_product.category)
-      form.append('description', new_product.description)
-      form.append('promoStart', new_product.promoStart.obj)
       form.append('promoPrice', new_product.promoPrice)
-      form.append('promoEnd', new_product.promoEnd.obj)
+      form.append('description', new_product.description)
       form.append('vendorCode', new_product.vendorCode)
+
+
       this.axios.post(this.url('addProduct'), form)
           .then(() => {
             this.getProducts()
             this.$successAlert('Product has been added');
-
-
+            $('#add-products').modal("hide")
           }).catch((error) => {
+            if(error.response && error.response.data){
+                this.$warningAlert(error.response.data.msg)
+            }
             console.log("fail", error)
           })
-
-     $('#add-products').modal("hide")
       this.newProduct = {
         name: '',
         price:'',
@@ -278,7 +297,9 @@ props:['listCategory', 'getProducts'],
 .selected-images:hover .remove-image{
   opacity: 1;
 }
-
+.show-images{
+  object-fit: contain;
+}
 .remove-image{
   opacity:0;
   transition:.3s;
@@ -286,11 +307,7 @@ props:['listCategory', 'getProducts'],
 .cancel{
   cursor:pointer;
 }
-.fa-asterisk{
-  font-size: 8px;
-  margin-bottom: 2px;
-  color:red;
-}
+
 
 .modal.fade:not(.in).right .modal-dialog {
   -webkit-transform: translate3d(0,0,0);
@@ -337,6 +354,9 @@ props:['listCategory', 'getProducts'],
   margin: 20px 0;
   color:#616cf5;
   cursor:pointer;
+}
+.add-russian:hover{
+  color: #3B4DB3;
 }
 .cashback-input{
   font-size: 16px;

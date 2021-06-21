@@ -39,6 +39,7 @@ import CatalogSettings from "@/components/settings/CatalogSettings";
 import StaffSettings from "@/components/settings/StaffSettings";
 import AddNews from "@/components/News/AddNews";
 import EditNews from "@/components/News/EditNews";
+import EmployeeLogin from "@/client/components/EmployeeLogin";
 
 import EditPromo from "@/components/loyalty/EditPromo";
 import PersonalSettings from "@/components/settings/PersonalSettings";
@@ -192,6 +193,14 @@ const routes = [
                 component: ClientLogin
             },
             {
+                path: 'login',
+                name: 'EmployeeLogin',
+                component: EmployeeLogin,
+                meta: {
+                    hideNavbar: true
+                }
+            },
+            {
                 path: 'signup',
                 name: 'ClientRegister',
                 component: ClientRegister
@@ -248,7 +257,7 @@ const routes = [
     },
     {
         path: "/log",
-        name: "log",
+        name: "Log",
         component: Log,
 
     },
@@ -401,7 +410,7 @@ router.beforeEach((to, from, next) => {
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
     // Check for protected route
-    if (requiresAuth && !authenticatedUser) next({ path: `/shop/${current_company_url}/signin` })
+    if (requiresAuth && !authenticatedUser) next({ path: `/${current_company_url}/signin` })
     else next();
 });
 

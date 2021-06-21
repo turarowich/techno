@@ -28,6 +28,8 @@ module.exports = function(app, passport){
     app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login', session: false }), authController.callbackFB);
     app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login', session: false }), authController.callbackGG);
     app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/login', session: false }), authController.callbackTW);
+    app.post('/loginEmployee', authController.loginEmployee);
+
     //Catalog
     app.get('/getCatalogSettings', catalogController.getCatalogSettings);
     app.get('/getCatalog', catalogController.getCatalog);

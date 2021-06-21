@@ -10,7 +10,7 @@
               </span>
           </button>
           <div>
-            <h3 class="modal-title">Order 343222</h3>
+            <h3 class="modal-title">Order {{currentData.code}}</h3>
             <span class="detail-date">Created {{currentData.createdAt}}</span>
           </div>
           <div class="detail-status"><span></span>{{currentData.status}}</div>
@@ -59,7 +59,7 @@
                   <div v-else v-for="order in currentData.products" :key="order._id" class="table-item d-flex align-items-center">
                     <div  class="d-flex align-items-center"  style="width: 50%;">
                       <div class="table-img">
-                        <img src="../../assets/img/sneak.webp">
+                        <img :src="imgSrc+'/'+order.img">
                       </div>
                       {{order.name}}
                     </div>
@@ -73,7 +73,7 @@
               </div>
               <div class="notes">
                 <h3 class="detail-product">Notes</h3>
-                <input class="cashback-input">
+                <input v-model="currentData.notes" class="cashback-input">
               </div>
 
 
@@ -85,19 +85,17 @@
               <h3 class="client-sub-title">Client</h3>
 
               <div  class="client-box d-flex align-items-center">
-                <div v-if="currentData.client === ''"  class="client-search d-flex align-items-center">
+                <div v-if="selectedClient.isDefault"  class="client-search d-flex align-items-center">
                   <img src="../../assets/icons/search-icon.svg" class="search-client-icon">
                   <input v-model="search_client" placeholder="Enter clients name or number" class="search-client">
                 </div>
                 <div v-else class="d-flex align-items-center">
-                  <img class="client-avatar" src="../../assets/img/criw.jpg">
+                  <img  class="client-avatar" :src="selectedClient.avatar">
                   <div class="position-relative">
-                    <h2 class="name-client">{{currentData.client.name}}</h2>
+                    <h2 class="name-client">{{selectedClient.name}}</h2>
                     <div class="category">
                       Category:
-                      <span v-if="currentData.client.category !== undefined">{{currentData.client.category.name}}</span>
-                      <span v-else>No category</span>
-
+                      <span>{{selectedClient.category.name}}</span>
                     </div>
                   </div>
                   <img @click="currentData.client = ''" class="close-client" src="../../assets/icons/deleteClient.svg">
@@ -110,7 +108,8 @@
                   </div>
                   <div v-else v-for="client in filteredClients" :key="client._id"  @click="selectClient(client._id)" class="table-child d-flex align-items-center">
                     <div class="table-img">
-                      <img src="../../assets/img/sneak.webp">
+                      <img v-if="!client.avatar" src="../../assets/icons/chat.svg">
+                      <img v-else :src="imgSrc+'/'+client.avatar">
                     </div>
                     <div>
                       <h4 class="general-title">{{client.name}}</h4>
@@ -158,14 +157,14 @@
 
               <div class="d-flex mb-5 justify-content-between align-items-center">
                 <h3 class="total-price">Total</h3>
-                <h3 class="total-price">{{totalPrice}} $</h3>
+                <h3 class="total-price">{{totalPrice}} </h3>
               </div>
             </div>
           </div>
 
           <div class="d-flex">
             <button class="save mr-2" @click.prevent="onSubmit(currentData._id)">Edit order</button>
-            <button class="cancel" @click="close">Close</button>
+            <button class="cancel" @click="cancel">Cancel</button>
           </div>
         </div>
       </div>
@@ -183,6 +182,7 @@ export default {
   props:['select_order','getOrders'],
   data(){
     return {
+      imgSrc:'',
       products:[],
       clients:[],
       search_product:'',
@@ -206,6 +206,24 @@ export default {
       })
       return sum
     },
+    selectedClient(){
+        let client =  {
+            avatar:"../../assets/icons/chat.svg",
+            name: "empty",
+            category:{
+                name: 'No category'
+            },
+            isDefault: true
+        }
+        if(this.currentData.client){
+            client = this.currentData.client 
+            client.avatar =  this.imgSrc+'/'+client.avatar
+            client.isDefault = false
+        }
+        
+        return client
+
+    },
     filteredProducts(){
       return this.products.filter((product)=>{
         return product.name.toLowerCase().includes(this.search_product.toLowerCase())
@@ -220,6 +238,9 @@ export default {
 
   },
   methods:{
+    cancel(){
+      $('#edit-order').modal("hide")
+    },
     deleteFromOrder(id){
       this.currentData.products=this.currentData.products.filter((item)=>item._id !== id)
 
@@ -230,7 +251,11 @@ export default {
         this.getOrders()
         $('#edit-order').modal("hide")
         this.$informationAlert('Changes are saved')
-      })
+      }).catch((error)=>{
+            if(error.response && error.response.data){
+                this.$warningAlert(error.response.data.msg)
+            }
+      });
     },
     selectProduct(selected){
       if(this.currentData.products.length === 0){
@@ -279,6 +304,7 @@ export default {
   mounted(){
     this.getProducts()
     this.getClients()
+    this.imgSrc = this.$server;
 
   },
   watch:{
@@ -353,6 +379,7 @@ export default {
 }
 .enter-name-input::placeholder{
   color:#616cf5;
+  opacity:1;
 }
 .promo-btn{
   background: #F4F4F4;

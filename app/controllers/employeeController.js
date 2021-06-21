@@ -1,5 +1,5 @@
 var bcrypt = require('bcryptjs');
-const { useDB, sendError, saveImage, createQrFile, randomNumber } = require('../../services/helper')
+const { useDB, sendError, saveImage, createQrFile, randomNumber, checkAccess } = require('../../services/helper')
 var validate = require('../../config/messages');
 const { query } = require('express');
 
@@ -9,6 +9,9 @@ class EmployeeController{
     getEmployee = async function (req, res) {
         let db = useDB(req.db)
         let Employee = db.model("Employee");
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active" }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Sending employee'
@@ -28,7 +31,9 @@ class EmployeeController{
     getEmployees = async function (req, res) {
         let db = useDB(req.db)
         let Employee = db.model("Employee");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active" }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Sending employees'
@@ -48,7 +53,9 @@ class EmployeeController{
     addEmployee = async function (req, res) {
         let db = useDB(req.db)
         let Employee = db.model("Employee");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Employee added'
@@ -97,7 +104,9 @@ class EmployeeController{
     updateEmployee = async function (req, res) {
         let db = useDB(req.db)
         let Employee = db.model("Employee");
-        
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Employee updated'
@@ -161,7 +170,9 @@ class EmployeeController{
     deleteEmployees = async function (req, res) {
         let db = useDB(req.db)
         let Employee = db.model("Employee");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Employees deleted'
@@ -193,7 +204,9 @@ class EmployeeController{
     updateEmployees = async function (req, res) {
         let db = useDB(req.db)
         let Employee = db.model("Employee");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Employees updated'

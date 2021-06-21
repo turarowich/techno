@@ -3,41 +3,26 @@
     <div class="container-fluid">
       <div class="login">
         <h1 class="welcome-sign-in">Log In</h1>
-        <form >
+        <form  class="loginEmployee">
           <label class="label">Email</label>
-          <input v-model="email" name="email" class="login-input">
-          <label class="label">Password</label>
+          <input v-model="email" name="email" class="login-input mb-0">
+          <label class="label mt-2">Password</label>
           <div class="password d-flex justify-space-between align-items-center">
-            <input v-model="password" name="password" id="password"  class="login-input" type="password">
+            <input name="password" v-model="password" id="password"  class="login-input" type="password">
             <img @click="showPassword" id="hide-eye"  src="../../assets/icons/Hide.svg">
             <img @click="showPassword" id="show-eye"  src="../../assets/icons/eye.svg">
           </div>
+          <!-- <input type="hidden" > -->
 
           <div class="remind d-flex justify-content-between align-item-center">
             <div class="d-flex ">
               <label class="custom-checkbox"><input type="checkbox"><span class="checkmark"></span></label>
               <span>Stay signed in</span>
             </div>
-            <a href="/">Forgot your password?</a>
           </div>
           <button @click="login" class="sign-in-btn" type="button">Sign In</button>
         </form>
-
-        <div class="have-account">Sign up with Social of fill the form to continue. </div>
-
-        <div class="social-link">
-          <img src="../../assets/icons/facebook.svg">
-          <img src="../../assets/icons/google.svg">
-        </div>
-
-        <div class="main-or d-flex align-items-center justify-content-center">
-          <div class="or-div"></div>
-          <span class="or-text">or</span>
-          <div class="or-div"></div>
-        </div>
-        <div class="have-account mb-0">Don't have an account? <router-link class="client-link" :to="`/${currentCompanyCatalog}/signup`">Sign up now</router-link></div>
       </div>
-
     </div>
   </div>
 </template>
@@ -46,7 +31,7 @@
 import $ from "jquery";
 
 export default {
-  name: "SignIn",
+  name: "EmployeeLogin",
   data(){
     return{
       email:'',
@@ -73,29 +58,23 @@ export default {
       }
     },
     login(){
-      let that=this;
       const options = {
         headers: {"company_url": this.currentCompanyCatalog}
       }
       console.log(this.currentCompanyCatalog,"currentCompanyCatalog");
-      let url = this.url('loginClient');
+      let url = this.url_home('loginEmployee');
       let data = {
         email:this.email,
         password:this.password,
       }
-      this.axios.post(url,data,options).then(function (response) {
-        console.log(response);
-        that.$successAlert('Logged in!');
-        that.$store.dispatch("Client/setUserAuth",response.data);
-
-        that.$router.push({ path: `/${that.currentCompanyCatalog}/client-account`});
-        // that.$router.go(-1);
-      }).catch(function(error){
+      this.axios.post(url,data,options).then((resp)=> {
+        localStorage.setItem('token', resp.data.token)
+        localStorage.setItem('user',JSON.stringify(resp.data.object))
+        this.changeToken();
+        this.$router.push('/orders')
+      }).catch((error)=>{
         if (error.response) {
-          // console.log(error.response.status);
-          // console.log(error.response.headers);
-          that.$successAlert(Object.values(error.response.data.errors).join(', '));
-          console.log(Object.values(error.response.data.errors));
+            this.setErrors($('.loginEmployee'), error)
         }
       });
     },

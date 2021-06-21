@@ -13,31 +13,31 @@
 
     <div class="analytics-wrapper">
       <div class="analytics-box" >
-        <p><img class="mr-2" src="../../assets/icons/coin.svg">The amount of profit</p>
+        <p><img class="mr-2" src="../../assets/icons/analytics/coin.svg">The amount of profit</p>
         <h2 class="analytics-title">4000</h2>
       </div>
       <div class="analytics-box" >
-        <p><img class="mr-2" src="../../assets/icons/coin.svg">Number of clients</p>
+        <p><img class="mr-2" src="../../assets/icons/analytics/numUser.svg">Number of clients</p>
         <h2 class="analytics-title">1020</h2>
       </div>
       <div class="analytics-box" >
-        <p><img class="mr-2" src="../../assets/icons/coin.svg">Middle age</p>
+        <p><img class="mr-2" src="../../assets/icons/analytics/middle.svg">Middle age</p>
         <h2 class="analytics-title">25</h2>
       </div>
       <div class="analytics-box" >
-        <p><img class="mr-2" src="../../assets/icons/coin.svg">Spent with bonuses</p>
+        <p><img class="mr-2" src="../../assets/icons/analytics/spent.svg">Spent with bonuses</p>
         <h2 class="analytics-title">13445</h2>
       </div>
       <div class="analytics-box" >
-        <p><img class="mr-2" src="../../assets/icons/coin.svg">The amount of discounts</p>
+        <p><img class="mr-2" src="../../assets/icons/analytics/customer.svg">The amount of discounts</p>
         <h2 class="analytics-title">111234</h2>
       </div>
       <div class="analytics-box" >
-        <p><img class="mr-2" src="../../assets/icons/coin.svg">Number of orders</p>
+        <p><img class="mr-2" src="../../assets/icons/analytics/orders.svg">Number of orders</p>
         <h2 class="analytics-title">11111</h2>
       </div>
       <div class="analytics-box" >
-        <p><img class="mr-2" src="../../assets/icons/coin.svg">
+        <p><img class="mr-2" src="../../assets/icons/analytics/check.svg">
         Average check</p>
         <h2 class="analytics-title">44444</h2>
       </div>

@@ -1,5 +1,5 @@
 var bcrypt = require('bcryptjs');
-const { useDB, sendError,saveImage } = require('../../services/helper')
+const { useDB, sendError, saveImage, checkAccess } = require('../../services/helper')
 var validate = require('../../config/messages');
 const { query } = require('express');
 const mongoose = require("mongoose");
@@ -58,7 +58,9 @@ class SettingsController{
         let Delivery = db.model("Delivery");
         let Branch = db.model("Branch");
         let Discount = db.model("Discount");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active" }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Sending settings'
@@ -103,7 +105,9 @@ class SettingsController{
         let Settings = db.model("Settings");
         let Delivery = db.model("Delivery");
         let Branch = db.model("Branch");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Settings updated'
@@ -338,7 +342,9 @@ class SettingsController{
     deleteDelivery = async function (req, res) {
         let db = useDB(req.db)
         let Delivery = db.model("Delivery");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Delivery deleted'
@@ -356,7 +362,9 @@ class SettingsController{
     deleteBranch = async function (req, res) {
         let db = useDB(req.db)
         let Branch = db.model("Branch");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Branch deleted'
@@ -374,7 +382,9 @@ class SettingsController{
         let new_branch = req.fields.branch;
         let db = useDB(req.db)
         let Branch = db.model("Branch");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Branch added'
@@ -389,6 +399,10 @@ class SettingsController{
     getBranch = async function (req, res) {
         let db = useDB(req.db)
         let Branch = db.model("Branch");
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active" }, db, res)
+        }
+        
         let result = {
             'status': 200,
             'msg': 'Branch added'
@@ -408,6 +422,9 @@ class SettingsController{
             'status': 200,
             'msg': 'Branch updated'
         }
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         try {
             let query = { '_id': edit_branch._id }
             req.fields['updatedAt'] = new Date()
@@ -423,7 +440,9 @@ class SettingsController{
         let new_option = req.fields.option;
         let db = useDB(req.db)
         let Delivery = db.model("Delivery");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Delivery option added'
@@ -438,6 +457,9 @@ class SettingsController{
     getDeliveryOption = async function (req, res) {
         let db = useDB(req.db)
         let Delivery = db.model("Delivery");
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active" }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Delivery on da way'
@@ -453,6 +475,9 @@ class SettingsController{
         let edit_option = req.fields.option;
         let db = useDB(req.db)
         let Delivery = db.model("Delivery");
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Branch updated'
@@ -472,6 +497,9 @@ class SettingsController{
         let personal_model = users.model("User");
         let db = useDB(req.db)
         let Settings = db.model("Settings");
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active" }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Sending settings'

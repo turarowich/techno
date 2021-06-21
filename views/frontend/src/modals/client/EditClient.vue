@@ -90,7 +90,11 @@ export default {
         this.$informationAlert("Change are saved")
         this.getClients()
         $('#edit-client').modal("hide")
-      })
+      }).catch((error)=>{
+            if(error.response && error.response.data){
+                this.$warningAlert(error.response.data.msg)
+            }
+        });
 
     },
     selectDate(){

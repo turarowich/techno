@@ -19,7 +19,6 @@
           <div class="move-category-item" v-for="cat in clientCategory" :key="cat._id" @click="moveCategory(cat._id)">{{cat.name}}</div>
         </div>
       </div>
-      <button class="app-buttons-item" ><img src="../../assets/icons/import.svg"><span>Import</span></button>
       <div class="dropdown filter">
         <button class="dropdown-toggle app-buttons-item mr-0" id="dropdownFilterClient" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="../../assets/icons/filter.svg"><span>Filter</span></button>
         <div class="dropdown-menu filter-box" aria-labelledby="dropdownFilterClient">
@@ -586,7 +585,11 @@ export default {
                   },
                 }
             )
-          })
+          }).catch((error)=>{
+                    if(error.response && error.response.data){
+                        this.$warningAlert(error.response.data.msg)
+                    }
+                });
         }
       })
      },
@@ -623,7 +626,11 @@ export default {
                   this.getClients()
                   $('#parent-check').prop('checked',false)
                   this.$successAlert('All clients have been removed')
-                })
+                }).catch((error)=>{
+                    if(error.response && error.response.data){
+                        this.$warningAlert(error.response.data.msg)
+                    }
+                });
           }
           else{
             this.deletedClients = []
@@ -757,6 +764,7 @@ export default {
 </script>
 
 <style scoped>
+
 .total{
   width: 6px;
   height: 6px;
