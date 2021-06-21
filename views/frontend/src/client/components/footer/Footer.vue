@@ -3,12 +3,12 @@
   <div class="d-flex justify-content-between align-items-center footer-container container">
   <div class="footer-contact">
     <h3>Contacts</h3>
-    <p class="footer-info"><img src="../../../assets/clients/Call.svg"><a  href="/">{{companyAddresses[0].phone}}</a></p>
-    <p class="footer-info"><img src="../../../assets/clients/Message.svg"><a href="/">{{catalog_settings.email}}</a></p>
+    <p class="footer-info"><img src="../../../assets/clients/Call.svg"><a  href="/">{{companyAddresses[0] ? companyAddresses[0].phone : ""}}</a></p>
+    <p class="footer-info"><img src="../../../assets/clients/Message.svg"><a href="/">{{catalog_settings.email || ""}}</a></p>
   </div>
   <div class="footer-address">
     <h3>Address</h3>
-    <p class="footer-info" >{{ companyAddresses[0].address }}</p>
+    <p class="footer-info" >{{companyAddresses[0] ? companyAddresses[0].address : ""}}</p>
   </div>
   <div class="footer-logo d-flex align-items-center">
     <img class="mr-2" src="../../../assets/clients/footerLogo.svg">

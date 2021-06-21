@@ -14,13 +14,6 @@
         <div><router-link class="view-all" :to="`/${currentCompanyCatalog}/client-news`">View all</router-link></div>
       </div>
       <div class="row">
-<!--        <div class="col-lg-3 ">-->
-<!--          <h2 class="news-title">News</h2>-->
-<!--          <p class="news-texts">A light blue T-shirt from the spring-summer 2021 collection,-->
-<!--            as if faded in the sun, turned out to be as comfortable as possible. The cut of</p>-->
-<!--          <router-link class="view-all" :to="`/shop/${currentCompanyCatalog}/client-news`">View all</router-link>-->
-<!--        </div>-->
-
         <div class="col-lg-12">
           <div class="row">
             <div v-for="(news,index) in newsArray.slice(0,4)" :key="index"  class="col-lg-3 col-md-4 col-sm-6 pl-0" @click="openNews(news._id)">
@@ -128,11 +121,13 @@ name: "Dashboard",
               whatsapp:settings.whatsapp,
               website:settings.website,
             }
+            console.log("99999999999999999999999999999");
             this.$store.dispatch("Catalog/setCatalog_settings",catalog_settings);
             // $('.overlay_404').show();
+            console.log("999999999999999999999999999990000000000000");
           }).catch(function (error){
             if (error.response) {
-              console.log('eeeeeeeeeeeeee',error.response)
+              console.log('setCatalog_settings EERRRor',error.response)
               let err_page = `
               <div>
               <marquee>
@@ -145,13 +140,15 @@ name: "Dashboard",
             }
           })
     })().catch(err => {
-      console.error(err);
+      console.error(err,"setCatalog_settings EEEEERRR");
     });
   },
   created(){
+    console.log('@@ created');
     // this.getCatalogSettings();
   },
   mounted() {
+    console.log('@@ mounted');
     this.getNews();
     const options = {
       headers: {

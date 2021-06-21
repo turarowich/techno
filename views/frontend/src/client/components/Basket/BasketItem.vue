@@ -7,7 +7,8 @@
     <div v-else class="client-table-item d-flex" v-for="item in shoppingCart" :key="item.product._id">
       <div style="width:40%;overflow: hidden;text-overflow: ellipsis;" class="d-flex align-items-center">
         <div class="client-table-img">
-          <img src="../../../assets/clients/shirt.svg">
+          <img v-if="!item.product.error" :src="server+'/'+item.product.img" @error="item.product.error=true">
+          <img v-else src="../../../assets/img/default.svg" >
         </div>
         <div>
           <h3 class="table-title">{{item.product.name}}</h3>
@@ -18,8 +19,6 @@
         <span class="count">{{item.quantity}}</span>
         <button class="increase mb-0" @click="increase(item.product._id)">+</button>
       </div>
-<!--      <div style="width:14%">{{item.discount_percent}}%</div>-->
-<!--      <div style="width:14%">{{item.discount_sum}}</div>-->
       <div style="width:30%">
         <span>
           {{item.current_price}} $
@@ -30,9 +29,6 @@
           <span style="color: #E94A4A;" v-if="item.isDiscounted">Discount {{item.discount_sum}}$</span>
           <span style="color: #E94A4A;" v-else>Discount {{item.discount_percent_sum}}$</span>
         </div>
-<!--        <span v-if="checkDates(item.product.promoStart,item.product.promoEnd)" :class="{lineThrough:checkDates(item.product.promoStart,item.product.promoEnd)}">-->
-<!--          {{item.product.price}} $-->
-<!--        </span>-->
       </div>
       <div style="width:10%" class="d-flex justify-content-end pr-3"><img @click="removeFromBasket(item.product._id)" src="../../../assets/clients/x.svg"></div>
     </div>
@@ -63,6 +59,9 @@ export default {
     },
     basket_promocode(){
       return this.$store.getters['Orders/getBasketPromocode'];
+    },
+    server(){
+      return this.$server;
     },
   },
   methods: {
@@ -133,13 +132,12 @@ export default {
   border-bottom: 1px solid #E4E4E4;
 }
 .client-table-img{
-  height: 70px;
-  width: 70px;
   margin-right: 16px;
 }
 .client-table-img img{
-  width: 100%;
-  height: 100%;
+  height: 70px;
+  width: 100px;
+  max-width: 100px;
   object-fit: contain;
 }
 .table-title{

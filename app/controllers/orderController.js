@@ -103,7 +103,6 @@ class OrderController{
     };
 
     addOrder = async function (req, res) {
-        console.log(req.fields);
         let db = useDB(req.db)
         let Order = db.model("Order");
         let Client = db.model("Client");  
@@ -160,6 +159,10 @@ class OrderController{
                     search_product.quantity = parseFloat(search_product.quantity)-parseFloat(product.quantity);
                     search_product.save();
                 }
+
+
+
+
             }
 
         //Cashback
