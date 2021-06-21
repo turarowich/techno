@@ -60,7 +60,10 @@ class OrderController{
         let db = useDB(req.db)
         let Order = db.model("Order");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "orders", parametr: "active" }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "orders", parametr: "active" }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -84,7 +87,10 @@ class OrderController{
             'msg': 'Sending orders'
         }
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "orders", parametr: "active" }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "orders", parametr: "active" }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         try {
             let query = {}
@@ -119,7 +125,10 @@ class OrderController{
             lang = 'en'
         }
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "orders", parametr: "active", parametr2: 'canEdit'}, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "orders", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -234,7 +243,10 @@ class OrderController{
         let Product = db.model("Product");
         let OrderProduct = db.model("OrderProduct");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "orders", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "orders", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -285,7 +297,10 @@ class OrderController{
         let db = useDB(req.db)
         let Order = db.model("Order");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "orders", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "orders", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -305,8 +320,12 @@ class OrderController{
         let db = useDB(req.db)
         let Order = db.model("Order");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "orders", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "orders", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
+        
         let result = {
             'status': 200,
             'msg': 'Orders deleted'
@@ -336,7 +355,10 @@ class OrderController{
         let db = useDB(req.db)
         let Order = db.model("Order");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "orders", parametr: "active" }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "orders", parametr: "active"}, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let lang = req.headers["accept-language"]
         if (lang != 'ru') {

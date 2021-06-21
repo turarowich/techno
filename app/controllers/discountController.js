@@ -4,6 +4,12 @@ class DiscountController{
     getDiscounts = async function (req, res) {
         let db = useDB(req.db)
         let discount_model = db.model("Discount");
+        if (req.userType == "employee") {
+            let checkResult = await checkAccess(req.userID, { access: "loyalty", parametr: "active" }, db, res)
+            if (checkResult) {
+                return;
+            }
+        }
         let result = {
             'status': 200,
             'msg': 'Sending Cashback'
@@ -19,6 +25,12 @@ class DiscountController{
         let db = useDB(req.db)
         let discount_model = db.model("Discount");
         let discount = req.fields;
+        if (req.userType == "employee") {
+            let checkResult = await checkAccess(req.userID, { access: "loyalty", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
+        }
         let result = {
             'status': 200,
             'msg': 'Sending Discount'
@@ -39,6 +51,12 @@ class DiscountController{
     removeDiscount = async function (req, res) {
         let db = useDB(req.db)
         let Discount = db.model("Discount");
+        if (req.userType == "employee") {
+            let checkResult = await checkAccess(req.userID, { access: "loyalty", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
+        }
         let result = {
             'status': 200,
             'msg': 'Discount deleted'

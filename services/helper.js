@@ -317,20 +317,23 @@ async function checkAccess(user_id, settings, db, res){
     }
     if(employee){
         if (employee[settings.access]) {
-            console.log(employee[settings.access][settings.parametr], settings, employee[settings.access])
             if(!employee[settings.access][settings.parametr]){
                 res.status(result.status).json(result);
+                return result
             }
             if (settings.parametr2 != undefined && !employee[settings.access][settings.parametr2]) {
                 res.status(result.status).json(result);
+                return result
             }
             if (settings.parametr3 != undefined && !employee[settings.access][settings.parametr3]) {
                 res.status(result.status).json(result);
+                return result
             }
         }
         return null
     }
     res.status(result.status).json(result);
+    return result
 }
 module.exports = {
     useDB: useDB,

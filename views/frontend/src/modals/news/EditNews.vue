@@ -155,20 +155,21 @@ export default {
                 this.$emit('getNews')
                 setTimeout(function(){ 
                     $('#edit-news').modal("hide")
+                    this.news = {
+                        name: '',
+                        desc: '',
+                        category:false,
+                        img: '',
+                        startDate:'',
+                        endDate: ''
+                    }
                  }, 500);
                 this.$successAlert('News has been updated')
-            }).catch((error) => {
-                console.log("fail", error)
-            })
-
-            
-            this.newProduct = {
-                name: '',
-                price:'',
-                quantity:'',
-                category: '',
-                img:''
-            }
+            }).catch((error)=>{
+                if(error.response && error.response.data){
+                    this.$warningAlert(error.response.data.msg)
+                }
+            });
         },
         makeImg(name){
             return this.img(name)

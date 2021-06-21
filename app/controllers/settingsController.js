@@ -59,7 +59,10 @@ class SettingsController{
         let Branch = db.model("Branch");
         let Discount = db.model("Discount");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "settings", parametr: "active" }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "settings", parametr: "active" }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -106,7 +109,10 @@ class SettingsController{
         let Delivery = db.model("Delivery");
         let Branch = db.model("Branch");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -319,7 +325,10 @@ class SettingsController{
         let db = useDB(req.db)
         let Delivery = db.model("Delivery");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -339,7 +348,10 @@ class SettingsController{
         let db = useDB(req.db)
         let Branch = db.model("Branch");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -359,7 +371,10 @@ class SettingsController{
         let db = useDB(req.db)
         let Branch = db.model("Branch");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -376,7 +391,10 @@ class SettingsController{
         let db = useDB(req.db)
         let Branch = db.model("Branch");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "settings", parametr: "active" }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "settings", parametr: "active"}, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         
         let result = {
@@ -399,7 +417,10 @@ class SettingsController{
             'msg': 'Branch updated'
         }
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         try {
             let query = { '_id': edit_branch._id }
@@ -417,7 +438,10 @@ class SettingsController{
         let db = useDB(req.db)
         let Delivery = db.model("Delivery");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -434,7 +458,10 @@ class SettingsController{
         let db = useDB(req.db)
         let Delivery = db.model("Delivery");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "settings", parametr: "active" }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "settings", parametr: "active" }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -452,7 +479,10 @@ class SettingsController{
         let db = useDB(req.db)
         let Delivery = db.model("Delivery");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -474,7 +504,10 @@ class SettingsController{
         let db = useDB(req.db)
         let Settings = db.model("Settings");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "settings", parametr: "active" }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "settings", parametr: "active" }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,

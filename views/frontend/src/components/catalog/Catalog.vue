@@ -294,23 +294,21 @@ name: "Catalog",
         if (result.isConfirmed) {
           this.axios.delete(this.url('deleteProducts'),{data:{
               objects: this.deletedProducts
-
-            }})
-              .then(()=>{
+            }}).then(()=>{
                 this.getProducts()
                 this.deletedProducts = []
                 $('#parent-check').prop('checked',false)
                 this.$successAlert('All products have been removed')
-              })
+            }).catch((error)=>{
+                if(error.response && error.response.data){
+                    this.$warningAlert(error.response.data.msg)
+                }
+            });
         }
         else{
           this.deletedProducts = []
         }
-      }).catch((error)=>{
-            if(error.response && error.response.data){
-                this.$warningAlert(error.response.data.msg)
-            }
-      });
+      })
     }
 
     },
@@ -395,14 +393,13 @@ name: "Catalog",
                   },
 
                 }
-            )
-          })
+            )}).catch((error)=>{
+                if(error.response && error.response.data){
+                    this.$warningAlert(error.response.data.msg)
+                }
+            });
        }
-      }).catch((error)=>{
-            if(error.response && error.response.data){
-                this.$warningAlert(error.response.data.msg)
-            }
-      });
+      })
     },
     deleteCategory(id){
 

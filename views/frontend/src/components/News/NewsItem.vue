@@ -47,7 +47,11 @@ export default {
           this.axios.get(this.url('sendNewsPN', newsID))
             .then(() => {
                 this.$successAlert('Notification is send')
-            })
+            }).catch((error)=>{
+                if(error.response && error.response.data){
+                    this.$warningAlert(error.response.data.msg)
+                }
+            });
       },
       makeImg(name){
         return this.img(name)

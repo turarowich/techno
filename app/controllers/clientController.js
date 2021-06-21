@@ -13,7 +13,10 @@ class ClientController{
         let Order = db.model("Order");
         let ClientBonusHistory = db.model("clientBonusHistory");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "clients", parametr: "active" }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "clients", parametr: "active" }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -50,7 +53,10 @@ class ClientController{
         let db = useDB(req.db)
         let Client = db.model("Client");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "clients", parametr: "active" }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "clients", parametr: "active" }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -72,7 +78,10 @@ class ClientController{
         let db = useDB(req.db)
         let Client = db.model("Client");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "clients", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "clients", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -128,7 +137,10 @@ class ClientController{
         let db = useDB(req.db)
         let Client = db.model("Client");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "clients", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "clients", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -200,7 +212,10 @@ class ClientController{
         let db = useDB(req.db)
         let Client = db.model("Client");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "clients", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "clients", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -226,7 +241,10 @@ class ClientController{
         let db = useDB(req.db)
         let Client = db.model("Client");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "clients", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "clients", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -248,7 +266,10 @@ class ClientController{
         let db = useDB(req.db)
         let Client = db.model("Client");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "clients", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "clients", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,

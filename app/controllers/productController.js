@@ -11,7 +11,10 @@ class ProductController{
         let db = useDB(req.db)
         let Product = db.model("Product");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "catalog", parametr: "active" }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "catalog", parametr: "active" }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
 
         let result = {
@@ -32,7 +35,10 @@ class ProductController{
         let db = useDB(req.db)
         let Product = db.model("Product");
         if(req.userType == "employee") {
-            await checkAccess(req.userID, { access: "catalog", parametr: "active" }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "catalog", parametr: "active" }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -52,7 +58,10 @@ class ProductController{
         let db = useDB(req.db)
         let Product = db.model("Product");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -134,7 +143,10 @@ class ProductController{
         let db = useDB(req.db)
         let Product = db.model("Product");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -206,7 +218,10 @@ class ProductController{
         let db = useDB(req.db)
         let Product = db.model("Product");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -228,7 +243,10 @@ class ProductController{
         let db = useDB(req.db)
         let Product = db.model("Product");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -247,7 +265,10 @@ class ProductController{
         let db = useDB(req.db)
         let Product = db.model("Product");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
