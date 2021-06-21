@@ -1,6 +1,6 @@
 <template>
 <div>
-  <NewsItem v-bind:news="news"/>
+  <NewsItem v-bind:news="newsArray"/>
 </div>
 </template>
 
@@ -13,21 +13,28 @@ name: "News",
   },
   data(){
   return{
-    news:[
-      {id:1, data:'12 Dec 2021', name:'New promotion, buy everything with a 20% discount!!!'},
-      {id:2, data:'12 Dec 2021', name:'New promotion, buy everything with a 20% discount!!!'},
-      {id:3, data:'12 Dec 2021', name:'New promotion, buy everything with a 20% discount!!!'},
-      {id:4, data:'12 Dec 2021', name:'New promotion, buy everything with a 20% discount!!!'},
-      {id:5, data:'12 Dec 2021', name:'New promotion, buy everything with a 20% discount!!!'},
-      {id:6, data:'12 Dec 2021', name:'New promotion, buy everything with a 20% discount!!!'},
-      {id:7, data:'12 Dec 2021', name:'New promotion, buy everything with a 20% discount!!!'},
-      {id:8, data:'12 Dec 2021', name:'New promotion, buy everything with a 20% discount!!!'},
-      {id:9, data:'12 Dec 2021', name:'New promotion, buy everything with a 20% discount!!!'},
-    ]
+    newsArray:[],
   }
   },
+  computed:{
+    currentCompanyCatalog() {
+      return this.$route.params.bekon;
+    },
+  },
   methods:{
-
+    async  getNews(){
+      const options = {
+        headers: {"company_url": this.currentCompanyCatalog}
+      }
+      await this.axios.get(this.url('getNewsWeb'),options)
+          .then((response) => {
+            console.log(response);
+            this.newsArray = response.data.objects;
+          })
+    },
+  },
+  mounted() {
+    this.getNews();
   }
 }
 </script>

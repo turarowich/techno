@@ -1,5 +1,5 @@
 var bcrypt = require('bcryptjs');
-const { useDB, sendError, saveImage, createQrFile, randomNumber } = require('../../services/helper')
+const { useDB, sendError, saveImage, createQrFile, randomNumber, checkAccess } = require('../../services/helper')
 var validate = require('../../config/messages');
 const { query } = require('express');
 const client = require('../models/client');
@@ -11,7 +11,10 @@ class ClientController{
         let Client = db.model("Client");
         let Discount = db.model("Discount");
         let Order = db.model("Order");
-
+        let ClientBonusHistory = db.model("clientBonusHistory");
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "clients", parametr: "active" }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Sending client'
@@ -30,6 +33,7 @@ class ClientController{
                     result['discount'] = discount
                 }
                 result['orders'] = await Order.find({client:client._id});
+                result['history'] = await ClientBonusHistory.find({client:client._id});
             }
             
             result['object'] = client
@@ -45,7 +49,9 @@ class ClientController{
     getClients = async function (req, res) {
         let db = useDB(req.db)
         let Client = db.model("Client");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "clients", parametr: "active" }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Sending clients'
@@ -65,7 +71,9 @@ class ClientController{
     addClient = async function (req, res) {
         let db = useDB(req.db)
         let Client = db.model("Client");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "clients", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Client added'
@@ -91,7 +99,7 @@ class ClientController{
             }).save();
             
             if (req.files.avatar) {
-                let filename = saveImage(req.files.avatar, req.db)
+                let filename = saveImage(req.files.avatar, req.db, null, true)
                 if (filename == 'Not image') {
                     result = {
                         status: 500,
@@ -119,7 +127,9 @@ class ClientController{
     updateClient = async function (req, res) {
         let db = useDB(req.db)
         let Client = db.model("Client");
-        
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "clients", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Client updated'
@@ -155,7 +165,7 @@ class ClientController{
     
             
             if (req.files.avatar) {
-                let filename = saveImage(req.files.avatar, req.db)
+                let filename = saveImage(req.files.avatar, req.db, null, true)
                 if (filename == 'Not image') {
                     result = {
                         status: 500,
@@ -189,7 +199,9 @@ class ClientController{
     updateClientsCategory = async function (req, res) {
         let db = useDB(req.db)
         let Client = db.model("Client");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "clients", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Sending clients'
@@ -213,7 +225,9 @@ class ClientController{
     deleteClient = async function (req, res) {
         let db = useDB(req.db)
         let Client = db.model("Client");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "clients", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Client deleted'
@@ -233,7 +247,9 @@ class ClientController{
     deleteClients = async function (req, res) {
         let db = useDB(req.db)
         let Client = db.model("Client");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "clients", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Clients deleted'

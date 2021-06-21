@@ -148,9 +148,12 @@ name: "Orders",
 
   computed: {
     filteredList:function() {
-      return this.orderList
+        
+      let newOrders = this.orderList
           .filter(order => {
-            return order.client_name && order.client_name.toLowerCase().includes(this.search.toLowerCase()) || order.client_phone.includes(this.search)
+              if(this.search == "")
+                return true
+            return (order.client_name && order.client_name.toLowerCase().includes(this.search.toLowerCase())) || (order.client_phone && order.client_phone.includes(this.search))
           })
           .filter(order=>{
             return order.status.includes(this.filter_by_status)
@@ -172,6 +175,8 @@ name: "Orders",
                     new Date(order.createdAt).getTime() <= new Date(this.filtered.slice(14,24)).getTime())
 
           })
+          console.log("filteredList", newOrders)
+          return newOrders
     },
     orderToDisplay: function(){
       let start = (this.currentPage - 1) * this.perPage
@@ -180,6 +185,7 @@ name: "Orders",
         value.index = index
         return value
       })
+      console.log("ordertodisplay", this.filteredList.slice(start, end))
       return this.filteredList.slice(start, end)
     },
     totalPages:function(){
@@ -289,12 +295,15 @@ name: "Orders",
                   this.getOrders()
                   $('#parent-check').prop('checked',false)
                   this.$successAlert('All orders have been removed')
-                })
+                }).catch((error)=>{
+                    if(error.response && error.response.data){
+                        this.$warningAlert(error.response.data.msg)
+                    }
+                });
           }
           else{
             this.deletedOrders = []
           }
-
         })
       }
     },
@@ -344,7 +353,11 @@ name: "Orders",
           .then(()=>{
             this.getOrders()
             this.$successAlert("Order deleted")
-          })
+          }).catch((error)=>{
+            if(error.response && error.response.data){
+                this.$warningAlert(error.response.data.msg)
+            }
+          });
         }
       })
     },

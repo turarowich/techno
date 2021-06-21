@@ -8,36 +8,35 @@
          <div class="row">
            <div class="col-lg-6">
              <label class="personal-label">Name</label><br>
-             <input class="edit-input cashback-input" placeholder="Name">
+             <input v-model="user.name" class="edit-input cashback-input" placeholder="Name">
              <label class="personal-label">Email</label><br>
-             <input class="edit-input cashback-input email" placeholder="Your email">
+             <input  v-model="user.email"  class="edit-input cashback-input email" placeholder="Your email">
             <span class="gender">Gender</span>
-
 
              <div class="radio-toolbar">
                <div class="d-flex align-items-center mr-5">
-                 <input type="radio" id="radioApple" name="radioFruit" value="apple" checked>
+                 <input type="radio" id="radioApple" v-model="user.gender" name="radioFruit" value="male">
                  <label for="radioApple"></label>
                  <span class="male">Male</span>
                </div>
                <div class="d-flex align-items-center">
-                 <input type="radio" id="radioOrange" name="radioFruit" value="orange">
+                 <input type="radio" id="radioOrange" v-model="user.gender" name="radioFruit" value="female">
                  <label for="radioOrange"></label>
                  <span class="male">Female</span>
                </div>
              </div>
 
              <div class="d-flex">
-               <button class="save">Save</button>
+               <button type="button" @click="save" class="save mr-2">Save</button>
                <button class="cancel">Cancel</button>
              </div>
            </div>
 
            <div class="col-lg-6">
              <label class="personal-label">Phone number</label><br>
-             <input class="edit-input cashback-input" placeholder="Phone number">
+             <input v-model="user.phone" class="edit-input cashback-input" placeholder="Phone number">
              <label class="personal-label">Birthday</label><br>
-             <input class="edit-input cashback-input" placeholder="Select a date">
+             <input id="clientBirthDay" v-model="clientBirthDay.formatted" class="edit-input cashback-input" placeholder="Select a date">
 
            </div>
          </div>
@@ -48,7 +47,75 @@
 
 <script>
 export default {
-name: "EditProfile"
+  name: "EditProfile",
+  data(){
+    return{
+      fromDateLightpick:{},
+      clientBirthDay:{
+        obj:'',
+        formatted:'',
+      },
+    }
+  },
+  computed:{
+    user(){
+      return this.$store.getters['Client/getUser'];
+    },
+    userToken(){
+      return this.$store.getters['Client/getUserToken'];
+    },
+    currentCompanyCatalog() {
+      return this.$route.params.bekon;
+    },
+  },
+  methods:{
+    selectDates(){
+      let that=this;
+      this.fromDateLightpick = new this.$lightpick({
+        field: document.getElementById('clientBirthDay'),
+        onSelect: function(date){
+          that.clientBirthDay.obj = date;
+          that.clientBirthDay.formatted = date.format('DD.MM.YYYY');
+        }
+      });
+    },
+    save(){
+      let that=this;
+      const options = {
+        headers: {
+          "company_url": this.currentCompanyCatalog,
+          "x-access-token": this.userToken,
+        }
+
+      }
+      let url = this.url('updateClient',this.user._id);
+
+      let data = {
+        name:this.user.name,
+        email:this.user.email,
+        phone:this.user.phone,
+        gender:this.user.gender,
+        birthDate:this.clientBirthDay.obj,
+      }
+      this.axios.put(url,data,options).then(function (response) {
+        console.log(response);
+        that.$successAlert('Updated');
+        that.$router.push({ path: `/${that.currentCompanyCatalog}/client-account`});
+      }).catch(function(error){
+        if (error.response) {
+          console.log(error.response);
+          that.$warningAlert(Object.values(error.response.data.errors))
+        }
+      });
+
+    }
+  },
+  watch: {
+  },
+  mounted() {
+    this.selectDates();
+    this.fromDateLightpick.setDate(this.user.birthDate);
+  }
 }
 </script>
 

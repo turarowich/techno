@@ -16,6 +16,25 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+async function addWelcomePoints(db) {
+    let cashback_model = db.model("Cashback");
+    let cashbackAll = await cashback_model.find();
+    let points = 0;
+    if(cashbackAll.length===0){
+        return 0;
+    }
+    try{
+        let cashback = cashbackAll[0];
+        //check welcome points
+        if(cashback.welcome_points_status){
+            points = cashback.welcome_points_quant;
+        }
+    }catch (e){
+        console.log(e);
+    }
+    return points;
+}
+
 class AuthController{
     register = async function (req, res) {
         console.log(req.fields);
@@ -61,6 +80,7 @@ class AuthController{
     };
 
     login = async function (req, res) {
+        console.log(req.fields);
         let db = useDB('loygift');
         let User = db.model("User");
         let result = []
@@ -84,7 +104,45 @@ class AuthController{
             res.status(result.status).json(result);
         }
     };
+    
+    loginEmployee = async function (req, res) {
+        let filter = {
+            email: req.fields.email,
+        }
 
+        let db = useDB('loygift' + req.headers['access-place']);
+        let Employee = db.model("Employee");
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
+        try {
+            let user = await Employee.findOne(filter).select('+password')
+            console.log(user)
+            let errors = {
+                email: validate[lang]['user_not_found'],
+                password: validate[lang]['password_wrong']
+            }
+
+            if (!user) return res.status(400).json({ status: 404, msg: 'No user found', errors: errors });
+
+            var passwordIsValid = bcrypt.compareSync(req.fields.password, user.password);
+            delete errors.phone
+            if (!passwordIsValid) return res.status(401).json({ status: 401, msg: "Not valid password", auth: false, token: null, errors: errors });
+
+            var token = jwt.sign({ id: req.headers['access-place'], user: user._id, type: "employee" }, config.secret_key, {
+                expiresIn: 86400 // expires in 24 hours
+            });
+            var refresh_token = jwt.sign({ id: req.headers['access-place'], user: user._id, type: "employee" }, config.secret_key, {
+                expiresIn: "30 days"
+            });
+            user.password = ""
+            res.status(200).json({ status: 200, auth: true, msg: "Sending token", token: token, refresh_token: refresh_token, object: user });
+        } catch (error) {
+            let result = sendError(error, req.headers["accept-language"])
+            res.status(result.status).json(result);
+        }
+    };
     loginClient = async function (req, res) {
         let log_field = 'phone';
         let filter = {
@@ -132,6 +190,7 @@ class AuthController{
     registerClient = async function (req, res) {
         let db = useDB('loygift'+req.headers['access-place']);
         let Client = db.model("Client");
+        let ClientBonusHistory = db.model("clientBonusHistory");
         let result = []
         let lang = req.headers["accept-language"]
         if (lang != 'ru') {
@@ -167,7 +226,14 @@ class AuthController{
                     expiresIn: 86400 // expires in 24 hours
                 }),
             }
-            
+
+            await new ClientBonusHistory({
+                client: client._id,
+                points: await addWelcomePoints(db),
+                source: 'Welcome points',
+                type: 'received',
+            }).save();
+
         } catch (error) {
             result = sendError(error, lang)
         }
@@ -184,14 +250,14 @@ class AuthController{
             lang = 'en'
         }
         socialAuth: try {
-            let social_res = await socialRegister(req.fields.social, req.fields.token, req.fields.screen_name)
+            social_res = await socialRegister(req.fields.social, req.fields.token, req.fields.screen_name)
 
             if (social_res.error) {
                 result = social_res.error
                 break socialAuth
             }
             let user = await Client.findOne(social_res.check)
-            console.log(social_res.check)
+            console.log(user, req.headers['access-place'], "sdfasdfasgsdfgsdfgdkfhjgkjdfhgkljhgjw43h4563456")
             if(user){
                 result = {
                     status: 500,
@@ -208,6 +274,7 @@ class AuthController{
             var client = new Client(social_res.save)
             let qrCode = createQrFile(social_res.uniqueCode, 'loygift' + req.headers['access-place'])
             client.QRCode = qrCode
+            client.uniqueCode = social_res.uniqueCode
             await client.save({ validateBeforeSave: false })
             result = {
                 'status': 200,
@@ -226,6 +293,7 @@ class AuthController{
 
             result = sendError(error, lang)
         }
+        
         res.status(result.status).json(result);
     };
     loginClientSocial = async function (req, res) {
@@ -491,7 +559,6 @@ class AuthController{
 
             result = sendError(error, lang)
         }
-        console.log(result)
         res.status(result.status).json(result);
     };
 

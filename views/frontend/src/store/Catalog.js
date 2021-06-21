@@ -3,6 +3,20 @@ export const CatalogModule = {
     namespaced: true,
     state: {
         company_url: '',
+        catalog_settings: {
+            name:'',
+            email:'',
+            banner:'',
+            description:'',
+            welcome:'',
+            delivery:'',
+            deliveryDescription:'',
+            telegram:'',
+            facebook:'',
+            instagram:'',
+            whatsapp:'',
+            website:'',
+        },
         company_addresses:[],
         company_delivery_options:[],
     },
@@ -11,6 +25,9 @@ export const CatalogModule = {
     mutations: {
         set_company_url(state, url) {
             state.company_url = url;
+        },
+        set_catalog_settings(state, obj) {
+            state.catalog_settings = obj;
         },
         set_company_addresses(state, addresses) {
             state.company_addresses = addresses;
@@ -25,6 +42,9 @@ export const CatalogModule = {
         setCompany_url: function({commit},url){
             commit('set_company_url' ,url)
         },
+        setCatalog_settings: function({commit},obj){
+            commit('set_catalog_settings' ,obj)
+        },
         setCompany_addresses: function({commit},addresses){
             commit('set_company_addresses' ,addresses)
         },
@@ -36,6 +56,9 @@ export const CatalogModule = {
     getters:{
         getCompany_ur(state){
             return state.company_url;
+        },
+        getCatalog_settings(state){
+            return state.catalog_settings;
         },
         getCompanyAddresses(state){
             return state.company_addresses;

@@ -47,7 +47,7 @@ const socket = io(process.env.VUE_APP_SERVER_URL, {
         token: localStorage.getItem('token')
     },
     withCredentials: true,
-    reconnection: false
+    reconnection: false,
 })
 
 ax.defaults.headers.common['Authorization'] = 'Bearer '+ token
@@ -82,6 +82,8 @@ var home_url = [
     'addOrderWeb',
     'getProductWeb',
     'getEarnedPoints',
+    'getNewsWeb',
+    'getSingleNewsWeb',
 ]
 app.config.globalProperties.addNewProperty = function(obj, key, value = "", copy) {
     obj.map(function(object) {
@@ -102,6 +104,7 @@ app.config.globalProperties.changeToken = function () {
             token: localStorage.getItem('token')
         },
         withCredentials: true,
+        reconnection: false
     })
 }
 app.config.globalProperties.img = function (main) {
@@ -123,6 +126,16 @@ app.config.globalProperties.url = function (main, id = null, search = null) {
     return this.$api + '/' + main + additional
     
 }
+app.config.globalProperties.url_home = function (main, id = null, search = null) {
+    let additional = '/'
+    if (id) {
+        additional += id + '/'
+    }
+    if (search) {
+        additional += '?' + search[0] + '=' + search[1]
+    }
+    return this.$server + '/' + main + additional
+}
 app.config.globalProperties.formToJson = function (formData) {
     let obj = {}
     formData.find('.alert-danger').remove()
@@ -141,6 +154,25 @@ app.config.globalProperties.formToJson = function (formData) {
         }
     })
     return obj
+}
+app.config.globalProperties.currentDate = function (day = 0) {
+    var date = new Date();
+    date.setDate(date.getDate() + day);
+    return date.toJSON().slice(0, 10)
+}
+app.config.globalProperties.setErrors = function (el, errors) {
+    let error_tag = '<p class="value-error-text">place</p>'
+    if (el) {
+        $.each(errors.response.data.errors, function (name, value) {
+            if (value instanceof Object) {
+                value = value[0]
+            }
+            $(el).find('[name="' + name + '"]').addClass('value-error')
+            if (!$(el).find('[name="' + name + '"]').next().hasClass('value-error-text')) {
+                $(el).find('[name="' + name + '"]').after(error_tag.replace('place', value))
+            }
+        })
+    }
 }
 app.config.globalProperties.clearForm = function (formData) {
     $(formData).find(':radio, :checkbox').removeAttr('checked').end()
@@ -202,9 +234,5 @@ app.config.globalProperties.$informationAlert = function(text){
         }
     )
 }
-
-
-
-
 app.mount('#app')
 

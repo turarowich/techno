@@ -111,6 +111,7 @@ app.use('/', VerifyDB,require('./routes/home.js')(router, passport))
 
 // handles not found errors
 app.use((err, req, res, next) => {
+    console.log('NEIIIIIIIIIIIIIIIIIIIIIn');
     if (err.httpStatusCode === 404) {
         res.status(400).render('NotFound');
     }
@@ -145,6 +146,7 @@ const io = require('socket.io')(httpsServer, {
     },
     path: '/socket.io',
 });
+io.sockets.setMaxListeners(0);
 require("./routes/socket.js")(io)
 
 httpServer.listen(config.port_http, () => {

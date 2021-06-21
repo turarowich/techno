@@ -132,6 +132,11 @@ const settingsSchema = new Schema({
         required: false,
         default: ""
     },
+    APNsTopic: {
+        type: String,
+        required: false,
+        default: ""
+    },
     //////catalog end
     createdAt: {
         type: Date,

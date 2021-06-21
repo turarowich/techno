@@ -6,6 +6,7 @@ var promocodeController = require('../app/controllers/promocodeController');
 var orderController = require('../app/controllers/orderController');
 var clientController = require('../app/controllers/clientController');
 var productController = require('../app/controllers/productController');
+var newsController = require('../app/controllers/newsController');
 module.exports = function(app, passport){    
     app.get('/', function(req, res){
         res.sendFile(path.resolve('views/frontend/dist/index.html'));
@@ -27,6 +28,8 @@ module.exports = function(app, passport){
     app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login', session: false }), authController.callbackFB);
     app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login', session: false }), authController.callbackGG);
     app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/login', session: false }), authController.callbackTW);
+    app.post('/loginEmployee', authController.loginEmployee);
+
     //Catalog
     app.get('/getCatalogSettings', catalogController.getCatalogSettings);
     app.get('/getCatalog', catalogController.getCatalog);
@@ -41,12 +44,16 @@ module.exports = function(app, passport){
     app.post('/addOrderWeb', orderController.addOrder);
     //Casback from order
     app.post('/getEarnedPoints', orderController.getEarnedPoints);
+    // News url
+    app.get('/getSingleNewsWeb/:news', newsController.getSingleNews);
+    app.get('/getNewsWeb', newsController.getNews);
 
     app.get('*', function (req, res) {
-        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>","Backup","<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-        console.log(req.url.includes('socket.io'))
+        let main_path = req.path
+        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>","Backup",main_path,"<<<<<<<<<<<<<<<<<<<<<<<<<<<")
         if (!req.url.includes('socket.io')){
-            console.log(req.url.includes('socket.io'))
+            console.log("IN99");
+            req.king="IN99";
             res.sendFile(path.resolve('views/frontend/dist/index.html'));
         } 
     });

@@ -144,7 +144,7 @@ name: "SignUp",
       })
 
     }
-  }
+}
 }
 </script>
 

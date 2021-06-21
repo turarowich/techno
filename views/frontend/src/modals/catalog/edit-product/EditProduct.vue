@@ -116,7 +116,7 @@
                 </div>
                 <div class="modal-btn d-flex">
                   <button @click.prevent="onSubmit" class="save">Save</button>
-                  <button class="cancel" @click.prevent="close">Cancel</button>
+                  <button type="button" class="cancel" data-dismiss="modal" aria-label="Close" >Cancel</button>
                 </div>
               </form>
             </div>
@@ -262,13 +262,12 @@ export default {
       .then(()=>{
         this.getProducts()
          this.$informationAlert('Changes are saved')
-      })
-
-      $('#edit-product').modal("hide")
-
-
-
-
+         $('#edit-product').modal("hide")
+      }).catch((error)=>{
+            if(error.response && error.response.data){
+                this.$warningAlert(error.response.data.msg)
+            }
+      });
     }
   },
 

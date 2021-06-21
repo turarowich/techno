@@ -10,11 +10,11 @@
         <div class="table-img">
           <img src="../../../assets/img/sneak.webp">
         </div>
-        {{order.name}}
+        {{order.source}}
       </div>
-      <div style="width:30%"> {{order.client}}</div>
-      <div class="d-flex justify-content-end" style="width:20%">{{order.phone}}</div>
-
+      <div style="width:30%"> {{order.createdAt.slice(0,10)}}</div>
+      <div v-if="order.type==='received'" class="d-flex justify-content-end received" style="width:20%">+{{order.points}}</div>
+      <div v-else class="d-flex justify-content-end used" style="width:20%">-{{order.points}}</div>
     </div>
   </div>
 </template>
@@ -27,5 +27,10 @@ export default {
 </script>
 
 <style scoped>
-
+.received{
+  color: green;
+}
+.used{
+  color: red;
+}
 </style>

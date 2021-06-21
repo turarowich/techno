@@ -3,14 +3,22 @@
     <div class="row">
       <div class="col-9 m-auto">
         <div class="row">
-            <div class="col-4  news-box" v-for="newss in news" :key="newss.id" @click="openNewsDetail">
+            <div class="col-4  news-box" v-for="newss in news" :key="newss._id" @click="openNews(newss._id)">
               <div class="new-img">
-                <img src="../../../assets/clients/mask3.svg">
+<!--                <img :src="server+'/'+newss.img">-->
+                <img v-if="!newss.error" :src="server+'/'+newss.img" @error="newss.error=true">
+                <img v-else src="../../../assets/img/default.svg" >
               </div>
              <div class="news-text">
-               <div class="d-flex align-items-center calendar-news" ><img src="../../../assets/icons/Calendar.svg"><span class="date">{{newss.data}}</span></div>
+               <div class="d-flex align-items-center calendar-news" ><img src="../../../assets/icons/Calendar.svg">
+                 <span class="date">
+                 {{newss.updatedAt.slice(0,10)}}
+               </span>
+               </div>
                <h4 class="news-content">{{newss.name}}</h4>
-               <p class="news-description">A light blue T-shirt from the spring-summer 2021 collection, as if faded in the sun, turned ou dettect...</p>
+               <p class="news-description">
+                 {{newss.desc}}
+               </p>
              </div>
             </div>
         </div>
@@ -23,10 +31,18 @@
 export default {
   name: "NewsItem",
   props:['news'],
+  computed:{
+    currentCompanyCatalog() {
+      return this.$route.params.bekon;
+    },
+    server(){
+      return this.$server;
+    },
+  },
   methods:{
-    openNewsDetail(){
-      this.$router.push('/home/news-detail')
-    }
+    openNews(id){
+      this.$router.push(`/${this.currentCompanyCatalog}/news-detail/${id}`)
+    },
   }
 }
 </script>
@@ -75,5 +91,10 @@ export default {
 .news-description{
   font-size: 14px;
   color:#858585;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* number of lines to show */
+  -webkit-box-orient: vertical;
 }
 </style>

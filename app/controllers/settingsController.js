@@ -1,5 +1,5 @@
 var bcrypt = require('bcryptjs');
-const { useDB, sendError,saveImage } = require('../../services/helper')
+const { useDB, sendError, saveImage, checkAccess } = require('../../services/helper')
 var validate = require('../../config/messages');
 const { query } = require('express');
 const mongoose = require("mongoose");
@@ -58,7 +58,9 @@ class SettingsController{
         let Delivery = db.model("Delivery");
         let Branch = db.model("Branch");
         let Discount = db.model("Discount");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active" }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Sending settings'
@@ -103,7 +105,9 @@ class SettingsController{
         let Settings = db.model("Settings");
         let Delivery = db.model("Delivery");
         let Branch = db.model("Branch");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Settings updated'
@@ -207,17 +211,41 @@ class SettingsController{
         res.status(result.status).json(result);
     };
     generateQrCodeFile = async function (req, res) {
+        // console.log(req.app._router);
         let result = {
             'status': 200,
             'validation':1,
             'msg': '',
         }
+        let catalog = req.fields.catalog;
+        ///express routes check
+        let route, routes = [];
+        req.app._router.stack.forEach(function(middleware){
+            if(middleware.route){ // routes registered directly on the app
+                routes.push(middleware.route);
+            } else if(middleware.name === 'router'){ // router middleware
+                middleware.handle.stack.forEach(function(handler){
+                    route = handler.route;
+                    route && routes.push(route.path);
+                });
+            }
+        });
+
+        routes.forEach(function (path){
+            if(path.search(catalog)!==-1){
+                result.msg = 'Url reserved';
+                result.validation = 0;
+                ///return if express route match;
+                return res.status(200).json(result);
+            }
+
+        })
         //check
         ///main_db _check
         let main_db = global.userConnection.useDb('loygift');
         let catalogs_model = main_db.model("catalogs");
         ///new catalog route
-        let catalog = req.fields.catalog;
+
         ///check
         let found = await catalogs_model.find( { "cat_url": catalog } );
         if(found.length>0){
@@ -314,7 +342,9 @@ class SettingsController{
     deleteDelivery = async function (req, res) {
         let db = useDB(req.db)
         let Delivery = db.model("Delivery");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Delivery deleted'
@@ -332,7 +362,9 @@ class SettingsController{
     deleteBranch = async function (req, res) {
         let db = useDB(req.db)
         let Branch = db.model("Branch");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Branch deleted'
@@ -350,7 +382,9 @@ class SettingsController{
         let new_branch = req.fields.branch;
         let db = useDB(req.db)
         let Branch = db.model("Branch");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Branch added'
@@ -365,6 +399,10 @@ class SettingsController{
     getBranch = async function (req, res) {
         let db = useDB(req.db)
         let Branch = db.model("Branch");
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active" }, db, res)
+        }
+        
         let result = {
             'status': 200,
             'msg': 'Branch added'
@@ -384,6 +422,9 @@ class SettingsController{
             'status': 200,
             'msg': 'Branch updated'
         }
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         try {
             let query = { '_id': edit_branch._id }
             req.fields['updatedAt'] = new Date()
@@ -399,7 +440,9 @@ class SettingsController{
         let new_option = req.fields.option;
         let db = useDB(req.db)
         let Delivery = db.model("Delivery");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Delivery option added'
@@ -414,6 +457,9 @@ class SettingsController{
     getDeliveryOption = async function (req, res) {
         let db = useDB(req.db)
         let Delivery = db.model("Delivery");
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active" }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Delivery on da way'
@@ -429,6 +475,9 @@ class SettingsController{
         let edit_option = req.fields.option;
         let db = useDB(req.db)
         let Delivery = db.model("Delivery");
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Branch updated'
@@ -443,6 +492,41 @@ class SettingsController{
         res.status(result.status).json(result);
     };
 
+    getPersonalSettings = async function (req, res) {
+        let users = useDB('loygift');
+        let personal_model = users.model("User");
+        let db = useDB(req.db)
+        let Settings = db.model("Settings");
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "settings", parametr: "active" }, db, res)
+        }
+        let result = {
+            'status': 200,
+            'msg': 'Sending settings'
+        }
+        try {
+            let settings = await Settings.find();
+            settings = settings[0];
+            let company = req.db.slice(7);//removing loygift
+            if (!settings){
+                settings = await new Settings({
+                    slogan: " ",
+                }).save();
+                /////
+                await new catalogs_model({
+                    company: company,
+                }).save();
+                /////
+            }
+            result['object'] = settings;
+            ///////////////////////////////////////////////////////
+            let user = await personal_model.findById(company);
+            result['user'] = user;
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.status(result.status).json(result);
+    };
 }
 
 

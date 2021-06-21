@@ -20,13 +20,13 @@
     </div>
 
     <div class="col-lg-3">
-        <div class="sales">
+        <div v-if="countOrders>0" class="sales">
 
           <div v-if="!clientAuth">
             <h3 class="cashback-sub-title" style="color:#616CF5;">Log In or register, to receive points and/or use them</h3>
             <div  class="auth_btns_wrapper">
-              <router-link style="flex: 1;" :to="`/shop/${currentCompanyCatalog}/signin`"><span>Log In</span></router-link>
-              <router-link style="flex: 1;" :to="`/shop/${currentCompanyCatalog}/signup`"><span>Register</span></router-link>
+              <router-link style="flex: 1;" :to="`/${currentCompanyCatalog}/signin`"><span>Log In</span></router-link>
+              <router-link style="flex: 1;" :to="`/${currentCompanyCatalog}/signup`"><span>Register</span></router-link>
             </div>
           </div>
           <div v-else>
@@ -68,17 +68,17 @@
           </div>
           <div class="delivery">
             <h3 class="cashback-sub-title">Delivery</h3>
-            <div class="personal-btns">
+            <div v-if="showDeliveryChoice" class="personal-btns">
               <div style="width:50%" @click="setDeliveryType('delivery')" :class="{active:deliveryService}" class="btns-item"><span class="btn-round"></span>Delivery</div>
               <div style="width:50%" @click="setDeliveryType('pick_up')" :class="{active:pickUp}" class="btns-item mr-0"><span class="btn-round"></span>Pick-up</div>
             </div>
 
             <div v-if="deliveryService" class="delivery_block position-relative">
+              <div class="py-3">
+                {{catalog_settings ? catalog_settings.deliveryDescription : ''}}
+              </div>
               <label class="cashback-label">Delivery address</label><br>
               <input v-model="deliveryAddress" type="text" class="cashback-input" placeholder="Enter your address"/>
-
-
-
               <label class="cashback-label">Delivery service</label><br>
               <div class="selected_delivery_option w-100 d-flex" @click="showDeliveryOption= !showDeliveryOption">
                 <div style="flex: 1;">
@@ -137,7 +137,7 @@
               </div>
 
               <div class="d-flex justify-content-between ">
-                <button @click="$router.push({ path: `/shop/${currentCompanyCatalog}` })" class="cancel">Continue shopping</button>
+                <button @click="$router.push({ path: `/${currentCompanyCatalog}` })" class="cancel">Continue shopping</button>
                 <button @click="checkNcontinue()" class="save">
                   Continue
                 </button>
@@ -166,6 +166,7 @@ name: "Basket",
   },
   data(){
     return {
+      showDeliveryChoice:true,
       searchText:'',
       pickUp:false,
       deliveryService:true,
@@ -178,7 +179,7 @@ name: "Basket",
       selectedDeliveryType:{
         type:'Delivery service',
         object:{
-          price:0,
+          // price:0,
         },
       }
     }
@@ -186,6 +187,9 @@ name: "Basket",
   computed:{
     clientAuth(){
       return this.getClientAuth()
+    },
+    company_url_basket(){
+      return this.$store.getters['Orders/getCompany_url_basket'];
     },
     branches(){
       return this.$store.getters['Catalog/getCompanyAddresses'];
@@ -199,6 +203,10 @@ name: "Basket",
       return options;
     },
     shoppingCart(){
+      console.log(this.currentCompanyCatalog,this.company_url_basket,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.");
+      if(this.currentCompanyCatalog!==this.company_url_basket){
+        return [];
+      }
       return this.$store.state.Orders.shoppingCart;
     },
     total_discounts(){
@@ -255,6 +263,16 @@ name: "Basket",
     },
     currentCompanyCatalog() {
       return this.$route.params.bekon;
+    },
+    catalog_settings(){
+      return this.$store.getters['Catalog/getCatalog_settings'];
+    },
+    countOrders(){
+      if(this.currentCompanyCatalog!==this.company_url_basket){
+        return 0;
+      }
+      return this.$store.getters['Orders/countOrders'];
+
     },
   },
   methods:{
@@ -366,7 +384,7 @@ name: "Basket",
     },
     continueAsGuest(guest){
       this.$store.dispatch('Orders/setGuest', guest);
-      this.$router.push({ path: `/shop/${this.currentCompanyCatalog}/product-info` })
+      this.$router.push({ path: `/${this.currentCompanyCatalog}/product-info` })
     },
     checkNcontinue(){
       let text = '';
@@ -463,6 +481,22 @@ name: "Basket",
       },
       deep: true
     },
+    catalog_settings:{
+      handler(val) {
+        if(!val.delivery){
+          this.setDeliveryType('pick_up');
+          this.showDeliveryChoice = false;
+        }else{
+          this.showDeliveryChoice = true;
+          this.setDeliveryType('delivery');
+        }
+      },
+      deep: true,
+      immediate:true,
+    },
+  },
+  beforeCreate() {
+
   },
   mounted(){
 
@@ -498,9 +532,7 @@ name: "Basket",
   height: 40px;
   margin-bottom: 27px;
 }
-.delivery .personal-btns{
-  margin-bottom: 30px;
-}
+
 .delivery .map-box{
   margin-bottom: 48px;
 }
@@ -581,6 +613,9 @@ name: "Basket",
   font-weight: normal;
   font-size: 14px;
   cursor: pointer;
+}
+.personal-btns{
+  margin-bottom: 10px;
 }
 .delivery_service{
   width: 100%;

@@ -461,6 +461,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     width: 100%;
     min-height: 100vh;
     padding:23px 44px;
+    z-index: 9999;
 }
 .sign-in-header{
     margin-bottom: 30px;
@@ -1252,6 +1253,24 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     border-radius: 50%;
     object-fit: cover;
     margin-right: 10px;
+}
+.word-break{
+    word-break: break-all;
+}
+input.value-error, select.value-error, textarea.value-error{
+    background: #FFECEC;
+    border: 1px solid #E94A4A!important;
+}
+input.value-success, select.value-success, textarea.value-success{
+    background: #D5F5D2;
+    border: 1px solid #5CBD85!important;
+}
+.value-error-text{
+    font-size: 14px;
+    line-height: 17px;
+    color: #E94A4A;
+    margin-top: 10px;
+    margin-bottom: 0;
 }
 .swal2-close{
     width: 13px !important;

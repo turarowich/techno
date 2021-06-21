@@ -1,12 +1,11 @@
 <template>
-  <div class="client">
-<div>
-
-  <div v-if="!['ClientLogin', 'ClientRegister'].includes($route.name)">
-    <Navbar/>
-  </div>
-  <router-view/>
-</div>
+  <div class="client overlay_404">
+    <div>
+      <div v-if="!['ClientLogin', 'ClientRegister', 'EmployeeLogin'].includes($route.name)">
+        <Navbar/>
+      </div>
+      <router-view/>
+    </div>
     <div v-if="!['ClientLogin', 'ClientRegister'].includes($route.name)">
       <Footer/>
     </div>
@@ -16,6 +15,7 @@
 <script>
 import Navbar from "@/client/Navbar";
 import Footer from "@/client/components/footer/Footer";
+// import $ from 'jquery';
 export default {
 name: "Home",
   components:{
@@ -36,9 +36,46 @@ name: "Home",
 
   },
   beforeCreate(){
-    console.log(this.$route.params.bekon,'ddddd  beforeCreate');
+    console.log("BeforeCreate HOME VUE");
+    ///Ahahah ahahhah
+    // (async () => {
+    //   const options = {
+    //     headers: {"company_url": this.$route.params.bekon}
+    //   }
+    //   await this.axios.get(this.url('getCatalogSettings'),options)
+    //       .then((response) => {
+    //         let settings = response.data.object;
+    //         this.$store.dispatch("Catalog/setCompany_addresses",response.data.branches);
+    //         this.$store.dispatch("Catalog/setCompany_delivery_options",response.data.deliveries);
+    //         let catalog_settings={
+    //           name:settings.name,
+    //           email:settings.email,
+    //           banner:settings.banner,
+    //           description:settings.description,
+    //           welcome:settings.welcome,
+    //           delivery:settings.delivery,
+    //           deliveryDescription:settings.deliveryDescription,
+    //           telegram:settings.telegram,
+    //           facebook:settings.facebook,
+    //           instagram:settings.instagram,
+    //           whatsapp:settings.whatsapp,
+    //           website:settings.website,
+    //         }
+    //         this.$store.dispatch("Catalog/setCatalog_settings",catalog_settings);
+    //         $('.overlay_404').show();
+    //       }).catch(function (error){
+    //         if (error.response) {
+    //           let err_page = `
+    //           <div>--->404</div>
+    //           `
+    //           $('.overlay_404').html(err_page).show();
+    //         }
+    //       })
+    // })().catch(err => {
+    //   console.error(err);
+    // });
     this.$store.dispatch("Catalog/setCompany_url",this.$route.params.bekon);
-
+    // this.$store.dispatch("Orders/setCompany_url_basket",this.$route.params.bekon);
   },
   created(){
 
@@ -57,6 +94,9 @@ name: "Home",
   .client-container{
     max-width: calc(100vw - 240px);
   }
+}
+.overlay_404{
+  /*display: none;*/
 }
 .client{
   overflow-y: auto;

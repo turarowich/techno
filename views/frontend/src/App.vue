@@ -1,17 +1,14 @@
 <template>
   <div class="d-flex">
-    <div class="siding-bar">
-      <SideBar v-bind:closeSideBar="closeSideBar"
-               v-if="!['SignIn', 'SignUp','Admin'].includes($route.name)"
-               v-show="!$route.path.includes('/shop')"
-      />
+    <div class="siding-bar" v-if="!$route.meta.hideNavbar">
+      <SideBar v-bind:closeSideBar="closeSideBar"  v-show="!$route.path.includes('/shop')"/>
     </div>
-    <div class="main-content" v-bind:class="{hun: $route.name === 'SignUp' || $route.name === 'Admin'  || $route.name === 'SignIn' || $route.path.includes('/shop') } ">
-      <Header  v-if="homePage()"  v-bind:openSideBar="openSideBar"/>
-      <NewMessageAlert />
-      <div  class="router-view">
-        <router-view/>
-      </div>
+    <div class="main-content" v-bind:class="{hun: $route.name === 'SignUp' || $route.name === 'Admin'  || $route.name === 'SignIn' || $route.name === 'Home' || $route.meta.hideNavbar} ">
+        <Header  v-if="homePage()"  v-bind:openSideBar="openSideBar"/>
+        <NewMessageAlert v-if="homePage()"/>
+        <div  class="router-view">
+            <router-view/>
+        </div>
     </div>
   </div>
 </template>
@@ -32,8 +29,8 @@ export default {
 
     methods: {
     homePage(){
-      if(['Settings','SignIn', 'SignUp', 'OrderDetail','EditClientPage', 'PushNotification',
-            'EditProductPage','IndividualPush','EditPromo','AddPromoPage','AddProductPage','AccessSettings','AddNews','EditNews','AddOrder'].includes(this.$route.name) || this.$route.path.startsWith("/shop")
+      if(['Home','Settings','SignIn', 'SignUp', 'OrderDetail','EditClientPage', 'PushNotification',
+            'EditProductPage','IndividualPush','EditPromo','AddPromoPage','AddProductPage','AccessSettings','AddNews','EditNews','AddOrder'].includes(this.$route.name) || this.$route.meta.hideNavbar
           || this.$route.path.startsWith("/loyalty")
       ){
         return false
@@ -57,6 +54,18 @@ export default {
                 selector: '.tool-tip'
             });
         });
+        $(document).on("input", '.value-error' , function () {
+            if(!$(this).hasClass('not-handle-error')){
+                
+                $(this).removeClass('value-error');
+                
+                if($(this).next().hasClass('value-error-text')){
+                
+                    $(this).next().remove();
+                }
+
+            }
+        })
     }
 
   }

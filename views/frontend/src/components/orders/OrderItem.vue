@@ -10,10 +10,11 @@
         <div><label class="custom-checkbox"><input  type="checkbox"  @click="checkMainSelect"  :ref="'select'+order._id" :value="order._id" ><span class="checkmark"></span></label></div>
         {{order.code}}</div>
       <div  class="table-child d-flex align-items-center"  style="width: 30%;">
-        <div v-if="order.products.length>0" class="table-img">
-           <img :src="imgSrc+'/'+order.products[0].img">
-        </div>
-         <span>{{order.products.length>0 ? order.products[0].name : 'No'}}</span>
+        <div  class="table-img">
+          <img v-if="order.products.length < 1" >
+           <img v-else :src="imgSrc+'/'+order.products[0].img">
+         </div>
+         <span>{{order.products[0] ? order.products[0].name : 'empty'}}</span>
       </div>
       <div class="table-child" v-show="data_check.client_checked"  style="width: 25%;">{{order.client ? order.client.name : ''}}</div>
       <div class="table-child" v-show="data_check.phone_checked" style="width: 20%;">{{order.client ? order.client.phone : ''}}</div>
@@ -50,7 +51,6 @@
     </div>
   </div>
 </template>
-
 <script>
 
 export default {
@@ -76,10 +76,35 @@ export default {
   },
 
   methods: {
-    statusChange(order,status){
-      order.status = status
-      this.axios.put(this.url('updateOrder',order._id), order).then(()=>{
-      })
+    statusDone(order){
+        this.axios.put(this.url('updateOrder',order._id), {status: 'Done'}).then(()=>{
+            order.status = 'Done';
+        }).catch((error)=>{
+                if(error.response && error.response.data){
+                    this.$warningAlert(error.response.data.msg)
+                }
+        });
+    },
+    statusCancel(order){
+
+      this.axios.put(this.url('updateOrder',order._id), {status: 'Canceled'}).then(()=>{
+          order.status = 'Canceled';
+      }).catch((error)=>{
+            if(error.response && error.response.data){
+                this.$warningAlert(error.response.data.msg)
+            }
+      });
+
+    },
+    statusProgress(order){
+        this.axios.put(this.url('updateOrder',order._id), {status: 'In proccess'}).then(()=>{
+            order.status = 'In proccess';
+        }).catch((error)=>{
+            if(error.response && error.response.data){
+                this.$warningAlert(error.response.data.msg)
+            }
+        });
+
     },
     checkAll(item) {
       return  this.$refs[`select${item._id}`].checked === true

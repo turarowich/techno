@@ -16,7 +16,7 @@
                     <h3 class="news-title mb-1">Cover Art <span>(Optional)</span></h3>
                     <p class="news-description margin-bottom-20">You can upload JPG or PNG, the minimum resolution is<br> 540*405 px, the size is not more than 3 MB.</p>
                     <button class="upload-photo margin-bottom-30" @click="selectPhoto">+ Upload photo</button><br>        
-                    <input accept="image/*" class="d-none" type="file" name="" ref="uploadPhoto" @change="uploadPhoto($event)">
+                    <input class="d-none" type="file" name="" ref="uploadPhoto" @change="uploadPhoto($event)" accept="image/*">
                     <div class="image-preview position-relative" v-if="news.img">
                         <img :src="imagePreview" alt="" class="w-100 d-block" accept="image/png, image/jpeg">
                         <button class="deleteImage" @click="clearInput">

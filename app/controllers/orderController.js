@@ -1,4 +1,4 @@
-const { useDB, sendError, createExcel, randomNumber } = require('../../services/helper')
+const { useDB, sendError, createExcel, randomNumber, checkAccess } = require('../../services/helper')
 var validate = require('../../config/messages');
 const fs = require('fs');
 const { connect } = require('mongodb');
@@ -37,7 +37,6 @@ async function calcCashback(products_full_data,cashback_model) {
                     //check
                     cashback_products.forEach(function (cash) {
                         if (prod.product._id == cash.id) {
-                            console.log(prod, "CASHBACK MATCH");
                             //discounted price
                             let sum = prod.current_price || 0;
                             let cashback_percent = parseFloat(cash.percentage_cashback) / 100 || 0;
@@ -60,7 +59,9 @@ class OrderController{
     getOrder = async function (req, res) {
         let db = useDB(req.db)
         let Order = db.model("Order");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "orders", parametr: "active" }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Sending order'
@@ -78,10 +79,12 @@ class OrderController{
     getOrders = async function (req, res) {
         let db = useDB(req.db)
         let Order = db.model("Order");
-
         let result = {
             'status': 200,
             'msg': 'Sending orders'
+        }
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "orders", parametr: "active" }, db, res)
         }
         try {
             let query = {}
@@ -110,9 +113,13 @@ class OrderController{
         let Client = db.model("Client");  
         let Product = db.model("Product");
         let OrderProduct = db.model("OrderProduct");
+        let ClientBonusHistory = db.model("clientBonusHistory");
         let lang = req.headers["accept-language"]
         if (lang != 'ru') {
             lang = 'en'
+        }
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "orders", parametr: "active", parametr2: 'canEdit'}, db, res)
         }
         let result = {
             'status': 200,
@@ -156,7 +163,9 @@ class OrderController{
                         price: search_product.price,
                         quantity: product.quantity
                     }).save();
-                    order.products.push(order_product._id)
+                    order.products.push(order_product._id);
+                    search_product.quantity = parseFloat(search_product.quantity)-parseFloat(product.quantity);
+                    search_product.save();
                 }
             }
 
@@ -164,30 +173,48 @@ class OrderController{
         let cashback_model = db.model("Cashback");
         let products_full_data = req.fields.products_full_data;
         let cashback_from_order = await calcCashback(products_full_data,cashback_model);
-        order.earnedPoints = parseFloat(cashback_from_order);
-
+        order.earnedPoints = parseFloat(cashback_from_order) || 0;
+        if(!req.fields.client){
+            req.fields.client = null
+        }
         let client = await Client.findById(req.fields.client)
         if(client){
             if (req.fields.points){
                 client.points -= req.fields.points;
-                client.save()
+                client.save({ validateBeforeSave: false });
+                await new ClientBonusHistory({
+                    client: client._id,
+                    points: req.fields.points,
+                    source: 'Points used order #'+order.code,
+                    order: order._id,
+                    type: 'used',
+                }).save();
             }
-            client.points += parseFloat(cashback_from_order);
-            client.balance += parseFloat(order.totalPrice);
-            client.save();
+            client.points = (parseFloat(client.points)+parseFloat(cashback_from_order)).toFixed(2);
+            client.balance = (parseFloat(client.balance) +parseFloat(order.totalPrice)).toFixed(2);
+            await client.save({ validateBeforeSave: false });
 
             order.client=client._id;
             order.client_name=client.name;
             order.client_phone=client.phone;
+
+            await new ClientBonusHistory({
+                client: client._id,
+                points: cashback_from_order,
+                source: 'Points received order #'+order.code,
+                order: order._id,
+                type: 'received',
+            }).save();
         }else if(req.fields.guest){
             let guest = req.fields.guest;
             order.client_name=guest.name || '';
             order.client_phone=guest.phone || '';
         }
-        console.log('EARNED CASHBACK',cashback_from_order,order)
-        order.save();
+        console.log('EARNED CASHBACK',cashback_from_order,order);
+        await order.save();
         result['object'] = await order.populate('products').execPopulate();
         } catch (error) {
+            console.log("errror")
             result = sendError(error, req.headers["accept-language"])
         }
         res.status(result.status).json(result);
@@ -205,7 +232,9 @@ class OrderController{
         let Order = db.model("Order");
         let Product = db.model("Product");
         let OrderProduct = db.model("OrderProduct");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "orders", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Order updated'
@@ -254,7 +283,9 @@ class OrderController{
     deleteOrder = async function (req, res) {
         let db = useDB(req.db)
         let Order = db.model("Order");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "orders", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Order deleted'
@@ -272,7 +303,9 @@ class OrderController{
     deleteOrders = async function (req, res) {
         let db = useDB(req.db)
         let Order = db.model("Order");
-
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "orders", parametr: "active", parametr2: 'canEdit' }, db, res)
+        }
         let result = {
             'status': 200,
             'msg': 'Orders deleted'
@@ -301,6 +334,9 @@ class OrderController{
     getOrderExcel = async function (req, res) {
         let db = useDB(req.db)
         let Order = db.model("Order");
+        if (req.userType == "employee") {
+            await checkAccess(req.userID, { access: "orders", parametr: "active" }, db, res)
+        }
         let lang = req.headers["accept-language"]
         if (lang != 'ru') {
             lang = 'en'

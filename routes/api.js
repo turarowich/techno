@@ -11,6 +11,7 @@ var pushController = require('../app/controllers/pushController');
 var cashbackController = require('../app/controllers/cashbackController');
 var discountController = require('../app/controllers/discountController');
 var settingsController = require('../app/controllers/settingsController');
+var employeeController = require('../app/controllers/employeeController');
 
 var multer = require('multer');
 var upload = multer({ dest: '../public/product/' });
@@ -111,6 +112,7 @@ module.exports = function (app, network_information) {
 
     // Settings url
     app.get('/getSettings', settingsController.getSettings);
+    app.get('/getPersonalSettings', settingsController.getPersonalSettings);
     app.put('/updateSettings', settingsController.updateSettings);
     app.delete('/deleteDelivery/:delivery', settingsController.deleteDelivery);
     app.delete('/deleteBranch/:branch', settingsController.deleteBranch);
@@ -122,6 +124,14 @@ module.exports = function (app, network_information) {
     app.post('/updateDeliveryOption', settingsController.updateDeliveryOption);
     app.put('/generateQrCodeFile', settingsController.generateQrCodeFile);
     app.put('/saveSettingsFile', settingsController.saveSettingsFile);
+
+    //Employees url
+    app.get('/getEmployee/:employee', employeeController.getEmployee);
+    app.get('/getEmployees', employeeController.getEmployees);
+    app.post('/addEmployee', employeeController.addEmployee);
+    app.put('/updateEmployee/:employee', employeeController.updateEmployee);
+    app.put('/updateEmployees', employeeController.updateEmployees);
+    app.post('/deleteEmployees', employeeController.deleteEmployees);
 
     return app;
 }

@@ -242,7 +242,11 @@ export default {
                 promoCode:''
               }
               this.clientObj = ''
-            })
+            }).catch((error)=>{
+                    if(error.response && error.response.data){
+                        this.$warningAlert(error.response.data.msg)
+                    }
+            });
 
     },
     selectProduct(selected){
