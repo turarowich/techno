@@ -1,19 +1,24 @@
 <template>
   <div class="row ">
-    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 product-box" v-for="product in catalog" :key="product._id">
-      <div class="product-img"  @click="selectProduct(product._id)">
-        <img v-if="!product.error" :src="server+'/'+product.img" @error="product.error=true">
-        <img v-else src="../../../assets/img/default.svg" >
-<!--        <img :src="server+'/'+product.img">-->
+    <div  class="col-lg-3 col-md-4 col-sm-6 col-xs-6 product-box" v-for="product in catalog" :key="product._id">
+
+      <div v-if="product.quantity>0">
+        <div class="product-img"  @click="selectProduct(product._id)">
+          <img v-if="!product.error" :src="server+'/'+product.img" @error="product.error=true">
+          <img v-else src="../../../assets/img/default.svg" >
+          <!--        <img :src="server+'/'+product.img">-->
+        </div>
+        <div class="product-add">
+          <h2 style="overflow: hidden;text-overflow: ellipsis;">{{product.name}}</h2>
+          <h3></h3>
+          <span v-if="checkDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} %%</span>
+          <br>
+          <span :class="{lineThrough:checkDates(product.promoStart,product.promoEnd)}">{{product.price}}</span>
+        </div>
+        <button class="add-to-card" @click="addToCart(product._id)">Add to cart</button>
       </div>
-      <div class="product-add">
-        <h2 style="overflow: hidden;text-overflow: ellipsis;">{{product.name}}</h2>
-        <h3></h3>
-        <span v-if="checkDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} %%</span>
-        <br>
-        <span :class="{lineThrough:checkDates(product.promoStart,product.promoEnd)}">{{product.price}}</span>
-      </div>
-      <button class="add-to-card" @click="addToCart(product._id)">Add to cart</button>
+
+
     </div>
   </div>
 </template>
@@ -90,6 +95,9 @@ name: "ClientCatalogItem",
       cart_object.current_price = current_price;
       this.$store.dispatch('Orders/addToCart', cart_object);
       this.$store.dispatch('Orders/setCompany_url_basket', that.$route.params.bekon);
+      //update/set storage version
+      let version = new Date();
+      this.$store.dispatch("Orders/setVersion",version);
     },
       selectProduct(id){
         this.$router.push({ path: `/${this.currentCompanyCatalog}/catalog-detail/${id}` });

@@ -1,7 +1,7 @@
 <template>
   <div class="container client-container">
 <nav class="navigation d-flex align-items-center justify-content-between">
-    <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar">{{catalog_settings.name || 'Company Name'}} <span>Catalog</span></router-link>
+    <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar">{{catalog_settings.name || 'Company Name'}}</router-link>
     <ul class="client-menu">
 
       <li class="client-list"><router-link class="client-link" :to="`/${currentCompanyCatalog}/about`"><img src="../assets/clients/info.svg"/>About us</router-link></li>

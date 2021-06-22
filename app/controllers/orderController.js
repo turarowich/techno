@@ -125,7 +125,7 @@ class OrderController{
             'status': 200,
             'msg': 'Order added'
         }
-        try {
+        order_try: try {
             let order = await new Order({
                  // client: client._id,
                  // client_name: client.name,
@@ -144,6 +144,7 @@ class OrderController{
                 productsPrice: req.fields.productsPrice,
                 totalPrice: req.fields.totalPrice,
                 branch: req.fields.branch,
+                products:[],
             });
             var products = req.fields.products
             for(let i=0; i < products.length; i++){
@@ -152,7 +153,7 @@ class OrderController{
                 if(!product.id){
                     search_product = await Product.findById(product._id)
                 }
-                if (search_product) {
+                if (search_product && search_product.quantity>=product.quantity) {
                     let order_product = await new OrderProduct({
                         product: product.id ? product.id : product._id,
                         name: search_product.name,
@@ -166,55 +167,60 @@ class OrderController{
                     order.products.push(order_product._id);
                     search_product.quantity = parseFloat(search_product.quantity)-parseFloat(product.quantity);
                     search_product.save();
+                }else{
+                    console.log("BREAK");
+                    console.log(order,"order <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+                    return res.status(400).send(`Out of stock, ${search_product.name} only ${search_product.quantity} left`);
+                    // break order_try;
                 }
+                //send warning
             }
 
-        //Cashback
-        let cashback_model = db.model("Cashback");
-        let products_full_data = req.fields.products_full_data;
-        let cashback_from_order = await calcCashback(products_full_data,cashback_model);
-        order.earnedPoints = parseFloat(cashback_from_order) || 0;
-        if(!req.fields.client){
-            req.fields.client = null
-        }
-        let client = await Client.findById(req.fields.client)
-        if(client){
-            if (req.fields.points){
-                client.points -= req.fields.points;
-                client.save({ validateBeforeSave: false });
+            //Cashback
+            let cashback_model = db.model("Cashback");
+            let products_full_data = req.fields.products_full_data;
+            let cashback_from_order = await calcCashback(products_full_data,cashback_model);
+            order.earnedPoints = parseFloat(cashback_from_order) || 0;
+            if(!req.fields.client){
+                req.fields.client = null
+            }
+            let client = await Client.findById(req.fields.client)
+            if(client){
+                if (req.fields.points){
+                    client.points -= req.fields.points;
+                    client.save({ validateBeforeSave: false });
+                    await new ClientBonusHistory({
+                        client: client._id,
+                        points: req.fields.points,
+                        source: 'Points used order #'+order.code,
+                        order: order._id,
+                        type: 'used',
+                    }).save();
+                }
+                client.points = (parseFloat(client.points)+parseFloat(cashback_from_order)).toFixed(2);
+                client.balance = (parseFloat(client.balance) +parseFloat(order.totalPrice)).toFixed(2);
+                await client.save({ validateBeforeSave: false });
+
+                order.client=client._id;
+                order.client_name=client.name;
+                order.client_phone=client.phone;
+
                 await new ClientBonusHistory({
                     client: client._id,
-                    points: req.fields.points,
-                    source: 'Points used order #'+order.code,
+                    points: cashback_from_order,
+                    source: 'Points received order #'+order.code,
                     order: order._id,
-                    type: 'used',
+                    type: 'received',
                 }).save();
+            }else if(req.fields.guest){
+                let guest = req.fields.guest;
+                order.client_name=guest.name || '';
+                order.client_phone=guest.phone || '';
             }
-            client.points = (parseFloat(client.points)+parseFloat(cashback_from_order)).toFixed(2);
-            client.balance = (parseFloat(client.balance) +parseFloat(order.totalPrice)).toFixed(2);
-            await client.save({ validateBeforeSave: false });
-
-            order.client=client._id;
-            order.client_name=client.name;
-            order.client_phone=client.phone;
-
-            await new ClientBonusHistory({
-                client: client._id,
-                points: cashback_from_order,
-                source: 'Points received order #'+order.code,
-                order: order._id,
-                type: 'received',
-            }).save();
-        }else if(req.fields.guest){
-            let guest = req.fields.guest;
-            order.client_name=guest.name || '';
-            order.client_phone=guest.phone || '';
-        }
-        console.log('EARNED CASHBACK',cashback_from_order,order);
-        await order.save();
-        result['object'] = await order.populate('products').execPopulate();
+            await order.save();
+            result['object'] = await order.populate('products').execPopulate();
         } catch (error) {
-            console.log("errror")
+            console.log("errror890");
             result = sendError(error, req.headers["accept-language"])
         }
         res.status(result.status).json(result);

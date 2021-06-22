@@ -76,11 +76,18 @@ export default {
     server(){
       return this.$server;
     },
+    company_url_basket(){
+      return this.$store.getters['Orders/getCompany_url_basket'];
+    },
   },
   methods: {
-    increase(id){
-      this.$store.dispatch('Orders/increaseQuantity', id);
-      this.$emit('checkPromocode_child',this.basket_promocode);
+    increase(id,stock_quant,basket_quant){
+      if(stock_quant>basket_quant){
+        this.$store.dispatch('Orders/increaseQuantity', id);
+        this.$emit('checkPromocode_child',this.basket_promocode);
+      }else{
+        this.$warningAlert('Not enough stock');
+      }
     },
     decrease(id){
       this.$store.dispatch('Orders/decreaseQuantity', id);
@@ -98,12 +105,12 @@ export default {
     },
     addToCart(){
       //check if its the same company
-      console.log(this.company_url_basket,this.$route.params.bekon);
+      console.log(this.company_url_basket,this.$route.params.bekon,"STORAGE CHECK");
       if(this.company_url_basket !==this.$route.params.bekon){
         //clear local storage
+        console.log('clear');
         this.$store.dispatch("Orders/clearAll");
       }
-
       let that = this;
       let cart_object = {
         client_status_discount:this.userDiscountStatus.discount_percentage || 0,
@@ -134,6 +141,9 @@ export default {
       cart_object.current_price = current_price;
       this.$store.dispatch('Orders/addToCart', cart_object);
       this.$store.dispatch('Orders/setCompany_url_basket', that.$route.params.bekon);
+      //update/set storage version
+      let version = new Date();
+      this.$store.dispatch("Orders/setVersion",version);
     },
     slide() {
       $('.product-img').slick({

@@ -87,13 +87,10 @@
                  </div>
                </div>
                <div class="d-flex">
-                 <div style="flex: 1;color: #616CF5;">
+                 <div v-if="futurePoints>0" style="flex: 1;color: #616CF5;">
                    <span v-if="clientAuth">You will receive {{futurePoints}} cashback points</span>
                    <span v-else>Login to receive {{futurePoints}} cashback points</span>
                  </div>
-<!--                 <div>-->
-<!--                   <h4>{{futurePoints}} points</h4>-->
-<!--                 </div>-->
                </div>
              </div>
            </div>
@@ -106,7 +103,6 @@
            Confirm and order
          </div>
        </div>
-
      </div>
    </div>
   </div>
@@ -206,8 +202,7 @@ export default {
         that.$router.push({ path: `/${that.currentCompanyCatalog}`});
       }).catch(function(error){
         if (error.response) {
-          console.log(error.response);
-          that.$warningAlert(Object.values(error.response.data.errors))
+          that.$warningAlert(error.response.data);
         }
       });
     },

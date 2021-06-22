@@ -59,6 +59,28 @@ app.config.globalProperties.$api = process.env.VUE_APP_API_URL;
 app.config.globalProperties.$server = process.env.VUE_APP_SERVER_URL;
 app.config.globalProperties.format_price = function (sum){parseFloat(sum).toFixed(2)};
 app.config.globalProperties.base_url = process.env.VUE_APP_SERVER_URL;
+app.config.globalProperties.checkCatalogStorageLife = function (){
+    ///move to router js
+    let life = 2;//hours
+    let version = new Date();
+    let storage_version = this.$store.getters['Orders/getVersion'];
+    if(!storage_version || storage_version ===""){
+        this.$store.dispatch("Orders/setVersion",version);
+        return;
+    }
+    let diff =  (version- new Date( storage_version))/1000/60/60;//get hours
+    console.log(diff,"HOURS");
+    if(diff>life){
+        console.log('Time TO UPDATE &&&');
+        //clear basket storage
+        this.$store.dispatch("Orders/clearAll");
+        //set new version
+        this.$store.dispatch("Orders/setVersion",version);
+    }else{
+        console.log('Not time YET &&&');
+    }
+
+};
 
 app.config.globalProperties.getClientAuth = function(){
     //return true if catalog client is authen-ed

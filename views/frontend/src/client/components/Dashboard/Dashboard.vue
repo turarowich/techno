@@ -121,19 +121,17 @@ name: "Dashboard",
               whatsapp:settings.whatsapp,
               website:settings.website,
             }
-            console.log("99999999999999999999999999999");
             this.$store.dispatch("Catalog/setCatalog_settings",catalog_settings);
+            this.checkCatalogStorageLife();
             // $('.overlay_404').show();
-            console.log("999999999999999999999999999990000000000000");
           }).catch(function (error){
             if (error.response) {
               console.log('setCatalog_settings EERRRor',error.response)
               let err_page = `
               <div>
-              <marquee>
-                <span style="font-size: 30px">404</span>
-              </marquee>
-
+                <marquee>
+                  <span style="font-size: 30px">404</span>
+                </marquee>
               </div>
               `
               $('.overlay_404').html(err_page).show();

@@ -17,7 +17,7 @@
       <div style="width:20%">
         <button class="decrease mb-0" @click="decrease(item.product._id)">-</button>
         <span class="count">{{item.quantity}}</span>
-        <button class="increase mb-0" @click="increase(item.product._id)">+</button>
+        <button class="increase mb-0" @click="increase(item.product._id,item.product.quantity,item.quantity)">+</button>
       </div>
       <div style="width:30%">
         <span>
@@ -111,13 +111,17 @@ export default {
           }
       })
     },
-    increase(id){
+    increase(id,stock_quant,basket_quant){
+      if(stock_quant>basket_quant){
         this.$store.dispatch('Orders/increaseQuantity', id);
         this.$emit('checkPromocode_child',this.basket_promocode);
+      }else{
+        this.$warningAlert('Not enough stock');
+      }
     },
     decrease(id){
-        this.$store.dispatch('Orders/decreaseQuantity', id);
-        this.$emit('checkPromocode_child',this.basket_promocode);
+      this.$store.dispatch('Orders/decreaseQuantity', id);
+      this.$emit('checkPromocode_child',this.basket_promocode);
     }
   }
 }

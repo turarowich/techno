@@ -147,6 +147,8 @@ name: "ClientAccount",
     logout(){
       this.$store.dispatch("Client/logout");
       this.$store.dispatch("Orders/clearAll");
+
+      this.$router.push({ path: `/${this.currentCompanyCatalog}/signin`});
     },
   },
   mounted(){
