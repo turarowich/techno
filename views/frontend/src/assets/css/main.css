@@ -1297,3 +1297,8 @@ input.value-success, select.value-success, textarea.value-success{
 .new{
     color:#616CF5;
 }
+@media(max-width:481px){
+    .swal2-popup.sweet-delete{
+        width: 100%;
+    }
+}

@@ -1,6 +1,6 @@
 <template>
 <div class="row catalog">
-  <div class="col-lg-3  ">
+  <div class="col-lg-3 col-md-4">
     <div class="catalog-left">
     <h3 class="product-title"><img src="../../../assets/clients/Icon.svg">Products</h3>
 
@@ -25,7 +25,7 @@
     </ul>
     </div>
   </div>
-  <div class="col-lg-9">
+  <div class="col-lg-9 col-md-8">
     <ClientCatalogItem v-bind:catalog="filteredList"/>
   </div>
 </div>
@@ -62,7 +62,10 @@ name: "Catalog",
             }
           })
         .filter((product)=>{
-            return product.price >= this.from && product.price <= this.to;
+          return product.price >= this.from && product.price <= this.to;
+
+
+
         })
     },
     currentCompanyCatalog() {
@@ -80,7 +83,7 @@ name: "Catalog",
         type: "double",
         min: 0,
         max: 1000,
-        from: 10,
+        from: 0,
         to: 800,
         prefix: "$",
         onChange: (data) => {
@@ -95,7 +98,7 @@ name: "Catalog",
       }
       await this.axios.get(this.url('getClientProducts'),options)
           .then((response) => {
-            console.log(response);
+            console.log(response,"rrrrrrrrrrrrrrrrrrrrrrr");
             this.catalog = response.data.objects;
           })
     },
@@ -104,7 +107,7 @@ name: "Catalog",
       const options = {
         headers: {"company_url": this.currentCompanyCatalog}
       }
-      await this.axios.get(this.url('getClientCategories'),options)
+      await this.axios.get(this.url('getCategories')+'?type=product',options)
           .then((res) => {
             this.listCategory = res.data.objects;
             this.listCategory.unshift({_id: 'all', name: 'All'})

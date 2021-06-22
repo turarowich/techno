@@ -1,9 +1,9 @@
 <template>
   <div class="row ">
-    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 product-box" v-for="product in catalog" :key="product._id">
+    <div class="col-lg-3 col-md-6 col-sm-6 product-box" v-for="product in catalog" :key="product._id">
       <div class="product-img"  @click="selectProduct(product._id)">
         <img v-if="!product.error" :src="server+'/'+product.img" @error="product.error=true">
-        <img v-else src="../../../assets/img/default.svg" >
+        <img v-else src="../../../assets/icons/no-catalog.svg" >
 <!--        <img :src="server+'/'+product.img">-->
       </div>
       <div class="product-add">
@@ -131,7 +131,6 @@ name: "ClientCatalogItem",
   transition:.3s;
 }
 .product-box{
-  margin-bottom: 50px;
   text-align: center;
   cursor:pointer;
   padding:20px;

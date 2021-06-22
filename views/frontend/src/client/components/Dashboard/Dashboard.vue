@@ -16,7 +16,7 @@
       <div class="row">
         <div class="col-lg-12">
           <div class="row">
-            <div v-for="(news,index) in newsArray.slice(0,4)" :key="index"  class="col-lg-3 col-md-4 col-sm-6 pl-0" @click="openNews(news._id)">
+            <div v-for="(news,index) in newsArray.slice(0,4)" :key="index"  class="col-lg-3 col-md-4 col-sm-6 mb-4 " @click="openNews(news._id)">
               <div class="new-img">
                 <img v-if="!news.error" :src="server+'/'+news.img" @error="news.error=true">
                 <img v-else src="../../../assets/img/default.svg" >
@@ -176,6 +176,7 @@ name: "Dashboard",
 
 }
 .news-description{
+  margin-bottom: 0;
   font-size: 14px;
   color:#858585;
   overflow: hidden;

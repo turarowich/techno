@@ -1,26 +1,28 @@
 <template>
-<div class="row news-detail">
-  <div class="col-lg-9 m-auto">
-    <div class="d-flex align-items-center justify-content-between path-box ">
-      <div class="d-flex align-items-center" @click="$router.go(-1)">
-        <img class="mr-3" src="../../../assets/clients/slide.svg">
-        <h3 class="path-title">
-          {{newsObject.name}}
-        </h3>
+<div class="container">
+  <div class="row news-detail">
+    <div class="col-lg-9 m-auto">
+      <div class="d-flex align-items-center justify-content-between path-box ">
+        <div class="d-flex align-items-center" @click="$router.go(-1)">
+          <img class="mr-3" src="../../../assets/clients/slide.svg">
+          <h3 class="path-title">
+            {{newsObject.name}}
+          </h3>
+        </div>
+        <span class="news-date">12 Dec 2021</span>
       </div>
-      <span class="news-date">12 Dec 2021</span>
+
+      <div class="new-item">
+        <!--      <img :src="server+'/'+newsObject.img" @error="$event.target.src=`http://example.com/default.jpg`">-->
+        <img v-if="!newsObject.error" :src="server+'/'+newsObject.img" @error="newsObject.error=true">
+        <img v-else src="../../../assets/img/default.svg" >
+      </div>
+      <p class="client-paragraph">
+        {{newsObject.desc}}
+      </p>
     </div>
 
-    <div class="new-item">
-<!--      <img :src="server+'/'+newsObject.img" @error="$event.target.src=`http://example.com/default.jpg`">-->
-      <img v-if="!newsObject.error" :src="server+'/'+newsObject.img" @error="newsObject.error=true">
-      <img v-else src="../../../assets/img/default.svg" >
-    </div>
-    <p class="client-paragraph">
-      {{newsObject.desc}}
-    </p>
   </div>
-
 </div>
 </template>
 

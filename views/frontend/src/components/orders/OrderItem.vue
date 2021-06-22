@@ -9,10 +9,10 @@
       <div class="table-child d-flex align-items-center"  style="width: 18%;">
         <div><label class="custom-checkbox"><input  type="checkbox"  @click="checkMainSelect"  :ref="'select'+order._id" :value="order._id" ><span class="checkmark"></span></label></div>
         {{order.code}}</div>
-      <div  class="table-child d-flex align-items-center"  style="width: 30%;">
+      <div v-if="order.products" class="table-child d-flex align-items-center"  style="width: 30%;">
         <div  class="table-img">
-          <img v-if="order.products.length < 1" >
-           <img v-else :src="imgSrc+'/'+order.products[0].img">
+          <img  v-if="order.products[0].img" :src="imgSrc+'/'+order.products[0].img">
+          <img v-else src="../../assets/icons/no-catalog.svg">
          </div>
          <span>{{order.products[0] ? order.products[0].name : 'empty'}}</span>
       </div>
@@ -76,36 +76,36 @@ export default {
   },
 
   methods: {
-    statusDone(order){
-        this.axios.put(this.url('updateOrder',order._id), {status: 'Done'}).then(()=>{
-            order.status = 'Done';
+    statusChange(order,status){
+        this.axios.put(this.url('updateOrder',order._id), {status: status}).then(()=>{
+            order.status = status;
         }).catch((error)=>{
                 if(error.response && error.response.data){
                     this.$warningAlert(error.response.data.msg)
                 }
         });
     },
-    statusCancel(order){
-
-      this.axios.put(this.url('updateOrder',order._id), {status: 'Canceled'}).then(()=>{
-          order.status = 'Canceled';
-      }).catch((error)=>{
-            if(error.response && error.response.data){
-                this.$warningAlert(error.response.data.msg)
-            }
-      });
-
-    },
-    statusProgress(order){
-        this.axios.put(this.url('updateOrder',order._id), {status: 'In proccess'}).then(()=>{
-            order.status = 'In proccess';
-        }).catch((error)=>{
-            if(error.response && error.response.data){
-                this.$warningAlert(error.response.data.msg)
-            }
-        });
-
-    },
+    // statusCancel(order){
+    //
+    //   this.axios.put(this.url('updateOrder',order._id), {status: 'Canceled'}).then(()=>{
+    //       order.status = 'Canceled';
+    //   }).catch((error)=>{
+    //         if(error.response && error.response.data){
+    //             this.$warningAlert(error.response.data.msg)
+    //         }
+    //   });
+    //
+    // },
+    // statusProgress(order){
+    //     this.axios.put(this.url('updateOrder',order._id), {status: 'In proccess'}).then(()=>{
+    //         order.status = 'In proccess';
+    //     }).catch((error)=>{
+    //         if(error.response && error.response.data){
+    //             this.$warningAlert(error.response.data.msg)
+    //         }
+    //     });
+    //
+    // },
     checkAll(item) {
       return  this.$refs[`select${item._id}`].checked === true
     },

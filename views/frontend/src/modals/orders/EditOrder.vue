@@ -40,7 +40,8 @@
                   <div  v-else v-for="product in filteredProducts" :key="product._id" @click="selectProduct(product)" class="product-order  d-flex align-items-center justify-content-between">
                     <div class="table-child d-flex align-items-center">
                       <div class="table-img">
-                        <img src="../../assets/img/sneak.webp">
+                        <img v-if="product.img" :src="imgSrc+'/'+product.img">
+                        <img v-else src="../../assets/icons/no-catalog.svg">
                       </div>
                       {{product.name}}
                     </div>
@@ -70,7 +71,8 @@
                   <div v-else v-for="order in currentData.products" :key="order._id" class="table-item d-flex align-items-center">
                     <div  class="d-flex align-items-center"  style="width: 50%;">
                       <div class="table-img">
-                        <img :src="imgSrc+'/'+order.img">
+                        <img v-if="order.img" :src="imgSrc+'/'+order.img">
+                        <img v-else src="../../assets/icons/no-catalog.svg">
                       </div>
                       {{order.name}}
                     </div>
@@ -101,7 +103,8 @@
                   <input v-model="search_client" placeholder="Enter clients name or number" class="search-client">
                 </div>
                 <div v-else class="d-flex align-items-center">
-                  <img  class="client-avatar" :src="selectedClient.avatar">
+                  <img v-if="selectedClient.avatar"  class="client-avatar" :src="selectedClient.avatar">
+                  <img class="client-avatar" v-else src="../../assets/icons/chat.svg">
                   <div class="position-relative">
                     <h2 class="name-client">{{selectedClient.name}}</h2>
                     <div class="category">
@@ -119,8 +122,8 @@
                   </div>
                   <div v-else v-for="client in filteredClients" :key="client._id"  @click="selectClient(client._id)" class="table-child d-flex align-items-center">
                     <div class="table-img">
-                      <img v-if="!client.avatar" src="../../assets/icons/chat.svg">
-                      <img v-else :src="imgSrc+'/'+client.avatar">
+                      <img class="a" v-if="client.avatar" :src="imgSrc+'/'+client.avatar">
+                      <img class="b" v-else src="../../assets/icons/chat.svg">
                     </div>
                     <div>
                       <h4 class="general-title">{{client.name}}</h4>
@@ -227,9 +230,12 @@ export default {
             isDefault: true
         }
         if(this.currentData.client){
-            client = this.currentData.client 
-            client.avatar =  this.imgSrc+'/'+client.avatar
-            client.isDefault = false
+            client = this.currentData.client
+            if(client.avatar){
+              client.avatar =  this.imgSrc+'/'+client.avatar
+            }
+
+          client.isDefault = false
         }
         
         return client
@@ -470,14 +476,14 @@ export default {
   height: 80px;
 }
 .client-avatar{
-  width: 50px;
-  height: 50px;
+  width: 55px;
+  height: 55px;
   border-radius:50%;
   object-fit: cover;
   margin-right: 13px;
 }
 .name-client{
-  font-size: 18px;
+  font-size: 16px;
   font-weight:  normal;
   margin-bottom: 5px;
 }

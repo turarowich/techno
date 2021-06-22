@@ -1,16 +1,15 @@
 <template>
   <div class="container client-container">
 <nav class="navigation d-flex align-items-center justify-content-between">
-    <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar">{{catalog_settings.name || 'Company Name'}} <span>Catalog</span></router-link>
-    <ul class="client-menu">
+    <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">{{catalog_settings.name || 'Company Name'}} <span> Catalog</span></router-link>
+    <div class="menu-wrapper">
+      <ul class="client-menu">
+        <li @click="removeActive" class="client-list"><router-link class="client-link" :to="`/${currentCompanyCatalog}/about`"><img src="../assets/clients/info.svg"/>About us</router-link></li>
+        <li @click="removeActive" v-if="!isLogged" class="client-list"><router-link class="client-link" :to="`/${currentCompanyCatalog}/signin`"><img class="mr-3" src="../assets/clients/Profile.svg"/>Login</router-link></li>
+        <li  v-else class="client-list"><img src="../assets/clients/Profile.svg"/><router-link class="client-link" :to="`/${currentCompanyCatalog}/client-account`">My Account</router-link></li>
+        <li @mouseover="mouser" @mouseleave="close_drop" class="client-list hoverBasket dropdown">
 
-      <li class="client-list"><router-link class="client-link" :to="`/${currentCompanyCatalog}/about`"><img src="../assets/clients/info.svg"/>About us</router-link></li>
-      <li v-if="!isLogged" class="client-list"><router-link class="client-link" :to="`/${currentCompanyCatalog}/signin`"><img src="../assets/clients/Profile.svg"/>Login</router-link></li>
-      <li v-else class="client-list"><img src="../assets/clients/Profile.svg"/><router-link class="client-link" :to="`/${currentCompanyCatalog}/client-account`">My Account</router-link></li>
-
-      <li @mouseover="mouser" @mouseleave="close_drop" class="client-list hoverBasket dropdown">
-
-          <router-link  class="client-link  d-inline-flex align-items-center" :to="`/${currentCompanyCatalog}/basket`" >
+          <router-link @click="removeActive"  class="client-link  d-inline-flex align-items-center" :to="`/${currentCompanyCatalog}/basket`" >
             <img src="../assets/clients/Buy.svg"/>Basket
             <div class="bg-not d-flex align-items-center">
               <span class="basket-not" v-if="countOrders > 0">{{countOrders}}</span>
@@ -26,8 +25,8 @@
             <div class="scroll-basket">
               <div v-for="item in shoppingCart" :key="item.product._id" class="d-flex align-items-start">
                 <div style="flex: 0 0 60px;" class="basket-img">
-                  <img v-if="!item.product.error" :src="server+'/'+item.product.img" @error="item.product.error=true">
-                  <img v-else src="../assets/img/default.svg" >
+                  <img style="object-fit: contain" v-if="!item.product.error" :src="server+'/'+item.product.img" @error="item.product.error=true">
+                  <img v-else src="../assets/icons/no-catalog.svg" >
                 </div>
                 <div style="display:flex;flex-direction: column;flex: 1;">
                   <div>
@@ -42,16 +41,20 @@
               </div>
 
               <div v-if="shoppingCart.length===0" class="d-flex" style="justify-content: center;align-items: center;flex-direction: column;height: 100%;">
-                  <img src="../assets/img/empty_basket.svg" >
-                  <span class="empty_basket_title">
+                <img src="../assets/img/empty_basket.svg" >
+                <span class="empty_basket_title">
                     Basket is empty
                   </span>
               </div>
             </div>
             <button v-if="shoppingCart.length>0" class="save" @click="$router.push({ path: `/${currentCompanyCatalog}/basket` })" >Go to purchasee</button>
           </div>
-      </li>
-    </ul>
+        </li>
+      </ul>
+    </div>
+  <div class="burger" @click="showNavbar">
+    <i class="fas fa-bars"></i>
+  </div>
 </nav>
     <div class="line"></div>
   </div>
@@ -99,6 +102,13 @@ export default {
     },
   },
   methods:{
+    removeActive(){
+      $('.menu-wrapper').removeClass('active')
+    },
+    showNavbar(){
+      $('.menu-wrapper').toggleClass('active')
+      $('.burger').toggleClass('active')
+    },
     logout(){
       this.$store.dispatch("Client/logout");
     },
@@ -121,6 +131,30 @@ export default {
 </script>
 
 <style scoped>
+.menu-wrapper.active{
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  z-index:999;
+  top: 0;
+  right: 0;
+  display:flex;
+  background: #fff;
+  padding-top: 20px;
+}
+.menu-wrapper.active .client-menu {
+  display: block;
+  margin: auto;
+}
+.menu-wrapper.active .client-list{
+  margin-bottom: 20px;
+}
+.burger{
+  display: none;
+}
+.burger.active{
+  z-index:1000;
+}
 .navigation{
   height: 62px;
 }
@@ -243,5 +277,14 @@ font-size: 14px;
   font-weight: 600;
   font-size: 16px;
   color: #B0B0B0;
+}
+
+@media(max-width:992px){
+  .client-menu{
+    display:none;
+  }
+  .burger{
+    display: block;
+  }
 }
 </style>

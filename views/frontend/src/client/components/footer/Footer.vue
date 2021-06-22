@@ -1,7 +1,7 @@
 <template>
 <footer >
-  <div class="d-flex justify-content-between align-items-center footer-container container">
-  <div class="footer-contact">
+  <div class="footer d-flex justify-content-between  footer-container container">
+  <div class="footer-contact mb-3">
     <h3>Contacts</h3>
     <p class="footer-info"><img src="../../../assets/clients/Call.svg"><a  href="/">{{companyAddresses[0] ? companyAddresses[0].phone : ""}}</a></p>
     <p class="footer-info"><img src="../../../assets/clients/Message.svg"><a href="/">{{catalog_settings.email || ""}}</a></p>
@@ -41,9 +41,12 @@ footer{
   background: #F4F4F4;
   margin-top: 100px;
 }
+.footer{
+  align-items: center;
+}
 .footer-address h3, .footer-contact h3{
   color: #222222;
-font-size: 16px;
+  font-size: 16px;
   font-weight: 600;
   margin-bottom: 17px;
 
@@ -69,5 +72,18 @@ font-size: 16px;
 }
 .footer-container{
   max-width: calc(100vw - 240px);
+}
+@media(max-width:640px){
+  .footer-container{
+    max-width:100% !important;
+  }
+}
+@media(max-width:481px){
+  .footer{
+    flex-direction: column;
+    align-items: flex-start;
+
+  }
+
 }
 </style>

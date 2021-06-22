@@ -5,21 +5,21 @@
       <h4>Your shopping cart is empty please choose your product from out catalog</h4>
     </div>
     <div v-else class="client-table-item d-flex" v-for="item in shoppingCart" :key="item.product._id">
-      <div style="width:40%;overflow: hidden;text-overflow: ellipsis;" class="d-flex align-items-center">
+      <div style="width:40%;overflow: hidden;text-overflow: ellipsis;" class="basket-name d-flex align-items-center">
         <div class="client-table-img">
           <img v-if="!item.product.error" :src="server+'/'+item.product.img" @error="item.product.error=true">
-          <img v-else src="../../../assets/img/default.svg" >
+          <img v-else src="../../../assets/icons/no-catalog.svg" >
         </div>
         <div>
           <h3 class="table-title">{{item.product.name}}</h3>
         </div>
       </div>
-      <div style="width:20%">
+      <div style="width:20%" class="basket-amount">
         <button class="decrease mb-0" @click="decrease(item.product._id)">-</button>
         <span class="count">{{item.quantity}}</span>
         <button class="increase mb-0" @click="increase(item.product._id)">+</button>
       </div>
-      <div style="width:30%">
+      <div style="width:30%;" class="hide">
         <span>
           {{item.current_price}} $
         </span>
@@ -90,6 +90,12 @@ export default {
               content:'content-sweet',
               closeButton:'close-btn'
           },
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp'
+        }
       }).then((result) => {
           if (result.isConfirmed) {
               this.$store.dispatch('Orders/removeFromBasket', id);
@@ -169,5 +175,22 @@ font-size:16px;
   text-decoration: line-through;
   font-size: 13px!important;
   color: #B0B0B0;
+}
+@media(max-width:481px){
+  .hide{
+    display:none;
+  }
+  .basket-name{
+    width: 70% !important;
+  }
+  .basket-amount{
+    width: 40% !important;
+  }
+  .client-table-img{
+    margin-right: 0;
+  }
+  .count{
+    width: 25px;
+  }
 }
 </style>

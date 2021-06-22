@@ -22,7 +22,8 @@
                   <div  v-else v-for="product in filteredProducts" :key="product._id" @click="selectProduct(product)" class="product-order  d-flex align-items-center justify-content-between">
                     <div class="table-child d-flex align-items-center">
                       <div class="table-img">
-                        <img :src="imgSrc+'/'+product.img">
+                        <img v-if="product.img" :src="imgSrc+'/'+product.img">
+                        <img v-else src="../../assets/icons/no-catalog.svg">
                       </div>
                       {{product.name}}
                     </div>
@@ -51,7 +52,8 @@
                   <div  v-else  v-for="order in new_order.products" :key="order._id" class="table-item d-flex align-items-center" >
                     <div  class="d-flex align-items-center"  style="width: 50%;">
                       <div class="table-img">
-                        <img :src="imgSrc+'/'+order.img">
+                        <img v-if="order.img" :src="imgSrc+'/'+order.img">
+                        <img v-else src="../../assets/icons/no-catalog.svg">
                       </div>
                       {{order.name}}
                     </div>

@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-9 m-auto">
         <div class="row">
-            <div class="col-4  news-box" v-for="newss in news" :key="newss._id" @click="openNews(newss._id)">
+            <div class="col-lg-4 col-md-6 col-sm-6   news-box" v-for="newss in news" :key="newss._id" @click="openNews(newss._id)">
               <div class="new-img">
 <!--                <img :src="server+'/'+newss.img">-->
                 <img v-if="!newss.error" :src="server+'/'+newss.img" @error="newss.error=true">

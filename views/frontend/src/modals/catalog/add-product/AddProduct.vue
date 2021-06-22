@@ -156,7 +156,7 @@ props:['listCategory', 'getProducts'],
   }
   },
   methods:{
-  showRussian(){
+    showRussian(){
     $('#name_ru').toggle();
   },
     cancel(){
@@ -242,6 +242,7 @@ props:['listCategory', 'getProducts'],
       else{
         this.validatePrice = false
       }
+
       form.append('category', new_product.category)
       form.append('name', new_product.name)
       form.append('name_ru', new_product.name_ru)
@@ -252,38 +253,44 @@ props:['listCategory', 'getProducts'],
       form.append('vendorCode', new_product.vendorCode)
 
 
-      this.axios.post(this.url('addProduct'), form)
-          .then(() => {
-            this.getProducts()
-            this.$successAlert('Product has been added');
-            $('#add-products').modal("hide")
-            this.newProduct = {
-              name: '',
-              price:'',
-              quantity:'',
-              category: '',
-              img:'',
-              name_ru:'',
-              imgArray: [],
-              description:'',
-              vendorCode:'',
-              promoStart: {
-                obj:"",
-                formatted:'',
-              },
-              promoEnd: {
-                obj:"",
-                formatted:'',
-              },
-              promoPrice:''
-            }
-            this.validateQuantity = false;
-            this.validateName = false;
-            this.validatePrice = false;
-          }).catch((error) => {
-            console.log("fail", error)
+      if(new_product.promoPrice > new_product.price){
+        this.$warningAlert("Promotional price must be < original price")
+      }
+      else{
+        this.axios.post(this.url('addProduct'), form)
+            .then(() => {
+              this.getProducts()
+              this.$successAlert('Product has been added');
+              $('#add-products').modal("hide")
+              this.newProduct = {
+                name: '',
+                price:'',
+                quantity:'',
+                category: '',
+                img:'',
+                name_ru:'',
+                imgArray: [],
+                description:'',
+                vendorCode:'',
+                promoStart: {
+                  obj:"",
+                  formatted:'',
+                },
+                promoEnd: {
+                  obj:"",
+                  formatted:'',
+                },
+                promoPrice:0
+              }
+              this.validateQuantity = false;
+              this.validateName = false;
+              this.validatePrice = false;
+            }).catch((error) => {
+          console.log("fail", error)
 
-          })
+        })
+      }
+
       $('#add-products').on('shown', function () {
         $("#modal-content").scrollTop(0);
       });
