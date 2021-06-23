@@ -187,7 +187,6 @@ class OrderController{
             req.fields.client = null
         }
         let client = await Client.findById(req.fields.client)
-        
         if(client){
             if (req.fields.points){
                 client.points -= req.fields.points;

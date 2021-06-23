@@ -14,16 +14,9 @@
         <div><router-link class="view-all" :to="`/${currentCompanyCatalog}/client-news`">View all</router-link></div>
       </div>
       <div class="row">
-<!--        <div class="col-lg-3 ">-->
-<!--          <h2 class="news-title">News</h2>-->
-<!--          <p class="news-texts">A light blue T-shirt from the spring-summer 2021 collection,-->
-<!--            as if faded in the sun, turned out to be as comfortable as possible. The cut of</p>-->
-<!--          <router-link class="view-all" :to="`/shop/${currentCompanyCatalog}/client-news`">View all</router-link>-->
-<!--        </div>-->
-
         <div class="col-lg-12">
           <div class="row">
-            <div v-for="(news,index) in newsArray.slice(0,4)" :key="index"  class="col-lg-3 col-md-4 col-sm-6 pl-0" @click="openNews(news._id)">
+            <div v-for="(news,index) in newsArray.slice(0,4)" :key="index"  class="col-lg-3 col-md-4 col-sm-6 mb-4 " @click="openNews(news._id)">
               <div class="new-img">
                 <img v-if="!news.error" :src="server+'/'+news.img" @error="news.error=true">
                 <img v-else src="../../../assets/img/default.svg" >
@@ -49,7 +42,7 @@
 
 <script>
 import ClientCatalog from "@/client/components/ClientCatalog/ClientCatalog";
-// import $ from 'jquery';
+import $ from 'jquery';
 export default {
 name: "Dashboard",
   components:{
@@ -66,7 +59,7 @@ name: "Dashboard",
       return this.$route.params.bekon;
     },
     bannerPath(){
-      if(this.settings.banner){
+      if(this.catalog_settings.banner){
         try {
           return this.base_url+'/'+ this.settings.banner;
           // eslint-disable-next-line no-empty
@@ -128,25 +121,34 @@ name: "Dashboard",
               whatsapp:settings.whatsapp,
               website:settings.website,
             }
+            console.log("99999999999999999999999999999");
             this.$store.dispatch("Catalog/setCatalog_settings",catalog_settings);
             // $('.overlay_404').show();
+            console.log("999999999999999999999999999990000000000000");
           }).catch(function (error){
             if (error.response) {
-              console.log('eeeeeeeeeeeeee',error.response)
-              // let err_page = `
-              // <div>--->404</div>
-              // `
-              // $('.overlay_404').html(err_page).show();
+              console.log('setCatalog_settings EERRRor',error.response)
+              let err_page = `
+              <div>
+              <marquee>
+                <span style="font-size: 30px">404</span>
+              </marquee>
+
+              </div>
+              `
+              $('.overlay_404').html(err_page).show();
             }
           })
     })().catch(err => {
-      console.error(err);
+      console.error(err,"setCatalog_settings EEEEERRR");
     });
   },
   created(){
+    console.log('@@ created');
     // this.getCatalogSettings();
   },
   mounted() {
+    console.log('@@ mounted');
     this.getNews();
     const options = {
       headers: {
@@ -174,6 +176,7 @@ name: "Dashboard",
 
 }
 .news-description{
+  margin-bottom: 0;
   font-size: 14px;
   color:#858585;
   overflow: hidden;

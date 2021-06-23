@@ -3,7 +3,7 @@
   <div>
     <div v-if="catalogList.length === 0" class="d-flex justify-content-center align-items-center">
           <div class="no-product">
-            <img src="../../assets/icons/no-catalog.svg">
+            <img src="../../assets/img/emp-product.svg">
             <p>There are no products in this category yet</p>
             <button class="save add-product" @click="addProduct">Add product</button>
           </div>
@@ -17,7 +17,10 @@
 
         <div  class="d-flex align-items-center"  style="width: 36%;">
           <div class="table-img">
-            <img :src="imgSrc+'/'+catalog.img">
+            <img v-if="catalog.img"  :src="imgSrc+'/'+catalog.img">
+            <img v-else-if="catalog.imgArray.length !== 0"  :src="imgSrc+'/'+catalog.imgArray[0]">
+            <img v-else  src="../../assets/icons/no-catalog.svg">
+
           </div>
           {{catalog.name}}
         </div>
@@ -87,6 +90,19 @@ export default {
 <style scoped>
 .see-catalog{
   cursor:pointer;
+}
+.no-img-product{
+  background: #F4F4F4;
+  border-radius:50%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.no-img-product img{
+  width:30px;
+  height:30px;
+  object-fit: contain;
 }
 .nonsee-catalog{
   display: none;

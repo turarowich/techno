@@ -217,17 +217,41 @@ class SettingsController{
         res.status(result.status).json(result);
     };
     generateQrCodeFile = async function (req, res) {
+        // console.log(req.app._router);
         let result = {
             'status': 200,
             'validation':1,
             'msg': '',
         }
+        let catalog = req.fields.catalog;
+        ///express routes check
+        let route, routes = [];
+        req.app._router.stack.forEach(function(middleware){
+            if(middleware.route){ // routes registered directly on the app
+                routes.push(middleware.route);
+            } else if(middleware.name === 'router'){ // router middleware
+                middleware.handle.stack.forEach(function(handler){
+                    route = handler.route;
+                    route && routes.push(route.path);
+                });
+            }
+        });
+
+        routes.forEach(function (path){
+            if(path.search(catalog)!==-1){
+                result.msg = 'Url reserved';
+                result.validation = 0;
+                ///return if express route match;
+                return res.status(200).json(result);
+            }
+
+        })
         //check
         ///main_db _check
         let main_db = global.userConnection.useDb('loygift');
         let catalogs_model = main_db.model("catalogs");
         ///new catalog route
-        let catalog = req.fields.catalog;
+
         ///check
         let found = await catalogs_model.find( { "cat_url": catalog } );
         if(found.length>0){

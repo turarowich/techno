@@ -2,7 +2,7 @@
   <div class="modal fade right"  id="edit-order" tabindex="-1" role="dialog" aria-labelledby="add-promocode" aria-hidden="true">
     <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width:calc(100vw - 250px);" role="document" >
       <div class="modal-content myModal-content h-100">
-        <div class="modal-header justify-content-start ">
+        <div class="modal-header justify-content-start">
 
           <button type="button" data-dismiss="modal" aria-label="Close" class="close">
               <span aria-hidden="true">
@@ -10,10 +10,21 @@
               </span>
           </button>
           <div>
-            <h3 class="modal-title">Order {{currentData.code}}</h3>
-            <span class="detail-date">Created {{currentData.createdAt}}</span>
+            <h3 class="modal-title d-flex align-items-center">
+              Order {{currentData.code}}
+              <div class="ml-4 d-flex align-items-center  detail-status"
+                   :class="[{red: currentData.status === 'Canceled'},
+                    {green: currentData.status=== 'Done'},
+                    {orange: currentData.status === 'In Progress'},
+                    {new: currentData.status === 'New'}
+                    ]">
+                <i class=" circle-status fas fa-circle"></i>
+                {{currentData.status}}
+              </div>
+            </h3>
+            <span  v-if="currentData.createdAt"  class="detail-date">Created {{currentData.createdAt.toString().slice(0,10)}}, <span>{{currentData.createdAt.toString().slice(11,16)}}</span></span>
           </div>
-          <div class="detail-status"><span></span>{{currentData.status}}</div>
+
         </div>
         <div class=" myModal-body">
           <div class="row">
@@ -29,7 +40,8 @@
                   <div  v-else v-for="product in filteredProducts" :key="product._id" @click="selectProduct(product)" class="product-order  d-flex align-items-center justify-content-between">
                     <div class="table-child d-flex align-items-center">
                       <div class="table-img">
-                        <img src="../../assets/img/sneak.webp">
+                        <img v-if="product.img" :src="imgSrc+'/'+product.img">
+                        <img v-else src="../../assets/icons/no-catalog.svg">
                       </div>
                       {{product.name}}
                     </div>
@@ -59,7 +71,8 @@
                   <div v-else v-for="order in currentData.products" :key="order._id" class="table-item d-flex align-items-center">
                     <div  class="d-flex align-items-center"  style="width: 50%;">
                       <div class="table-img">
-                        <img :src="imgSrc+'/'+order.img">
+                        <img v-if="order.img" :src="imgSrc+'/'+order.img">
+                        <img v-else src="../../assets/icons/no-catalog.svg">
                       </div>
                       {{order.name}}
                     </div>
@@ -90,7 +103,8 @@
                   <input v-model="search_client" placeholder="Enter clients name or number" class="search-client">
                 </div>
                 <div v-else class="d-flex align-items-center">
-                  <img  class="client-avatar" :src="selectedClient.avatar">
+                  <img v-if="selectedClient.avatar"  class="client-avatar" :src="selectedClient.avatar">
+                  <img class="client-avatar" v-else src="../../assets/icons/chat.svg">
                   <div class="position-relative">
                     <h2 class="name-client">{{selectedClient.name}}</h2>
                     <div class="category">
@@ -108,8 +122,8 @@
                   </div>
                   <div v-else v-for="client in filteredClients" :key="client._id"  @click="selectClient(client._id)" class="table-child d-flex align-items-center">
                     <div class="table-img">
-                      <img v-if="!client.avatar" src="../../assets/icons/chat.svg">
-                      <img v-else :src="imgSrc+'/'+client.avatar">
+                      <img class="a" v-if="client.avatar" :src="imgSrc+'/'+client.avatar">
+                      <img class="b" v-else src="../../assets/icons/chat.svg">
                     </div>
                     <div>
                       <h4 class="general-title">{{client.name}}</h4>
@@ -163,7 +177,7 @@
           </div>
 
           <div class="d-flex">
-            <button class="save mr-2" @click.prevent="onSubmit(currentData._id)">Edit order</button>
+            <button class="save mr-2" @click="onSubmit(currentData._id)">Edit order</button>
             <button class="cancel" @click="cancel">Cancel</button>
           </div>
         </div>
@@ -216,9 +230,12 @@ export default {
             isDefault: true
         }
         if(this.currentData.client){
-            client = this.currentData.client 
-            client.avatar =  this.imgSrc+'/'+client.avatar
-            client.isDefault = false
+            client = this.currentData.client
+            if(client.avatar){
+              client.avatar =  this.imgSrc+'/'+client.avatar
+            }
+
+          client.isDefault = false
         }
         
         return client
@@ -260,6 +277,7 @@ export default {
     selectProduct(selected){
       if(this.currentData.products.length === 0){
         this.currentData.products.push(selected)
+        selected.quantity = 1;
       }
       else{
         let product = null
@@ -272,6 +290,7 @@ export default {
           product = selected
         }
         if(product){
+          product.quantity = 1;
           this.currentData.products.push(product)
 
 
@@ -326,10 +345,7 @@ export default {
 .client-search{
   width: 100%;
 }
-.detail-status{
-  color:#F19C4B;
-  margin-top: 4px;
-}
+
 .client-search input{
   width: 100%;
   border:none;
@@ -366,7 +382,10 @@ export default {
   position: relative;
 
 }
-
+.detail-status{
+  font-weight: normal;
+  font-size: 14px;
+}
 .form-control{
   margin-bottom: 15px;
   background: #F8F9FB;
@@ -404,14 +423,7 @@ export default {
   color:#616cf5;
   font-weight: normal;
 }
-.detail-status span{
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  border-radius:50%;
-  background: #F19C4B;
-  margin-right: 5px;
-}
+
 
 .detail-date{
   color: #8C94A5;
@@ -464,14 +476,14 @@ export default {
   height: 80px;
 }
 .client-avatar{
-  width: 50px;
-  height: 50px;
+  width: 55px;
+  height: 55px;
   border-radius:50%;
   object-fit: cover;
   margin-right: 13px;
 }
 .name-client{
-  font-size: 18px;
+  font-size: 16px;
   font-weight:  normal;
   margin-bottom: 5px;
 }

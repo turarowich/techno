@@ -1,7 +1,7 @@
 <template>
   <div class="modal fade right "  id="add-products" tabindex="-1" role="dialog" aria-labelledby="add-products" aria-hidden="true">
       <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: calc(100% - 250px);" role="document" >
-        <div class="modal-content  myModal-content h-100">
+        <div id="modal-content" class="modal-content  myModal-content h-100">
           <div class="modal-header justify-content-start align-items-center">
             <img  data-dismiss="modal" aria-label="Close" class="close" src="../../../assets/icons/xBlack.svg" alt="">
             <h3 class="modal-title">Add Product</h3>
@@ -10,21 +10,23 @@
                 <div class="row">
                   <div class="col-11 m-auto">
                     <form id="myForm" @submit.prevent="onSubmit"  class="modal-form">
-                      <div class="d-flex align-items-center">
+                      <div class="d-flex ">
                         <div style="width:50%" class="mr-3">
                           <label class="product-label">Name</label><br>
-                          <input  v-model="newProduct.name" style="width:100%"  class="cashback-input">
+                          <input  v-model="newProduct.name" style="width:100%" :class="{errorInput: validateName === true}"  class="cashback-input">
+                          <div class="fill-fields" v-if="validateName === true">Fill in the fields</div>
                         </div>
 
                         <div class="quantity-category mr-3">
                           <label class="product-label">Quantity</label><br>
-                          <input v-model="newProduct.quantity"  type="number"  class="cashback-input">
+                          <input v-model="newProduct.quantity" :class="{errorInput: validateQuantity === true}" type="number" min="1"  class="cashback-input">
+                          <div class="fill-fields" v-if="validateQuantity === true">Fill in the fields</div>
                         </div>
 
                         <div style="width:25%;">
                           <label class="product-label">Select category</label><br>
                           <select v-model="newProduct.category" class="form-control mb-0 select-phone" aria-label="Default select example">
-                            <option :value="cat._id" v-for="cat in listCategory"  :key="cat._id" >{{cat.name}}</option>
+                            <option :value="cat._id" v-for="cat in listCategory.slice(1)"  :key="cat._id" >{{cat.name}}</option>
                           </select>
                         </div>
                       </div>
@@ -39,10 +41,11 @@
                         <span>Discount</span>
                       </div>
 
-                      <div class="d-flex ">
+                      <div class="d-flex mb-4 ">
                         <div style=" width:33.33%; margin-right:8px;">
                           <label>Price</label>
-                          <input  v-model="newProduct.price"  type="number" class="form-input cashback-input mb-4" placeholder="Price"  name="price">
+                          <input :class="{errorInput: validatePrice === true}"  v-model="newProduct.price"  type="number" class="form-input cashback-input"  name="price">
+                          <div class="fill-fields" v-if="validatePrice===true">Fill in the fields</div>
                         </div>
                         <div class="show-price" style="width:33.33%; margin-right:8px;">
                           <label>Promotional prices</label>
@@ -118,8 +121,9 @@ name: "AddProduct",
 props:['listCategory', 'getProducts'],
   data(){
     return{
-      boolean:true,
-
+      validateName:false,
+      validateQuantity:false,
+      validatePrice:false,
       previewImage:[],
       newProduct:{
         name_ru:'',
@@ -152,7 +156,7 @@ props:['listCategory', 'getProducts'],
   }
   },
   methods:{
-  showRussian(){
+    showRussian(){
     $('#name_ru').toggle();
   },
     cancel(){
@@ -213,14 +217,30 @@ props:['listCategory', 'getProducts'],
            form.append('imgArray'+(item-1),new_product.imgArray[item])
           }
         }
-
       if(new_product.promoStart.obj !== ""){
         form.append('promoStart', new_product.promoStart.obj)
 
       }
       if(new_product.promoEnd !== ""){
         form.append('promoEnd', new_product.promoEnd.obj)
-
+      }
+      if(new_product.name === ""){
+        this.validateName = true
+      }
+      else{
+        this.validateName = false
+      }
+      if(new_product.quantity === ""){
+        this.validateQuantity = true
+      }
+      else{
+        this.validateQuantity = false
+      }
+      if(new_product.price === ""){
+        this.validatePrice = true
+      }
+      else{
+        this.validatePrice = false
       }
 
       form.append('category', new_product.category)
@@ -233,37 +253,51 @@ props:['listCategory', 'getProducts'],
       form.append('vendorCode', new_product.vendorCode)
 
 
-      this.axios.post(this.url('addProduct'), form)
-          .then(() => {
-            this.getProducts()
-            this.$successAlert('Product has been added');
-            $('#add-products').modal("hide")
-          }).catch((error) => {
-            if(error.response && error.response.data){
-                this.$warningAlert(error.response.data.msg)
-            }
-            console.log("fail", error)
-          })
-      this.newProduct = {
-        name: '',
-        price:'',
-        quantity:'',
-        category: '',
-        img:'',
-        name_ru:'',
-        imgArray: [],
-        description:'',
-        vendorCode:'',
-        promoStart: {
-          obj:{},
-          formatted:'',
-        },
-        promoEnd: {
-          obj:{},
-          formatted:'',
-        },
-        promoPrice:''
+      if(new_product.promoPrice > new_product.price){
+        this.$warningAlert("Promotional price must be < original price")
       }
+      else{
+        this.axios.post(this.url('addProduct'), form)
+            .then(() => {
+              this.getProducts()
+              this.$successAlert('Product has been added');
+              $('#add-products').modal("hide")
+              this.newProduct = {
+                name: '',
+                price:'',
+                quantity:'',
+                category: '',
+                img:'',
+                name_ru:'',
+                imgArray: [],
+                description:'',
+                vendorCode:'',
+                promoStart: {
+                  obj:"",
+                  formatted:'',
+                },
+                promoEnd: {
+                  obj:"",
+                  formatted:'',
+                },
+                promoPrice:0
+              }
+              this.validateQuantity = false;
+              this.validateName = false;
+              this.validatePrice = false;
+            }).catch((error) => {
+          console.log("fail", error)
+
+        })
+      }
+
+      $('#add-products').on('shown', function () {
+        $("#modal-content").scrollTop(0);
+      });
+
+
+
+
     },
 
   },
@@ -307,7 +341,11 @@ props:['listCategory', 'getProducts'],
 .cancel{
   cursor:pointer;
 }
+.fill-fields{
+  color:#E94A4A;
+  margin-top: 5px;
 
+}
 
 .modal.fade:not(.in).right .modal-dialog {
   -webkit-transform: translate3d(0,0,0);

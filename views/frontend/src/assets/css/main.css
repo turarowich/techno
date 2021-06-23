@@ -1279,3 +1279,26 @@ input.value-success, select.value-success, textarea.value-success{
     right: 20px !important;
 
 }
+.errorInput{
+    border: 1px solid #E94A4A;
+    background: #FFECEC;
+}
+
+
+.red{
+    color:red;
+}
+.green{
+    color:#5CBD85;
+}
+.orange{
+    color:orange;
+}
+.new{
+    color:#616CF5;
+}
+@media(max-width:481px){
+    .swal2-popup.sweet-delete{
+        width: 100%;
+    }
+}

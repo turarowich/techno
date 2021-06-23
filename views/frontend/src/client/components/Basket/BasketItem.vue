@@ -5,22 +5,21 @@
       <h4>Your shopping cart is empty please choose your product from out catalog</h4>
     </div>
     <div v-else class="client-table-item d-flex" v-for="item in shoppingCart" :key="item.product._id">
-      <div style="width:40%;overflow: hidden;text-overflow: ellipsis;" class="d-flex align-items-center">
+      <div style="width:40%;overflow: hidden;text-overflow: ellipsis;" class="basket-name d-flex align-items-center">
         <div class="client-table-img">
-          <img src="../../../assets/clients/shirt.svg">
+          <img v-if="!item.product.error" :src="server+'/'+item.product.img" @error="item.product.error=true">
+          <img v-else src="../../../assets/icons/no-catalog.svg" >
         </div>
         <div>
           <h3 class="table-title">{{item.product.name}}</h3>
         </div>
       </div>
-      <div style="width:20%">
+      <div style="width:20%" class="basket-amount">
         <button class="decrease mb-0" @click="decrease(item.product._id)">-</button>
         <span class="count">{{item.quantity}}</span>
         <button class="increase mb-0" @click="increase(item.product._id)">+</button>
       </div>
-<!--      <div style="width:14%">{{item.discount_percent}}%</div>-->
-<!--      <div style="width:14%">{{item.discount_sum}}</div>-->
-      <div style="width:30%">
+      <div style="width:30%;" class="hide">
         <span>
           {{item.current_price}} $
         </span>
@@ -30,9 +29,6 @@
           <span style="color: #E94A4A;" v-if="item.isDiscounted">Discount {{item.discount_sum}}$</span>
           <span style="color: #E94A4A;" v-else>Discount {{item.discount_percent_sum}}$</span>
         </div>
-<!--        <span v-if="checkDates(item.product.promoStart,item.product.promoEnd)" :class="{lineThrough:checkDates(item.product.promoStart,item.product.promoEnd)}">-->
-<!--          {{item.product.price}} $-->
-<!--        </span>-->
       </div>
       <div style="width:10%" class="d-flex justify-content-end pr-3"><img @click="removeFromBasket(item.product._id)" src="../../../assets/clients/x.svg"></div>
     </div>
@@ -49,11 +45,23 @@ export default {
     }
   },
   computed:{
+    company_url_basket(){
+      return this.$store.getters['Orders/getCompany_url_basket'];
+    },
+    currentCompanyCatalog() {
+      return this.$route.params.bekon;
+    },
     shoppingCart(){
+      if(this.currentCompanyCatalog!==this.company_url_basket){
+        return [];
+      }
       return this.$store.state.Orders.shoppingCart;
     },
     basket_promocode(){
       return this.$store.getters['Orders/getBasketPromocode'];
+    },
+    server(){
+      return this.$server;
     },
   },
   methods: {
@@ -82,6 +90,12 @@ export default {
               content:'content-sweet',
               closeButton:'close-btn'
           },
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp'
+        }
       }).then((result) => {
           if (result.isConfirmed) {
               this.$store.dispatch('Orders/removeFromBasket', id);
@@ -124,13 +138,12 @@ export default {
   border-bottom: 1px solid #E4E4E4;
 }
 .client-table-img{
-  height: 70px;
-  width: 70px;
   margin-right: 16px;
 }
 .client-table-img img{
-  width: 100%;
-  height: 100%;
+  height: 70px;
+  width: 100px;
+  max-width: 100px;
   object-fit: contain;
 }
 .table-title{
@@ -162,5 +175,22 @@ font-size:16px;
   text-decoration: line-through;
   font-size: 13px!important;
   color: #B0B0B0;
+}
+@media(max-width:481px){
+  .hide{
+    display:none;
+  }
+  .basket-name{
+    width: 70% !important;
+  }
+  .basket-amount{
+    width: 40% !important;
+  }
+  .client-table-img{
+    margin-right: 0;
+  }
+  .count{
+    width: 25px;
+  }
 }
 </style>

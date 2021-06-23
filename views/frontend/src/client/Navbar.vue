@@ -1,16 +1,15 @@
 <template>
   <div class="container client-container">
 <nav class="navigation d-flex align-items-center justify-content-between">
-    <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar">{{catalog_settings.name || 'Company Name'}} <span>Catalog</span></router-link>
-    <ul class="client-menu">
+    <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">{{catalog_settings.name || 'Company Name'}} <span> Catalog</span></router-link>
+    <div class="menu-wrapper">
+      <ul class="client-menu">
+        <li @click="removeActive" class="client-list"><router-link class="client-link" :to="`/${currentCompanyCatalog}/about`"><img src="../assets/clients/info.svg"/>About us</router-link></li>
+        <li @click="removeActive" v-if="!isLogged" class="client-list"><router-link class="client-link" :to="`/${currentCompanyCatalog}/signin`"><img class="mr-3" src="../assets/clients/Profile.svg"/>Login</router-link></li>
+        <li  v-else class="client-list"><img src="../assets/clients/Profile.svg"/><router-link class="client-link" :to="`/${currentCompanyCatalog}/client-account`">My Account</router-link></li>
+        <li @mouseover="mouser" @mouseleave="close_drop" class="client-list hoverBasket dropdown">
 
-      <li class="client-list"><router-link class="client-link" :to="`/${currentCompanyCatalog}/about`"><img src="../assets/clients/info.svg"/>About us</router-link></li>
-      <li v-if="!isLogged" class="client-list"><router-link class="client-link" :to="`/${currentCompanyCatalog}/signin`"><img src="../assets/clients/Profile.svg"/>Login</router-link></li>
-      <li v-else class="client-list"><img src="../assets/clients/Profile.svg"/><router-link class="client-link" :to="`/${currentCompanyCatalog}/client-account`">My Account</router-link></li>
-
-      <li class="client-list hoverBasket dropdown">
-
-          <router-link class="client-link  d-inline-flex align-items-center" :to="`/${currentCompanyCatalog}/basket`" data-hover="dropdown">
+          <router-link @click="removeActive"  class="client-link  d-inline-flex align-items-center" :to="`/${currentCompanyCatalog}/basket`" >
             <img src="../assets/clients/Buy.svg"/>Basket
             <div class="bg-not d-flex align-items-center">
               <span class="basket-not" v-if="countOrders > 0">{{countOrders}}</span>
@@ -20,41 +19,73 @@
           <div class="basket-hover">
             <div class="basket-header d-flex align-item-center justify-content-between">
               <h5>Basket</h5>
-              <img  class="close-hover mr-0" src="../assets/clients/x.svg">
+              <img @click="close_drop" class="close-hover mr-0"  src="../assets/clients/x.svg">
             </div>
             <div class="line"></div>
             <div class="scroll-basket">
-              <div v-for="item in shoppingCart" @click="$router.push('/home/catalog-detail/:'+item.product._id)" :key="item.product._id" class="d-flex align-items-start">
-                <div style="width:20%" class="basket-img">
-                  <img src="../assets/clients/shirt.svg">
+              <div v-for="item in shoppingCart" :key="item.product._id" class="d-flex align-items-start">
+                <div style="flex: 0 0 60px;" class="basket-img">
+                  <img style="object-fit: contain" v-if="!item.product.error" :src="server+'/'+item.product.img" @error="item.product.error=true">
+                  <img v-else src="../assets/icons/no-catalog.svg" >
                 </div>
-                <div style="width:50%">
-                  <h3 class="basket-title">{{item.product.name}}</h3>
-                  <span class="basket-code">{{item.product.article}}</span>
+                <div style="display:flex;flex-direction: column;flex: 1;">
+                  <div>
+                    <h3 class="basket-title">{{item.product.name}}</h3>
+                  </div>
+                  <div style="display: flex;align-items: center;">
+                    <span class="basket-code" style="flex: 3">{{item.product.vendorCode}}</span>
+                    <div class="basket-code " style="flex: 2">{{item.quantity}}x</div>
+                    <div class="basket-price " style="flex: 2">{{item.product.price}} $</div>
+                  </div>
                 </div>
-                <div class="basket-price " style="width:20%">{{item.quantity}}x</div>
-                <div class="basket-price " style="width:20%">{{item.product.price}} $</div>
+              </div>
+
+              <div v-if="shoppingCart.length===0" class="d-flex" style="justify-content: center;align-items: center;flex-direction: column;height: 100%;">
+                <img src="../assets/img/empty_basket.svg" >
+                <span class="empty_basket_title">
+                    Basket is empty
+                  </span>
               </div>
             </div>
-            <button class="save" @click="$router.push({ path: `/${currentCompanyCatalog}/basket` })" >Go to purchasee</button>
+            <button v-if="shoppingCart.length>0" class="save" @click="$router.push({ path: `/${currentCompanyCatalog}/basket` })" >Go to purchasee</button>
           </div>
-      </li>
-    </ul>
+        </li>
+      </ul>
+    </div>
+  <div class="burger" @click="showNavbar">
+    <i class="fas fa-bars"></i>
+  </div>
 </nav>
     <div class="line"></div>
   </div>
 </template>
 
 <script>
-
+import $ from 'jquery';
 export default {
-name: "Navbar",
+  name: "Navbar",
+  data(){
+    return{
+      show_mini_basket:false,
+    }
+  },
   computed:{
   // ...mapGetters(["Orders/countOrders" ,"Orders/shoppingCart"]),
+    company_url_basket(){
+      return this.$store.getters['Orders/getCompany_url_basket'];
+    },
     countOrders(){
+      if(this.currentCompanyCatalog!==this.company_url_basket){
+        return 0;
+      }
       return this.$store.getters['Orders/countOrders'];
+
     },
     shoppingCart(){
+
+      if(this.currentCompanyCatalog!==this.company_url_basket){
+        return [];
+      }
       return this.$store.state.Orders.shoppingCart;
     },
     currentCompanyCatalog() {
@@ -66,14 +97,32 @@ name: "Navbar",
     isLogged(){
       return this.$store.getters['Client/getUserStatus'];
     },
+    server(){
+      return this.$server;
+    },
   },
   methods:{
+    removeActive(){
+      $('.menu-wrapper').removeClass('active')
+    },
+    showNavbar(){
+      $('.menu-wrapper').toggleClass('active')
+      $('.burger').toggleClass('active')
+    },
     logout(){
       this.$store.dispatch("Client/logout");
     },
     close_drop(){
-      this.$store.dispatch("Client/logout");
+        $('.basket-hover').css('visibility', 'hidden');
     },
+    mouser(){
+      $('.basket-hover').css('visibility', 'visible');
+      console.log('DADASASASASS');
+    },
+    mouser_leave(){
+      $('.basket-hover').css('visibility', 'hidden');
+      console.log('DADASASASASS');
+    }
   },
 
 
@@ -82,6 +131,30 @@ name: "Navbar",
 </script>
 
 <style scoped>
+.menu-wrapper.active{
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  z-index:999;
+  top: 0;
+  right: 0;
+  display:flex;
+  background: #fff;
+  padding-top: 20px;
+}
+.menu-wrapper.active .client-menu {
+  display: block;
+  margin: auto;
+}
+.menu-wrapper.active .client-list{
+  margin-bottom: 20px;
+}
+.burger{
+  display: none;
+}
+.burger.active{
+  z-index:1000;
+}
 .navigation{
   height: 62px;
 }
@@ -159,6 +232,7 @@ font-size: 14px;
 }
 .basket-hover .save{
   width:100%;
+  margin-top: 10px;
 }
 .basket-header{
   padding-bottom:10px;
@@ -183,17 +257,34 @@ font-size: 14px;
   margin-bottom: 4px;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width:179px ;
 }
 .basket-code{
   color: #B0B0B0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .basket-price{
   font-size: 18px;
   font-weight: normal;
-  padding-top: 10px;
 }
 .scroll-basket{
   height: 250px;
   overflow-y: auto;
+}
+.empty_basket_title{
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  color: #B0B0B0;
+}
+
+@media(max-width:992px){
+  .client-menu{
+    display:none;
+  }
+  .burger{
+    display: block;
+  }
 }
 </style>
