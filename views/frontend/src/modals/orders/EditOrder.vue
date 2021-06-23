@@ -64,12 +64,12 @@
 
                 <div class="table-content">
                   <div class="d-flex align-items-center h-100 justify-content-center flex-column" v-if="currentData.products.length === 0">
-                    <img class="empty-img" src="../../assets/icons/emptyOrder.svg">
+                    <img class=" mb-3 empty-img" src="../../assets/img/emp-product.svg">
                     <p class="empty-page-text">Add a product to start</p>
                   </div>
 
                   <div v-else v-for="order in currentData.products" :key="order._id" class="table-item d-flex align-items-center">
-                    <div  class="d-flex align-items-center"  style="width: 50%;">
+                    <div  class="d-flex align-items-center "  style="width: 50%;">
                       <div class="table-img">
                         <img v-if="order.img" :src="imgSrc+'/'+order.img">
                         <img v-else src="../../assets/icons/no-catalog.svg">

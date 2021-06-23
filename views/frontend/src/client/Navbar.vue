@@ -135,7 +135,7 @@ export default {
   position: fixed;
   width: 100%;
   height: 100vh;
-  z-index:999;
+  z-index:9999;
   top: 0;
   right: 0;
   display:flex;
@@ -153,7 +153,9 @@ export default {
   display: none;
 }
 .burger.active{
-  z-index:1000;
+  z-index:10000;
+  position: fixed;
+  right:15px;
 }
 .navigation{
   height: 62px;

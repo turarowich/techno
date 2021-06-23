@@ -91,7 +91,7 @@ export default {
               closeButton:'close-btn'
           },
         showClass: {
-          popup: 'animate__animated animate__fadeInDown'
+          popup: 'animate__animated animate__slideInDown'
         },
         hideClass: {
           popup: 'animate__animated animate__fadeOutUp'

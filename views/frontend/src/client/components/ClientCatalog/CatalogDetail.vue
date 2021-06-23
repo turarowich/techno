@@ -150,6 +150,17 @@ export default {
         dots: true,
         centerMode: true,
         focusOnSelect: true,
+        responsive: [
+          {
+            breakpoint: 768,
+            settings: {
+              slidesToShow: 2,
+              slidesToScroll: 2,
+              infinite: true,
+              dots: true
+            }
+          },
+        ]
       });
     },
     async  getOneProduct(){
@@ -174,7 +185,6 @@ export default {
 
 <style scoped>
 .product-img{
-  width: 400px;
   height: 440px;
   margin-bottom: 40px;
 }
@@ -214,8 +224,10 @@ export default {
 @media(max-width:481px){
   .product-img{
     width: 100%;
-    height: 90%;
+    height: 50%;
+    margin-bottom: 0;
   }
+
 }
 
 </style>

@@ -25,9 +25,9 @@
 
         <div class="have-account">Sign up with Social of fill the form to continue. </div>
 
-        <div class="social-link">
-          <img src="../../assets/icons/facebook.svg">
-          <img src="../../assets/icons/google.svg">
+        <div class="social-link d-flex justify-content-center">
+        <div class="social-icons">  <img src="../../assets/icons/facebook.svg"></div>
+        <div class="social-icons mr-0">  <img src="../../assets/icons/google.svg"></div>
         </div>
 
         <div class="main-or d-flex align-items-center justify-content-center">
@@ -175,7 +175,30 @@ form{
 }
 .main-or{
   margin-top:15px;
-  margin-bottom: 11px;
+  margin-bottom: 15px;
 }
+@media(max-width:768px){
+  .login{
+    width: 100%;
+  }
+}
+@media(max-width:660px){
+  .login{
+    padding: 30px 40px;
+  }
+}
+@media(max-width:576px){
+  .authorization{
+    padding:23px 0;
+  }
+  .welcome-sign-in{
+    font-size: 36px !important;
+  }
+}
+@media(max-width:420px){
+  .login{
+    padding:30px 20px;
+  }
 
+}
 </style>
