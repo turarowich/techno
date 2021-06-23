@@ -135,7 +135,7 @@ app.use((err, req, res, next) => {
     }
 });
 
-const io = require('socket.io')(httpsServer, {
+const io = require('socket.io')(httpServer, {
     cors: {
         // origin: "http://localhost:3000",
         origin: ["http://localhost:3000", "http://127.0.0.1:3000", "https://app.loygift.com", "http://10.121.6.29:3000", "*:*"],

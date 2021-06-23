@@ -242,6 +242,19 @@ class OrderController{
         let Order = db.model("Order");
         let Product = db.model("Product");
         let OrderProduct = db.model("OrderProduct");
+        
+        if (req.userType == "employee" && Object.keys(req.fields).length == 1 && "status" in req.fields){
+            let checkResult = await checkAccess(req.userID, { access: "canChangeOrderStatus" }, db, res)
+            if (checkResult) {
+                return;
+            }
+        }
+        if (req.userType == "employee" && "status" in req.fields) {
+            let checkResult = await checkAccess(req.userID, { access: "canChangeOrderStatus" }, db)
+            if (checkResult) {
+                delete req.fields.status;
+            }
+        }
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "orders", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -256,7 +269,7 @@ class OrderController{
             let query = { '_id': req.params.order }
             req.fields['updatedAt'] = new Date()
             var products = req.fields.products
-            req.fields.products = null
+            // req.fields.products = null
             let order = await Order.findOneAndUpdate(query, req.fields)
             if(products && products.length){
                 order.products = []

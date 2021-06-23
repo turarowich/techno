@@ -89,7 +89,12 @@ export default {
           that.edit_branch = response.data.object;
           $('#add_branch').modal('show');
           console.log(response);
-        })
+        }).catch((error)=>{
+                if(error.response.data && !error.response.data.errors){
+                    that.$warningAlert(error.response.data.msg)
+                }
+                console.log(error);
+        });
     },
     getEditDeliveryOption(id){
       let that=this;
@@ -101,7 +106,12 @@ export default {
       .then(function (response){
         that.edit_delivery = response.data.object;
         $('#add_delivery_option').modal('show');
-      })
+      }).catch((error)=>{
+            if(error.response.data && !error.response.data.errors){
+                that.$warningAlert(error.response.data.msg)
+            }
+            console.log(error);
+      });
     },
     clearEdit(){
       this.edit_branch = {};
@@ -136,6 +146,9 @@ export default {
             that.$successAlert("Removed");
             that.updateData();
           }).catch(function(error){
+            if(error.response.data && !error.response.data.errors){
+                that.$warningAlert(error.response.data.msg)
+            }
             if (error.response) {
               // console.log(error.response.status);
               // console.log(error.response.headers);

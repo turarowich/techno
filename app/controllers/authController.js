@@ -160,6 +160,7 @@ class AuthController{
         if (lang != 'ru') {
             lang = 'en'
         }
+        
         try {
             let user = await Client.findOne(filter).select('+password')
 
@@ -196,6 +197,8 @@ class AuthController{
         if (lang != 'ru') {
             lang = 'en'
         }
+        console.log(req.fields)
+        console.log(lang)
         try {
             let hashedPassword = bcrypt.hashSync(req.fields.password, 8);
 
@@ -249,8 +252,10 @@ class AuthController{
         if (lang != 'ru') {
             lang = 'en'
         }
+        console.log(lang)
         socialAuth: try {
-            social_res = await socialRegister(req.fields.social, req.fields.token, req.fields.screen_name)
+            console.log(req.fields)
+            social_res = await socialRegister(req.fields.social, req.fields.token, req.fields.screen_name, req.fields.full_name, req.fields.email)
 
             if (social_res.error) {
                 result = social_res.error
@@ -306,7 +311,8 @@ class AuthController{
             lang = 'en'
         }
         socialAuth: try {
-            let social_res = await socialRegister(req.fields.social, req.fields.token, req.fields.screen_name)
+            console.log(req.fields)
+            let social_res = await socialRegister(req.fields.social, req.fields.token, req.fields.screen_name, req.fields.full_name, req.fields.email)
 
             if (social_res.error) {
                 result = social_res.error
@@ -574,7 +580,6 @@ class AuthController{
         var gg_token = req.authInfo;
         res.cookie('auth', gg_token);
         let result = await loginClientSocialWeb ("google", gg_token,"en","602e5015622e3235df995cbe");
-        // let result = await loginClientSocialWeb ("google", gg_token,"en","602e5015622e3235df995cbe");
         res.redirect('/');
     };
     callbackTW = async function (req, res) {
@@ -582,11 +587,11 @@ class AuthController{
         let screen_name = req.user.username;
         res.cookie('auth', tw_token);
         let result = await registerClientSocialWeb ("twitter", tw_token,"en","602e5015622e3235df995cbe",screen_name);
-        // let result = await loginClientSocialWeb ("google", gg_token,"en","602e5015622e3235df995cbe");
+        
         res.redirect('/');
     };
 }
-async function socialRegister(type, token, screen_name=""){
+async function socialRegister(type, token, screen_name="", full_name="", email=""){
     let response = []
     if (type == "facebook") {
         response = await fbRegister(token)
@@ -594,6 +599,8 @@ async function socialRegister(type, token, screen_name=""){
         response = await twitterRegister(token, screen_name)
     } else if (type == "google") {
         response = await googleRegister(token)
+    } else if (type == "apple") {
+        response = await appleRegister(token, screen_name, full_name, email)
     }
     return response
 } 
@@ -696,6 +703,24 @@ async function twitterRegister(token, screen_name) {
         birthDate: response.data.birthday,
         gender: response.data.gender,
         twitter_id: response.data.id,
+    }
+    let result = {
+        check: check,
+        save: save
+    }
+    return result
+}
+async function appleRegister(token, screen_name, full_name, email) {
+    
+    let check = { apple_id: screen_name,  }
+    if (email) {
+        check = { $or: [{ apple_id: screen_name }, { email: email }] }
+    }
+
+    let save = {
+        name: full_name,
+        email: email,
+        apple_id: screen_name,
     }
     let result = {
         check: check,

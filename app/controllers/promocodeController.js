@@ -1,4 +1,4 @@
-const { useDB, sendError } = require('../../services/helper')
+const { useDB, sendError, checkAccess } = require('../../services/helper')
 var validate = require('../../config/messages');
 class PromocodeController{
     

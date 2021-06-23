@@ -306,7 +306,7 @@ function createQrFile(user_id, company) {
     })
     return link + filename
 }
-async function checkAccess(user_id, settings, db, res){
+async function checkAccess(user_id, settings, db, res=null){
     let Employee = db.model("Employee");
     let employee = await Employee.findById(user_id)
     let result = {
@@ -316,23 +316,36 @@ async function checkAccess(user_id, settings, db, res){
         'object': null
     }
     if(employee){
+        
+        if ( settings.parametr == undefined) {
+            if(!employee[settings.access]){
+                if (res) {
+                    res.status(result.status).json(result);
+                }
+                return result
+            }
+            return null
+        } 
         if (employee[settings.access]) {
             if(!employee[settings.access][settings.parametr]){
-                res.status(result.status).json(result);
+                if(res){
+                    res.status(result.status).json(result);
+                }
                 return result
             }
             if (settings.parametr2 != undefined && !employee[settings.access][settings.parametr2]) {
-                res.status(result.status).json(result);
-                return result
-            }
-            if (settings.parametr3 != undefined && !employee[settings.access][settings.parametr3]) {
-                res.status(result.status).json(result);
+                if (res) {
+                    res.status(result.status).json(result);
+                }
                 return result
             }
         }
+
         return null
     }
-    res.status(result.status).json(result);
+    if (res) {
+        res.status(result.status).json(result);
+    }
     return result
 }
 module.exports = {

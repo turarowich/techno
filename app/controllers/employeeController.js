@@ -36,6 +36,7 @@ class EmployeeController{
         let Employee = db.model("Employee");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "settings", parametr: "active" }, db, res)
+            console.log(checkResult);
             if (checkResult) {
                 return;
             }

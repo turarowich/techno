@@ -1,4 +1,4 @@
-const { useDB, sendError } = require('../../services/helper')
+const { useDB, sendError, checkAccess } = require('../../services/helper')
 var validate = require('../../config/messages');
 class CashbackController{
     getCashback = async function (req, res) {
@@ -6,7 +6,12 @@ class CashbackController{
         let cashback_model = db.model("Cashback");
         let one = await cashback_model.find();
         let cashback_one = {};
-
+        if (req.userType == "employee") {
+            let checkResult = await checkAccess(req.userID, { access: "loyalty", parametr: "active" }, db, res)
+            if (checkResult) {
+                return;
+            }
+        }
         let result = {
             'status': 200,
             'msg': 'Sending Cashback'
@@ -28,7 +33,12 @@ class CashbackController{
     updateCashback = async function (req, res) {
         let db = useDB(req.db)
         let cashback_model = db.model("Cashback");
-
+        if (req.userType == "employee") {
+            let checkResult = await checkAccess(req.userID, { access: "loyalty", parametr: "active", parametr2: "canEdit" }, db, res)
+            if (checkResult) {
+                return;
+            }
+        }
         let result = {
             'status': 200,
             'msg': 'Sending Cashback'

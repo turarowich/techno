@@ -334,11 +334,15 @@ export default {
       }).then(function (response) {
         console.log(response);
         that.displayMessages(['Updated'],"Success");
-      }).catch(function(error){
+      }).catch((error)=>{
         if (error.response) {
           // console.log(error.response.status);
           // console.log(error.response.headers);
-          that.displayMessages(Object.values(error.response.data.errors),"Errors");
+            if(error.response.data && !error.response.data.errors){
+                this.$warningAlert(error.response.data.msg)
+            }
+            that.displayMessages(Object.values(error.response.data.errors),"Errors");
+            
         }
       });
     },

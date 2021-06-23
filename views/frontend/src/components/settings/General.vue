@@ -65,7 +65,12 @@ export default {
         that.$successAlert('Updated');
       }).catch(function(error){
         if (error.response) {
-          that.$warningAlert('Something went wrong');
+            if(error.response.data && !error.response.data.errors){
+                that.$warningAlert(error.response.data.msg)
+            }else{
+                that.$warningAlert('Something went wrong');
+            }
+          
           that.$warningAlert(Object.values(error.response.data.errors),"Errors");
         }
       });

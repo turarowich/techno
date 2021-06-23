@@ -87,6 +87,11 @@ const clientSchema = new Schema({
         required: false,
         default: ''
     },
+    apple_id: {
+        type: String,
+        required: false,
+        default: ''
+    },
     google_id: {
         type: String,
         required: false,

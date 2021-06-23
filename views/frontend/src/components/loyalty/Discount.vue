@@ -60,27 +60,31 @@ export default {
   },
   methods:{
     add(){
-      let messages = [];
-      if(this.current_discount.name===''){messages.push('Enter the name of the discount')}
-      if(this.current_discount.percentage==='' || this.current_discount.percentage<=0){messages.push('Enter discount percentage')}
-      if(this.current_discount.percentage>100){messages.push('Percentage cannot be more than 100')}
-      if(this.current_discount.min_sum==='' || this.current_discount.min_sum<=0){messages.push('Enter discount min sum')}
-      if(messages.length>=1){this.displayMessages(messages,"Errors");return}
-      //if ok
-      let copy = $.extend(true,{},this.current_discount);
-      this.list_of_discounts.push(copy);
-
-      let that=this;
-      let url = this.base_url+'/api/addDiscount';
-      this.axios.post(url,
-        copy
-      ).then(function (response) {
-        that.list_of_discounts = response.data.discounts;
-      }).catch(function(error){
-        if (error.response) {
-          // console.log(error.response.status);
-          // console.log(error.response.headers);
-          that.displayMessages(Object.values(error.response.data.errors),"Errors");
+        let messages = [];
+        if(this.current_discount.name===''){messages.push('Enter the name of the discount')}
+        if(this.current_discount.percentage==='' || this.current_discount.percentage<=0){messages.push('Enter discount percentage')}
+        if(this.current_discount.percentage>100){messages.push('Percentage cannot be more than 100')}
+        if(this.current_discount.min_sum==='' || this.current_discount.min_sum<=0){messages.push('Enter discount min sum')}
+        if(messages.length>=1){this.displayMessages(messages,"Errors");return}
+        //if ok
+        let copy = $.extend(true,{},this.current_discount);
+        // let new_list_of_discounts = this.list_of_discounts
+        // new_list_of_discounts.push(copy);
+        
+        let that=this;
+        let url = this.base_url+'/api/addDiscount';
+        this.axios.post(url,
+            copy
+        ).then((response)=> {     
+            this.list_of_discounts = response.data.discounts;
+        }).catch((error)=>{
+            if(error.response.data && !error.response.data.errors){
+                this.$warningAlert(error.response.data.msg)
+            }
+            if (error.response) {
+            // console.log(error.response.status);
+            // console.log(error.response.headers);
+            that.displayMessages(Object.values(error.response.data.errors),"Errors");
         }
       });
 
@@ -94,12 +98,17 @@ export default {
       this.axios.delete(url).then(function (response) {
         that.list_of_discounts = response.data.discounts;
         that.displayMessages(['Removed'],"Success");
-      }).catch(function(error){
-        if (error.response) {
-          // console.log(error.response.status);
-          // console.log(error.response.headers);
-          that.displayMessages(Object.values(error.response.data.errors),"Errors");
-        }
+      }).catch((error)=>{
+            if(error.response.data && !error.response.data.errors){
+                this.$warningAlert(error.response.data.msg)
+            }
+            if (error.response) {
+            // console.log(error.response.status);
+            // console.log(error.response.headers);
+                
+                that.displayMessages(Object.values(error.response.data.errors),"Errors");
+                
+            }
       });
 
     },
@@ -112,12 +121,17 @@ export default {
       }).then(function (response) {
         console.log(response);
         that.displayMessages(['Updated'],"Success");
-      }).catch(function(error){
-        if (error.response) {
-          // console.log(error.response.status);
-          // console.log(error.response.headers);
-          that.displayMessages(Object.values(error.response.data.errors),"Errors");
-        }
+      }).catch((error)=>{
+            if(error.response.data && !error.response.data.errors){
+                that.status = !that.status
+                this.$warningAlert(error.response.data.msg)
+            }
+            if (error.response) {
+            // console.log(error.response.status);
+            // console.log(error.response.headers);
+                
+                that.displayMessages(Object.values(error.response.data.errors),"Errors");
+            }
       });
     },
     displayMessages(array,title){

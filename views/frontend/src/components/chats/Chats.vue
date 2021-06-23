@@ -4,7 +4,7 @@
     <!-- <div class="notification">
       <button class="app-buttons-item"><img class="img-btn" src="../../assets/icons/ring.svg"><span>Push notification</span></button>
     </div> -->
-    <div class="chat d-flex h-100">
+    <div class="chat d-flex">
     <div class="overflow-hidden contacts-container">
         <div class="d-flex align-items-center  search-chat">
             <img class="mr-3" src="../../assets/icons/search-icon.svg">
@@ -161,6 +161,11 @@ export default {
                         },
                         }
                     )
+                }).catch((error)=>{
+                    if(error.response.data && !error.response.data.errors){
+                        this.$warningAlert(error.response.data.msg)
+                    }
+                    console.log(error);
                 });
         }
         })
@@ -176,6 +181,10 @@ export default {
                 that.contactList[index].messages.push(message)
                 that.contactList[index].lastMessageAt = new Date()
             }
+        })
+        this.socket.on("warning message",(data)=> {
+
+            this.$warningAlert(data)
         })
         this.socket.emit('init_admin')
     },

@@ -335,6 +335,12 @@ class ClientController{
         if (lang != 'ru') {
             lang = 'en'
         }
+        if (req.userType == "employee") {
+            let checkResult = await checkAccess(req.userID, { access: "chat", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
+        }
         let result = {
             'status': 200,
             'msg': 'Messages updated'
@@ -356,6 +362,12 @@ class ClientController{
         if (lang != 'ru') {
             lang = 'en'
         }
+        if (req.userType == "employee") {
+            let checkResult = await checkAccess(req.userID, { access: "chat", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
+        }
         let result = {
             'status': 200,
             'msg': 'Messages cleared'
@@ -374,7 +386,12 @@ class ClientController{
     getNewMessages = async function (req, res) {
         let db = useDB(req.db)
         let Message = db.model("Message");
-        
+        if (req.userType == "employee") {
+            let checkResult = await checkAccess(req.userID, { access: "chat", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
+        }
         let lang = req.headers["accept-language"]
         if (lang != 'ru') {
             lang = 'en'
@@ -397,6 +414,87 @@ class ClientController{
             console.log(query, req.fields.isIncoming)
             let messages = await Message.find(query)
             result['objects'] = messages
+        } catch (error) {
+            result = sendError(error, lang)
+        }
+
+        res.status(result.status).json(result);
+    }
+
+
+    addPoints = async function (req, res) {
+        let db = useDB(req.db)
+        let Client = db.model("Client");
+        let ClientBonusHistory = db.model("clientBonusHistory");
+        if (req.userType == "employee") {
+            let checkResult = await checkAccess(req.userID, { access: "addPoint" }, db, res)
+            if (checkResult) {
+                return;
+            }
+        }
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
+        let result = {
+            'status': 200,
+            'msg': 'Points added'
+        }
+        try {
+            let query = {
+                _id: req.fields.client
+            }
+            let client = await Client.find(query)
+            client.points = (parseFloat(client.points) + parseFloat(req.fields.points)).toFixed(2);
+            await client.save({ validateBeforeSave: false });
+            await new ClientBonusHistory({
+                client: client._id,
+                points: req.fields.points,
+                source: 'Points added by company',
+                type: 'received',
+            }).save();
+        } catch (error) {
+            result = sendError(error, lang)
+        }
+
+        res.status(result.status).json(result);
+    }
+
+    deductPoints = async function (req, res) {
+        let db = useDB(req.db)
+        let Client = db.model("Client");
+        let ClientBonusHistory = db.model("clientBonusHistory");
+        if (req.userType == "employee") {
+            let checkResult = await checkAccess(req.userID, { access: "addPoint" }, db, res)
+            if (checkResult) {
+                return;
+            }
+        }
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
+        let result = {
+            'status': 200,
+            'msg': 'Points added'
+        }
+        try {
+            let query = {
+                _id: req.fields.client
+            }
+            let client = await Client.find(query)
+            if (parseFloat(client.points) < parseFloat(req.fields.points)){
+                req.fields.points = client.points
+            }
+            client.points = (parseFloat(client.points) - parseFloat(req.fields.points)).toFixed(2);
+            
+            await client.save({ validateBeforeSave: false });
+            await new ClientBonusHistory({
+                client: client._id,
+                points: -req.fields.points,
+                source: 'Points deducted by company',
+                type: 'deducted',
+            }).save();
         } catch (error) {
             result = sendError(error, lang)
         }

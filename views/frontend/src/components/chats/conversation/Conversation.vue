@@ -1,7 +1,11 @@
 <template>
 <div class="conversation-chat">
   <ConversationHeader v-bind:contact="contact"/>
-  <MessageFeed v-bind:contact="contact" v-bind:messages="messages" />
+    <MessageFeed v-if="contact" v-bind:contact="contact" v-bind:messages="messages" />
+    <div v-else class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
+        <img src="../../../assets/icons/chat-empty.svg" alt="">
+        <p class="empty-chat-text mt-3">Chat is empty, no active chats </p>
+    </div>
   <MessageComposer v-on:send="sendMessage"/>
 
 
@@ -30,7 +34,12 @@ name: "Conversation",
 </script>
 
 <style scoped>
-
+.empty-chat-text{
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 19px;
+    color: #8C94A5;
+}
 .conversation-chat{
   display: flex;
   flex-direction: column;

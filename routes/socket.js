@@ -10,19 +10,16 @@ module.exports = io => {
     io.on('connection', (socket) => {
         socket.on("details", listener)
         socket.on('init_admin', () => {
-            console.log('init admin',socket.handshake.headers.db)
             socket.join(socket.handshake.headers.db)
         });
         socket.on('init', (user) => {
-            console.log(user)
             socket.join(user)
         });
         socket.on('read messages', (msg) => {
             controller.readMessage(socket, msg)
         });
         socket.on('message', (data) => {
-            console.log(data)
-            controller.addMessage(socket, data)
+            controller.addMessage(io, socket, data)
             socket.join(data.user)
             socket.broadcast.to(data.user).to(socket.handshake.headers.db).emit("server message", data)
         });

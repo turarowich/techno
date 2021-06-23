@@ -28,6 +28,8 @@ module.exports = function (app, network_information) {
     app.get('/updatedMessagesStatus/:client', clientController.updatedMessagesStatus);
     app.post('/clearMessages', clientController.clearMessages);
     app.post('/getNewMessages', clientController.getNewMessages);
+    app.post('/addPoints', clientController.addPoints);
+    app.post('/deductPoints', clientController.deductPoints);
     
     // Products url
     app.get('/getProduct/:product', productController.getProduct);
