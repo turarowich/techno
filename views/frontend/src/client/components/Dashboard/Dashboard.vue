@@ -100,7 +100,7 @@ name: "Dashboard",
   beforeCreate() {
     (async () => {
       const options = {
-        headers: {"company_url": this.$route.params.bekon}
+        headers: {"company_url": this.$route.params.bekon,"X-Client-Url": this.$route.params.bekon}
       }
       await this.axios.get(this.url('getCatalogSettings'),options)
           .then((response) => {
