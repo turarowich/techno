@@ -19,7 +19,11 @@ function verifyTokenSocket(socket, next) {
 
         socket.handshake.headers.user = decoded.user;
         socket.handshake.headers.db = "loygift" + decoded.id;
-        
+        if (decoded.type && decoded.type == "employee") {
+            socket.handshake.headers.userType = "employee"
+        } else {
+            socket.handshake.headers.userType = "other"
+        }
         // mainRoom is admin id so if he want send some notification for his client just need to use that room
         if (decoded.id){
             socket.handshake.headers.mainRoom = "mainRoom" + decoded.id

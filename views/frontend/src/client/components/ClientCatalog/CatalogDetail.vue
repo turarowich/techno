@@ -184,9 +184,11 @@ export default {
 
 <style scoped>
 .product-img{
+  width: 400px;
   height: 440px;
-
+  margin-bottom: 40px;
 }
+
 .lineThrough{
   text-decoration: line-through;
   font-size: 20px!important;
@@ -214,7 +216,17 @@ export default {
   color: #999999;
   margin-bottom: 30px;
 }
-
+@media(max-width:992px){
+  .product-img{
+    height: 400px;
+  }
+}
+@media(max-width:481px){
+  .product-img{
+    width: 100%;
+    height: 90%;
+  }
+}
 
 </style>
 

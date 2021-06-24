@@ -32,7 +32,6 @@
        </div>
      </div>
    </div>
-
  </div>
 </template>
 
@@ -59,8 +58,11 @@ export default {
         that.$store.dispatch("Promocode/setPromocodeSelectedObjects",response.data.products);
         that.$store.dispatch("Promocode/setEditState",true);
         that.$router.push('/add-promo-page');
-      }).catch(function(error){
-        console.log(error);
+      }).catch((error)=>{
+            if(error.response.data && !error.response.data.errors){
+                that.$warningAlert(error.response.data.msg)
+            }
+            console.log(error);
       });
     },
 
@@ -70,11 +72,11 @@ export default {
       this.axios.delete(url).then(function (response) {
         console.log(response);
         that.$store.dispatch("Promocode/setPromocodeAPI",{axios:that.axios,url:that.url('getPromocodes')});
-      }).catch(function(error){
+      }).catch((error)=>{
         if (error.response) {
-          // console.log(error.response.status);
-          // console.log(error.response.headers);
-          console.log(error.response.data.errors);
+            if(error.response.data && !error.response.data.errors){
+                this.$warningAlert(error.response.data.msg)
+            }
         }
       });
 

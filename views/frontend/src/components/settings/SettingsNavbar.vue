@@ -5,8 +5,8 @@
         <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='General' }" to="/settings" exact>General</router-link></li>
         <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='Price' }" to="/settings/price">Price</router-link></li>
         <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='CatalogSettings' }" to="/settings/catalog-settings">Catalog</router-link></li>
-        <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='PersonalSettings' }" to="/settings/personal-settings">Personal settings</router-link></li>
-        <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='StaffSettings' }" to="/settings/staff-settings">Staff settings</router-link></li>
+        <li class="loaylty-list" v-if="isAdmin"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='PersonalSettings' }" to="/settings/personal-settings">Personal settings</router-link></li>
+        <li class="loaylty-list" v-if="isAdmin"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='StaffSettings' }" to="/settings/staff-settings">Staff settings</router-link></li>
         <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='AddressDelivery' }" to="/settings/address-delivery">Address and delivery</router-link></li>
       </ul>
     </div>
@@ -18,13 +18,25 @@
 // import $ from "jquery";
 
 export default {
-  name: "SettingsNavbar",
-  computed: {
-    currentRouteName() {
-      return this.$route.name;
-    }
-  },
-  methods:{
+    name: "SettingsNavbar",
+  
+    data() {
+        return {
+            user: JSON.parse(localStorage.getItem('user'))
+        }
+    },
+    computed: {
+        currentRouteName() {
+            return this.$route.name;
+        },
+        isAdmin(){
+            if(this.user.rate != undefined && this.user.activeBefore != undefined){
+                return true
+            }
+            return false
+        }
+    },
+    methods:{
     // addActive(){
     //   $(document).ready(function() {
     //     $('.loyalty-link').click(function() {

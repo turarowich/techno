@@ -36,7 +36,7 @@
       <div>
         <button class="app-buttons-item" @click="showYesterday"><img src="../../assets/icons/yesterday.svg"><span>Yesterday</span></button>
         <button class="app-buttons-item" @click="showTodayData"><img src="../../assets/icons/yesterday.svg"><span>Today</span></button>
-        <button class="app-buttons-item" @click="clickOnDate"><img src="../../assets/icons/yesterday.svg"><input placeholder="2021-03-01 to 2021-03-04"  class="date-pick" id="datepicker"></button>
+        <button class="app-buttons-item" @click="clickOnDate"><img src="../../assets/icons/yesterday.svg"><input :value="between_value"  class="date-pick" id="datepicker"></button>
       </div>
     </div>
       <div class="main-search d-flex align-items-center">
@@ -122,6 +122,7 @@ name: "Orders",
   },
   data(){
     return{
+      between_value:'',
       deletedOrders:[],
       orderList:[],
       select_order:'',
@@ -171,7 +172,7 @@ name: "Orders",
           .filter(order=>{
             return order.createdAt.slice(0,10).includes(this.filtered)
                 || (new Date(order.createdAt).getTime() >= new Date(this.filtered.slice(0,10)).getTime() &&
-                    new Date(order.createdAt).getTime() < new Date(this.filtered.slice(14,24)).getTime())
+                    new Date(order.createdAt).getTime() <= new Date(this.filtered.slice(14,24)).getTime())
 
           })
           console.log("filteredList", newOrders)
@@ -246,8 +247,7 @@ name: "Orders",
       this.filtered = this.$moment().format("YYYY-MM-DD")
     },
     filteredBetweenDate(){
-      const value = $('#datepicker').val();
-      this.filtered = value
+      this.filtered = this.between_value
     },
     toggleSelect: function () {
       this.orderList.forEach((user)=> {
@@ -375,10 +375,20 @@ name: "Orders",
           var str = '';
           str += start ? start.format('YYYY-MM-DD') + ' to ' : '';
           str += end ? end.format('YYYY-MM-DD') : '...';
-          document.getElementById('datepicker').value=str;
+          this.between_value = str;
+          this.filter_between_date = str
           this.filteredBetweenDate()
       }
     });
+    const to_date = this.$moment().subtract(1, "days").format("YYYY-MM-DD")
+    const from_date = this.$moment().format('YYYY-MM-DD')
+    this.between_value = to_date + ' to ' + from_date;
+
+    console.log(new Date(this.filtered.slice(0,10)).getTime())
+    console.log(new Date(this.filtered.slice(14,24)).getTime())
+
+
+
   },
 
 

@@ -141,22 +141,25 @@ name: "AddNews",
         
         this.axios.post(this.url('addNews'), form)
             .then(() => {
-                
                 setTimeout(()=>{ 
                     this.$emit('getNews')
                     $('#add-news').modal("hide")
+                    this.news = {
+                        name: '',
+                        desc: '',
+                        category:false,
+                        img: '',
+                        startDate:'',
+                        endDate: ''
+                    }
                  }, 500);
                 this.$successAlert('News has been added')
-            }).catch((error) => {
-                console.log("fail", error)
-            })
-            this.newProduct = {
-                name: '',
-                price:'',
-                quantity:'',
-                category: '',
-                img:''
-            }
+            }).catch((error)=>{
+                if(error.response && error.response.data){
+                    this.$warningAlert(error.response.data.msg)
+                }
+            });
+            
         },
 
   },

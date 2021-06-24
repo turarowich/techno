@@ -127,9 +127,8 @@ app.use('/', VerifyDB,require('./routes/home.js')(router, passport))
 app.use((err, req, res, next) => {
     console.log('NEIIIIIIIIIIIIIIIIIIIIIn');
     if (err.httpStatusCode === 404) {
-        res.status(400).render('NotFound');
+        res.status(404).render('NotFound');
     }
-    next(err);
 });
 
 // handles unauthorized errors
@@ -139,7 +138,6 @@ app.use((err, req, res, next) => {
     if (err.httpStatusCode === 304) {
         res.status(304).render('Unauthorized');
     }
-    next(err);
 })
 
 

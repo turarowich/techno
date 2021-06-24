@@ -286,11 +286,15 @@ export default {
         console.log(response);
         that.displayMessages(['Added']);
         that.$router.push('/loyalty/promocode')
-      }).catch(function(error){
+      }).catch((error)=>{
         if (error.response) {
           // console.log(error.response.status);
           // console.log(error.response.headers);
-          that.displayMessages(Object.values(error.response.data.errors));
+            if(error.response.data && !error.response.data.errors){
+                this.$warningAlert(error.response.data.msg)
+            }
+            that.displayMessages(Object.values(error.response.data.errors));
+            
         }
       });
     },

@@ -280,13 +280,16 @@ export default {
       document.body.removeChild(textArea);
     },
     updateCatalogUrl(){
-      // let that=this;
+      let that=this;
       let url = this.url('updateSettings');
       this.axios.put(url, {
         catalogUrl:this.catalogUrl
       }).then(function (response) {
         console.log(response);
       }).catch(function(error){
+          if(error.response.data && !error.response.data.errors){
+                that.$warningAlert(error.response.data.msg)
+            }
         if (error.response) {
           // console.log(error.response.status);
           // console.log(error.response.headers);
@@ -325,6 +328,9 @@ export default {
 
       }).catch(function(error){
         if (error.response) {
+            if(error.response.data && !error.response.data.errors){
+                that.$warningAlert(error.response.data.msg)
+            }
           // console.log(error.response.status);
           // console.log(error.response.headers);
           // that.displayMessages(Object.values(error.response.data.errors),"Errors");
@@ -362,6 +368,9 @@ export default {
         that.$successAlert('Updated');
       }).catch(function(error){
         if (error.response) {
+            if(error.response.data && !error.response.data.errors){
+                that.$warningAlert(error.response.data.msg)
+            }
           // console.log(error.response.status);
           // console.log(error.response.headers);
           // that.displayMessages(Object.values(error.response.data.errors),"Errors");
@@ -399,7 +408,12 @@ export default {
         // that.$router.push('/loyalty/promocode')
       }).catch(function(error){
         if (error.response) {
-          that.$warningAlert('Something went wrong');
+            if(error.response.data && !error.response.data.errors){
+                that.$warningAlert(error.response.data.msg)
+            }else{
+                that.$warningAlert('Something went wrong');
+            }
+          
           // console.log(error.response.status);
           // console.log(error.response.headers);
           // that.displayMessages(Object.values(error.response.data.errors),"Errors");

@@ -1,4 +1,4 @@
-const { useDB, sendError } = require('../../services/helper')
+const { useDB, sendError, checkAccess } = require('../../services/helper')
 var validate = require('../../config/messages');
 class PromocodeController{
     
@@ -6,6 +6,12 @@ class PromocodeController{
         let db = useDB(req.db)
         let Promocode = db.model("Promocode");
         let Products = db.model("Product");
+        if (req.userType == "employee") {
+            let checkResult = await checkAccess(req.userID, { access: "loyalty", parametr: "active" }, db, res)
+            if (checkResult) {
+                return;
+            }
+        }
         let result = {
             'status': 200,
             'msg': 'Sending promocode'
@@ -28,7 +34,13 @@ class PromocodeController{
     getPromocodes = async function (req, res) {
         let db = useDB(req.db)
         let Promocode = db.model("Promocode");
-
+        if (req.userType == "employee") {
+            let checkResult = await checkAccess(req.userID, { access: "loyalty", parametr: "active" }, db, res)
+            if (checkResult) {
+                return;
+            }
+        }
+        
         let result = {
             'status': 200,
             'msg': 'Sending promocodes'
@@ -47,6 +59,12 @@ class PromocodeController{
         let db = useDB(req.db)
         let Promocode = db.model("Promocode");
         let new_promocode =  req.fields;
+        if (req.userType == "employee") {
+            let checkResult = await checkAccess(req.userID, { access: "loyalty", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
+        }
         let result = {
             'status': 200,
             'msg': 'Promocode added'
@@ -76,7 +94,12 @@ class PromocodeController{
     updatePromocode = async function (req, res) {
         let db = useDB(req.db)
         let Promocode = db.model("Promocode");
-
+        if (req.userType == "employee") {
+            let checkResult = await checkAccess(req.userID, { access: "loyalty", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
+        }
         let result = {
             'status': 200,
             'msg': 'Promocode updated'
@@ -96,7 +119,12 @@ class PromocodeController{
     deletePromocode = async function (req, res) {
         let db = useDB(req.db)
         let Promocode = db.model("Promocode");
-
+        if (req.userType == "employee") {
+            let checkResult = await checkAccess(req.userID, { access: "loyalty", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
+        }
         let result = {
             'status': 200,
             'msg': 'Promocode deleted'
@@ -135,6 +163,12 @@ class PromocodeController{
         let db = useDB(req.db)
         let Promocode = db.model("Promocode");
         let search = req.query.search;
+        if (req.userType == "employee") {
+            let checkResult = await checkAccess(req.userID, { access: "loyalty", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
+        }
         let result = {
             'status': 200,
             'msg': 'Sending promocodes'
@@ -153,7 +187,12 @@ class PromocodeController{
         let sum = req.query.sum;
         let type = req.query.type;
         let date = req.query.date;
-        console.log(sum,date,search,req.db,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        if (req.userType == "employee") {
+            let checkResult = await checkAccess(req.userID, { access: "loyalty", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
+        }
         let result = {
             'status': 200,
             'msg': 'Promocode is valid',

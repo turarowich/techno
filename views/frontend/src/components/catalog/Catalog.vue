@@ -15,11 +15,10 @@
           </button>
 
           <div class="move-category dropdown-menu" aria-labelledby="dropdownMenuTotal">
-                <div class="move-category-item" v-for="cat in listCategory" :key="cat._id" @click="moveCategory(cat._id)">{{cat.name}}</div>
+                <div class="move-category-item" v-for="cat in listCategory.slice(1)" :key="cat._id" @click="moveCategory(cat._id)">{{cat.name}}</div>
           </div>
         </div>
         <button class="app-buttons-item" data-turbolinks="true"  data-toggle="modal" data-target="#import-client"><img src="../../assets/icons/import.svg"><span>Import</span></button>
-
 
         <div class="dropdown">
           <button class="app-buttons-item dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
@@ -77,7 +76,7 @@
                 </p>
                 <div class="dropdown dropMenu">
                     <div class="dropdown-toggle" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img v-if="category._id !== ''" src="../../assets/icons/three-dots.svg">
+                    <img v-if="category._id !== '' && category._id !== null" src="../../assets/icons/three-dots.svg">
                 </div>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenu">
                     <ul class="list-group" >
@@ -179,7 +178,7 @@ name: "Catalog",
       movedCategories:[],
       search:'',
       sorting:true,
-      filtered: '',
+      filtered: null,
       perPage: 8,
       currentPage: 1,
       selectAll:false,
@@ -221,10 +220,17 @@ name: "Catalog",
           })
           .filter(product => {
             if(this.filtered){
-              return product.category && product.category._id.includes(this.filtered)
+              return product.category && product.category._id.includes(this.filtered);
             }
             return true;
           })
+          .filter(product=>{
+            if(this.filtered === ""){
+              return product.category === null
+            }
+            return true
+          })
+
     },
     catalogToDisplay: function(){
       let start = (this.currentPage - 1) * this.perPage
@@ -294,23 +300,21 @@ name: "Catalog",
         if (result.isConfirmed) {
           this.axios.delete(this.url('deleteProducts'),{data:{
               objects: this.deletedProducts
-
-            }})
-              .then(()=>{
+            }}).then(()=>{
                 this.getProducts()
                 this.deletedProducts = []
                 $('#parent-check').prop('checked',false)
                 this.$successAlert('All products have been removed')
-              })
+            }).catch((error)=>{
+                if(error.response && error.response.data){
+                    this.$warningAlert(error.response.data.msg)
+                }
+            });
         }
         else{
           this.deletedProducts = []
         }
-      }).catch((error)=>{
-            if(error.response && error.response.data){
-                this.$warningAlert(error.response.data.msg)
-            }
-      });
+      })
     }
 
     },
@@ -395,14 +399,13 @@ name: "Catalog",
                   },
 
                 }
-            )
-          })
+            )}).catch((error)=>{
+                if(error.response && error.response.data){
+                    this.$warningAlert(error.response.data.msg)
+                }
+            });
        }
-      }).catch((error)=>{
-            if(error.response && error.response.data){
-                this.$warningAlert(error.response.data.msg)
-            }
-      });
+      })
     },
     deleteCategory(id){
 
@@ -465,7 +468,8 @@ name: "Catalog",
        this.axios.get(this.url('getCategories')+'?type=product')
           .then((res)=>{
             this.listCategory = res.data.objects;
-            this.listCategory.unshift({_id:"", name: 'All'})
+            this.listCategory.unshift({_id:"", name: 'Without category'})
+            this.listCategory.unshift({_id:null, name: 'All'})
 
           })
     },

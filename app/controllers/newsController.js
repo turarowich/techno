@@ -8,7 +8,10 @@ class NewsController {
         let db = useDB(req.db)
         let News = db.model("News");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "news", parametr: "active" }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "news", parametr: "active" }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -27,7 +30,10 @@ class NewsController {
         let db = useDB(req.db)
         let News = db.model("News");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "news", parametr: "active" }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "news", parametr: "active" }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -48,7 +54,10 @@ class NewsController {
         let db = useDB(req.db)
         let News = db.model("News");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "news", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "news", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -107,7 +116,10 @@ class NewsController {
         let db = useDB(req.db)
         let News = db.model("News");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "news", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "news", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -151,8 +163,12 @@ class NewsController {
         let db = useDB(req.db)
         let News = db.model("News");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "news", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "news", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult){
+                return;
+            }
         }
+        console.log("here")
         let result = {
             'status': 200,
             'msg': 'News deleted'

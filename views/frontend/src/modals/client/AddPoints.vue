@@ -15,14 +15,14 @@
             </button>
           </div>
           <div class="modal-body category-body">
-            <form class="modal-form">
+            <!-- <form class="modal-form"> -->
               <label>Quantity</label><br>
               <input  class="cashback-input mb-3"  placeholder="Enter a quantity">
 
               <label>Comments</label><br>
               <textarea class="general-area p-2" placeholder="Description"></textarea>
               <button  class="save">Add</button>
-            </form>
+            <!-- </form> -->
           </div>
         </div>
       </div>
@@ -31,8 +31,35 @@
 </template>
 
 <script>
+import $ from "jquery";
 export default {
-  name: "AddPoints"
+    name: "AddPoints",
+    data(){
+        return{
+            points: 0,
+            comment: 0,
+        }
+    },
+    methods:{
+
+        onSubmit(){
+            this.axios.post(this.url('addPoints'),{
+                // client: this.client._id,
+                points: this.points,
+                comment: this.comment,
+            })
+            .then(()=>{
+                this.$informationAlert("Successfull")
+                this.getClients()
+                $('#add-points').modal("hide")
+            }).catch((error)=>{
+                if(error.response && error.response.data){
+                    this.$warningAlert(error.response.data.msg)
+                }
+            });
+
+        },
+    }
 }
 </script>
 

@@ -5,25 +5,25 @@
   </div>
   <div class="d-flex align-items-center path-box" @click="$router.go(-1)"><img class="mr-2" src="../../../assets/clients/slide.svg"><h3 class="path-title">{{$route.name}}</h3></div>
   <div class="row">
-    <div class="col-lg-9">
+    <div class="col-lg-8 mb-5">
 
       <div class="client-table-header">
-        <div class="client-table-head" style="width:40%">Products</div>
-        <div class="client-table-head" style="width:20%">Amount</div>
+        <div class="client-table-head head-name" style="width:40%">Products</div>
+        <div class="client-table-head head-amount" style="width:20%">Amount</div>
 <!--        <div class="client-table-head" style="width:14%">Discount%</div>-->
 <!--        <div class="client-table-head" style="width:14%">DiscountSum</div>-->
-        <div class="client-table-head" style="width:30%">Price</div>
+        <div class="client-table-head head-price" style="width:30%">Price</div>
         <div class="client-table-head" style="width:10%"></div>
 
       </div>
       <BasketItem @checkPromocode_child="checkPromocode" />
     </div>
 
-    <div class="col-lg-3">
+    <div class="col-lg-4 col-md-6">
         <div v-if="countOrders>0" class="sales">
 
           <div v-if="!clientAuth">
-            <h3 class="cashback-sub-title" style="color:#616CF5;">Log In or register, to receive points and/or use them</h3>
+            <h3 class="cashback-sub-title mb-4" style="color:#616CF5;">Log In or register, to receive points and/or use them</h3>
             <div  class="auth_btns_wrapper">
               <router-link style="flex: 1;" :to="`/${currentCompanyCatalog}/signin`"><span>Log In</span></router-link>
               <router-link style="flex: 1;" :to="`/${currentCompanyCatalog}/signup`"><span>Register</span></router-link>
@@ -49,7 +49,7 @@
             </div>
           </div>
 
-          <div class="mb-1 sales-input d-flex">
+          <div class="mb-3 sales-input d-flex">
             <input v-model="searchText" class="cashback-input" placeholder="Enter a promocode">
             <img @click="searchPromocode" class="promocodeCheckBtn" src="../../../assets/icons/check_mark.svg">
           </div>
@@ -542,7 +542,7 @@ name: "Basket",
   color:#484848;
 }
 .discount{
-  margin-bottom: 0;
+  margin-bottom: 20px;
 }
 .total .delivery{
   margin-bottom: 5px;
@@ -689,5 +689,16 @@ name: "Basket",
   border-radius: 5px;
   padding: 5px;
   cursor: pointer;
+}
+@media(max-width:481px){
+  .head-price{
+    display:none;
+  }
+  .head-name{
+    width: 58% !important;
+  }
+  .head-amount{
+    width: 40%;
+  }
 }
 </style>

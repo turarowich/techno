@@ -103,7 +103,11 @@ export default {
                   },
                 }
             )
-          })
+          }).catch((error)=>{
+                if(error.response && error.response.data){
+                    this.$warningAlert(error.response.data.msg)
+                }
+            });
        }
       })
           

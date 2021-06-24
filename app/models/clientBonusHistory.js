@@ -21,7 +21,7 @@ const clientBonusHistorySchema = new Schema({
     type: {
         type: String,
         required: false,
-        enum: ['received', 'used']
+        enum: ['received', 'used', 'deducted']
     },
 
     createdAt: {

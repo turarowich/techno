@@ -24,12 +24,12 @@
                   <div style="width:25%;">
                     <label class="product-label">Select category</label>
 
-                    <select v-if="currentData.category ? currentData.category._id : ''"   name="category" v-model="currentData.category._id"  class="form-control mb-0 select-phone" >
-                      <option :value="cat._id" v-for="cat in listCategory" :key="cat._id">{{cat.name}}</option>
+                    <select v-if="currentData.category"   name="category" v-model="currentData.category._id"  class="form-control mb-0 select-phone" >
+                      <option :value="cat._id" v-for="cat in listCategory.slice(1)" :key="cat._id">{{cat.name}}</option>
                     </select>
 
                     <select v-else  name="category" v-model="no_category"  class="form-control mb-0 select-phone" >
-                      <option :value="cat._id" v-for="cat in listCategory" :key="cat._id">{{cat.name}}</option>
+                      <option :value="cat._id" v-for="cat in listCategory.slice(1)" :key="cat._id">{{cat.name}}</option>
                     </select>
                   </div>
                 </div>
@@ -94,12 +94,12 @@
                   <input @change="onFileChange($event)" ref="addImage" class="d-none" multiple id="imgsArray" type="file" name="imgArray">
                 </label>
                 <div  class="d-flex">
-                   <div v-if="currentData.img !== ''">
+                   <div v-if="currentData.img">
                       <img v-if="typeof currentData.img === 'string'" :src="imgSrc+'/'+currentData.img" class="show-images mr-2">
                       <img v-else :src="mainImg" class="show-images mr-2">
 
                    </div>
-                    <div v-if="currentData.img !== ''" class="selected-overlay">
+                    <div v-if="currentData.img" class="selected-overlay">
                       <img  @click="currentData.img = ''" class="remove-images" src="../../../assets/icons/deleteClient.svg">
                     </div>
                    <div v-for="(img, index) in imagePreview" :key="index" >
@@ -147,11 +147,11 @@ export default {
       promoStartLightpick:{},
       promoEndLightpick:{},
       promoStart: {
-        obj:{},
+        obj:"",
         formatted:'',
       },
       promoEnd: {
-        obj:{},
+        obj:"",
         formatted:'',
       },
     }
@@ -217,7 +217,7 @@ export default {
     onFileChange() {
       $.each($("#imgsArray")[0].files, (i,file)=> {
          console.log(i)
-          if(this.currentData.img === ''){
+          if(this.currentData.img === '' || this.currentData.img === undefined){
             this.currentData.img = file
           }
           else{
@@ -243,13 +243,23 @@ export default {
          form.append('imgArray'+item, updatedProduct.imgArray[item])
       }
 
-     if(updatedProduct.category){
-       form.append('category',updatedProduct.category._id)
-     }
-     else{
+      if(this.promoStart.obj != ""){
+        form.append("promoStart", this.promoStart.obj)
+      }
+      if(this.promoEnd.obj != ""){
+        form.append("promoEnd", this.promoEnd.obj)
+      }
+
+      if(updatedProduct.category){
+        form.append('category',updatedProduct.category._id)
+      }
+      else{
        form.append('category',this.no_category)
-     }
-      form.append('img',updatedProduct.img)
+      }
+      if(updatedProduct.img || updatedProduct.img === ''){
+        form.append('img', updatedProduct.img)
+      }
+
       form.append("name", updatedProduct.name)
       form.append("name_ru", updatedProduct.name_ru)
       form.append("quantity", updatedProduct.quantity)
@@ -257,19 +267,25 @@ export default {
       form.append("description", updatedProduct.description)
       form.append("promoPrice", updatedProduct.promoPrice)
       form.append("vendorCode", updatedProduct.vendorCode)
-      form.append("promoStart", this.promoStart.obj)
-      form.append("promoEnd", this.promoEnd.obj)
 
-      this.axios.put(this.url('updateProduct',updatedProduct._id),form)
-      .then(()=>{
-        this.getProducts()
-         this.$informationAlert('Changes are saved')
-         $('#edit-product').modal("hide")
-      }).catch((error)=>{
-            if(error.response && error.response.data){
-                this.$warningAlert(error.response.data.msg)
-            }
-      });
+      if(updatedProduct.promoPrice > updatedProduct.price){
+        this.$warningAlert("Promotional price must be < original price")
+      }
+      else{
+        this.axios.put(this.url('updateProduct',updatedProduct._id),form)
+            .then(()=>{
+              this.getProducts()
+              this.$informationAlert('Changes are saved')
+              $('#edit-product').modal("hide")
+              this.no_category = '';
+            }).catch((error)=>{
+          if(error.response && error.response.data){
+            this.$warningAlert(error.response.data.msg)
+          }
+        });
+      }
+
+
     }
   },
 

@@ -10,7 +10,10 @@ class EmployeeController{
         let db = useDB(req.db)
         let Employee = db.model("Employee");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "settings", parametr: "active" }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "settings", parametr: "active" }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -32,7 +35,11 @@ class EmployeeController{
         let db = useDB(req.db)
         let Employee = db.model("Employee");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "settings", parametr: "active" }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "settings", parametr: "active" }, db, res)
+            console.log(checkResult);
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -54,7 +61,10 @@ class EmployeeController{
         let db = useDB(req.db)
         let Employee = db.model("Employee");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -105,7 +115,10 @@ class EmployeeController{
         let db = useDB(req.db)
         let Employee = db.model("Employee");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -171,7 +184,10 @@ class EmployeeController{
         let db = useDB(req.db)
         let Employee = db.model("Employee");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
@@ -205,7 +221,10 @@ class EmployeeController{
         let db = useDB(req.db)
         let Employee = db.model("Employee");
         if (req.userType == "employee") {
-            await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+            let checkResult = await checkAccess(req.userID, { access: "settings", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
         }
         let result = {
             'status': 200,
