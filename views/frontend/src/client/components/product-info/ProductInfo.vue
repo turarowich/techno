@@ -167,7 +167,7 @@ export default {
     confirmNorder(){
       let that=this;
       const options = {
-        headers: {"company_url": this.currentCompanyCatalog}
+        headers: {"x-client-url": this.currentCompanyCatalog}
       }
       let url = this.url('addOrderWeb');
       let products = this.shoppingCart.map(function (order){
@@ -209,7 +209,7 @@ export default {
     getFuturePoints(){
       let that=this;
       const options = {
-        headers: {"company_url": this.currentCompanyCatalog}
+        headers: {"x-client-url": this.currentCompanyCatalog}
       }
       let url = this.url('getEarnedPoints');
       let data = {

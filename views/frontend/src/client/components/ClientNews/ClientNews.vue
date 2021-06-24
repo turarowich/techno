@@ -24,7 +24,7 @@ name: "News",
   methods:{
     async  getNews(){
       const options = {
-        headers: {"company_url": this.currentCompanyCatalog}
+        headers: {"x-client-url": this.currentCompanyCatalog}
       }
       await this.axios.get(this.url('getNewsWeb'),options)
           .then((response) => {

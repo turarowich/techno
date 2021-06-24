@@ -81,7 +81,7 @@ export default {
     register(){
       let that=this;
       const options = {
-        headers: {"company_url": this.currentCompanyCatalog}
+        headers: {"x-client-url": this.currentCompanyCatalog}
       }
       let url = this.url('registerClient');
       let data = {

@@ -51,7 +51,7 @@ export default {
   methods:{
     async  getOneNews(){
       const options = {
-        headers: {"company_url": this.currentCompanyCatalog}
+        headers: {"x-client-url": this.currentCompanyCatalog}
       }
       await this.axios.get(this.url('getSingleNewsWeb',this.$route.params.id),options)
           .then((response) => {

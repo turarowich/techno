@@ -88,7 +88,7 @@ name: "Dashboard",
     },
     async  getNews(){
       const options = {
-        headers: {"company_url": this.currentCompanyCatalog}
+        headers: {"x-client-url": this.currentCompanyCatalog}
       }
       await this.axios.get(this.url('getNewsWeb'),options)
           .then((response) => {
@@ -100,7 +100,7 @@ name: "Dashboard",
   beforeCreate() {
     (async () => {
       const options = {
-        headers: {"company_url": this.$route.params.bekon,"X-Client-Url": this.$route.params.bekon}
+        headers: {"X-Client-Url": this.$route.params.bekon}
       }
       await this.axios.get(this.url('getCatalogSettings'),options)
           .then((response) => {
@@ -150,7 +150,7 @@ name: "Dashboard",
     this.getNews();
     const options = {
       headers: {
-        "company_url": this.currentCompanyCatalog,
+        "x-client-url": this.currentCompanyCatalog,
         "x-access-token": this.userToken,
       }
     }

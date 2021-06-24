@@ -83,7 +83,7 @@ export default {
       let that=this;
       const options = {
         headers: {
-          "company_url": this.currentCompanyCatalog,
+          "x-client-url": this.currentCompanyCatalog,
           "x-access-token": this.userToken,
         }
 

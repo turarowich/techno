@@ -59,7 +59,7 @@ export default {
     },
     login(){
       const options = {
-        headers: {"company_url": this.currentCompanyCatalog}
+        headers: {"x-client-url": this.currentCompanyCatalog}
       }
       console.log(this.currentCompanyCatalog,"currentCompanyCatalog");
       let url = this.url_home('loginEmployee');

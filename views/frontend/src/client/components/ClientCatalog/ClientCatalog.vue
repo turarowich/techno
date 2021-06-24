@@ -94,7 +94,7 @@ name: "Catalog",
     },
     async  getProducts(){
       const options = {
-        headers: {"company_url": this.currentCompanyCatalog}
+        headers: {"x-client-url": this.currentCompanyCatalog}
       }
       await this.axios.get(this.url('getClientProducts'),options)
           .then((response) => {
@@ -105,7 +105,7 @@ name: "Catalog",
 
     async getCategories() {
       const options = {
-        headers: {"company_url": this.currentCompanyCatalog}
+        headers: {"x-client-url": this.currentCompanyCatalog}
       }
       await this.axios.get(this.url('getClientCategories')+'?type=product',options)
           .then((res) => {

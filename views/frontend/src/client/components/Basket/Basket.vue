@@ -320,7 +320,7 @@ name: "Basket",
           "date":new Date(),
           "sum": this.total_price,
         },
-        headers: {"company_url": this.currentCompanyCatalog}
+        headers: {"x-client-url": this.currentCompanyCatalog}
       }).then(function(response){
         let data = response.data.object;
         if(data){

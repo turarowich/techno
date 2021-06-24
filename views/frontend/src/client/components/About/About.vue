@@ -81,7 +81,7 @@ export default {
   beforeCreate() {
     (async () => {
       const options = {
-        headers: {"company_url": this.$route.params.bekon}
+        headers: {"x-client-url": this.$route.params.bekon}
       }
       await this.axios.get(this.url('getCatalogSettings'),options)
           .then((response) => {
