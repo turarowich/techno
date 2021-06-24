@@ -39,11 +39,11 @@
           </div>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
             <ul class="list-group " >
-              <li class="list-group-item" v-on:click="statusChange(order,'Done')">Done</li>
-              <li class="list-group-item" data-toggle="modal" data-target="#edit-order" @click="$emit('selectOrder',order._id)">Edit</li>
-              <li class="list-group-item" @click="statusChange(order, 'Canceled')">Cancel</li>
-              <li class="list-group-item" v-on:click="$emit('deleteOrder',order._id)">Delete</li>
-              <li class="list-group-item" v-on:click="statusChange(order, 'In Progress')">In progress</li>
+              <li v-if="check()" class="list-group-item" data-toggle="modal" data-target="#edit-order" @click="$emit('selectOrder',order._id)">Edit</li>
+              <li v-if="check()" class="list-group-item" v-on:click="$emit('deleteOrder',order._id)">Delete</li>
+              <li v-if="check('canChangeOrderStatus', null, null)" class="list-group-item" v-on:click="statusChange(order,'Done')">Done</li>
+              <li v-if="check('canChangeOrderStatus', null, null)" class="list-group-item" @click="statusChange(order, 'Canceled')">Cancel</li>
+              <li v-if="check('canChangeOrderStatus', null, null)" class="list-group-item" v-on:click="statusChange(order, 'In Progress')">In progress</li>
             </ul>
           </div>
         </div>
@@ -76,6 +76,9 @@ export default {
   },
 
   methods: {
+    check(access="orders", parametr="active", parametr2="canEdit"){
+        return this.checkAccess(access, parametr, parametr2)
+    },
     statusChange(order,status){
         this.axios.put(this.url('updateOrder',order._id), {status: status}).then(()=>{
             order.status = status;

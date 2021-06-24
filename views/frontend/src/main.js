@@ -69,6 +69,32 @@ app.config.globalProperties.socket = socket
 app.config.globalProperties.scrollToBottom = function(obj){
     $("#"+obj).scrollTop(1000000)
 }
+app.config.globalProperties.getUser = function () {
+    return JSON.parse(localStorage.getItem('user'))
+}
+app.config.globalProperties.isAdmin = function () {
+    let user = this.getUser()
+    if (user.rate != undefined && user.activeBefore != undefined) {
+        return true
+    }
+    return false
+}
+app.config.globalProperties.checkAccess = function (access, parametr=null, parametr2 = null) {
+    let user = this.getUser()
+    if (app.config.globalProperties.isAdmin()){
+        return true
+    }
+    if (!parametr && !parametr2){
+        if (user[access]){
+            return true
+        }
+    }else if (user[access] && user[access][parametr] && !parametr2) {
+        return true
+    } else if (user[access] && user[access][parametr] && user[access][parametr2]) {
+        return true
+    }
+    return false
+}
 var home_url = [
     'login',
     'register',

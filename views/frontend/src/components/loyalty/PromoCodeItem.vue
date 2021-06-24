@@ -14,12 +14,12 @@
      <div  style="width: 16%;">{{promocode.code}}</div>
      <div  style="width: 16%;">{{promocode.endDate.slice(0,10) }}</div>
      <div  style="width: 13%;" >
-       <div class="history-btn" data-toggle="modal" data-target="#history-promocode">
+       <div  v-if="check()" class="history-btn" data-toggle="modal" data-target="#history-promocode">
          <img src="../../assets/icons/History.svg">
        </div>
      </div>
      <div  style="width:3%">
-       <div class="dropleft dropMenu">
+       <div v-if="check()" class="dropleft dropMenu">
          <div class="dropdown-toggle" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
            <img  src="../../assets/icons/three-dots.svg" class="three-dots">
          </div>
@@ -47,6 +47,9 @@ export default {
     this.$store.dispatch("Promocode/setPromocodeAPI",{axios:this.axios,url:this.url('getPromocodes')});
   },
   methods:{
+    check(access="loyalty", parametr="active", parametr2="canEdit"){
+        return this.checkAccess(access, parametr, parametr2)
+    },
     getEditPromocode(id){
       let that = this;
       this.axios.get(this.url('getPromocode'),{

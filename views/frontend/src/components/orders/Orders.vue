@@ -3,9 +3,9 @@
     <div class="searchAndButtons">
     <div class="d-flex justify-content-between app-buttons">
       <div class="d-flex align-items-center">
-        <button class="app-buttons-item adding-btns" data-toggle="modal" data-target="#add-order"><span>+ Add order</span></button>
-        <button class="app-buttons-item" @click="deleteAllOrder"><img class="img-btn" src="../../assets/icons/trash_empty.svg" ><span>Remove</span></button>
-        <button class="app-buttons-item" @click="exportOrder"><img class="img-btn" src="../../assets/icons/set.svg"><span>Export to Excell </span></button>
+        <button v-if="check()" class="app-buttons-item adding-btns" data-toggle="modal" data-target="#add-order" ><span>+ Add order</span></button>
+        <button v-if="check()" class="app-buttons-item" @click="deleteAllOrder"><img class="img-btn" src="../../assets/icons/trash_empty.svg" ><span>Remove</span></button>
+        <button v-if="check()" class="app-buttons-item" @click="exportOrder"><img class="img-btn" src="../../assets/icons/set.svg"><span>Export to Excell </span></button>
         <div class="dropdown filter-drops">
           <button class="app-buttons-item dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
             <img class="img-btn" src="../../assets/icons/filter.svg"><span>Filter</span>
@@ -122,27 +122,28 @@ name: "Orders",
   },
   data(){
     return{
-      between_value:'',
-      deletedOrders:[],
-      orderList:[],
-      select_order:'',
-      data_check:{
-        client_checked:true,
-        phone_checked:false,
-        date_checked:false,
-        notes_checked:false
-      },
-      filter_by_status: '',
-      price_from:'',
-      price_to:'',
-      sorting:true,
-      search:'',
-      filtered:this.$moment().format("YYYY-MM-DD"),
-      selectAll: false,
-      currentPage:1,
-      perPage:8,
-      total_price:'',
-
+        between_value:'',
+        deletedOrders:[],
+        orderList:[],
+        select_order:'',
+        data_check:{
+            client_checked:true,
+            phone_checked:false,
+            date_checked:false,
+            notes_checked:false
+        },
+        filter_by_status: '',
+        price_from:'',
+        price_to:'',
+        sorting:true,
+        search:'',
+        filtered:this.$moment().format("YYYY-MM-DD"),
+        selectAll: false,
+        currentPage:1,
+        perPage:8,
+        total_price:'',
+        user: this.getUser(),
+        isAdmin: this.isAdmin()
     }
   },
 
@@ -175,7 +176,6 @@ name: "Orders",
                     new Date(order.createdAt).getTime() <= new Date(this.filtered.slice(14,24)).getTime())
 
           })
-          console.log("filteredList", newOrders)
           return newOrders
     },
     orderToDisplay: function(){
@@ -185,7 +185,6 @@ name: "Orders",
         value.index = index
         return value
       })
-      console.log("ordertodisplay", this.filteredList.slice(start, end))
       return this.filteredList.slice(start, end)
     },
     totalPages:function(){
@@ -199,6 +198,9 @@ name: "Orders",
     },
   },
   methods: {
+    check(access="orders", parametr="active", parametr2="canEdit"){
+        return this.checkAccess(access, parametr, parametr2)
+    },
     selectOrder(id){
       this.orderList.map((item)=>{
         if(item._id === id) {
@@ -212,7 +214,6 @@ name: "Orders",
       this.axios.get(this.url('getOrders')+'?populate=client')
       .then((response)=>{
         this.orderList = response.data.objects;
-        console.log(this.orderList)
       })
     },
     checkAll(item){
@@ -383,12 +384,6 @@ name: "Orders",
     const to_date = this.$moment().subtract(1, "days").format("YYYY-MM-DD")
     const from_date = this.$moment().format('YYYY-MM-DD')
     this.between_value = to_date + ' to ' + from_date;
-
-    console.log(new Date(this.filtered.slice(0,10)).getTime())
-    console.log(new Date(this.filtered.slice(14,24)).getTime())
-
-
-
   },
 
 

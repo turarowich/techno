@@ -3,7 +3,7 @@
   <div class="searchAndButtons">
     <div class="d-flex justify-content-between app-buttons">
       <div class="d-flex align-items-center">
-        <button class="app-buttons-item adding-btns" data-toggle="modal" data-target="#add-news"><span>+ Add news</span></button>
+        <button v-if="check()" class="app-buttons-item adding-btns" data-toggle="modal" data-target="#add-news"><span>+ Add news</span></button>
       </div>
     </div>
     <div class="main-search d-flex align-items-center ">
@@ -54,6 +54,9 @@ export default {
         }
   },
   methods:{
+    check(access="news", parametr="active", parametr2="canEdit"){
+        return this.checkAccess(access, parametr, parametr2)
+    },
     getNews(){
         this.axios.get(this.url('getNews'))
             .then((response) => {

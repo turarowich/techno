@@ -3,9 +3,9 @@
   <div class="searchAndButtons">
     <div class="d-flex justify-content-between app-buttons">
       <div class="d-flex align-items-center">
-        <button class="app-buttons-item adding-btns" @click="getAddPromocode"><span>+ Add promocode</span></button>
+        <button v-if="check()" class="app-buttons-item adding-btns" @click="getAddPromocode"><span>+ Add promocode</span></button>
 
-        <button class="app-buttons-item"><img src="../../assets/icons/trash_empty.svg"><span>Remove</span></button>
+        <button v-if="check()" class="app-buttons-item"><img src="../../assets/icons/trash_empty.svg"><span>Remove</span></button>
       </div>
     </div>
     <div class="main-search d-flex align-items-center ">
@@ -52,6 +52,9 @@ export default {
     HistoryPromocode
   },
   methods:{
+    check(access="loyalty", parametr="active", parametr2="canEdit"){
+        return this.checkAccess(access, parametr, parametr2)
+    },
     getAddPromocode(){
       this.$router.push('/add-promo-page');
       this.$store.dispatch("Promocode/setEditState",false);
