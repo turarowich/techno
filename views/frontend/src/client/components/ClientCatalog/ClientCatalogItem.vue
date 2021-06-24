@@ -1,6 +1,6 @@
 <template>
-  <div class="row ">
-    <div class="col-lg-3 col-md-6 col-sm-6 product-box" v-for="product in catalog" :key="product._id">
+  <div class="row p-2 ">
+    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 product-box" v-for="product in catalog" :key="product._id">
       <div class="product-img"  @click="selectProduct(product._id)">
         <img v-if="!product.error" :src="server+'/'+product.img" @error="product.error=true">
         <img v-else src="../../../assets/icons/no-catalog.svg" >
@@ -8,7 +8,6 @@
       </div>
       <div class="product-add">
         <h2 style="overflow: hidden;text-overflow: ellipsis;">{{product.name}}</h2>
-        <h3></h3>
         <span v-if="checkDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} %%</span>
         <br>
         <span :class="{lineThrough:checkDates(product.promoStart,product.promoEnd)}">{{product.price}}</span>

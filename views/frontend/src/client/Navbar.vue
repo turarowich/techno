@@ -7,9 +7,9 @@
         <li @click="removeActive" class="client-list"><router-link class="client-link" :to="`/${currentCompanyCatalog}/about`"><img src="../assets/clients/info.svg"/>About us</router-link></li>
         <li @click="removeActive" v-if="!isLogged" class="client-list"><router-link class="client-link" :to="`/${currentCompanyCatalog}/signin`"><img class="mr-3" src="../assets/clients/Profile.svg"/>Login</router-link></li>
         <li  v-else class="client-list"><img src="../assets/clients/Profile.svg"/><router-link class="client-link" :to="`/${currentCompanyCatalog}/client-account`">My Account</router-link></li>
-        <li @mouseover="mouser" @mouseleave="close_drop" class="client-list hoverBasket dropdown">
+        <li @mouseover="mouser" @mouseleave="close_drop" @click="removeActive" class="client-list hoverBasket dropdown">
 
-          <router-link @click="removeActive"  class="client-link  d-inline-flex align-items-center" :to="`/${currentCompanyCatalog}/basket`" >
+          <router-link   class="client-link  d-inline-flex align-items-center" :to="`/${currentCompanyCatalog}/basket`" >
             <img src="../assets/clients/Buy.svg"/>Basket
             <div class="bg-not d-flex align-items-center">
               <span class="basket-not" v-if="countOrders > 0">{{countOrders}}</span>
