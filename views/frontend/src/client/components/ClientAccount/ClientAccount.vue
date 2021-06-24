@@ -161,7 +161,38 @@ name: "ClientAccount",
     }
     if(this.user){
       this.$store.dispatch("Client/updateUserData",{axios:this.axios,url:this.url('getClient',this.user._id),options:options});
+      this.socket.emit('join_cat', {user: this.user._id});
     }
+
+  },
+  created() {
+    this.socket.on("sendingHey", function(data) {
+      console.log(data);
+      alert(`${data.status},DAS ist ${data.code}`);
+
+      if (!("Notification" in window)) {
+        alert("This browser does not support desktop notification");
+      }
+
+      // Let's check whether notification permissions have already been granted
+      else if (Notification.permission === "granted") {
+        // If it's okay let's create a notification
+        var notification = new Notification(data.status);
+        console.log(notification);
+      }
+
+      // Otherwise, we need to ask the user for permission
+      else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then(function (permission) {
+          // If the user accepts, let's create a notification
+          if (permission === "granted") {
+            var notification = new Notification(data.status);
+            console.log(notification);
+          }
+        });
+      }
+
+    });
 
   }
 }

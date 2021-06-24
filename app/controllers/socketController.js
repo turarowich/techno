@@ -42,6 +42,9 @@ class SocketController {
             socket.to(socket.handshake.headers.mainRoom).emit("server news notification", data)
         }
     }
+    sendHey = async function (io) {
+        io.to('kaarov888@gmail.com').emit('sendingHey', {msg: 'sendingHey AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.'});
+    }
 }
 module.exports = new SocketController();
 

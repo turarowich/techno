@@ -12,10 +12,10 @@ var cashbackController = require('../app/controllers/cashbackController');
 var discountController = require('../app/controllers/discountController');
 var settingsController = require('../app/controllers/settingsController');
 var employeeController = require('../app/controllers/employeeController');
-
+var orderStatusController = require('../app/controllers/orderStatusController');
 var multer = require('multer');
 var upload = multer({ dest: '../public/product/' });
-module.exports = function (app, network_information) {
+module.exports = function (app, io) {
     //Clients url
     app.get('/getClient/:client', clientController.getClient);
     app.get('/getClients', clientController.getClients);
@@ -92,7 +92,8 @@ module.exports = function (app, network_information) {
     app.delete('/deleteOrder/:order', orderController.deleteOrder);
     app.delete('/deleteOrders', orderController.deleteOrders);
     app.post('/getOrderExcel', orderController.getOrderExcel);
-
+    //Change Order status
+    app.post('/updateOrderWeb', orderStatusController.create(io));
 
     // News url
     app.get('/getSingleNews/:news', newsController.getSingleNews);

@@ -23,7 +23,7 @@ name: "Conversation",
   props:['contact', 'messages'],
   methods:{
     sendMessage(text){
-        this.$emit('message', {user: this.contact._id, text: text, isIncoming: true })
+      this.$emit('message', {user: this.contact._id, text: text, isIncoming: true })
     }
   }
 }

@@ -87,7 +87,7 @@ export default {
         console.log(response);
         that.$successAlert('Logged in!');
         that.$store.dispatch("Client/setUserAuth",response.data);
-
+        localStorage.setItem('token', response.data.token);
         that.$router.push({ path: `/${that.currentCompanyCatalog}/client-account`});
         // that.$router.go(-1);
       }).catch(function(error){

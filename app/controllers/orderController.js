@@ -1,4 +1,5 @@
 const { useDB, sendError, createExcel, randomNumber, checkAccess } = require('../../services/helper')
+
 var validate = require('../../config/messages');
 const fs = require('fs');
 const { connect } = require('mongodb');
@@ -249,7 +250,7 @@ class OrderController{
             let query = { '_id': req.params.order }
             req.fields['updatedAt'] = new Date()
             var products = req.fields.products
-            req.fields.products = null
+            // req.fields.products = null  ?
             let order = await Order.findOneAndUpdate(query, req.fields)
             if(products && products.length){
                 order.products = []

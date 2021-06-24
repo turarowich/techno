@@ -29,6 +29,9 @@ export const PromocodeModule = {
             object.axios.get(object.url)
                 .then(response => {
                     commit('SET_PromocodesAPI', response.data.objects)
+                }).catch(function (error){
+                    console.log(error);
+                    commit('SET_PromocodesAPI', []);
                 })
         },
         setPromocodeFromSearch({ commit },array){

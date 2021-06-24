@@ -84,6 +84,14 @@ export default {
                     this.$warningAlert(error.response.data.msg)
                 }
         });
+
+        this.axios.post(this.url('updateOrderWeb'), {status: 'Done',order:order._id,code:order.code,client:order.client._id}).then(()=>{
+          console.log('456%');
+        }).catch((error)=>{
+          if(error.response && error.response.data){
+            this.$warningAlert(error.response.data.msg)
+          }
+        });
     },
     statusCancel(order){
       

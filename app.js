@@ -100,9 +100,23 @@ router.get("/auth/facebook", passport.authenticate("facebook", { authType: 'reau
 router.get("/auth/google", passport.authenticate("google", { authType: 'reauthenticate',scope: ['https://www.googleapis.com/auth/plus.login','https://www.googleapis.com/auth/userinfo.email','https://www.googleapis.com/auth/userinfo.profile']}));
 router.get("/auth/twitter", passport.authenticate("twitter", { authType: 'reauthenticate'}));
 
+
+const io = require('socket.io')(httpServer, {
+    cors: {
+        // origin: "http://localhost:3000",
+        origin: ["http://localhost:3000", "http://127.0.0.1:3000", "https://app.loygift.com", "http://10.121.6.29:3000", "*:*"],
+        methods: ["GET", "POST"],
+        credentials: true
+    },
+    path: '/socket.io',
+});
+io.sockets.setMaxListeners(0);
+require("./routes/socket.js")(io)
+
+
 app.use('/images', express.static(__dirname + '/views/frontend/images'))
 app.use('/files', express.static(__dirname + '/views/frontend/files'))
-app.use('/api', VerifyToken, require('./routes/api.js')(router))
+app.use('/api', VerifyToken, require('./routes/api.js')(router,io))
 app.use('/', VerifyDB,require('./routes/home.js')(router, passport))
 // app.use('/',require('./routes/home.js')(router, passport))
 
@@ -137,17 +151,7 @@ app.use((err, req, res, next) => {
     }
 });
 
-const io = require('socket.io')(httpsServer, {
-    cors: {
-        // origin: "http://localhost:3000",
-        origin: ["http://localhost:3000", "http://127.0.0.1:3000", "https://app.loygift.com", "http://10.121.6.29:3000", "*:*"],
-        methods: ["GET", "POST"],
-        credentials: true
-    },
-    path: '/socket.io',
-});
-io.sockets.setMaxListeners(0);
-require("./routes/socket.js")(io)
+
 
 httpServer.listen(config.port_http, () => {
     console.log(`App listening at http://${config.localhost}:${config.port_http}`);

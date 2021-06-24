@@ -42,6 +42,8 @@ const ax = axios.create({
         port: 8443
     },
 });
+console.log(process.env.VUE_APP_SERVER_URL,"process.env.VUE_APP_SERVER_URL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+console.log(localStorage.getItem('token'),"process.env.VUE_APP_SERVER_URL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 const socket = io(process.env.VUE_APP_SERVER_URL, {
     extraHeaders: {
         token: localStorage.getItem('token')

@@ -71,7 +71,7 @@ export default {
       this.list_of_discounts.push(copy);
 
       let that=this;
-      let url = this.base_url+'/api/addDiscount';
+      let url = this.url('addDiscount');
       this.axios.post(url,
         copy
       ).then(function (response) {

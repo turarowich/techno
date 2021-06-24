@@ -3,7 +3,9 @@ var config = require('../config/config');
 
 function verifyTokenSocket(socket, next) {
     // Header names in Express are auto-converted to lowercase
+    console.log(socket.handshake.headers,"verifyTokenSocket");
     var token = socket.handshake.headers.token
+
     if (!token){
         // return res.status(403).send({ auth: false, message: 'No token provided.' });
         next();

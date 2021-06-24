@@ -94,6 +94,7 @@ export default {
         console.log(response);
         that.$successAlert('Registered');
         that.$store.dispatch("Client/setUserAuth",response.data);
+        localStorage.setItem('token', response.data.token);
         // that.$router.go(-1);
         that.$router.push({ path: `/${that.currentCompanyCatalog}/client-account`});
       }).catch(function(error){
