@@ -107,7 +107,7 @@ name: "Catalog",
       const options = {
         headers: {"company_url": this.currentCompanyCatalog}
       }
-      await this.axios.get(this.url('getCategories')+'?type=product',options)
+      await this.axios.get(this.url('getClientCategories')+'?type=product',options)
           .then((res) => {
             this.listCategory = res.data.objects;
             this.listCategory.unshift({_id: 'all', name: 'All'})

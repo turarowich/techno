@@ -20,7 +20,7 @@ function verifyDB(req, res, next) {
         'getSingleNewsWeb',
     ];
     console.log(req.headers['company_url'],"MIDDLEWARE");
-    console.log(req.headers,"MIDDLEWARE");
+    console.log(req.headers,"HEADERS");
     let cat_url = req.headers['company_url'];
     let shoes_db = global.userConnection.useDb('loygift').model("catalogs");
     let catalogs_model = shoes_db.model("catalogs");
