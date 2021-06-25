@@ -204,7 +204,7 @@ name: "Orders",
         if(item._id === id) {
           this.select_order = item;
           this.addNewProperty(this.select_order.products, "_id", 0, 'product')
-
+          console.log(this.select_order,"ddddddddddddddddddddddddddddddddd");
         }
       })
     },

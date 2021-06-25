@@ -16,8 +16,16 @@
          </div>
          <span>{{order.products[0] ? order.products[0].name : 'empty'}}</span>
       </div>
-      <div class="table-child" v-show="data_check.client_checked"  style="width: 25%;">{{order.client ? order.client.name : ''}}</div>
-      <div class="table-child" v-show="data_check.phone_checked" style="width: 20%;">{{order.client ? order.client.phone : ''}}</div>
+      <div v-if="order.client" class="table-child" v-show="data_check.client_checked"  style="width: 25%;">
+        {{order.client ? order.client.name : ''}}
+      </div>
+      <div v-else class="table-child" v-show="data_check.client_checked"  style="width: 25%;">
+        Guest - {{order.client_name}}
+      </div>
+
+      <div class="table-child" v-show="data_check.phone_checked" style="width: 20%;">
+        {{order.client ? order.client.phone : ''}}
+      </div>
       <div  class="table-child"  style="width: 10%;">{{order.totalPrice}} $</div>
       <div class="table-child" v-show="data_check.date_checked"  style="width: 15%;">{{order.createdAt.split('').slice(0,10).join('')}}</div>
       <div class="table-child pr-3" v-show="data_check.notes_checked" style="width: 10%;" ><div>{{order.notes}}</div></div>

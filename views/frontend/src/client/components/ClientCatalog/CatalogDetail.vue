@@ -34,13 +34,17 @@
           <h1 v-if="checkDates(getProduct.promoStart,getProduct.promoEnd)" class="product-price">{{getProduct.promoPrice}} $</h1>
           <h3 :class="{lineThrough:checkDates(getProduct.promoStart,getProduct.promoEnd)}" class="product-price">{{getProduct.price}} $</h3>
           <br>
-          <button class="decrease" @click="decrease(getProduct._id)">-</button>
-          <span v-if="getProductFromStore" class="count">{{getProductFromStore.quantity}}</span>
-          <span v-else class="count">0</span>
-          <button class="increase" @click="addToCart">+</button>
+
+          <div v-if="!catalog_settings.catalogMode">
+            <button class="decrease" @click="decrease(getProduct._id)">-</button>
+            <span v-if="getProductFromStore" class="count">{{getProductFromStore.quantity}}</span>
+            <span v-else class="count">0</span>
+            <button class="increase" @click="addToCart">+</button>
+          </div>
+
           <h3 class="price mt-0">Description</h3>
           <p class="product-text">{{getProduct.description}}</p>
-          <button class="catalog-btn" @click="addToCart()"><a >Add to card +</a></button>
+          <button v-if="!catalog_settings.catalogMode" class="catalog-btn" @click="addToCart()"><a >Add to card +</a></button>
         </div>
       </div>
     </div>
@@ -61,6 +65,9 @@ export default {
     }
   },
   computed:{
+    catalog_settings(){
+      return this.$store.getters['Catalog/getCatalog_settings'];
+    },
     currentCompanyCatalog() {
       return this.$route.params.bekon;
     },

@@ -97,7 +97,7 @@
             <div class="col-lg-4">
               <h3 class="client-sub-title">Client</h3>
 
-              <div  class="client-box d-flex align-items-center">
+              <div v-if="!selectedClient.isDefault" class="client-box d-flex align-items-center">
                 <div v-if="selectedClient.isDefault"  class="client-search d-flex align-items-center">
                   <img src="../../assets/icons/search-icon.svg" class="search-client-icon">
                   <input v-model="search_client" placeholder="Enter clients name or number" class="search-client">
@@ -115,6 +115,15 @@
                   <img @click="currentData.client = ''" class="close-client" src="../../assets/icons/deleteClient.svg">
                 </div>
               </div>
+              <div v-else>
+                <h4>Guest</h4>
+                <ul class="p-0">
+                  <li class="payment-list d-flex justify-content-between">Name<span>{{ currentData.client_name }}</span></li>
+                  <li class="payment-list d-flex justify-content-between">Phone<span>{{ currentData.client_phone }}</span></li>
+                </ul>
+              </div>
+
+
               <div class="parent-order-client">
                 <div v-if="search_client.length !==0" class="child-order-client">
                   <div v-if="filteredClients.length === 0">
@@ -207,7 +216,6 @@ export default {
         promocode:'',
         status:'',
         deliveryType:'',
-
       },
       search:''
     }
@@ -230,21 +238,25 @@ export default {
             isDefault: true
         }
         if(this.currentData.client){
-            client = this.currentData.client
-            if(client.avatar){
-              client.avatar =  this.imgSrc+'/'+client.avatar
-            }
-
+          let name = this.currentData.client.name;
+          // let category = this.currentData.client.category;
+          if(client.avatar){
+            client.avatar =  this.imgSrc+'/'+client.avatar
+          }
+          client.name = name;
           client.isDefault = false
         }
-        
         return client
-
     },
     filteredProducts(){
-      return this.products.filter((product)=>{
-        return product.name.toLowerCase().includes(this.search_product.toLowerCase())
-      })
+      if(this.products.length){
+        return this.products.filter((product)=>{
+          return product.name.toLowerCase().includes(this.search_product.toLowerCase())
+        })
+      }else{
+        return [];
+      }
+
     },
     filteredClients(){
       return this.clients.filter((client)=>{
@@ -324,12 +336,20 @@ export default {
     this.getProducts()
     this.getClients()
     this.imgSrc = this.$server;
-
   },
   watch:{
     select_order(newCat){
-      this.currentData = Object.assign({}, newCat)
-    }
+      console.log(newCat,"select_order WATCH EDIT");
+      this.currentData = Object.assign({}, newCat);
+
+    },
+    currentData:{
+      handler(val) {
+        console.log(val,"total_price CHANGE TO STORE",val);
+      },
+      deep: true,
+      immediate:true,
+    },
   },
 }
 </script>

@@ -16,6 +16,7 @@
      <h3 class="catalog-sub-title margin-10">Your url from online catalog</h3>
      <p class="catalog-description mb-3">You can send a link to your catalog to your clients</p>
      <div class="reload-code d-flex align-items-center">
+       <span style="color:#858585;">{{domainNameShop}}/</span>
        <input v-model="catalogUrl">
        <div @click="generateQrcode();" class="url-icon mr-1">
          <img src="../../assets/icons/Setting.svg">
@@ -25,7 +26,7 @@
        </div>
      </div>
      <h3 class="catalog-sub-title margin-20">QR code for online catalog</h3>
-     <h3 class="catalog-sub-title mb-3" style="text-overflow: ellipsis;overflow: hidden">{{catalogFullUrl}}</h3>
+<!--     <h3 class="catalog-sub-title mb-3" style="text-overflow: ellipsis;overflow: hidden">{{catalogFullUrl}}</h3>-->
      <div class="d-flex align-items-center margin-50">
        <img :src="qrcodePath" class="mr-3">
        <div>
@@ -188,9 +189,9 @@ export default {
     catalogFullUrl(){
       return window.location.host+'/'+this.catalogUrl;
     },
-    // domainNameShop(){
-    //   // return window.location.host+'/shop/';
-    // },
+    domainNameShop(){
+      return window.location.host;
+    },
     qrcodePath(){
       if(this.company !=="" && this.id !==''){
         try {

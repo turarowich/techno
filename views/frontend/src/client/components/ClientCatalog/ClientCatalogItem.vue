@@ -16,7 +16,8 @@
           <br>
           <span :class="{lineThrough:checkDates(product.promoStart,product.promoEnd)}">{{product.price}}</span>
         </div>
-        <button class="add-to-card" @click="addToCart(product._id)">Add to cart</button>
+        <button v-if="!catalog_settings.catalogMode" class="add-to-card" @click="addToCart(product._id)">Add to cart</button>
+        <button v-else class="add-to-card" @click="selectProduct(product._id)">View</button>
       </div>
 
 
@@ -45,6 +46,9 @@ name: "ClientCatalogItem",
     },
     server(){
       return this.$server;
+    },
+    catalog_settings(){
+      return this.$store.getters['Catalog/getCatalog_settings'];
     },
   },
   methods:{
