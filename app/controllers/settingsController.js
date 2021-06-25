@@ -304,9 +304,10 @@ class SettingsController{
         let settings_model = db.model("Settings");
         let company = req.db;
         let img = req.fields.logo;
-        let regex = /^data:.+\/(.+);base64,(.*)$/
-        let matches = img.match(regex);
-        let ext = matches[1];
+        // let regex = /^data:.+\/(.+);base64,(.*)$/
+        // let matches = img.match(regex);
+        // let ext = matches[1];
+        let ext = img.substring("data:image/".length, img.indexOf(";base64"));
 
         let dir = path.join(__dirname, '/../../views/frontend/images/' + company+'/logo');
         let full_file_name = 'images/' + company+'/logo/logo.'+ext;
@@ -325,6 +326,7 @@ class SettingsController{
             'status': 200,
             'msg': '',
         }
+        console.log('try STARTING SER SAVE');
         try {
             // strip off the data: url prefix to get just the base64-encoded bytes
             let data = img.replace(/^data:image\/\w+;base64,/, "");
@@ -334,7 +336,7 @@ class SettingsController{
                     console.log(err)
                 })
             }
-            fs.writeFile(dir+ "/" + file_name, buf,function (out){
+            await fs.writeFile(dir+ "/" + file_name, buf,function (out){
                 console.log(out,"9090099")
             });
             await settings_model.findOneAndUpdate(req.fields.id, update);

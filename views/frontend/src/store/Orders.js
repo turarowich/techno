@@ -267,25 +267,6 @@ export const OrdersModule = {
                 console.log('INCREASE');
                 if(state.shoppingCart[index].product.quantity>state.shoppingCart[index].quantity){
                     dispatch('increaseQuantity',order.product._id);
-
-                    Swal.fire({
-                        timer:1500,
-                        title:'Added to cart',
-                        text:"+++",
-                        showConfirmButton:false,
-                        position: 'top-right',
-                        customClass:{
-                            popup:'success-popup information-popup',
-                            content:'success-content',
-                            title:'success-title',
-                            header:'success-header',
-                            image:'success-img'
-                        },
-                        showClass:{
-                            popup: 'animate__animated animate__zoomIn'
-                        }
-                    })
-
                 }else{
                     Swal.fire({
                         timer:1500,
@@ -305,10 +286,6 @@ export const OrdersModule = {
                         }
                     })
                 }
-
-
-
-
             }
         },
         removeFromBasket: function({commit},id){

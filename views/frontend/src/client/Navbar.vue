@@ -1,7 +1,15 @@
 <template>
   <div class="container client-container">
 <nav class="navigation d-flex align-items-center justify-content-between">
-    <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">{{catalog_settings.name || 'Company Name'}} <span> Catalog</span></router-link>
+    <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">
+      <div v-if="catalog_settings.logo && catalog_settings.logo !==''"  v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.logo + ')' }" class="catalog_logo">
+
+      </div>
+      <span v-else>
+        {{catalog_settings.name || 'Company Name'}}
+      </span>
+    </router-link>
+
     <div class="menu-wrapper">
       <ul class="client-menu">
         <li @click="removeActive" class="client-list"><router-link class="client-link" :to="`/${currentCompanyCatalog}/about`"><img src="../assets/clients/info.svg"/>About us</router-link></li>
@@ -278,7 +286,15 @@ font-size: 14px;
   font-size: 16px;
   color: #B0B0B0;
 }
-
+.catalog_logo{
+  max-height: 55px;
+  height: 46px;
+  max-width: 46px;
+  width: 55px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
+}
 @media(max-width:992px){
   .client-menu{
     display:none;

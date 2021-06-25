@@ -7,6 +7,7 @@ export const CatalogModule = {
             name:'',
             email:'',
             banner:'',
+            logo:'',
             description:'',
             welcome:'',
             delivery:'',

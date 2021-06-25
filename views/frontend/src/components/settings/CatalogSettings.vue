@@ -99,6 +99,7 @@
 
      <div class="margin-30">
        <label>Logo</label>
+       <p class="catalog-description margin-30">You can upload JPG or PNG photos, the size is not more than 3 MB.</p>
        <div class="profile-img ">
 <!--         <img class="profile-logo" :src="previewImage" >-->
          <img class="profile-logo" :src="logoPath">
@@ -108,7 +109,7 @@
      </div>
 
      <h3 class="catalog-sub-title margin-10">Banner</h3>
-     <p class="catalog-description margin-30">You can upload JPG or PNG photos, the minimum resolution is 1200*320px, the size is not more than 3 MB.</p>
+     <p class="catalog-description margin-30">You can upload JPG or PNG photos, the size is not more than 3 MB.</p>
 
      <div class="profile-img big-profile-img margin-30">
        <img :src="bannerPath">
@@ -230,7 +231,7 @@ export default {
     },
   },
   methods:{
-    uploadImage(e,type){
+    async uploadImage(e,type){
       let that = this;
       const image = e.target.files[0];
       if(image.name.match(/\.(jpg|jpeg|png|gif)$/)){
@@ -248,12 +249,13 @@ export default {
           im.src = e.target.result;
           im.onload = function (){
             console.log(im.width,im.height);
-            if(type==="banner" && (im.width<1200 || im.width<320)){
-              that.$warningAlert('Min resolution 1200*320px');
-            }else{
-              // this.previewImage = e.target.result;
-              that.saveFile(type,e.target.result);
-            }
+            // if(type==="banner" && (im.width<1200 || im.width<320)){
+            //   that.$warningAlert('Min resolution 1200*320px');
+            // }else{
+            //   // this.previewImage = e.target.result;
+            //   that.saveFile(type,e.target.result);
+            // }
+            that.saveFile(type,e.target.result);
           }
         };
 
@@ -352,6 +354,7 @@ export default {
       win.document.close();
     },
     saveFile(type,file){
+      console.log("SAVING FILE");
       let that=this;
       let url = this.url('saveSettingsFile');
       let formData = new FormData();
@@ -404,8 +407,6 @@ export default {
       }).then(function (response) {
         console.log(response);
         that.$successAlert('Updated');
-        // that.displayMessages(['Added'],"Success");
-        // that.$router.push('/loyalty/promocode')
       }).catch(function(error){
         if (error.response) {
             if(error.response.data && !error.response.data.errors){
