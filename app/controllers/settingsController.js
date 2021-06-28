@@ -562,6 +562,34 @@ class SettingsController{
         }
         res.status(result.status).json(result);
     };
+    updatePersonalSettings = async function (req, res) {
+        let users = useDB('loygift');
+        let personal_model = users.model("User");
+        if (req.userType == "employee") {
+            let checkResult = await checkAccess(req.userID, { access: "settings", parametr: "active" }, db, res)
+            if (checkResult) {
+                return;
+            }
+        }
+        let result = {
+            'status': 200,
+            'msg': 'Updated'
+        }
+        try {
+            let query = { '_id': req.fields._id };
+            let hashedPassword = bcrypt.hashSync(req.fields.password, 8);
+            let user = {
+                name:req.fields.name,
+                email:req.fields.email,
+                phone:req.fields.phone,
+                password:hashedPassword,
+            };
+            await personal_model.findOneAndUpdate(query,user)
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.status(result.status).json(result);
+    }
 }
 
 

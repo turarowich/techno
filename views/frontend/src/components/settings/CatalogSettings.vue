@@ -17,7 +17,7 @@
      <p class="catalog-description mb-3">You can send a link to your catalog to your clients</p>
      <div class="reload-code d-flex align-items-center">
        <span style="color:#858585;">{{domainNameShop}}/</span>
-       <input v-model="catalogUrl">
+       <input style="color:#616CF5;padding-bottom: 1px;padding-left: 0;" v-model="catalogUrl">
        <div @click="generateQrcode();" class="url-icon mr-1">
          <img src="../../assets/icons/Setting.svg">
        </div>
@@ -50,33 +50,36 @@
        customers can also place an order only within your institution
      </p>
 
-     <div class="d-flex margin-10">
-       <label class="switch d-flex">
-         <input v-model="news_status" type="checkbox">
-         <span class="slider round"></span>
-       </label>
-       <h2 class="catalog-sub-title">News</h2>
-     </div>
 
-<!--     <h3 class="catalog-sub-title mb-1">News</h3>-->
-     <p class="catalog-description margin-30">Disable news in the directory</p>
 
-     <label>News title</label>
-     <input v-model="news_title" class="cashback-input">
 
-     <label>News description</label>
-     <textarea v-model="news_description" class="margin-50 general-area"></textarea>
+<!--     <div class="d-flex margin-10">-->
+<!--       <label class="switch d-flex">-->
+<!--         <input v-model="news_status" type="checkbox">-->
+<!--         <span class="slider round"></span>-->
+<!--       </label>-->
+<!--       <h2 class="catalog-sub-title">News</h2>-->
+<!--     </div>-->
+<!--     -->
+<!--     <p class="catalog-description margin-30">Disable news in the directory</p>-->
 
-     <div class="d-flex margin-10">
-       <label class="switch d-flex">
-         <input v-model="filters_n_category_status" type="checkbox">
-         <span class="slider round"></span>
-       </label>
-       <h2 class="catalog-sub-title">Filters and category</h2>
-     </div>
-     <p class="catalog-description margin-50">
-       Disable categories and filters in the catalog
-     </p>
+<!--     <label>News title</label>-->
+<!--     <input v-model="news_title" class="cashback-input">-->
+
+<!--     <label>News description</label>-->
+<!--     <textarea v-model="news_description" class="margin-50 general-area"></textarea>-->
+
+<!--     <div class="d-flex margin-10">-->
+<!--       <label class="switch d-flex">-->
+<!--         <input v-model="filters_n_category_status" type="checkbox">-->
+<!--         <span class="slider round"></span>-->
+<!--       </label>-->
+<!--       <h2 class="catalog-sub-title">Filters and category</h2>-->
+<!--     </div>-->
+<!--     <p class="catalog-description margin-50">-->
+<!--       Disable categories and filters in the catalog-->
+<!--     </p>-->
+
 
      <div class="d-flex margin-10">
        <label class="switch d-flex">

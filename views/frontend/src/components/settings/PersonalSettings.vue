@@ -5,8 +5,7 @@
       <div class="col-lg-5">
         <label class="sum-point">Name</label>
         <input v-model="name" class="form-input cashback-input mb-4" placeholder="Your name">
-        <label class="sum-point">Name of company</label>
-        <input v-model="companyName" class="form-input cashback-input mb-4" placeholder="Company">
+
         <label class="sum-point">Password</label>
         <div class="pswrd-input mb-4">
           <input id="show-password" type="password" placeholder="Password">
@@ -24,18 +23,18 @@
       <div class="col-lg-5">
         <label class="sum-point">Phone number</label>
         <div class="d-flex mb-4">
-          <select class="form-control select-phone" aria-label="Default select example">
-            <option>+996</option>
-            <option>+792</option>
-            <option>+996</option>
-            <option>+792</option>
-            <option>+996</option>
-            <option>+792</option>
-            <option>+996</option>
-            <option>+792</option>
-            <option>+996</option>
-            <option>+792</option>
-          </select>
+<!--          <select class="form-control select-phone" aria-label="Default select example">-->
+<!--            <option>+996</option>-->
+<!--            <option>+792</option>-->
+<!--            <option>+996</option>-->
+<!--            <option>+792</option>-->
+<!--            <option>+996</option>-->
+<!--            <option>+792</option>-->
+<!--            <option>+996</option>-->
+<!--            <option>+792</option>-->
+<!--            <option>+996</option>-->
+<!--            <option>+792</option>-->
+<!--          </select>-->
           <input v-model="phone" class="cashback-input">
         </div>
         <label class="sum-point">Email</label>
@@ -43,7 +42,7 @@
       </div>
     </div>
 
-    <button class="save">Save</button>
+    <button @click="save" type="button" class="save">Save</button>
   </form>
 </div>
 </template>
@@ -57,9 +56,9 @@ export default {
     return{
       name:'',
       phone:'',
-      companyName:'',
       email:'',
       password:'',
+      id:'',
     }
   },
   methods:{
@@ -89,20 +88,44 @@ export default {
         $('#hide-eye').css({'display':'block'})
 
       }
-    }
+    },
+    save(){
+      let that=this;
+      let url = this.url('updateSettings');
+      this.axios.put(url, {
+        name:this.name,
+        phone:this.phone,
+        email:this.email,
+        password:this.password,
+      }).then(function (response) {
+        console.log(response);
+        that.$successAlert('Updated');
+      }).catch(function(error){
+        if (error.response) {
+          if(error.response.data && !error.response.data.errors){
+            that.$warningAlert(error.response.data.msg)
+          }else{
+            that.$warningAlert('Something went wrong');
+          }
+          // that.displayMessages(Object.values(error.response.data.errors),"Errors");
+        }
+      });
+
+    },
+
   },
   beforeCreate(){
     let that = this;
     this.axios
-        .get(this.url('getPersonalSettings'))
-        .then(function (response){
-          console.log(response,"getPersonalSettings");
-          let user = response.data.user;
-          that.name= user.name || '';
-          that.phone= user.phone || '';
-          that.email= user.email || '';
-          that.companyName = user.companyName || '';
-        })
+      .get(this.url('getPersonalSettings'))
+      .then(function (response){
+        console.log(response,"getPersonalSettings");
+        let user = response.data.user;
+        that.name= user.name || '';
+        that.phone= user.phone || '';
+        that.email= user.email || '';
+        that.id= user.id || '';
+      })
   },
 }
 </script>
