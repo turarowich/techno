@@ -1,5 +1,6 @@
 <template>
 <div>
+
   <NewsItem v-bind:news="newsArray"/>
 </div>
 </template>

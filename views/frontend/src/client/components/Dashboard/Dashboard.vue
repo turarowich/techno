@@ -15,8 +15,8 @@
       </div>
       <div class="row">
         <div class="col-lg-12">
-          <div class="row">
-            <div v-for="(news,index) in newsArray.slice(0,4)" :key="index"  class="col-lg-3 col-md-4 col-sm-6 mb-4 " @click="openNews(news._id)">
+          <div class="row parentNews">
+            <div v-for="(news,index) in newsArray.slice(0,4)" :key="index"  class="childNews col-lg-3 col-md-4 col-sm-6 mb-4 " @click="openNews(news._id)">
               <div class="new-img">
                 <img v-if="!news.error" :src="server+'/'+news.img" @error="news.error=true">
                 <img v-else src="../../../assets/img/default.svg" >
@@ -215,6 +215,7 @@ name: "Dashboard",
 }
 .new{
   margin-bottom: 70px;
+  color:#000;
 }
 .news-title{
   color: #222222;
@@ -243,9 +244,19 @@ name: "Dashboard",
 .main-box{
   height: 320px;
   /*background: url('../../../assets/clients/main-box.svg');*/
-  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   position: relative;
   border-radius: 5px;
   margin-bottom: 25px;
+}
+
+@media(max-width:576px){
+  .parentNews .childNews:nth-child(3), .parentNews .childNews:nth-child(4){
+    display:none;
+  }
+  .new{
+    margin-bottom: 40px;
+  }
 }
 </style>

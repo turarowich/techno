@@ -186,7 +186,7 @@ props:['listCategory', 'getProducts'],
       }
     },
     onFileChange() {
-      var valid = ["image/png", "image/jpg", "image/jpeg"];
+      var valid = ["image/png", "image/jpg", "image/jpeg", "image/svg"];
       $.each($("#imgArray")[0].files, (i,file)=> {
         console.log(i)
       if(this.newProduct.imgArray.length<4){

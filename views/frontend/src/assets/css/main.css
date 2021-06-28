@@ -415,7 +415,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     background: url('../../assets/icons/select.svg' ) no-repeat;
     -webkit-appearance: none;
     background-position-x: 90%;
-    background-position-y: 19px;
+    background-position-y: 55%;
 }
 .long-form-control{
 
@@ -577,7 +577,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .swal2-popup.sweet-delete{
     border: 1px solid #D3D3D3;
     border-radius: 5px;
-    width: 24%;
+    width: 330px;
     padding:20px;
     animation-duration: .7s;
 
@@ -706,7 +706,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     background: url('../../assets/clients/slide.svg') no-repeat;
 
 }
-.slick-slide{
+.product-img .slick-slide{
+    margin: 0;
+    width: 100%;
+}
+.slick-slide {
     margin: 0 5px;
 }
 .slick-list, .slick-track, .slick-slide div{
@@ -772,7 +776,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     margin-bottom: 50px;
 }
 .path-img{
-    margin-right: 8px;
+    margin-right: 5px;
 }
 .show-path{
     font-weight: normal;
@@ -1274,10 +1278,7 @@ input.value-success, select.value-success, textarea.value-success{
     margin-bottom: 0;
 }
 .swal2-close{
-    width: 13px !important;
-    height: 25px !important;
-    top: 15px !important;
-    right: 20px !important;
+    top: 5px !important;
 
 }
 .errorInput{
@@ -1311,6 +1312,9 @@ input.value-success, select.value-success, textarea.value-success{
     justify-content: center;
     border-radius: 50%;
 }
+
+
+
 @media(max-width:481px){
     .swal2-popup.sweet-delete{
         width: 100%;
@@ -1318,4 +1322,17 @@ input.value-success, select.value-success, textarea.value-success{
     .slick-dots{
         display: none !important;
     }
+}
+.modal-backdrop {
+    width:100%;
+    left: 250px;
+
+}
+
+
+/*Responsive Web Catalog*/
+.mobile-header{
+    border-bottom: 1px solid #E4E4E4;
+    height: 62px;
+    margin-bottom: 20px;
 }

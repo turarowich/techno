@@ -3,12 +3,12 @@
   <div class="footer d-flex justify-content-between  footer-container container">
   <div class="footer-contact mb-3">
     <h3>Contacts</h3>
-    <p class="footer-info"><img src="../../../assets/clients/Call.svg"><a  href="/">{{companyAddresses[0] ? companyAddresses[0].phone : ""}}</a></p>
-    <p class="footer-info"><img src="../../../assets/clients/Message.svg"><a href="/">{{catalog_settings.email || ""}}</a></p>
+    <p class="footer-info"><img src="../../../assets/clients/Call.svg"><a  href="/">{{companyAddresses[0] ? companyAddresses[0].phone : "+996771236478"}}</a></p>
+    <p class="footer-info"><img src="../../../assets/clients/Message.svg"><a href="/">{{catalog_settings.email || "example@gmail.com"}}</a></p>
   </div>
-  <div class="footer-address">
+  <div class="footer-address mb-3">
     <h3>Address</h3>
-    <p class="footer-info" >{{companyAddresses[0] ? companyAddresses[0].address : ""}}</p>
+    <p class="footer-info" >{{companyAddresses[0] ? companyAddresses[0].address : "Bishkek, Kyrgyzstan"}}</p>
   </div>
   <div class="footer-logo d-flex align-items-center">
     <img class="mr-2" src="../../../assets/clients/footerLogo.svg">
@@ -73,9 +73,14 @@ footer{
 .footer-container{
   max-width: calc(100vw - 240px);
 }
+
 @media(max-width:640px){
   .footer-container{
     max-width:100% !important;
+  }
+  footer{
+    padding: 50px 0;
+
   }
 }
 @media(max-width:481px){

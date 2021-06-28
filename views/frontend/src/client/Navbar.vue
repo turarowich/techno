@@ -1,13 +1,36 @@
 <template>
   <div class="container client-container">
 <nav class="navigation d-flex align-items-center justify-content-between">
-    <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">{{catalog_settings.name || 'Company Name'}} <span> Catalog</span></router-link>
+  <div class="burger" @click="showNavbar">
+    <img src="../assets/icons/menu.svg">
+  </div>
+    <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">{{catalog_settings.name || 'Company Name'}} </router-link>
     <div class="menu-wrapper">
+      <div class="mobile-header d-flex justify-content-between align-items-center" >
+        <div class="d-flex align-items-center">
+          <div class="table-img">
+
+            <img  src="../assets/icons/no-catalog.svg">
+          </div>
+          <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">{{catalog_settings.name || 'Company Name'}} </router-link>
+
+        </div>
+        <img @click="removeActive" class="close-nav" src="../assets/icons/xBlack.svg">
+      </div>
       <ul class="client-menu">
         <li @click="removeActive" class="client-list"><router-link class="client-link" :to="`/${currentCompanyCatalog}/about`"><img src="../assets/clients/info.svg"/>About us</router-link></li>
-        <li @click="removeActive" v-if="!isLogged" class="client-list"><router-link class="client-link" :to="`/${currentCompanyCatalog}/signin`"><img class="mr-3" src="../assets/clients/Profile.svg"/>Login</router-link></li>
+        <li @click="removeActive" v-if="!isLogged" class="client-list"><router-link class="client-link" :to="`/${currentCompanyCatalog}/signin`"><img  src="../assets/clients/Profile.svg"/>Login</router-link></li>
         <li  v-else class="client-list"><img src="../assets/clients/Profile.svg"/><router-link class="client-link" :to="`/${currentCompanyCatalog}/client-account`">My Account</router-link></li>
-        <li @mouseover="mouser" @mouseleave="close_drop" @click="removeActive" class="client-list hoverBasket dropdown">
+        <li @click="removeActive" class="client-list mobile-basket">
+          <router-link   class="client-link  d-inline-flex align-items-center" :to="`/${currentCompanyCatalog}/basket`" >
+            <img src="../assets/clients/Buy.svg"/>Basket
+            <div class="bg-not d-flex align-items-center">
+              <span class="basket-not" v-if="countOrders > 0">{{countOrders}}</span>
+            </div>
+          </router-link>
+        </li>
+
+        <li  @mouseover="mouser" @mouseleave="close_drop" @click="removeActive" class="client-list hoverBasket dropdown">
 
           <router-link   class="client-link  d-inline-flex align-items-center" :to="`/${currentCompanyCatalog}/basket`" >
             <img src="../assets/clients/Buy.svg"/>Basket
@@ -51,10 +74,17 @@
           </div>
         </li>
       </ul>
+      <div class="contact">
+        <h3 class="contact-title">Contacts</h3>
+        <p class="footer-info"><img src="../assets/clients/Call.svg"><a  href="/">{{companyAddresses[0] ? companyAddresses[0].phone : "+9965002345"}}</a></p>
+        <p class="footer-info"><img src="../assets/clients/Message.svg"><a href="/">{{catalog_settings.email || "example@gmail.com"}}</a></p>
+      </div>
     </div>
-  <div class="burger" @click="showNavbar">
-    <i class="fas fa-bars"></i>
-  </div>
+
+    <img @click="$router.push(`/${currentCompanyCatalog}/basket`)" class="mobile-basket" src="../assets/clients/Buy.svg"/>
+
+
+
 </nav>
     <div class="line"></div>
   </div>
@@ -67,9 +97,18 @@ export default {
   data(){
     return{
       show_mini_basket:false,
+
     }
   },
   computed:{
+
+    //Contacts company
+
+    companyAddresses(){
+      return this.$store.getters['Catalog/getCompanyAddresses'];
+    },
+
+
   // ...mapGetters(["Orders/countOrders" ,"Orders/shoppingCart"]),
     company_url_basket(){
       return this.$store.getters['Orders/getCompany_url_basket'];
@@ -104,10 +143,12 @@ export default {
   methods:{
     removeActive(){
       $('.menu-wrapper').removeClass('active')
+      $('.client').removeClass('active')
     },
     showNavbar(){
-      $('.menu-wrapper').toggleClass('active')
-      $('.burger').toggleClass('active')
+      $('.menu-wrapper').addClass('active')
+      $('.menu-wrapper').addClass('fadeIn')
+      $('.client').addClass('active')
     },
     logout(){
       this.$store.dispatch("Client/logout");
@@ -131,32 +172,86 @@ export default {
 </script>
 
 <style scoped>
+.contact{
+  position: absolute;
+  bottom: 20px;
+  left:20px;
+  border-top: 1px solid #e7e7e7;
+  width: 88%;
+  padding-top: 20px;
+  display:none;
+
+}
+.contact-title{
+  color: #222222;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 17px;
+}
+.footer-info{
+  margin-bottom: 10px;
+  display: block;
+  color:#484848;
+
+}
+
+.footer-info img{
+  margin-right: 10px;
+}
+.footer-info a, .footer-info a:hover{
+  color:#484848;
+  text-decoration: none;
+}
+
+
+.close-nav{
+  width: 24px;
+  height: 24px;
+}
+
 .menu-wrapper.active{
   position: fixed;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   z-index:9999;
   top: 0;
   right: 0;
-  display:flex;
+  display: block;
   background: #fff;
-  padding-top: 20px;
+  padding: 0 20px;
+
+
+}
+.mobile-basket{
+  display:none;
+  width: 24px;
+  height: 24px;
+
+}
+
+.menu-wrapper .mobile-header{
+  display:none !important;
+}
+.menu-wrapper.active .mobile-header{
+  display: flex !important;
 }
 .menu-wrapper.active .client-menu {
-  display: block;
   margin: auto;
+  display: block;
+  padding: 0;
 }
 .menu-wrapper.active .client-list{
   margin-bottom: 20px;
+  margin-right: 0;
+}
+.client-link img{
+  width: 20px;
+  height: 20px;
 }
 .burger{
   display: none;
 }
-.burger.active{
-  z-index:10000;
-  position: fixed;
-  right:15px;
-}
+
 .navigation{
   height: 62px;
 }
@@ -282,11 +377,22 @@ font-size: 14px;
 }
 
 @media(max-width:992px){
-  .client-menu{
+  .menu-wrapper{
     display:none;
+
   }
   .burger{
     display: block;
   }
+  .mobile-basket{
+    display:block;
+  }
+  .hoverBasket{
+    display:none;
+  }
+  .contact{
+    display:block;
+  }
+
 }
 </style>

@@ -5,11 +5,11 @@
   </div>
   <div class="d-flex align-items-center path-box" @click="$router.go(-1)"><img class="mr-2" src="../../../assets/clients/slide.svg"><h3 class="path-title">{{$route.name}}</h3></div>
   <div class="row">
-    <div class="col-lg-8 mb-5">
+    <div class="col-lg-8 mb-5 basket-item">
 
       <div class="client-table-header">
         <div class="client-table-head head-name" style="width:40%">Products</div>
-        <div class="client-table-head head-amount" style="width:20%">Amount</div>
+        <div class="client-table-head head-amount" style="width:30%">Amount</div>
 <!--        <div class="client-table-head" style="width:14%">Discount%</div>-->
 <!--        <div class="client-table-head" style="width:14%">DiscountSum</div>-->
         <div class="client-table-head head-price" style="width:30%">Price</div>
@@ -505,6 +505,10 @@ name: "Basket",
 </script>
 
 <style scoped>
+.basket-item{
+  height: 450px;
+  overflow-y: auto;
+}
 .sales .cashback-sub-title{
   margin-bottom: 10px;
 }
@@ -542,7 +546,7 @@ name: "Basket",
   color:#484848;
 }
 .discount{
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 .total .delivery{
   margin-bottom: 5px;
@@ -562,6 +566,10 @@ name: "Basket",
 }
 .cancel{
   padding: 0 10px;
+  width: 50%;
+}
+.save{
+  width: 50%;
 }
 .promocodeCheckBtn{
   width: 33px;
@@ -689,6 +697,11 @@ name: "Basket",
   border-radius: 5px;
   padding: 5px;
   cursor: pointer;
+}
+@media(max-width:768px){
+  .client-table-header{
+    display: none;
+  }
 }
 @media(max-width:481px){
   .head-price{
