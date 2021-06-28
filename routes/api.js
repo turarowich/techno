@@ -117,6 +117,7 @@ module.exports = function (app, io) {
     app.get('/getSettings', settingsController.getSettings);
     app.get('/getPersonalSettings', settingsController.getPersonalSettings);
     app.put('/updateSettings', settingsController.updateSettings);
+    app.put('/updatePersonalSettings', settingsController.updatePersonalSettings);
     app.delete('/deleteDelivery/:delivery', settingsController.deleteDelivery);
     app.delete('/deleteBranch/:branch', settingsController.deleteBranch);
     app.post('/addBranch', settingsController.addBranch);

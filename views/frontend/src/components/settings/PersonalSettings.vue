@@ -8,13 +8,13 @@
 
         <label class="sum-point">Password</label>
         <div class="pswrd-input mb-4">
-          <input id="show-password" type="password" placeholder="Password">
+          <input id="show-password" v-model="password" type="password" placeholder="Password">
           <img class="hide-eye" @click="showPassword" src="../../assets/icons/Hide.svg">
           <img class="show-eye"  @click="showPassword" src="../../assets/icons/eye.svg">
         </div>
         <label class="sum-point">Repeat password</label>
-        <div class="pswrd-input">
-          <input id="show-repeat" type="password" placeholder="Password">
+        <div class="pswrd-input not-handle-error" :class="comparePassword">
+          <input id="show-repeat" class="" v-model="repeatPassword" type="password" placeholder="Password" >
           <img id="hide-eye" @click="showRepeat" src="../../assets/icons/Hide.svg">
           <img id="show-eye"  @click="showRepeat" src="../../assets/icons/eye.svg">
         </div>
@@ -58,11 +58,22 @@ export default {
       phone:'',
       email:'',
       password:'',
+      repeatPassword:'',
       id:'',
     }
   },
+  computed:{
+    comparePassword(){
+      if(this.password==="" && this.repeatPassword===""){
+        return "";
+      }else if(this.password  === this.repeatPassword ){
+        return "value-success";
+      }else{
+        return "value-error";
+      }
+    }
+  },
   methods:{
-
     showPassword() {
       var x = document.getElementById("show-password");
       if (x.type === "password") {
@@ -90,9 +101,15 @@ export default {
       }
     },
     save(){
+      if(this.comparePassword === "value-error"){
+        this.$warningAlert('Passwords dont match');
+        return;
+      }
+
       let that=this;
-      let url = this.url('updateSettings');
+      let url = this.url('updatePersonalSettings');
       this.axios.put(url, {
+        _id:this.id,
         name:this.name,
         phone:this.phone,
         email:this.email,
@@ -124,7 +141,7 @@ export default {
         that.name= user.name || '';
         that.phone= user.phone || '';
         that.email= user.email || '';
-        that.id= user.id || '';
+        that.id= user._id || '';
       })
   },
 }

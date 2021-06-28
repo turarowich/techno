@@ -14,13 +14,13 @@
     </router-link>
 
 
-    <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">{{catalog_settings.name || 'Company Name'}} </router-link>
+<!--    <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">{{catalog_settings.name || 'Company Name'}} </router-link>-->
     <div class="menu-wrapper">
       <div class="mobile-header d-flex justify-content-between align-items-center" >
         <div class="d-flex align-items-center">
-          <div class="table-img">
-            <img  src="../assets/icons/no-catalog.svg">
-          </div>
+<!--          <div class="table-img">-->
+<!--            <img  src="../assets/icons/no-catalog.svg">-->
+<!--          </div>-->
           <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">
             <div v-if="catalog_settings.logo && catalog_settings.logo !==''"  v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.logo + ')' }" class="catalog_logo">
 
@@ -51,6 +51,7 @@
             </div>
           </router-link>
         </li>
+
         <li  v-if="!catalog_settings.catalogMode"  @mouseover="mouser" @mouseleave="close_drop" class="client-list hoverBasket dropdown">
 
           <router-link @click="removeActive"  class="client-link  d-inline-flex align-items-center" :to="`/${currentCompanyCatalog}/basket`" >
