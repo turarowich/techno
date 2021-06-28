@@ -45,11 +45,11 @@
           </div>
             <div class="policy">
               <div class="rules d-flex">
-                <label class="custom-checkbox " ><input type="checkbox"><span class="checkmark"></span></label>
+               <div> <label class="custom-checkbox " ><input type="checkbox"><span class="checkmark"></span></label></div>
                 <span>I have read the <a href="#">Privacy Policy </a> and accept its terms.</span>
               </div>
               <div class="rules d-flex">
-                <label class="custom-checkbox " ><input type="checkbox"><span class="checkmark"></span></label>
+                <div><label class="custom-checkbox " ><input type="checkbox"><span class="checkmark"></span></label></div>
                 <span>I have read and accept the <a href="#">Terms of the offer</a></span>
               </div>
             </div>
@@ -200,5 +200,34 @@ a{
 }
 .welcome-sign-up span{
   font-weight: 100;
+}
+@media(max-width:768px){
+  .sign-up{
+    width: 100%;
+  }
+  .sign-in-btn{
+    margin-bottom: 20px;
+  }
+  .have-account{
+    text-align:center;
+  }
+}
+@media(max-width:660px){
+  .sign-up{
+    padding: 30px 40px;
+  }
+}
+@media(max-width:576px){
+  .authorization{
+    padding:23px 0;
+  }
+  .welcome-sign-up{
+    font-size: 36px !important;
+  }
+}
+@media(max-width:420px) {
+  .sign-up {
+    padding: 30px 2px;
+  }
 }
 </style>

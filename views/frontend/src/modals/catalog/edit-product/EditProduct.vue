@@ -177,9 +177,7 @@ export default {
     },
   },
   methods:{
-    beka(){
-      console.log(this.currentData)
-    },
+
     removeImage(idx){
      this.currentData.imgArray.forEach((item,index)=>{
        if(index === idx){

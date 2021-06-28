@@ -1,6 +1,6 @@
 <template>
   <div class="client overlay_404">
-    <div>
+    <div >
       <div v-if="!['ClientLogin', 'ClientRegister', 'EmployeeLogin'].includes($route.name)">
         <Navbar/>
       </div>
@@ -90,17 +90,17 @@ name: "Home",
 </script>
 
 <style scoped>
-@media(min-width:1200px){
-  .client-container{
-    max-width: calc(100vw - 240px);
-  }
-}
+
 .overlay_404{
   /*display: none;*/
 }
 .client{
   overflow-y: auto;
   height: 100%;
+}
+.client.active{
+  height: 300px;
+  overflow:hidden;
 }
 
 .main-box h1{
@@ -116,5 +116,9 @@ name: "Home",
 .new-img img{
   width: 100%;
 }
-
+@media(min-width:1200px){
+  .client-container{
+    max-width: calc(100vw - 240px);
+  }
+}
 </style>

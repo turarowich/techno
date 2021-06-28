@@ -295,6 +295,12 @@ name: "Catalog",
           content:'content-sweet',
           closeButton:'close-btn'
         },
+        showClass: {
+          popup: 'animate__animated animate__slideInDown'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp'
+        }
 
       }).then((result) => {
         if (result.isConfirmed) {
@@ -368,7 +374,7 @@ name: "Catalog",
           closeButton:'close-btn'
         },
         showClass: {
-          popup: 'animate__animated animate__fadeInDown'
+          popup: 'animate__animated animate__slideInDown'
         },
         hideClass: {
           popup: 'animate__animated animate__fadeOutUp'
@@ -425,7 +431,12 @@ name: "Catalog",
           content:'content-sweet',
           closeButton:'close-btn'
         },
-
+        showClass: {
+          popup: 'animate__animated animate__slideInDown'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp'
+        }
       }).then((result) => {
         if (result.isConfirmed) {
           this.axios.delete(this.url('deleteCategory',id))

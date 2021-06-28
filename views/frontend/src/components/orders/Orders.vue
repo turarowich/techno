@@ -286,7 +286,12 @@ name: "Orders",
             content:'content-sweet',
             closeButton:'close-btn'
           },
-
+          showClass: {
+            popup: 'animate__animated animate__slideInDown'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          }
         }).then((result) => {
           if (result.isConfirmed) {
             this.axios.delete(this.url('deleteOrders'),{data:{objects: this.deletedOrders}})
@@ -346,7 +351,12 @@ name: "Orders",
           closeButton:'close-btn'
 
         },
-
+        showClass: {
+          popup: 'animate__animated animate__slideInDown'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp'
+        }
       }).then((result) => {
         if (result.isConfirmed) {
           this.axios.delete(this.url('deleteOrder',id))

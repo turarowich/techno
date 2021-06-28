@@ -15,8 +15,11 @@
           <form  class="modal-form ">
 
             <div class="client-profile-img">
-                <img src="../../assets/icons/clientUser.svg">
-                <img class="add-profile-img" src="../../assets/icons/addBtn.svg">
+                <img class="img"  v-if="typeof currentData.avatar === 'string'" :src="imgSrc+'/'+currentData.avatar">
+                <img class="img" v-else-if="typeof currentData.avatar === 'object'" :src="imagePreview">
+                <img class="img" v-else src="../../assets/icons/clientUser.svg">
+                <input @change="uploadPhoto($event)" type="file" class="d-none" id="add-user-img">
+                <label for="add-user-img"><img class="add-profile-img" src="../../assets/icons/addBtn.svg"></label>
             </div>
 
             <label>Name</label><br>
@@ -37,7 +40,7 @@
 
             <label>Birthday</label>
             <div class="calendar d-flex align-items-center">
-              <input v-model="currentData.birthDate" class="calendar-input" id="calendar">
+              <input v-model="currentData.birthDate" class="calendar-input" id="birthDate">
               <img class="calendar-img" src="../../assets/icons/Calendar.svg">
             </div>
 
@@ -74,18 +77,43 @@ export default {
   props:['select_client', 'getClients'],
   data(){
     return{
-      currentData:''
+      currentData:{
+        avatar:''
+      },
+      imgSrc:''
+    }
+  },
+  computed:{
+    imagePreview() {
+      if(this.currentData.avatar){
+        return URL.createObjectURL(this.currentData.avatar)
+      }
+      return null
     }
   },
   methods:{
-
+    uploadPhoto(event){
+      var valid = ["image/png", "image/jpg", "image/jpeg"];
+      if(event.target.files[0] && event.target.files[0].size > 3000000){
+        this.$warningAlert('Image size exceed 3 mb');
+      }else if(event.target.files[0] && !valid.includes(event.target.files[0].type)){
+        this.$warningAlert('Image type can be jpg or png');
+      }else{
+        this.currentData.avatar = event.target.files[0]
+      }
+    },
     onSubmit(id){
-        this.axios.put(this.url('updateClient',id),{
-              name:this.currentData.name,
-              email:this.currentData.email,
-              phone:this.currentData.phone,
-              birthDate:this.currentData.birthDate
-      })
+      const updatedData = this.currentData;
+     let form = new FormData;
+      if(updatedData.avatar){
+        form.append('avatar', updatedData.avatar)
+      }
+      form.append('birthDate', updatedData.birthDate)
+      form.append('name', updatedData.name);
+      form.append('email',updatedData.email);
+      form.append('phone',updatedData.phone);
+
+      this.axios.put(this.url('updateClient',id),form)
       .then(()=>{
         this.$informationAlert("Change are saved")
         this.getClients()
@@ -99,24 +127,24 @@ export default {
     },
     selectDate(){
       new this.$lightpick({
-        field: document.getElementById('calendar'),
+        field: document.getElementById('birthDate'),
         orientation:'top',
         format:'',
-        autoclose:true,
-        onSelect: function(date){
-          this.currentData.birthDate = date.format()
+        onSelect: date=>{
+          this.currentData.birthDate = date.format('YYYY-MM-DD')
         }
       });
     }
   },
   mounted(){
-    this.selectDate()
+    this.selectDate();
+    this.imgSrc = this.$server;
 
   },
   watch:{
     select_client(newCat){
       this.currentData = Object.assign({}, newCat)
-    }
+      }
   },
 }
 </script>
@@ -165,6 +193,12 @@ export default {
   position: relative;
   margin-bottom: 28px;
 
+}
+.client-profile-img .img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius:50%;
 }
 .add-profile-img{
   width: 21px;

@@ -5,7 +5,7 @@
         <h1 class="welcome-sign-in">Register</h1>
         <form >
           <label for="name" class="label">Name</label>
-          <input v-model="name" id="name" name="name" class="login-input">
+          <input  v-model="name" id="name" name="name" class="login-input">
           <label class="label">Email</label>
           <input v-model="email" name="email" class="login-input">
           <label class="label">Phone number</label>
@@ -21,11 +21,13 @@
 
           <div class="remind mb-3 d-flex justify-content-between align-item-center">
             <div class="d-flex ">
-              <label class="custom-checkbox">
-                <input type="checkbox" v-model="read_pp">
-                <span class="checkmark">
+              <div>
+                <label class="custom-checkbox">
+                  <input type="checkbox" v-model="read_pp">
+                  <span class="checkmark">
                 </span>
-              </label>
+                </label>
+              </div>
               <span>I have read the Privacy Policy and accept its terms.</span>
             </div>
 
@@ -36,9 +38,8 @@
         <div class="have-account">Sign up with Social of fill the form to continue. </div>
 
         <div class="social-link d-flex justify-content-center">
-          <div class="social-icons">      <img src="../../assets/icons/twitter.svg"></div>
           <div class="social-icons">      <img src="../../assets/icons/facebook.svg"></div>
-          <div class="social-icons">      <img src="../../assets/icons/google.svg"></div>
+          <div class="social-icons mr-0">      <img src="../../assets/icons/google.svg"></div>
         </div>
       </div>
     </div>
@@ -112,6 +113,7 @@ export default {
 </script>
 
 <style scoped>
+
 .login{
   width: 586px;
   background: #FFFFFF;
@@ -124,19 +126,7 @@ export default {
 
 
 }
-.social-icons{
-  background: #FFFFFF;
-  /* Label Black/10% */
-  margin-right: 40px;
-  border: 0.5px solid rgba(18, 18, 29, 0.1);
-  box-sizing: border-box;
-  width: 56px;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-}
+
 .sign-in-btn{
   margin-bottom: 24px;
 }
@@ -201,6 +191,27 @@ form{
 .disabled_btn{
   pointer-events: none;
   opacity: .5;
+}
+@media(max-width:768px){
+  .login{
+    width: 100%;
+  }
+}
+@media(max-width:576px){
+  .login{
+    padding: 35px 40px;
+  }
+  .authorization{
+    padding: 23px 0 !important;
+  }
+  .welcome-sign-in{
+    font-size: 36px !important;
+  }
+}
+@media(max-width:420px){
+  .login{
+    padding:30px 20px;
+  }
 }
 
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="row ">
-    <div class="col-lg-3 col-md-6 col-sm-6 product-box" v-for="product in catalog" :key="product._id">
+    <div class="col-lg-3 col-6 product-box" v-for="product in catalog" :key="product._id">
 
       <div v-if="product.quantity>0">
         <div class="product-img"  @click="selectProduct(product._id)">
@@ -10,7 +10,7 @@
           <!--        <img :src="server+'/'+product.img">-->
         </div>
         <div class="product-add">
-          <h2 style="overflow: hidden;text-overflow: ellipsis;">{{product.name}}</h2>
+          <h2 :class="{up: checkDates(product.promoStart,product.promoEnd) !== true}" style="overflow: hidden;text-overflow: ellipsis;">{{product.name}}</h2>
           <h3></h3>
           <span v-if="checkDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} %%</span>
           <br>
@@ -112,16 +112,20 @@ name: "ClientCatalogItem",
 </script>
 
 <style scoped>
+.up{
+  margin-bottom: -10px;
+}
 .product-img {
-  height: 225px;
+
   width: 100%;
   margin-bottom: 10px;
   text-align: center;
 }
 .product-img img{
   width: 100%;
-  height: 100%;
+  height: 160px;
   object-fit: contain;
+  border-radius:10px;
 }
 .product-add{
   font-weight: bold;
@@ -164,6 +168,9 @@ name: "ClientCatalogItem",
 .product-add  span{
   font-size: 16px;
 }
+.product-add h2{
+  margin-bottom: 5px;
+}
 .product-add h2, .product-add h3{
   font-size: 14px;
 }
@@ -174,6 +181,21 @@ name: "ClientCatalogItem",
 }
 .lineThrough{
   text-decoration: line-through;
-  font-size: 9px!important;
+  font-size: 12px!important;
+  font-weight: normal;
+}
+@media(max-width:576px){
+  .product-box:hover{
+    border:none;
+  }
+}
+
+@media(max-width:380px){
+  .product-box{
+    padding: 20px 10px;
+  }
+  .add-to-card{
+    padding:0.3rem 30px;
+  }
 }
 </style>

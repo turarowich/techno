@@ -563,6 +563,11 @@ export default {
   height: 100px;
   position: relative;
 }
+.profile-img img{
+  width: 100%;
+  height: 100%;
+  background-size:contain;
+}
 .profile-logo{
   width: 100%;
   height: 100%;

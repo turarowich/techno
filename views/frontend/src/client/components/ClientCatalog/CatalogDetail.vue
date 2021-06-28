@@ -1,12 +1,12 @@
 <template>
   <div class="container client-container">
     <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg"><div @click="$router.go(-1)" class="mr-1">Back </div> | <span > {{getProduct.name}}</span> </div>
-  <div class="row mt-5 mb-5">
+  <div class="row  mb-5">
     <div class="col-10 m-auto">
 
       <div class="row">
         <div class="col-lg-7 detail-right">
-          <div class="product-img" id="container">
+          <div class="product-img" :class="{active: getProduct.imgArray.length===0}" id="container">
 <!--            <img :src="server+'/'+getProduct.img">-->
             <img v-if="!getProduct.error" :src="server+'/'+getProduct.img" @error="getProduct.error=true">
             <img v-else src="../../../assets/img/default.svg" >
@@ -28,7 +28,7 @@
             </div>
           </div>
         </div>
-        <div class="col-lg-5">
+        <div class="col-lg-5 detail-left" :class="{active: getProduct.imgArray.length===0}">
           <h3 class="product-name">{{getProduct.name}}</h3>
           <h5 class="product-code">{{getProduct.code}}</h5>
           <h1 v-if="checkDates(getProduct.promoStart,getProduct.promoEnd)" class="product-price">{{getProduct.promoPrice}} $</h1>
@@ -167,6 +167,17 @@ export default {
         dots: true,
         centerMode: true,
         focusOnSelect: true,
+        responsive: [
+          {
+            breakpoint: 768,
+            settings: {
+              slidesToShow: 2,
+              slidesToScroll: 2,
+              infinite: true,
+              dots: true
+            }
+          },
+        ]
       });
     },
     async  getOneProduct(){
@@ -191,7 +202,6 @@ export default {
 
 <style scoped>
 .product-img{
-  width: 400px;
   height: 440px;
   margin-bottom: 40px;
 }
@@ -199,11 +209,14 @@ export default {
 .lineThrough{
   text-decoration: line-through;
   font-size: 20px!important;
+  font-weight: normal !important;
+
 }
 .product-img img{
   width: 100%;
   height: 100%;
   object-fit: contain;
+  border-radius: 5px;
 }
 .product-name{
   font-weight: 600;
@@ -228,11 +241,23 @@ export default {
     height: 400px;
   }
 }
-@media(max-width:481px){
-  .product-img{
+@media(max-width:481px) {
+  .product-img {
     width: 100%;
-    height: 90%;
+    height: 60%;
+    margin-bottom: 0;
   }
+  .detail-left{
+    margin-top: -50px;
+  }
+  .detail-left.active{
+    margin-top: 50px;
+  }
+  .product-img.active {
+    height: 100%;
+  }
+
+
 }
 
 </style>

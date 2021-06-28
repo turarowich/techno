@@ -73,8 +73,6 @@ export default {
     data_check: {
       type: Object
     },
-
-
   },
   data() {
     return {
