@@ -224,10 +224,10 @@ class AuthController{
                 'msg': 'Client added',
                 'auth': true,
                 'object': client,
-                'refresh_token': jwt.sign({ id: req.headers['access-place'], user: client._id, name: user.name, type: "client"  }, config.secret_key, {
+                'refresh_token': jwt.sign({ id: req.headers['access-place'], user: client._id, name: client.name, type: "client"  }, config.secret_key, {
                     expiresIn: "30 days"
                 }),
-                'token': jwt.sign({ id: req.headers['access-place'], user: client._id, name: user.name, type: "client" }, config.secret_key, {
+                'token': jwt.sign({ id: req.headers['access-place'], user: client._id, name: client.name, type: "client" }, config.secret_key, {
                     expiresIn: 86400 // expires in 24 hours
                 }),
             }
@@ -288,10 +288,10 @@ class AuthController{
                 'msg': 'Client added',
                 'auth': true,
                 'object': client,
-                'refresh_token': jwt.sign({ id: req.headers['access-place'], user: client._id, name: user.name, type: "client"  }, config.secret_key, {
+                'refresh_token': jwt.sign({ id: req.headers['access-place'], user: client._id, name: client.name, type: "client"  }, config.secret_key, {
                     expiresIn: "30 days"
                 }),
-                'token': jwt.sign({ id: req.headers['access-place'], user: client._id, name: user.name, type: "client" }, config.secret_key, {
+                'token': jwt.sign({ id: req.headers['access-place'], user: client._id, name: client.name, type: "client" }, config.secret_key, {
                     expiresIn: 86400 // expires in 24 hours
                 }),
             }
@@ -338,10 +338,10 @@ class AuthController{
                 'msg': 'Sending token',
                 'auth': true,
                 'object': client,
-                'refresh_token': jwt.sign({ id: req.headers['access-place'], user: client._id, name: user.name, type: "client"  }, config.secret_key, {
+                'refresh_token': jwt.sign({ id: req.headers['access-place'], user: client._id, name: client.name, type: "client"  }, config.secret_key, {
                     expiresIn: "30 days"
                 }),
-                'token': jwt.sign({ id: req.headers['access-place'], user: client._id, name: user.name, type: "client" }, config.secret_key, {
+                'token': jwt.sign({ id: req.headers['access-place'], user: client._id, name: client.name, type: "client" }, config.secret_key, {
                     expiresIn: 86400 // expires in 24 hours
                 }),
             }
@@ -369,10 +369,10 @@ class AuthController{
                 'status': 200,
                 'msg': 'Sending token',
                 'auth': true,
-                'refresh_token': jwt.sign({ id: decoded.id, user: decoded.user, name: user.name, type: decoded.type  }, config.secret_key, {
+                'refresh_token': jwt.sign({ id: decoded.id, user: decoded.user, name: decoded.name, type: decoded.type  }, config.secret_key, {
                     expiresIn: "30 days"
                 }),
-                'token': jwt.sign({ id: decoded.id, user: decoded.user, name: user.name, type: decoded.type }, config.secret_key, {
+                'token': jwt.sign({ id: decoded.id, user: decoded.user, name: decoded.name, type: decoded.type }, config.secret_key, {
                     expiresIn: 86400 // expires in 24 hours
                 }),
             }
@@ -526,10 +526,10 @@ class AuthController{
                         'msg': 'Sending token',
                         'auth': true,
                         'object': client,
-                        'refresh_token': jwt.sign({ id: req.headers['access-place'], user: client._id, name: user.name, type: "client" }, config.secret_key, {
+                        'refresh_token': jwt.sign({ id: req.headers['access-place'], user: client._id, name: client.name, type: "client" }, config.secret_key, {
                             expiresIn: "30 days"
                         }),
-                        'token': jwt.sign({ id: req.headers['access-place'], user: client._id, name: user.name, type: "client" }, config.secret_key, {
+                        'token': jwt.sign({ id: req.headers['access-place'], user: client._id, name: client.name, type: "client" }, config.secret_key, {
                             expiresIn: 86400 // expires in 24 hours
                         }),
                     }
