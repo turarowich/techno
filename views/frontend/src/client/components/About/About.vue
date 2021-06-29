@@ -1,7 +1,7 @@
 <template>
 <div class="about container client-container">
   <div class="row">
-  <div class="col-lg-7 mr-4">
+  <div class="col-lg-7 left-about">
     <div class="about-left">
       <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg"><div @click="$router.go(-1)" class="mr-1">Back </div>  | <span>{{$route.name}}</span> </div>
       <div class="main-box" v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.banner + ')' }">
@@ -81,7 +81,7 @@ export default {
   beforeCreate() {
     (async () => {
       const options = {
-        headers: {"company_url": this.$route.params.bekon}
+        headers: {"x-client-url": this.$route.params.bekon}
       }
       await this.axios.get(this.url('getCatalogSettings'),options)
           .then((response) => {
@@ -149,7 +149,9 @@ background-size:cover;
   font-size: 16px;
   font-weight: 600;
 }
-
+.catalog-btn{
+  margin-bottom: 40px;
+}
 .shop-name{
   font-size: 28px;
   font-weight: 700;
@@ -190,5 +192,10 @@ background-size:cover;
 }
 .contact-icon img:first-child{
   margin-right: 16px;
+}
+@media(max-width:481px) {
+  .main-box{
+    height: 270px;
+  }
 }
 </style>

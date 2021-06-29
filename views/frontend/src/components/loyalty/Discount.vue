@@ -70,12 +70,12 @@ export default {
         let copy = $.extend(true,{},this.current_discount);
         // let new_list_of_discounts = this.list_of_discounts
         // new_list_of_discounts.push(copy);
-        
+
         let that=this;
         let url = this.base_url+'/api/addDiscount';
         this.axios.post(url,
             copy
-        ).then((response)=> {     
+        ).then((response)=> {
             this.list_of_discounts = response.data.discounts;
         }).catch((error)=>{
             if(error.response.data && !error.response.data.errors){
@@ -105,9 +105,9 @@ export default {
             if (error.response) {
             // console.log(error.response.status);
             // console.log(error.response.headers);
-                
+
                 that.displayMessages(Object.values(error.response.data.errors),"Errors");
-                
+
             }
       });
 
@@ -129,7 +129,7 @@ export default {
             if (error.response) {
             // console.log(error.response.status);
             // console.log(error.response.headers);
-                
+
                 that.displayMessages(Object.values(error.response.data.errors),"Errors");
             }
       });

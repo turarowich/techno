@@ -4,29 +4,35 @@
       <img src="../../../assets/clients/box.png">
       <h4>Your shopping cart is empty please choose your product from out catalog</h4>
     </div>
+
     <div v-else class="client-table-item d-flex" v-for="item in shoppingCart" :key="item.product._id">
-      <div style="width:40%;overflow: hidden;text-overflow: ellipsis;" class="basket-name d-flex align-items-center">
+      <div style="overflow: hidden;text-overflow: ellipsis;" class="basket-name d-flex align-items-center">
         <div class="client-table-img">
           <img v-if="!item.product.error" :src="server+'/'+item.product.img" @error="item.product.error=true">
           <img v-else src="../../../assets/icons/no-catalog.svg" >
         </div>
-        <div>
+        <div class="name-vendorCode">
           <h3 class="table-title">{{item.product.name}}</h3>
+          <span style="color:#b0b0b0">{{item.product.vendorCode}}</span>
         </div>
       </div>
-      <div style="width:20%" class="basket-amount">
+      <div style="width:30%" class="basket-amount">
+        <div class="name-vendorCode mobile">
+          <h3 class="table-title">{{item.product.name}}</h3>
+          <span style="color:#b0b0b0">{{item.product.vendorCode}}</span>
+        </div>
         <button class="decrease mb-0" @click="decrease(item.product._id)">-</button>
         <span class="count">{{item.quantity}}</span>
-        <button class="increase mb-0" @click="increase(item.product._id)">+</button>
+        <button class="increase mb-0" @click="increase(item.product._id,item.product.quantity,item.quantity)">+</button>
       </div>
-      <div style="width:30%;" class="hide">
+      <div style="width:30%;">
         <span>
           {{item.current_price}} $
         </span>
         <br>
         <div v-if="item.current_price<(item.product.price*item.quantity)" class="discounts_block">
-          <span class="lineThrough">{{item.product.price*item.quantity}}$ </span>
-          <span style="color: #E94A4A;" v-if="item.isDiscounted">Discount {{item.discount_sum}}$</span>
+          <span class="lineThrough mr-2">{{item.product.price*item.quantity}}$ </span>
+          <span style="color: #E94A4A;" v-if="item.isDiscounted">Discount <span class="break-discount">{{item.discount_sum}}$</span></span>
           <span style="color: #E94A4A;" v-else>Discount {{item.discount_percent_sum}}$</span>
         </div>
       </div>
@@ -77,7 +83,7 @@ export default {
     removeFromBasket(id) {
       Swal.fire({
           showConfirmButton: true,
-          html: 'Are you sure u want to remove this <br>item',
+          html: 'Are you sure u want to remove<br> this item',
           showCloseButton: true,
           showCancelButton: true,
           confirmButtonText: 'Remove',
@@ -91,7 +97,7 @@ export default {
               closeButton:'close-btn'
           },
         showClass: {
-          popup: 'animate__animated animate__fadeInDown'
+          popup: 'animate__animated animate__slideInDown'
         },
         hideClass: {
           popup: 'animate__animated animate__fadeOutUp'
@@ -117,22 +123,32 @@ export default {
           }
       })
     },
-    increase(id){
+    increase(id,stock_quant,basket_quant){
+      if(stock_quant>basket_quant){
         this.$store.dispatch('Orders/increaseQuantity', id);
         this.$emit('checkPromocode_child',this.basket_promocode);
+      }else{
+        this.$warningAlert('Not enough stock');
+      }
     },
     decrease(id){
-        this.$store.dispatch('Orders/decreaseQuantity', id);
-        this.$emit('checkPromocode_child',this.basket_promocode);
+      this.$store.dispatch('Orders/decreaseQuantity', id);
+      this.$emit('checkPromocode_child',this.basket_promocode);
     }
   }
 }
 </script>
 
 <style scoped>
-
+.basket-name{
+  width: 40%;
+}
+.name-vendorCode.mobile{
+  display: none;
+  margin-bottom: 10px;
+}
 .client-table-item{
-  height: 100px;
+  padding:14px 0;
   display: flex;
   align-items: center;
   border-bottom: 1px solid #E4E4E4;
@@ -176,12 +192,26 @@ font-size:16px;
   font-size: 13px!important;
   color: #B0B0B0;
 }
+@media(max-width:576px){
+  .client-table-item{
+    align-items: flex-start;
+  }
+  .name-vendorCode{
+    display:none
+  }
+  .name-vendorCode.mobile{
+    display: block;
+  }
+  .lineThrough{
+    display:block;
+  }
+  .break-discount{
+    display:block;
+  }
+}
 @media(max-width:481px){
   .hide{
     display:none;
-  }
-  .basket-name{
-    width: 70% !important;
   }
   .basket-amount{
     width: 40% !important;

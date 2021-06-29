@@ -1,9 +1,11 @@
 <template>
-  <div class="news">
+  <div class="news container">
+    <div @click="$router.go(-1)" class="d-flex align-items-center mb-4">
+      <h3 class="news-back" >News</h3>
+    </div>
     <div class="row">
-      <div class="col-9 m-auto">
-        <div class="row">
-            <div class="col-lg-4 col-md-6 col-sm-6   news-box" v-for="newss in news" :key="newss._id" @click="openNews(newss._id)">
+
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6  news-box" v-for="newss in news" :key="newss._id" @click="openNews(newss._id)">
               <div class="new-img">
 <!--                <img :src="server+'/'+newss.img">-->
                 <img v-if="!newss.error" :src="server+'/'+newss.img" @error="newss.error=true">
@@ -23,8 +25,7 @@
             </div>
         </div>
       </div>
-    </div>
-  </div>
+
 </template>
 
 <script>
@@ -48,6 +49,12 @@ export default {
 </script>
 
 <style scoped>
+.news-back{
+  font-size:18px;
+  font-weight: normal;
+  cursor:pointer;
+}
+
 .news-box{
   margin-bottom: 37px;
 }
@@ -60,11 +67,13 @@ export default {
   height: 125px;
   width: 100%;
   margin-right: 10px;
+
 }
 .new-img img{
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 5px;
 
 }
 .date{
@@ -96,5 +105,10 @@ export default {
   display: -webkit-box;
   -webkit-line-clamp: 3; /* number of lines to show */
   -webkit-box-orient: vertical;
+}
+@media(min-width:1200px){
+  .news{
+    max-width: calc(100vw - 240px);
+  }
 }
 </style>

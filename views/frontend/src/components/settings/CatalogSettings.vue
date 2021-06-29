@@ -16,7 +16,8 @@
      <h3 class="catalog-sub-title margin-10">Your url from online catalog</h3>
      <p class="catalog-description mb-3">You can send a link to your catalog to your clients</p>
      <div class="reload-code d-flex align-items-center">
-       <input v-model="catalogUrl">
+       <span style="color:#858585;">{{domainNameShop}}/</span>
+       <input style="color:#616CF5;padding-bottom: 1px;padding-left: 0;" v-model="catalogUrl">
        <div @click="generateQrcode();" class="url-icon mr-1">
          <img src="../../assets/icons/Setting.svg">
        </div>
@@ -25,7 +26,7 @@
        </div>
      </div>
      <h3 class="catalog-sub-title margin-20">QR code for online catalog</h3>
-     <h3 class="catalog-sub-title mb-3" style="text-overflow: ellipsis;overflow: hidden">{{catalogFullUrl}}</h3>
+<!--     <h3 class="catalog-sub-title mb-3" style="text-overflow: ellipsis;overflow: hidden">{{catalogFullUrl}}</h3>-->
      <div class="d-flex align-items-center margin-50">
        <img :src="qrcodePath" class="mr-3">
        <div>
@@ -49,33 +50,36 @@
        customers can also place an order only within your institution
      </p>
 
-     <div class="d-flex margin-10">
-       <label class="switch d-flex">
-         <input v-model="news_status" type="checkbox">
-         <span class="slider round"></span>
-       </label>
-       <h2 class="catalog-sub-title">News</h2>
-     </div>
 
-<!--     <h3 class="catalog-sub-title mb-1">News</h3>-->
-     <p class="catalog-description margin-30">Disable news in the directory</p>
 
-     <label>News title</label>
-     <input v-model="news_title" class="cashback-input">
 
-     <label>News description</label>
-     <textarea v-model="news_description" class="margin-50 general-area"></textarea>
+<!--     <div class="d-flex margin-10">-->
+<!--       <label class="switch d-flex">-->
+<!--         <input v-model="news_status" type="checkbox">-->
+<!--         <span class="slider round"></span>-->
+<!--       </label>-->
+<!--       <h2 class="catalog-sub-title">News</h2>-->
+<!--     </div>-->
+<!--     -->
+<!--     <p class="catalog-description margin-30">Disable news in the directory</p>-->
 
-     <div class="d-flex margin-10">
-       <label class="switch d-flex">
-         <input v-model="filters_n_category_status" type="checkbox">
-         <span class="slider round"></span>
-       </label>
-       <h2 class="catalog-sub-title">Filters and category</h2>
-     </div>
-     <p class="catalog-description margin-50">
-       Disable categories and filters in the catalog
-     </p>
+<!--     <label>News title</label>-->
+<!--     <input v-model="news_title" class="cashback-input">-->
+
+<!--     <label>News description</label>-->
+<!--     <textarea v-model="news_description" class="margin-50 general-area"></textarea>-->
+
+<!--     <div class="d-flex margin-10">-->
+<!--       <label class="switch d-flex">-->
+<!--         <input v-model="filters_n_category_status" type="checkbox">-->
+<!--         <span class="slider round"></span>-->
+<!--       </label>-->
+<!--       <h2 class="catalog-sub-title">Filters and category</h2>-->
+<!--     </div>-->
+<!--     <p class="catalog-description margin-50">-->
+<!--       Disable categories and filters in the catalog-->
+<!--     </p>-->
+
 
      <div class="d-flex margin-10">
        <label class="switch d-flex">
@@ -99,6 +103,7 @@
 
      <div class="margin-30">
        <label>Logo</label>
+       <p class="catalog-description margin-30">You can upload JPG or PNG photos, the size is not more than 3 MB.</p>
        <div class="profile-img ">
 <!--         <img class="profile-logo" :src="previewImage" >-->
          <img class="profile-logo" :src="logoPath">
@@ -108,7 +113,7 @@
      </div>
 
      <h3 class="catalog-sub-title margin-10">Banner</h3>
-     <p class="catalog-description margin-30">You can upload JPG or PNG photos, the minimum resolution is 1200*320px, the size is not more than 3 MB.</p>
+     <p class="catalog-description margin-30">You can upload JPG or PNG photos, the size is not more than 3 MB.</p>
 
      <div class="profile-img big-profile-img margin-30">
        <img :src="bannerPath">
@@ -187,9 +192,9 @@ export default {
     catalogFullUrl(){
       return window.location.host+'/'+this.catalogUrl;
     },
-    // domainNameShop(){
-    //   // return window.location.host+'/shop/';
-    // },
+    domainNameShop(){
+      return window.location.host;
+    },
     qrcodePath(){
       if(this.company !=="" && this.id !==''){
         try {
@@ -230,7 +235,7 @@ export default {
     },
   },
   methods:{
-    uploadImage(e,type){
+    async uploadImage(e,type){
       let that = this;
       const image = e.target.files[0];
       if(image.name.match(/\.(jpg|jpeg|png|gif)$/)){
@@ -248,12 +253,13 @@ export default {
           im.src = e.target.result;
           im.onload = function (){
             console.log(im.width,im.height);
-            if(type==="banner" && (im.width<1200 || im.width<320)){
-              that.$warningAlert('Min resolution 1200*320px');
-            }else{
-              // this.previewImage = e.target.result;
-              that.saveFile(type,e.target.result);
-            }
+            // if(type==="banner" && (im.width<1200 || im.width<320)){
+            //   that.$warningAlert('Min resolution 1200*320px');
+            // }else{
+            //   // this.previewImage = e.target.result;
+            //   that.saveFile(type,e.target.result);
+            // }
+            that.saveFile(type,e.target.result);
           }
         };
 
@@ -352,6 +358,7 @@ export default {
       win.document.close();
     },
     saveFile(type,file){
+      console.log("SAVING FILE");
       let that=this;
       let url = this.url('saveSettingsFile');
       let formData = new FormData();
@@ -404,8 +411,6 @@ export default {
       }).then(function (response) {
         console.log(response);
         that.$successAlert('Updated');
-        // that.displayMessages(['Added'],"Success");
-        // that.$router.push('/loyalty/promocode')
       }).catch(function(error){
         if (error.response) {
             if(error.response.data && !error.response.data.errors){
@@ -557,6 +562,11 @@ export default {
   width: 100px;
   height: 100px;
   position: relative;
+}
+.profile-img img{
+  width: 100%;
+  height: 100%;
+  background-size:contain;
 }
 .profile-logo{
   width: 100%;

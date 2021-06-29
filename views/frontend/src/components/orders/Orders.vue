@@ -34,6 +34,7 @@
         </div>
       </div>
       <div>
+        <span @click="test">SERVER LOG ROOMS</span>
         <button class="app-buttons-item" @click="showYesterday"><img src="../../assets/icons/yesterday.svg"><span>Yesterday</span></button>
         <button class="app-buttons-item" @click="showTodayData"><img src="../../assets/icons/yesterday.svg"><span>Today</span></button>
         <button class="app-buttons-item" @click="clickOnDate"><img src="../../assets/icons/yesterday.svg"><input :value="between_value"  class="date-pick" id="datepicker"></button>
@@ -198,6 +199,14 @@ name: "Orders",
     },
   },
   methods: {
+    test(){
+      this.axios.post(this.url('socketRooms'), {status: 'Done'}).then(()=>{
+      }).catch((error)=>{
+        if(error.response && error.response.data){
+          this.$warningAlert(error.response.data.msg)
+        }
+      });
+    },
     check(access="orders", parametr="active", parametr2="canEdit"){
         return this.checkAccess(access, parametr, parametr2)
     },
@@ -206,7 +215,7 @@ name: "Orders",
         if(item._id === id) {
           this.select_order = item;
           this.addNewProperty(this.select_order.products, "_id", 0, 'product')
-
+          console.log(this.select_order,"ddddddddddddddddddddddddddddddddd");
         }
       })
     },
@@ -287,7 +296,12 @@ name: "Orders",
             content:'content-sweet',
             closeButton:'close-btn'
           },
-
+          showClass: {
+            popup: 'animate__animated animate__slideInDown'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          }
         }).then((result) => {
           if (result.isConfirmed) {
             this.axios.delete(this.url('deleteOrders'),{data:{objects: this.deletedOrders}})
@@ -347,7 +361,12 @@ name: "Orders",
           closeButton:'close-btn'
 
         },
-
+        showClass: {
+          popup: 'animate__animated animate__slideInDown'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp'
+        }
       }).then((result) => {
         if (result.isConfirmed) {
           this.axios.delete(this.url('deleteOrder',id))

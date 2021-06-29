@@ -45,7 +45,7 @@
 
                 <div class="table-content">
                   <div v-if="new_order.products.length===0" class="d-flex align-items-center h-100 justify-content-center flex-column">
-                    <img class="empty-img mb-2" src="../../assets/icons/no-catalog.svg">
+                    <img class="empty-img mb-2" src="../../assets/img/emp-product.svg">
                     <p class="empty-page-text">Add a product to start</p>
                   </div>
 

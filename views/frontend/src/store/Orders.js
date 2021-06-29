@@ -2,6 +2,7 @@ import Swal from "sweetalert2";
 export const OrdersModule = {
     namespaced: true,
     state: {
+        version:'',
         company_url: '',
         shoppingCart:[],
         countOrders: 0,
@@ -39,34 +40,42 @@ export const OrdersModule = {
                 },
             },
             state.guest={},
-            // state.getProduct={},
-            state.promocode=null
+            state.promocode=null,
+
+            state.version='',
+            state.company_url= '',
+            state.usePointsStatus=false,
+            state.selectedDelivery_Type='delivery',
+            state.address=''
         },
         set_company_url(state, url) {
             state.company_url = url;
         },
+        set_version(state, version) {
+            state.version = version;
+        },
         setSelectedDeliveryType(state, obj){
-            state.selectedDeliveryType = obj
+            state.selectedDeliveryType = obj;
         },
         setSelectedDelivery_Type(state, type){
-            state.selectedDelivery_Type = type
+            state.selectedDelivery_Type = type;
         },
         setAddress(state, str){
-            state.address = str
+            state.address = str;
         },
         setDeliveryCost(state, cost){
-            state.deliveryCost = cost
+            state.deliveryCost = cost;
         },
         setUsePointsStatus(state, points){
-            state.usePointsStatus = points
+            state.usePointsStatus = points;
         },
         setUsedPoints(state, points){
-            state.usedPoints = points
+            state.usedPoints = points;
         },
         addToCart(state, order) {
             let client_status_discount = order.client_status_discount || 0;
             console.log(client_status_discount,"add-------------->");
-            state.shoppingCart.push(order)
+            state.shoppingCart.push(order);
         },
         removeFromBasket(state, id) {
             let index = state.shoppingCart.findIndex(x => x.product._id === id);
@@ -124,7 +133,9 @@ export const OrdersModule = {
             console.log(client_status_discount);
             let index = state.shoppingCart.findIndex(x => x.product._id === id);
             if(index !== -1){
-                if(state.shoppingCart[index].quantity>=1){
+
+                if(state.shoppingCart[index].quantity>=2){
+                    //decrease till 1
                     state.shoppingCart[index].quantity -=1;
                     let item = state.shoppingCart[index];
                     let sum = (item.product.price * item.quantity)-(item.product.price * item.quantity*(item.discount_percent/100))-(item.discount_sum);
@@ -196,40 +207,39 @@ export const OrdersModule = {
     // Actions are functions that you call throughout your application that call mutations.
     actions: {
         clearAll:function ({commit}){
-            commit('clearAll')
+            commit('clearAll');
         },
         setCompany_url_basket: function({commit},url){
-            commit('set_company_url' ,url)
+            commit('set_company_url' ,url);
+        },
+        setVersion: function({commit},version){
+            commit('set_version' ,version);
         },
         getDetail: function({commit},product){
-            commit('getDetail' ,product)
+            commit('getDetail' ,product);
         },
         setSelectedDeliveryType: function({commit},object){
-            commit('setSelectedDeliveryType' ,object)
+            commit('setSelectedDeliveryType' ,object);
         },
         setSelectedDelivery_Type: function({commit},type){
-            commit('setSelectedDelivery_Type' ,type)
+            commit('setSelectedDelivery_Type' ,type);
         },
         setAddress: function({commit},str){
-            commit('setAddress' ,str)
+            commit('setAddress' ,str);
         },
         setDeliveryCost: function({commit},cost){
-            commit('setDeliveryCost' ,cost)
+            commit('setDeliveryCost' ,cost);
         },
         setUsePointsStatus:function ({commit},status){
-            commit('setUsePointsStatus' ,status)
+            commit('setUsePointsStatus' ,status);
         },
         setUsedPoints:function ({commit},points){
-            commit('setUsedPoints' ,points)
+            commit('setUsedPoints' ,points);
         },
         addToCart: function({commit,state,dispatch,rootState}, order){
             //add new or increase quantity
             let index = state.shoppingCart.findIndex(x => x.product._id === order.product._id)
             let client_status_discount = rootState.Client.userDiscountStatus.discount_percentage;
-            // let obj = {
-            //     id:order.product._id,
-            //     client_status_discount:client_status_discount,
-            // }
             if(index === -1){
                 //add new
                 order.client_status_discount = client_status_discount;
@@ -255,24 +265,27 @@ export const OrdersModule = {
             else{
                 //increase quantity
                 console.log('INCREASE');
-                dispatch('increaseQuantity',order.product._id);
-                Swal.fire({
-                    timer:1500,
-                    title:'Added to cart',
-                    text:"+++",
-                    showConfirmButton:false,
-                    position: 'top-right',
-                    customClass:{
-                        popup:'success-popup information-popup',
-                        content:'success-content',
-                        title:'success-title',
-                        header:'success-header',
-                        image:'success-img'
-                    },
-                    showClass:{
-                        popup: 'animate__animated animate__zoomIn'
-                    }
-                })
+                if(state.shoppingCart[index].product.quantity>state.shoppingCart[index].quantity){
+                    dispatch('increaseQuantity',order.product._id);
+                }else{
+                    Swal.fire({
+                        timer:1500,
+                        title:'Cant add',
+                        text:"Not enought in stock",
+                        showConfirmButton:false,
+                        position: 'top-right',
+                        customClass:{
+                            popup:'success-popup information-popup',
+                            content:'success-content',
+                            title:'success-title',
+                            header:'success-header',
+                            image:'success-img'
+                        },
+                        showClass:{
+                            popup: 'animate__animated animate__zoomIn'
+                        }
+                    })
+                }
             }
         },
         removeFromBasket: function({commit},id){
@@ -287,7 +300,6 @@ export const OrdersModule = {
                 id:id,
                 client_status_discount:client_status_discount,
             }
-            console.log(obj,"{}{{{}}}}}{{PPPPPPPddddddddddddddddddddddddddddddddddddddddddddd")
             commit('increaseQuantity',obj)
         },
         decreaseQuantity: function({commit,rootState},id){
@@ -391,6 +403,9 @@ export const OrdersModule = {
         },
         getCompany_url_basket(state){
             return state.company_url;
+        },
+        getVersion(state){
+            return state.version;
         },
     },
 }

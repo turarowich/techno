@@ -361,8 +361,6 @@ const router = createRouter({
         return { top: 0 }
     },
     routes,
-
-
 });
 
 // Creates a nextMiddleware() function which not only
@@ -405,6 +403,7 @@ router.beforeEach((to, from, next) => {
 });
 //WEB Catalog auth guard.
 router.beforeEach((to, from, next) => {
+    console.log('router BEFORE EACH');
     const authenticatedUser = store.state.Client.user.auth;
     const current_company_url = store.state.Catalog.company_url;
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);

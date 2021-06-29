@@ -1,19 +1,35 @@
 var controller = require('../app/controllers/socketController');
 const verifyTokenSocket = require('./../services/verifyTokenSocket');
+var allClients = [];
 module.exports = io => {
     const listener = (...args) => {
-        console.log(args);
+        console.log(args,"SOCKET");
     }
     io.use((socket, next) => {
         verifyTokenSocket(socket, next)
     });
     io.on('connection', (socket) => {
+        allClients.push(socket.id);
+        console.log(socket.id,"SOCKET ID <<<<<<<<<<<<<<<<<<<<");
+        console.log(allClients,"ALL SOCKET ID <<<<<<<<<<<<<<<<<<<<");
         socket.on("details", listener)
         socket.on('init_admin', () => {
             socket.join(socket.handshake.headers.db)
         });
         socket.on('init', (user) => {
+            console.log(user )
             socket.join(user)
+        });
+        socket.on('join_cat', (data) => {
+            console.log(data,"JOIN CAT")
+            socket.join(data.user);
+            // controller.sendHey(io);
+        });
+        socket.on('disconnect', (reason) => {
+            console.log(`${reason} Got disconnect! ${socket.id}`);
+            // socket.connect();
+            var i = allClients.indexOf(socket);
+            // allClients.splice(i, 1);
         });
         socket.on('read messages', (msg) => {
             controller.readMessage(socket, msg)

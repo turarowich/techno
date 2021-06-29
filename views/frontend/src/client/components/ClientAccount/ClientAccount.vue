@@ -74,7 +74,13 @@
         </div>
 
       </div>
+
+
+
+
+
     </div>
+
 
   </div>
 </template>
@@ -147,20 +153,34 @@ name: "ClientAccount",
     logout(){
       this.$store.dispatch("Client/logout");
       this.$store.dispatch("Orders/clearAll");
+
+      this.$router.push({ path: `/${this.currentCompanyCatalog}/signin`});
     },
   },
   mounted(){
     $('.nav-tabs a:first').click();
     const options = {
       headers: {
-        "company_url": this.currentCompanyCatalog,
+        "x-client-url": this.currentCompanyCatalog,
         "x-access-token": this.userToken,
       }
     }
     if(this.user){
       this.$store.dispatch("Client/updateUserData",{axios:this.axios,url:this.url('getClient',this.user._id),options:options});
+      console.log("EMITTING");
+      this.socket.emit('join_cat', {user: this.user._id});
     }
 
+  },
+  created() {
+    // this.socket.on("sendingHey", function(data) {
+    // this.socket.on("sendingHey", function(data) {
+    //   console.log(data);
+    //   $('#orderStatus').modal('show');
+    //   let text = `Order #${data.code} is ${data.status}`;
+    //   $('.orderStatusText').text(text);
+    //   // alert(`This order ${data.code} is ${data.status}`);
+    // });
   }
 }
 </script>

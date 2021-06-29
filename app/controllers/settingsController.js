@@ -304,9 +304,10 @@ class SettingsController{
         let settings_model = db.model("Settings");
         let company = req.db;
         let img = req.fields.logo;
-        let regex = /^data:.+\/(.+);base64,(.*)$/
-        let matches = img.match(regex);
-        let ext = matches[1];
+        // let regex = /^data:.+\/(.+);base64,(.*)$/
+        // let matches = img.match(regex);
+        // let ext = matches[1];
+        let ext = img.substring("data:image/".length, img.indexOf(";base64"));
 
         let dir = path.join(__dirname, '/../../views/frontend/images/' + company+'/logo');
         let full_file_name = 'images/' + company+'/logo/logo.'+ext;
@@ -325,6 +326,7 @@ class SettingsController{
             'status': 200,
             'msg': '',
         }
+        console.log('try STARTING SER SAVE');
         try {
             // strip off the data: url prefix to get just the base64-encoded bytes
             let data = img.replace(/^data:image\/\w+;base64,/, "");
@@ -334,7 +336,7 @@ class SettingsController{
                     console.log(err)
                 })
             }
-            fs.writeFile(dir+ "/" + file_name, buf,function (out){
+            await fs.writeFile(dir+ "/" + file_name, buf,function (out){
                 console.log(out,"9090099")
             });
             await settings_model.findOneAndUpdate(req.fields.id, update);
@@ -560,6 +562,39 @@ class SettingsController{
         }
         res.status(result.status).json(result);
     };
+    updatePersonalSettings = async function (req, res) {
+        let users = useDB('loygift');
+        let personal_model = users.model("User");
+        if (req.userType == "employee") {
+            let checkResult = await checkAccess(req.userID, { access: "settings", parametr: "active" }, db, res)
+            if (checkResult) {
+                return;
+            }
+        }
+        let result = {
+            'status': 200,
+            'msg': 'Updated'
+        }
+        try {
+            let filter = { '_id': req.fields._id };
+            let user = await personal_model.findOne(filter);
+            if(user){
+                user.name =req.fields.name;
+                user.email =req.fields.email;
+                user.phone =req.fields.phone;
+            }
+            if(req.fields.password.length!==0){
+                user.password = bcrypt.hashSync(req.fields.password, 8);
+            }
+            await user.validate();
+            await user.save();
+            // result['user']=await personal_model.findOneAndUpdate(filter,user,{runValidators:true} );
+            result['user']=user;
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.status(result.status).json(result);
+    }
 }
 
 

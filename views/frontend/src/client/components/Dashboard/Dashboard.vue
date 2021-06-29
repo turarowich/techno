@@ -15,8 +15,8 @@
       </div>
       <div class="row">
         <div class="col-lg-12">
-          <div class="row">
-            <div v-for="(news,index) in newsArray.slice(0,4)" :key="index"  class="col-lg-3 col-md-4 col-sm-6 mb-4 " @click="openNews(news._id)">
+          <div class="row parentNews">
+            <div v-for="(news,index) in newsArray.slice(0,4)" :key="index"  class="childNews col-lg-3 col-md-4 col-sm-6 mb-4 " @click="openNews(news._id)">
               <div class="new-img">
                 <img v-if="!news.error" :src="server+'/'+news.img" @error="news.error=true">
                 <img v-else src="../../../assets/img/default.svg" >
@@ -88,7 +88,7 @@ name: "Dashboard",
     },
     async  getNews(){
       const options = {
-        headers: {"company_url": this.currentCompanyCatalog}
+        headers: {"x-client-url": this.currentCompanyCatalog}
       }
       await this.axios.get(this.url('getNewsWeb'),options)
           .then((response) => {
@@ -100,7 +100,7 @@ name: "Dashboard",
   beforeCreate() {
     (async () => {
       const options = {
-        headers: {"company_url": this.$route.params.bekon}
+        headers: {"X-Client-Url": this.$route.params.bekon}
       }
       await this.axios.get(this.url('getCatalogSettings'),options)
           .then((response) => {
@@ -109,8 +109,10 @@ name: "Dashboard",
             this.$store.dispatch("Catalog/setCompany_delivery_options",response.data.deliveries);
             let catalog_settings={
               name:settings.name,
+              catalogMode:settings.catalogMode,
               email:settings.email,
               banner:settings.banner,
+              logo:settings.logo,
               description:settings.description,
               welcome:settings.welcome,
               delivery:settings.delivery,
@@ -121,19 +123,17 @@ name: "Dashboard",
               whatsapp:settings.whatsapp,
               website:settings.website,
             }
-            console.log("99999999999999999999999999999");
             this.$store.dispatch("Catalog/setCatalog_settings",catalog_settings);
+            this.checkCatalogStorageLife();
             // $('.overlay_404').show();
-            console.log("999999999999999999999999999990000000000000");
           }).catch(function (error){
             if (error.response) {
               console.log('setCatalog_settings EERRRor',error.response)
               let err_page = `
               <div>
-              <marquee>
-                <span style="font-size: 30px">404</span>
-              </marquee>
-
+                <marquee>
+                  <span style="font-size: 30px">404</span>
+                </marquee>
               </div>
               `
               $('.overlay_404').html(err_page).show();
@@ -152,7 +152,7 @@ name: "Dashboard",
     this.getNews();
     const options = {
       headers: {
-        "company_url": this.currentCompanyCatalog,
+        "x-client-url": this.currentCompanyCatalog,
         "x-access-token": this.userToken,
       }
     }
@@ -215,6 +215,7 @@ name: "Dashboard",
 }
 .new{
   margin-bottom: 70px;
+  color:#000;
 }
 .news-title{
   color: #222222;
@@ -243,9 +244,19 @@ name: "Dashboard",
 .main-box{
   height: 320px;
   /*background: url('../../../assets/clients/main-box.svg');*/
-  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   position: relative;
   border-radius: 5px;
   margin-bottom: 25px;
+}
+
+@media(max-width:576px){
+  .parentNews .childNews:nth-child(3), .parentNews .childNews:nth-child(4){
+    display:none;
+  }
+  .new{
+    margin-bottom: 40px;
+  }
 }
 </style>
