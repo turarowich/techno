@@ -9,7 +9,7 @@ var queryString = require('query-string');
 const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
-    port: 587,
+    port: 2525,
     auth: {
         user: 'moorestudio2@gmail.com',
         pass: '123123123@@',
@@ -414,7 +414,7 @@ class AuthController{
             }
             let code = randomNumber(100000, 1000000)
             client.oneTimeCode = code
-            client.save()
+            await client.save({validateBeforeSave: false})
             transporter.sendMail({
                 from: 'loygift', // sender address
                 to: req.fields.email, // list of receivers
