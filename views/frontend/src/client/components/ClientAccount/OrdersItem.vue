@@ -7,13 +7,13 @@
     </div>
 <div v-else class="table-item d-flex align-items-center" v-for="order in orderList" :key="order.id">
   <div style="width:20%" class="d-flex align-items-center">
-    <div class="table-img">
-      <img src="../../../assets/img/sneak.webp">
-    </div>
+<!--    <div class="table-img">-->
+<!--      <img src="../../../assets/img/sneak.webp">-->
+<!--    </div>-->
     {{order.code}}
   </div>
   <div style="width:14%"> {{order.address}}</div>
-  <div style="width:10%">{{new Date(order.createdAt).toDateString()}}</div>
+  <div style="width:10%">{{format_date(order.createdAt)}}</div>
   <div style="width:12%">{{order.products.length}}</div>
   <div style="width:12%">{{order.deliveryPrice}}</div>
   <div style="width:12%">{{order.totalDiscount}}</div>
@@ -27,6 +27,13 @@
 export default {
 name: "OrdersItem",
   props:['orderList'],
+  methods:{
+    format_date(value){
+      if (value) {
+        return this.$moment(String(value)).format('MM-DD-YY');
+      }
+    },
+  },
 }
 </script>
 

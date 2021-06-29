@@ -100,7 +100,7 @@ router.get("/auth/facebook", passport.authenticate("facebook", { authType: 'reau
 router.get("/auth/google", passport.authenticate("google", { authType: 'reauthenticate',scope: ['https://www.googleapis.com/auth/plus.login','https://www.googleapis.com/auth/userinfo.email','https://www.googleapis.com/auth/userinfo.profile']}));
 router.get("/auth/twitter", passport.authenticate("twitter", { authType: 'reauthenticate'}));
 
-
+console.log(httpServer,"httpServerhttpServerhttpServerhttpServerhttpServerhttpServerhttpServerhttpServerhttpServerhttpServerhttpServerhttpServerhttpServerhttpServerhttpServerhttpServer");
 const io = require('socket.io')(httpServer, {
     cors: {
         // origin: "http://localhost:3000",
