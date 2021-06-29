@@ -1,6 +1,6 @@
 <template>
   <div class="news container">
-    <div class="d-flex align-items-center mb-5" style="cursor:pointer" @click="$router.go(-1)">
+    <div class="d-flex align-items-center mb-4" style="cursor:pointer" @click="$router.go(-1)">
       <img class="mr-2" src="../../../assets/clients/slide.svg">
       <h3 class="path-title">
         News
