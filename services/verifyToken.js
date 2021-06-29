@@ -1,6 +1,5 @@
 var jwt = require('jsonwebtoken');
 var config = require('../config/config');
-
 function verifyToken(req, res, next) {
     
     // Header names in Express are auto-converted to lowercase
@@ -17,12 +16,13 @@ function verifyToken(req, res, next) {
         if (err)
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
         // if everything good, save to request for use in other routes
-        if (decoded.type && decoded.type == "employee"){
-            req.userType = "employee"
+        if (decoded.type){
+            req.userType = decoded.type
         }else{
-            req.userType = "other"
+            req.userType = "client"
         }
         req.userID = decoded.user;
+        req.userName = decoded.name;
         req.db = "loygift" + decoded.id;
         next();
     });

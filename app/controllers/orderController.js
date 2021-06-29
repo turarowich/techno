@@ -2,6 +2,10 @@ const { useDB, sendError, createExcel, randomNumber, checkAccess } = require('..
 var validate = require('../../config/messages');
 const fs = require('fs');
 const { connect } = require('mongodb');
+const { title } = require('process');
+
+const LOG = require('./logController');
+const Analytics = require('./analyticsController');
 
 async function calcCashback(products_full_data,cashback_model) {
     //Cashback
@@ -108,12 +112,10 @@ class OrderController{
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
-
         res.status(result.status).json(result);
     };
 
     addOrder = async function (req, res) {
-        console.log(req.fields);
         let db = useDB(req.db)
         let Order = db.model("Order");
         let Client = db.model("Client");  
@@ -146,7 +148,7 @@ class OrderController{
                 deliveryType: req.fields.deliveryType,
                 notes: req.fields.notes,
                 points: req.fields.points,
-                code: randomNumber(1000, 10000),
+                code: randomNumber(100000, 10000000),
 
                 deliveryPrice: req.fields.deliveryPrice,
                 totalDiscount: req.fields.totalDiscount,
@@ -216,10 +218,10 @@ class OrderController{
             }).save();
         }else if(req.fields.guest){
             let guest = req.fields.guest;
-            order.client_name=guest.name || '';
-            order.client_phone=guest.phone || '';
+            order.client_name = guest.name || '';
+            order.client_phone = guest.phone || '';
         }
-        console.log('EARNED CASHBACK',cashback_from_order,order);
+        await LOG.addLog(req, "order_created", "", "order_num", "#" + order.code)
         await order.save();
         result['object'] = await order.populate('products').execPopulate();
         } catch (error) {
@@ -297,6 +299,13 @@ class OrderController{
                 }
                 await order.save()
             }
+            let status = req.fields.status.replace(/ /g, '').toLowerCase()
+            if (req.fields.status && Object.keys(req.fields).length == 1){
+                await LOG.addLog(req, "order_updated", "#" + order.code, "change_status", status, status)
+                await Analytics.updateAnalytics(req, order.createdAt, true)
+            }else{
+                await LOG.addLog(req, "order_updated", "#" + order.code, "order_changed", status)
+            }
             result['object'] = await order.populate('client').populate('products').execPopulate()
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
@@ -320,6 +329,13 @@ class OrderController{
         }
         try {
             let query = { '_id': req.params.order }
+            let order = await Order.findById(query)
+            
+            if(order){
+                await LOG.addLog(req, "order_deleted", "#" + order.code, "order_by", req.client_name, "canceled")
+                await Analytics.updateAnalytics(req, order.createdAt, true)
+            }
+            
             await Order.findByIdAndRemove(query)
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
@@ -348,6 +364,15 @@ class OrderController{
                     '_id': {
                         $in: req.fields.objects
                     }
+                }
+                let orders = await Order.find(query, 'code')
+                
+                if (orders.length) {
+                    let desc = orders.map(function (elem) {
+                        return "#" + elem.code;
+                    }).join(", ")
+                    await Analytics.updateAnalytics(req, orders[0].createdAt, true)
+                    await LOG.addLog(req, "orders_deleted", '', desc)
                 }
                 await Order.deleteMany(query)
             } catch (error) {

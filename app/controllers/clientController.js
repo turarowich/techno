@@ -3,6 +3,8 @@ const { useDB, sendError, saveImage, createQrFile, randomNumber, checkAccess } =
 var validate = require('../../config/messages');
 const { query } = require('express');
 const client = require('../models/client');
+const LOG = require('./logController');
+const Analytics = require('./analyticsController');
 
 class ClientController{
     
@@ -123,7 +125,7 @@ class ClientController{
                     client.save()
                 }
             }
-
+            await Analytics.updateAnalytics(req, client.createdAt, false, true)
             client.password = 'secured';
             result['object'] = client
         } catch (error) {
@@ -199,6 +201,8 @@ class ClientController{
                 client.apns.push(req.fields.apns)
                 await client.save()
             }
+            await Analytics.updateAnalytics(req, client.createdAt, false, true)
+            // await LOG.addLog(req, "client_updated", "", "order_num", "#" + order.code)
             result['object'] = client
         } catch (error) {
             console.log(error)

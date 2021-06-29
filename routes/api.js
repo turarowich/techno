@@ -12,6 +12,7 @@ var cashbackController = require('../app/controllers/cashbackController');
 var discountController = require('../app/controllers/discountController');
 var settingsController = require('../app/controllers/settingsController');
 var employeeController = require('../app/controllers/employeeController');
+var analyticsController = require('../app/controllers/analyticsController');
 
 var multer = require('multer');
 var upload = multer({ dest: '../public/product/' });
@@ -134,6 +135,10 @@ module.exports = function (app, network_information) {
     app.put('/updateEmployee/:employee', employeeController.updateEmployee);
     app.put('/updateEmployees', employeeController.updateEmployees);
     app.post('/deleteEmployees', employeeController.deleteEmployees);
+
+
+    //Analytics url
+    app.get('/getAnalytics', analyticsController.getAnalytics);
 
     return app;
 }

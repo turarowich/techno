@@ -13,7 +13,7 @@
             </div>
         </div>
         <div style="width:30%">
-            {{news.updatedAt.slice(0, 10)}}
+            {{ news.updatedAt.slice(0, 10) }}
         </div>
         <div style="width:30%">
             <button class="news-btn" @click="sendNewsNotification(news._id)">

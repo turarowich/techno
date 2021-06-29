@@ -8,10 +8,11 @@
 
       <div class="table-child d-flex align-items-center"  style="width: 18%;">
         <div><label class="custom-checkbox"><input  type="checkbox"  @click="checkMainSelect"  :ref="'select'+order._id" :value="order._id" ><span class="checkmark"></span></label></div>
-        {{order.code}}</div>
+        {{order.code}}
+        </div>
       <div v-if="order.products" class="table-child d-flex align-items-center"  style="width: 30%;">
         <div  class="table-img">
-          <img  v-if="order.products[0].img" :src="imgSrc+'/'+order.products[0].img">
+          <img  v-if="order.products[0] && order.products[0].img" :src="imgSrc+'/'+order.products[0].img">
           <img v-else src="../../assets/icons/no-catalog.svg">
          </div>
          <span>{{order.products[0] ? order.products[0].name : 'empty'}}</span>
@@ -56,12 +57,7 @@
 export default {
   name: "OrderItem",
   props: {
-    orderList: {
-      type: Array,
-      default: function () {
-        return []
-      },
-    },
+    orderList: { },
     data_check: {
       type: Object
     },
