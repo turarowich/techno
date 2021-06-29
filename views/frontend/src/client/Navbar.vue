@@ -1,11 +1,11 @@
 <template>
-  <div class="container client-container">
-<nav class="navigation d-flex align-items-center justify-content-between">
+  <div class="container client-container ">
+<nav class="navigation d-flex  align-items-center justify-content-between">
   <div class="burger" @click="showNavbar">
     <img src="../assets/icons/menu.svg">
   </div>
     <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">
-      <div v-if="catalog_settings.logo && catalog_settings.logo !==''"  v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.logo + ')' }" class="catalog_logo">
+      <div v-if="catalog_settings.logo && catalog_settings.logo ===''"  v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.logo + ')' }" class="catalog_logo">
 
       </div>
       <span v-else>
@@ -14,13 +14,10 @@
     </router-link>
 
 
-<!--    <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">{{catalog_settings.name || 'Company Name'}} </router-link>-->
-    <div class="menu-wrapper">
+
+  <div class="menu-wrapper">
       <div class="mobile-header d-flex justify-content-between align-items-center" >
         <div class="d-flex align-items-center">
-<!--          <div class="table-img">-->
-<!--            <img  src="../assets/icons/no-catalog.svg">-->
-<!--          </div>-->
           <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">
             <div v-if="catalog_settings.logo && catalog_settings.logo !==''"  v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.logo + ')' }" class="catalog_logo">
 
@@ -37,10 +34,10 @@
       <ul class="client-menu">
         <li @click="removeActive" class="client-list"><router-link class="client-link" :to="`/${currentCompanyCatalog}/about`"><img src="../assets/clients/info.svg"/>About us</router-link></li>
 
-        <span v-if="!catalog_settings.catalogMode">
-          <li @click="removeActive" v-if="!isLogged" class="client-list "><router-link class="client-link" :to="`/${currentCompanyCatalog}/signin`"><img class="mr-3" src="../assets/clients/Profile.svg"/>Login</router-link></li>
-          <li  v-else class="client-list"><img src="../assets/clients/Profile.svg"/><router-link class="client-link" :to="`/${currentCompanyCatalog}/client-account`">My Account</router-link></li>
-        </span>
+        <div class="list-span" v-if="!catalog_settings.catalogMode">
+          <li @click="removeActive" v-if="!isLogged" class="client-list "><router-link class="client-link" :to="`/${currentCompanyCatalog}/signin`"><img  src="../assets/clients/Profile.svg"/>Login</router-link></li>
+          <li @click="removeActive"  v-else class="client-list"><img src="../assets/clients/Profile.svg"/><router-link class="client-link" :to="`/${currentCompanyCatalog}/client-account`">My Account</router-link></li>
+        </div>
 
 
         <li @click="removeActive" class="client-list mobile-basket">
@@ -103,12 +100,18 @@
       </div>
     </div>
 
-    <img @click="$router.push(`/${currentCompanyCatalog}/basket`)" class="mobile-basket" src="../assets/clients/Buy.svg"/>
+  <router-link  class="basket-menu"  :to="`/${currentCompanyCatalog}/basket`">
+    <img src="../assets/clients/Buy.svg"/>
+    <div class="bg-not d-flex align-items-center">
+      <span class="basket-not" v-if="countOrders > 0">{{countOrders}}</span>
+    </div>
+  </router-link>
 
 
 
 </nav>
-    <div class="line"></div>
+
+
   </div>
 
   <!--Centered Modal-->
@@ -187,12 +190,12 @@ export default {
   methods:{
     removeActive(){
       $('.menu-wrapper').removeClass('active')
-      $('.client').removeClass('active')
+
     },
     showNavbar(){
       $('.menu-wrapper').addClass('active')
-      $('.menu-wrapper').addClass('fadeIn')
-      $('.client').addClass('active')
+
+
     },
     logout(){
       this.$store.dispatch("Client/logout");
@@ -227,6 +230,7 @@ export default {
 </script>
 
 <style scoped>
+
 .contact{
   position: absolute;
   bottom: 20px;
@@ -247,7 +251,9 @@ export default {
   margin-bottom: 10px;
   display: block;
   color:#484848;
-
+}
+.list-span{
+  margin-right: 40px;
 }
 
 .footer-info img{
@@ -266,24 +272,34 @@ export default {
 
 .menu-wrapper.active{
   position: fixed;
-  width: 100%;
+  width: 100vw;
   height: 100%;
   z-index:9999;
   top: 0;
-  right: 0;
-  display: block;
+  left: 0;
   background: #fff;
   padding: 0 20px;
+  transition:.4s;
 
 
 }
-.mobile-basket{
+.mobile-basket ,.basket-menu{
   display:none;
+
+}
+.basket-menu{
+  position: relative;
+
+}
+.basket-menu img{
   width: 24px;
   height: 24px;
-
 }
-
+.basket-menu .bg-not{
+  position: absolute;
+  top:-2px;
+  right: -5px;
+}
 .menu-wrapper .mobile-header{
   display:none !important;
 }
@@ -299,7 +315,7 @@ export default {
   margin-bottom: 20px;
   margin-right: 0;
 }
-.client-link img{
+.client-list img{
   width: 20px;
   height: 20px;
 }
@@ -309,6 +325,8 @@ export default {
 
 .navigation{
   height: 62px;
+  border-bottom: 1px solid #E4E4E4;
+
 }
 .brand-navbar{
   color: #222222;
@@ -359,7 +377,12 @@ font-size: 14px;
   background: transparent;
   margin-left: 7px;
 }
-
+.basket-title{
+  width: 10rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow:hidden;
+}
 .basket-hover{
   background: #FFFFFF;
   width: 20rem;
@@ -441,13 +464,16 @@ font-size: 14px;
 }
 @media(max-width:992px){
   .menu-wrapper{
-    display:none;
+    position: fixed;
+    width: 100vw;
+    height: 100%;
+    left:-100vw;
 
   }
   .burger{
     display: block;
   }
-  .mobile-basket{
+  .mobile-basket, .basket-menu{
     display:block;
   }
   .hoverBasket{

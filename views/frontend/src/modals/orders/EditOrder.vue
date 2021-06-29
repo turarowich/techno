@@ -88,8 +88,6 @@
                 <h3 class="detail-product">Notes</h3>
                 <input v-model="currentData.notes" class="cashback-input">
               </div>
-
-
             </div>
 
 
@@ -103,8 +101,8 @@
                   <input v-model="search_client" placeholder="Enter clients name or number" class="search-client">
                 </div>
                 <div v-else class="d-flex align-items-center">
-                  <img v-if="selectedClient.avatar"  class="client-avatar" :src="selectedClient.avatar">
-                  <img class="client-avatar" v-else src="../../assets/icons/chat.svg">
+<!--                  <img v-if="selectedClient.avatar"  class="client-avatar" :src="selectedClient.avatar">-->
+                  <img class="client-avatar"  src="../../assets/icons/chat.svg">
                   <div class="position-relative">
                     <h2 class="name-client">{{selectedClient.name}}</h2>
                     <div class="category">
@@ -115,8 +113,8 @@
                   <img @click="currentData.client = ''" class="close-client" src="../../assets/icons/deleteClient.svg">
                 </div>
               </div>
-              <div v-else>
-                <h4>Guest</h4>
+              <div v-else class="client-box guest-box">
+                <h4 class="guest">Guest</h4>
                 <ul class="p-0">
                   <li class="payment-list d-flex justify-content-between">Name<span>{{ currentData.client_name }}</span></li>
                   <li class="payment-list d-flex justify-content-between">Phone<span>{{ currentData.client_phone }}</span></li>
@@ -365,7 +363,9 @@ export default {
 .client-search{
   width: 100%;
 }
-
+.guest{
+  font-size: 18px;
+}
 .client-search input{
   width: 100%;
   border:none;

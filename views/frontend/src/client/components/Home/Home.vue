@@ -1,10 +1,16 @@
 <template>
   <div class="client overlay_404">
-    <div >
-      <div v-if="!['ClientLogin', 'ClientRegister', 'EmployeeLogin'].includes($route.name)">
+    <div>
+      <div class="fixed-top bg-white" v-if="!['ClientLogin', 'ClientRegister', 'EmployeeLogin'].includes($route.name)">
         <Navbar/>
+
       </div>
-      <router-view/>
+
+        <div class="router-content">
+          <router-view />
+        </div>
+
+
     </div>
     <div v-if="!['ClientLogin', 'ClientRegister'].includes($route.name)">
       <Footer/>
@@ -13,6 +19,7 @@
 </template>
 
 <script>
+import $ from 'jquery';
 import Navbar from "@/client/Navbar";
 import Footer from "@/client/components/footer/Footer";
 // import $ from 'jquery';
@@ -81,7 +88,20 @@ name: "Home",
 
   },
   mounted() {
-
+    $(document).ready(function(){
+      $(window).on("scroll",function() {
+        if($(this).scrollTop() > 200)
+        {
+          $(".bg-white").addClass("nav-top");
+          $('.navigation').css({'border-bottom': 'none'})
+        }
+        else
+        {
+          $(".bg-white").removeClass("nav-top");
+          $('.navigation').css({'border-bottom': '1px solid #e4e4e4'})
+        }
+      })
+    })
 
 
 
@@ -90,6 +110,14 @@ name: "Home",
 </script>
 
 <style scoped>
+.nav-top{
+  box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.2);
+  transition:.3s;
+;
+}
+.router-content{
+  margin-top:90px;
+}
 
 .overlay_404{
   /*display: none;*/

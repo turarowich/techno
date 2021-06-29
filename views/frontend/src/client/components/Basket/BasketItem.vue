@@ -18,7 +18,7 @@
       </div>
       <div style="width:30%" class="basket-amount">
         <div class="name-vendorCode mobile">
-          <h3 class="table-title">{{item.product.name}}</h3>
+          <h3 class="table-title long-text">{{item.product.name}}</h3>
           <span style="color:#b0b0b0">{{item.product.vendorCode}}</span>
         </div>
         <button class="decrease mb-0" @click="decrease(item.product._id)">-</button>
@@ -140,6 +140,13 @@ export default {
 </script>
 
 <style scoped>
+.long-text{
+  width: 100px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow:hidden;
+}
+
 .basket-name{
   width: 40%;
 }
@@ -153,23 +160,24 @@ export default {
   align-items: center;
   border-bottom: 1px solid #E4E4E4;
 }
-.client-table-img{
-  margin-right: 16px;
-}
+
 .client-table-img img{
-  height: 70px;
-  width: 100px;
-  max-width: 100px;
+  height: 90px;
+  width: 90px;
+  border-radius: 50%;
+  margin-right: 20px;
   object-fit: contain;
+}
+
+.basket-name{
+  margin-right: 20px;
 }
 .table-title{
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 5px;
 }
-.table-parag{
-  color: #B0B0B0;
-}
+
 .empty-basket{
   height: 300px;
   border-radius:10px;
@@ -192,12 +200,18 @@ font-size:16px;
   font-size: 13px!important;
   color: #B0B0B0;
 }
+
+
 @media(max-width:576px){
   .client-table-item{
     align-items: flex-start;
   }
+  .basket-name{
+    width: 30%;
+  }
   .name-vendorCode{
-    display:none
+    display:none;
+
   }
   .name-vendorCode.mobile{
     display: block;
@@ -210,17 +224,19 @@ font-size:16px;
   }
 }
 @media(max-width:481px){
-  .hide{
-    display:none;
-  }
+
   .basket-amount{
     width: 40% !important;
   }
-  .client-table-img{
+  .basket-name{
     margin-right: 0;
   }
   .count{
     width: 25px;
+  }
+  .client-table-img img{
+    width: 70px;
+    height: 70px;
   }
 }
 </style>

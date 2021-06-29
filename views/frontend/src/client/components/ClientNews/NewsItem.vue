@@ -1,7 +1,10 @@
 <template>
   <div class="news container">
-    <div @click="$router.go(-1)" class="d-flex align-items-center mb-4">
-      <h3 class="news-back" >News</h3>
+    <div class="d-flex align-items-center mb-4" style="cursor:pointer" @click="$router.go(-1)">
+      <img class="mr-2" src="../../../assets/clients/slide.svg">
+      <h3 class="path-title">
+        News
+      </h3>
     </div>
     <div class="row">
 

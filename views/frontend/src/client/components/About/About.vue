@@ -1,9 +1,10 @@
 <template>
 <div class="about container client-container">
+  <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg"><div @click="$router.go(-1)" class="mr-1">Back </div>  | <span>{{$route.name}}</span> </div>
+
   <div class="row">
   <div class="col-lg-7 left-about">
     <div class="about-left">
-      <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg"><div @click="$router.go(-1)" class="mr-1">Back </div>  | <span>{{$route.name}}</span> </div>
       <div class="main-box" v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.banner + ')' }">
 <!--        <img :src="server+'/'+catalog_settings.banner">-->
 <!--        <div class="relatives">-->
