@@ -1,7 +1,9 @@
 <template>
 <div class="container client-container">
 <!--  <div class="main-box" v-bind:style="{ backgroundImage: 'url(' + bannerPath + ')' }" >-->
+
   <div class="main-box" v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.banner + ')' }" >
+
     <div class="relatives">
       <h1>{{catalog_settings.name || 'Company Name'}}</h1>
       <p>{{catalog_settings.welcome || 'Welcome to our thingy'}}</p>
@@ -249,7 +251,10 @@ name: "Dashboard",
   position: relative;
   border-radius: 5px;
   margin-bottom: 25px;
+
+
 }
+
 
 @media(max-width:576px){
   .parentNews .childNews:nth-child(3), .parentNews .childNews:nth-child(4){

@@ -1,10 +1,10 @@
 <template>
-<div class="container">
+<div class="container my-container">
   <div class="row news-detail">
     <div class="col-lg-9 m-auto">
       <div class="d-flex align-items-center justify-content-between path-box ">
         <div class="d-flex align-items-center" @click="$router.go(-1)">
-          <img class="mr-3" src="../../../assets/clients/slide.svg">
+          <img class="mr-2" src="../../../assets/clients/slide.svg">
           <h3 class="path-title">
             {{newsObject.name}}
           </h3>
@@ -68,6 +68,9 @@ export default {
 </script>
 
 <style scoped>
+.my-container{
+  margin-top: 130px;
+}
 .new-item{
   height: 300px;
   margin-bottom: 50px;

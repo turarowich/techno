@@ -10,11 +10,10 @@
           <!--        <img :src="server+'/'+product.img">-->
         </div>
         <div class="product-add">
-          <h2 :class="{up: checkDates(product.promoStart,product.promoEnd) !== true}" style="overflow: hidden;text-overflow: ellipsis;">{{product.name}}</h2>
-          <h3></h3>
-          <span v-if="checkDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} %%</span>
+          <h2 class="long-text"  style="overflow: hidden;text-overflow: ellipsis;">{{product.name}}</h2>
+          <span :class="{up: checkDates(product.promoStart,product.promoEnd) !== true}" v-if="checkDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} сом</span>
           <br>
-          <span :class="{lineThrough:checkDates(product.promoStart,product.promoEnd)}">{{product.price}}</span>
+          <span :class="{lineThrough:checkDates(product.promoStart,product.promoEnd), up: checkDates(product.promoStart,product.promoEnd) !== true}">{{product.price}}</span>
         </div>
         <button v-if="!catalog_settings.catalogMode" class="add-to-card" @click="addToCart(product._id)">Add to cart</button>
         <button v-else class="add-to-card" @click="selectProduct(product._id)">View</button>
@@ -113,7 +112,15 @@ name: "ClientCatalogItem",
 
 <style scoped>
 .up{
-  margin-bottom: -10px;
+  margin-top: -17px;
+  display: block;
+  margin-bottom: 34px;
+}
+.long-text{
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis
 }
 .product-img {
 

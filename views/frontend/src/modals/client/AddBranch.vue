@@ -3,7 +3,7 @@
     <div class="modal myModal  pr-0 fade" id="add_branch" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" role="document"  style="max-width: calc(100% - 250px);">
         <div class="modal-content add_branch_modal_content">
-          <div class="modal-header justify-content-start align-items-center">
+          <div class="modal-header justify-content-start align-items-center h-100">
 
           <img data-dismiss="modal" aria-label="Close" class="close"  src="../../assets/icons/xBlack.svg">
 

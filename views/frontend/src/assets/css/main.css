@@ -775,8 +775,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     font-size: 16px;
     margin-bottom: 50px;
 }
+.large-path-img{
+    width: 20px;
+    height: 16px;
+    margin-bottom: 1px;
+}
 .path-img{
     margin-right: 5px;
+    margin-bottom: 2px;
 }
 .show-path{
     font-weight: normal;
@@ -784,6 +790,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     align-items: center;
     margin-bottom: 32px;
     cursor:pointer;
+    margin-top: 30px;
+
+
 }
 .show-path span{
     margin-left: 8px;
@@ -1321,6 +1330,9 @@ input.value-success, select.value-success, textarea.value-success{
     }
     .slick-dots{
         display: none !important;
+    }
+    .path-title{
+        font-size: 18px;
     }
 }
 .modal-backdrop {

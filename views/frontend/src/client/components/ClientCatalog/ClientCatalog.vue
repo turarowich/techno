@@ -65,7 +65,6 @@
     </div>
   </div>
   <div id="products" class="pt-3 col-lg-9 col-md-8">
-
     <ClientCatalogItem v-bind:catalog="filteredList"/>
   </div>
 </div>
@@ -220,19 +219,32 @@ name: "Catalog",
 .mobile-btns{
   display:none;
 }
+@keyframes fadeIn {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);}
+}
+
+
 .showCategory.active,.showFilter.active{
-  display:block;
+  display: block;
+  animation: fadeIn 0.3s;
+
 }
 .showCategory, .showFilter{
   position: fixed;
-  width: 100%;
+  width: 100vw;
   height: 100%;
   z-index:9999;
   top: 0;
-  right: 0;
+  left:0;
   display: none;
   background: #fff;
   padding:0 20px;
+  animation: fadeOut .3s;
+
 }
 .filter-category{
   font-size: 20px;

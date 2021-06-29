@@ -3,7 +3,7 @@
   <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg"><div @click="$router.go(-1)" class="mr-1">Back </div> | <span>Shopping cart</span>
 
   </div>
-  <div class="d-flex align-items-center path-box" @click="$router.go(-1)"><img class="mr-2" src="../../../assets/clients/slide.svg"><h3 class="path-title">{{$route.name}}</h3></div>
+  <div class="d-flex align-items-center path-box" @click="$router.go(-1)"><img class="large-path-img mr-1" src="../../../assets/clients/slide.svg"><h3 class="path-title">{{$route.name}}</h3></div>
   <div class="row">
     <div class="col-lg-8 mb-5 basket-item">
 
@@ -31,7 +31,7 @@
           </div>
           <div v-else>
             <span class="client_points_title">User your points for an additional discount</span>
-            <div class="d-flex mb-2 client_points_block" style="align-items: center;">
+            <div class="d-flex mb-3 client_points_block" style="align-items: center;">
 
               <div class="d-flex" style="flex: 1;">
                 <label class="custom-checkbox">
@@ -43,7 +43,7 @@
               </div>
               <div>
                 <span class="client_points">
-                  {{user.points}} --{{userDiscountStatus.discount_percentage || 0}}%
+                  {{user.points}} -- {{userDiscountStatus.discount_percentage || 0}}%
                 </span>
               </div>
             </div>
@@ -74,13 +74,13 @@
             </div>
 
             <div v-if="deliveryService" class="delivery_block position-relative">
-              <div class="py-3">
+              <div class="my-3">
                 {{catalog_settings ? catalog_settings.deliveryDescription : ''}}
               </div>
               <label class="cashback-label">Delivery address</label><br>
               <input v-model="deliveryAddress" type="text" class="cashback-input" placeholder="Enter your address"/>
               <label class="cashback-label">Delivery service</label><br>
-              <div class="selected_delivery_option w-100 d-flex" @click="showDeliveryOption= !showDeliveryOption">
+              <div class="selected_delivery_option w-100 d-flex"  @click="showDeliveryOptions">
                 <div style="flex: 1;">
                   {{selectedDeliveryType.object.name}}
                 </div>
@@ -96,9 +96,9 @@
               </div>
             </div>
             <div v-if="pickUp" class="pick_up_block">
-            <span>Select address where u would like to pick up ur order</span>
+            <div class="my-3">Select address where u would like to pick up ur order</div>
               <div @click="setBranch(branch)" v-for="branch in branches" :key="branch._id" :class="{active_branch:branch._id===selectedBranchObject._id}" class="d-flex pick_up_block_item">
-                <div>
+                <div class="mr-2">
                   <img src="../../../assets/icons/location.svg">
                 </div>
                 <div>
@@ -112,10 +112,7 @@
               </div>
             </div>
 
-            <div class="line"></div>
-
-            <div class="total">
-
+            <div class="total mt-4">
               <div class=" discount d-flex justify-content-between">
                 <h3>Products</h3>
                 <span>{{total_price_full}} $</span>
@@ -126,12 +123,12 @@
                 <span>-{{ total_discounts }} $</span>
               </div>
 
-              <div v-if="deliveryService" class="delivery d-flex justify-content-between">
+              <div v-if="deliveryService" class="mb-3 delivery d-flex justify-content-between">
                 <h3>Delivery</h3>
                 <span style="color:#5CBD85;">{{delivery_cost}} $</span>
               </div>
 
-              <div class="d-flex justify-content-between">
+              <div class="mb-4 d-flex justify-content-between">
                 <h4>Total</h4>
                 <h4>{{total_price_discount_delivery}} $</h4>
               </div>
@@ -276,6 +273,11 @@ name: "Basket",
     },
   },
   methods:{
+  showDeliveryOptions(){
+    this.showDeliveryOption= !this.showDeliveryOption
+
+    $('.selected_delivery_option').toggleClass('active')
+  },
     setSelectedDeliveryOption(obj){
       this.selectedDeliveryOptionObject = obj;
       this.showDeliveryOption = false;
@@ -506,7 +508,7 @@ name: "Basket",
 
 <style scoped>
 .basket-item{
-  height: 450px;
+  max-height: 500px;
   overflow-y: auto;
 }
 .sales .cashback-sub-title{
@@ -635,7 +637,7 @@ name: "Basket",
 }
 .pick_up_block_item{
   border-radius: 7px;
-  padding: 9px;
+  padding: 15px;
   margin-bottom: 10px;
   background: #F8F9FF;
   cursor: pointer;
@@ -647,6 +649,7 @@ name: "Basket",
   font-size: 16px;
   color: #616CF5;
   line-height: 1;
+  margin-bottom: 5px;
 }
 .pick_up_block_item_wh{
   font-style: normal;
@@ -654,6 +657,7 @@ name: "Basket",
   font-size: 14px;
   color: #8C94A5;
   line-height: 1;
+
 
 }
 .active_branch{
@@ -676,27 +680,41 @@ name: "Basket",
   font-size: 16px;
   line-height: 24px;
   color: #858585;
+  margin-bottom: 10px;
+  display: block;
 }
 .delivery_option_wrapper_class{
   position:absolute;
-  border: 1px solid black;
+  border: 1px solid #d3d3d3;
   width:100%;
   background-color: white;
-  border-radius: 5px;
-  padding: 5px;
+  border-top: none;
+  padding: 10px;
+  padding-bottom: 0;
+  max-height:300px;
+  overflow-y: auto;
+
 }
 .delivery_option_class{
   cursor: pointer;
   height: 35px;
 }
+.delivery_option_class:hover{
+  color:#616cf5;
+}
+.selected_delivery_option.active{
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius:0;
+}
 .selected_delivery_option{
   display: flex;
   align-items: center;
   height: 40px;
-  border:1px solid black;
+  border: 1px solid #d3d3d3;
   border-radius: 5px;
-  padding: 5px;
+  padding: 5px 10px;
   cursor: pointer;
+
 }
 @media(max-width:768px){
   .client-table-header{
@@ -713,5 +731,6 @@ name: "Basket",
   .head-amount{
     width: 40%;
   }
+
 }
 </style>

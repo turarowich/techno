@@ -234,7 +234,7 @@ export default {
 }
 .product-text{
   color: #999999;
-  margin-bottom: 30px;
+  margin-bottom: 50px;
 }
 @media(max-width:992px){
   .product-img{
