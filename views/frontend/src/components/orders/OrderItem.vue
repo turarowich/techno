@@ -30,7 +30,7 @@
       <div class="table-child" v-show="data_check.date_checked"  style="width: 15%;">{{order.createdAt.split('').slice(0,10).join('')}}</div>
       <div class="table-child pr-3" v-show="data_check.notes_checked" style="width: 10%;" ><div>{{order.notes}}</div></div>
       <div class="table-child" style="width: 15%;"
-           :class="[{red: order.status === 'Canceled'},
+           :class="[{red: order.status === 'Cancelled'},
           {green: order.status === 'Done'},
           {orange: order.status === 'In Progress'},
           {new: order.status === 'New'}
@@ -49,7 +49,7 @@
             <ul class="list-group " >
               <li class="list-group-item" v-on:click="statusChange(order,'Done')">Done</li>
               <li class="list-group-item" data-toggle="modal" data-target="#edit-order" @click="$emit('selectOrder',order._id)">Edit</li>
-              <li class="list-group-item" @click="statusChange(order, 'Canceled')">Cancel</li>
+              <li class="list-group-item" @click="statusChange(order, 'Cancelled')">Cancel</li>
               <li class="list-group-item" v-on:click="$emit('deleteOrder',order._id)">Delete</li>
               <li class="list-group-item" v-on:click="statusChange(order, 'In Progress')">In progress</li>
             </ul>
@@ -90,14 +90,18 @@ export default {
                     this.$warningAlert(error.response.data.msg)
                 }
         });
+        //send push
+        let pushable = ['Done','Cancelled','In Progress']
+        if(pushable.includes(status)){
+          this.axios.post(this.url('updateOrderWeb'), {status: status,order:order._id,code:order.code,client:order.client._id}).then(()=>{
+          }).catch((error)=>{
+            if(error.response && error.response.data){
+              this.$warningAlert(error.response.data.msg)
+            }
+          });
+        }
 
-        this.axios.post(this.url('updateOrderWeb'), {status: 'Done',order:order._id,code:order.code,client:order.client._id}).then(()=>{
-          console.log('456%');
-        }).catch((error)=>{
-          if(error.response && error.response.data){
-            this.$warningAlert(error.response.data.msg)
-          }
-        });
+
     },
     // statusCancel(order){
     //

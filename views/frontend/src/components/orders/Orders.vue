@@ -34,6 +34,7 @@
         </div>
       </div>
       <div>
+        <span @click="test">SERVER LOG ROOMS</span>
         <button class="app-buttons-item" @click="showYesterday"><img src="../../assets/icons/yesterday.svg"><span>Yesterday</span></button>
         <button class="app-buttons-item" @click="showTodayData"><img src="../../assets/icons/yesterday.svg"><span>Today</span></button>
         <button class="app-buttons-item" @click="clickOnDate"><img src="../../assets/icons/yesterday.svg"><input :value="between_value"  class="date-pick" id="datepicker"></button>
@@ -199,6 +200,15 @@ name: "Orders",
     },
   },
   methods: {
+    test(){
+      this.axios.post(this.url('socketRooms'), {status: 'Done'}).then(()=>{
+      }).catch((error)=>{
+        if(error.response && error.response.data){
+          this.$warningAlert(error.response.data.msg)
+        }
+      });
+
+    },
     selectOrder(id){
       this.orderList.map((item)=>{
         if(item._id === id) {

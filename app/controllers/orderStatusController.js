@@ -3,10 +3,11 @@ var socketController = require('./socketController');
 
 exports.create = function(io) {
     return  function(req) {
-        console.log(req.fields);
-        console.log(io.sockets.adapter.rooms);
+        console.log(io.sockets.adapter.rooms,"ROOMS");
+        console.log(req.fields.client,"ROOMS");
         try {
             io.to(req.fields.client).emit('sendingHey', {
+            // io.to(req.fields.client).emit('sendingHey', {
                 status: req.fields.status,
                 order: req.fields.order,
                 code: req.fields.code,
@@ -14,5 +15,10 @@ exports.create = function(io) {
         } catch (error) {
             console.log(error);
         }
+    }
+}
+exports.rooms = function(io) {
+    return  function(req) {
+        console.log(io.sockets.adapter.rooms,"ROOMS");
     }
 }

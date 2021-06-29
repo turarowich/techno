@@ -97,7 +97,7 @@
             <div class="col-lg-4">
               <h3 class="client-sub-title">Client</h3>
 
-              <div v-if="!selectedClient.isDefault" class="client-box d-flex align-items-center">
+              <div v-if="select_order.client" class="client-box d-flex align-items-center">
                 <div v-if="selectedClient.isDefault"  class="client-search d-flex align-items-center">
                   <img src="../../assets/icons/search-icon.svg" class="search-client-icon">
                   <input v-model="search_client" placeholder="Enter clients name or number" class="search-client">

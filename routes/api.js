@@ -96,6 +96,7 @@ module.exports = function (app, io) {
     app.post('/getOrderExcel', orderController.getOrderExcel);
     //Change Order status
     app.post('/updateOrderWeb', orderStatusController.create(io));
+    app.post('/socketRooms', orderStatusController.rooms(io));
 
     // News url
     app.get('/getSingleNews/:news', newsController.getSingleNews);

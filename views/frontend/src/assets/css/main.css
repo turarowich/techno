@@ -1323,11 +1323,11 @@ input.value-success, select.value-success, textarea.value-success,div.value-succ
         display: none !important;
     }
 }
-.modal-backdrop {
-    width:100%;
-    left: 250px;
+/*.modal-backdrop {*/
+/*    width:100%;*/
+/*    left: 250px;*/
 
-}
+/*}*/
 
 
 /*Responsive Web Catalog*/

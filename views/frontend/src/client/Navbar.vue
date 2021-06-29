@@ -54,7 +54,7 @@
 
         <li  v-if="!catalog_settings.catalogMode"  @mouseover="mouser" @mouseleave="close_drop" class="client-list hoverBasket dropdown">
 
-          <router-link @click="removeActive"  class="client-link  d-inline-flex align-items-center" :to="`/${currentCompanyCatalog}/basket`" >
+          <router-link class="client-link  d-inline-flex align-items-center" :to="`/${currentCompanyCatalog}/basket`" >
             <img src="../assets/clients/Buy.svg"/>Basket
             <div class="bg-not d-flex align-items-center">
               <span class="basket-not" v-if="countOrders > 0">{{countOrders}}</span>
@@ -110,6 +110,26 @@
 </nav>
     <div class="line"></div>
   </div>
+
+  <!--Centered Modal-->
+  <div class="parent-modal">
+    <div class="modal myModal fade" id="orderStatus"  role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content category-content">
+          <div class="modal-header category-header align-items-center">
+            <h3 class="modal-title orderStatusText">
+            </h3>
+            <button type="button" data-dismiss="modal" aria-label="Close" class="close mr-0">
+                  <span aria-hidden="true">
+                    <img src="../assets/icons/xBlack.svg" alt="">
+                  </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </template>
 
 <script>
@@ -130,7 +150,9 @@ export default {
       return this.$store.getters['Catalog/getCompanyAddresses'];
     },
 
-
+    user(){
+      return this.$store.getters['Client/getUser'];
+    },
   // ...mapGetters(["Orders/countOrders" ,"Orders/shoppingCart"]),
     company_url_basket(){
       return this.$store.getters['Orders/getCompany_url_basket'];
@@ -187,7 +209,18 @@ export default {
       console.log('DADASASASASS');
     }
   },
-
+  created() {
+    // this.socket.on("sendingHey", function(data) {
+    if(this.user) {
+      this.socket.on("sendingHey", function (data) {
+        console.log(data);
+        $('#orderStatus').modal('show');
+        let text = `Order #${data.code} is ${data.status}`;
+        $('.orderStatusText').text(text);
+        // alert(`This order ${data.code} is ${data.status}`);
+      });
+    }
+  }
 
 
 }

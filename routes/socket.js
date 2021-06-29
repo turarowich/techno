@@ -21,13 +21,13 @@ module.exports = io => {
             socket.join(user)
         });
         socket.on('join_cat', (data) => {
-            console.log(data,"<<>>++++++++++++++++++++++++++")
+            console.log(data,"JOIN CAT")
             socket.join(data.user);
             // controller.sendHey(io);
         });
-        socket.on('disconnect', function() {
-            console.log('Got disconnect!');
-
+        socket.on('disconnect', (reason) => {
+            console.log(`${reason} Got disconnect! ${socket.id}`);
+            // socket.connect();
             var i = allClients.indexOf(socket);
             // allClients.splice(i, 1);
         });
