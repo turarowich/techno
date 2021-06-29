@@ -415,7 +415,7 @@ class AuthController{
             let code = randomNumber(100000, 1000000)
             client.oneTimeCode = code
             await client.save({validateBeforeSave: false})
-            transporter.sendMail({
+            await transporter.sendMail({
                 from: 'loygift', // sender address
                 to: req.fields.email, // list of receivers
                 subject: "New password", // Subject line
