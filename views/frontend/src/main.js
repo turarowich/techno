@@ -49,7 +49,7 @@ const socket = io(process.env.VUE_APP_SERVER_URL, {
         token: localStorage.getItem('token')
     },
     withCredentials: true,
-    reconnection: false,
+    reconnection: true,
 })
 
 ax.defaults.headers.common['Authorization'] = 'Bearer '+ token
@@ -154,7 +154,7 @@ app.config.globalProperties.changeToken = function () {
             token: localStorage.getItem('token')
         },
         withCredentials: true,
-        reconnection: false
+        reconnection: true
     })
 }
 app.config.globalProperties.img = function (main) {
