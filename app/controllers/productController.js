@@ -57,6 +57,7 @@ class ProductController{
     addProduct = async function (req, res) {
         let db = useDB(req.db)
         let Product = db.model("Product");
+        let Log = db.model("Log");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -131,6 +132,14 @@ class ProductController{
                 }
             }    
             await product.save()
+            await new Log({
+                type: "product_created",
+                description: product.name,
+                value: product.price,
+                valueColor: "done",
+                user: req.userName,
+                icon: "add"
+            }).save()
             result['object'] = product
         } catch (error) {
             result = sendError(error, lang)
@@ -142,6 +151,7 @@ class ProductController{
     updateProduct = async function (req, res) {
         let db = useDB(req.db)
         let Product = db.model("Product");
+        let Log = db.model("Log");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -207,6 +217,14 @@ class ProductController{
                 }
             }
             await product.save({new:true})
+            await new Log({
+                type: "product_updated",
+                description: product.name,
+                value: product.price,
+                valueColor: "done",
+                user: req.userName,
+                icon: "update"
+            }).save()
             result['object'] = product
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
@@ -217,6 +235,7 @@ class ProductController{
     updateProductsCategory = async function (req, res) {
         let db = useDB(req.db)
         let Product = db.model("Product");
+        
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -242,6 +261,7 @@ class ProductController{
     deleteProduct = async function (req, res) {
         let db = useDB(req.db)
         let Product = db.model("Product");
+        let Log = db.model("Log");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -254,6 +274,17 @@ class ProductController{
         }
         try {
             let query = { '_id': req.params.product }
+            let product = await Product.findById(query)
+            if(product){
+                await new Log({
+                    type: "product_deleted",
+                    description: product.name,
+                    value: product.price,
+                    valueColor: "canceled",
+                    user: req.userName,
+                    icon: "delete"
+                }).save()
+            }
             await Product.findByIdAndRemove(query)
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
@@ -264,6 +295,7 @@ class ProductController{
     deleteProducts = async function (req, res) {
         let db = useDB(req.db)
         let Product = db.model("Product");
+        let Log = db.model("Log");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -281,6 +313,20 @@ class ProductController{
                         $in: req.fields.objects
                     }
                 }
+                let products = await Product.find(query, 'name')
+
+                if (products.length) {
+                    let desc = products.map(function (elem) {
+                        return elem.name;
+                    }).join(", ")
+                    await new Log({
+                        type: "products_deleted",
+                        description: desc,
+                        user: req.userName,
+                        icon: "delete"
+                    }).save()
+                }
+
                 await Product.deleteMany(query)
             } catch (error) {
                 result = sendError(error, req.headers["accept-language"])

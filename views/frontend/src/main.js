@@ -24,9 +24,10 @@ import moment from 'moment';
 import Lightpick from 'lightpick'
 import axios from "axios";
 import store from './store';
-import 'dropzone/dist/dropzone'
-import 'dropzone/dist/dropzone.css'
-import io from "socket.io-client"
+import 'dropzone/dist/dropzone';
+import 'dropzone/dist/dropzone.css';
+import io from "socket.io-client";
+import messages from "./assets/js/messages";
 const app = createApp(App)
 app.use(router);
 app.use(store);
@@ -49,8 +50,9 @@ const socket = io(process.env.VUE_APP_SERVER_URL, {
         token: localStorage.getItem('token')
     },
     withCredentials: true,
-    reconnection: true,
+    reconnection: (process.env.VUE_APP_RECONNECTION === 'true'),
 })
+console.log(process.env.VUE_APP_RECONNECTION === 'true')
 
 ax.defaults.headers.common['Authorization'] = 'Bearer '+ token
 app.config.globalProperties.$moment = moment;
@@ -83,7 +85,18 @@ app.config.globalProperties.checkCatalogStorageLife = function (){
     }
 
 };
-
+app.config.globalProperties.replaceTxt = function (txt="", lang=null) {
+    let text = txt.split(" ");
+    if(!lang){
+        lang = "en"
+    }
+    for(let [index,word] of text.entries()){
+        if (messages[lang][word]){
+            text[index] = messages[lang][word]
+        }
+    }
+    return text.join(' ')
+}
 app.config.globalProperties.getClientAuth = function(){
     //return true if catalog client is authen-ed
     //undefined otherwise
@@ -154,7 +167,7 @@ app.config.globalProperties.changeToken = function () {
             token: localStorage.getItem('token')
         },
         withCredentials: true,
-        reconnection: true
+        reconnection: process.env.VUE_APP_RECONNECTION
     })
 }
 app.config.globalProperties.img = function (main) {

@@ -31,6 +31,11 @@ const logSchema = new Schema({
         required: false,
         default: ''
     },
+    icon: {
+        type: String,
+        required: false,
+        default: ''
+    },
     createdAt: {
         type: Date,
         required: true,

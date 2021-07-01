@@ -138,6 +138,7 @@ class ClientController{
     updateClient = async function (req, res) {
         let db = useDB(req.db)
         let Client = db.model("Client");
+        let Log = db.model("Log");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "clients", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -201,8 +202,14 @@ class ClientController{
                 client.apns.push(req.fields.apns)
                 await client.save()
             }
+            await new Log({
+                type: "client_updated",
+                description: client.name + " "+ client.phone,
+                user: req.userName,
+                icon: "update"
+            }).save()
+
             await Analytics.updateAnalytics(req, client.createdAt, false, true)
-            // await LOG.addLog(req, "client_updated", "", "order_num", "#" + order.code)
             result['object'] = client
         } catch (error) {
             console.log(error)
@@ -244,6 +251,7 @@ class ClientController{
     deleteClient = async function (req, res) {
         let db = useDB(req.db)
         let Client = db.model("Client");
+        let Log = db.model("Log");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "clients", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -257,6 +265,15 @@ class ClientController{
         try {
 
             let query = { '_id': req.params.client }
+            let client = await Client.findById(query)
+            if (client) {
+                await new Log({
+                    type: "client_deleted",
+                    description: client.name + client.phone,
+                    user: req.userName,
+                    icon: "delete"
+                }).save()
+            }
             await Client.findByIdAndRemove(query)
 
         } catch (error) {
@@ -269,6 +286,7 @@ class ClientController{
     deleteClients = async function (req, res) {
         let db = useDB(req.db)
         let Client = db.model("Client");
+        let Log = db.model("Log");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "clients", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -286,6 +304,20 @@ class ClientController{
                         $in: req.fields.objects
                     }
                 }
+                let clients = await Client.find(query, 'name')
+
+                if (clients.length) {
+                    let desc = clients.map(function (elem) {
+                        return elem.name;
+                    }).join(", ")
+                    await new Log({
+                        type: "clients_deleted",
+                        description: desc,
+                        user: req.userName,
+                        icon: "delete"
+                    }).save()
+                }
+                
                 await Client.deleteMany(query)
             } catch (error) {
                 result = sendError(error, req.headers["accept-language"])

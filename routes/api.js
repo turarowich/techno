@@ -14,6 +14,7 @@ var settingsController = require('../app/controllers/settingsController');
 var employeeController = require('../app/controllers/employeeController');
 var analyticsController = require('../app/controllers/analyticsController');
 var orderStatusController = require('../app/controllers/orderStatusController');
+var logController = require('../app/controllers/logController');
 var multer = require('multer');
 var upload = multer({ dest: '../public/product/' });
 module.exports = function (app, io) {
@@ -142,6 +143,9 @@ module.exports = function (app, io) {
 
     //Analytics url
     app.get('/getAnalytics', analyticsController.getAnalytics);
+
+    //Logs
+    app.get('/getLogs', logController.getLogs);
 
     return app;
 }

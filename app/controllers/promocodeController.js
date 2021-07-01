@@ -58,6 +58,7 @@ class PromocodeController{
     addPromocode = async function (req, res) {
         let db = useDB(req.db)
         let Promocode = db.model("Promocode");
+        let Log = db.model("Log");
         let new_promocode =  req.fields;
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "loyalty", parametr: "active", parametr2: 'canEdit' }, db, res)
@@ -82,7 +83,14 @@ class PromocodeController{
                 selected_type: new_promocode.selected_type || 'type',
                 selected_items_list: new_promocode.selected_items_list || [1,2],
             }).save();
-
+            await new Log({
+                type: "promocode_created",
+                description: promocode.name,
+                value: promocode.code,
+                valueColor: "done",
+                user: req.userName,
+                icon: "add"
+            }).save()
             result['object'] = promocode
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
@@ -94,6 +102,7 @@ class PromocodeController{
     updatePromocode = async function (req, res) {
         let db = useDB(req.db)
         let Promocode = db.model("Promocode");
+        let Log = db.model("Log");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "loyalty", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -108,6 +117,14 @@ class PromocodeController{
             let query = { '_id': req.fields.promocode_id }
             req.fields['updatedAt'] = new Date()
             let promocode = await Promocode.findOneAndUpdate(query, req.fields)
+            await new Log({
+                type: "promocode_updated",
+                description: promocode.name,
+                value: promocode.code,
+                valueColor: "done",
+                user: req.userName,
+                icon: "update"
+            }).save()
             result['object'] = promocode
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
@@ -119,6 +136,7 @@ class PromocodeController{
     deletePromocode = async function (req, res) {
         let db = useDB(req.db)
         let Promocode = db.model("Promocode");
+        let Log = db.model("Log");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "loyalty", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -131,6 +149,15 @@ class PromocodeController{
         }
         try {
             let query = { '_id': req.params.promocode }
+            let promocode = await Promocode.findById(query)
+            await new Log({
+                type: "promocode_deleted",
+                description: promocode.name,
+                value: promocode.code,
+                valueColor: "canceled",
+                user: req.userName,
+                icon: "delete"
+            }).save()
             await Promocode.findByIdAndRemove(query)
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])

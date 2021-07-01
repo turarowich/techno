@@ -31,9 +31,9 @@
         </div>
       </div>
       <div>
-        <button class="app-buttons-item" @click="showYesterday"><img src="../../assets/icons/yesterday.svg"><span>Yesterday</span></button>
-        <button class="app-buttons-item" @click="showTodayData"><img src="../../assets/icons/yesterday.svg"><span>Today</span></button>
-        <button class="app-buttons-item" @click="clickOnDate"><img src="../../assets/icons/yesterday.svg"><input placeholder="2021-03-01 to 2021-03-04"  class="date-pick" id="datepicker"></button>
+        <button class="app-buttons-item" @click="selectDate(new Date(), -1)"><img src="../../assets/icons/yesterday.svg"><span>Yesterday</span></button>
+        <button class="app-buttons-item" @click="selectDate(new Date())"><img src="../../assets/icons/yesterday.svg"><span>Today</span></button>
+        <button class="app-buttons-item"><img src="../../assets/icons/yesterday.svg"><input :value="between_value"  class="date-pick" id="datepicker" readonly></button>
       </div>
     </div>
     <div class="main-search d-flex align-items-center">
@@ -50,7 +50,7 @@
 
   </div>
   <div class="table-content">
-    <LogItem/>
+    <LogItem v-bind:logs="logsList"/>
   </div>
 
 </div>
@@ -62,6 +62,79 @@ export default {
   name: "Log",
   components:{
     LogItem
+  },
+  data(){
+    return{
+        logs:[],
+        between_value:'',
+        startDate:'',
+        endDate:'',
+         search:""
+    }
+  },
+  computed:{
+        logsList() {
+            return this.logs.filter((log) =>{
+                if(log.title.toLowerCase().includes(this.search.toLowerCase()) || log.user.toLowerCase().includes(this.search.toLowerCase())){
+                    return log
+                }
+                return false;
+            });
+        }
+  },
+  methods:{
+        changeTitle(objects){
+            return objects.map((log) =>{
+                log.title = this.replaceText(log.type + ' ' +log.title)
+                return log
+            });
+        },
+        replaceText(text){
+            return this.replaceTxt(text, "en")
+        },
+        getLogs(){
+            this.axios.get(this.url('getLogs'),{ 
+                params: {
+                    start: this.startDate,
+                    end: this.endDate
+                }
+            }).then((response) => {
+                this.logs = this.changeTitle(response.data.objects);
+            })
+        },
+        selectDate(date, add_day=0){
+            this.startDate = this.$moment(date).add(add_day, "days").format("YYYY-MM-DD")
+            this.endDate = this.$moment(date).add(add_day, "days").format("YYYY-MM-DD")
+            this.getLogs()
+        }
+  },
+  mounted(){
+      
+      new this.$lightpick({
+        field: document.getElementById('datepicker'),
+        singleDate: false,
+        numberOfMonths: 2,
+        numberOfColumns:2,
+        format:'YYYY-MM-DD',
+        onSelect: (start,end)=>{
+          var str = '';
+          str += start ? start.format('YYYY-MM-DD') + ' to ' : '';
+          str += end ? end.format('YYYY-MM-DD') : '...';
+          this.between_value = str;
+          
+          this.startDate = start.format('YYYY-MM-DD')
+          if(start && end){
+              this.endDate = end.format('YYYY-MM-DD')
+              this.getLogs()
+          }
+      }
+    });
+    let to_date = this.$moment().subtract(1, "days").format("YYYY-MM-DD")
+    let from_date = this.$moment().format('YYYY-MM-DD')
+    this.between_value = to_date + ' to ' + from_date;
+    this.startDate = to_date
+    this.endDate = from_date
+    this.getLogs()
   }
 }
 </script>

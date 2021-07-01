@@ -4,8 +4,6 @@ var validate = require('../../config/messages');
 const fs = require('fs');
 const { connect } = require('mongodb');
 const { title } = require('process');
-
-const LOG = require('./logController');
 const Analytics = require('./analyticsController');
 
 async function calcCashback(products_full_data,cashback_model) {
@@ -122,6 +120,7 @@ class OrderController{
         let Client = db.model("Client");  
         let Product = db.model("Product");
         let OrderProduct = db.model("OrderProduct");
+        let Log = db.model("Log");
         let ClientBonusHistory = db.model("clientBonusHistory");
         let lang = req.headers["accept-language"]
         if (lang != 'ru') {
@@ -229,7 +228,13 @@ class OrderController{
                 order.client_name=guest.name || '';
                 order.client_phone=guest.phone || '';
             }
-            await LOG.addLog(req, "order_created", "", "order_num", "#" + order.code)
+            await new Log({
+                type: "order_created",
+                description: "order_num",
+                value: "#" + order.code,
+                user: req.userName,
+                icon: "add"
+            }).save()
             await order.save();
             result['object'] = await order.populate('products').execPopulate();
         } catch (error) {
@@ -251,7 +256,7 @@ class OrderController{
         let Order = db.model("Order");
         let Product = db.model("Product");
         let OrderProduct = db.model("OrderProduct");
-
+        let Log = db.model("Log");
         if (req.userType == "employee" && Object.keys(req.fields).length == 1 && "status" in req.fields){
             let checkResult = await checkAccess(req.userID, { access: "canChangeOrderStatus" }, db, res)
             if (checkResult) {
@@ -308,12 +313,20 @@ class OrderController{
                 await order.save()
             }
             let status = req.fields.status.replace(/ /g, '').toLowerCase()
-            if (req.fields.status && Object.keys(req.fields).length == 1){
-                await LOG.addLog(req, "order_updated", "#" + order.code, "change_status", status, status)
-                await Analytics.updateAnalytics(req, order.createdAt, true)
-            }else{
-                await LOG.addLog(req, "order_updated", "#" + order.code, "order_changed", status)
+            var logVal = {
+                type: "order_updated",
+                title: "#" + order.code,
+                description: "order_changed",
+                user: req.userName,
+                icon: "update"
             }
+            if (req.fields.status && Object.keys(req.fields).length == 2){
+                logVal.description = "status_changed"
+                logVal.valueColor = status
+                logVal.value = status
+            }
+            await new Log(logVal).save()
+            await Analytics.updateAnalytics(req, order.createdAt, true)
             result['object'] = await order.populate('client').populate('products').execPopulate()
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
@@ -325,6 +338,7 @@ class OrderController{
     deleteOrder = async function (req, res) {
         let db = useDB(req.db)
         let Order = db.model("Order");
+        let Log = db.model("Log");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "orders", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -340,7 +354,14 @@ class OrderController{
             let order = await Order.findById(query)
             
             if(order){
-                await LOG.addLog(req, "order_deleted", "#" + order.code, "order_by", req.client_name, "canceled")
+                await new Log({
+                    type: "order_deleted",
+                    title: "#" + order.code,
+                    description: "order_by",
+                    value: order.client_name,
+                    user: req.userName,
+                    icon: "delete"
+                }).save()
                 await Analytics.updateAnalytics(req, order.createdAt, true)
             }
             
@@ -355,6 +376,7 @@ class OrderController{
     deleteOrders = async function (req, res) {
         let db = useDB(req.db)
         let Order = db.model("Order");
+        let Log = db.model("Log");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "orders", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -380,7 +402,12 @@ class OrderController{
                         return "#" + elem.code;
                     }).join(", ")
                     await Analytics.updateAnalytics(req, orders[0].createdAt, true)
-                    await LOG.addLog(req, "orders_deleted", '', desc)
+                    await new Log({
+                        type: "orders_deleted",
+                        description: desc,
+                        user: req.userName,
+                        icon: "delete"
+                    }).save()
                 }
                 await Order.deleteMany(query)
             } catch (error) {

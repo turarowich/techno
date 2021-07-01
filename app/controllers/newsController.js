@@ -53,6 +53,7 @@ class NewsController {
     addNews = async function (req, res) {
         let db = useDB(req.db)
         let News = db.model("News");
+        let Log = db.model("Log");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "news", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -103,7 +104,14 @@ class NewsController {
                     news.img = filename
                 }
             }
-            news.save()
+            await news.save()
+
+            await new Log({
+                type: "news_created",
+                description: news.name,
+                user: req.userName,
+                icon: "add"
+            }).save()
             result['object'] = news
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
@@ -115,6 +123,7 @@ class NewsController {
     updateNews = async function (req, res) {
         let db = useDB(req.db)
         let News = db.model("News");
+        let Log = db.model("Log");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "news", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -151,6 +160,13 @@ class NewsController {
                     await news.save()
                 }
             }
+            news = await News.findById(query)
+            await new Log({
+                type: "news_updated",
+                description: news.name,
+                user: req.userName,
+                icon: "update"
+            }).save()
             result['object'] = news
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
@@ -162,19 +178,27 @@ class NewsController {
     deleteNews = async function (req, res) {
         let db = useDB(req.db)
         let News = db.model("News");
+        let Log = db.model("Log");
+
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "news", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult){
                 return;
             }
         }
-        console.log("here")
         let result = {
             'status': 200,
             'msg': 'News deleted'
         }
         try {
             let query = { '_id': req.params.news }
+            let news = await News.findById(query)
+            await new Log({
+                type: "news_deleted",
+                description: news.name,
+                user: req.userName,
+                icon: "delete"
+            }).save()
             await News.findByIdAndRemove(query)
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
