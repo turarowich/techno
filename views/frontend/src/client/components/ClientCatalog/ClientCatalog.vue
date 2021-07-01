@@ -65,7 +65,9 @@
     </div>
   </div>
   <div id="products" class="pt-3 col-lg-9 col-md-8">
-    <ClientCatalogItem v-bind:catalog="filteredList"/>
+
+        <ClientCatalogItem v-bind:catalog="filteredList"/>
+
   </div>
 </div>
 
@@ -78,7 +80,9 @@ import ClientCatalogItem from "@/client/components/ClientCatalog/ClientCatalogIt
 export default {
 name: "Catalog",
   components:{
-    ClientCatalogItem
+    ClientCatalogItem,
+
+
   },
   data(){
   return{
@@ -87,7 +91,10 @@ name: "Catalog",
     filtered: 'all',
     from:0,
     to:0,
-    showCategory:'All'
+    showCategory:'All',
+
+
+
 
   }
   },
@@ -177,13 +184,18 @@ name: "Catalog",
     },
     async  getProducts(){
       const options = {
-        headers: {"x-client-url": this.currentCompanyCatalog}
+        headers: {"x-client-url": this.currentCompanyCatalog},
+
+
       }
-      await this.axios.get(this.url('getClientProducts'),options)
-          .then((response) => {
-            console.log(response,"rrrrrrrrrrrrrrrrrrrrrrr");
-            this.catalog = response.data.objects;
-          })
+
+       await this.axios.get(this.url('getClientProducts'),options)
+           .then((response) => {
+             this.catalog = response.data.objects;
+
+           })
+
+
     },
 
     async getCategories() {
@@ -219,19 +231,19 @@ name: "Catalog",
 .mobile-btns{
   display:none;
 }
-@keyframes fadeIn {
+@-webkit-keyframes fadeIn {
   from {
-    transform: scale(0);
+    -webkit-transform: scale(0);
   }
   to {
-    transform: scale(1);}
+    -webkit-transform: scale(1);}
 }
 
 
 .showCategory.active,.showFilter.active{
   display: block;
-  animation: fadeIn 0.3s;
-
+  -webkit-animation: fadeIn 0.3s;
+  animation-fill-mode:forwards;
 }
 .showCategory, .showFilter{
   position: fixed;
@@ -243,7 +255,10 @@ name: "Catalog",
   display: none;
   background: #fff;
   padding:0 20px;
-  animation: fadeOut .3s;
+  transition:.3s;
+  -webkit-animation: fadeIn 0.3s;
+  animation-fill-mode:forwards;
+  animation-direction: reverse;
 
 }
 .filter-category{

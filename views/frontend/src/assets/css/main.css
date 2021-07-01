@@ -1,3 +1,8 @@
+input{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
 body{
     font-size:14px;
 }
@@ -441,7 +446,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     width: 100%;
     border: 1px solid #D3D3D3;
     border-radius: 5px;
-    height: 40px;
+    height: 45px;
     padding:0 10px;
     margin-bottom: 13px;
 }
@@ -476,7 +481,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     width: 100%;
     border: 1px solid #D3D3D3;
     border-radius: 5px;
-    height: 40px;
+    height: 45px;
     padding-right:10px;
     margin-bottom: 13px;
 }
@@ -489,7 +494,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     width: 100%;
     background: #616CF5;
     border-radius: 5px;
-    height: 50px;
+    height: 45px;
     border:none;
     color:#fff;
     font-size: 18px;
@@ -748,8 +753,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     padding: 0 !important;
 }
 .slick-slide .slider-item{
-    height: 130px;
-    margin-right: 10px;
+    height: 100px;
+
 }
 .decrease,.increase{
     border: 1px solid #8C94A5;
@@ -811,6 +816,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 /*=========================Input slider in catalog======================*/
 .irs--flat {
     margin-bottom: 30px;
+}
+.irs-hidden-input{
+    display:none !important;
 }
 .irs--flat .irs-handle {
     top: 17px;
@@ -1323,23 +1331,33 @@ input.value-success, select.value-success, textarea.value-success{
 }
 
 
+@media(max-width:992px){
+        .multiple-items .slick-track{
+            display: none;
+        }
+        .slick-prev, .slick-next{
+            display: none !important;
+        }
 
+        .slick-dots{
+            bottom:-35px;
+        }
+
+
+
+
+}
 @media(max-width:481px){
     .swal2-popup.sweet-delete{
         width: 100%;
     }
-    .slick-dots{
-        display: none !important;
-    }
+
+
     .path-title{
         font-size: 18px;
     }
 }
-.modal-backdrop {
-    width:100%;
-    left: 250px;
 
-}
 
 
 /*Responsive Web Catalog*/

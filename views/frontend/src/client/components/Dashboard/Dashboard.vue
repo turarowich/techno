@@ -16,9 +16,9 @@
         <div><router-link class="view-all" :to="`/${currentCompanyCatalog}/client-news`">View all</router-link></div>
       </div>
       <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-12 main-news">
           <div class="row parentNews">
-            <div v-for="(news,index) in newsArray.slice(0,4)" :key="index"  class="childNews col-lg-3 col-md-4 col-sm-6 mb-4 " @click="openNews(news._id)">
+            <div v-for="(news,index) in newsArray.slice(0,4)" :key="index"  class="childNews col-lg-3 col-md-4 col-sm-6 mb-4 pr-0" @click="openNews(news._id)">
               <div class="new-img">
                 <img v-if="!news.error" :src="server+'/'+news.img" @error="news.error=true">
                 <img v-else src="../../../assets/img/default.svg" >
@@ -166,6 +166,9 @@ name: "Dashboard",
 </script>
 
 <style scoped>
+.main-news{
+  padding-right:30px;
+}
 .calendar-news{
   border-bottom: 1px solid #E3E3E3;
   margin-bottom: 10px;
@@ -204,7 +207,7 @@ name: "Dashboard",
   font-size: 16px;
 }
 .new-img{
-  height: 125px;
+  height: 150px;
   width: 100%;
   margin-right: 10px;
 
@@ -251,6 +254,7 @@ name: "Dashboard",
   position: relative;
   border-radius: 5px;
   margin-bottom: 25px;
+  margin-top: -28px;
 
 
 }

@@ -90,4 +90,9 @@ export default {
 .news-date{
   color: #858585;
 }
+@media(max-width:481px){
+  .my-container{
+    margin-top: 110px;
+  }
+}
 </style>

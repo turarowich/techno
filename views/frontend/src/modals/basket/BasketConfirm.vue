@@ -1,6 +1,6 @@
 <template>
   <div class="parent-modal">
-    <div class="modal myModal fade" id="confirmAsGuest" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal myModal fade pr-0" id="confirmAsGuest" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content add_branch_modal_content">
           <div class="modal-header">
@@ -69,6 +69,9 @@ export default {
 </script>
 
 <style scoped>
+.login-input{
+  height: 40px;
+}
 .working-phones div{
   flex: 1;
 }
@@ -79,6 +82,8 @@ export default {
   width: 452px;
   max-width: 452px;
   /*height: 340px;*/
+  margin-top: 20%;
+  border:none;
 }
 
 .modal-content{
@@ -114,6 +119,7 @@ export default {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  margin-top: 20px;
 }
 .confirmAsGuestClass div:first-child{
   color: #FFFFFF;
@@ -127,5 +133,16 @@ export default {
 }
 .modal-body {
   margin-bottom: 40px;
+}
+@media(max-width:576px){
+  .add_branch_modal_content{
+    width: 96%;
+    padding: 0 20px;
+    border-radius:10px;
+    margin-left: 2%;
+
+
+  }
+
 }
 </style>

@@ -1,12 +1,12 @@
 <template>
-  <div class="client overlay_404">
+  <div class="client  overlay_404">
     <div>
-      <div class="fixed-top bg-white" v-if="!['ClientLogin', 'ClientRegister', 'EmployeeLogin'].includes($route.name)">
+      <div class="fixed-top " v-if="!['ClientLogin', 'ClientRegister', 'EmployeeLogin'].includes($route.name)">
         <Navbar/>
 
       </div>
 
-        <div class="router-content">
+        <div class="router-content" id="router-content">
           <router-view />
         </div>
 
@@ -14,6 +14,7 @@
     </div>
     <div v-if="!['ClientLogin', 'ClientRegister'].includes($route.name)">
       <Footer/>
+      <img @click="scrollToTop" id="back-top" src="../../../assets/icons/back-top.svg">
     </div>
   </div>
 </template>
@@ -40,6 +41,12 @@ name: "Home",
     }
   },
   methods:{
+      scrollToTop(){
+          document.body.scrollTop = 0;
+          document.documentElement.scrollTop = 0;
+
+
+      }
 
   },
   beforeCreate(){
@@ -92,13 +99,15 @@ name: "Home",
       $(window).on("scroll",function() {
         if($(this).scrollTop() > 200)
         {
-          $(".bg-white").addClass("nav-top");
-          $('.navigation').css({'border-bottom': 'none'})
+          $(".fixed-top").addClass("nav-top");
+          $('.navigation').css({'border-bottom': '1px solid transparent'})
+          $('#back-top').css({'display':'none'})
         }
         else
         {
-          $(".bg-white").removeClass("nav-top");
+          $(".fixed-top").removeClass("nav-top");
           $('.navigation').css({'border-bottom': '1px solid #e4e4e4'})
+          $('#back-top').css({'display':'none'})
         }
       })
     })
@@ -110,15 +119,37 @@ name: "Home",
 </script>
 
 <style scoped>
+
 .nav-top{
   box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.2);
   transition:.3s;
-;
+
+}
+.fixed-top{
+  background: #fff;
+}
+.client.before{
+
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.3) !important;
+  position: fixed;
+  z-index:10000;
+  left: 0;
+  top: 0;
 }
 .router-content{
   margin-top:90px;
 }
+#back-top{
+  position: fixed;
+  bottom: 20px;
+  right:20px;
 
+}
+#back-top{
+  display: none;
+}
 .overlay_404{
   /*display: none;*/
 }

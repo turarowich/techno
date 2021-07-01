@@ -5,7 +5,7 @@
     <img src="../assets/icons/menu.svg">
   </div>
     <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">
-      <div v-if="catalog_settings.logo && catalog_settings.logo ===''"  v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.logo + ')' }" class="catalog_logo">
+      <div v-if="catalog_settings.logo && catalog_settings.logo !==''"  v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.logo + ')' }" class="catalog_logo">
 
       </div>
       <span v-else>
@@ -17,8 +17,8 @@
 
   <div class="menu-wrapper">
       <div class="mobile-header d-flex justify-content-between align-items-center" >
-        <div class="d-flex align-items-center">
-          <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">
+        <div class="d-flex align-items-center" @click="removeActive">
+          <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar">
             <div v-if="catalog_settings.logo && catalog_settings.logo !==''"  v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.logo + ')' }" class="catalog_logo">
 
             </div>
@@ -191,7 +191,6 @@ export default {
   },
 
 
-
 }
 </script>
 
@@ -243,7 +242,7 @@ export default {
   z-index:9999;
   top: 0;
   left: 0;
-  background: #fff;
+  background: #fafafa;
   padding: 0 20px;
   transition:.4s;
 
@@ -255,6 +254,7 @@ export default {
 }
 .basket-menu{
   position: relative;
+  padding: 5px;
 
 }
 .basket-menu img{
@@ -263,8 +263,8 @@ export default {
 }
 .basket-menu .bg-not{
   position: absolute;
-  top:-2px;
-  right: -5px;
+  top:3px;
+  right: -2px;
 }
 .menu-wrapper .mobile-header{
   display:none !important;
@@ -337,6 +337,7 @@ font-size: 14px;
   color:#fff;
   transition:.3s;
 }
+
 .bg-not{
   height: 14px;
   width: 14px;
@@ -371,6 +372,7 @@ font-size: 14px;
   top: 30px;
   visibility: visible;
 }
+
 .basket-hover .save{
   width:100%;
   margin-top: 10px;
@@ -429,12 +431,23 @@ font-size: 14px;
   border-radius: 50%;
 }
 @media(max-width:992px){
+  .menu-wrapper .client-menu {
+    display: none;
+
+  }
   .menu-wrapper{
     position: fixed;
     width: 100vw;
     height: 100%;
-    left:-100vw;
-
+    z-index:9999;
+    top: 0;
+    left: -100vw;
+    background: #fafafa;
+    padding: 0 20px;
+    transition:0.4s;
+  }
+  .client-link{
+    font-size: 16px;
   }
   .burger{
     display: block;

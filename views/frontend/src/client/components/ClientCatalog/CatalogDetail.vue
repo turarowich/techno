@@ -1,61 +1,67 @@
 <template>
-  <div class="container client-container">
-    <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg"><div @click="$router.go(-1)" class="mr-1">Back </div> | <span > {{getProduct.name}}</span> </div>
-  <div class="row  mb-5">
-    <div class="col-10 m-auto">
-
-      <div class="row">
-        <div class="col-lg-7 detail-right">
-          <div class="product-img" :class="{active: getProduct.imgArray.length===0}" id="container">
-<!--            <img :src="server+'/'+getProduct.img">-->
-            <img v-if="!getProduct.error" :src="server+'/'+getProduct.img" @error="getProduct.error=true">
-            <img v-else src="../../../assets/img/default.svg" >
-
-
-            <img v-for="(img,index) in getProduct.imgArray" :key="index" :src="server+'/'+img">
-          </div>
-          <div v-if="getProduct.imgArray.length>0" class="multiple-items">
-            <div class="slider-item">
-              <img v-if="!getProduct.error" :src="server+'/'+getProduct.img" @error="getProduct.error=true">
-              <img v-else src="../../../assets/img/default.svg" >
-            </div>
+ <div>
+  <div v-if="!getProduct.img"><Spinner/></div>
+   <div v-else class="container client-container">
+     <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg"><div @click="$router.go(-1)" class="mr-1">Back </div> | <span > {{getProduct.name}}</span> </div>
+     <div class="row  mb-5">
+       <div class="col-lg-10  m-auto">
+         <div class="row">
+           <div class="col-lg-7 detail-right">
+             <div class="product-img" :class="{active: getProduct.imgArray.length===0}" id="container">
+               <!--            <img :src="server+'/'+getProduct.img">-->
+               <img v-if="!getProduct.error" :src="server+'/'+getProduct.img" @error="getProduct.error=true">
+               <img v-else src="../../../assets/img/default.svg" >
 
 
-            <div v-for="(img,index) in getProduct.imgArray" :key="index" class="slider-item">
-              <img :src="server+'/'+img">
+               <img v-for="(img,index) in getProduct.imgArray" :key="index" :src="server+'/'+img">
+             </div>
+             <div v-if="getProduct.imgArray.length>0" class="multiple-items">
+               <div class="slider-item">
+                 <img v-if="!getProduct.error" :src="server+'/'+getProduct.img" @error="getProduct.error=true">
+                 <img v-else src="../../../assets/img/default.svg" >
+               </div>
 
 
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-5 detail-left" :class="{active: getProduct.imgArray.length===0}">
-          <h3 class="product-name">{{getProduct.name}}</h3>
-          <h5 class="product-code">{{getProduct.code}}</h5>
-          <h1 v-if="checkDates(getProduct.promoStart,getProduct.promoEnd)" class="product-price">{{getProduct.promoPrice}} $</h1>
-          <h3 :class="{lineThrough:checkDates(getProduct.promoStart,getProduct.promoEnd)}" class="product-price">{{getProduct.price}} $</h3>
-          <br>
+               <div v-for="(img,index) in getProduct.imgArray" :key="index" class="slider-item">
+                 <img :src="server+'/'+img">
 
-          <div v-if="!catalog_settings.catalogMode">
-            <button class="decrease" @click="decrease(getProduct._id)">-</button>
-            <span v-if="getProductFromStore" class="count">{{getProductFromStore.quantity}}</span>
-            <span v-else class="count">0</span>
-            <button class="increase" @click="addToCart">+</button>
-          </div>
 
-          <h3 class="price mt-0">Description</h3>
-          <p class="product-text">{{getProduct.description}}</p>
-          <button v-if="!catalog_settings.catalogMode" class="catalog-btn" @click="addToCart()"><a >Add to card +</a></button>
-        </div>
-      </div>
-    </div>
-  </div>
-  </div>
+               </div>
+             </div>
+           </div>
+           <div class="col-lg-5 detail-left" :class="{active: getProduct.imgArray.length===0}">
+             <h3 class="product-name">{{getProduct.name}}</h3>
+             <h5 class="product-code">{{getProduct.code}}</h5>
+             <h1 v-if="checkDates(getProduct.promoStart,getProduct.promoEnd)" class="product-price">{{getProduct.promoPrice}} $</h1>
+             <h3 :class="{lineThrough:checkDates(getProduct.promoStart,getProduct.promoEnd)}" class="product-price">{{getProduct.price}} $</h3>
+             <br>
+
+             <div v-if="!catalog_settings.catalogMode">
+               <button class="decrease" @click="decrease(getProduct._id)">-</button>
+               <span v-if="getProductFromStore" class="count">{{getProductFromStore.quantity}}</span>
+               <span v-else class="count">0</span>
+               <button class="increase" @click="addToCart">+</button>
+             </div>
+
+             <h3 class="price mt-0">Description</h3>
+             <p class="product-text">{{getProduct.description}}</p>
+             <button v-if="!catalog_settings.catalogMode" class="catalog-btn" @click="addToCart()"><a >Add to card +</a></button>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
 </template>
 
 <script>
+import Spinner from "../Spinner";
 import $ from 'jquery';
 export default {
   name: "CatalogDetail",
+  components:{
+    Spinner
+  },
   data(){
     return{
       today:new Date(),
@@ -171,8 +177,8 @@ export default {
           {
             breakpoint: 768,
             settings: {
-              slidesToShow: 2,
-              slidesToScroll: 2,
+              slidesToShow: 3,
+              slidesToScroll: 1,
               infinite: true,
               dots: true
             }
@@ -240,19 +246,22 @@ export default {
   .product-img{
     height: 400px;
   }
+  .multiple-items{
+    margin-bottom: 0;
+  }
 }
 @media(max-width:481px) {
   .product-img {
     width: 100%;
-    height: 60%;
-    margin-bottom: 0;
+    height: 100%;
+    margin-bottom: 0
   }
-  .detail-left{
-    margin-top: -50px;
+
+
+  .detail-right{
+    margin-bottom: 60px;
   }
-  .detail-left.active{
-    margin-top: 50px;
-  }
+
   .product-img.active {
     height: 100%;
   }
