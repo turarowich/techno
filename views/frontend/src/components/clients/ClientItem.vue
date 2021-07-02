@@ -24,8 +24,7 @@
       <div class="table-child" v-show="data_check.last_purchase_checked"  style="width: 16%;">{{client.last_purchase}}</div>
       <div  style="width:3%" class="table-child dropleft dropMenu">
       <div v-if="check()" class="dropdown-toggle" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <img  src="../../assets/icons/three-dots.svg"
-              class="three-dots">
+        <img  src="../../assets/icons/three-dots.svg" class="three-dots">
       </div>
       <div v-if="check()" class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
         <ul class="list-group" >

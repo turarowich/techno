@@ -35,6 +35,14 @@ const en_messages = {
     news_created: 'News added',
     news_updated: 'News updated',
     news_deleted: 'News deleted',
+
+    // Points messages
+    points_added: 'Points added',
+    successfully_get: 'successfully get',
+    points_deducted: 'Points deducted',
+    writting_off: 'writting of',
+    from_client: 'from client',
+
 }
 const ru_messages = {
     // Order messages
@@ -73,6 +81,13 @@ const ru_messages = {
     news_created: 'Новость добавлена',
     news_updated: 'Новость изменена',
     news_deleted: 'Новость удалена',
+
+    // Points messages
+    points_added: 'Бонусы начислены',
+    successfully_get: 'получил',
+    points_deducted: 'Бонусы списаны',
+    writting_off: 'списали',
+    from_client: 'у клиента',
 }
 
 module.exports = {

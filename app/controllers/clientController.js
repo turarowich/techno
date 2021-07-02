@@ -461,6 +461,7 @@ class ClientController{
     addPoints = async function (req, res) {
         let db = useDB(req.db)
         let Client = db.model("Client");
+        let Log = db.model("Log");
         let ClientBonusHistory = db.model("clientBonusHistory");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "addPoint" }, db, res)
@@ -480,15 +481,25 @@ class ClientController{
             let query = {
                 _id: req.fields.client
             }
-            let client = await Client.find(query)
-            client.points = (parseFloat(client.points) + parseFloat(req.fields.points)).toFixed(2);
-            await client.save({ validateBeforeSave: false });
-            await new ClientBonusHistory({
-                client: client._id,
-                points: req.fields.points,
-                source: 'Points added by company',
-                type: 'received',
-            }).save();
+            let client = await Client.findById(query)
+            if(client){
+                client.points = (parseFloat(client.points) + parseFloat(req.fields.points)).toFixed(2);
+                await client.save({ validateBeforeSave: false });
+                await new ClientBonusHistory({
+                    client: client._id,
+                    points: req.fields.points,
+                    source: 'Points added by company',
+                    type: 'received',
+                }).save();
+                await new Log({
+                    type: "points_added",
+                    description: client.name + " successfully_get",
+                    value: req.fields.points + 'P',
+                    valueColor: "done",
+                    user: req.userName,
+                    icon: "addPoint"
+                }).save()
+            }
         } catch (error) {
             result = sendError(error, lang)
         }
@@ -499,6 +510,7 @@ class ClientController{
     deductPoints = async function (req, res) {
         let db = useDB(req.db)
         let Client = db.model("Client");
+        let Log = db.model("Log");
         let ClientBonusHistory = db.model("clientBonusHistory");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "addPoint" }, db, res)
@@ -512,25 +524,36 @@ class ClientController{
         }
         let result = {
             'status': 200,
-            'msg': 'Points added'
+            'msg': 'Points deducted'
         }
         try {
             let query = {
                 _id: req.fields.client
             }
-            let client = await Client.find(query)
-            if (parseFloat(client.points) < parseFloat(req.fields.points)){
-                req.fields.points = client.points
-            }
-            client.points = (parseFloat(client.points) - parseFloat(req.fields.points)).toFixed(2);
+            let client = await Client.findById(query)
+            if(client){
+                if (parseFloat(client.points) < parseFloat(req.fields.points)) {
+                    req.fields.points = client.points
+                }
+                client.points = (parseFloat(client.points) - parseFloat(req.fields.points)).toFixed(2);
+
+                await client.save({ validateBeforeSave: false });
+                await new ClientBonusHistory({
+                    client: client._id,
+                    points: -req.fields.points,
+                    source: 'Points deducted by company',
+                    type: 'deducted',
+                }).save();
+                await new Log({
+                    type: "points_deducted",
+                    description: "from_client " + client.name + " writting_off",
+                    value: -req.fields.points + 'P',
+                    valueColor: "canceled",
+                    user: req.userName,
+                    icon: "delete"
+                }).save()
+            }   
             
-            await client.save({ validateBeforeSave: false });
-            await new ClientBonusHistory({
-                client: client._id,
-                points: -req.fields.points,
-                source: 'Points deducted by company',
-                type: 'deducted',
-            }).save();
         } catch (error) {
             result = sendError(error, lang)
         }
