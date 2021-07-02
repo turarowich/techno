@@ -246,6 +246,7 @@ export default {
     selectDate(date, add_day=0){
         this.startDate = this.$moment(date).add(add_day, "days").format("YYYY-MM-DD")
         this.endDate = this.$moment(date).add(add_day, "days").format("YYYY-MM-DD")
+        this.between_value = this.startDate + ' to ' + this.endDate;
         this.getDate()
     }
   },

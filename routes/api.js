@@ -114,8 +114,9 @@ module.exports = function (app, io) {
     app.put('/updateUser/:user', verifyAccess, userController.updateUser);
     app.delete('/deleteUser/:user', verifyAccess, userController.deleteUser);
 
-    // User url
+    // Push notification url
     app.get('/sendNewsPN/:id', pushController.sendNewsPN);
+    app.post('/sendPushNotification', pushController.sendPushNotification);
 
     // Settings url
     app.get('/getSettings', settingsController.getSettings);
