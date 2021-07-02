@@ -109,6 +109,8 @@ export default {
   border-bottom: 1px solid #F4F4F4;
   padding-bottom: 5px;
   margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 400;
 }
 .filter-select{
   height: 30px;
