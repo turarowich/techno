@@ -884,7 +884,7 @@ export default {
   padding-bottom: 30px;
   height: auto;
   overflow-y: auto;
-  transform: translate3d(-565px, 33px, 0px) !important;
+  transform: translate3d(-575px, 33px, 0px) !important;
   position: relative;
 }
 .save{

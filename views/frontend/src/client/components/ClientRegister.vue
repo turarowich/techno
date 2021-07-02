@@ -41,6 +41,15 @@
           <div class="social-icons">      <img src="../../assets/icons/facebook.svg"></div>
           <div class="social-icons mr-0">      <img src="../../assets/icons/google.svg"></div>
         </div>
+
+
+        <div class="main-or d-flex align-items-center justify-content-center">
+          <div class="or-div"></div>
+          <span class="or-text">or</span>
+          <div class="or-div"></div>
+        </div>
+        <div class="have-account mb-0">Don't have an account? <router-link class="client-link" :to="`/${currentCompanyCatalog}/signin`">Sign in now</router-link></div>
+
       </div>
     </div>
   </div>
@@ -192,25 +201,27 @@ form{
   pointer-events: none;
   opacity: .5;
 }
+.authorization{
+  margin-top: -90px;
+}
 @media(max-width:768px){
   .login{
     width: 100%;
-  }
-}
-@media(max-width:576px){
-  .login{
-    padding: 35px 40px;
+    padding: 0;
+    border:none;
   }
   .authorization{
-    padding: 23px 0 !important;
+    background: #fff;
+    padding: 0;
+  }
+}
+
+@media(max-width:576px){
+  .authorization{
+    padding:23px 0;
   }
   .welcome-sign-in{
     font-size: 36px !important;
-  }
-}
-@media(max-width:420px){
-  .login{
-    padding:30px 20px;
   }
 }
 

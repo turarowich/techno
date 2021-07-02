@@ -8,7 +8,7 @@
     </div>
     <div class="row">
 
-            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6  news-box" v-for="newss in news" :key="newss._id" @click="openNews(newss._id)">
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 pr-0 news-box" v-for="newss in news" :key="newss._id" @click="openNews(newss._id)">
               <div class="new-img">
 <!--                <img :src="server+'/'+newss.img">-->
                 <img v-if="!newss.error" :src="server+'/'+newss.img" @error="newss.error=true">
@@ -52,12 +52,9 @@ export default {
 </script>
 
 <style scoped>
-.news-back{
-  font-size:18px;
-  font-weight: normal;
-  cursor:pointer;
+.news{
+  padding-right: 30px;
 }
-
 .news-box{
   margin-bottom: 37px;
 }
@@ -67,7 +64,7 @@ export default {
   padding-bottom: 8px;
 }
 .new-img{
-  height: 125px;
+  height: 150px;
   width: 100%;
   margin-right: 10px;
 
@@ -91,7 +88,6 @@ export default {
   margin-bottom: 10px;
 }
 .news-text{
-  background: #F8F9FB;
   padding: 10px 20px;
 }
 .news-text img{

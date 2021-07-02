@@ -1,26 +1,30 @@
 <template>
-  <div class="row ">
-    <div class="col-lg-3 col-6 product-box" v-for="product in catalog" :key="product._id">
+  <div>
 
-      <div v-if="product.quantity>0">
-        <div class="product-img"  @click="selectProduct(product._id)">
-          <img v-if="!product.error" :src="server+'/'+product.img" @error="product.error=true">
-<!--          <img v-else src="../../../assets/img/default.svg" >-->
-          <img v-else src="../../../assets/icons/no-catalog.svg" >
-          <!--        <img :src="server+'/'+product.img">-->
+    <div class="row add-padding" >
+      <div  class="col-lg-3 col-6  product-box"  v-for="(product) in catalog" :key="product._id" >
+          <div v-if="product.quantity>0">
+            <div class="product-img"  @click="selectProduct(product._id)">
+              <img v-if="!product.error" :src="server+'/'+product.img" @error="product.error=true">
+              <!--          <img v-else src="../../../assets/img/default.svg" >-->
+              <img v-else src="../../../assets/icons/no-catalog.svg" >
+              <!--        <img :src="server+'/'+product.img">-->
+            </div>
+            <div class="product-add">
+              <h2 class="long-text"  style="overflow: hidden;text-overflow: ellipsis;">{{product.name}}</h2>
+              <span v-if="checkDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} сом</span>
+              <br>
+              <span :class="{lineThrough:checkDates(product.promoStart,product.promoEnd)}">{{product.price}} сом</span>
+            </div>
+            <button v-if="!catalog_settings.catalogMode" class="add-to-card" @click="addToCart(product._id)">Add to cart</button>
+            <button v-else class="add-to-card" @click="selectProduct(product._id)">View</button>
+          </div>
+
+
         </div>
-        <div class="product-add">
-          <h2 class="long-text"  style="overflow: hidden;text-overflow: ellipsis;">{{product.name}}</h2>
-          <span :class="{up: checkDates(product.promoStart,product.promoEnd) !== true}" v-if="checkDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} сом</span>
-          <br>
-          <span :class="{lineThrough:checkDates(product.promoStart,product.promoEnd), up: checkDates(product.promoStart,product.promoEnd) !== true}">{{product.price}}</span>
-        </div>
-        <button v-if="!catalog_settings.catalogMode" class="add-to-card" @click="addToCart(product._id)">Add to cart</button>
-        <button v-else class="add-to-card" @click="selectProduct(product._id)">View</button>
-      </div>
-
-
     </div>
+
+
   </div>
 </template>
 
@@ -28,12 +32,23 @@
 export default {
 name: "ClientCatalogItem",
   props:['catalog'],
+  components:{
+
+  },
+
   data(){
     return{
       today:new Date(),
+      catalogList:[],
+      page:1,
+      noResult:false,
+      message:""
+
+
     }
   },
   computed:{
+
     userDiscountStatus(){
       return this.$store.getters['Client/getUserDiscountStatus'];
     },
@@ -51,6 +66,9 @@ name: "ClientCatalogItem",
     },
   },
   methods:{
+
+
+
     checkDates(start,end){
       let itsPromo = false;
       let startDate = new Date(start);
@@ -107,15 +125,17 @@ name: "ClientCatalogItem",
         this.$router.push({ path: `/${this.currentCompanyCatalog}/catalog-detail/${id}` });
       },
     },
+  mounted(){
+
+  }
 }
 </script>
 
 <style scoped>
-.up{
-  margin-top: -17px;
-  display: block;
-  margin-bottom: 34px;
+.add-padding{
+  padding-right: 15px;
 }
+
 .long-text{
   width: 100%;
   white-space: nowrap;
@@ -123,16 +143,15 @@ name: "ClientCatalogItem",
   text-overflow: ellipsis
 }
 .product-img {
+  margin-bottom: 16px;
+  height:176px;
 
-  width: 100%;
-  margin-bottom: 10px;
-  text-align: center;
 }
 .product-img img{
   width: 100%;
-  height: 160px;
+  height: 100%;
   object-fit: contain;
-  border-radius:10px;
+  border-radius: 10px;
 }
 .product-add{
   font-weight: bold;
@@ -148,6 +167,7 @@ name: "ClientCatalogItem",
   padding: 0.3rem  2rem;
   background: #F4F4F4;
   border-radius: 10px;
+  width: 140px;
 }
 .add-to-card:hover{
   color:#222;
@@ -157,10 +177,10 @@ name: "ClientCatalogItem",
 .product-box{
   text-align: center;
   cursor:pointer;
-  padding:20px;
+  padding:15px;
   box-sizing: border-box;
-
   border: 0.5px solid transparent;
+  padding-bottom: 20px;
 
 
 }
@@ -195,14 +215,26 @@ name: "ClientCatalogItem",
   .product-box:hover{
     border:none;
   }
+  .product-box{
+    padding-right: 0;
+  }
 }
 
 @media(max-width:380px){
-  .product-box{
-    padding: 20px 10px;
+  .product-img img{
+    height: 163px;
+  }
+  .product-img{
+    margin-bottom: 0;
   }
   .add-to-card{
     padding:0.3rem 30px;
   }
+}
+@media(max-width:330px){
+  .product-img img{
+    height: 138px;
+  }
+
 }
 </style>

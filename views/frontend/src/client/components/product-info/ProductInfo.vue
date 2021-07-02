@@ -355,7 +355,7 @@ export default {
     width: 100%;
   }
   .basket-hover{
-    margin:50px 0;
+    margin-top: 50px;
     padding: 0;
     background: #fff;
   }

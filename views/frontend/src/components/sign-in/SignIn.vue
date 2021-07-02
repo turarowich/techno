@@ -1,7 +1,7 @@
 <template>
 <div class="authorization">
   <div class="container-fluid">
-  <div class="sign-in-header d-flex justify-content-between align-items-center">
+  <div class="sign-in-header">
     <img class="main-logo" src="../../assets/img/sign-logo.svg">
     <select class="select-lang form-control">
       <option>Eng</option>
@@ -34,7 +34,7 @@
       <div class="or-div"></div>
     </div>
 
-    <div class="have-account">Don't have an account? <a href="/signup">Sign up now</a></div>
+    <div class="have-account">Don't have an account? <a  @click="$router.push('/signup')">Sign up now</a></div>
 
     <div class="social-link">
       <a href="http://localhost:8080/auth/facebook"><img src="../../assets/icons/facebook.svg"></a>
@@ -166,7 +166,7 @@ form{
   margin-bottom: 11px;
 }
 .have-account{
-  font-size: 16px;
+
   color:#b0b0b0;
 }
 
@@ -188,37 +188,36 @@ form{
   background-position-x:80%;
   background-position-y: 12px;
 }
-.social-link{
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
 
-}
-.social-link a{
-  margin-right: 16px;
-  border: 0.5px solid rgba(18, 18, 29, 0.1);
-  background: #fff;
-  width: 56px;
-  height: 56px;
+.sign-in-header{
   display: flex;
-  justify-content: center;
-  align-items:center;
-  border-radius:50%;
-
+  align-items: center;justify-content: space-between;
 }
-.social-link a:last-child{
-  margin-right: 0;
+
+.have-account a{
+  cursor:pointer;
+}
+.have-account a:hover{
+  color:#616cf5
 }
 @media(max-width:768px){
   .login{
     width: 100%;
+    padding: 0;
+    border:none;
+  }
+  .authorization{
+    background: #fff;
+    padding: 0;
+  }
+  .sign-in-header{
+    justify-content: center;
+  }
+  .select-lang{
+    display:none;
   }
 }
-@media(max-width:660px){
-  .login{
-    padding: 30px 40px;
-  }
-}
+
 @media(max-width:576px){
   .authorization{
     padding:23px 0;
@@ -226,11 +225,5 @@ form{
   .welcome-sign-in{
     font-size: 36px !important;
   }
-}
-@media(max-width:420px){
-  .login{
-    padding:30px 20px;
-  }
-
 }
 </style>

@@ -23,7 +23,7 @@
           <button @click="login" class="sign-in-btn" type="button">Sign In</button>
         </form>
 
-        <div class="have-account">Sign up with Social of fill the form to continue. </div>
+        <div class="have-account">Sign in with Social of fill the form to continue. </div>
 
         <div class="social-link d-flex justify-content-center">
         <div class="social-icons">  <img src="../../assets/icons/facebook.svg"></div>
@@ -104,6 +104,9 @@ export default {
 </script>
 
 <style scoped>
+.authorization{
+  margin-top: -90px;
+}
 .login{
   width: 586px;
   background: #FFFFFF;
@@ -177,16 +180,19 @@ form{
   margin-top:15px;
   margin-bottom: 15px;
 }
+
 @media(max-width:768px){
   .login{
     width: 100%;
+    padding: 0;
+    border:none;
+  }
+  .authorization{
+    background: #fff;
+    padding: 0;
   }
 }
-@media(max-width:660px){
-  .login{
-    padding: 30px 40px;
-  }
-}
+
 @media(max-width:576px){
   .authorization{
     padding:23px 0;
@@ -195,10 +201,6 @@ form{
     font-size: 36px !important;
   }
 }
-@media(max-width:420px){
-  .login{
-    padding:30px 20px;
-  }
 
-}
+
 </style>
