@@ -9,7 +9,7 @@ var queryString = require('query-string');
 const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
-    port: 2525,
+    port: 587,
     auth: {
         user: 'moorestudio2@gmail.com',
         pass: '123123123@@',

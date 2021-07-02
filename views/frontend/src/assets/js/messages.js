@@ -18,7 +18,6 @@ const en_messages = {
     client_deleted: 'Client deleted',
     clients_deleted: 'Clients deleted',
 
-
     // Loyalty messages
     promocode_created: 'Promocode added',
     promocode_updated: 'Promocode updated',
@@ -36,7 +35,6 @@ const en_messages = {
     news_created: 'News added',
     news_updated: 'News updated',
     news_deleted: 'News deleted',
-
 }
 const ru_messages = {
     // Order messages
@@ -75,7 +73,6 @@ const ru_messages = {
     news_created: 'Новость добавлена',
     news_updated: 'Новость изменена',
     news_deleted: 'Новость удалена',
-
 }
 
 module.exports = {
