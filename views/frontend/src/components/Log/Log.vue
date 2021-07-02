@@ -10,22 +10,54 @@
 
           <div class="dropdown-menu general-dropdown" aria-labelledby="dropdownMenuButton">
             <div class="filter-dropdown">
-              <h3 class="drop-title">By price</h3>
-              <div class="d-flex">
-                <input placeholder="0" v-model="price_from"  type="number" class="drop-input">
-                <div class="d-flex">
-                  <label class="mr-2 pl-2">to</label>
-                  <input placeholder="0" v-model="price_to" type="number"  class="drop-input">
-                </div>
-              </div>
-              <h3 class="drop-title">Sort by</h3>
-              <select  v-model="filter_by_status" class="filter-select form-control form-control-sm mb-2" aria-label=".form-select-lg example">
-                <option value="">All</option>
-                <option value="Done">Done</option>
-                <option value="In Progress">In process</option>
-                <option value="Canceled">Canceled</option>
-                <option value="New">New</option>
-              </select>
+             <form>
+               <div>
+                 <div class="filter-list" data-toggle="collapse" data-target="#admins" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
+                   Admins
+                   <img src="../../assets/icons/down.svg" class="filter-img">
+                 </div>
+                 <div class="collapse" id="admins">
+                   <div class="filter-body">
+                     <select class="filter-select form-control form-control-sm mb-2" aria-label=".form-select-lg example">
+                       <option value="">All</option>
+                       <option value="Done">Done</option>
+                       <option value="In Progress">In process</option>
+                       <option value="Canceled">Canceled</option>
+                       <option value="New">New</option>
+                     </select>
+                   </div>
+                 </div>
+               </div>
+               <div >
+                 <div class="filter-list" data-toggle="collapse" data-target="#cashback" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
+                   Cash back
+                   <img src="../../assets/icons/down.svg" class="filter-img">
+                 </div>
+                 <div class="collapse" id="cashback">
+                   <div class="filter-body">
+                     <div class="radio-toolbar-gender">
+                       <div class="d-flex align-items-center mb-2 mr-5">
+                         <input ref="client-filter" type="radio" id="radioMen" name="radioGender" @click="gender_client = 'men'">
+                         <label for="radioMen"></label>
+                         <span class="male">Added</span>
+                       </div>
+                       <div class="d-flex align-items-center mb-2">
+                         <input ref="client-filter" type="radio" id="radioWoman" name="radioGender" @click="gender_client='woman'">
+                         <label for="radioWoman"></label>
+                         <span class="male">Edited</span>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+               <div class="filter-list">Orders</div>
+               <div class="order_users mb-2"><label class="custom-checkbox mr-2"><input ref="client-filter"   id="client-birthday" type="checkbox"><span class="checkmark"></span></label>Show only created orders</div>
+               <div class="filter-list">Clients</div>
+               <div class="order_users"><label class="custom-checkbox mr-2"><input ref="client-filter"   id="created" type="checkbox"><span class="checkmark"></span></label>Show only created users</div>
+
+             </form>
+
+
             </div>
           </div>
         </div>
@@ -67,6 +99,29 @@ export default {
 </script>
 
 <style scoped>
+.order_users{
+  font-size: 14px;
+}
+.filter-list{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #F4F4F4;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+.filter-select{
+  height: 30px;
+  font-size: 14px;
+
+}
+.general-dropdown{
+  width: 19rem;
+}
+.filter-dropdown{
+  padding: 17px;
+  transform: translate3d(0px, -5px, 0px) !important;
+}
 .main-content-header{
   padding-right:10px;
 }
@@ -86,5 +141,29 @@ export default {
   border:none;
   cursor:pointer;
   color:#606877;
+}/*====================Radio  toolbaar baschback*/
+.radio-toolbar-gender input[type="radio"] {
+  opacity: 0;
+  position: fixed;
+  width: 0;
+}
+
+.radio-toolbar-gender label {
+  display: inline-block;
+  margin-bottom: 0;
+  margin-right: 10px;
+  width: 13px;
+  height: 13px;
+  border: 1px solid #E3E3E3;
+  box-sizing: border-box;
+  border-radius:3px;
+}
+
+.radio-toolbar-gender input[type="radio"]:checked + label {
+  background-color: #616cf5;
+  border: none;
+}
+.male{
+  font-size: 14px;
 }
 </style>

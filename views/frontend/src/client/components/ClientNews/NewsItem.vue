@@ -88,7 +88,6 @@ export default {
   margin-bottom: 10px;
 }
 .news-text{
-  background: #F8F9FB;
   padding: 10px 20px;
 }
 .news-text img{

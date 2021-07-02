@@ -23,7 +23,7 @@
           <button @click="login" class="sign-in-btn" type="button">Sign In</button>
         </form>
 
-        <div class="have-account">Sign up with Social of fill the form to continue. </div>
+        <div class="have-account">Sign in with Social of fill the form to continue. </div>
 
         <div class="social-link d-flex justify-content-center">
         <div class="social-icons">  <img src="../../assets/icons/facebook.svg"></div>

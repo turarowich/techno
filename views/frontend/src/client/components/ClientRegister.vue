@@ -211,20 +211,18 @@ form{
     border:none;
   }
   .authorization{
-    padding: 0;
     background: #fff;
+    padding: 0;
   }
-
 }
+
 @media(max-width:576px){
   .authorization{
     padding:23px 0;
   }
-
   .welcome-sign-in{
     font-size: 36px !important;
   }
 }
-
 
 </style>

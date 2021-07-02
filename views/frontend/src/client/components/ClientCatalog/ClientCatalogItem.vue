@@ -12,9 +12,9 @@
             </div>
             <div class="product-add">
               <h2 class="long-text"  style="overflow: hidden;text-overflow: ellipsis;">{{product.name}}</h2>
-              <span :class="{up: checkDates(product.promoStart,product.promoEnd) !== true}" v-if="checkDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} сом</span>
+              <span v-if="checkDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} сом</span>
               <br>
-              <span :class="{lineThrough:checkDates(product.promoStart,product.promoEnd), up: checkDates(product.promoStart,product.promoEnd) !== true}">{{product.price}}</span>
+              <span :class="{lineThrough:checkDates(product.promoStart,product.promoEnd)}">{{product.price}} сом</span>
             </div>
             <button v-if="!catalog_settings.catalogMode" class="add-to-card" @click="addToCart(product._id)">Add to cart</button>
             <button v-else class="add-to-card" @click="selectProduct(product._id)">View</button>
@@ -135,11 +135,7 @@ name: "ClientCatalogItem",
 .add-padding{
   padding-right: 15px;
 }
-.up{
-  margin-top: -17px;
-  display: block;
-  margin-bottom: 34px;
-}
+
 .long-text{
   width: 100%;
   white-space: nowrap;
@@ -147,14 +143,15 @@ name: "ClientCatalogItem",
   text-overflow: ellipsis
 }
 .product-img {
-  margin-bottom: 10px;
+  margin-bottom: 16px;
+  height:176px;
 
 }
 .product-img img{
   width: 100%;
-  height: 176px;
-  border-radius:5px;
+  height: 100%;
   object-fit: contain;
+  border-radius: 10px;
 }
 .product-add{
   font-weight: bold;
@@ -183,7 +180,6 @@ name: "ClientCatalogItem",
   padding:15px;
   box-sizing: border-box;
   border: 0.5px solid transparent;
-  margin-bottom: 10px;
   padding-bottom: 20px;
 
 
@@ -227,7 +223,9 @@ name: "ClientCatalogItem",
 @media(max-width:380px){
   .product-img img{
     height: 163px;
-
+  }
+  .product-img{
+    margin-bottom: 0;
   }
   .add-to-card{
     padding:0.3rem 30px;

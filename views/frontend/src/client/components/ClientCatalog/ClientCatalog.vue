@@ -160,9 +160,9 @@ name: "Catalog",
       $("#range-slider").ionRangeSlider({
         type: "double",
         min: 0,
-        max: 1000,
+        max: 10000,
         from: 0,
-        to: 800,
+        to: 10000,
         prefix: "$",
         onChange: (data) => {
           this.from = data.from;
@@ -172,9 +172,9 @@ name: "Catalog",
       $("#range-slider2").ionRangeSlider({
         type: "double",
         min: 0,
-        max: 1000,
+        max: 10000,
         from: 0,
-        to: 800,
+        to: 10000,
         prefix: "$",
         onChange: (data) => {
           this.from = data.from;

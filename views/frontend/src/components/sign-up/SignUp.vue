@@ -2,7 +2,7 @@
 
   <div class="authorization">
     <div class="container-fluid">
-      <div class="sign-in-header d-flex justify-content-between align-items-center">
+      <div class="sign-in-header">
         <img class="main-logo" src="../../assets/img/sign-logo.svg">
         <select class="form-control select-lang">
           <option>Eng</option>
@@ -14,7 +14,7 @@
           <h1 class="welcome-sign-up ">Growth for your<br>
             business with loy <span>Gift</span></h1>
       <form @submit.prevent="registerSubmit">
-        <div class="container-fluid">
+
           <div class="row">
             <div class="col-lg-6">
               <label class="label">Your name</label>
@@ -58,11 +58,19 @@
                      <button class="sign-in-btn">Continue</button>
                    </div>
                    <div class="col-lg-6">
-                     <div class="have-account">Don't have an account? <a href="/">Sign in now</a></div>
+                     <div class="have-account">Don't have an account? <a style="color:#616cf5; cursor:pointer;" @click="$router.push('/')">Sign in now</a></div>
                    </div>
                  </div>
-
+        <div class="main-or d-flex align-items-center justify-content-center">
+          <div class="or-div"></div>
+          <span class="or-text">or</span>
+          <div class="or-div"></div>
         </div>
+        <div class="social-link">
+          <a href="http://localhost:8080/auth/facebook"><img src="../../assets/icons/facebook.svg"></a>
+          <a href="http://localhost:8080/auth/google"><img src="../../assets/icons/google.svg"></a>
+        </div>
+
       </form>
       </div>
       <p class="footer-text">Cashback. Loyalty program. Client base. Offline cashback.
@@ -149,10 +157,29 @@ name: "SignUp",
 </script>
 
 <style scoped>
+.or-div{
+  height: 0;
+  width: 30%;
+  border-bottom:1px solid #b0b0b0;
+}
+.or-text{
+  margin:0 20px;
+  color:#b0b0b0;
+  font-size:18px;
+
+}
+.main-or{
+  margin-top:15px;
+  margin-bottom: 11px;
+}
 form {
   text-align: left;
 }
-
+.sign-in-header{
+  display: flex;
+  justify-content: space-between;
+  align-items:center;
+}
 .sign-up{
   width: 823px;
   background: #FFFFFF;
@@ -177,13 +204,13 @@ form {
   color: #858585;
 }
 .have-account{
-  font-size: 16px;
   color:#b0b0b0;
 }
 a{
   color: #616CF5;
   text-decoration: none;
 }
+
 .select-lang{
   width: 73px;
   height: 30px;
@@ -202,32 +229,38 @@ a{
   font-weight: 100;
 }
 @media(max-width:768px){
+  .sign-in-header{
+    justify-content: center;
+  }
+  .select-lang{
+    display:none;
+  }
   .sign-up{
     width: 100%;
+    padding: 0;
+    border:none;
   }
-  .sign-in-btn{
-    margin-bottom: 20px;
+  .authorization{
+    background: #fff;
+    padding: 0;
   }
   .have-account{
     text-align:center;
   }
-}
-@media(max-width:660px){
-  .sign-up{
-    padding: 30px 40px;
+  .sign-in-btn{
+    margin-bottom: 20px;
+  }
+  .or-div{
+    width: 130px;
   }
 }
+
 @media(max-width:576px){
   .authorization{
     padding:23px 0;
   }
   .welcome-sign-up{
     font-size: 36px !important;
-  }
-}
-@media(max-width:420px) {
-  .sign-up {
-    padding: 30px 2px;
   }
 }
 </style>

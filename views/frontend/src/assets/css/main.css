@@ -1330,6 +1330,27 @@ input.value-success, select.value-success, textarea.value-success{
     border-radius: 50%;
 }
 
+.social-link{
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+
+}
+.social-link a{
+    margin-right: 30px;
+    border: 0.5px solid rgba(18, 18, 29, 0.1);
+    background: #fff;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    border-radius:50%;
+
+}
+.social-link a:last-child{
+    margin-right: 0;
+}
 
 @media(max-width:992px){
         .multiple-items .slick-track{
@@ -1343,10 +1364,8 @@ input.value-success, select.value-success, textarea.value-success{
             bottom:-35px;
         }
 
-
-
-
 }
+
 @media(max-width:481px){
     .swal2-popup.sweet-delete{
         width: 100%;
