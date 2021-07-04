@@ -120,6 +120,64 @@ class PushController {
         }
     };
 
+    sendPushNotification = async function (req, res) {
+        let db = useDB(req.db)
+        let Device = db.model("Device");
+        let Settings = db.model("Settings");
+        let settings = await Settings.find()
+        let News = db.model("News");
+        settings = settings[0]
+        let clients = req.fields.clients
+        let data = await News.findById(req.fields.news)
+        let result = {
+            'status': 500,
+            'msg': 'Something went wrong'
+        }
+        if (clients && settings) {
+            let query = { 'type': 'ios', 'client': { $in: clients } }
+            
+            if (req.fields.sendToAll){
+                query = {}
+            }
+            let devicesIOS = await Device.find(query)
+            
+            let noteIOS = new apn.Notification({
+                alert: {
+                    title: req.fields.title != "" ? req.fields.title : data.name,
+                    subtitle: "",
+                    body: req.fields.description != "" ? req.fields.description : data.desc,
+                },
+                mutableContent: 1,
+                payload: {
+                    name: data.name,
+                    name_ru: data.name_ru,
+                    desc: data.desc,
+                    desc_ru: data.desc_ru,
+                    img: data.img,
+                    date: data.startDate,
+                    type: "news",
+                },
+                sound: "default",
+                topic: settings.APNsTopic
+            });
+            apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
+                if (response.failed.length) {
+                    response.failed.forEach((fail) => {
+                        if (fail.status == '400' && fail.response.reason == 'BadDeviceToken') {
+                            let device = devicesIOS.find(device => device.token == fail.device)
+                            if (device) device.deleteOne()
+                        }
+                    });
+                }
+            }).catch(function (error) {
+                console.log("Faled to send message to ", error);
+            });
+            result['status'] = 200
+            result['msg'] = "Sending push notifications"
+        }
+        res.status(result.status).json(result);
+    };
+
 
     
 }

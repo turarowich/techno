@@ -2,7 +2,7 @@
 <div class="row catalog">
   <div id="categories" class="pt-3 col-lg-3 col-md-4">
     <div class="catalog-left">
-    <h3 class="product-title"><img src="../../../assets/clients/Icon.svg">Products</h3>
+    <h3 @click="test" class="product-title"><img src="../../../assets/clients/Icon.svg">Products</h3>
 
     <h3 class="price">Price:</h3>
 
@@ -110,14 +110,35 @@ name: "Catalog",
           })
         .filter((product)=>{
           return product.price >= this.from && product.price <= this.to;
-
-
-
         })
     },
     currentCompanyCatalog() {
       return this.$route.params.bekon;
-    }
+    },
+    minPrice(){
+      let today = new Date();
+      let nums = [];
+      this.catalog.map(function (item){
+        if(item.promoStart<=today && item.promoEnd>=today){
+          nums.push(item.promoPrice);
+        }else{
+          nums.push(item.price);
+        }
+      });
+      return nums.length>0 ? Math.min(...nums) : 0;
+    },
+    maxPrice(){
+      let today = new Date();
+      let nums = [];
+      this.catalog.map(function (item){
+        if(item.promoStart<=today && item.promoEnd>=today){
+          nums.push(item.promoPrice);
+        }else{
+          nums.push(item.price);
+        }
+      });
+      return Math.max(...nums);
+    },
   },
   methods: {
     displayFiltered(id){
@@ -209,12 +230,26 @@ name: "Catalog",
           })
     },
   },
+  watch:{
+    catalog: {
+      handler: function (list) {
+        let that = this;
+        let instance = $("#range-slider").data("ionRangeSlider");
+        instance.update({
+          from: that.minPrice,
+          to:that.maxPrice,
+        });
+        that.from = that.minPrice;
+        that.to = that.maxPrice;
+        console.log(list,"NEEEEEEEEEEEEEEEEEEEEEE");
+      },
+    },
+  },
   mounted(){
     this.rangeSlider()
     this.getRangeValues()
     this.getCategories()
     this.getProducts()
-
 }
 
 }

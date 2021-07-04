@@ -576,15 +576,20 @@ class SettingsController{
             'msg': 'Updated'
         }
         try {
-            let query = { '_id': req.fields._id };
-            let hashedPassword = bcrypt.hashSync(req.fields.password, 8);
-            let user = {
-                name:req.fields.name,
-                email:req.fields.email,
-                phone:req.fields.phone,
-                password:hashedPassword,
-            };
-            await personal_model.findOneAndUpdate(query,user)
+            let filter = { '_id': req.fields._id };
+            let user = await personal_model.findOne(filter);
+            if(user){
+                user.name =req.fields.name;
+                user.email =req.fields.email;
+                user.phone =req.fields.phone;
+            }
+            if(req.fields.password.length!==0){
+                user.password = bcrypt.hashSync(req.fields.password, 8);
+            }
+            await user.validate();
+            await user.save();
+            // result['user']=await personal_model.findOneAndUpdate(filter,user,{runValidators:true} );
+            result['user']=user;
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }

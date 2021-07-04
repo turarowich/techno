@@ -23,9 +23,10 @@ import moment from 'moment';
 import Lightpick from 'lightpick'
 import axios from "axios";
 import store from './store';
-import 'dropzone/dist/dropzone'
-import 'dropzone/dist/dropzone.css'
-import io from "socket.io-client"
+import 'dropzone/dist/dropzone';
+import 'dropzone/dist/dropzone.css';
+import io from "socket.io-client";
+import messages from "./assets/js/messages";
 const app = createApp(App)
 app.use(router);
 app.use(store);
@@ -48,8 +49,9 @@ const socket = io(process.env.VUE_APP_SERVER_URL, {
         token: localStorage.getItem('token')
     },
     withCredentials: true,
-    reconnection: false,
+    reconnection: (process.env.VUE_APP_RECONNECTION === 'true'),
 })
+console.log(process.env.VUE_APP_RECONNECTION === 'true')
 
 ax.defaults.headers.common['Authorization'] = 'Bearer '+ token
 app.config.globalProperties.$moment = moment;
@@ -82,7 +84,18 @@ app.config.globalProperties.checkCatalogStorageLife = function (){
     }
 
 };
-
+app.config.globalProperties.replaceTxt = function (txt="", lang=null) {
+    let text = txt.split(" ");
+    if(!lang){
+        lang = "en"
+    }
+    for(let [index,word] of text.entries()){
+        if (messages[lang][word]){
+            text[index] = messages[lang][word]
+        }
+    }
+    return text.join(' ')
+}
 app.config.globalProperties.getClientAuth = function(){
     //return true if catalog client is authen-ed
     //undefined otherwise
@@ -91,6 +104,32 @@ app.config.globalProperties.getClientAuth = function(){
 app.config.globalProperties.socket = socket
 app.config.globalProperties.scrollToBottom = function(obj){
     $("#"+obj).scrollTop(1000000)
+}
+app.config.globalProperties.getUser = function () {
+    return JSON.parse(localStorage.getItem('user'))
+}
+app.config.globalProperties.isAdmin = function () {
+    let user = this.getUser()
+    if (user.rate != undefined && user.activeBefore != undefined) {
+        return true
+    }
+    return false
+}
+app.config.globalProperties.checkAccess = function (access, parametr=null, parametr2 = null) {
+    let user = this.getUser()
+    if (app.config.globalProperties.isAdmin()){
+        return true
+    }
+    if (!parametr && !parametr2){
+        if (user[access]){
+            return true
+        }
+    }else if (user[access] && user[access][parametr] && !parametr2) {
+        return true
+    } else if (user[access] && user[access][parametr] && user[access][parametr2]) {
+        return true
+    }
+    return false
 }
 var home_url = [
     'login',
@@ -127,7 +166,7 @@ app.config.globalProperties.changeToken = function () {
             token: localStorage.getItem('token')
         },
         withCredentials: true,
-        reconnection: false
+        reconnection: process.env.VUE_APP_RECONNECTION
     })
 }
 app.config.globalProperties.img = function (main) {

@@ -3,15 +3,15 @@
   <div class="searchAndButtons">
   <div class="d-flex justify-content-between app-buttons">
     <div class="d-flex align-items-center">
-      <button class="app-buttons-item adding-btns" data-toggle="modal" data-target="#add-client-category"><span>+ Add category</span></button>
-      <button class="app-buttons-item" data-toggle="modal" data-target="#push-notification "><img src="../../assets/icons/bgNotification.svg"><span>Push notification</span></button>
-      <button class="app-buttons-item" data-toggle="modal" data-target="#individual-push"><img src="../../assets/icons/send-individual.svg"><span>Individual push</span></button>
+      <button v-if="check()" class="app-buttons-item adding-btns" data-toggle="modal" data-target="#add-client-category"><span>+ Add category</span></button>
+      <button v-if="check()" class="app-buttons-item" data-toggle="modal" data-target="#push-notification "><img src="../../assets/icons/bgNotification.svg"><span>Push notification</span></button>
+      <button v-if="check()" class="app-buttons-item" data-toggle="modal" data-target="#individual-push"><img src="../../assets/icons/send-individual.svg"><span>Individual push</span></button>
 
     </div>
     <div class="d-flex align-items-center">
-      <button class="app-buttons-item" @click="deleteAllClient"><img src="../../assets/icons/trash_empty.svg"><span>Remove</span></button>
+      <button v-if="check()" class="app-buttons-item" @click="deleteAllClient"><img src="../../assets/icons/trash_empty.svg"><span>Remove</span></button>
       <div class="dropdown">
-        <button class="dropdown-toggle app-buttons-item" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button v-if="check()" class="dropdown-toggle app-buttons-item" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <img src="../../assets/icons/moveto.svg"><span>Move to</span>
         </button>
 
@@ -22,7 +22,7 @@
       <div class="dropdown filter">
         <button class="dropdown-toggle app-buttons-item mr-0" id="dropdownFilterClient" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="../../assets/icons/filter.svg"><span>Filter</span></button>
         <div class="dropdown-menu filter-box" aria-labelledby="dropdownFilterClient">
-          <form id="form"   >
+          <form id="form">
               <div class="filter-header">
                 <h3>Filters</h3>
               </div>
@@ -467,6 +467,9 @@ export default {
   },
 
   methods: {
+    check(access="clients", parametr="active", parametr2="canEdit"){
+        return this.checkAccess(access, parametr, parametr2)
+    },
     selectCategory(id){
       this.clientCategory.map((item)=>{
         if(item._id === id){

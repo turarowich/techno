@@ -23,11 +23,10 @@
       <div class="table-child" v-show="data_check.bonus_checked"  style="width: 8%;">{{client.bonus}}</div>
       <div class="table-child" v-show="data_check.last_purchase_checked"  style="width: 16%;">{{client.last_purchase}}</div>
       <div  style="width:3%" class="table-child dropleft dropMenu">
-      <div class="dropdown-toggle" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <img  src="../../assets/icons/three-dots.svg"
-              class="three-dots">
+      <div v-if="check()" class="dropdown-toggle" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <img  src="../../assets/icons/three-dots.svg" class="three-dots">
       </div>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
+      <div v-if="check()" class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
         <ul class="list-group" >
           <li class="list-group-item" data-toggle="modal" data-target="#edit-client" @click="$emit('selectClient', client._id)">Edit</li>
           <li class="list-group-item" v-on:click="$emit('deleteClient',client._id)">Delete</li>
@@ -48,6 +47,9 @@ export default {
     }
   },
   methods: {
+    check(access="clients", parametr="active", parametr2="canEdit"){
+        return this.checkAccess(access, parametr, parametr2)
+    },
     checkAll(item) {
       return  this.$refs[`select${item._id}`].checked === true
     },

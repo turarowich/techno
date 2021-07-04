@@ -1279,11 +1279,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .word-break{
     word-break: break-all;
 }
-input.value-error, select.value-error, textarea.value-error{
+input.value-error, select.value-error, textarea.value-error,div.value-error{
     background: #FFECEC;
     border: 1px solid #E94A4A!important;
 }
-input.value-success, select.value-success, textarea.value-success{
+input.value-success, select.value-success, textarea.value-success,div.value-success{
     background: #D5F5D2;
     border: 1px solid #5CBD85!important;
 }
@@ -1377,7 +1377,11 @@ input.value-success, select.value-success, textarea.value-success{
         font-size: 18px;
     }
 }
+/*.modal-backdrop {*/
+/*    width:100%;*/
+/*    left: 250px;*/
 
+/*}*/
 
 
 /*Responsive Web Catalog*/

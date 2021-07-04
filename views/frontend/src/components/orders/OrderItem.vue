@@ -8,10 +8,11 @@
 
       <div class="table-child d-flex align-items-center"  style="width: 18%;">
         <div><label class="custom-checkbox"><input  type="checkbox"  @click="checkMainSelect"  :ref="'select'+order._id" :value="order._id" ><span class="checkmark"></span></label></div>
-        {{order.code}}</div>
+        {{order.code}}
+        </div>
       <div v-if="order.products" class="table-child d-flex align-items-center"  style="width: 30%;">
         <div  class="table-img">
-          <img  v-if="order.products[0].img" :src="imgSrc+'/'+order.products[0].img">
+          <img  v-if="order.products[0] && order.products[0].img" :src="imgSrc+'/'+order.products[0].img">
           <img v-else src="../../assets/icons/no-catalog.svg">
          </div>
          <span>{{order.products[0] ? order.products[0].name : 'empty'}}</span>
@@ -30,7 +31,7 @@
       <div class="table-child" v-show="data_check.date_checked"  style="width: 15%;">{{order.createdAt.split('').slice(0,10).join('')}}</div>
       <div class="table-child pr-3" v-show="data_check.notes_checked" style="width: 10%;" ><div>{{order.notes}}</div></div>
       <div class="table-child" style="width: 15%;"
-           :class="[{red: order.status === 'Canceled'},
+           :class="[{red: order.status === 'Cancelled'},
           {green: order.status === 'Done'},
           {orange: order.status === 'In Progress'},
           {new: order.status === 'New'}
@@ -47,11 +48,11 @@
           </div>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
             <ul class="list-group " >
-              <li class="list-group-item" v-on:click="statusChange(order,'Done')">Done</li>
-              <li class="list-group-item" data-toggle="modal" data-target="#edit-order" @click="$emit('selectOrder',order._id)">Edit</li>
-              <li class="list-group-item" @click="statusChange(order, 'Canceled')">Cancel</li>
-              <li class="list-group-item" v-on:click="$emit('deleteOrder',order._id)">Delete</li>
-              <li class="list-group-item" v-on:click="statusChange(order, 'In Progress')">In progress</li>
+              <li v-if="check()" class="list-group-item" data-toggle="modal" data-target="#edit-order" @click="$emit('selectOrder',order._id)">Edit</li>
+              <li v-if="check()" class="list-group-item" v-on:click="$emit('deleteOrder',order._id)">Delete</li>
+              <li v-if="check('canChangeOrderStatus', null, null)" class="list-group-item" v-on:click="statusChange(order,'Done')">Done</li>
+              <li v-if="check('canChangeOrderStatus', null, null)" class="list-group-item" @click="statusChange(order, 'Canceled')">Cancel</li>
+              <li v-if="check('canChangeOrderStatus', null, null)" class="list-group-item" v-on:click="statusChange(order, 'In Progress')">In progress</li>
             </ul>
           </div>
         </div>
@@ -64,12 +65,7 @@
 export default {
   name: "OrderItem",
   props: {
-    orderList: {
-      type: Array,
-      default: function () {
-        return []
-      },
-    },
+    orderList: { },
     data_check: {
       type: Object
     },
@@ -82,6 +78,9 @@ export default {
   },
 
   methods: {
+    check(access="orders", parametr="active", parametr2="canEdit"){
+        return this.checkAccess(access, parametr, parametr2)
+    },
     statusChange(order,status){
         this.axios.put(this.url('updateOrder',order._id), {status: status}).then(()=>{
             order.status = status;
@@ -90,14 +89,18 @@ export default {
                     this.$warningAlert(error.response.data.msg)
                 }
         });
+        //send push
+        let pushable = ['Done','Cancelled','In Progress']
+        if(pushable.includes(status)){
+          this.axios.post(this.url('updateOrderWeb'), {status: status,order:order._id,code:order.code,client:order.client._id}).then(()=>{
+          }).catch((error)=>{
+            if(error.response && error.response.data){
+              this.$warningAlert(error.response.data.msg)
+            }
+          });
+        }
 
-        this.axios.post(this.url('updateOrderWeb'), {status: 'Done',order:order._id,code:order.code,client:order.client._id}).then(()=>{
-          console.log('456%');
-        }).catch((error)=>{
-          if(error.response && error.response.data){
-            this.$warningAlert(error.response.data.msg)
-          }
-        });
+
     },
     // statusCancel(order){
     //

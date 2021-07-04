@@ -74,6 +74,9 @@ export default {
         this.$router.push('/orders')
       }).catch((error)=>{
         if (error.response) {
+            if(error.response.data){
+                this.$warningAlert(error.response.data.msg)
+            }
             this.setErrors($('.loginEmployee'), error)
         }
       });

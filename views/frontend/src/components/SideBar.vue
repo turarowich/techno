@@ -1,22 +1,22 @@
 <template>
-<div class="side-bar" v-if="user">
+<div class="side-bar">
     <div class="side-bar-header">
           <img class="logo" src="../assets/img/logo.svg"/>
           <button v-on:click="closeSideBar" class="btn closing"><i class="fas fa-align-right "></i></button>
     </div>
     <div v-on:click="closeSideBar">
-      <router-link class="router-link" v-if="(user.orders && user.orders.active) || isAdmin" to="/orders"><span class="sider-bar-link"> <div class="left-line"></div><img src="../assets/icons/Plus.svg" >Orders</span> </router-link>
-      <router-link class="router-link" v-if="(user.clients && user.clients.active) || isAdmin"  data-turbolinks="false" to="/clients" ><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Document.svg" >Clients</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
-      <router-link class="router-link" v-if="(user.loyalty && user.loyalty.active) || isAdmin" to="/loyalty"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Game.svg" >Loyalty</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
-      <router-link class="router-link" v-if="(user.catalog && user.catalog.active) || isAdmin" to="/catalog"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Discovery.svg"  data-turbolinks="false">Catalog</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
-      <router-link class="router-link" v-if="(user.chat && user.chat.active) || isAdmin" to="/chats"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/MoresSquare.svg" >Chats <span class="chats-quantity" v-if="msgsCount != ''">{{msgsCount}}</span></span><img v-if="msgsCount == ''" class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
-      <router-link class="router-link" v-if="(user.analytics && user.analytics.active) || isAdmin" to="/analytics"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/group.svg" >Analytics</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
-      <router-link class="router-link" v-if="(user.news && user.news.active) || isAdmin" to="/news"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/VolumeUp.svg" >News</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
-      <router-link class="router-link" v-if="(user.log && user.log.active) || isAdmin" to="/log"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/logs.svg" >Log</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+      <router-link class="router-link" v-if="check('orders', 'active')" to="/orders"><span class="sider-bar-link"> <div class="left-line"></div><img src="../assets/icons/Plus.svg" >Orders</span> </router-link>
+      <router-link class="router-link" v-if="check('clients', 'active')"  data-turbolinks="false" to="/clients" ><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Document.svg" >Clients</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+      <router-link class="router-link" v-if="check('loyalty', 'active')" to="/loyalty"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Game.svg" >Loyalty</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+      <router-link class="router-link" v-if="check('catalog', 'active')" to="/catalog"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Discovery.svg"  data-turbolinks="false">Catalog</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+      <router-link class="router-link" v-if="check('chat', 'active')" to="/chats"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/MoresSquare.svg" >Chats <span class="chats-quantity" v-if="msgsCount != ''">{{msgsCount}}</span></span><img v-if="msgsCount == ''" class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+      <router-link class="router-link" v-if="check('analytics', 'active')" to="/analytics"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/group.svg" >Analytics</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+      <router-link class="router-link" v-if="check('news', 'active')" to="/news"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/VolumeUp.svg" >News</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+      <router-link class="router-link" v-if="check('log', 'active')" to="/log"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/logs.svg" >Log</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
      <div class="help-setting">
         <router-link class="router-link help" to="/"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/question.svg" >Help</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
         <div class="line-side"></div>
-        <router-link class="router-link" v-if="(user.settings && user.settings.active) || isAdmin" to="/settings"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Setting.svg" >Settings</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+        <router-link class="router-link" v-if="check('settings', 'active')" to="/settings"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Setting.svg" >Settings</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
       </div>
     </div>
 </div>
@@ -31,23 +31,22 @@ name: "SideBar",
     data() {
         return {
             sideBarMenu: true,
-            user: JSON.parse(localStorage.getItem('user'))
         }
     },
     computed:{
         msgsCount(){
             return this.$store.getters['Message/getMessages'];
         },
-        isAdmin(){
-            if(this.user.rate != undefined && this.user.activeBefore != undefined){
-                return true
-            }
-            return false
-        }
+        
     },
     props:{
         closeSideBar: {
             type:Function,
+        }
+    },
+    methods:{
+        check(access, parametr, parametr2){
+            return this.checkAccess(access, parametr, parametr2)
         }
     },
     created(){

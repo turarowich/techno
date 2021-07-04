@@ -3,6 +3,8 @@ const { useDB, sendError, saveImage, createQrFile, randomNumber, checkAccess } =
 var validate = require('../../config/messages');
 const { query } = require('express');
 const client = require('../models/client');
+const LOG = require('./logController');
+const Analytics = require('./analyticsController');
 
 class ClientController{
     
@@ -123,7 +125,7 @@ class ClientController{
                     client.save()
                 }
             }
-
+            await Analytics.updateAnalytics(req, client.createdAt, false, true)
             client.password = 'secured';
             result['object'] = client
         } catch (error) {
@@ -136,6 +138,7 @@ class ClientController{
     updateClient = async function (req, res) {
         let db = useDB(req.db)
         let Client = db.model("Client");
+        let Log = db.model("Log");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "clients", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -199,6 +202,14 @@ class ClientController{
                 client.apns.push(req.fields.apns)
                 await client.save()
             }
+            await new Log({
+                type: "client_updated",
+                description: client.name + " "+ client.phone,
+                user: req.userName,
+                icon: "update"
+            }).save()
+
+            await Analytics.updateAnalytics(req, client.createdAt, false, true)
             result['object'] = client
         } catch (error) {
             console.log(error)
@@ -240,6 +251,7 @@ class ClientController{
     deleteClient = async function (req, res) {
         let db = useDB(req.db)
         let Client = db.model("Client");
+        let Log = db.model("Log");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "clients", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -253,6 +265,15 @@ class ClientController{
         try {
 
             let query = { '_id': req.params.client }
+            let client = await Client.findById(query)
+            if (client) {
+                await new Log({
+                    type: "client_deleted",
+                    description: client.name + client.phone,
+                    user: req.userName,
+                    icon: "delete"
+                }).save()
+            }
             await Client.findByIdAndRemove(query)
 
         } catch (error) {
@@ -265,6 +286,7 @@ class ClientController{
     deleteClients = async function (req, res) {
         let db = useDB(req.db)
         let Client = db.model("Client");
+        let Log = db.model("Log");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "clients", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -282,6 +304,20 @@ class ClientController{
                         $in: req.fields.objects
                     }
                 }
+                let clients = await Client.find(query, 'name')
+
+                if (clients.length) {
+                    let desc = clients.map(function (elem) {
+                        return elem.name;
+                    }).join(", ")
+                    await new Log({
+                        type: "clients_deleted",
+                        description: desc,
+                        user: req.userName,
+                        icon: "delete"
+                    }).save()
+                }
+                
                 await Client.deleteMany(query)
             } catch (error) {
                 result = sendError(error, req.headers["accept-language"])
@@ -425,6 +461,7 @@ class ClientController{
     addPoints = async function (req, res) {
         let db = useDB(req.db)
         let Client = db.model("Client");
+        let Log = db.model("Log");
         let ClientBonusHistory = db.model("clientBonusHistory");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "addPoint" }, db, res)
@@ -444,15 +481,25 @@ class ClientController{
             let query = {
                 _id: req.fields.client
             }
-            let client = await Client.find(query)
-            client.points = (parseFloat(client.points) + parseFloat(req.fields.points)).toFixed(2);
-            await client.save({ validateBeforeSave: false });
-            await new ClientBonusHistory({
-                client: client._id,
-                points: req.fields.points,
-                source: 'Points added by company',
-                type: 'received',
-            }).save();
+            let client = await Client.findById(query)
+            if(client){
+                client.points = (parseFloat(client.points) + parseFloat(req.fields.points)).toFixed(2);
+                await client.save({ validateBeforeSave: false });
+                await new ClientBonusHistory({
+                    client: client._id,
+                    points: req.fields.points,
+                    source: 'Points added by company',
+                    type: 'received',
+                }).save();
+                await new Log({
+                    type: "points_added",
+                    description: client.name + " successfully_get",
+                    value: req.fields.points + 'P',
+                    valueColor: "done",
+                    user: req.userName,
+                    icon: "addPoint"
+                }).save()
+            }
         } catch (error) {
             result = sendError(error, lang)
         }
@@ -463,6 +510,7 @@ class ClientController{
     deductPoints = async function (req, res) {
         let db = useDB(req.db)
         let Client = db.model("Client");
+        let Log = db.model("Log");
         let ClientBonusHistory = db.model("clientBonusHistory");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "addPoint" }, db, res)
@@ -476,25 +524,36 @@ class ClientController{
         }
         let result = {
             'status': 200,
-            'msg': 'Points added'
+            'msg': 'Points deducted'
         }
         try {
             let query = {
                 _id: req.fields.client
             }
-            let client = await Client.find(query)
-            if (parseFloat(client.points) < parseFloat(req.fields.points)){
-                req.fields.points = client.points
-            }
-            client.points = (parseFloat(client.points) - parseFloat(req.fields.points)).toFixed(2);
+            let client = await Client.findById(query)
+            if(client){
+                if (parseFloat(client.points) < parseFloat(req.fields.points)) {
+                    req.fields.points = client.points
+                }
+                client.points = (parseFloat(client.points) - parseFloat(req.fields.points)).toFixed(2);
+
+                await client.save({ validateBeforeSave: false });
+                await new ClientBonusHistory({
+                    client: client._id,
+                    points: -req.fields.points,
+                    source: 'Points deducted by company',
+                    type: 'deducted',
+                }).save();
+                await new Log({
+                    type: "points_deducted",
+                    description: "from_client " + client.name + " writting_off",
+                    value: -req.fields.points + 'P',
+                    valueColor: "canceled",
+                    user: req.userName,
+                    icon: "delete"
+                }).save()
+            }   
             
-            await client.save({ validateBeforeSave: false });
-            await new ClientBonusHistory({
-                client: client._id,
-                points: -req.fields.points,
-                source: 'Points deducted by company',
-                type: 'deducted',
-            }).save();
         } catch (error) {
             result = sendError(error, lang)
         }

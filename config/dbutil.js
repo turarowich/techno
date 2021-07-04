@@ -39,6 +39,7 @@ const initClientDbConnection = () => {
     require("../app/models/clientBonusHistory.js")
     require("../app/models/user.js")
     require("../app/models/employee.js")
+    require("../app/models/log.js")
     return db;
 };
 

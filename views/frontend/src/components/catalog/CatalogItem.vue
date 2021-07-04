@@ -29,7 +29,7 @@
         <div  style="width: 13%;">{{catalog.price}}</div>
         <div  style="width:8%;" class="see-catalog"><img @click="$emit('hideCatalog',catalog.id)" class="see-catalog" src="../../assets/icons/see.svg"><img class="nonsee-catalog" src="../../assets/icons/nonsee.svg"></div>
         <div  style="width:8%;">
-          <div class="dropleft dropMenu">
+          <div v-if="check()" class="dropleft dropMenu">
             <div class="dropdown-toggle" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <img  src="../../assets/icons/three-dots.svg"
                     class="three-dots">
@@ -62,6 +62,9 @@ export default {
   },
 
   methods:{
+    check(access="catalog", parametr="active", parametr2="canEdit"){
+        return this.checkAccess(access, parametr, parametr2)
+    },
     addProduct(){
       $('#add-product').click()
     },
@@ -129,3 +132,5 @@ export default {
 }
 
 </style>
+
+

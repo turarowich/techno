@@ -13,7 +13,7 @@
             </div>
         </div>
         <div style="width:30%">
-            {{news.updatedAt.slice(0, 10)}}
+            {{ news.updatedAt.slice(0, 10) }}
         </div>
         <div style="width:30%">
             <button class="news-btn" @click="sendNewsNotification(news._id)">
@@ -21,7 +21,7 @@
             </button>
         </div>
         <div style="width:10%" class="d-flex justify-content-end" >
-            <div class="dropleft dropMenu">
+            <div v-if="check()" class="dropleft dropMenu">
             <div class="dropdown-toggle d-flex justify-content-end" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img  src="../../assets/icons/three-dots.svg"
                     class="three-dots">
@@ -40,23 +40,26 @@
 
 <script>
 export default {
-  name: "NewsItem",
-  props:['newsList'],
-  methods:{
-      sendNewsNotification(newsID){
-          this.axios.get(this.url('sendNewsPN', newsID))
-            .then(() => {
-                this.$successAlert('Notification is send')
-            }).catch((error)=>{
-                if(error.response && error.response.data){
-                    this.$warningAlert(error.response.data.msg)
-                }
-            });
-      },
-      makeImg(name){
-        return this.img(name)
-      }
-  }
+    name: "NewsItem",
+    props:['newsList'],
+    methods:{
+        check(access="news", parametr="active", parametr2="canEdit"){
+            return this.checkAccess(access, parametr, parametr2)
+        },
+        sendNewsNotification(newsID){
+            this.axios.get(this.url('sendNewsPN', newsID))
+                .then(() => {
+                    this.$successAlert('Notification is send')
+                }).catch((error)=>{
+                    if(error.response && error.response.data){
+                        this.$warningAlert(error.response.data.msg)
+                    }
+                });
+        },
+        makeImg(name){
+            return this.img(name)
+        }
+    }
 }
 </script>
 

@@ -3,14 +3,14 @@
     <div class="searchAndButtons">
     <div class="d-flex justify-content-between app-buttons">
       <div class="d-flex align-items-center">
-        <button class="app-buttons-item adding-btns" id="add-product" data-toggle="modal" data-target="#add-products"><span>+ Add product</span></button>
-        <button class="app-buttons-item adding-btns" @click="getProducts" data-toggle="modal" data-target="#add-service"><span>+ Add service</span></button>
-        <button class="app-buttons-item adding-btns"  data-toggle="modal" data-target="#add-category"><span>+ Add category </span></button>
+        <button v-if="check()" class="app-buttons-item adding-btns" id="add-product" data-toggle="modal" data-target="#add-products"><span>+ Add product</span></button>
+        <button v-if="check()" class="app-buttons-item adding-btns" @click="getProducts" data-toggle="modal" data-target="#add-service"><span>+ Add service</span></button>
+        <button v-if="check()" class="app-buttons-item adding-btns"  data-toggle="modal" data-target="#add-category"><span>+ Add category </span></button>
       </div>
       <div class="d-flex align-items-center">
-        <button class="app-buttons-item" @click="deleteAllOrder"><img src="../../assets/icons/trash_empty.svg"><span>Remove</span></button>
+        <button v-if="check()" class="app-buttons-item" @click="deleteAllOrder"><img src="../../assets/icons/trash_empty.svg"><span>Remove</span></button>
         <div class="dropdown">
-          <button class="dropdown-toggle app-buttons-item" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button v-if="check()" class="dropdown-toggle app-buttons-item" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <img src="../../assets/icons/moveto.svg"><span>Move to</span>
           </button>
 
@@ -18,7 +18,7 @@
                 <div class="move-category-item" v-for="cat in listCategory.slice(1)" :key="cat._id" @click="moveCategory(cat._id)">{{cat.name}}</div>
           </div>
         </div>
-        <button class="app-buttons-item" data-turbolinks="true"  data-toggle="modal" data-target="#import-client"><img src="../../assets/icons/import.svg"><span>Import</span></button>
+        <button v-if="check()" class="app-buttons-item" data-turbolinks="true"  data-toggle="modal" data-target="#import-client"><img src="../../assets/icons/import.svg"><span>Import</span></button>
 
         <div class="dropdown">
           <button class="app-buttons-item dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
@@ -253,6 +253,9 @@ name: "Catalog",
 
   },
   methods:{
+    check(access="catalog", parametr="active", parametr2="canEdit"){
+        return this.checkAccess(access, parametr, parametr2)
+    },
     checkAll(item){
       this.selectAll = item
     },
