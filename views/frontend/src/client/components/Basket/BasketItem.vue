@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="text-center empty-basket" v-if="shoppingCart.length === 0">
-      <img src="../../../assets/clients/box.png">
+      <img src="../../../assets/clients/box.svg">
       <h4>Your shopping cart is empty please choose your product from out catalog</h4>
     </div>
 
@@ -164,7 +164,7 @@ export default {
 .client-table-img img{
   height: 90px;
   width: 90px;
-  border-radius: 50%;
+  border-radius: 5px;
   margin-right: 20px;
   object-fit: contain;
 }

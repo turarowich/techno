@@ -1352,6 +1352,7 @@ input.value-success, select.value-success, textarea.value-success{
     margin-right: 0;
 }
 
+
 @media(max-width:992px){
         .multiple-items .slick-track{
             display: none;

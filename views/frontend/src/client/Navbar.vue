@@ -423,12 +423,12 @@ font-size: 14px;
 }
 .catalog_logo{
   max-height: 55px;
-  height: 46px;
-  max-width: 46px;
+  height: 45px;
+  max-width: 45px;
   width: 55px;
   background-size: cover;
   background-position: center;
-  border-radius: 50%;
+  border-radius: 5px;
 }
 @media(max-width:992px){
   .menu-wrapper .client-menu {

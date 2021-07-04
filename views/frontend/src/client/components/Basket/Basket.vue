@@ -23,7 +23,7 @@
         <div v-if="countOrders>0" class="sales">
 
           <div v-if="!clientAuth">
-            <h3 class="cashback-sub-title mb-4" style="color:#616CF5;">Log In or register, to receive points and/or use them</h3>
+            <h3 class="cashback-sub-title mb-4" style="color:#616CF5;">To use or get points, log in or register</h3>
             <div  class="auth_btns_wrapper">
               <router-link style="flex: 1;" :to="`/${currentCompanyCatalog}/signin`"><span>Log In</span></router-link>
               <router-link style="flex: 1;" :to="`/${currentCompanyCatalog}/signup`"><span>Register</span></router-link>
@@ -48,10 +48,13 @@
               </div>
             </div>
           </div>
-
+          <h3 class="cashback-sub-title promo">Sales</h3>
           <div class="mb-3 sales-input d-flex">
             <input v-model="searchText" class="cashback-input" placeholder="Enter a promocode">
-            <img @click="searchPromocode" class="promocodeCheckBtn" src="../../../assets/icons/check_mark.svg">
+            <div @click="searchPromocode"  class="promocodeCheckBtn">
+              <img  src="../../../assets/icons/bird.svg">
+            </div>
+
           </div>
           <div v-if="basket_promocode != null" class="promocode_result">
               <div class="d-flex">
@@ -512,7 +515,7 @@ name: "Basket",
   overflow-y: auto;
 }
 .sales .cashback-sub-title{
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 .sales-input{
   border: 1px solid #E3E3E3;
@@ -521,6 +524,7 @@ name: "Basket",
   padding:0 6px;
   /*margin-bottom: 42px;*/
   align-items: center;
+ 
 }
 .sales-input input{
   border:none;
@@ -578,6 +582,15 @@ name: "Basket",
   height: 33px;
   border-radius: 5px;
   border: 1px solid #D3D3D3;
+  background: #616cf5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor:pointer;
+}
+.promocodeCheckBtn img{
+  width: 15px;
+  height: 11px;
 }
 .promocode_result{
   border:1px solid #d3d3d3;
