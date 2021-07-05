@@ -5,6 +5,11 @@
     <img src="../assets/icons/menu.svg">
   </div>
     <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">
+      <div v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.logo + ')' }" class="catalog_logo">
+
+      </div>
+
+
       <div v-if="catalog_settings.logo && catalog_settings.logo !==''"  v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.logo + ')' }" class="catalog_logo">
 
       </div>
@@ -181,7 +186,7 @@ export default {
       return this.$store.getters['Client/getUserStatus'];
     },
     server(){
-      return this.$server;
+      return this.$;
     },
   },
   methods:{
@@ -202,11 +207,9 @@ export default {
     },
     mouser(){
       $('.basket-hover').css('visibility', 'visible');
-      console.log('DADASASASASS');
     },
     mouser_leave(){
       $('.basket-hover').css('visibility', 'hidden');
-      console.log('DADASASASASS');
     }
   },
   created() {

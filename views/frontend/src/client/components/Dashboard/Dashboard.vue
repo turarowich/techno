@@ -110,6 +110,7 @@ name: "Dashboard",
             let catalog_settings={
               name:settings.name,
               catalogMode:settings.catalogMode,
+              foodMode:settings.foodMode,
               email:settings.email,
               banner:settings.banner,
               logo:settings.logo,

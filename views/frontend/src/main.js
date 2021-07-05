@@ -109,6 +109,12 @@ var home_url = [
     'getEarnedPoints',
     'getNewsWeb',
     'getSingleNewsWeb',
+    'saveTempoOrder',
+    'getTempoOrder',
+    'updateTempoOrder',
+    'updateProductTempoOrder',
+    'removeProductTempoOrder',
+    'searchProductWeb',
 ]
 app.config.globalProperties.addNewProperty = function(obj, key, value = "", copy) {
     obj.map(function(object) {

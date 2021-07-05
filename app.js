@@ -32,6 +32,7 @@ app.use((req, res, next) => {
 const formidableMiddleware = require('express-formidable');
 const VerifyToken = require('./services/verifyToken');
 const VerifyDB = require('./services/verifyDB');
+const VerifyOrder = require('./services/verifyOrder');
 
 global.appRoot = path.resolve(__dirname);
 global.userConnection = userConnection;
@@ -118,6 +119,7 @@ app.use('/images', express.static(__dirname + '/views/frontend/images'))
 app.use('/files', express.static(__dirname + '/views/frontend/files'))
 app.use('/api', VerifyToken, require('./routes/api.js')(router,io))
 app.use('/', VerifyDB,require('./routes/home.js')(router, passport))
+app.use('/', VerifyOrder,require('./routes/menu.js')(router))
 // app.use('/',require('./routes/home.js')(router, passport))
 
 

@@ -141,6 +141,11 @@
                 <button @click="checkNcontinue()" class="save">
                   Continue
                 </button>
+                <button @click="generateQRCode()" class="save">
+                  QR
+                </button>
+
+
               </div>
             </div>
           </div>
@@ -151,11 +156,42 @@
     <BasketConfirm @continueAsGuest_child="continueAsGuest" />
   </div>
 </div>
+
+  <!--Centered Modal-->
+  <div class="parent-modal">
+    <div class="modal myModal fade" id="QRCodeModal" tabindex="-1" role="dialog" aria-labelledby="QRCodeModal" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content QRCodeModalContent">
+          <div class="modal-body">
+          <div class="d-flex" style="justify-content: center;align-items: center;flex-direction: column">
+            <canvas id="qrCanvas" width="200" height="100"></canvas>
+            {{menuUrl}}
+          </div>
+          <div class="d-flex QRCodeBasketItem" v-for="itemQ in shoppingCart" :key="itemQ.product._id">
+            <div style="margin-right: 30px;font-weight: bold;">
+              {{itemQ.quantity}}x
+            </div>
+            <div class="d-flex" style="flex-direction: column;">
+              <span style="font-weight: bold;">{{itemQ.product.name}}</span>
+              <span style="color:#858585;">{{itemQ.product.vendorCode}}</span>
+            </div>
+            <div style="margin-left: auto;">
+              {{itemQ.product.price}}$
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 </template>
 
 <script>
 import BasketItem from "@/client/components/Basket/BasketItem";
 import BasketConfirm from "@/modals/basket/BasketConfirm";
+import QRCode from 'qrcode';
 import $ from "jquery";
 // import Swal from "sweetalert2";
 export default {
@@ -181,7 +217,8 @@ name: "Basket",
         object:{
           // price:0,
         },
-      }
+      },
+      menuUrl:'',
     }
   },
   computed:{
@@ -203,7 +240,6 @@ name: "Basket",
       return options;
     },
     shoppingCart(){
-      console.log(this.currentCompanyCatalog,this.company_url_basket,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.");
       if(this.currentCompanyCatalog!==this.company_url_basket){
         return [];
       }
@@ -280,6 +316,54 @@ name: "Basket",
       this.selectedDeliveryOptionObject = obj;
       this.showDeliveryOption = false;
     },
+    saveTempoOrderFunc(menu_url){
+      let order = [];
+      this.shoppingCart.map(function (item){
+        order.push({
+          product : item.product,
+          quantity : item.quantity
+        })
+      })
+
+      this.axios.post(this.url('saveTempoOrder'), {
+        order:order,
+        company_url:this.currentCompanyCatalog,
+        menu_url:menu_url,
+      }).then(function (response) {
+        console.log(response);
+      }).catch(function(error){
+        if (error.response) {
+          console.log(error.response);
+        }
+      });
+    },
+    generateQRCode(){
+      $('#QRCodeModal').modal('show');
+      let code = this.generateCode();
+      let url = window.location.host+"/menu/"+code;
+      let canvas = document.getElementById('qrCanvas')
+      this.menuUrl = url;
+      this.saveTempoOrderFunc(code);
+      QRCode.toCanvas(canvas, url,  {
+        color: {
+          dark: '#616CF5',  // Blue dots
+          light: '#0000' // Transparent background
+        }
+      },function (error) {
+        if (error) console.error(error)
+        console.log('success!');
+      })
+    },
+    generateCode(){
+      let length = 6;
+      let result           = [];
+      let characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let charactersLength = characters.length;
+      for ( var i = 0; i < length; i++ ) {
+        result.push(characters.charAt(Math.floor(Math.random() * charactersLength)));
+      }
+      return result.join('');
+    },
     setDeliveryType(type){
       //redo later
       this.selectedDeliveryType.type = type;
@@ -344,7 +428,7 @@ name: "Basket",
         //check type
         if(promocode_type==='all'){
           product_ids = this.shoppingCart.map(function (item){
-            item.product._id;
+            return item.product._id;
           })
         }else if(promocode_type==='Service'){
           this.shoppingCart.map(function (item){
@@ -369,6 +453,7 @@ name: "Basket",
         });
       }
       //result
+      console.log(product_ids,"<product_idsproduct_ids");
       if(product_ids.length>0){
         let parameter={
           promocode:promocode,
@@ -698,6 +783,19 @@ name: "Basket",
   padding: 5px;
   cursor: pointer;
 }
+.QRCodeModalContent{
+  width: 484px;
+}
+.QRCodeBasketItem{
+  border-bottom: 1px solid #D3D3D3;
+  padding-bottom: 13px;
+  padding-top: 20px;
+  font-size: 16px;
+}
+.modal-body{
+  padding:30px 40px 50px 40px;
+}
+
 @media(max-width:768px){
   .client-table-header{
     display: none;
