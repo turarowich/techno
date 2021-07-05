@@ -4,22 +4,29 @@
 
   </div>
   <div class="d-flex align-items-center path-box" @click="$router.go(-1)"><img class="large-path-img mr-1" src="../../../assets/clients/slide.svg"><h3 class="path-title">{{$route.name}}</h3></div>
-  <div class="row">
-    <div class="col-lg-8 mb-5 basket-item">
 
-      <div class="client-table-header">
-        <div class="client-table-head head-name" style="width:40%">Products</div>
-        <div class="client-table-head head-amount" style="width:30%">Amount</div>
-<!--        <div class="client-table-head" style="width:14%">Discount%</div>-->
-<!--        <div class="client-table-head" style="width:14%">DiscountSum</div>-->
-        <div class="client-table-head head-price" style="width:30%">Price</div>
-        <div class="client-table-head" style="width:10%"></div>
+  <div class="text-center empty-basket" v-if="shoppingCart.length === 0">
+    <img src="../../../assets/clients/box.svg">
+    <h4>Your shopping cart is empty please choose your product from out catalog</h4>
+  </div>
 
+  <div v-else>
+
+    <div class="row">
+      <div class="col-lg-8 mb-5 basket-item">
+        <div class="client-table-header">
+          <div class="client-table-head head-name" style="width:40%">Products</div>
+          <div class="client-table-head head-amount" style="width:30%">Amount</div>
+          <!--        <div class="client-table-head" style="width:14%">Discount%</div>-->
+          <!--        <div class="client-table-head" style="width:14%">DiscountSum</div>-->
+          <div class="client-table-head head-price" style="width:30%">Price</div>
+          <div class="client-table-head" style="width:10%"></div>
+
+        </div>
+        <BasketItem @checkPromocode_child="checkPromocode" />
       </div>
-      <BasketItem @checkPromocode_child="checkPromocode" />
-    </div>
 
-    <div class="col-lg-4 col-md-6">
+      <div class="col-lg-4 col-md-6">
         <div v-if="countOrders>0" class="sales">
 
           <div v-if="!clientAuth">
@@ -57,17 +64,17 @@
 
           </div>
           <div v-if="basket_promocode != null" class="promocode_result">
-              <div class="d-flex">
-                <div>
-                  Name: {{basket_promocode.name}}
-                </div>
-                <div @click="removePromocode" class="remove_promocode_basket" style="flex: 0 0 33px">
-                  <img alt="x" src="../../../assets/icons/x.svg">
-                </div>
+            <div class="d-flex">
+              <div>
+                Name: {{basket_promocode.name}}
               </div>
-              <div>Discount %: {{basket_promocode.discount}}</div>
-              <div>Discount fix: {{basket_promocode.fixed_sum}}</div>
-              <div v-if="basket_promocode == null" style="color: red;font-weight: bold;">Promocode is not applicable</div>
+              <div @click="removePromocode" class="remove_promocode_basket" style="flex: 0 0 33px">
+                <img alt="x" src="../../../assets/icons/x.svg">
+              </div>
+            </div>
+            <div>Discount %: {{basket_promocode.discount}}</div>
+            <div>Discount fix: {{basket_promocode.fixed_sum}}</div>
+            <div v-if="basket_promocode == null" style="color: red;font-weight: bold;">Promocode is not applicable</div>
           </div>
           <div class="delivery">
             <h3 class="cashback-sub-title">Delivery</h3>
@@ -99,7 +106,7 @@
               </div>
             </div>
             <div v-if="pickUp" class="pick_up_block">
-            <div class="my-3">Select address where u would like to pick up ur order</div>
+              <div class="my-3">Select address where u would like to pick up ur order</div>
               <div @click="setBranch(branch)" v-for="branch in branches" :key="branch._id" :class="{active_branch:branch._id===selectedBranchObject._id}" class="d-flex pick_up_block_item">
                 <div class="mr-2">
                   <img src="../../../assets/icons/location.svg">
@@ -145,11 +152,15 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <div>
+      <BasketConfirm @continueAsGuest_child="continueAsGuest" />
     </div>
   </div>
-  <div>
-    <BasketConfirm @continueAsGuest_child="continueAsGuest" />
-  </div>
+
+
+
 </div>
 </template>
 
@@ -525,6 +536,23 @@ name: "Basket",
   /*margin-bottom: 42px;*/
   align-items: center;
  
+}
+.empty-basket{
+  height: 300px;
+  border-radius:10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+}
+.empty-basket h4{
+  color:#b0b0b0;
+  font-size:16px;
+}
+.empty-basket img{
+  width:80px;
+  margin-bottom: 20px;
 }
 .sales-input input{
   border:none;

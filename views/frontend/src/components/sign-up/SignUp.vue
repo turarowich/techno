@@ -163,6 +163,7 @@ name: "SignUp",
       else{
         this.validatePassword = false
       }
+
       data.append('name', this.register.name);
       data.append('email', this.register.email);
       data.append('phone', this.register.phone);

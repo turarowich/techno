@@ -1,11 +1,7 @@
 <template>
   <div>
-    <div class="text-center empty-basket" v-if="shoppingCart.length === 0">
-      <img src="../../../assets/clients/box.svg">
-      <h4>Your shopping cart is empty please choose your product from out catalog</h4>
-    </div>
 
-    <div v-else class="client-table-item d-flex" v-for="item in shoppingCart" :key="item.product._id">
+    <div class="client-table-item d-flex" v-for="item in shoppingCart" :key="item.product._id">
       <div style="overflow: hidden;text-overflow: ellipsis;" class="basket-name d-flex align-items-center">
         <div class="client-table-img">
           <img v-if="!item.product.error" :src="server+'/'+item.product.img" @error="item.product.error=true">
@@ -178,23 +174,7 @@ export default {
   margin-bottom: 5px;
 }
 
-.empty-basket{
-  height: 300px;
-  border-radius:10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 
-}
-.empty-basket h4{
-  color:#b0b0b0;
-font-size:16px;
-}
-.empty-basket img{
-  width:80px;
-  margin-bottom: 20px;
-}
 .lineThrough{
   text-decoration: line-through;
   font-size: 13px!important;
