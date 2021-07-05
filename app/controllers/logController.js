@@ -17,6 +17,7 @@ class LogController {
             value: value,
             valueColor: value_color,
             user: req.userName,
+            user_id: req.userID,
             type: type,
             icon: icon
         }).save();

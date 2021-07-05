@@ -138,6 +138,7 @@ class ProductController{
                 value: product.price,
                 valueColor: "done",
                 user: req.userName,
+                user_id: req.userID,
                 icon: "add"
             }).save()
             result['object'] = product
@@ -223,6 +224,7 @@ class ProductController{
                 value: product.price,
                 valueColor: "done",
                 user: req.userName,
+                user_id: req.userID,
                 icon: "update"
             }).save()
             result['object'] = product
@@ -282,6 +284,7 @@ class ProductController{
                     value: product.price,
                     valueColor: "canceled",
                     user: req.userName,
+                    user_id: req.userID,
                     icon: "delete"
                 }).save()
             }
@@ -323,6 +326,7 @@ class ProductController{
                         type: "products_deleted",
                         description: desc,
                         user: req.userName,
+                        user_id: req.userID,
                         icon: "delete"
                     }).save()
                 }

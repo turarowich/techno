@@ -206,6 +206,7 @@ class ClientController{
                 type: "client_updated",
                 description: client.name + " "+ client.phone,
                 user: req.userName,
+                user_id: req.userID,
                 icon: "update"
             }).save()
 
@@ -269,8 +270,9 @@ class ClientController{
             if (client) {
                 await new Log({
                     type: "client_deleted",
-                    description: client.name + client.phone,
+                    description: client.name + ' ' + (client.phone ? client.phone : ""),
                     user: req.userName,
+                    user_id: req.userID,
                     icon: "delete"
                 }).save()
             }
@@ -308,12 +310,13 @@ class ClientController{
 
                 if (clients.length) {
                     let desc = clients.map(function (elem) {
-                        return elem.name;
+                        return elem.name +' ' + (client.phone ? client.phone : "");
                     }).join(", ")
                     await new Log({
                         type: "clients_deleted",
                         description: desc,
                         user: req.userName,
+                        user_id: req.userID,
                         icon: "delete"
                     }).save()
                 }
@@ -497,6 +500,7 @@ class ClientController{
                     value: req.fields.points + 'P',
                     valueColor: "done",
                     user: req.userName,
+                    user_id: req.userID,
                     icon: "addPoint"
                 }).save()
             }
@@ -550,6 +554,7 @@ class ClientController{
                     value: -req.fields.points + 'P',
                     valueColor: "canceled",
                     user: req.userName,
+                    user_id: req.userID,
                     icon: "delete"
                 }).save()
             }   

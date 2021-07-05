@@ -233,6 +233,7 @@ class OrderController{
                 description: "order_num",
                 value: "#" + order.code,
                 user: req.userName,
+                user_id: req.userID,
                 icon: "add"
             }).save()
             await order.save();
@@ -318,6 +319,7 @@ class OrderController{
                 title: "#" + order.code,
                 description: "order_changed",
                 user: req.userName,
+                user_id: req.userID,
                 icon: "update"
             }
             if (req.fields.status && Object.keys(req.fields).length == 2){
@@ -360,6 +362,7 @@ class OrderController{
                     description: "order_by",
                     value: order.client_name,
                     user: req.userName,
+                    user_id: req.userID,
                     icon: "delete"
                 }).save()
                 await Analytics.updateAnalytics(req, order.createdAt, true)
@@ -406,6 +409,7 @@ class OrderController{
                         type: "orders_deleted",
                         description: desc,
                         user: req.userName,
+                        user_id: req.userID,
                         icon: "delete"
                     }).save()
                 }
