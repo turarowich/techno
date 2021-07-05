@@ -15,6 +15,7 @@ var employeeController = require('../app/controllers/employeeController');
 var analyticsController = require('../app/controllers/analyticsController');
 var orderStatusController = require('../app/controllers/orderStatusController');
 var logController = require('../app/controllers/logController');
+
 var multer = require('multer');
 var upload = multer({ dest: '../public/product/' });
 var verifyAccess = require('../services/verifyAccess');
@@ -147,6 +148,14 @@ module.exports = function (app, io) {
 
     //Logs
     app.get('/getLogs', verifyAccess, logController.getLogs);
+
+    // Shedule push
+    app.get('/getSchedulePush/:object', verifyAccess, pushController.getSchedulePush);
+    app.get('/getSchedulePushes', verifyAccess, pushController.getSchedulePushes);
+    app.post('/addSchedulePush', verifyAccess, pushController.addSchedulePush);
+    app.put('/updateSchedulePush/:object', verifyAccess, pushController.updateSchedulePush);
+    app.delete('/deleteSchedulePush/:object', verifyAccess, pushController.deleteSchedulePush);
+    app.post('/deleteSchedulePushes', verifyAccess, pushController.deleteSchedulePushes);
 
     return app;
 }

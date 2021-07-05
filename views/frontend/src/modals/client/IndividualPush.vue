@@ -20,31 +20,21 @@
           <div class="d-flex main-content-header">
             <div class="table-head" style="width: 3%;"><label class="custom-checkbox"><input type="checkbox"><span class="checkmark"></span></label></div>
             <div class="table-head" style="width: 43%;">Name</div>
-            <div class="table-head" style="width: 25%;">Category</div>
-            <div class="table-head" style="width: 18%;">Gap</div>
-            <div class="table-head" style="width: 8%;"></div>
+            <div class="table-head" style="width: 30%;">Gap</div>
+            <div class="table-head" style="width: 21%;">Action</div>
             <div class="table-head" style="width:3%"></div>
           </div>
-
           <div>
-            <!--    <div class="text-center empty-box" >-->
-            <!--      <img src="../../assets/icons/emptyOrder.svg">-->
-            <!--      <p class="empty-page-text">You have no orders yet</p>-->
-            <!--    </div>-->
             <AddPush/>
             <div class="table-content">
               <div class="table-item d-flex align-items-center" >
                 <div  style="width: 3%;"><label class="custom-checkbox"><input  type="checkbox"  ><span class="checkmark"></span></label></div>
-                <div  class="d-flex align-items-center"  style="width: 43%;">
-                  <div class="table-img">
-                    <img src="../../assets/img/sneak.webp">
-                  </div>
-                  All clients
+                <div  class="d-flex flex-column justify-content-center"  style="width: 43%;">
+                  <p class="mb-0">All clients</p>
+                  <p class="mb-0">9</p>
                 </div>
-
-                <div  style="width: 25%;">vip</div>
-                <div  style="width: 18%;">Everyweek</div>
-                <div  style="width: 8%;">
+                <div  style="width: 30%;">Everyweek</div>
+                <div  style="width: 21%;">
                   <label class="switch">
                     <input type="checkbox" data-toggle="collapse" data-target="#collapse-limit" aria-expanded="true" aria-controls="collapse-limit">
                     <span class="slider round"></span>

@@ -44,32 +44,25 @@
 
                   </div>
                 </div>
-
-
-
                <div class="all-clients">
-                 <div  v-for="client in pushData.clients" :key="client._id" class="choosed-client d-flex justify-content-between align-items-center">
+                 <div  v-for="selectedClient in selectedClients" :key="selectedClient._id" class="choosed-client d-flex justify-content-between align-items-center">
                    <div class="d-flex align-items-center">
                      <div class="category-logo d-flex justify-content-center align-items-center">V</div>
                      <div class="category">
-                       <div class="category-name">{{client.name}}</div>
-                       <span class="category-people">Category <span style="color:#000; text-transform:capitalize">{{client.category.name}}</span></span>
+                       <div class="category-name">{{selectedClient.name}}</div>
+                       <span class="category-people" v-if="selectedClient.category">Category <span style="color:#000; text-transform:capitalize">{{ selectedClient.category.name}}</span></span>
                      </div>
                    </div>
-
-
                    <img @click="deleteClient(client)" src="../../assets/icons/deleteClient.svg">
                  </div>
                </div>
-
-
               </div>
 
 <!-------------------------Right Side --------------------->
 
               <div class="col-lg-6">
                   <h3 class="push-title settings">Notification settings</h3>
-
+                <input type="text"  v-model="pushTitle"  name="week" class="cashback-input w-100 mb-2" placeholder="Please set push name">
                 <div class="radio-toolbar">
                   <div class="d-flex align-items-center mr-4">
                     <input type="radio" id="radioWeek" v-model="value" value="week"  name="week"  >
@@ -82,13 +75,8 @@
                     <span class="maled">By month</span>
                   </div>
                 </div>
-
-
-
-
-                    <input v-show="value==='month'"  id="push-date" class="cashback-input" placeholder="Select by month" style="width:100%">
-
-                  <div class="week" v-show="value ==='week'" >
+                <input v-show="value==='month'"  id="push-date" class="cashback-input" placeholder="Select by month" style="width:100%">
+                <div class="week" v-show="value ==='week'" >
                     <div class="days active d-flex justify-content-center align-items-center">MO</div>
                     <div class="days d-flex justify-content-center align-items-center">TU</div>
                     <div class="days d-flex justify-content-center align-items-center">WE</div>
@@ -96,26 +84,19 @@
                     <div class="days d-flex justify-content-center align-items-center">FR</div>
                     <div class="days d-flex justify-content-center align-items-center">SA</div>
                     <div class="days d-flex justify-content-center align-items-center">SU</div>
-                  </div>
-
-
+                </div>
                <div class="d-flex mb-3">
-                 <select v-model="pushData.hours" class=" form-control long-form-control mr-2  form-control-lg" aria-label=".form-select-lg example">
+                 <select v-model="hours" class=" form-control long-form-control mr-2  form-control-lg" aria-label=".form-select-lg example">
                   <option v-for="(hours,index) in working_hours" :key="index" :value="hours">{{hours}}</option>
                  </select>
                <button disabled="true" class=" check cash-btn"><img src="../../assets/icons/enable+.svg"></button>
                </div>
-
                 <div class="titles">
                   <label>Title</label><br>
-                  <input v-model="pushData.title" class="cashback-input"><br>
-
+                  <input v-model="title" class="cashback-input"><br>
                   <label>Description</label><br>
-                  <textarea v-model="pushData.description" class="general-area"></textarea>
+                  <textarea v-model="description" class="general-area"></textarea>
                 </div>
-
-
-
               </div>
             </div>
             <div class="d-flex">
@@ -145,15 +126,14 @@ export default {
       clients:[],
       search_client:'',
       clientCategory:[],
+      pushTitle: "",
       value:'week',
-      pushData:{
-        clients:[],
+        selectedClients:[],
         by_month:'',
         by_week:'',
-        hours:'',
+        hours: '01:00',
         title:'',
         description:''
-      },
     }
   },
   computed:{
@@ -166,7 +146,6 @@ export default {
   },
   methods:{
     onSubmit(){
-      console.log(this.pushData)
       $('#add-push').modal("hide")
     },
     getClients(){
@@ -183,29 +162,21 @@ export default {
           })
     },
     selectClient(selected){
-      if(this.pushData.clients.length === 0){
-        this.pushData.clients.push(selected)
-      }
-      else{
-        let product = null;
-        for (let i = 0; i < this.pushData.clients.length; i++) {
-          if(this.pushData.clients[i]._id === selected._id){
+        for (let i = 0; i < this.selectedClients.length; i++) {
+          if(this.selectedClients[i]._id === selected._id){
             this.$warningAlert("Client already added")
-            product = null;
+            selected = null;
+            this.search_client = ''
             break;
           }
-          product = selected
         }
-        if(product){
-          this.pushData.clients.push(product)
+        if(selected){
+          this.selectedClients.push(selected)
         }
-      }
-      this.search_client = ''
-
+        this.search_client = ''
     },
     deleteClient(client){
-      this.pushData.clients = this.pushData.clients.filter((item)=> item !== client)
-
+      this.selectedClients = this.selectedClients.filter((item)=> item !== client)
     }
   },
   mounted(){
@@ -216,10 +187,9 @@ export default {
       format:'',
       autoClose:false,
       lang:'en',
+      inline: true,
       onSelect:(date)=>{
         this.pushData.by_month = date.format().toString().slice(0,16)
-
-
       }
     });
   }
