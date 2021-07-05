@@ -12,21 +12,20 @@
             <div class="filter-dropdown">
              <form>
                <div>
-                 <div class="filter-list" data-toggle="collapse" data-target="#admins" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
+                <div class="filter-list" data-toggle="collapse" data-target="#admins" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
                    Admins
                    <img src="../../assets/icons/down.svg" class="filter-img">
-                 </div>
-                 <div class="collapse" id="admins">
-                   <div class="filter-body">
-                     <select class="filter-select form-control form-control-sm mb-2" aria-label=".form-select-lg example">
-                       <option value="">All</option>
-                       <option value="Done">Done</option>
-                       <option value="In Progress">In process</option>
-                       <option value="Canceled">Canceled</option>
-                       <option value="New">New</option>
-                     </select>
-                   </div>
-                 </div>
+                </div>
+                <div class="collapse" id="admins">
+                    <div class="filter-body">
+                        <select class="filter-select form-control form-control-sm mb-2" aria-label=".form-select-lg example" v-model="selectedEmployee">
+                            <option value="">All</option>
+                            <option v-for="employee, index in employees" :key="index"  :value="employee._id">
+                            {{employee.name}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
                </div>
                <div >
                  <div class="filter-list" data-toggle="collapse" data-target="#cashback" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
@@ -37,12 +36,12 @@
                    <div class="filter-body">
                      <div class="radio-toolbar-gender">
                        <div class="d-flex align-items-center mb-2 mr-5">
-                         <input ref="client-filter" type="radio" id="radioMen" name="radioGender" @click="gender_client = 'men'">
+                         <input ref="client-filter" type="radio" id="radioMen" name="sortLogs" value="cashback_created" v-model="sortBy">
                          <label for="radioMen"></label>
                          <span class="male">Added</span>
                        </div>
                        <div class="d-flex align-items-center mb-2">
-                         <input ref="client-filter" type="radio" id="radioWoman" name="radioGender" @click="gender_client='woman'">
+                         <input ref="client-filter" type="radio" id="radioWoman" name="sortLogs" value="cashback_updated" v-model="sortBy">
                          <label for="radioWoman"></label>
                          <span class="male">Edited</span>
                        </div>
@@ -51,13 +50,10 @@
                  </div>
                </div>
                <div class="filter-list">Orders</div>
-               <div class="order_users mb-2"><label class="custom-checkbox mr-2"><input ref="client-filter"   id="client-birthday" type="checkbox"><span class="checkmark"></span></label>Show only created orders</div>
+               <div class="order_users mb-2"><label class="custom-checkbox mr-2"><input ref="client-filter" name="sortLogs"  id="client-birthday" type="radio" value="order_created"  v-model="sortBy"><span class="checkmark"></span></label>Show only created orders</div>
                <div class="filter-list">Clients</div>
-               <div class="order_users"><label class="custom-checkbox mr-2"><input ref="client-filter"   id="created" type="checkbox"><span class="checkmark"></span></label>Show only created users</div>
-
+               <div class="order_users"><label class="custom-checkbox mr-2"><input ref="client-filter" name="sortLogs"   id="created" type="radio" value="client_deleted clients_deleted"  v-model="sortBy"><span class="checkmark"></span></label>Show only deleted clients</div>
              </form>
-
-
             </div>
           </div>
         </div>
@@ -78,8 +74,6 @@
      <div class="table-head" style="width: 60%;">Operation name</div>
      <div class="table-head" style="width: 20%;">User</div>
      <div class="table-head" style="width: 20%;">Date and time</div>
-
-
   </div>
   <div class="table-content">
     <LogItem v-bind:logs="logsList"/>
@@ -101,13 +95,24 @@ export default {
         between_value:'',
         startDate:'',
         endDate:'',
-         search:""
+        search:"",
+        employees:[],
+        selectedEmployee: '',
+        sortBy: ""
     }
   },
   computed:{
         logsList() {
             return this.logs.filter((log) =>{
                 if(log.title.toLowerCase().includes(this.search.toLowerCase()) || log.user.toLowerCase().includes(this.search.toLowerCase())){
+                    
+                    if(this.selectedEmployee && (this.selectedEmployee != log.user_id)){
+                        return false;
+                    }
+                    if(this.sortBy && !this.sortBy.includes(log.type)){
+                        return false;
+                    }
+
                     return log
                 }
                 return false;
@@ -132,6 +137,12 @@ export default {
                 }
             }).then((response) => {
                 this.logs = this.changeTitle(response.data.objects);
+            })
+        },
+        getEmployees(){
+            this.axios.get(this.url('getEmployees')).
+            then((response) => {
+                this.employees = response.data.objects;
             })
         },
         selectDate(date, add_day=0){
@@ -168,6 +179,7 @@ export default {
     this.startDate = to_date
     this.endDate = from_date
     this.getLogs()
+    this.getEmployees()
   }
 }
 </script>

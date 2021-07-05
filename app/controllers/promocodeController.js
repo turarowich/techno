@@ -89,6 +89,7 @@ class PromocodeController{
                 value: promocode.code,
                 valueColor: "done",
                 user: req.userName,
+                user_id: req.userID,
                 icon: "add"
             }).save()
             result['object'] = promocode
@@ -123,6 +124,7 @@ class PromocodeController{
                 value: promocode.code,
                 valueColor: "done",
                 user: req.userName,
+                user_id: req.userID,
                 icon: "update"
             }).save()
             result['object'] = promocode
@@ -156,6 +158,7 @@ class PromocodeController{
                 value: promocode.code,
                 valueColor: "canceled",
                 user: req.userName,
+                user_id: req.userID,
                 icon: "delete"
             }).save()
             await Promocode.findByIdAndRemove(query)

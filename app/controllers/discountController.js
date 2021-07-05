@@ -49,6 +49,7 @@ class DiscountController{
                 value: discount.percentage,
                 valueColor: "done",
                 user: req.userName,
+                user_id: req.userID,
                 icon: "add"
             }).save()
             result['discounts'] = await discount_model.find();
@@ -81,6 +82,7 @@ class DiscountController{
                     value: discount.discount_percentage,
                     valueColor: "canceled",
                     user: req.userName,
+                    user_id: req.userID,
                     icon: "delete"
                 }).save()
             }

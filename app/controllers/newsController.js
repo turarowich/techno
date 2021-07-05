@@ -110,6 +110,7 @@ class NewsController {
                 type: "news_created",
                 description: news.name,
                 user: req.userName,
+                user_id: req.userID,
                 icon: "add"
             }).save()
             result['object'] = news
@@ -165,6 +166,7 @@ class NewsController {
                 type: "news_updated",
                 description: news.name,
                 user: req.userName,
+                user_id: req.userID,
                 icon: "update"
             }).save()
             result['object'] = news
@@ -197,6 +199,7 @@ class NewsController {
                 type: "news_deleted",
                 description: news.name,
                 user: req.userName,
+                user_id: req.userID,
                 icon: "delete"
             }).save()
             await News.findByIdAndRemove(query)

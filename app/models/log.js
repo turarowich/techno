@@ -26,6 +26,10 @@ const logSchema = new Schema({
         type: String,
         required: false,
     },
+    user_id: {
+        type: String,
+        required: false,
+    },
     type: {
         type: String,
         required: false,
