@@ -160,18 +160,20 @@ class PushController {
                 sound: "default",
                 topic: settings.APNsTopic
             });
-            apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
-                if (response.failed.length) {
-                    response.failed.forEach((fail) => {
-                        if (fail.status == '400' && fail.response.reason == 'BadDeviceToken') {
-                            let device = devicesIOS.find(device => device.token == fail.device)
-                            if (device) device.deleteOne()
-                        }
-                    });
-                }
-            }).catch(function (error) {
-                console.log("Faled to send message to ", error);
-            });
+            if (apnProvider){
+                apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
+                    if (response.failed.length) {
+                        response.failed.forEach((fail) => {
+                            if (fail.status == '400' && fail.response.reason == 'BadDeviceToken') {
+                                let device = devicesIOS.find(device => device.token == fail.device)
+                                if (device) device.deleteOne()
+                            }
+                        });
+                    }
+                }).catch(function (error) {
+                    console.log("Faled to send message to ", error);
+                });
+            }
             result['status'] = 200
             result['msg'] = "Sending push notifications"
         }
