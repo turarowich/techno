@@ -3,7 +3,7 @@
       <div class="order_container_wrapper">
 
         <div class="order_container">
-          <div class="top_fixed">
+          <div class="top_fixed w-100">
             <div class="d-flex">
               <div @click="openAdd" style="z-index: 1;">
                 <img src="../../../assets/icons/blue_plus.svg">
@@ -12,8 +12,8 @@
                 Order
               </div>
             </div>
-            <div style="text-align: center; margin-bottom: 30px;">
-              <img src="../../../assets/img/wave_line.svg">
+            <div v-bind:style="{ backgroundImage: 'url(' + server+'/'+'img/wave_line.svg'+ ')' }" style="text-align: center; margin-bottom: 30px;height: 5px;width: 100%;" >
+<!--              <img src="../../../assets/img/wave_line.svg">-->
             </div>
           </div>
 
