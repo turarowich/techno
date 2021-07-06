@@ -122,7 +122,7 @@
               </div>
               <div class="line"></div>
             </div>
-            
+
             <div class="total">
 
               <div class=" discount d-flex justify-content-between">
