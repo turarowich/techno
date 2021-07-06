@@ -4,14 +4,18 @@ function verifyToken(req, res, next) {
     
     // Header names in Express are auto-converted to lowercase
     let token = req.headers['x-access-token'] || req.headers['authorization'];
-    console.log(token,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><:::::::::::::::::::::::::::::::::::::::::");
-    // Remove Bearer from string
-
-    token = token.replace(/^Bearer\s+/, "");
-
-    if (!token)
+    let validWithoutToken = ['/getProducts', '/getNews']
+    if (!token){
+        if (req.headers['access-place'] && validWithoutToken.includes(req.url)){
+            console.log("here")
+            req.db = 'loygift' + req.headers['access-place']
+            return next();
+        }
         return res.status(403).send({ auth: false, message: 'No token provided.' });
-
+    }else{
+        // Remove Bearer from string
+        token = token.replace(/^Bearer\s+/, "");
+    }
     jwt.verify(token, config.secret_key, function (err, decoded) {
         if (err)
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });

@@ -46,20 +46,18 @@
                 </div>
                <div class="all-clients">
                  <div  v-for="selectedClient in selectedClients" :key="selectedClient._id" class="choosed-client d-flex justify-content-between align-items-center">
-                   <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center">
                      <div class="category-logo d-flex justify-content-center align-items-center">V</div>
                      <div class="category">
                        <div class="category-name">{{selectedClient.name}}</div>
                        <span class="category-people" v-if="selectedClient.category">Category <span style="color:#000; text-transform:capitalize">{{ selectedClient.category.name}}</span></span>
                      </div>
-                   </div>
+                    </div>
                    <img @click="deleteClient(client)" src="../../assets/icons/deleteClient.svg">
                  </div>
                </div>
               </div>
-
-<!-------------------------Right Side --------------------->
-
+            <!-------------------------Right Side --------------------->
               <div class="col-lg-6">
                   <h3 class="push-title settings">Notification settings</h3>
                 <input type="text"  v-model="pushTitle"  name="week" class="cashback-input w-100 mb-2" placeholder="Please set push name">
