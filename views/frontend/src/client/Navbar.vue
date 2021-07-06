@@ -5,19 +5,12 @@
     <img src="../assets/icons/menu.svg">
   </div>
     <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">
-      <div v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.logo + ')' }" class="catalog_logo">
-
-      </div>
-
-
-      <div v-if="catalog_settings.logo && catalog_settings.logo !==''"  v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.logo + ')' }" class="catalog_logo">
-
+      <div v-if="catalog_settings.logo && catalog_settings.logo !==''"  v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.logo + ')' }" class="catalog_logo 2Q">
       </div>
       <span v-else>
         {{catalog_settings.name || 'Company Name'}}
       </span>
     </router-link>
-
 
 <!--    <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">{{catalog_settings.name || 'Company Name'}} </router-link>-->
     <div class="menu-wrapper">
@@ -27,7 +20,7 @@
 <!--            <img  src="../assets/icons/no-catalog.svg">-->
 <!--          </div>-->
           <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">
-            <div v-if="catalog_settings.logo && catalog_settings.logo !==''"  v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.logo + ')' }" class="catalog_logo">
+            <div v-if="catalog_settings.logo && catalog_settings.logo !==''"  v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.logo + ')' }" class="catalog_logo Q3">
 
             </div>
             <span v-else>
@@ -42,13 +35,13 @@
       <ul class="client-menu">
         <li @click="removeActive" class="client-list"><router-link class="client-link" :to="`/${currentCompanyCatalog}/about`"><img src="../assets/clients/info.svg"/>About us</router-link></li>
 
-        <span v-if="!catalog_settings.catalogMode">
+        <span v-if="!catalog_settings.catalogMode && !catalog_settings.foodMode">
           <li @click="removeActive" v-if="!isLogged" class="client-list "><router-link class="client-link" :to="`/${currentCompanyCatalog}/signin`"><img class="mr-3" src="../assets/clients/Profile.svg"/>Login</router-link></li>
           <li  v-else class="client-list"><img src="../assets/clients/Profile.svg"/><router-link class="client-link" :to="`/${currentCompanyCatalog}/client-account`">My Account</router-link></li>
         </span>
 
 
-        <li @click="removeActive" class="client-list mobile-basket">
+        <li v-if="!catalog_settings.catalogMode"  @click="removeActive" class="client-list mobile-basket">
           <router-link   class="client-link  d-inline-flex align-items-center" :to="`/${currentCompanyCatalog}/basket`" >
             <img src="../assets/clients/Buy.svg"/>Basket
             <div class="bg-not d-flex align-items-center">
@@ -108,7 +101,7 @@
       </div>
     </div>
 
-    <img @click="$router.push(`/${currentCompanyCatalog}/basket`)" class="mobile-basket" src="../assets/clients/Buy.svg"/>
+    <img v-if="!catalog_settings.catalogMode"  @click="$router.push(`/${currentCompanyCatalog}/basket`)" class="mobile-basket" src="../assets/clients/Buy.svg"/>
 
 
 
@@ -186,7 +179,7 @@ export default {
       return this.$store.getters['Client/getUserStatus'];
     },
     server(){
-      return this.$;
+      return this.$server;
     },
   },
   methods:{

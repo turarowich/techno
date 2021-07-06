@@ -154,6 +154,7 @@ export default {
 
       this.axios.post(this.url('addOrderWeb'),data,options).then(function (response) {
         console.log(response);
+        that.$successAlert("Order sent");
       }).catch(function(error){
         if (error.response) {
           that.$warningAlert(error.response.data);

@@ -236,13 +236,15 @@ class OrderController{
             }
             //params: product->list of products ids and quantity, Product model,promocode obj,client obj,discounts list.
             let result_object = await products_with_discounts(
-                req.fields.products, // list of product ids
+                req.fields.products, // list of product ids and quant
                 Product,             // Product model
                 promocode,           // promocode object
                 client,              // client object
                 discounts,           // list of discounts
             );
-            let total = (parseFloat(result_object.discountedTotal) + parseFloat(deliveryPrice) - parseFloat(req.fields.points)).toFixed(2);
+            let total = (parseFloat(result_object.discountedTotal) + parseFloat(deliveryPrice) - parseFloat(req.fields.points || 0)).toFixed(2);
+            console.log(total,"ptttttttttttttttttttttttttttttttttttttt",result_object.discountedTotal,deliveryPrice,req.fields.points);
+
             let order = await new Order({
                  // client: client._id,
                  // client_name: client.name,
@@ -253,7 +255,7 @@ class OrderController{
                 delivery: req.fields.delivery,
                 deliveryType: req.fields.deliveryType,
                 notes: req.fields.notes,
-                points: req.fields.points,
+                points: req.fields.points || 0,
                 code: randomNumber(1000, 10000),
                 deliveryPrice: deliveryPrice,
                 totalDiscount: result_object.discountsTotal,
@@ -290,15 +292,6 @@ class OrderController{
                 }
                 //send warning
             }
-
-            //Cashback
-            // let cashback_model = db.model("Cashback");
-            // let products_full_data = req.fields.products_full_data;
-            // let cashback_from_order = await calcCashback(products_full_data,cashback_model);
-            // order.earnedPoints = parseFloat(cashback_from_order) || 0;  //move
-            // if(!req.fields.client){
-            //     req.fields.client = null
-            // }
 
             if(client){
                 if (req.fields.points){
@@ -379,8 +372,6 @@ class OrderController{
             var products = req.fields.products
             // req.fields.products = null  ?
             let order = await Order.findOneAndUpdate(query, req.fields)
-            let client = await Client.findById(order.client);
-            let promocode = await PromocodeModel.findById(order.promoCode);
 
             if(products && products.length){
                 order.products = []
@@ -390,7 +381,6 @@ class OrderController{
                     if (!product.id) {
                         search_product = await Product.findById(product._id)
                     }
-
                     if (search_product) {
                         let order_product = await new OrderProduct({
                             product: search_product._id,
@@ -409,43 +399,110 @@ class OrderController{
                 await order.save()
             }
             //Cashback
-            if(order.status === "Done"){
+            let client = await Client.findById(order.client);
+            let updated_order = await Order.findById(order._id);
+            console.log(updated_order.status,"updated_order.status>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+            if(updated_order.status === "Done" && client){
+                ///////////////////////////////////////////////////////////////////////////////////////////////////////
                 let cashback_model = db.model("Cashback");
                 let products_and_quantity = [];
-                let order_2nd = await order.populate('client').populate('products').execPopulate();
-                for (const pro_ of order_2nd.products) {
+                await updated_order.populate('client').populate('products').execPopulate();
+
+                let promocode = await PromocodeModel.findById(updated_order.promoCode);
+                for (const pro_ of updated_order.products) {
                     products_and_quantity.push({
                         id:pro_.product,
                         quantity:pro_.quantity,
                     })
                 }
                 let result_object = await products_with_discounts(
-                    products_and_quantity, // list of product ids
+                    products_and_quantity, // list of product ids $ quant
                     Product,             // Product model
                     promocode,           // promocode object
                     client,              // client object
                     discounts,           // list of discounts
                 );
+
                 let cashback_from_order = await calcCashback(result_object.productCurrentPrice,cashback_model);
-                order_2nd.earnedPoints = parseFloat(cashback_from_order) || 0;
-                await order_2nd.save();
-                client.points = (parseFloat(client.points)+parseFloat(cashback_from_order)).toFixed(2);//move
-                client.save();
-                await new ClientBonusHistory({
-                    client: client._id,
-                    points: cashback_from_order,
-                    source: 'Points received order #'+order_2nd.code,
-                    order: order_2nd._id,
-                    type: 'received',
-                }).save();
+                updated_order.earnedPoints = parseFloat(cashback_from_order) || 0;
+                await updated_order.save();
+                //////////////////////////////////////////////////////////////////////////////////////////////////
+                client.points = (parseFloat(client.points)+parseFloat(cashback_from_order)).toFixed(2);
+                await client.save();
+                if(parseFloat(cashback_from_order)>0){
+                    await new ClientBonusHistory({
+                        client: client._id,
+                        points: cashback_from_order,
+                        source: 'Points received order #'+updated_order.code,
+                        order: updated_order._id,
+                        type: 'received',
+                    }).save();
+                }
 
             }
+            //
 
+            if(updated_order.status === "Cancelled" && client){
+                console.log('CANCELLED');
+                //subtract cashback, balance, add cashback used to client, create new bonus history
+                //deduct balance
+                client.balance = (parseFloat(client.balance)-parseFloat(updated_order.totalPrice)).toFixed(2);
+                client.points = (parseFloat(client.points)+parseFloat(updated_order.points)).toFixed(2);
+                //add used cashback
+                if(parseFloat(updated_order.points)>0){
+                    await new ClientBonusHistory({
+                        client: client._id,
+                        points: updated_order.points,
+                        source: 'Spent points refunded order #' + updated_order.code,
+                        order: updated_order._id,
+                        type: 'received',
+                    }).save();
+                }
+
+
+                ////deduct cashback
+                //calculate cashback
+                /////////////////////////////////////////////////////////////////////////////////////////////////
+                //duplicate code redo later
+                let cashback_model = db.model("Cashback");
+                let products_and_quantity = [];
+                await updated_order.populate('client').populate('products').execPopulate();
+
+                let promocode = await PromocodeModel.findById(updated_order.promoCode);
+                for (const pro_ of updated_order.products) {
+                    products_and_quantity.push({
+                        id:pro_.product,
+                        quantity:pro_.quantity,
+                    })
+                }
+                let result_object = await products_with_discounts(
+                    products_and_quantity, // list of product ids $ quant
+                    Product,             // Product model
+                    promocode,           // promocode object
+                    client,              // client object
+                    discounts,           // list of discounts
+                );
+
+                let cashback_from_order = await calcCashback(result_object.productCurrentPrice,cashback_model);
+                /////////////////////////////////////////////////////////////////////////////////////////////////
+                client.points = (parseFloat(client.points)-parseFloat(cashback_from_order)).toFixed(2);
+                if(parseFloat(cashback_from_order)>0){
+                    await new ClientBonusHistory({
+                        client: client._id,
+                        points: cashback_from_order,
+                        source: 'Points cancelled order #' + updated_order.code,
+                        order: updated_order._id,
+                        type: 'deducted',
+                    }).save();
+                }
+
+
+                await client.save({ validateBeforeSave: false });
+            }
             result['object'] = await order.populate('client').populate('products').execPopulate()
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
-
         res.status(result.status).json(result);
     };
 

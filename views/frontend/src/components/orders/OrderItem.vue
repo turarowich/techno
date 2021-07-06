@@ -47,11 +47,11 @@
           </div>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
             <ul class="list-group " >
-              <li class="list-group-item" v-on:click="statusChange(order,'Done')">Done</li>
-              <li class="list-group-item" data-toggle="modal" data-target="#edit-order" @click="$emit('selectOrder',order._id)">Edit</li>
-              <li class="list-group-item" @click="statusChange(order, 'Cancelled')">Cancel</li>
+              <li v-if="!['Cancelled','Done'].includes(order.status)" class="list-group-item" v-on:click="statusChange(order,'Done')">Done</li>
+              <li v-if="!['Cancelled','Done'].includes(order.status)" class="list-group-item" data-toggle="modal" data-target="#edit-order" @click="$emit('selectOrder',order._id)">Edit</li>
+              <li v-if="!['Cancelled'].includes(order.status)" class="list-group-item" @click="statusChange(order, 'Cancelled')">Cancel</li>
               <li class="list-group-item" v-on:click="$emit('deleteOrder',order._id)">Delete</li>
-              <li class="list-group-item" v-on:click="statusChange(order, 'In Progress')">In progress</li>
+<!--              <li class="list-group-item" v-on:click="statusChange(order, 'In Progress')">In progress</li>-->
             </ul>
           </div>
         </div>
@@ -83,6 +83,7 @@ export default {
 
   methods: {
     statusChange(order,status){
+        console.log(status,"statusChange");
         this.axios.put(this.url('updateOrder',order._id), {status: status}).then(()=>{
             order.status = status;
         }).catch((error)=>{

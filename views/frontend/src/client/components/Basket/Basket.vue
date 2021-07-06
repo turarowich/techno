@@ -22,38 +22,42 @@
     <div class="col-lg-4 col-md-6">
         <div v-if="countOrders>0" class="sales">
 
-          <div v-if="!clientAuth">
-            <h3 class="cashback-sub-title mb-4" style="color:#616CF5;">Log In or register, to receive points and/or use them</h3>
-            <div  class="auth_btns_wrapper">
-              <router-link style="flex: 1;" :to="`/${currentCompanyCatalog}/signin`"><span>Log In</span></router-link>
-              <router-link style="flex: 1;" :to="`/${currentCompanyCatalog}/signup`"><span>Register</span></router-link>
-            </div>
-          </div>
-          <div v-else>
-            <span class="client_points_title">User your points for an additional discount</span>
-            <div class="d-flex mb-2 client_points_block" style="align-items: center;">
-
-              <div class="d-flex" style="flex: 1;">
-                <label class="custom-checkbox">
-                  <input v-model="usePointsStatus" type="checkbox" >
-                  <span class="checkmark">
-                </span>
-                </label>
-                <span>Use points</span>
+          <div v-if="!catalog_settings.foodMode">
+            <div v-if="!clientAuth">
+              <h3 class="cashback-sub-title mb-4" style="color:#616CF5;">Log In or register, to receive points and/or use them</h3>
+              <div  class="auth_btns_wrapper">
+                <router-link style="flex: 1;" :to="`/${currentCompanyCatalog}/signin`"><span>Log In</span></router-link>
+                <router-link style="flex: 1;" :to="`/${currentCompanyCatalog}/signup`"><span>Register</span></router-link>
               </div>
-              <div>
+            </div>
+            <div v-else>
+              <span class="client_points_title">User your points for an additional discount</span>
+              <div class="d-flex mb-2 client_points_block" style="align-items: center;">
+
+                <div class="d-flex" style="flex: 1;">
+                  <label class="custom-checkbox">
+                    <input v-model="usePointsStatus" type="checkbox" >
+                    <span class="checkmark">
+                </span>
+                  </label>
+                  <span>Use points</span>
+                </div>
+                <div>
                 <span class="client_points">
                   {{user.points}} --{{userDiscountStatus.discount_percentage || 0}}%
                 </span>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="mb-3 sales-input d-flex">
-            <input v-model="searchText" class="cashback-input" placeholder="Enter a promocode">
-            <img @click="searchPromocode" class="promocodeCheckBtn" src="../../../assets/icons/check_mark.svg">
-          </div>
-          <div v-if="basket_promocode != null" class="promocode_result">
+
+          <div v-if="!catalog_settings.foodMode">
+            <div class="mb-3 sales-input d-flex">
+              <input v-model="searchText" class="cashback-input" placeholder="Enter a promocode">
+              <img @click="searchPromocode" class="promocodeCheckBtn" src="../../../assets/icons/check_mark.svg">
+            </div>
+            <div v-if="basket_promocode != null" class="promocode_result">
               <div class="d-flex">
                 <div>
                   Name: {{basket_promocode.name}}
@@ -65,55 +69,60 @@
               <div>Discount %: {{basket_promocode.discount}}</div>
               <div>Discount fix: {{basket_promocode.fixed_sum}}</div>
               <div v-if="basket_promocode == null" style="color: red;font-weight: bold;">Promocode is not applicable</div>
+            </div>
           </div>
+
+
+
           <div class="delivery">
-            <h3 class="cashback-sub-title">Delivery</h3>
-            <div v-if="showDeliveryChoice" class="personal-btns">
-              <div style="width:50%" @click="setDeliveryType('delivery')" :class="{active:deliveryService}" class="btns-item"><span class="btn-round"></span>Delivery</div>
-              <div style="width:50%" @click="setDeliveryType('pick_up')" :class="{active:pickUp}" class="btns-item mr-0"><span class="btn-round"></span>Pick-up</div>
-            </div>
+            <div v-if="!catalog_settings.foodMode">
+              <h3 class="cashback-sub-title">Delivery</h3>
+              <div v-if="showDeliveryChoice" class="personal-btns">
+                <div style="width:50%" @click="setDeliveryType('delivery')" :class="{active:deliveryService}" class="btns-item"><span class="btn-round"></span>Delivery</div>
+                <div style="width:50%" @click="setDeliveryType('pick_up')" :class="{active:pickUp}" class="btns-item mr-0"><span class="btn-round"></span>Pick-up</div>
+              </div>
 
-            <div v-if="deliveryService" class="delivery_block position-relative">
-              <div class="py-3">
-                {{catalog_settings ? catalog_settings.deliveryDescription : ''}}
-              </div>
-              <label class="cashback-label">Delivery address</label><br>
-              <input v-model="deliveryAddress" type="text" class="cashback-input" placeholder="Enter your address"/>
-              <label class="cashback-label">Delivery service</label><br>
-              <div class="selected_delivery_option w-100 d-flex" @click="showDeliveryOption= !showDeliveryOption">
-                <div style="flex: 1;">
-                  {{selectedDeliveryType.object.name}}
+              <div v-if="deliveryService" class="delivery_block position-relative">
+                <div class="py-3">
+                  {{catalog_settings ? catalog_settings.deliveryDescription : ''}}
                 </div>
-                <div>
-                  {{selectedDeliveryType.object.price}}
-                </div>
-              </div>
-              <div class="delivery_option_wrapper_class" v-if="showDeliveryOption">
-                <div @click="setSelectedDeliveryOption(opt)" v-for="opt in delivery_options" :key="opt._id" class="d-flex delivery_option_class">
-                  <div style="flex:1;">{{opt.name}}</div>
-                  <div>{{opt.price}}$</div>
-                </div>
-              </div>
-            </div>
-            <div v-if="pickUp" class="pick_up_block">
-            <span>Select address where u would like to pick up ur order</span>
-              <div @click="setBranch(branch)" v-for="branch in branches" :key="branch._id" :class="{active_branch:branch._id===selectedBranchObject._id}" class="d-flex pick_up_block_item">
-                <div>
-                  <img src="../../../assets/icons/location.svg">
-                </div>
-                <div>
-                  <div class="pick_up_block_item_address">
-                    {{branch.address}}
+                <label class="cashback-label">Delivery address</label><br>
+                <input v-model="deliveryAddress" type="text" class="cashback-input" placeholder="Enter your address"/>
+                <label class="cashback-label">Delivery service</label><br>
+                <div class="selected_delivery_option w-100 d-flex" @click="showDeliveryOption= !showDeliveryOption">
+                  <div style="flex: 1;">
+                    {{selectedDeliveryType.object.name}}
                   </div>
-                  <div class="pick_up_block_item_wh">
-                    Mn-Fr 08:00 - 19:00
+                  <div>
+                    {{selectedDeliveryType.object.price}}
+                  </div>
+                </div>
+                <div class="delivery_option_wrapper_class" v-if="showDeliveryOption">
+                  <div @click="setSelectedDeliveryOption(opt)" v-for="opt in delivery_options" :key="opt._id" class="d-flex delivery_option_class">
+                    <div style="flex:1;">{{opt.name}}</div>
+                    <div>{{opt.price}}$</div>
                   </div>
                 </div>
               </div>
+              <div v-if="pickUp" class="pick_up_block">
+                <span>Select address where u would like to pick up ur order</span>
+                <div @click="setBranch(branch)" v-for="branch in branches" :key="branch._id" :class="{active_branch:branch._id===selectedBranchObject._id}" class="d-flex pick_up_block_item">
+                  <div>
+                    <img src="../../../assets/icons/location.svg">
+                  </div>
+                  <div>
+                    <div class="pick_up_block_item_address">
+                      {{branch.address}}
+                    </div>
+                    <div class="pick_up_block_item_wh">
+                      Mn-Fr 08:00 - 19:00
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="line"></div>
             </div>
-
-            <div class="line"></div>
-
+            
             <div class="total">
 
               <div class=" discount d-flex justify-content-between">
@@ -138,13 +147,13 @@
 
               <div class="d-flex justify-content-between ">
                 <button @click="$router.push({ path: `/${currentCompanyCatalog}` })" class="cancel">Continue shopping</button>
-                <button @click="checkNcontinue()" class="save">
+
+                <button v-if="catalog_settings.foodMode" @click="generateQRCode()" class="save">
+                  Confirm order
+                </button>
+                <button v-else @click="checkNcontinue()" class="save">
                   Continue
                 </button>
-                <button @click="generateQRCode()" class="save">
-                  QR
-                </button>
-
 
               </div>
             </div>
