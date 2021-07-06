@@ -181,6 +181,173 @@ class PushController {
     };
 
 
+    // SCHEDULE PUSH model functions listed
+    getSchedulePush = async function (req, res) {
+        let db = useDB(req.db)
+        let SchedulePush = db.model("SchedulePush");
+        let result = {
+            'status': 200,
+            'msg': 'Sending schedulePush'
+        }
+        try {
+            let schedulePush = await SchedulePush.findById(req.params.object)
+            result['object'] = schedulePush
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+
+        res.status(result.status).json(result);
+    };
+    getSchedulePushes = async function (req, res) {
+        let db = useDB(req.db)
+        let SchedulePush = db.model("SchedulePush");
+        let result = {
+            'status': 200,
+            'msg': 'Sending schedule pushs'
+        }
+        try {
+            let schedulePushes = await SchedulePush.find()
+            result['objects'] = schedulePushes
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+
+        res.status(result.status).json(result);
+    };
+
+    addSchedulePush = async function (req, res) {
+        let db = useDB(req.db)
+        let SchedulePush = db.model("SchedulePush");
+        let Log = db.model("Log");
+        let result = {
+            'status': 200,
+            'msg': 'SchedulePush added'
+        }
+        try {
+            let schedulePush = await new SchedulePush(req.fields).save();
+            await new Log({
+                type: "schedule_push_added",
+                description: schedulePush.title,
+                user: req.userName,
+                user_id: req.userID,
+                icon: "add"
+            }).save()
+            result['object'] = schedulePush
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+
+        res.status(result.status).json(result);
+    };
+
+    updateSchedulePush = async function (req, res) {
+        let db = useDB(req.db)
+        let SchedulePush = db.model("SchedulePush");
+        let Log = db.model("Log");
+        let result = {
+            'status': 200,
+            'msg': 'SchedulePush updated'
+        }
+        try {
+
+            let query = { '_id': req.params.object }
+            req.fields['updatedAt'] = new Date()
+            let schedulePush = await SchedulePush.findOneAndUpdate(query, req.fields)
+            await new Log({
+                type: "schedule_push_updated",
+                description: schedulePush.title,
+                user: req.userName,
+                user_id: req.userID,
+                icon: "update"
+            }).save()
+            result['object'] = schedulePush
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+
+        res.status(result.status).json(result);
+    };
+
+    deleteSchedulePush = async function (req, res) {
+        let db = useDB(req.db)
+        let SchedulePush = db.model("SchedulePush");
+        let Log = db.model("Log");
+        let result = {
+            'status': 200,
+            'msg': 'SchedulePush deleted'
+        }
+        try {
+            let query = { '_id': req.params.object }
+            let schedulePush = await SchedulePush.findById(query)
+            if (schedulePush) {
+                await new Log({
+                    type: "schedule_push_deleted",
+                    description: schedulePush.title,
+                    user: req.userName,
+                    user_id: req.userID,
+                    icon: "delete"
+                }).save()
+            }
+            await SchedulePush.findByIdAndRemove(query)
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+
+        res.status(result.status).json(result);
+    };
+    
+    deleteSchedulePushes = async function (req, res) {
+        let db = useDB(req.db)
+        let SchedulePush = db.model("SchedulePush");
+        let Log = db.model("Log");
+        if (req.userType == "employee") {
+            let checkResult = await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
+        }
+        let result = {
+            'status': 200,
+            'msg': 'SchedulePushes deleted'
+        }
+        if (req.fields.objects.length) {
+            try {
+                let query = {
+                    '_id': {
+                        $in: req.fields.objects
+                    }
+                }
+                let schedulePushes = await SchedulePush.find(query, 'title')
+
+                if (schedulePushes.length) {
+                    let desc = schedulePushes.map(function (elem) {
+                        return elem.title;
+                    }).join(", ")
+                    await new Log({
+                        type: "schedule_pushes_deleted",
+                        description: desc,
+                        user: req.userName,
+                        user_id: req.userID,
+                        icon: "delete"
+                    }).save()
+                }
+
+                await SchedulePush.deleteMany(query)
+            } catch (error) {
+                result = sendError(error, req.headers["accept-language"])
+            }
+        } else {
+            result = {
+                'status': 200,
+                'msg': 'Parametr objects is empty'
+            }
+        }
+
+
+        res.status(result.status).json(result);
+    };
+
+
     
 }
 

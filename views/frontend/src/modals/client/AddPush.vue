@@ -44,33 +44,23 @@
 
                   </div>
                 </div>
-
-
-
                <div class="all-clients">
-                 <div  v-for="client in pushData.clients" :key="client._id" class="choosed-client d-flex justify-content-between align-items-center">
-                   <div class="d-flex align-items-center">
+                 <div  v-for="selectedClient in selectedClients" :key="selectedClient._id" class="choosed-client d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
                      <div class="category-logo d-flex justify-content-center align-items-center">V</div>
                      <div class="category">
-                       <div class="category-name">{{client.name}}</div>
-                       <span class="category-people" v-if="client.category">Category <span style="color:#000; text-transform:capitalize">{{client.category.name}}</span></span>
-                       <span class="category-people" v-else>Category <span style="color:#000; text-transform:capitalize">No category</span></span>
+                       <div class="category-name">{{selectedClient.name}}</div>
+                       <span class="category-people" v-if="selectedClient.category">Category <span style="color:#000; text-transform:capitalize">{{ selectedClient.category.name}}</span></span>
                      </div>
-                   </div>
-
-
+                    </div>
                    <img @click="deleteClient(client)" src="../../assets/icons/deleteClient.svg">
                  </div>
                </div>
-
-
               </div>
-
-<!-------------------------Right Side --------------------->
-
-              <div class="col-lg-5">
+            <!-------------------------Right Side --------------------->
+              <div class="col-lg-6">
                   <h3 class="push-title settings">Notification settings</h3>
-
+                <input type="text"  v-model="pushTitle"  name="week" class="cashback-input w-100 mb-2" placeholder="Please set push name">
                 <div class="radio-toolbar">
                   <div class="d-flex align-items-center mr-4">
                     <input type="radio" id="radioWeek" v-model="value" value="week"  name="week"  >
@@ -186,7 +176,9 @@ export default {
       clients:[],
       search_client:'',
       clientCategory:[],
+      pushTitle: "",
       value:'week',
+        selectedClients:[],
       pushData:{
         name:'',
         clients:[],
@@ -228,7 +220,6 @@ export default {
       $('#add-push').modal("hide")
     },
     onSubmit(){
-      console.log(this.pushData)
       $('#add-push').modal("hide")
     },
     getClients(){
@@ -246,30 +237,21 @@ export default {
           })
     },
     selectClient(selected){
-      if(this.pushData.clients.length === 0){
-        this.pushData.clients.push(selected)
-      }
-      else{
-        let product = null;
-        for (let i = 0; i < this.pushData.clients.length; i++) {
-          if(this.pushData.clients[i]._id === selected._id){
+        for (let i = 0; i < this.selectedClients.length; i++) {
+          if(this.selectedClients[i]._id === selected._id){
             this.$warningAlert("Client already added")
-            product = null;
+            selected = null;
+            this.search_client = ''
             break;
           }
-          product = selected
         }
-        if(product){
-          this.pushData.clients.push(product)
+        if(selected){
+          this.selectedClients.push(selected)
         }
-      }
-      this.search_client = '';
-      console.log(this.pushData)
-
+        this.search_client = ''
     },
     deleteClient(client){
-      this.pushData.clients = this.pushData.clients.filter((item)=> item !== client)
-
+      this.selectedClients = this.selectedClients.filter((item)=> item !== client)
     }
   },
   mounted(){
@@ -284,8 +266,6 @@ export default {
       inline:true,
       onSelect:(date)=>{
         this.pushData.by_month = date.format().toString().slice(0,16)
-
-
       }
     });
   }
