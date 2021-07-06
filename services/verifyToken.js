@@ -7,7 +7,7 @@ function verifyToken(req, res, next) {
     let validWithoutToken = ['/getProducts', '/getNews']
     if (!token){
         if (req.headers['access-place'] && validWithoutToken.includes(req.url)){
-            console.log("here")
+            
             req.db = 'loygift' + req.headers['access-place']
             return next();
         }
