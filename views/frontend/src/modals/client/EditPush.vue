@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade right"  id="add-push" tabindex="-1" role="dialog" aria-labelledby="add-promocode" aria-hidden="true">
+  <div class="modal fade right"  id="edit-push" tabindex="-1" role="dialog" aria-labelledby="edit-push" aria-hidden="true">
     <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: calc(100% - 250px);" role="document" >
       <div class="modal-content myModal-content h-100">
         <div class="modal-header justify-content-start align-items-center">
@@ -9,7 +9,7 @@
                 <img src="../../assets/icons/x.svg" alt="">
               </span>
           </button>
-            <h3 class="modal-title">Add push</h3>
+          <h3 class="modal-title">Edit push</h3>
         </div>
         <div class=" myModal-body">
           <form  class="modal-form ">
@@ -47,29 +47,29 @@
 
 
 
-               <div class="all-clients">
-                 <div  v-for="client in pushData.clients" :key="client._id" class="choosed-client d-flex justify-content-between align-items-center">
-                   <div class="d-flex align-items-center">
-                     <div class="category-logo d-flex justify-content-center align-items-center">V</div>
-                     <div class="category">
-                       <div class="category-name">{{client.name}}</div>
-                       <span class="category-people" v-if="client.category">Category <span style="color:#000; text-transform:capitalize">{{client.category.name}}</span></span>
-                       <span class="category-people" v-else>Category <span style="color:#000; text-transform:capitalize">No category</span></span>
-                     </div>
-                   </div>
+                <div class="all-clients">
+                  <div  v-for="client in pushData.clients" :key="client._id" class="choosed-client d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                      <div class="category-logo d-flex justify-content-center align-items-center">V</div>
+                      <div class="category">
+                        <div class="category-name">{{client.name}}</div>
+                        <span class="category-people" v-if="client.category">Category <span style="color:#000; text-transform:capitalize">{{client.category.name}}</span></span>
+                        <span class="category-people" v-else>Category <span style="color:#000; text-transform:capitalize">No category</span></span>
+                      </div>
+                    </div>
 
 
-                   <img @click="deleteClient(client)" src="../../assets/icons/deleteClient.svg">
-                 </div>
-               </div>
+                    <img @click="deleteClient(client)" src="../../assets/icons/deleteClient.svg">
+                  </div>
+                </div>
 
 
               </div>
 
-<!-------------------------Right Side --------------------->
+              <!-------------------------Right Side --------------------->
 
-              <div class="col-lg-5">
-                  <h3 class="push-title settings">Notification settings</h3>
+              <div class="col-lg-6">
+                <h3 class="push-title settings">Notification settings</h3>
 
                 <div class="radio-toolbar">
                   <div class="d-flex align-items-center mr-4">
@@ -84,29 +84,12 @@
                   </div>
                 </div>
 
-                <!-- By Month  -->
 
-                <div v-show="value === 'month'" >
-                  <div id="months" >
-                    <section>
-                    </section>
-                  </div>
-                  <div class="d-flex justify-content-between">
-                    <div class="d-flex align-items-center mb-4">
-                      <h2 class="selected-day">March 27 - April 12</h2>
-                      <label class="switch d-flex">
-                        <input  type="checkbox">
-                        <span class="slider round"></span>
-                      </label>
-                    </div>
-                    <span class="add-more" @click="addContent">+ Add more</span>
-                  </div>
-                </div>
 
-              <!----- By week-- -->
 
-              <div v-show="value ==='week'" >
-                <div class="week"  >
+                <input v-show="value==='month'"  id="push-date" class="cashback-input" placeholder="Select by month" style="width:100%">
+
+                <div class="week" v-show="value ==='week'" >
                   <div class="days active d-flex justify-content-center align-items-center">MO</div>
                   <div class="days d-flex justify-content-center align-items-center">TU</div>
                   <div class="days d-flex justify-content-center align-items-center">WE</div>
@@ -115,46 +98,31 @@
                   <div class="days d-flex justify-content-center align-items-center">SA</div>
                   <div class="days d-flex justify-content-center align-items-center">SU</div>
                 </div>
-                <div class="d-flex justify-content-between">
-                  <div class="d-flex align-items-center mb-4">
-                    <h2 class="selected-day">Monday</h2>
-                    <label class="switch d-flex">
-                      <input  type="checkbox">
-                      <span class="slider round"></span>
-                    </label>
-                  </div>
-                  <span class="add-more" @click="addContent">+ Add more</span>
+
+
+                <div class="d-flex mb-3">
+                  <select v-model="pushData.hours" class=" form-control long-form-control mr-2  form-control-lg" aria-label=".form-select-lg example">
+                    <option v-for="(hours,index) in working_hours" :key="index" :value="hours">{{hours}}</option>
+                  </select>
+                  <button disabled="true" class=" check cash-btn"><img src="../../assets/icons/enable+.svg"></button>
                 </div>
-              </div>
 
-                <!---------Push Content------->
+                <div class="titles">
+                  <label>Title</label><br>
+                  <input v-model="pushData.title" class="cashback-input"><br>
 
-                <div v-for="(item,index) in push_content" :key="index" >
-                  <div class="d-flex mb-3">
-                    <div style="width:25%" class="mr-3">
-                      <label>Time</label><br>
-                      <select v-model="item.time"  class=" form-control  mr-2  form-control-lg" aria-label=".form-select-lg example">
-                        <option v-for="(hours,index) in working_hours" :key="index" :value="hours">{{hours}}</option>
-                      </select>
-                    </div>
-                    <div class="titles" style="width:85%">
-                      <label>Title</label><br>
-                      <input v-model="item.title" class=" cashback-input">
-                      <img v-show="index!==0" @click="removeContent(index)" class="remove-content" style="width:18px;height:18px;" src="../../assets/icons/xx.svg">
-                    </div>
-
-                  </div>
                   <label>Description</label><br>
-                  <textarea v-model="item.description"  class="general-area"></textarea>
+                  <textarea v-model="pushData.description" class="general-area"></textarea>
                 </div>
+
+
+
               </div>
             </div>
-
             <div class="d-flex">
               <button class="save mr-2" @click.prevent="onSubmit">Save</button>
-              <button class="cancel" @click="cancel">Cancel</button>
+              <button class="cancel">Cancel</button>
             </div>
-
           </form>
         </div>
       </div>
@@ -168,21 +136,13 @@
 import $ from "jquery";
 
 export default {
-  name: "AddPush",
+  name: "EditPush",
   data(){
     return {
       working_hours:[
         '01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00',
         '13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00','00:00',
       ],
-
-      push_content:[
-        {time:'',title: '',description:''},
-      ],
-      days:{
-        monday:'monday',
-        tuesday:''
-      },
       clients:[],
       search_client:'',
       clientCategory:[],
@@ -192,8 +152,9 @@ export default {
         clients:[],
         by_month:'',
         by_week:'',
-
-
+        hours:'',
+        title:'',
+        description:''
       },
     }
   },
@@ -206,27 +167,6 @@ export default {
 
   },
   methods:{
-    addContent(){
-
-    if(this.push_content.length<3){
-      this.push_content.push({time:'',title: '',description:''})
-    }
-    else{
-      this.$warningAlert('Max is 3')
-    }
-    console.log(this.push_content)
-
-    },
-    removeContent(el){
-        this.push_content = this.push_content.filter((item,index)=>{
-          console.log(item)
-          return el!==index
-        })
-
-    },
-    cancel(){
-      $('#add-push').modal("hide")
-    },
     onSubmit(){
       console.log(this.pushData)
       $('#add-push').modal("hide")
@@ -276,12 +216,10 @@ export default {
     this.getCategories()
     this.getClients();
     new this.$lightpick({
+      field: document.getElementById('push-date'),
       format:'',
       autoClose:false,
-      field: document.getElementById('months'),
-      parentEl:'section',
       lang:'en',
-      inline:true,
       onSelect:(date)=>{
         this.pushData.by_month = date.format().toString().slice(0,16)
 
@@ -294,34 +232,19 @@ export default {
 </script>
 
 <style scoped>
-.add-more{
-  color:#616cf5;
-  cursor:pointer;
-
-}
-.remove-content{
-  position: absolute;
-  right: -30px;
-  top: 38px;
-}
-#months{
+#push-date{
   margin-bottom: 20px;
-}
-.selected-day{
-  font-size: 16px;
-  font-weight: normal;
-  margin-right: 20px;
 }
 .cashback-input,.form-control{
   height: 40px;
 }
-
-.titles{
-  position: relative;
-}
 .form-control{
-  width: 100% !important;
-  background-position-x: 85%;
+  background: none;
+}
+
+.cash-btn{
+  height: 40px;
+  width: 40px;
 }
 .radio-toolbar{
   margin-bottom: 20px;

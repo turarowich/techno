@@ -8,7 +8,7 @@
                 <img src="../../assets/icons/xBlack.svg" alt="">
               </span>
           </button>
-          <h3 class="modal-title">Individual push</h3>
+          <h3 class="modal-title">Schedule push</h3>
         </div>
         <div class=" myModal-body">
           <span class="header-description">Configure Unique Push Notifications<br> to send to customers</span>
@@ -32,6 +32,7 @@
             <!--      <p class="empty-page-text">You have no orders yet</p>-->
             <!--    </div>-->
             <AddPush/>
+            <EditPush/>
             <div class="table-content">
               <div class="table-item d-flex align-items-center" >
                 <div  style="width: 3%;"><label class="custom-checkbox"><input  type="checkbox"  ><span class="checkmark"></span></label></div>
@@ -58,7 +59,7 @@
                     </div>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
                       <ul class="list-group " >
-                        <li class="list-group-item">Edit</li>
+                        <li class="list-group-item"  data-toggle="modal" data-target="#edit-push">Edit</li>
                         <li class="list-group-item">Delete</li>
                       </ul>
                     </div>
@@ -79,11 +80,13 @@
 
 <script>
 import AddPush from "@/modals/client/AddPush";
+import EditPush from "./EditPush";
 
 export default {
   name: "Push notification",
   components:{
-    AddPush
+    AddPush,
+    EditPush
   }
 
 

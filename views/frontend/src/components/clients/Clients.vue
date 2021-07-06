@@ -5,7 +5,7 @@
     <div class="d-flex align-items-center">
       <button v-if="check()" class="app-buttons-item adding-btns" data-toggle="modal" data-target="#add-client-category"><span>+ Add category</span></button>
       <button v-if="check()" class="app-buttons-item" data-toggle="modal" data-target="#push-notification "><img src="../../assets/icons/bgNotification.svg"><span>Push notification</span></button>
-      <button v-if="check()" class="app-buttons-item" data-toggle="modal" data-target="#individual-push"><img src="../../assets/icons/send-individual.svg"><span>Individual push</span></button>
+      <button v-if="check()" class="app-buttons-item" data-toggle="modal" data-target="#individual-push"><img src="../../assets/icons/send-individual.svg"><span>Schedule push</span></button>
 
     </div>
     <div class="d-flex align-items-center">
@@ -39,7 +39,7 @@
                           <div class="d-flex align-items-center mr-2">
                             <label>From</label>
                             <div class="calendar d-flex align-items-center">
-                              <input  class="calendar-input"  id="from-date">
+                              <input v-model="from_register_date"  class="calendar-input"  id="from-date">
                               <img src="../../assets/icons/Calendar.svg">
                             </div>
                           </div>
@@ -184,7 +184,7 @@
                   </div>
                </div>
               <div class="d-flex justify-content-end align-items-center">
-                <div @click="resetFilter()" class="reset" :class="addResetClass">Reset all</div>
+                <div @click="resetFilter()" class="reset">Reset all</div>
                 <button class="save" @click.prevent="filterSubmit" type="submit">Apply</button>
               </div>
           </form>
@@ -192,10 +192,18 @@
       </div>
     </div>
   </div>
-  <div class="main-search d-flex align-items-center ">
+  <div class="main-search d-flex align-items-center mb-2 ">
     <img src="../../assets/icons/search-icon.svg">
     <input class="main-input" type="text" placeholder="Search" v-model="search">
   </div>
+    <div>
+      <span class="show-properties"  v-if="f_from_register_date!== '2000-01-01'">Register from{{f_from_register_date}} <img src="../../assets/icons/xBlack.svg"></span>
+      <span class="show-properties" v-if="f_to_register_date!== ''">Register to{{f_to_register_date}} <img src="../../assets/icons/xBlack.svg"></span>
+      <span class="show-properties" v-if="f_category!== ''">Category{{f_category}} <img src="../../assets/icons/xBlack.svg"></span>
+      <span class="show-properties" v-if="f_birthday !== ''">Birthday{{f_birthday}} <img src="../../assets/icons/xBlack.svg"></span>
+    </div>
+
+
   </div>
   <div class="d-flex">
     <div class="client-category-menu" style="width:24%">
@@ -455,13 +463,7 @@ export default {
     showPrev(){
       return this.currentPage > 1;
     },
-    addResetClass: function(){
-      return {
-        red: this.category.length >0 || this.gender_client.length >0 || this.birthday.length>0
-        || this.from_number_purchase.length >0 || this.to_number_purchase.length >0 || this.from_purchase_date !== '2000-01-01'
-        || this.to_purchase_date.length >0 || this.from_register_date !== '2000-01-01' || this.to_register_date.length>0
-      }
-    },
+
 
 
   },
@@ -496,6 +498,7 @@ export default {
     }
     })
   },
+
     resetFilter(){
       this.category = '';
       this.birthday = '';
@@ -505,10 +508,11 @@ export default {
       this.from_register_date='2000-01-01';
       this.to_register_date = '';
       this.from_number_purchase='';
-      this.to_number_purchase=''
+      this.to_number_purchase='';
+      this.filterSubmit()
       document.getElementById('form').reset()
-
     },
+
     filterSubmit(){
         this.f_category = this.category;
         this.f_gender_client = this.gender_client;
@@ -784,7 +788,19 @@ export default {
 </script>
 
 <style scoped>
+.show-properties img{
+  margin-bottom: 2px;
+}
+.show-properties{
+  font-size: 12px;
 
+  display: inline-flex;
+  align-items:center;
+  background: lightgrey;
+  margin-right: 10px;
+  padding:2px 10px;
+  border-radius:5px;
+}
 .total{
   width: 6px;
   height: 6px;
@@ -821,8 +837,8 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.reset.red{
-  color:#E94A4A;
+.reset{
+  color:#E94A4A !important;
 }
 .general-dropdown.settings-dropdown{
   transform: translate3d(-166px, -19px, 0px) !important;

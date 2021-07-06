@@ -119,7 +119,7 @@ export default {
   name: "Push notification",
   data(){
     return{
-      clients:[],
+      clientList:[],
       search_client:'',
       clientCategory:[],
       search_category:'',
@@ -128,11 +128,12 @@ export default {
       search_news:'',
       filterClient:'',
       newData:{
-        client:[],
+        clients:[],
         news:'',
         title:'',
         description:'',
-        last_pruchase:''
+        sendToAll:false
+
 
       }
     }
@@ -140,7 +141,7 @@ export default {
   computed:{
     filteredClients(){
 
-      return this.clients
+      return this.clientList
           .filter((item)=>{
             return item.name.toLowerCase().includes(this.search_client.toLowerCase())
           })
@@ -168,13 +169,13 @@ export default {
   },
   methods:{
     selectedNews(selected){
-      this.newData.news = selected
+      this.newData.news = selected._id
       this.search_news = ''
     },
     getClients(){
       this.axios.get(this.url('getClients'))
           .then((res)=>{
-            this.clients = res.data.objects;
+            this.clientList= res.data.objects;
           })
     },
     getCategories(){
@@ -185,7 +186,7 @@ export default {
           })
     },
     toggleSelect(){
-      this.clients.forEach((client)=>{
+      this.clientList.forEach((client)=>{
         if(this.$refs[`select${client._id}`]!==undefined && this.$refs[`select${client._id}`] !== null){
           if(this.selectAll === false){
             this.$refs[`select${client._id}`].checked = true
@@ -204,7 +205,7 @@ export default {
 
     },
     checkMainSelect() {
-      if(this.clients.every(this.checkAll)){
+      if(this.clientList.every(this.checkAll)){
         this.selectAll = true
       }
       else{
@@ -220,14 +221,22 @@ export default {
           })
     },
     onSubmit(){
-      this.clients.forEach((client)=>{
+      const new_data = this.newData;
+      console.log(new_data)
+      this.clientList.forEach((client)=>{
         if(this.$refs[`select${client._id}`]!==undefined && this.$refs[`select${client._id}`] !== null){
           if(this.$refs[`select${client._id}`].checked === true){
-            this.newData.client.push(client._id)
+            new_data.clients.push(client._id)
           }
         }
       })
-      console.log(this.newData)
+      if(this.selectAll === true){
+          new_data.sendToAll = true
+      }
+      this.axios.post(this.url('sendPushNotification'),new_data)
+      .then((res)=>{
+        console.log(res, 'Success push')
+      })
       $('#push-notification').modal("hide")
     },
 

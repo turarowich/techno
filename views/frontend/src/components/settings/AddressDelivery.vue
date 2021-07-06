@@ -139,6 +139,12 @@ export default {
           closeButton:'close-btn'
 
         },
+        showClass: {
+          popup: 'animate__animated animate__slideInDown'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp'
+        }
 
       }).then((result) => {
         if (result.isConfirmed) {
