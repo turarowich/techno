@@ -4,7 +4,8 @@ function verifyToken(req, res, next) {
     
     // Header names in Express are auto-converted to lowercase
     let token = req.headers['x-access-token'] || req.headers['authorization'];
-    let validWithoutToken = ['/getProducts', '/getNews']
+    let validWithoutToken = ['/getProducts', '/getNews', '/getCategories?type=product', '/getCategories']
+    console.log(req.url)
     if (!token){
         if (req.headers['access-place'] && validWithoutToken.includes(req.url)){
             
