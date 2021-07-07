@@ -14,7 +14,7 @@
      <div  style="width: 16%;">{{promocode.code}}</div>
      <div  style="width: 16%;">{{promocode.endDate.slice(0,10) }}</div>
      <div  style="width: 13%;" >
-       <div class="history-btn" data-toggle="modal" data-target="#history-promocode">
+       <div @click="getHistory(promocode.usedBy)" class="history-btn" data-toggle="modal" data-target="#history-promocode">
          <img src="../../assets/icons/History.svg">
        </div>
      </div>
@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import $ from 'jquery';
 export default {
   name: "PromoCodeItem",
   computed:{
@@ -47,6 +48,33 @@ export default {
     this.$store.dispatch("Promocode/setPromocodeAPI",{axios:this.axios,url:this.url('getPromocodes')});
   },
   methods:{
+    getHistory(list){
+      let that = this;
+      let content = '';
+      list.forEach(function (item){
+        let name = "Guest";
+        if(item.user){
+          name = item.name;
+        }
+        let text = `
+        <div class="table-item d-flex align-items-center">
+          <div  class="d-flex align-items-center"  style="width: 50%;">
+            <span class="mr-3">1</span>
+            ${name}
+          </div>
+          <div style="width:40%">
+            ${that.$moment(item.date).format('YYYY-MM-DD')}
+            </div>
+          <div style="width:10%">
+            ${item.quantity}
+          </div>
+        </div>
+      `
+        content+=text;
+      })
+
+      $('.promoHistoryContent').html(content);
+    },
     getEditPromocode(id){
       let that = this;
       this.axios.get(this.url('getPromocode'),{

@@ -83,7 +83,7 @@ export default {
 
   methods: {
     statusChange(order,status){
-        console.log(status,"statusChange");
+        console.log(status,"statusChange",order);
         this.axios.put(this.url('updateOrder',order._id), {status: status}).then(()=>{
             order.status = status;
         }).catch((error)=>{
@@ -93,7 +93,7 @@ export default {
         });
         //send push
         let pushable = ['Done','Cancelled','In Progress']
-        if(pushable.includes(status)){
+        if(pushable.includes(status) && order.client){
           this.axios.post(this.url('updateOrderWeb'), {status: status,order:order._id,code:order.code,client:order.client._id}).then(()=>{
           }).catch((error)=>{
             if(error.response && error.response.data){

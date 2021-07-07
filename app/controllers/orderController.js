@@ -141,7 +141,50 @@ async function calcCashback(products_full_data,cashback_model) {
     }
     return cashback_from_order;
 }
+async function checkAndUpdatePromo(promocode=null,client=null) {
+    if(promocode){
+        // promocode.usedBy = [];
+        // promocode.save();
+        // console.log(promocode);
+        // return;
 
+        //check uses
+        if(promocode.already_used >= promocode.number_of_uses){
+            return res.status(400).send("Promocode has expired");
+        }
+        promocode.already_used +=1;
+        let usedBy = promocode.usedBy;
+        if(client){
+            console.log('YASSS CLIENT');
+            let exists = usedBy.find(used => used.user == client._id.toString());
+            if(!exists){
+                console.log("NEW USER");
+                usedBy.push({
+                    user:client._id,
+                    quantity:1,
+                    name:client.name,
+                })
+            }else{
+                console.log("OLD USER");
+                exists.quantity +=1;
+            }
+        }else{
+            console.log("else");
+            let exists = usedBy.find(used => used.user == null);
+            if(!exists){
+                console.log("NEW null");
+                usedBy.push({
+                    user:null,
+                    quantity:1,
+                })
+            }else{
+                console.log("OLD null");
+                exists.quantity +=1;
+            }
+        }
+        promocode.save();
+    }
+}
 class OrderController{
     
     getOrder = async function (req, res) {
@@ -243,7 +286,9 @@ class OrderController{
                 discounts,           // list of discounts
             );
             let total = (parseFloat(result_object.discountedTotal) + parseFloat(deliveryPrice) - parseFloat(req.fields.points || 0)).toFixed(2);
-            console.log(total,"ptttttttttttttttttttttttttttttttttttttt",result_object.discountedTotal,deliveryPrice,req.fields.points);
+
+            //update promocode
+            await checkAndUpdatePromo(promocode,client);
 
             let order = await new Order({
                  // client: client._id,
@@ -372,6 +417,9 @@ class OrderController{
             var products = req.fields.products
             // req.fields.products = null  ?
             let order = await Order.findOneAndUpdate(query, req.fields)
+            let client = await Client.findById(order.client);
+            let promocode = await PromocodeModel.findById(req.fields.promoCode);
+            await checkAndUpdatePromo(promocode,client);
 
             if(products && products.length){
                 order.products = []
@@ -399,9 +447,8 @@ class OrderController{
                 await order.save()
             }
             //Cashback
-            let client = await Client.findById(order.client);
+
             let updated_order = await Order.findById(order._id);
-            console.log(updated_order.status,"updated_order.status>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
             if(updated_order.status === "Done" && client){
                 ///////////////////////////////////////////////////////////////////////////////////////////////////////
                 let cashback_model = db.model("Cashback");
