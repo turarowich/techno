@@ -180,6 +180,8 @@ export const OrdersModule = {
                         item.current_price =parseFloat(sum).toFixed(2);
                     }
                 }
+
+
             })
         },
         unsetPromocode(state,client_status_discount){

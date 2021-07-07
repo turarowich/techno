@@ -5,21 +5,22 @@
     <img src="../assets/icons/menu.svg">
   </div>
     <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">
-      <div v-if="catalog_settings.logo && catalog_settings.logo !==''"  v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.logo + ')' }" class="catalog_logo">
-
+      <div v-if="catalog_settings.logo && catalog_settings.logo !==''"  v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.logo + ')' }" class="catalog_logo 2Q">
       </div>
       <span v-else>
         {{catalog_settings.name || 'Company Name'}}
       </span>
     </router-link>
 
-
-
-  <div class="menu-wrapper">
+<!--    <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">{{catalog_settings.name || 'Company Name'}} </router-link>-->
+    <div class="menu-wrapper">
       <div class="mobile-header d-flex justify-content-between align-items-center" >
-        <div class="d-flex align-items-center" @click="removeActive">
-          <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar">
-            <div v-if="catalog_settings.logo && catalog_settings.logo !==''"  v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.logo + ')' }" class="catalog_logo">
+        <div class="d-flex align-items-center">
+<!--          <div class="table-img">-->
+<!--            <img  src="../assets/icons/no-catalog.svg">-->
+<!--          </div>-->
+          <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">
+            <div v-if="catalog_settings.logo && catalog_settings.logo !==''"  v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.logo + ')' }" class="catalog_logo Q3">
 
             </div>
             <span v-else>
@@ -34,13 +35,13 @@
       <ul class="client-menu">
         <li @click="removeActive" class="client-list"><router-link class="client-link" :to="`/${currentCompanyCatalog}/about`"><img src="../assets/clients/info.svg"/>About us</router-link></li>
 
-        <div class="list-span" v-if="!catalog_settings.catalogMode">
-          <li @click="removeActive" v-if="!isLogged" class="client-list "><router-link class="client-link" :to="`/${currentCompanyCatalog}/signin`"><img  src="../assets/clients/Profile.svg"/>Login</router-link></li>
-          <li @click="removeActive"  v-else class="client-list"><img src="../assets/clients/Profile.svg"/><router-link class="client-link" :to="`/${currentCompanyCatalog}/client-account`">My Account</router-link></li>
-        </div>
+        <span v-if="!catalog_settings.catalogMode && !catalog_settings.foodMode">
+          <li @click="removeActive" v-if="!isLogged" class="client-list "><router-link class="client-link" :to="`/${currentCompanyCatalog}/signin`"><img class="mr-3" src="../assets/clients/Profile.svg"/>Login</router-link></li>
+          <li  v-else class="client-list"><img src="../assets/clients/Profile.svg"/><router-link class="client-link" :to="`/${currentCompanyCatalog}/client-account`">My Account</router-link></li>
+        </span>
 
 
-        <li @click="removeActive" class="client-list mobile-basket">
+        <li v-if="!catalog_settings.catalogMode"  @click="removeActive" class="client-list mobile-basket">
           <router-link   class="client-link  d-inline-flex align-items-center" :to="`/${currentCompanyCatalog}/basket`" >
             <img src="../assets/clients/Buy.svg"/>Basket
             <div class="bg-not d-flex align-items-center">
@@ -100,12 +101,7 @@
       </div>
     </div>
 
-  <router-link  class="basket-menu"  :to="`/${currentCompanyCatalog}/basket`">
-    <img src="../assets/clients/Buy.svg"/>
-    <div class="bg-not d-flex align-items-center">
-      <span class="basket-not" v-if="countOrders > 0">{{countOrders}}</span>
-    </div>
-  </router-link>
+    <img v-if="!catalog_settings.catalogMode"  @click="$router.push(`/${currentCompanyCatalog}/basket`)" class="mobile-basket" src="../assets/clients/Buy.svg"/>
 
 
 
@@ -205,11 +201,9 @@ export default {
     },
     mouser(){
       $('.basket-hover').css('visibility', 'visible');
-      console.log('DADASASASASS');
     },
     mouser_leave(){
       $('.basket-hover').css('visibility', 'hidden');
-      console.log('DADASASASASS');
     }
   },
   created() {

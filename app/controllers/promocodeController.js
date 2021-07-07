@@ -46,7 +46,7 @@ class PromocodeController{
             'msg': 'Sending promocodes'
         }
         try {
-            let promocodes = await Promocode.find()
+            let promocodes = await Promocode.find();
             result['objects'] = promocodes
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
@@ -235,6 +235,10 @@ class PromocodeController{
             let promocode = await Promocode.findOne({ "code": search });
             console.log(promocode);
             if(promocode){
+                if(promocode.already_used >= promocode.number_of_uses){
+                    result['msg'] = validate[lang]['promo_already_used']
+                    break promocode
+                }
                 var start = new Date(promocode.startDate);
                 var end = new Date(promocode.endDate);
                 if(date){

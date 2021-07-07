@@ -52,6 +52,11 @@ const promocodeSchema = new Schema({
         type: Number,
         required: false,
     },
+    already_used: {
+        type: Number,
+        required: false,
+        default: 0,
+    },
     selected_type: {
         type: String,
         required: false,
@@ -62,8 +67,26 @@ const promocodeSchema = new Schema({
         required: false,
     },
     usedBy: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Client'
+        user:{
+            type: Schema.Types.ObjectId,
+            ref: 'Client',
+            required: false,
+        },
+        quantity:{
+            type:Number,
+            default:0,
+            required: false,
+        },
+        name:{
+            type:String,
+            default:'',
+            required: false,
+        },
+        date:{
+            type: Date,
+            required: true,
+            default: Date.now,
+        },
     }],
     startDate: {
         type: Date,

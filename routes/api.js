@@ -15,7 +15,7 @@ var employeeController = require('../app/controllers/employeeController');
 var analyticsController = require('../app/controllers/analyticsController');
 var orderStatusController = require('../app/controllers/orderStatusController');
 var logController = require('../app/controllers/logController');
-
+var catalogController = require('../app/controllers/catalogController');
 var multer = require('multer');
 var upload = multer({ dest: '../public/product/' });
 var verifyAccess = require('../services/verifyAccess');
@@ -34,7 +34,12 @@ module.exports = function (app, io) {
     app.post('/getNewMessages', clientController.getNewMessages);
     app.post('/addPoints', verifyAccess, clientController.addPoints);
     app.post('/deductPoints', verifyAccess, clientController.deductPoints);
-    
+    //Online menu
+    app.post('/saveTempoOrder',  catalogController.saveTempoOrder);
+    app.get('/getTempoOrder', catalogController.getTempoOrder);
+    app.post('/updateTempoOrder', catalogController.updateTempoOrder);
+    app.post('/updateProductTempoOrder', catalogController.updateProductTempoOrder);
+    app.post('/removeProductTempoOrder', catalogController.removeProductTempoOrder);
     // Products url
     app.get('/getProduct/:product', productController.getProduct);
     app.get('/getProducts', productController.getProducts);

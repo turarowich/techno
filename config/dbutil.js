@@ -41,6 +41,7 @@ const initClientDbConnection = () => {
     require("../app/models/employee.js")
     require("../app/models/log.js")
     require("../app/models/schedulePush.js")
+    require("../app/models/tempoOrder.js")
     return db;
 };
 

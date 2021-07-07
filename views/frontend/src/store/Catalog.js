@@ -6,6 +6,7 @@ export const CatalogModule = {
         catalog_settings: {
             name:'',
             catalogMode:'',
+            foodMode:'',
             email:'',
             banner:'',
             logo:'',

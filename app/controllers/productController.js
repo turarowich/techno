@@ -444,9 +444,27 @@ class ProductController{
             'status': 200,
             'msg': 'Sending product'
         }
+
+        console.log(req.query);
+
         try {
             let product = await Product.find( { "name": {$regex: search} } )
             result['objects'] = product
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.json(result);
+    };
+    searchProductWeb = async function (req, res) {
+        let db = useDB(req.query.db)
+        let Product = db.model("Product");
+        let search = req.query.search;
+        let result = {
+            'status': 200,
+            'msg': 'Sending products'
+        }
+        try {
+            result['objects'] = await Product.find( { "name": {$regex: search} } );
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }

@@ -34,7 +34,10 @@ module.exports = function(app, passport){
     app.get('/getCatalogSettings', catalogController.getCatalogSettings);
     app.get('/getCatalog', catalogController.getCatalog);
     app.get('/getClientProducts', catalogController.getClientProducts);
+
+
     //same as in api
+    app.get('/searchProductWeb', productController.searchProductWeb);
     app.get('/getProductWeb/:product', productController.getProduct);
     app.get('/getClientCategories', catalogController.getClientCategories);
 

@@ -3,19 +3,20 @@ var config = require('../config/config');
 
 function verifyTokenSocket(socket, next) {
     // Header names in Express are auto-converted to lowercase
+    // console.log(socket.id,"verifyTokenSocket",token,'o');
     var token = socket.handshake.headers.token
 
     if (!token){
         // return res.status(403).send({ auth: false, message: 'No token provided.' });
+        // console.log(socket.id,"No verifyTokenSocket");
         next();
     }   
 
     jwt.verify(token, config.secret_key, function (err, decoded) {
         if (err){
+            // console.log(socket.id,`${err} verifyTokenSocket`);
             next();
         }
-        
-
         socket.handshake.headers.user = decoded.user;
         socket.handshake.headers.db = "loygift" + decoded.id;
         if (decoded.type && decoded.type == "employee") {
