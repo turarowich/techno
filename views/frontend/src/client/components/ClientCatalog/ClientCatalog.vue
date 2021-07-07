@@ -1,4 +1,4 @@
-<template>
+catalog<template>
 <div class="row catalog">
   <div id="categories" class="pt-3 col-lg-3 col-md-4">
     <div class="catalog-left">
@@ -101,15 +101,18 @@ name: "Catalog",
   computed:{
     filteredList: function(){
       return  this.catalog
-          .filter(product => {
-            if(this.filtered!=='all'){
-              return product.category===this.filtered;
-            }else{
-              return product;
-            }
-          })
+        .filter(product => {
+          if(this.filtered!=='all'){
+            return product.category===this.filtered;
+          }else{
+            return product;
+          }
+        })
         .filter((product)=>{
           return product.price >= this.from && product.price <= this.to;
+        })
+        .filter((product)=>{
+          return product.quantity > 0;
         })
     },
     currentCompanyCatalog() {

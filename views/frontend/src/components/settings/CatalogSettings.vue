@@ -123,23 +123,23 @@
 
      <label>Description</label>
      <textarea v-model="description" class="general-area definition-area margin-30"></textarea>
+     <!-- //dont remove-->
+     <!--     <h3 class="catalog-sub-title mb-1">Accent colors</h3>-->
+<!--     <p class="catalog-description margin-20">You can supply any color</p>-->
 
-     <h3 class="catalog-sub-title mb-1">Accent colors</h3>
-     <p class="catalog-description margin-20">You can supply any color</p>
+<!--     <div style="position: relative" class="color-box margin-50 d-flex justify-content-between align-items-center">-->
+<!--       <div style="width:100%;" class="d-flex align-items-center">-->
+<!--         <div v-bind:style="{ background: color}" v-on:click="seen = !seen" class="color-picker mr-2"></div>-->
+<!--         <input disabled v-model="color" class="color-input pr-2" placeholder="#616cf5">-->
 
-     <div style="position: relative" class="color-box margin-50 d-flex justify-content-between align-items-center">
-       <div style="width:100%;" class="d-flex align-items-center">
-         <div v-bind:style="{ background: color}" v-on:click="seen = !seen" class="color-picker mr-2"></div>
-         <input disabled v-model="color" class="color-input pr-2" placeholder="#616cf5">
+<!--         <div v-if="seen" class="picker_conteiner" style="position: absolute;right: 0;">-->
+<!--           <span v-on:click="seen = !seen" class="picker_close_btn"><img src="../../assets/icons/addBtn.svg"></span>-->
+<!--           <Picker v-on:sendColor="onColorPick"/>-->
+<!--         </div>-->
 
-         <div v-if="seen" class="picker_conteiner" style="position: absolute;right: 0;">
-           <span v-on:click="seen = !seen" class="picker_close_btn"><img src="../../assets/icons/addBtn.svg"></span>
-           <Picker v-on:sendColor="onColorPick"/>
-         </div>
-
-       </div>
-       <span @click="color='#616cf5'" style="color:#616cf5;cursor: pointer">Clear</span>
-     </div>
+<!--       </div>-->
+<!--       <span @click="color='#616cf5'" style="color:#616cf5;cursor: pointer">Clear</span>-->
+<!--     </div>-->
 
      <h3 class="catalog-sub-title margin-20">Social networks</h3>
      <div class="margin-50">
@@ -156,12 +156,12 @@
 
 <script>
 
-import Picker from "@/components/settings/Picker";
+// import Picker from "@/components/settings/Picker";
 
 export default {
   name: "CatalogSettings",
   components:{
-    Picker
+    // Picker
   },
   data(){
     return{
