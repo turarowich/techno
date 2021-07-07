@@ -36,15 +36,18 @@ const schedulePushSchema = new Schema({
         push:[{
             time: {
                 type: String,
-                required: true
+                required: false,
+                default: ""
             },
             title: {
                 type: String,
-                required: true
+                required: false,
+                default: ""
             },
             desc: {
                 type: String,
-                required: true
+                required: false,
+                default: ""
             },
         }],
     },
@@ -57,15 +60,18 @@ const schedulePushSchema = new Schema({
         push: [{
             time: {
                 type: String,
-                required: true
+                required: false,
+                default: ""
             },
             title: {
                 type: String,
-                required: true
+                required: false,
+                default: ""
             },
             desc: {
                 type: String,
-                required: true
+                required: false,
+                default: ""
             },
         }],
     },
@@ -78,15 +84,18 @@ const schedulePushSchema = new Schema({
         push: [{
             time: {
                 type: String,
-                required: true
+                required: false,
+                default: ""
             },
             title: {
                 type: String,
-                required: true
+                required: false,
+                default: ""
             },
             desc: {
                 type: String,
-                required: true
+                required: false,
+                default: ""
             },
         }],
     },
@@ -99,15 +108,18 @@ const schedulePushSchema = new Schema({
         push: [{
             time: {
                 type: String,
-                required: true
+                required: false,
+                default: ""
             },
             title: {
                 type: String,
-                required: true
+                required: false,
+                default: ""
             },
             desc: {
                 type: String,
-                required: true
+                required: false,
+                default: ""
             },
         }],
     },
@@ -120,36 +132,42 @@ const schedulePushSchema = new Schema({
         push: [{
             time: {
                 type: String,
-                required: true
+                required: false,
+                default: ""
             },
             title: {
                 type: String,
-                required: true
+                required: false,
+                default: ""
             },
             desc: {
                 type: String,
-                required: true
+                required: false,
+                default: ""
             },
         }],
     },
     saturday: {
         isActive: {
             type: Boolean,
-            required: true,
+            required: false,
             default: false
         },
         push: [{
             time: {
                 type: String,
-                required: true
+                required: false,
+                default: ""
             },
             title: {
                 type: String,
-                required: true
+                required: false,
+                default: ""
             },
             desc: {
                 type: String,
-                required: true
+                required: false,
+                default: ""
             },
         }],
     },
@@ -162,15 +180,18 @@ const schedulePushSchema = new Schema({
         push: [{
             time: {
                 type: String,
-                required: true
+                required: false,
+                default: ""
             },
             title: {
                 type: String,
-                required: true
+                required: true,
+                default: ""
             },
             desc: {
                 type: String,
-                required: true
+                required: true,
+                default: ""
             },
         }],
     },
