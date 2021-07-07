@@ -4,10 +4,7 @@ var validate = require('../../config/messages');
 const fs = require('fs');
 const moment = require('moment');
 const { connect } = require('mongodb');
-<<<<<<< HEAD
-const { title } = require('process');
 const Analytics = require('./analyticsController');
-=======
 function compareDates(dateStart_,dateEnd_){
     if(!dateStart_ || !dateEnd_){
         return false;
@@ -94,7 +91,6 @@ async function products_with_discounts(products=[],Product,promocode=null,client
         discountsTotal:discountsTotal.toFixed(2),
     }
 }
->>>>>>> c69b5acc0a532a739f5520652164e561daf9aff2
 
 async function calcCashback(products_full_data,cashback_model) {
     //Cashback
@@ -305,22 +301,12 @@ class OrderController{
                 delivery: req.fields.delivery,
                 deliveryType: req.fields.deliveryType,
                 notes: req.fields.notes,
-<<<<<<< HEAD
-                points: req.fields.points,
-                code: randomNumber(100000, 10000000),
-
-                deliveryPrice: req.fields.deliveryPrice,
-                totalDiscount: req.fields.totalDiscount,
-                productsPrice: req.fields.productsPrice,
-                totalPrice: req.fields.totalPrice,
-=======
                 points: req.fields.points || 0,
-                code: randomNumber(1000, 10000),
+                code: randomNumber(100000, 10000000),
                 deliveryPrice: deliveryPrice,
                 totalDiscount: result_object.discountsTotal,
                 productsPrice: result_object.nonDiscountedTotal,
                 totalPrice: total,
->>>>>>> c69b5acc0a532a739f5520652164e561daf9aff2
                 branch: req.fields.branch,
                 products:[],
             });
@@ -406,15 +392,12 @@ class OrderController{
         let Order = db.model("Order");
         let Product = db.model("Product");
         let OrderProduct = db.model("OrderProduct");
-<<<<<<< HEAD
         let Log = db.model("Log");
-=======
         let Discount = db.model("Discount");
         let PromocodeModel = db.model("Promocode");
         let Client = db.model("Client");
         let ClientBonusHistory = db.model("clientBonusHistory");
 
->>>>>>> c69b5acc0a532a739f5520652164e561daf9aff2
         if (req.userType == "employee" && Object.keys(req.fields).length == 1 && "status" in req.fields){
             let checkResult = await checkAccess(req.userID, { access: "canChangeOrderStatus" }, db, res)
             if (checkResult) {
@@ -473,7 +456,6 @@ class OrderController{
                 }
                 await order.save()
             }
-<<<<<<< HEAD
             let status = req.fields.status.replace(/ /g, '').toLowerCase()
             var logVal = {
                 type: "order_updated",
@@ -490,7 +472,6 @@ class OrderController{
             }
             await new Log(logVal).save()
             await Analytics.updateAnalytics(req, order.createdAt, true)
-=======
             //Cashback
 
             let updated_order = await Order.findById(order._id);
@@ -591,7 +572,6 @@ class OrderController{
 
                 await client.save({ validateBeforeSave: false });
             }
->>>>>>> c69b5acc0a532a739f5520652164e561daf9aff2
             result['object'] = await order.populate('client').populate('products').execPopulate()
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
