@@ -498,7 +498,6 @@ export default {
     }
     })
   },
-
     resetFilter(){
       this.category = '';
       this.birthday = '';
@@ -512,7 +511,6 @@ export default {
       this.filterSubmit()
       document.getElementById('form').reset()
     },
-
     filterSubmit(){
         this.f_category = this.category;
         this.f_gender_client = this.gender_client;
@@ -788,6 +786,11 @@ export default {
 </script>
 
 <style scoped>
+.client .modal-backdrop {
+    width:100%;
+    left: 250px;
+
+}
 .show-properties img{
   margin-bottom: 2px;
 }

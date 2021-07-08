@@ -18,7 +18,7 @@
                 <div class="d-flex client-all justify-content-between">
                   <h4 class="push-title">Clients</h4>
                   <div class="d-flex align-items-center">
-                    <div class="table-head "><label class="custom-checkbox mr-2 "><input type="checkbox"><span class="checkmark"></span></label></div>
+                    <div class="table-head "><label class="custom-checkbox mr-2 "><input v-model="week.sendToAll" type="checkbox"><span class="checkmark"></span></label></div>
                     <span class="send-all">Send to all</span>
                   </div>
                 </div>
@@ -44,33 +44,24 @@
 
                   </div>
                 </div>
-
-
-
                 <div class="all-clients">
-                  <div  v-for="client in pushData.clients" :key="client._id" class="choosed-client d-flex justify-content-between align-items-center">
+                  <div  v-for="client in selectedClients" :key="client._id" class="choosed-client d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
                       <div class="category-logo d-flex justify-content-center align-items-center">V</div>
                       <div class="category">
                         <div class="category-name">{{client.name}}</div>
                         <span class="category-people" v-if="client.category">Category <span style="color:#000; text-transform:capitalize">{{client.category.name}}</span></span>
-                        <span class="category-people" v-else>Category <span style="color:#000; text-transform:capitalize">No category</span></span>
                       </div>
                     </div>
-
-
                     <img @click="deleteClient(client)" src="../../assets/icons/deleteClient.svg">
                   </div>
                 </div>
-
-
               </div>
-
               <!-------------------------Right Side --------------------->
-
               <div class="col-lg-6">
                 <h3 class="push-title settings">Notification settings</h3>
-
+                <label>Push name</label>
+                <input type="text"  v-model="week.title"  name="week" class="cashback-input w-100 mb-3" placeholder="Please set push name">
                 <div class="radio-toolbar">
                   <div class="d-flex align-items-center mr-4">
                     <input type="radio" id="radioWeek" v-model="value" value="week"  name="week"  >
@@ -84,45 +75,77 @@
                   </div>
                 </div>
 
+                <!-- By Month  -->
 
-
-
-                <input v-show="value==='month'"  id="push-date" class="cashback-input" placeholder="Select by month" style="width:100%">
-
-                <div class="week" v-show="value ==='week'" >
-                  <div class="days active d-flex justify-content-center align-items-center">MO</div>
-                  <div class="days d-flex justify-content-center align-items-center">TU</div>
-                  <div class="days d-flex justify-content-center align-items-center">WE</div>
-                  <div class="days d-flex justify-content-center align-items-center">TH</div>
-                  <div class="days d-flex justify-content-center align-items-center">FR</div>
-                  <div class="days d-flex justify-content-center align-items-center">SA</div>
-                  <div class="days d-flex justify-content-center align-items-center">SU</div>
+                <div v-show="value === 'month'" >
+                  <div id="months" >
+                    <section>
+                    </section>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <div class="d-flex align-items-center mb-4">
+                      <h2 class="selected-day">March 27 - April 12</h2>
+                      <label class="switch d-flex">
+                        <input  type="checkbox">
+                        <span class="slider round"></span>
+                      </label>
+                    </div>
+                    <span class="add-more" @click="addContent">+ Add more</span>
+                  </div>
                 </div>
 
+                <!----- By week-- -->
 
-                <div class="d-flex mb-3">
-                  <select v-model="pushData.hours" class=" form-control long-form-control mr-2  form-control-lg" aria-label=".form-select-lg example">
-                    <option v-for="(hours,index) in working_hours" :key="index" :value="hours">{{hours}}</option>
-                  </select>
-                  <button disabled="true" class=" check cash-btn"><img src="../../assets/icons/enable+.svg"></button>
+                <div v-show="value ==='week'" >
+                  <div class="week"  >
+                    <div  @click="setDay('monday')" :class="{is_active: selectedDay.name === 'monday',active: week.monday.isActive }"  class="days d-flex justify-content-center align-items-center">MO</div>
+                    <div  @click="setDay('tuesday')" :class="{is_active: selectedDay.name === 'tuesday',active: week.tuesday.isActive }"  class="days d-flex justify-content-center align-items-center">TU</div>
+                    <div  @click="setDay('wednesday')" :class="{is_active: selectedDay.name === 'wednesday',active: week.wednesday.isActive}"  class="days d-flex justify-content-center align-items-center">WE</div>
+                    <div  @click="setDay('thirsday')" :class="{is_active: selectedDay.name === 'thirsday',active: week.thirsday.isActive}"  class="days d-flex justify-content-center align-items-center">TH</div>
+                    <div  @click="setDay('friday')" :class="{is_active: selectedDay.name === 'friday',active: week.friday.isActive}"  class="days d-flex justify-content-center align-items-center">FR</div>
+                    <div  @click="setDay('saturday')" :class="{is_active: selectedDay.name === 'saturday',active: week.saturday.isActive}"  class="days d-flex justify-content-center align-items-center">SA</div>
+                    <div  @click="setDay('sunday')" :class="{is_active: selectedDay.name === 'sunday',active: week.sunday.isActive}"  class="days d-flex justify-content-center align-items-center">SU</div>
+                  </div>
+                  <div class="d-flex align-items-center mb-4 justify-content-between">
+                    <div class="d-flex align-items-center ">
+                      <label class="switch d-flex ">
+                        <input v-model="currentPush.isActive" type="checkbox">
+                        <span class="slider round"></span>
+                      </label>
+                      <h2 class="selected-day"></h2>
+                    </div>
+                    <span class="add-more" @click="addContent">+ Add more</span>
+                  </div>
                 </div>
 
-                <div class="titles">
-                  <label>Title</label><br>
-                  <input v-model="pushData.title" class="cashback-input"><br>
+                <!---------Push Content------->
 
-                  <label>Description</label><br>
-                  <textarea v-model="pushData.description" class="general-area"></textarea>
+                <div v-for="(item,index) in currentPush" :key="index" >
+                  <div class="d-flex mb-3">
+                    <div style="width:25%" class="mr-3">
+                      <label>Time</label><br>
+                      <select v-model="item.time"  class=" form-control  mr-2  form-control-lg" aria-label=".form-select-lg example">
+                        <option v-for="(hours,index) in working_hours" :key="index" :value="hours">{{hours}}</option>
+                      </select>
+                    </div>
+                    <div class="titles" style="width:85%">
+                      <label>Title</label><br>
+                      <input v-model="item.title" class=" cashback-input">
+                      <img v-show="index!==0" @click="removeContent(index)" class="remove-content" style="width:18px;height:18px;" src="../../assets/icons/xx.svg">
+                    </div>
+
+                  </div>
+                  <label >Description</label><br>
+                  <textarea v-model="item.desc"  class="general-area"></textarea>
                 </div>
-
-
-
               </div>
             </div>
+
             <div class="d-flex">
               <button class="save mr-2" @click.prevent="onSubmit">Save</button>
-              <button class="cancel">Cancel</button>
+              <button class="cancel" @click.prevent="cancel">Cancel</button>
             </div>
+
           </form>
         </div>
       </div>
@@ -136,26 +159,43 @@
 import $ from "jquery";
 
 export default {
-  name: "EditPush",
+  name: "AddPush",
+  props:['getSchedulePushes','edit_push'],
   data(){
     return {
       working_hours:[
         '01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00',
         '13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00','00:00',
       ],
-      clients:[],
+
+
+      selectedDay:{isActive:false, push:[{time:'',title: '',desc:''}],name:'Select day'},
+
       search_client:'',
       clientCategory:[],
-      value:'week',
-      pushData:{
-        name:'',
+      currentPush:{
+        isActive:false,
         clients:[],
-        by_month:'',
-        by_week:'',
-        hours:'',
-        title:'',
-        description:''
+        tuesday:'',
+
       },
+      push_content:'',
+      value:'week',
+      selectedClients:[],
+      turnOnDay:false,
+      week:{
+        monday: {isActive:false, push:[{time:'',title: '',desc:''}],name:'monday'},
+        tuesday:{isActive:false, push:[{time:'',title: '',desc:''}],name:'tuesday'},
+        wednesday:{isActive:false, push:[{time:'',title: '',desc:''}],name:'wednesday'},
+        thirsday:{isActive:false, push:[{time:'',title: '',desc:''}],name:'thirsday'},
+        friday:{isActive:false, push:[{time:'',title: '',desc:''}],name:'friday'},
+        saturday: {isActive:false, push:[{time:'',title: '',desc:''}],name:'saturday'},
+        sunday: {isActive:false, push:[{time:'',title: '',desc:''}],name:'sunday'},
+        sendToAll:false,
+        clients:[],
+        title: "",
+      }
+
     }
   },
   computed:{
@@ -165,17 +205,55 @@ export default {
       })
     },
 
+
+
   },
   methods:{
     onSubmit(){
-      console.log(this.pushData)
-      $('#add-push').modal("hide")
+      this.axios.post(this.url('addSchedulePush'),this.week)
+          .then((res)=>{
+            console.log(res, "sucesss")
+            this.getSchedulePushes()
+            $('#add-push').modal("hide");
+          })
+          .catch(()=>{
+            console.log(this.week)
+          })
+
+    },
+    setDay(day){
+      this.selectedDay = day;
+      for(let obj in this.week){
+        if(obj === day){
+          this.selectedDay = this.week[day]
+
+        }
+      }
+    },
+    addContent(){
+      if(this.selectedDay.push.length<3){
+        this.selectedDay.push.push({time:'',title: '',desc:''})
+      }
+      else{
+        this.$warningAlert('Max is 3')
+      }
+
+    },
+    removeContent(el){
+      this.selectedDay.push = this.selectedDay.push.filter((item,index)=>{
+        console.log(item)
+        return el!==index
+      })
+
+    },
+    cancel(){
+      // $('#add-push').modal("hide")
+      console.log(this.currentPush);
     },
     getClients(){
       this.axios.get(this.url('getClients'))
           .then((res)=>{
             this.clients = res.data.objects;
-            console.log("DDDDDDDDDDDDDDDD", this.clients)
           })
     },
     getCategories(){
@@ -186,65 +264,77 @@ export default {
           })
     },
     selectClient(selected){
-      if(this.pushData.clients.length === 0){
-        this.pushData.clients.push(selected)
-      }
-      else{
-        let product = null;
-        for (let i = 0; i < this.pushData.clients.length; i++) {
-          if(this.pushData.clients[i]._id === selected._id){
-            this.$warningAlert("Client already added")
-            product = null;
-            break;
-          }
-          product = selected
-        }
-        if(product){
-          this.pushData.clients.push(product)
+      for (let i = 0; i < this.selectedClients.length; i++) {
+        if(this.selectedClients[i]._id === selected._id){
+          this.$warningAlert("Client already added")
+          selected = null;
+          this.search_client = ''
+          break;
         }
       }
-      this.search_client = '';
-      console.log(this.pushData)
-
+      if(selected){
+        this.selectedClients.push(selected)
+        this.week.clients.push(selected._id)
+      }
+      this.search_client = ''
     },
     deleteClient(client){
-      this.pushData.clients = this.pushData.clients.filter((item)=> item !== client)
+      this.selectedClients = this.selectedClients.filter((item)=> item !== client)
+      this.week.clients = this.week.clients.filter((item)=>item !== client._id)
+    },
 
-    }
   },
   mounted(){
-    this.getCategories()
+    this.getCategories();
     this.getClients();
-    new this.$lightpick({
-      field: document.getElementById('push-date'),
-      format:'',
-      autoClose:false,
-      lang:'en',
-      onSelect:(date)=>{
-        this.pushData.by_month = date.format().toString().slice(0,16)
 
 
-      }
-    });
+  },
+  watch:{
+    edit_push(newCat) {
+      this.currentPush = Object.assign({}, newCat);
+
+
+    }
   }
 
 }
 </script>
 
 <style scoped>
-#push-date{
+.is_active{
+  color:#616cf5 !important;
+}
+.add-more{
+  color:#616cf5;
+  cursor:pointer;
+
+}
+.remove-content{
+  position: absolute;
+  right: -30px;
+  top: 38px;
+}
+#months{
   margin-bottom: 20px;
+}
+.selected-day{
+  font-size: 16px;
+  font-weight: normal;
+  margin-left: 10px;
+  text-transform: capitalize;
+
 }
 .cashback-input,.form-control{
   height: 40px;
 }
-.form-control{
-  background: none;
-}
 
-.cash-btn{
-  height: 40px;
-  width: 40px;
+.titles{
+  position: relative;
+}
+.form-control{
+  width: 100% !important;
+  background-position-x: 85%;
 }
 .radio-toolbar{
   margin-bottom: 20px;
@@ -301,10 +391,15 @@ export default {
   cursor:pointer;
   margin-right: 10px;
 }
-.days.active,.days:hover{
+.days.active{
   background: #616cf5;
+  color:#fff !important;
+}
+.days:hover{
+  color: #616cf5;
   transition: .3s;
-  color:#fff;
+  border:1px solid #616cf5;
+
 }
 .category-logo{
   width: 40px;

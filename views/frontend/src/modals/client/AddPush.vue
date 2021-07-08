@@ -18,7 +18,7 @@
                 <div class="d-flex client-all justify-content-between">
                   <h4 class="push-title">Clients</h4>
                   <div class="d-flex align-items-center">
-                    <div class="table-head "><label class="custom-checkbox mr-2 "><input type="checkbox"><span class="checkmark"></span></label></div>
+                    <div class="table-head "><label class="custom-checkbox mr-2 "><input v-model="week.sendToAll" type="checkbox"><span class="checkmark"></span></label></div>
                     <span class="send-all">Send to all</span>
                   </div>
                 </div>
@@ -53,14 +53,15 @@
                        <span class="category-people" v-if="selectedClient.category">Category <span style="color:#000; text-transform:capitalize">{{ selectedClient.category.name}}</span></span>
                      </div>
                     </div>
-                   <img @click="deleteClient(client)" src="../../assets/icons/deleteClient.svg">
+                   <img @click="deleteClient(selectedClient)" src="../../assets/icons/deleteClient.svg">
                  </div>
                </div>
               </div>
             <!-------------------------Right Side --------------------->
               <div class="col-lg-6">
                   <h3 class="push-title settings">Notification settings</h3>
-                <input type="text"  v-model="pushTitle"  name="week" class="cashback-input w-100 mb-2" placeholder="Please set push name">
+                <label>Push name</label>
+                <input type="text"  v-model="week.title"  name="week" class="cashback-input w-100 mb-3" placeholder="Please set push name">
                 <div class="radio-toolbar">
                   <div class="d-flex align-items-center mr-4">
                     <input type="radio" id="radioWeek" v-model="value" value="week"  name="week"  >
@@ -97,21 +98,21 @@
 
               <div v-show="value ==='week'" >
                 <div class="week"  >
-                  <div class="days active d-flex justify-content-center align-items-center">MO</div>
-                  <div class="days d-flex justify-content-center align-items-center">TU</div>
-                  <div class="days d-flex justify-content-center align-items-center">WE</div>
-                  <div class="days d-flex justify-content-center align-items-center">TH</div>
-                  <div class="days d-flex justify-content-center align-items-center">FR</div>
-                  <div class="days d-flex justify-content-center align-items-center">SA</div>
-                  <div class="days d-flex justify-content-center align-items-center">SU</div>
+                  <div  @click="setDay('monday')" :class="{is_active: selectedDay.name === 'monday',active: week.monday.isActive }"  class="days d-flex justify-content-center align-items-center">MO</div>
+                  <div  @click="setDay('tuesday')" :class="{is_active: selectedDay.name === 'tuesday',active: week.tuesday.isActive }"  class="days d-flex justify-content-center align-items-center">TU</div>
+                  <div  @click="setDay('wednesday')" :class="{is_active: selectedDay.name === 'wednesday',active: week.wednesday.isActive}"  class="days d-flex justify-content-center align-items-center">WE</div>
+                  <div  @click="setDay('thirsday')" :class="{is_active: selectedDay.name === 'thirsday',active: week.thirsday.isActive}"  class="days d-flex justify-content-center align-items-center">TH</div>
+                  <div  @click="setDay('friday')" :class="{is_active: selectedDay.name === 'friday',active: week.friday.isActive}"  class="days d-flex justify-content-center align-items-center">FR</div>
+                  <div  @click="setDay('saturday')" :class="{is_active: selectedDay.name === 'saturday',active: week.saturday.isActive}"  class="days d-flex justify-content-center align-items-center">SA</div>
+                  <div  @click="setDay('sunday')" :class="{is_active: selectedDay.name === 'sunday',active: week.sunday.isActive}"  class="days d-flex justify-content-center align-items-center">SU</div>
                 </div>
-                <div class="d-flex justify-content-between">
-                  <div class="d-flex align-items-center mb-4">
-                    <h2 class="selected-day">Monday</h2>
-                    <label class="switch d-flex">
-                      <input  type="checkbox">
+                <div class="d-flex align-items-center mb-4 justify-content-between">
+                  <div class="d-flex align-items-center ">
+                    <label class="switch d-flex ">
+                      <input v-model="selectedDay.isActive" type="checkbox">
                       <span class="slider round"></span>
                     </label>
+                    <h2 class="selected-day">{{selectedDay.name}}</h2>
                   </div>
                   <span class="add-more" @click="addContent">+ Add more</span>
                 </div>
@@ -119,7 +120,7 @@
 
                 <!---------Push Content------->
 
-                <div v-for="(item,index) in push_content" :key="index" >
+                <div v-for="(item,index) in selectedDay.push" :key="index" >
                   <div class="d-flex mb-3">
                     <div style="width:25%" class="mr-3">
                       <label>Time</label><br>
@@ -134,8 +135,8 @@
                     </div>
 
                   </div>
-                  <label>Description</label><br>
-                  <textarea v-model="item.description"  class="general-area"></textarea>
+                  <label >Description</label><br>
+                  <textarea v-model="item.desc"  class="general-area"></textarea>
                 </div>
               </div>
             </div>
@@ -159,34 +160,36 @@ import $ from "jquery";
 
 export default {
   name: "AddPush",
+  props:['getSchedulePushes'],
   data(){
     return {
       working_hours:[
         '01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00',
         '13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00','00:00',
       ],
-
       push_content:[
         {time:'',title: '',description:''},
       ],
-      days:{
-        monday:'monday',
-        tuesday:''
-      },
+      selectedDay:{isActive:false, push:[{time:'',title: '',desc:''}],name:'Select day'},
       clients:[],
       search_client:'',
       clientCategory:[],
-      pushTitle: "",
       value:'week',
-        selectedClients:[],
-      pushData:{
-        name:'',
+      selectedClients:[],
+      turnOnDay:false,
+      week:{
+        monday: {isActive:false, push:[{time:'',title: '',desc:''}],name:'monday'},
+        tuesday:{isActive:false, push:[{time:'',title: '',desc:''}],name:'tuesday'},
+        wednesday:{isActive:false, push:[{time:'',title: '',desc:''}],name:'wednesday'},
+        thirsday:{isActive:false, push:[{time:'',title: '',desc:''}],name:'thirsday'},
+        friday:{isActive:false, push:[{time:'',title: '',desc:''}],name:'friday'},
+        saturday: {isActive:false, push:[{time:'',title: '',desc:''}],name:'saturday'},
+        sunday: {isActive:false, push:[{time:'',title: '',desc:''}],name:'sunday'},
+        sendToAll:false,
         clients:[],
-        by_month:'',
-        by_week:'',
+        title: "",
+      }
 
-
-      },
     }
   },
   computed:{
@@ -198,19 +201,39 @@ export default {
 
   },
   methods:{
-    addContent(){
+    onSubmit(){
+      this.axios.post(this.url('addSchedulePush'),this.week)
+      .then((res)=>{
+        console.log(res, "sucesss")
+        this.$successAlert('Push has been added')
+        this.getSchedulePushes()
+        $('#add-push').modal("hide");
+      })
+      .catch(()=>{
+        console.log(this.week)
+      })
 
-    if(this.push_content.length<3){
-      this.push_content.push({time:'',title: '',description:''})
+    },
+    setDay(day){
+      this.selectedDay = day;
+      for(let obj in this.week){
+        if(obj === day){
+          this.selectedDay = this.week[day]
+
+        }
+      }
+    },
+    addContent(){
+      if(this.selectedDay.push.length<3){
+      this.selectedDay.push.push({time:'',title: '',desc:''})
     }
     else{
       this.$warningAlert('Max is 3')
-    }
-    console.log(this.push_content)
+      }
 
     },
     removeContent(el){
-        this.push_content = this.push_content.filter((item,index)=>{
+        this.selectedDay.push = this.selectedDay.push.filter((item,index)=>{
           console.log(item)
           return el!==index
         })
@@ -219,14 +242,10 @@ export default {
     cancel(){
       $('#add-push').modal("hide")
     },
-    onSubmit(){
-      $('#add-push').modal("hide")
-    },
     getClients(){
       this.axios.get(this.url('getClients'))
           .then((res)=>{
             this.clients = res.data.objects;
-            console.log("DDDDDDDDDDDDDDDD", this.clients)
           })
     },
     getCategories(){
@@ -247,12 +266,15 @@ export default {
         }
         if(selected){
           this.selectedClients.push(selected)
+          this.week.clients.push(selected._id)
         }
         this.search_client = ''
     },
     deleteClient(client){
       this.selectedClients = this.selectedClients.filter((item)=> item !== client)
-    }
+      this.week.clients = this.week.clients.filter((item)=>item !== client._id)
+    },
+
   },
   mounted(){
     this.getCategories()
@@ -264,9 +286,6 @@ export default {
       parentEl:'section',
       lang:'en',
       inline:true,
-      onSelect:(date)=>{
-        this.pushData.by_month = date.format().toString().slice(0,16)
-      }
     });
   }
 
@@ -274,6 +293,9 @@ export default {
 </script>
 
 <style scoped>
+.is_active{
+  color:#616cf5 !important;
+}
 .add-more{
   color:#616cf5;
   cursor:pointer;
@@ -290,7 +312,9 @@ export default {
 .selected-day{
   font-size: 16px;
   font-weight: normal;
-  margin-right: 20px;
+  margin-left: 10px;
+  text-transform: capitalize;
+
 }
 .cashback-input,.form-control{
   height: 40px;
@@ -358,10 +382,15 @@ export default {
   cursor:pointer;
   margin-right: 10px;
 }
-.days.active,.days:hover{
+.days.active{
   background: #616cf5;
+  color:#fff !important;
+}
+.days:hover{
+  color: #616cf5;
   transition: .3s;
-  color:#fff;
+  border:1px solid #616cf5;
+
 }
 .category-logo{
   width: 40px;

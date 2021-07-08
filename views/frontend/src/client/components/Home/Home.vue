@@ -95,6 +95,7 @@ name: "Home",
 
   },
   mounted() {
+    $(".modal-backdrop").attr('class', 'active');
     $(document).ready(function(){
       $(window).on("scroll",function() {
         if($(this).scrollTop() > 200)

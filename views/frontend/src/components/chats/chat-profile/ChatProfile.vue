@@ -24,7 +24,7 @@
         <p><img src="../../../assets/icons/Calendar.svg">{{contact.birthDate ? contact.birthDate.slice(0, 10) : ""}}</p>
     </div>
 
-    <button class="view-profile">View profile</button>
+    <button class="view-profile" @click="$router.push('/edit-client-page')">View profile</button>
   </div>
 </div>
 </template>

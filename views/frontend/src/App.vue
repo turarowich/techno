@@ -49,6 +49,7 @@ export default {
 
     },
     mounted(){
+
         $(document).ready(function(){
             $(document).tooltip({
                 selector: '.tool-tip'
@@ -73,6 +74,9 @@ export default {
 
 </script>
 <style scoped>
+.modal-backdrop {
+  margin-left: 250px;
+}
 @font-face {
  font-family:"SF Pro Display";
  font-weight:normal;
