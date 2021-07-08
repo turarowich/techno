@@ -19,6 +19,7 @@ var catalogController = require('../app/controllers/catalogController');
 var multer = require('multer');
 var upload = multer({ dest: '../public/product/' });
 var verifyAccess = require('../services/verifyAccess');
+
 module.exports = function (app, io) {
     //Clients url
     app.get('/getClient/:client', clientController.getClient);

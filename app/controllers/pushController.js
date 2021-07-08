@@ -353,7 +353,10 @@ class PushController {
         let db = useDB("loygift")
         let User = db.model("User");
         let users = await User.find()
-        
+        console.log("Starting push loop")
+        let today = (moment().format('dddd')).toLowerCase();
+        let query = { 'isActive': true }
+        query[`${today}.isActive`] = true
         for(let user of users){
             db = useDB("loygift" + user._id)
             let Device = db.model("Device");
@@ -361,48 +364,65 @@ class PushController {
             let SchedulePush = db.model("SchedulePush");
             let settings = await Settings.find()
             settings = settings[0]
-            let data = await SchedulePush.find({'isActive': true})
-            let today = (moment().format('dddd')).toLowerCase();
-            for(let info of data){
+            
+            let data = await SchedulePush.find(query)
+            console.log("Checking company", "loygift" + user._id)
+            for(let info of data){                        
+                let devicesIOS = await Device.find(query)
                 let query = { 'type': 'ios', 'client': { $in: info.clients } }
                 if (info.sendToAll) {
                     query = {}
                 }
-                let devicesIOS = await Device.find(query)
                 let todayInfo = info[today]
-                let now = moment()
-                if (todayInfo.isActive && now){
-                    for (let push of todayInfo.push) {
-                        let noteIOS = new apn.Notification({
-                            alert: {
-                                title: push.title,
-                                subtitle: "",
-                                body: push.desc,
-                            },
-                            mutableContent: 1,
-                            payload: {
-                                type: "individual",
-                            },
-                            sound: "default",
-                            topic: settings.APNsTopic
-                        });
-                        if (apnProvider) {
-                            apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
-                                if (response.failed.length) {
-                                    response.failed.forEach((fail) => {
-                                        if (fail.status == '400' && fail.response.reason == 'BadDeviceToken') {
-                                            let device = devicesIOS.find(device => device.token == fail.device)
-                                            if (device) device.deleteOne()
-                                        }
-                                    });
-                                }
-                            }).catch(function (error) {
-                                console.log("Faled to send message to ", error);
-                            });
-                        }
+                console.log("Get info from", today, info[today])
+                for (let push of todayInfo.push) {
+                    // First compare two dates
+                    nowDate = (new Date()).setHours(0, 0, 0, 0)
+                    infoDate = (new Date(info.sendAt)).setHours(0, 0, 0, 0)
+                    if (nowDate <= infoDate) {
+                        console.log("Already send push", today)
+                        return;
                     }
+
+                    // Second compare times
+                    let now = moment.minutes() + moment.hours() * 60;
+                    let infoTime = parseInt(push.time.slice(0, 2)) + parseInt(push.time.slice(3, 5)) * 60
+                    if (now < infoTime) {
+                        console.log("Time not has come", push.time, moment.format("HH:mm"))
+                        return;
+                    }
+                    push.sendAt = new Date()
+                    await push.save()
+                    console.log("Everything is okay start to send", push.title)
+                    let noteIOS = new apn.Notification({
+                        alert: {
+                            title: push.title,
+                            subtitle: "",
+                            body: push.desc,
+                        },
+                        mutableContent: 1,
+                        payload: {
+                            type: "individual",
+                        },
+                        sound: "default",
+                        topic: settings.APNsTopic
+                    });
+                    if (apnProvider) {
+                        apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
+                            if (response.failed.length) {
+                                response.failed.forEach((fail) => {
+                                    if (fail.status == '400' && fail.response.reason == 'BadDeviceToken') {
+                                        let device = devicesIOS.find(device => device.token == fail.device)
+                                        if (device) device.deleteOne()
+                                    }
+                                });
+                            }
+                        }).catch(function (error) {
+                            console.log("Faled to send message to ", error);
+                        });
+                    }
+                    console.log("Finish push", push.title)
                 }
-                
             }
         }
         return;

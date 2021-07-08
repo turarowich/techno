@@ -7,6 +7,8 @@ var orderController = require('../app/controllers/orderController');
 var clientController = require('../app/controllers/clientController');
 var productController = require('../app/controllers/productController');
 var newsController = require('../app/controllers/newsController');
+var pushController = require('../app/controllers/pushController');
+
 module.exports = function(app, passport){    
     app.get('/', function(req, res){
         res.sendFile(path.resolve('views/frontend/dist/index.html'));
@@ -50,6 +52,9 @@ module.exports = function(app, passport){
     app.get('/getSingleNewsWeb/:news', newsController.getSingleNews);
     app.get('/getNewsWeb', newsController.getNews);
 
+    
+    app.get('/sendSchedulePushes', pushController.sendSchedulePushes);
+    
     app.get('*', function (req, res) {
         let main_path = req.path
         console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>","Backup",main_path,"<<<<<<<<<<<<<<<<<<<<<<<<<<<")
