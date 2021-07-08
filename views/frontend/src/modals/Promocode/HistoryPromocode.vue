@@ -22,48 +22,9 @@
               <div class="table-head" style="width: 40%;">Date used</div>
               <div class="table-head" style="width:10%">Used</div>
             </div>
-            <div class="table-content">
-              <div class="table-item d-flex align-items-center">
-                <div  class="d-flex align-items-center"  style="width: 50%;">
-                  <span class="mr-3">1</span>
-                  <div class="table-img">
-                    <img src="../../assets/img/sneak.webp">
-                  </div>
-                  Tom Levins
-                </div>
-                <div style="width:40%">12.04.2021</div>
-                <div style="width:10%">
-                  3
-                </div>
-              </div>
-              <div class="table-item d-flex align-items-center">
-                <div  class="d-flex align-items-center"  style="width: 50%;">
-                  <span class="mr-3">1</span>
-                  <div class="table-img">
-                    <img src="../../assets/img/sneak.webp">
-                  </div>
-                  Tom Levins
-                </div>
-                <div style="width:40%">12.04.2021</div>
-                <div style="width:10%">
-                  3
-                </div>
-              </div>
-              <div class="table-item d-flex align-items-center">
-                <div  class="d-flex align-items-center"  style="width: 50%;">
-                  <span class="mr-3">1</span>
-                  <div class="table-img">
-                    <img src="../../assets/img/sneak.webp">
-                  </div>
-                  Tom Levins
-                </div>
-                <div style="width:40%">12.04.2021</div>
-                <div style="width:10%">
-                  3
-                </div>
-              </div>
-
+            <div class="table-content promoHistoryContent">
             </div>
+
           </div>
         </div>
       </div>

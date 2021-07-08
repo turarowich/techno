@@ -29,100 +29,109 @@
       <div class="col-lg-4 col-md-6">
         <div v-if="countOrders>0" class="sales">
 
-          <div v-if="!clientAuth">
-            <h3 class="cashback-sub-title mb-4" style="color:#616CF5;">To use or get points, log in or register</h3>
-            <div  class="auth_btns_wrapper">
-              <router-link style="flex: 1;" :to="`/${currentCompanyCatalog}/signin`"><span>Log In</span></router-link>
-              <router-link style="flex: 1;" :to="`/${currentCompanyCatalog}/signup`"><span>Register</span></router-link>
-            </div>
-          </div>
-          <div v-else>
-            <span class="client_points_title">User your points for an additional discount</span>
-            <div class="d-flex mb-3 client_points_block" style="align-items: center;">
-
-              <div class="d-flex" style="flex: 1;">
-                <label class="custom-checkbox">
-                  <input v-model="usePointsStatus" type="checkbox" >
-                  <span class="checkmark">
-                </span>
-                </label>
-                <span>Use points</span>
+          <div v-if="!catalog_settings.foodMode">
+            <div v-if="!clientAuth">
+              <h3 class="cashback-sub-title mb-4" style="color:#616CF5;">Log In or register, to receive points and/or use them</h3>
+              <div  class="auth_btns_wrapper">
+                <router-link style="flex: 1;" :to="`/${currentCompanyCatalog}/signin`"><span>Log In</span></router-link>
+                <router-link style="flex: 1;" :to="`/${currentCompanyCatalog}/signup`"><span>Register</span></router-link>
               </div>
-              <div>
+            </div>
+            <div v-else>
+              <span class="client_points_title">User your points for an additional discount</span>
+              <div class="d-flex mb-2 client_points_block" style="align-items: center;">
+
+                <div class="d-flex" style="flex: 1;">
+                  <label class="custom-checkbox">
+                    <input v-model="usePointsStatus" type="checkbox" >
+                    <span class="checkmark">
+                </span>
+                  </label>
+                  <span>Use points</span>
+                </div>
+                <div>
                 <span class="client_points">
                   {{user.points}} -- {{userDiscountStatus.discount_percentage || 0}}%
                 </span>
+                </div>
               </div>
             </div>
           </div>
-          <h3 class="cashback-sub-title promo">Sales</h3>
-          <div class="mb-3 sales-input d-flex">
-            <input v-model="searchText" class="cashback-input" placeholder="Enter a promocode">
-            <div @click="searchPromocode"  class="promocodeCheckBtn">
-              <img  src="../../../assets/icons/bird.svg">
-            </div>
 
-          </div>
-          <div v-if="basket_promocode != null" class="promocode_result">
-            <div class="d-flex">
-              <div>
-                Name: {{basket_promocode.name}}
-              </div>
-              <div @click="removePromocode" class="remove_promocode_basket" style="flex: 0 0 33px">
-                <img alt="x" src="../../../assets/icons/x.svg">
-              </div>
+
+          <div v-if="!catalog_settings.foodMode">
+            <div class="mb-3 sales-input d-flex">
+              <input v-model="searchText" class="cashback-input" placeholder="Enter a promocode">
+              <img @click="searchPromocode" class="promocodeCheckBtn" src="../../../assets/icons/check_mark.svg">
             </div>
-            <div>Discount %: {{basket_promocode.discount}}</div>
-            <div>Discount fix: {{basket_promocode.fixed_sum}}</div>
-            <div v-if="basket_promocode == null" style="color: red;font-weight: bold;">Promocode is not applicable</div>
+            <div v-if="basket_promocode != null" class="promocode_result">
+              <div class="d-flex">
+                <div>
+                  Name: {{basket_promocode.name}}
+                </div>
+                <div @click="removePromocode" class="remove_promocode_basket" style="flex: 0 0 33px">
+                  <img alt="x" src="../../../assets/icons/x.svg">
+                </div>
+              </div>
+              <div>Discount %: {{basket_promocode.discount}}</div>
+              <div>Discount fix: {{basket_promocode.fixed_sum}}</div>
+              <div v-if="basket_promocode == null" style="color: red;font-weight: bold;">Promocode is not applicable</div>
+            </div>
           </div>
+
+
+
           <div class="delivery">
-            <h3 class="cashback-sub-title">Delivery</h3>
-            <div v-if="showDeliveryChoice" class="personal-btns">
-              <div style="width:50%" @click="setDeliveryType('delivery')" :class="{active:deliveryService}" class="btns-item"><span class="btn-round"></span>Delivery</div>
-              <div style="width:50%" @click="setDeliveryType('pick_up')" :class="{active:pickUp}" class="btns-item mr-0"><span class="btn-round"></span>Pick-up</div>
-            </div>
+            <div v-if="!catalog_settings.foodMode">
+              <h3 class="cashback-sub-title">Delivery</h3>
+              <div v-if="showDeliveryChoice" class="personal-btns">
+                <div style="width:50%" @click="setDeliveryType('delivery')" :class="{active:deliveryService}" class="btns-item"><span class="btn-round"></span>Delivery</div>
+                <div style="width:50%" @click="setDeliveryType('pick_up')" :class="{active:pickUp}" class="btns-item mr-0"><span class="btn-round"></span>Pick-up</div>
+              </div>
 
-            <div v-if="deliveryService" class="delivery_block position-relative">
-              <div class="my-3">
-                {{catalog_settings ? catalog_settings.deliveryDescription : ''}}
-              </div>
-              <label class="cashback-label">Delivery address</label><br>
-              <input v-model="deliveryAddress" type="text" class="cashback-input" placeholder="Enter your address"/>
-              <label class="cashback-label">Delivery service</label><br>
-              <div class="selected_delivery_option w-100 d-flex"  @click="showDeliveryOptions">
-                <div style="flex: 1;">
-                  {{selectedDeliveryType.object.name}}
+              <div v-if="deliveryService" class="delivery_block position-relative">
+                <div class="py-3">
+                  {{catalog_settings ? catalog_settings.deliveryDescription : ''}}
                 </div>
-                <div>
-                  {{selectedDeliveryType.object.price}}
-                </div>
-              </div>
-              <div class="delivery_option_wrapper_class" v-if="showDeliveryOption">
-                <div @click="setSelectedDeliveryOption(opt)" v-for="opt in delivery_options" :key="opt._id" class="d-flex delivery_option_class">
-                  <div style="flex:1;">{{opt.name}}</div>
-                  <div>{{opt.price}}$</div>
-                </div>
-              </div>
-            </div>
-            <div v-if="pickUp" class="pick_up_block">
-              <div class="my-3">Select address where u would like to pick up ur order</div>
-              <div @click="setBranch(branch)" v-for="branch in branches" :key="branch._id" :class="{active_branch:branch._id===selectedBranchObject._id}" class="d-flex pick_up_block_item">
-                <div class="mr-2">
-                  <img src="../../../assets/icons/location.svg">
-                </div>
-                <div>
-                  <div class="pick_up_block_item_address">
-                    {{branch.address}}
+                <label class="cashback-label">Delivery address</label><br>
+                <input v-model="deliveryAddress" type="text" class="cashback-input" placeholder="Enter your address"/>
+                <label class="cashback-label">Delivery service</label><br>
+                <div class="selected_delivery_option w-100 d-flex" @click="showDeliveryOption= !showDeliveryOption">
+                  <div style="flex: 1;">
+                    {{selectedDeliveryType.object.name}}
                   </div>
-                  <div class="pick_up_block_item_wh">
-                    Mn-Fr 08:00 - 19:00
+                  <div>
+                    {{selectedDeliveryType.object.price}}
+                  </div>
+                </div>
+                <div class="delivery_option_wrapper_class" v-if="showDeliveryOption">
+                  <div @click="setSelectedDeliveryOption(opt)" v-for="opt in delivery_options" :key="opt._id" class="d-flex delivery_option_class">
+                    <div style="flex:1;">{{opt.name}}</div>
+                    <div>{{opt.price}}$</div>
                   </div>
                 </div>
               </div>
+              <div v-if="pickUp" class="pick_up_block">
+                <span>Select address where u would like to pick up ur order</span>
+                <div @click="setBranch(branch)" v-for="branch in branches" :key="branch._id" :class="{active_branch:branch._id===selectedBranchObject._id}" class="d-flex pick_up_block_item">
+                  <div>
+                    <img src="../../../assets/icons/location.svg">
+                  </div>
+                  <div>
+                    <div class="pick_up_block_item_address">
+                      {{branch.address}}
+                    </div>
+                    <div class="pick_up_block_item_wh">
+                      Mn-Fr 08:00 - 19:00
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="line"></div>
             </div>
 
-            <div class="total mt-4">
+            <div class="total">
+
               <div class=" discount d-flex justify-content-between">
                 <h3>Products</h3>
                 <span>{{total_price_full}} $</span>
@@ -145,7 +154,11 @@
 
               <div class="d-flex justify-content-between ">
                 <button @click="$router.push({ path: `/${currentCompanyCatalog}` })" class="cancel">Continue shopping</button>
-                <button @click="checkNcontinue()" class="save">
+
+                <button v-if="catalog_settings.foodMode" @click="generateQRCode()" class="save">
+                  Confirm order
+                </button>
+                <button v-else @click="checkNcontinue()" class="save">
                   Continue
                 </button>
               </div>
@@ -158,15 +171,43 @@
       <BasketConfirm @continueAsGuest_child="continueAsGuest" />
     </div>
   </div>
-
-
-
 </div>
+
+  <!--Centered Modal-->
+  <div class="parent-modal">
+    <div class="modal myModal fade" id="QRCodeModal" tabindex="-1" role="dialog" aria-labelledby="QRCodeModal" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content QRCodeModalContent">
+          <div class="modal-body">
+          <div class="d-flex" style="justify-content: center;align-items: center;flex-direction: column">
+            <canvas id="qrCanvas" width="200" height="100"></canvas>
+            {{menuUrl}}
+          </div>
+          <div class="d-flex QRCodeBasketItem" v-for="itemQ in shoppingCart" :key="itemQ.product._id">
+            <div style="margin-right: 30px;font-weight: bold;">
+              {{itemQ.quantity}}x
+            </div>
+            <div class="d-flex" style="flex-direction: column;">
+              <span style="font-weight: bold;">{{itemQ.product.name}}</span>
+              <span style="color:#858585;">{{itemQ.product.vendorCode}}</span>
+            </div>
+            <div style="margin-left: auto;">
+              {{itemQ.product.price}}$
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 </template>
 
 <script>
 import BasketItem from "@/client/components/Basket/BasketItem";
 import BasketConfirm from "@/modals/basket/BasketConfirm";
+import QRCode from 'qrcode';
 import $ from "jquery";
 // import Swal from "sweetalert2";
 export default {
@@ -192,7 +233,8 @@ name: "Basket",
         object:{
           // price:0,
         },
-      }
+      },
+      menuUrl:'',
     }
   },
   computed:{
@@ -214,7 +256,6 @@ name: "Basket",
       return options;
     },
     shoppingCart(){
-      console.log(this.currentCompanyCatalog,this.company_url_basket,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.");
       if(this.currentCompanyCatalog!==this.company_url_basket){
         return [];
       }
@@ -296,6 +337,54 @@ name: "Basket",
       this.selectedDeliveryOptionObject = obj;
       this.showDeliveryOption = false;
     },
+    saveTempoOrderFunc(menu_url){
+      let order = [];
+      this.shoppingCart.map(function (item){
+        order.push({
+          product : item.product,
+          quantity : item.quantity
+        })
+      })
+
+      this.axios.post(this.url('saveTempoOrder'), {
+        order:order,
+        company_url:this.currentCompanyCatalog,
+        menu_url:menu_url,
+      }).then(function (response) {
+        console.log(response);
+      }).catch(function(error){
+        if (error.response) {
+          console.log(error.response);
+        }
+      });
+    },
+    generateQRCode(){
+      $('#QRCodeModal').modal('show');
+      let code = this.generateCode();
+      let url = window.location.host+"/menu/"+code;
+      let canvas = document.getElementById('qrCanvas')
+      this.menuUrl = url;
+      this.saveTempoOrderFunc(code);
+      QRCode.toCanvas(canvas, url,  {
+        color: {
+          dark: '#616CF5',  // Blue dots
+          light: '#0000' // Transparent background
+        }
+      },function (error) {
+        if (error) console.error(error)
+        console.log('success!');
+      })
+    },
+    generateCode(){
+      let length = 6;
+      let result           = [];
+      let characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let charactersLength = characters.length;
+      for ( var i = 0; i < length; i++ ) {
+        result.push(characters.charAt(Math.floor(Math.random() * charactersLength)));
+      }
+      return result.join('');
+    },
     setDeliveryType(type){
       //redo later
       this.selectedDeliveryType.type = type;
@@ -360,7 +449,7 @@ name: "Basket",
         //check type
         if(promocode_type==='all'){
           product_ids = this.shoppingCart.map(function (item){
-            item.product._id;
+            return item.product._id;
           })
         }else if(promocode_type==='Service'){
           this.shoppingCart.map(function (item){
@@ -385,6 +474,7 @@ name: "Basket",
         });
       }
       //result
+      console.log(product_ids,"<product_idsproduct_ids");
       if(product_ids.length>0){
         let parameter={
           promocode:promocode,
@@ -535,7 +625,7 @@ name: "Basket",
   padding:0 6px;
   /*margin-bottom: 42px;*/
   align-items: center;
- 
+
 }
 .empty-basket{
   height: 300px;
@@ -757,6 +847,19 @@ name: "Basket",
   cursor: pointer;
 
 }
+.QRCodeModalContent{
+  width: 484px;
+}
+.QRCodeBasketItem{
+  border-bottom: 1px solid #D3D3D3;
+  padding-bottom: 13px;
+  padding-top: 20px;
+  font-size: 16px;
+}
+.modal-body{
+  padding:30px 40px 50px 40px;
+}
+
 @media(max-width:768px){
   .client-table-header{
     display: none;

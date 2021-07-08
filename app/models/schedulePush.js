@@ -3,9 +3,8 @@ const Schema = mongoose.Schema;
 
 const schedulePushSchema = new Schema({
     clients: [{
-        type: String,
-        required: false,
-        default: ""
+        type: Schema.Types.ObjectId,
+        ref: 'Client'
     }],
     byWeek: {
         type: Boolean,
@@ -37,18 +36,22 @@ const schedulePushSchema = new Schema({
             time: {
                 type: String,
                 required: false,
-                default:''
+                default: ""
             },
             title: {
                 type: String,
                 required: false,
-                default:''
+                default: ""
             },
             desc: {
                 type: String,
                 required: false,
-                default:''
+                default: ""
             },
+            sendAt:{
+                type: Date,
+                required: false,
+            }
         }],
     },
     tuesday: {
@@ -61,18 +64,22 @@ const schedulePushSchema = new Schema({
             time: {
                 type: String,
                 required: false,
-                default:''
+                default: ""
             },
             title: {
                 type: String,
                 required: false,
-                default:''
+                default: ""
             },
             desc: {
                 type: String,
                 required: false,
-                default:''
+                default: ""
             },
+            sendAt: {
+                type: Date,
+                required: false,
+            }
         }],
     },
     wednesday: {
@@ -85,18 +92,22 @@ const schedulePushSchema = new Schema({
             time: {
                 type: String,
                 required: false,
-                default:''
+                default: ""
             },
             title: {
                 type: String,
                 required: false,
-                default:''
+                default: ""
             },
             desc: {
                 type: String,
                 required: false,
-                default:''
+                default: ""
             },
+            sendAt: {
+                type: Date,
+                required: false,
+            }
         }],
     },
     thursday: {
@@ -109,18 +120,22 @@ const schedulePushSchema = new Schema({
             time: {
                 type: String,
                 required: false,
-                default:''
+                default: ""
             },
             title: {
                 type: String,
                 required: false,
-                default:''
+                default: ""
             },
             desc: {
                 type: String,
                 required: false,
-                default:''
+                default: ""
             },
+            sendAt: {
+                type: Date,
+                required: false,
+            }
         }],
     },
     friday: {
@@ -133,42 +148,50 @@ const schedulePushSchema = new Schema({
             time: {
                 type: String,
                 required: false,
-                default:''
+                default: ""
             },
             title: {
                 type: String,
                 required: false,
-                default:''
+                default: ""
             },
             desc: {
                 type: String,
                 required: false,
-                default:''
+                default: ""
             },
+            sendAt: {
+                type: Date,
+                required: false,
+            }
         }],
     },
     saturday: {
         isActive: {
             type: Boolean,
-            required: true,
+            required: false,
             default: false
         },
         push: [{
             time: {
                 type: String,
                 required: false,
-                default:''
+                default: ""
             },
             title: {
                 type: String,
                 required: false,
-                default:''
+                default: ""
             },
             desc: {
                 type: String,
                 required: false,
-                default:''
+                default: ""
             },
+            sendAt: {
+                type: Date,
+                required: false,
+            }
         }],
     },
     sunday: {
@@ -181,18 +204,22 @@ const schedulePushSchema = new Schema({
             time: {
                 type: String,
                 required: false,
-                default:''
+                default: ""
             },
             title: {
                 type: String,
-                required: false,
-                default:''
+                required: true,
+                default: ""
             },
             desc: {
                 type: String,
-                required: false,
-                default:''
+                required: true,
+                default: ""
             },
+            sendAt: {
+                type: Date,
+                required: false,
+            }
         }],
     },
     

@@ -23,6 +23,7 @@ import CatalogDetail from "@/client/components/ClientCatalog/CatalogDetail";
 import NewsDetail from "@/client/components/ClientNews/NewsDetail";
 import ClientNews from "@/client/components/ClientNews/ClientNews";
 import Basket from "@/client/components/Basket/Basket";
+import Menu from "@/client/components/CatalogMenu/Menu";
 import ClientAccount from "@/client/components/ClientAccount/ClientAccount";
 import PersonalInfo from "@/client/components/PersonalInfo/PersonalInfo";
 import EditProfile from "@/client/components/EditProfile/EditProfile";
@@ -89,7 +90,6 @@ const routes = [
         path: "/edit-promo",
         name: "EditPromo",
         component: EditPromo,
-
     },
     {
         path: "/add-product-page",
@@ -109,7 +109,14 @@ const routes = [
         component: IndividualPush,
 
     },
-
+    {
+        path: "/menu/:code",
+        name: "Menu",
+        component: Menu,
+        meta: {
+            hideNavbar: true,
+        },
+    },
     {
         // path: "/shop/:bekon",
         path: "/:bekon",

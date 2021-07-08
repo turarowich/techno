@@ -32,7 +32,7 @@ async function addWelcomePoints(db) {
     }catch (e){
         console.log(e);
     }
-    return points;
+    return parseFloat(points);
 }
 
 class AuthController{
@@ -200,10 +200,8 @@ class AuthController{
         if (lang != 'ru') {
             lang = 'en'
         }
-        
         try {
             let hashedPassword = bcrypt.hashSync(req.fields.password, 8);
-
             let number = randomNumber(100000, 1000000)
             // let number = 1000001
             let qrCode = createQrFile(number.toString(), 'loygift' + req.headers['access-place'])
@@ -216,8 +214,19 @@ class AuthController{
                 QRCode: qrCode
             })
             await client.validate()
-            client.password = hashedPassword
-            await client.save()
+            client.password = hashedPassword;
+
+            //cashback
+            let cashback_points = await addWelcomePoints(db);
+            client.points = parseFloat(client.points ) + cashback_points;
+            await new ClientBonusHistory({
+                client: client._id,
+                points: cashback_points,
+                source: 'Welcome points',
+                type: 'received',
+            }).save();
+
+            await client.save();
             client.password = ""
             result = {
                 'status': 200,
@@ -232,12 +241,7 @@ class AuthController{
                 }),
             }
 
-            await new ClientBonusHistory({
-                client: client._id,
-                points: await addWelcomePoints(db),
-                source: 'Welcome points',
-                type: 'received',
-            }).save();
+
 
         } catch (error) {
             result = sendError(error, lang)

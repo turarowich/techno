@@ -48,11 +48,12 @@
           </div>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
             <ul class="list-group " >
-              <li v-if="check()" class="list-group-item" data-toggle="modal" data-target="#edit-order" @click="$emit('selectOrder',order._id)">Edit</li>
-              <li v-if="check()" class="list-group-item" v-on:click="$emit('deleteOrder',order._id)">Delete</li>
-              <li v-if="check('canChangeOrderStatus', null, null)" class="list-group-item" v-on:click="statusChange(order,'Done')">Done</li>
-              <li v-if="check('canChangeOrderStatus', null, null)" class="list-group-item" @click="statusChange(order, 'Canceled')">Cancel</li>
-              <li v-if="check('canChangeOrderStatus', null, null)" class="list-group-item" v-on:click="statusChange(order, 'In Progress')">In progress</li>
+              <li v-if="!['Cancelled','Done'].includes(order.status) && check()" class="list-group-item" data-toggle="modal" data-target="#edit-order" @click="$emit('selectOrder',order._id)">Edit</li>
+              <li class="list-group-item" v-if="check()" v-on:click="$emit('deleteOrder',order._id)">Delete</li>
+              <li v-if="!['Cancelled','Done'].includes(order.status) && check('canChangeOrderStatus', null, null)" class="list-group-item" v-on:click="statusChange(order,'Done')">Done</li>
+              <li v-if="!['Cancelled'].includes(order.status) && check('canChangeOrderStatus', null, null)" class="list-group-item" @click="statusChange(order, 'Cancelled')">Cancel</li>
+<!--          
+        <li class="list-group-item" v-on:click="statusChange(order, 'In Progress')">In progress</li>-->
             </ul>
           </div>
         </div>
@@ -82,6 +83,7 @@ export default {
         return this.checkAccess(access, parametr, parametr2)
     },
     statusChange(order,status){
+        console.log(status,"statusChange",order);
         this.axios.put(this.url('updateOrder',order._id), {status: status}).then(()=>{
             order.status = status;
         }).catch((error)=>{
@@ -91,7 +93,7 @@ export default {
         });
         //send push
         let pushable = ['Done','Cancelled','In Progress']
-        if(pushable.includes(status)){
+        if(pushable.includes(status) && order.client){
           this.axios.post(this.url('updateOrderWeb'), {status: status,order:order._id,code:order.code,client:order.client._id}).then(()=>{
           }).catch((error)=>{
             if(error.response && error.response.data){

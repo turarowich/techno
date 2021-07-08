@@ -50,8 +50,8 @@
               <div>
                 <label class="valid-for">Valid for</label>
                 <div class="personal-btns">
-                  <div type="Service" class="btns-item active"><span class="btn-round"></span>services</div>
-                  <div type="Product" class="btns-item"><span class="btn-round"></span>products</div>
+                  <div type="service" class="btns-item active"><span class="btn-round"></span>services</div>
+                  <div type="product" class="btns-item"><span class="btn-round"></span>products</div>
                   <div type="all" class="btns-item mr-0"><span class="btn-round"></span>on everything</div>
                 </div>
               </div>
@@ -284,7 +284,12 @@ export default {
         'promocode_id':this.promocode_id,
       }).then(function (response) {
         console.log(response);
-        that.displayMessages(['Added']);
+        if(that.editState){
+          that.$successAlert('Updated');
+        }else{
+          that.$successAlert('Added');
+        }
+
         that.$router.push('/loyalty/promocode')
       }).catch((error)=>{
         if (error.response) {
@@ -351,7 +356,7 @@ export default {
       this.fixedSum=promocode.fixed_sum;
       this.minSum=promocode.min_sum;
       this.selectedType=promocode.selected_type;
-      this.numberOfUses=promocode.numberOfUses;
+      this.numberOfUses=promocode.number_of_uses;
       this.selectedItemsList=selectedItemsList_objects;
       this.fromDateLightpick.setDate(promocode.startDate);
       this.toDateLightpick.setDate(promocode.endDate);

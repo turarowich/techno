@@ -26,7 +26,7 @@
           <div class="d-flex align-items-center">
             <img class="mr-2" src="../../../assets/clients/Discount.svg"> <span class="bonus-span mb-0" v-if="user">My bonuses: {{user.points}}</span>
           </div>
-          <p class="client-paragraph mb-0">You can spend your current points or continue to accumulate them</p>
+          <p @click="sendCLientEmit" class="client-paragraph mb-0">You can spend your current points or continue to accumulate them</p>
         </div>
         <ul class="nav nav-tabs mb-5">
           <li>
@@ -74,10 +74,6 @@
         </div>
 
       </div>
-
-
-
-
 
     </div>
 
@@ -156,8 +152,19 @@ name: "ClientAccount",
 
       this.$router.push({ path: `/${this.currentCompanyCatalog}/signin`});
     },
+    sendCLientEmit(){
+
+      if(this.user){
+        this.socket.io.opts.extraHeaders =  {
+          token: localStorage.getItem('token')
+        };
+        console.log("EMITTING sendCLientEmit",this.socket);
+        this.socket.emit('join_cat', {user: this.user._id});
+      }
+    },
   },
   mounted(){
+
     $('.nav-tabs a:first').click();
     const options = {
       headers: {
@@ -166,13 +173,17 @@ name: "ClientAccount",
       }
     }
     if(this.user){
+      this.socket.io.opts.extraHeaders =  {
+        token: localStorage.getItem('token')
+      };
       this.$store.dispatch("Client/updateUserData",{axios:this.axios,url:this.url('getClient',this.user._id),options:options});
-      console.log("EMITTING");
+      console.log("EMITTING",this.socket);
       this.socket.emit('join_cat', {user: this.user._id});
     }
 
   },
   created() {
+
     // this.socket.on("sendingHey", function(data) {
     // this.socket.on("sendingHey", function(data) {
     //   console.log(data);

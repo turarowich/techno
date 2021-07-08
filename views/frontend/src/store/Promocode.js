@@ -26,10 +26,8 @@ export const PromocodeModule = {
     // Actions are functions that you call throughout your application that call mutations.
     actions: {
         setPromocodeAPI({ commit },object) {
-            console.log("sadgdfgsdfsdfsfgsdfgsdfgsfgsdfg")
             object.axios.get(object.url)
                 .then((response) => {
-                    console.log("sadgdfgsdfsdfsfgsdfgsdfgsfgsdfg")
                     commit('SET_PromocodesAPI', response.data.objects)
                 }).catch((error) =>{
                     console.log(error,"oiooioi");
@@ -37,20 +35,16 @@ export const PromocodeModule = {
                 })
         },
         setPromocodeFromSearch({ commit },array){
-            console.log('setPromocodeFromSearch');
             commit('SET_PromocodesAPI', array)
         },
         setPromocodeObject({ commit },obj){
-            console.log('SET_PromocodesObject');
             commit('SET_PromocodesObject', obj);
             commit('SET_EditState', true);
         },
         setPromocodeSelectedObjects({ commit },obj){
-            console.log('SET_PromocodesSelectedOjects');
             commit('SET_PromocodesSelectedOjects', obj);
         },
         setEditState({ commit },status){
-            console.log('SET_EditState',status);
             commit('SET_EditState', status)
         }
     },

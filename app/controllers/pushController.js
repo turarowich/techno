@@ -6,7 +6,7 @@ const { query } = require('express');
 var apn = require('apn');
 var path = require('path')
 var dir = path.join(__dirname, "../../keys/" + config.APNs)
-
+var moment = require('moment')
 var options = {
     token: {
         key: dir,
@@ -232,6 +232,7 @@ class PushController {
                 user_id: req.userID,
                 icon: "add"
             }).save()
+            schedulePush = await SchedulePush.find({ '_id': schedulePush._id}).populate('clients').exec()
             result['object'] = schedulePush
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
@@ -260,6 +261,7 @@ class PushController {
                 user_id: req.userID,
                 icon: "update"
             }).save()
+            schedulePush = await SchedulePush.find({ '_id': schedulePush._id }).populate('clients').exec()
             result['object'] = schedulePush
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
@@ -347,6 +349,64 @@ class PushController {
         res.status(result.status).json(result);
     };
 
+    sendSchedulePushes = async function (req, res) {
+        let db = useDB("loygift")
+        let User = db.model("User");
+        let users = await User.find()
+        
+        for(let user of users){
+            db = useDB("loygift" + user._id)
+            let Device = db.model("Device");
+            let Settings = db.model("Settings");
+            let SchedulePush = db.model("SchedulePush");
+            let settings = await Settings.find()
+            settings = settings[0]
+            let data = await SchedulePush.find({'isActive': true})
+            let today = (moment().format('dddd')).toLowerCase();
+            for(let info of data){
+                let query = { 'type': 'ios', 'client': { $in: info.clients } }
+                if (info.sendToAll) {
+                    query = {}
+                }
+                let devicesIOS = await Device.find(query)
+                let todayInfo = info[today]
+                let now = moment()
+                if (todayInfo.isActive && now){
+                    for (let push of todayInfo.push) {
+                        let noteIOS = new apn.Notification({
+                            alert: {
+                                title: push.title,
+                                subtitle: "",
+                                body: push.desc,
+                            },
+                            mutableContent: 1,
+                            payload: {
+                                type: "individual",
+                            },
+                            sound: "default",
+                            topic: settings.APNsTopic
+                        });
+                        if (apnProvider) {
+                            apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
+                                if (response.failed.length) {
+                                    response.failed.forEach((fail) => {
+                                        if (fail.status == '400' && fail.response.reason == 'BadDeviceToken') {
+                                            let device = devicesIOS.find(device => device.token == fail.device)
+                                            if (device) device.deleteOne()
+                                        }
+                                    });
+                                }
+                            }).catch(function (error) {
+                                console.log("Faled to send message to ", error);
+                            });
+                        }
+                    }
+                }
+                
+            }
+        }
+        return;
+    };
 
     
 }

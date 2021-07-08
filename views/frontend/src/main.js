@@ -44,6 +44,7 @@ const ax = axios.create({
 });
 console.log(process.env.VUE_APP_SERVER_URL,"process.env.VUE_APP_SERVER_URL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 console.log(localStorage.getItem('token'),"process.env.VUE_APP_SERVER_URL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
 const socket = io(process.env.VUE_APP_SERVER_URL, {
     extraHeaders: {
         token: localStorage.getItem('token')
@@ -146,6 +147,12 @@ var home_url = [
     'getEarnedPoints',
     'getNewsWeb',
     'getSingleNewsWeb',
+    'saveTempoOrder',
+    'getTempoOrder',
+    'updateTempoOrder',
+    'updateProductTempoOrder',
+    'removeProductTempoOrder',
+    'searchProductWeb',
 ]
 app.config.globalProperties.addNewProperty = function(obj, key, value = "", copy) {
     obj.map(function(object) {
@@ -166,7 +173,7 @@ app.config.globalProperties.changeToken = function () {
             token: localStorage.getItem('token')
         },
         withCredentials: true,
-        reconnection: process.env.VUE_APP_RECONNECTION
+        reconnection: (process.env.VUE_APP_RECONNECTION === 'true')
     })
 }
 app.config.globalProperties.img = function (main) {

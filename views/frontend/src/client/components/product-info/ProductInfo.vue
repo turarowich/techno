@@ -186,7 +186,7 @@ export default {
         guest:this.guest,
         client:this.user ? this.user._id  : null,
         points:this.getUsedPoints || 0,
-        promoCode:this.getPromocode,
+        promoCode:this.getPromocode ? this.getPromocode._id : null,
         status:"In Progress",
         address:this.getAddress,
         deliveryType:this.deliveryType.type,

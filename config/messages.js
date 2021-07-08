@@ -61,6 +61,7 @@ const en_messages = {
     promo_code_unique: 'Promocode with this code already exists',
     promo_404: 'Promocode not found',
     promo_not_usable: 'Promocode is not usable',
+    promo_already_used: 'Promocode alredy used',
     promo_min_price: 'The amount for using the promo code has not been reached',
     
 }
@@ -125,6 +126,7 @@ const ru_messages = {
     promo_code_unique: 'Промокод с таким кодом уже существует',
     promo_404: 'Промокод не найден',
     promo_not_usable: 'Промокод не может быть использован',
+    promo_already_used: 'Промокод уже использован',
     promo_min_price: 'Не достигнута сумма для использования промокода',
     
     
