@@ -5,7 +5,7 @@
         <div class="modal-content category-content">
           <div class="modal-header category-header">
             <div class="d-flex justify-content-between mb-3" style="width:100%">
-              <h3 class="modal-title">Promocode for new shoes</h3>
+              <h3 class="modal-title">Promocode - <span id="promoHistoryTitle"></span></h3>
               <button type="button" data-dismiss="modal" aria-label="Close" class="close">
               <span aria-hidden="true">
                 <img src="../../assets/icons/x.svg" alt="">

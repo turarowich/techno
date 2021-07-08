@@ -14,7 +14,7 @@
      <div  style="width: 16%;">{{promocode.code}}</div>
      <div  style="width: 16%;">{{promocode.endDate.slice(0,10) }}</div>
      <div  style="width: 13%;" >
-       <div  v-if="check()" @click="getHistory(promocode.usedBy)" class="history-btn" data-toggle="modal" data-target="#history-promocode">
+       <div  v-if="check()" @click="getHistory(promocode.usedBy,promocode.name)" class="history-btn" data-toggle="modal" data-target="#history-promocode">
          <img src="../../assets/icons/History.svg">
        </div>
      </div>
@@ -51,7 +51,7 @@ export default {
     check(access="loyalty", parametr="active", parametr2="canEdit"){
         return this.checkAccess(access, parametr, parametr2)
     },
-    getHistory(list){
+    getHistory(list,promo_name){
       let that = this;
       let content = '';
       list.forEach(function (item){
@@ -76,6 +76,7 @@ export default {
         content+=text;
       })
 
+      $('#promoHistoryTitle').html(promo_name);
       $('.promoHistoryContent').html(content);
     },
     getEditPromocode(id){
