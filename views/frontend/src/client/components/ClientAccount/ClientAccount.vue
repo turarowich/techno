@@ -4,7 +4,18 @@
       <div class="col-lg-10 m-auto">
         <div class="profile-info">
           <div class="d-flex align-items-center">
-            <img class="client-avatar" src="../../../assets/clients/clientProfile.svg">
+              <div class="client_avatar_container" style="position: relative;margin-right: 16px;">
+              <div class="client_avatar_with_back" v-if="!user.error" @error="user.error=true" v-bind:style="{ backgroundImage: 'url(' + server+'/'+user.avatar + '?rand=' + rand+ ')' }">
+
+              </div>
+              <img v-else class="client-avatar" src="../../../assets/clients/clientProfile.svg">
+              <input @change="uploadPhoto($event)" type="file" class="d-none" id="uploadClientImage">
+              <label for="uploadClientImage" style="position: absolute;left: 44px;bottom: 0;margin-bottom: 0;">
+                <img src="../../../assets/icons/addBtn.svg" style="height: 18px;width: 18px;">
+              </label>
+            </div>
+
+
             <div v-if="user">
               <h1 class="profile-title">
                 {{user.name}}
@@ -93,6 +104,7 @@ name: "ClientAccount",
   },
   data(){
   return{
+    rand: 1,
     orderList:[
       {id:1,name:"Essential Shoes",client:"Tomas Levins", phone:"0550457834", total:"450 $",date:"T2021-03-19",notes:"Please",status:'New'},
       {id:3,name:"AirForces",client:"Tomas Levins", phone:"0775896542", total:"13 $",date:"2021-03-19",notes:"Please" ,status:'New'},
@@ -104,6 +116,9 @@ name: "ClientAccount",
   }
   },
   computed:{
+    server(){
+      return this.$server;
+    },
     user(){
       return this.$store.getters['Client/getUser'];
     },
@@ -124,6 +139,50 @@ name: "ClientAccount",
     },
   },
   methods:{
+    uploadPhoto(event){
+      let valid = ["image/png", "image/jpg", "image/jpeg"];
+      let that = this;
+      if(event.target.files[0] && event.target.files[0].size > 1000000){
+        that.$warningAlert('Image size exceed 3 mb');
+      }else if(event.target.files[0] && !valid.includes(event.target.files[0].type)){
+        that.$warningAlert('Image type can be jpg or png');
+      }else{
+        const reader = new FileReader();
+        reader.readAsDataURL(event.target.files[0]);
+        reader.onload = e =>{
+          //check
+          let im = new Image;
+          im.src = e.target.result;
+          im.onload = function (){
+            that.saveFile(e.target.result);
+          }
+        };
+      }
+    },
+    saveFile(file){
+      console.log("SAVING FILE");
+      let that=this;
+      const options = {
+        headers: {
+          "x-client-url": this.currentCompanyCatalog,
+          "x-access-token": this.userToken,
+        }
+      }
+      let url = this.url('saveAvatar');
+      let formData = new FormData();
+      formData.append('avatar', file);
+      formData.append('client', this.user._id);
+      this.axios.post(url, formData,options).then(function (response) {
+        that.user.avatar = response.data.avatar;
+        that.rand = Date.now();
+      }).catch(function(error){
+        if (error.response) {
+          if(error.response.data && !error.response.data.errors){
+            that.$warningAlert(error.response.data.msg)
+          }
+        }
+      });
+    },
     sortByDate() {
       if (this.orderList.length === 0) {
         return null;
@@ -202,6 +261,12 @@ name: "ClientAccount",
 }
 .disable-underline.active .order-tab{
   opacity: 1;
+}
+.client_avatar_with_back{
+  height:62px;
+  width:62px;
+  background-size: cover;
+  border-radius: 50%;
 }
 .logout{
   font-size: 16px;

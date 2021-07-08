@@ -5,7 +5,8 @@ const { query } = require('express');
 const client = require('../models/client');
 const LOG = require('./logController');
 const Analytics = require('./analyticsController');
-
+var path = require('path');
+const fs = require('fs');
 class ClientController{
     
     getClient = async function (req, res) {
@@ -176,9 +177,7 @@ class ClientController{
                     new: true
                 })
             }
-            
-    
-            
+
             if (req.files.avatar) {
                 let filename = saveImage(req.files.avatar, req.db, null, true)
                 if (filename == 'Not image') {
@@ -219,6 +218,50 @@ class ClientController{
 
         res.status(result.status).json(result);
     };
+    saveAvatar = async function (req, res) {
+        let db = useDB(req.db)
+        let company = req.db;
+        let clientModel = db.model("Client");
+        let client = req.fields.client;
+        let img = req.fields.avatar;
+        let ext = img.substring("data:image/".length, img.indexOf(";base64"));
+        let file_name = client+'.'+ext;
+        let dir = path.join(__dirname, '/../../views/frontend/images/' + company);
+        let full_file_name = 'images/' + company+'/'+file_name;
+
+        let update = {
+            avatar:full_file_name
+        };
+        let result = {
+            'status': 200,
+            'msg': '',
+        }
+        console.log('try STARTING SER SAVE');
+        try {
+            //remove old
+            let client_object = await clientModel.findById(client);
+            let remove_path = path.join(__dirname, '/../../views/frontend/'+client_object.avatar);
+            await fs.unlinkSync(remove_path);
+            // strip off the data: url prefix to get just the base64-encoded bytes
+            let data = img.replace(/^data:image\/\w+;base64,/, "");
+            let buf = Buffer.from(data, 'base64');
+            if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir, {recursive: true}, err => {
+                    console.log(err)
+                })
+            }
+            await fs.writeFile(dir+ "/" + file_name, buf,function (out){
+                console.log(out,"9090099")
+            });
+            await clientModel.findOneAndUpdate({_id:client}, update);
+            result.msg = 'Success';
+            result.avatar = full_file_name;
+        }catch (errr){
+            console.log(errr);
+            result.msg = 'errr';
+        }
+        res.status(result.status).json(result);
+    }
 
     updateClientsCategory = async function (req, res) {
         let db = useDB(req.db)

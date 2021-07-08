@@ -241,7 +241,6 @@ export default {
       if(image.name.match(/\.(jpg|jpeg|png|gif)$/)){
         let size = image.size;
         if(size>3000000){
-          console.log('boog');
           that.$warningAlert('Max size 3MB');
           return ;
         }
