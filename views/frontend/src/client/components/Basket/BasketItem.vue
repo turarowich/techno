@@ -27,13 +27,13 @@
       </div>
       <div style="width:30%;">
         <span>
-          {{item.current_price}} $
+          {{item.current_price}} {{catalog_settings.currency}}
         </span>
         <br>
         <div v-if="item.current_price<(item.product.price*item.quantity)" class="discounts_block">
-          <span class="lineThrough mr-2">{{item.product.price*item.quantity}}$ </span>
-          <span style="color: #E94A4A;" v-if="item.isDiscounted">Discount <span class="break-discount">{{item.discount_sum}}$</span></span>
-          <span style="color: #E94A4A;" v-else>Discount {{item.discount_percent_sum}}$</span>
+          <span class="lineThrough mr-2">{{item.product.price*item.quantity}} {{catalog_settings.currency}}</span>
+          <span style="color: #E94A4A;" v-if="item.isDiscounted">Discount <span class="break-discount">{{item.discount_sum}} {{catalog_settings.currency}}</span></span>
+          <span style="color: #E94A4A;" v-else>Discount {{item.discount_percent_sum}} {{catalog_settings.currency}}</span>
         </div>
       </div>
       <div style="width:10%" class="d-flex justify-content-end pr-3"><img @click="removeFromBasket(item.product._id)" src="../../../assets/clients/x.svg"></div>
@@ -51,6 +51,9 @@ export default {
     }
   },
   computed:{
+    catalog_settings(){
+      return this.$store.getters['Catalog/getCatalog_settings'];
+    },
     company_url_basket(){
       return this.$store.getters['Orders/getCompany_url_basket'];
     },

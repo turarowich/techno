@@ -51,8 +51,8 @@
         <div class="tab-content">
           <div id="menu1" class="tab-pane fade">
             <div class="d-flex main-content-header">
-              <div class="table-head" style="width: 20%;">Name order</div>
-              <div class="table-head" style="width: 14%;">Deliver address</div>
+              <div class="table-head" style="width: 10%;">Order #</div>
+              <div class="table-head" style="width: 24%;">Deliver address</div>
               <div class="table-head table-link " @click="sortByDate" style="width: 10%;">Date<img class="date-pol" style="margin-left:10px" src="../../../assets/icons/polygon.svg"></div>
               <div class="table-head " style="width: 12%;" >Total quantity </div>
               <div class="table-head " style="width: 12%; cursor: pointer">Delivery price</div>

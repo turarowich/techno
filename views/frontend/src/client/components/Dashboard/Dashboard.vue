@@ -111,6 +111,7 @@ name: "Dashboard",
             this.$store.dispatch("Catalog/setCompany_delivery_options",response.data.deliveries);
             let catalog_settings={
               name:settings.name,
+              currency:settings.currency,
               catalogMode:settings.catalogMode,
               foodMode:settings.foodMode,
               email:settings.email,

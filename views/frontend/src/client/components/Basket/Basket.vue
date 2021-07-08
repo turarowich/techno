@@ -100,7 +100,7 @@
                 <div class="delivery_option_wrapper_class" v-if="showDeliveryOption">
                   <div @click="setSelectedDeliveryOption(opt)" v-for="opt in delivery_options" :key="opt._id" class="d-flex delivery_option_class">
                     <div style="flex:1;">{{opt.name}}</div>
-                    <div>{{opt.price}}$</div>
+                    <div>{{opt.price}}{{catalog_settings.currency}}</div>
                   </div>
                 </div>
               </div>
@@ -127,22 +127,22 @@
 
               <div class=" discount d-flex justify-content-between">
                 <h3>Products</h3>
-                <span>{{total_price_full}} $</span>
+                <span>{{total_price_full}} {{catalog_settings.currency}}</span>
               </div>
 
               <div class=" discount d-flex justify-content-between">
                 <h3>Discount</h3>
-                <span>-{{ total_discounts }} $</span>
+                <span>-{{ total_discounts }} {{catalog_settings.currency}}</span>
               </div>
 
               <div v-if="deliveryService" class="mb-3 delivery d-flex justify-content-between">
                 <h3>Delivery</h3>
-                <span style="color:#5CBD85;">{{delivery_cost}} $</span>
+                <span style="color:#5CBD85;">{{delivery_cost}} {{catalog_settings.currency}}</span>
               </div>
 
               <div class="mb-4 d-flex justify-content-between">
                 <h4>Total</h4>
-                <h4>{{total_price_discount_delivery}} $</h4>
+                <h4>{{total_price_discount_delivery}} {{catalog_settings.currency}}</h4>
               </div>
 
               <div class="d-flex justify-content-between ">
@@ -185,7 +185,7 @@
               <span style="color:#858585;">{{itemQ.product.vendorCode}}</span>
             </div>
             <div style="margin-left: auto;">
-              {{itemQ.product.price}}$
+              {{itemQ.product.price}}{{catalog_settings.currency}}
             </div>
           </div>
           </div>

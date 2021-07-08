@@ -5,6 +5,7 @@ export const CatalogModule = {
         company_url: '',
         catalog_settings: {
             name:'',
+            currency:'',
             catalogMode:'',
             foodMode:'',
             email:'',
