@@ -12,30 +12,34 @@
 
       <div class="sign-up">
           <h1 class="welcome-sign-up ">Growth for your<br>
-            business with loy <span>Gift</span></h1>
+            business with<br class="br"> loy <span>Gift</span></h1>
       <form @submit.prevent="registerSubmit">
 
           <div class="row">
             <div class="col-lg-6">
               <label class="label">Your name</label>
-              <input v-model="register.name" class="login-input" name="name">
+              <input :class="{errorInput: validateName === true}" v-model="register.name" class="login-input" name="name">
+              <p class="fill-fields" v-if="validateName===true">Enter your name</p>
               <label class="label">Email</label>
-              <input v-model="register.email" class="login-input" name="password">
+              <input :class="{errorInput: validateEmail === true}" v-model="register.email" class="login-input" name="password">
+              <p class="fill-fields" v-if="validateEmail===true">Enter your email</p>
               <label class="label">Password</label>
-              <div class="password d-flex justify-space-between align-items-center">
-                <input v-model="register.password" id="show-password"  name="password" class="login-input" type="password">
+              <div  :class="{errorInput: validatePassword === true}" class="password d-flex justify-space-between align-items-center">
+                <input  v-model="register.password" id="show-password"  name="password" class="login-input bg-transparent" type="password">
                 <img class="hide-eye" @click="showPassword" src="../../assets/icons/Hide.svg">
                 <img class="show-eye"  @click="showPassword" src="../../assets/icons/eye.svg">
               </div>
+              <p class="fill-fields" v-if="validatePassword===true">Enter your password</p>
 
             </div>
             <div class="col-lg-6">
               <label class="label">Phone number</label>
-              <input v-model="register.phone" class="login-input" name="phone">
+              <input :class="{errorInput: validatePhone === true}" v-model="register.phone" class="login-input" name="phone">
+              <p class="fill-fields" v-if="validatePhone===true">Enter your phone number</p>
               <label class="label">Description</label>
               <input v-model="register.description" class="login-input" name="description">
               <label class="label">Repeat password</label>
-              <div class=" password d-flex justify-space-between align-items-center">
+              <div   class=" password d-flex justify-space-between align-items-center">
                 <input id="show-repeat"  class="login-input" type="password">
                 <img id="hide-eye" @click="showRepeat" src="../../assets/icons/Hide.svg">
                 <img id="show-eye"  @click="showRepeat" src="../../assets/icons/eye.svg">
@@ -58,7 +62,7 @@
                      <button class="sign-in-btn">Continue</button>
                    </div>
                    <div class="col-lg-6">
-                     <div class="have-account">Don't have an account? <a style="color:#616cf5; cursor:pointer;" @click="$router.push('/')">Sign in now</a></div>
+                     <div class="have-account">Have an account? <a style="color:#616cf5; cursor:pointer;" @click="$router.push('/')">Sign in now</a></div>
                    </div>
                  </div>
         <div class="main-or d-flex align-items-center justify-content-center">
@@ -88,6 +92,10 @@ export default {
 name: "SignUp",
   data(){
     return {
+      validatePhone:false,
+      validateName:false,
+      validatePassword:false,
+      validateEmail:false,
       register:{
         name:'',
         password:'',
@@ -128,6 +136,34 @@ name: "SignUp",
     registerSubmit(){
       let that = this;
       const data = new FormData()
+
+      if(this.register.name === ""){
+        this.validateName = true
+      }
+      else{
+        this.validateName = false
+      }
+
+      if(this.register.email === ""){
+        this.validateEmail = true
+      }
+      else{
+        this.validateEmail = false
+      }
+
+      if(this.register.phone === ""){
+        this.validatePhone = true
+      }
+      else{
+        this.validatePhone = false
+      }
+      if(this.register.password === ""){
+        this.validatePassword = true
+      }
+      else{
+        this.validatePassword = false
+      }
+
       data.append('name', this.register.name);
       data.append('email', this.register.email);
       data.append('phone', this.register.phone);
@@ -148,7 +184,7 @@ name: "SignUp",
       })
       .catch((error)=>{
         console.log(error);
-        that.$warningAlert(Object.values(error.response.data.errors));
+        
       })
 
     }
@@ -157,6 +193,14 @@ name: "SignUp",
 </script>
 
 <style scoped>
+.br{
+  display:none;
+}
+.fill-fields{
+  margin-top: -10px;
+  font-size:14px;
+  color:#E94A4A;
+}
 .or-div{
   height: 0;
   width: 30%;
@@ -229,6 +273,9 @@ a{
   font-weight: 100;
 }
 @media(max-width:768px){
+  .br{
+    display: block;
+  }
   .sign-in-header{
     justify-content: center;
   }

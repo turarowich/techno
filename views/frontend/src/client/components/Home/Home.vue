@@ -95,13 +95,14 @@ name: "Home",
 
   },
   mounted() {
+    $(".modal-backdrop").attr('class', 'active');
     $(document).ready(function(){
       $(window).on("scroll",function() {
         if($(this).scrollTop() > 200)
         {
           $(".fixed-top").addClass("nav-top");
           $('.navigation').css({'border-bottom': '1px solid transparent'})
-          $('#back-top').css({'display':'none'})
+          $('#back-top').css({'display':'block'})
         }
         else
         {
@@ -123,8 +124,8 @@ name: "Home",
 .nav-top{
   box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.2);
   transition:.3s;
-
 }
+
 .fixed-top{
   background: #fff;
 }
@@ -146,9 +147,6 @@ name: "Home",
   bottom: 20px;
   right:20px;
 
-}
-#back-top{
-  display: none;
 }
 .overlay_404{
   /*display: none;*/

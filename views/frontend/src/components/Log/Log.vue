@@ -205,6 +205,7 @@ export default {
 }
 .general-dropdown{
   width: 19rem;
+  transform: translate3d(0px, -5px, 0px) !important;
 }
 .filter-dropdown{
   padding: 17px;

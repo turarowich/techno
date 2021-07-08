@@ -4,22 +4,29 @@
 
   </div>
   <div class="d-flex align-items-center path-box" @click="$router.go(-1)"><img class="large-path-img mr-1" src="../../../assets/clients/slide.svg"><h3 class="path-title">{{$route.name}}</h3></div>
-  <div class="row">
-    <div class="col-lg-8 mb-5 basket-item">
 
-      <div class="client-table-header">
-        <div class="client-table-head head-name" style="width:40%">Products</div>
-        <div class="client-table-head head-amount" style="width:30%">Amount</div>
-<!--        <div class="client-table-head" style="width:14%">Discount%</div>-->
-<!--        <div class="client-table-head" style="width:14%">DiscountSum</div>-->
-        <div class="client-table-head head-price" style="width:30%">Price</div>
-        <div class="client-table-head" style="width:10%"></div>
+  <div class="text-center empty-basket" v-if="shoppingCart.length === 0">
+    <img src="../../../assets/clients/box.svg">
+    <h4>Your shopping cart is empty please choose your product from out catalog</h4>
+  </div>
 
+  <div v-else>
+
+    <div class="row">
+      <div class="col-lg-8 mb-5 basket-item">
+        <div class="client-table-header">
+          <div class="client-table-head head-name" style="width:40%">Products</div>
+          <div class="client-table-head head-amount" style="width:30%">Amount</div>
+          <!--        <div class="client-table-head" style="width:14%">Discount%</div>-->
+          <!--        <div class="client-table-head" style="width:14%">DiscountSum</div>-->
+          <div class="client-table-head head-price" style="width:30%">Price</div>
+          <div class="client-table-head" style="width:10%"></div>
+
+        </div>
+        <BasketItem @checkPromocode_child="checkPromocode" />
       </div>
-      <BasketItem @checkPromocode_child="checkPromocode" />
-    </div>
 
-    <div class="col-lg-4 col-md-6">
+      <div class="col-lg-4 col-md-6">
         <div v-if="countOrders>0" class="sales">
 
           <div v-if="!catalog_settings.foodMode">
@@ -159,11 +166,15 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <div>
+      <BasketConfirm @continueAsGuest_child="continueAsGuest" />
     </div>
   </div>
-  <div>
-    <BasketConfirm @continueAsGuest_child="continueAsGuest" />
-  </div>
+
+
+
 </div>
 
   <!--Centered Modal-->
@@ -609,7 +620,7 @@ name: "Basket",
   overflow-y: auto;
 }
 .sales .cashback-sub-title{
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 .sales-input{
   border: 1px solid #E3E3E3;
@@ -618,6 +629,24 @@ name: "Basket",
   padding:0 6px;
   /*margin-bottom: 42px;*/
   align-items: center;
+ 
+}
+.empty-basket{
+  height: 300px;
+  border-radius:10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+}
+.empty-basket h4{
+  color:#b0b0b0;
+  font-size:16px;
+}
+.empty-basket img{
+  width:80px;
+  margin-bottom: 20px;
 }
 .sales-input input{
   border:none;
@@ -675,6 +704,15 @@ name: "Basket",
   height: 33px;
   border-radius: 5px;
   border: 1px solid #D3D3D3;
+  background: #616cf5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor:pointer;
+}
+.promocodeCheckBtn img{
+  width: 15px;
+  height: 11px;
 }
 .promocode_result{
   border:1px solid #d3d3d3;

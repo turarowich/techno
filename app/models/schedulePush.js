@@ -204,17 +204,17 @@ const schedulePushSchema = new Schema({
             time: {
                 type: String,
                 required: false,
-                default: ""
+                default:''
             },
             title: {
                 type: String,
-                required: true,
-                default: ""
+                required: false,
+                default:''
             },
             desc: {
                 type: String,
-                required: true,
-                default: ""
+                required: false,
+                default:''
             },
             sendAt: {
                 type: Date,

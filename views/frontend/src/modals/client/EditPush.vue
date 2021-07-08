@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade right"  id="add-push" tabindex="-1" role="dialog" aria-labelledby="add-promocode" aria-hidden="true">
+  <div class="modal fade right"  id="edit-push" tabindex="-1" role="dialog" aria-labelledby="edit-push" aria-hidden="true">
     <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: calc(100% - 250px);" role="document" >
       <div class="modal-content myModal-content h-100">
         <div class="modal-header justify-content-start align-items-center">
@@ -9,7 +9,7 @@
                 <img src="../../assets/icons/x.svg" alt="">
               </span>
           </button>
-            <h3 class="modal-title">Add push</h3>
+          <h3 class="modal-title">Edit push</h3>
         </div>
         <div class=" myModal-body">
           <form  class="modal-form ">
@@ -44,22 +44,22 @@
 
                   </div>
                 </div>
-               <div class="all-clients">
-                 <div  v-for="selectedClient in selectedClients" :key="selectedClient._id" class="choosed-client d-flex justify-content-between align-items-center">
+                <div class="all-clients">
+                  <div  v-for="client in selectedClients" :key="client._id" class="choosed-client d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
-                     <div class="category-logo d-flex justify-content-center align-items-center">V</div>
-                     <div class="category">
-                       <div class="category-name">{{selectedClient.name}}</div>
-                       <span class="category-people" v-if="selectedClient.category">Category <span style="color:#000; text-transform:capitalize">{{ selectedClient.category.name}}</span></span>
-                     </div>
+                      <div class="category-logo d-flex justify-content-center align-items-center">V</div>
+                      <div class="category">
+                        <div class="category-name">{{client.name}}</div>
+                        <span class="category-people" v-if="client.category">Category <span style="color:#000; text-transform:capitalize">{{client.category.name}}</span></span>
+                      </div>
                     </div>
-                   <img @click="deleteClient(selectedClient)" src="../../assets/icons/deleteClient.svg">
-                 </div>
-               </div>
+                    <img @click="deleteClient(client)" src="../../assets/icons/deleteClient.svg">
+                  </div>
+                </div>
               </div>
-            <!-------------------------Right Side --------------------->
+              <!-------------------------Right Side --------------------->
               <div class="col-lg-6">
-                  <h3 class="push-title settings">Notification settings</h3>
+                <h3 class="push-title settings">Notification settings</h3>
                 <label>Push name</label>
                 <input type="text"  v-model="week.title"  name="week" class="cashback-input w-100 mb-3" placeholder="Please set push name">
                 <div class="radio-toolbar">
@@ -94,33 +94,33 @@
                   </div>
                 </div>
 
-              <!----- By week-- -->
+                <!----- By week-- -->
 
-              <div v-show="value ==='week'" >
-                <div class="week"  >
-                  <div  @click="setDay('monday')" :class="{is_active: selectedDay.name === 'monday',active: week.monday.isActive }"  class="days d-flex justify-content-center align-items-center">MO</div>
-                  <div  @click="setDay('tuesday')" :class="{is_active: selectedDay.name === 'tuesday',active: week.tuesday.isActive }"  class="days d-flex justify-content-center align-items-center">TU</div>
-                  <div  @click="setDay('wednesday')" :class="{is_active: selectedDay.name === 'wednesday',active: week.wednesday.isActive}"  class="days d-flex justify-content-center align-items-center">WE</div>
-                  <div  @click="setDay('thirsday')" :class="{is_active: selectedDay.name === 'thirsday',active: week.thirsday.isActive}"  class="days d-flex justify-content-center align-items-center">TH</div>
-                  <div  @click="setDay('friday')" :class="{is_active: selectedDay.name === 'friday',active: week.friday.isActive}"  class="days d-flex justify-content-center align-items-center">FR</div>
-                  <div  @click="setDay('saturday')" :class="{is_active: selectedDay.name === 'saturday',active: week.saturday.isActive}"  class="days d-flex justify-content-center align-items-center">SA</div>
-                  <div  @click="setDay('sunday')" :class="{is_active: selectedDay.name === 'sunday',active: week.sunday.isActive}"  class="days d-flex justify-content-center align-items-center">SU</div>
-                </div>
-                <div class="d-flex align-items-center mb-4 justify-content-between">
-                  <div class="d-flex align-items-center ">
-                    <label class="switch d-flex ">
-                      <input v-model="selectedDay.isActive" type="checkbox">
-                      <span class="slider round"></span>
-                    </label>
-                    <h2 class="selected-day">{{selectedDay.name}}</h2>
+                <div v-show="value ==='week'" >
+                  <div class="week"  >
+                    <div  @click="setDay('monday')" :class="{is_active: selectedDay.name === 'monday',active: week.monday.isActive }"  class="days d-flex justify-content-center align-items-center">MO</div>
+                    <div  @click="setDay('tuesday')" :class="{is_active: selectedDay.name === 'tuesday',active: week.tuesday.isActive }"  class="days d-flex justify-content-center align-items-center">TU</div>
+                    <div  @click="setDay('wednesday')" :class="{is_active: selectedDay.name === 'wednesday',active: week.wednesday.isActive}"  class="days d-flex justify-content-center align-items-center">WE</div>
+                    <div  @click="setDay('thirsday')" :class="{is_active: selectedDay.name === 'thirsday',active: week.thirsday.isActive}"  class="days d-flex justify-content-center align-items-center">TH</div>
+                    <div  @click="setDay('friday')" :class="{is_active: selectedDay.name === 'friday',active: week.friday.isActive}"  class="days d-flex justify-content-center align-items-center">FR</div>
+                    <div  @click="setDay('saturday')" :class="{is_active: selectedDay.name === 'saturday',active: week.saturday.isActive}"  class="days d-flex justify-content-center align-items-center">SA</div>
+                    <div  @click="setDay('sunday')" :class="{is_active: selectedDay.name === 'sunday',active: week.sunday.isActive}"  class="days d-flex justify-content-center align-items-center">SU</div>
                   </div>
-                  <span class="add-more" @click="addContent">+ Add more</span>
+                  <div class="d-flex align-items-center mb-4 justify-content-between">
+                    <div class="d-flex align-items-center ">
+                      <label class="switch d-flex ">
+                        <input v-model="currentPush.isActive" type="checkbox">
+                        <span class="slider round"></span>
+                      </label>
+                      <h2 class="selected-day"></h2>
+                    </div>
+                    <span class="add-more" @click="addContent">+ Add more</span>
+                  </div>
                 </div>
-              </div>
 
                 <!---------Push Content------->
 
-                <div v-for="(item,index) in selectedDay.push" :key="index" >
+                <div v-for="(item,index) in currentPush" :key="index" >
                   <div class="d-flex mb-3">
                     <div style="width:25%" class="mr-3">
                       <label>Time</label><br>
@@ -143,7 +143,7 @@
 
             <div class="d-flex">
               <button class="save mr-2" @click.prevent="onSubmit">Save</button>
-              <button class="cancel" @click="cancel">Cancel</button>
+              <button class="cancel" @click.prevent="cancel">Cancel</button>
             </div>
 
           </form>
@@ -160,20 +160,26 @@ import $ from "jquery";
 
 export default {
   name: "AddPush",
-  props:['getSchedulePushes'],
+  props:['getSchedulePushes','edit_push'],
   data(){
     return {
       working_hours:[
         '01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00',
         '13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00','00:00',
       ],
-      push_content:[
-        {time:'',title: '',description:''},
-      ],
+
+
       selectedDay:{isActive:false, push:[{time:'',title: '',desc:''}],name:'Select day'},
-      clients:[],
+
       search_client:'',
       clientCategory:[],
+      currentPush:{
+        isActive:false,
+        clients:[],
+        tuesday:'',
+
+      },
+      push_content:'',
       value:'week',
       selectedClients:[],
       turnOnDay:false,
@@ -199,19 +205,20 @@ export default {
       })
     },
 
+
+
   },
   methods:{
     onSubmit(){
       this.axios.post(this.url('addSchedulePush'),this.week)
-      .then((res)=>{
-        console.log(res, "sucesss")
-        this.$successAlert('Push has been added')
-        this.getSchedulePushes()
-        $('#add-push').modal("hide");
-      })
-      .catch(()=>{
-        console.log(this.week)
-      })
+          .then((res)=>{
+            console.log(res, "sucesss")
+            this.getSchedulePushes()
+            $('#add-push').modal("hide");
+          })
+          .catch(()=>{
+            console.log(this.week)
+          })
 
     },
     setDay(day){
@@ -225,22 +232,23 @@ export default {
     },
     addContent(){
       if(this.selectedDay.push.length<3){
-      this.selectedDay.push.push({time:'',title: '',desc:''})
-    }
-    else{
-      this.$warningAlert('Max is 3')
+        this.selectedDay.push.push({time:'',title: '',desc:''})
+      }
+      else{
+        this.$warningAlert('Max is 3')
       }
 
     },
     removeContent(el){
-        this.selectedDay.push = this.selectedDay.push.filter((item,index)=>{
-          console.log(item)
-          return el!==index
-        })
+      this.selectedDay.push = this.selectedDay.push.filter((item,index)=>{
+        console.log(item)
+        return el!==index
+      })
 
     },
     cancel(){
-      $('#add-push').modal("hide")
+      // $('#add-push').modal("hide")
+      console.log(this.currentPush);
     },
     getClients(){
       this.axios.get(this.url('getClients'))
@@ -256,19 +264,19 @@ export default {
           })
     },
     selectClient(selected){
-        for (let i = 0; i < this.selectedClients.length; i++) {
-          if(this.selectedClients[i]._id === selected._id){
-            this.$warningAlert("Client already added")
-            selected = null;
-            this.search_client = ''
-            break;
-          }
+      for (let i = 0; i < this.selectedClients.length; i++) {
+        if(this.selectedClients[i]._id === selected._id){
+          this.$warningAlert("Client already added")
+          selected = null;
+          this.search_client = ''
+          break;
         }
-        if(selected){
-          this.selectedClients.push(selected)
-          this.week.clients.push(selected._id)
-        }
-        this.search_client = ''
+      }
+      if(selected){
+        this.selectedClients.push(selected)
+        this.week.clients.push(selected._id)
+      }
+      this.search_client = ''
     },
     deleteClient(client){
       this.selectedClients = this.selectedClients.filter((item)=> item !== client)
@@ -277,16 +285,17 @@ export default {
 
   },
   mounted(){
-    this.getCategories()
+    this.getCategories();
     this.getClients();
-    new this.$lightpick({
-      format:'',
-      autoClose:false,
-      field: document.getElementById('months'),
-      parentEl:'section',
-      lang:'en',
-      inline:true,
-    });
+
+
+  },
+  watch:{
+    edit_push(newCat) {
+      this.currentPush = Object.assign({}, newCat);
+
+
+    }
   }
 
 }

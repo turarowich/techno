@@ -1,6 +1,6 @@
 <template>
  <div>
-  <div v-if="!getProduct.img"><Spinner/></div>
+  <div v-if="!getProduct.name"><Spinner/></div>
    <div v-else class="container client-container">
      <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg"><div @click="$router.go(-1)" class="mr-1">Back </div> | <span > {{getProduct.name}}</span> </div>
      <div class="row  mb-5">
@@ -241,6 +241,11 @@ export default {
 .product-text{
   color: #999999;
   margin-bottom: 50px;
+}
+@media(min-width:1200px){
+  .client-container{
+    width: calc(100vw - 240px);
+  }
 }
 @media(max-width:992px){
   .product-img{

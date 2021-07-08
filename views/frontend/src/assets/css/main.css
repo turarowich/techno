@@ -1352,6 +1352,7 @@ input.value-success, select.value-success, textarea.value-success,div.value-succ
     margin-right: 0;
 }
 
+
 @media(max-width:992px){
         .multiple-items .slick-track{
             display: none;
@@ -1376,13 +1377,13 @@ input.value-success, select.value-success, textarea.value-success,div.value-succ
         font-size: 18px;
     }
 }
-/*.modal-backdrop {*/
-/*    width:100%;*/
-/*    left: 250px;*/
 
-/*}*/
-
-
+.modal-backdrop {
+    margin-left: 250px;
+}
+.modal-backdrop.active{
+    margin-left: 0 !important;
+}
 /*Responsive Web Catalog*/
 .mobile-header{
     border-bottom: 1px solid #E4E4E4;

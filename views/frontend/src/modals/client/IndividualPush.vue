@@ -8,35 +8,37 @@
                 <img src="../../assets/icons/xBlack.svg" alt="">
               </span>
           </button>
-          <h3 class="modal-title">Individual push</h3>
+          <h3 class="modal-title">Schedule push</h3>
         </div>
         <div class=" myModal-body">
           <span class="header-description">Configure Unique Push Notifications<br> to send to customers</span>
 
-          <div>
-            <button class="app-buttons-item adding-btns"  data-toggle="modal" data-target="#add-push"><span>+ Add push</span></button>
+          <div class="d-flex align-items-center mb-4">
+            <button class="app-buttons-item adding-btns mb-0"  data-toggle="modal" data-target="#add-push"><span>+ Add push</span></button>
+            <button class="app-buttons-item" @click="deleteAllPushes"><img class="img-btn" src="../../assets/icons/trash_empty.svg" ><span>Remove</span></button>
           </div>
 
           <div class="d-flex main-content-header">
-            <div class="table-head" style="width: 3%;"><label class="custom-checkbox"><input type="checkbox"><span class="checkmark"></span></label></div>
+            <div class="table-head" style="width: 3%;"><label class="custom-checkbox"><input @click="toggleSelect" v-model="selectAll" type="checkbox"><span class="checkmark"></span></label></div>
             <div class="table-head" style="width: 43%;">Name</div>
             <div class="table-head" style="width: 30%;">Gap</div>
             <div class="table-head" style="width: 21%;">Action</div>
             <div class="table-head" style="width:3%"></div>
           </div>
           <div>
-            <AddPush/>
+            <AddPush v-bind:getSchedulePushes="getSchedulePushes"/>
+            <EditPush v-bind:edit_push="edit_push"/>
             <div class="table-content">
-              <div class="table-item d-flex align-items-center" >
-                <div  style="width: 3%;"><label class="custom-checkbox"><input  type="checkbox"  ><span class="checkmark"></span></label></div>
+              <div class="table-item d-flex align-items-center" v-for="pushes in schedulePushes"  :key="pushes._id" >
+                <div  style="width: 3%;"><label class="custom-checkbox"><input @click="checkMainSelect" :ref="'select'+pushes._id" type="checkbox"  ><span class="checkmark"></span></label></div>
                 <div  class="d-flex flex-column justify-content-center"  style="width: 43%;">
-                  <p class="mb-0">All clients</p>
-                  <p class="mb-0">9</p>
+                  <p class="mb-0">{{pushes.title}}</p>
+                  <p class="mb-0" style="color:#858585">{{pushes.clients.length}} clients</p>
                 </div>
-                <div  style="width: 30%;">Everyweek</div>
+                <div  style="width: 30%;">{{pushes.byWeek ? 'EveryWeek' : 'Everymonth'}}</div>
                 <div  style="width: 21%;">
                   <label class="switch">
-                    <input type="checkbox" data-toggle="collapse" data-target="#collapse-limit" aria-expanded="true" aria-controls="collapse-limit">
+                    <input v-model="pushes.isActive" type="checkbox" data-toggle="collapse" data-target="#collapse-limit" aria-expanded="true" aria-controls="collapse-limit">
                     <span class="slider round"></span>
                   </label>
                 </div>
@@ -48,18 +50,15 @@
                     </div>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
                       <ul class="list-group " >
-                        <li class="list-group-item">Edit</li>
-                        <li class="list-group-item">Delete</li>
+                        <li class="list-group-item"  data-toggle="modal" data-target="#edit-push" @click="edit_push = pushes">Edit</li>
+                        <li class="list-group-item" @click="deletePush(pushes._id)">Delete</li>
                       </ul>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-
           </div>
-
-
         </div>
       </div>
     </div>
@@ -69,11 +68,171 @@
 
 <script>
 import AddPush from "@/modals/client/AddPush";
+import EditPush from "./EditPush";
+import Swal from "sweetalert2";
+import $ from "jquery";
 
 export default {
   name: "Push notification",
   components:{
-    AddPush
+    AddPush,
+    EditPush
+  },
+  data(){
+    return{
+      schedulePushes:[],
+      deletedPushes:[],
+      selectAll:false,
+      edit_push:''
+    }
+  },
+  methods:{
+    checkAll(item) {
+      return  this.$refs[`select${item._id}`].checked === true
+    },
+    toggleSelect: function () {
+      this.schedulePushes.forEach((user)=> {
+        if(this.$refs[`select${user._id}`] !== undefined && this.$refs[`select${user._id}`] !== null){
+          if(this.selectAll === false){
+            this.$refs[`select${user._id}`].checked = true
+          }
+          else{
+            this.$refs[`select${user._id}`].checked = false
+          }
+        }
+      });
+    },
+    checkMainSelect() {
+      if(this.schedulePushes.every(this.checkAll)){
+        this.selectAll = true;
+
+      }
+      else{
+        this.selectAll = false;
+      }
+
+    },
+    getSchedulePushes(){
+      this.axios.get(this.url('getSchedulePushes'))
+      .then((res)=>{
+          this.schedulePushes = res.data.objects;
+      })
+    },
+    deletePush(id){
+      Swal.fire({
+        showConfirmButton: true,
+        html: 'Are you sure to remove this <br>push',
+        showCloseButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Delete',
+        buttonsStyling:false,
+        customClass:{
+          popup: 'sweet-delete',
+          confirmButton: 'confirm-btn',
+          cancelButton:'cancel-btn',
+          actions:'btn-group',
+          content:'content-sweet',
+          closeButton:'close-btn'
+
+        },
+        showClass: {
+          popup: 'animate__animated animate__slideInDown'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp'
+        }
+
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.axios.delete(this.url('deleteSchedulePush', id))
+              .then(()=>{
+                this.getSchedulePushes()
+                Swal.fire({
+                      title:'Success',
+                      timer:1500,
+                      text:'Push has been removed',
+                      showConfirmButton:false,
+                      position: 'top-right',
+                      customClass:{
+                        popup:'success-popup',
+                        content:'success-content',
+                        title:'success-title',
+                        header:'success-header',
+                        image:'success-img'
+                      },
+                    }
+                )
+              }).catch((error)=>{
+            if(error.response && error.response.data){
+              this.$warningAlert(error.response.data.msg)
+            }
+          });
+        }
+      })
+    },
+    deleteAllPushes() {
+      this.schedulePushes.forEach((user)=> {
+        if(this.$refs[`select${user._id}`] !== undefined && this.$refs[`select${user._id}`] !== null){
+          if(this.$refs[`select${user._id}`].checked === true){
+            this.deletedPushes.push(user._id)
+          }
+        }
+      });
+      if(this.deletedPushes.length > 0){
+        Swal.fire({
+          showConfirmButton: true,
+          html: 'Are you sure to remove these<br>pushes',
+          showCloseButton: true,
+          showCancelButton: true,
+          confirmButtonText: 'Delete',
+          buttonsStyling:false,
+          customClass:{
+            popup: 'sweet-delete',
+            confirmButton: 'confirm-btn',
+            cancelButton:'cancel-btn',
+            actions:'btn-group',
+            content:'content-sweet',
+            closeButton:'close-btn'
+          },
+
+          showClass: {
+            popup: 'animate__animated animate__slideInDown'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.axios.post(this.url('deleteSchedulePushes'),{objects: this.deletedPushes})
+                .then(()=>{
+                  this.deletedPushes = []
+                  this.getSchedulePushes()
+                  $('#parent-check').prop('checked',false)
+                  this.$successAlert('All clients have been removed')
+                }).catch((error)=>{
+              if(error.response && error.response.data){
+                this.$warningAlert(error.response.data.msg)
+              }
+            });
+          }
+          else{
+            this.deletedPushes = []
+          }
+
+        })
+      }
+
+
+
+
+
+
+
+    },
+  },
+  mounted(){
+    this.getSchedulePushes()
+
   }
 
 
