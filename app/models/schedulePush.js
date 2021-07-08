@@ -3,9 +3,8 @@ const Schema = mongoose.Schema;
 
 const schedulePushSchema = new Schema({
     clients: [{
-        type: String,
-        required: false,
-        default: ""
+        type: Schema.Types.ObjectId,
+        ref: 'Client'
     }],
     byWeek: {
         type: Boolean,
@@ -49,6 +48,10 @@ const schedulePushSchema = new Schema({
                 required: false,
                 default: ""
             },
+            sendAt:{
+                type: Date,
+                required: false,
+            }
         }],
     },
     tuesday: {
@@ -73,6 +76,10 @@ const schedulePushSchema = new Schema({
                 required: false,
                 default: ""
             },
+            sendAt: {
+                type: Date,
+                required: false,
+            }
         }],
     },
     wednesday: {
@@ -97,6 +104,10 @@ const schedulePushSchema = new Schema({
                 required: false,
                 default: ""
             },
+            sendAt: {
+                type: Date,
+                required: false,
+            }
         }],
     },
     thursday: {
@@ -121,6 +132,10 @@ const schedulePushSchema = new Schema({
                 required: false,
                 default: ""
             },
+            sendAt: {
+                type: Date,
+                required: false,
+            }
         }],
     },
     friday: {
@@ -145,6 +160,10 @@ const schedulePushSchema = new Schema({
                 required: false,
                 default: ""
             },
+            sendAt: {
+                type: Date,
+                required: false,
+            }
         }],
     },
     saturday: {
@@ -169,6 +188,10 @@ const schedulePushSchema = new Schema({
                 required: false,
                 default: ""
             },
+            sendAt: {
+                type: Date,
+                required: false,
+            }
         }],
     },
     sunday: {
@@ -193,6 +216,10 @@ const schedulePushSchema = new Schema({
                 required: true,
                 default: ""
             },
+            sendAt: {
+                type: Date,
+                required: false,
+            }
         }],
     },
     
