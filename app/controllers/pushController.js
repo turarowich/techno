@@ -190,7 +190,7 @@ class PushController {
             'msg': 'Sending schedulePush'
         }
         try {
-            let schedulePush = await SchedulePush.findById(req.params.object)
+            let schedulePush = await SchedulePush.findById(req.params.object).populate('clients').exec()
             result['object'] = schedulePush
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
@@ -206,7 +206,7 @@ class PushController {
             'msg': 'Sending schedule pushs'
         }
         try {
-            let schedulePushes = await SchedulePush.find()
+            let schedulePushes = await SchedulePush.find().populate('clients').exec()
             result['objects'] = schedulePushes
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
