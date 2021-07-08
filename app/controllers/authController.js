@@ -523,7 +523,7 @@ class AuthController{
                 if (req.fields.password && req.fields.password.match(/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/) && req.fields.password.length < 64){
                     client.password = bcrypt.hashSync(req.fields.password, 8);
                     client.oneTimeCode = ""
-                    await client.save()
+                    await client.save({validateBeforeSave:false})
                     client.password = "secured"
                     result = {
                         'status': 200,
