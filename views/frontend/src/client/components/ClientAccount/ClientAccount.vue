@@ -5,8 +5,7 @@
         <div class="profile-info">
           <div class="d-flex align-items-center">
               <div class="client_avatar_container" style="position: relative;margin-right: 16px;">
-              <div class="client_avatar_with_back" v-if="!user.error" @error="user.error=true" v-bind:style="{ backgroundImage: 'url(' + server+'/'+user.avatar + '?rand=' + rand+ ')' }">
-
+              <div class="client_avatar_with_back" v-if="!user.error && user.avatar!=undefined" @error="user.error=true" v-bind:style="{ backgroundImage: 'url(' + server+'/'+user.avatar + '?rand=' + rand+ ')' }">
               </div>
               <img v-else class="client-avatar" src="../../../assets/clients/clientProfile.svg">
               <input @change="uploadPhoto($event)" type="file" class="d-none" id="uploadClientImage">

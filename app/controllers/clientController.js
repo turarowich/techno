@@ -240,8 +240,11 @@ class ClientController{
         try {
             //remove old
             let client_object = await clientModel.findById(client);
-            let remove_path = path.join(__dirname, '/../../views/frontend/'+client_object.avatar);
-            await fs.unlinkSync(remove_path);
+            if(client_object.avatar){
+                let remove_path = path.join(__dirname, '/../../views/frontend/'+client_object.avatar);
+                await fs.unlinkSync(remove_path);
+            }
+
             // strip off the data: url prefix to get just the base64-encoded bytes
             let data = img.replace(/^data:image\/\w+;base64,/, "");
             let buf = Buffer.from(data, 'base64');
