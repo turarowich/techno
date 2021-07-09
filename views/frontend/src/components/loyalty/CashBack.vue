@@ -84,9 +84,22 @@
         </label>
         <h2 class="cashback-sub-title mb-0">Share with a friend</h2>
       </div>
+
+      <div class="d-flex enable-title align-items-center">
+        <label class="switch d-flex ">
+          <input type="checkbox" v-model="receive_back_points_status">
+          <span class="slider round"></span>
+        </label>
+        <h2 class="cashback-sub-title mb-0">Client that shared also receives the same amount of points</h2>
+      </div>
+
       <p class="cashback-description">Increase customer loyalty with the help of this tool</p>
       <input type="number" v-model="share_points_quant" class="cashback-input" style="width:40%">
     </div>
+
+
+
+
     <div class="radio-toolbar">
       <div class="d-flex align-items-center mr-4">
         <input type="radio" id="radioShopping" name="charge" value="buy" v-model="grant_points_when" :checked="grant_points_when == 'buy'">
@@ -169,6 +182,7 @@ export default {
         points_lifetime_status: false,
         share_points_quant: 0,
         share_points_status: false,
+        receive_back_points_status:false,
         status: false,
         welcome_points_quant: 0,
         welcome_points_status: false,
@@ -326,6 +340,7 @@ export default {
         selectedItemsList:that.selectedItemsList,
         share_points_quant:that.share_points_quant || 0,
         share_points_status:that.share_points_status,
+        receive_back_points_status:that.receive_back_points_status,
         status:that.status,
         welcome_points_quant:that.welcome_points_quant || 0,
         welcome_points_status:that.welcome_points_status,
@@ -408,6 +423,7 @@ export default {
           that.selectedItemsList = cashback.selectedItemsList;
           that.share_points_quant = cashback.share_points_quant;
           that.share_points_status = cashback.share_points_status;
+          that.receive_back_points_status = cashback.receive_back_points_status;
           that.welcome_points_quant = cashback.welcome_points_quant;
           that.welcome_points_status = cashback.welcome_points_status;
           that.bday_message_body= cashback.bday_message_body;

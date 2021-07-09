@@ -5,8 +5,10 @@ export const CatalogModule = {
         company_url: '',
         catalog_settings: {
             name:'',
+            currency:'',
             catalogMode:'',
             foodMode:'',
+            share_points_status:false,
             email:'',
             banner:'',
             logo:'',

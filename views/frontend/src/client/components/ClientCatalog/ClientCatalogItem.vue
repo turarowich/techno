@@ -3,7 +3,7 @@
 
     <div class="row add-padding" >
       <div  class="col-lg-3 col-6  product-box"  v-for="(product) in catalog" :key="product._id" >
-          <div v-if="product.quantity>0">
+          <div>
             <div class="product-img"  @click="selectProduct(product._id)">
               <img v-if="!product.error" :src="server+'/'+product.img" @error="product.error=true">
               <!--          <img v-else src="../../../assets/img/default.svg" >-->
@@ -11,20 +11,16 @@
               <!--        <img :src="server+'/'+product.img">-->
             </div>
             <div class="product-add">
-              <h2 class="long-text"  style="overflow: hidden;text-overflow: ellipsis;">{{product.name}}</h2>
-              <span v-if="checkDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} сом</span>
+              <h2 class="long-text"  style="overflow: hidden;text-overflow: ellipsis;">{{product.name}} {{product.quantity}}</h2>
+              <span v-if="checkDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} {{catalog_settings.currency}}</span>
               <br>
-              <span :class="{lineThrough:checkDates(product.promoStart,product.promoEnd)}">{{product.price}} сом</span>
+              <span :class="{lineThrough:checkDates(product.promoStart,product.promoEnd)}">{{product.price}} {{catalog_settings.currency}}</span>
             </div>
             <button v-if="!catalog_settings.catalogMode" class="add-to-card" @click="addToCart(product._id)">Add to cart</button>
             <button v-else class="add-to-card" @click="selectProduct(product._id)">View</button>
           </div>
-
-
         </div>
     </div>
-
-
   </div>
 </template>
 

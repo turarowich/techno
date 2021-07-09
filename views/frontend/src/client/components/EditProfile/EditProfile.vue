@@ -86,10 +86,8 @@ export default {
           "x-client-url": this.currentCompanyCatalog,
           "x-access-token": this.userToken,
         }
-
       }
       let url = this.url('updateClient',this.user._id);
-
       let data = {
         name:this.user.name,
         email:this.user.email,

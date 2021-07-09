@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-
+const uid = require('rand-token');
 const clientSchema = new Schema({
     name: {
         type: String,
@@ -119,6 +119,22 @@ const clientSchema = new Schema({
         type: String,
         required: false,
         default: ""
+    },
+    promocode:{
+        type: String,
+        required: false,
+        default: function() {
+            return uid.generate(7).toUpperCase();
+        }
+    },
+    promocodeIsUsed:{
+        type: Boolean,
+        required: false,
+        default:false,
+    },
+    whosePromoUsed:{
+        type: Schema.Types.ObjectId,
+        ref: "Client",
     },
     uniqueCode: {
         type: String,

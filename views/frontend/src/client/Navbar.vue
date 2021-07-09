@@ -16,9 +16,6 @@
     <div class="menu-wrapper">
       <div class="mobile-header d-flex justify-content-between align-items-center" >
         <div class="d-flex align-items-center">
-<!--          <div class="table-img">-->
-<!--            <img  src="../assets/icons/no-catalog.svg">-->
-<!--          </div>-->
           <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">
             <div v-if="catalog_settings.logo && catalog_settings.logo !==''"  v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.logo + ')' }" class="catalog_logo Q3">
 
@@ -39,7 +36,6 @@
           <li @click="removeActive" v-if="!isLogged" class="client-list "><router-link class="client-link" :to="`/${currentCompanyCatalog}/signin`"><img class="mr-3" src="../assets/clients/Profile.svg"/>Login</router-link></li>
           <li  v-else class="client-list"><img src="../assets/clients/Profile.svg"/><router-link class="client-link" :to="`/${currentCompanyCatalog}/client-account`">My Account</router-link></li>
         </span>
-
 
         <li v-if="!catalog_settings.catalogMode"  @click="removeActive" class="client-list mobile-basket">
           <router-link   class="client-link  d-inline-flex align-items-center" :to="`/${currentCompanyCatalog}/basket`" >
@@ -78,7 +74,7 @@
                   <div style="display: flex;align-items: center;">
                     <span class="basket-code" style="flex: 3">{{item.product.vendorCode}}</span>
                     <div class="basket-code " style="flex: 2">{{item.quantity}}x</div>
-                    <div class="basket-price " style="flex: 2">{{item.product.price}} $</div>
+                    <div class="basket-price " style="flex: 2">{{item.product.price}} {{catalog_settings.currency}}</div>
                   </div>
                 </div>
               </div>
@@ -100,16 +96,9 @@
         <p class="footer-info"><img src="../assets/clients/Message.svg"><a href="/">{{catalog_settings.email || "example@gmail.com"}}</a></p>
       </div>
     </div>
-
     <img v-if="!catalog_settings.catalogMode"  @click="$router.push(`/${currentCompanyCatalog}/basket`)" class="mobile-basket" src="../assets/clients/Buy.svg"/>
-
-
-
 </nav>
-
-
   </div>
-
   <!--Centered Modal-->
   <div class="parent-modal">
     <div class="modal myModal fade" id="orderStatus"  role="dialog" aria-hidden="true">
@@ -119,9 +108,9 @@
             <h3 class="modal-title orderStatusText">
             </h3>
             <button type="button" data-dismiss="modal" aria-label="Close" class="close mr-0">
-                  <span aria-hidden="true">
-                    <img src="../assets/icons/xBlack.svg" alt="">
-                  </span>
+                <span aria-hidden="true">
+                  <img src="../assets/icons/xBlack.svg" alt="">
+                </span>
             </button>
           </div>
         </div>
@@ -142,9 +131,7 @@ export default {
     }
   },
   computed:{
-
     //Contacts company
-
     companyAddresses(){
       return this.$store.getters['Catalog/getCompanyAddresses'];
     },
@@ -190,8 +177,6 @@ export default {
     },
     showNavbar(){
       $('.menu-wrapper').addClass('active')
-
-
     },
     logout(){
       this.$store.dispatch("Client/logout");
@@ -207,23 +192,21 @@ export default {
     }
   },
   created() {
-    // this.socket.on("sendingHey", function(data) {
     if(this.user) {
       this.socket.on("sendingHey", function (data) {
-        console.log(data);
         $('#orderStatus').modal('show');
         let text = `Order #${data.code} is ${data.status}`;
         $('.orderStatusText').text(text);
-        // alert(`This order ${data.code} is ${data.status}`);
       });
     }
   }
-
 }
 </script>
 
 <style scoped>
-
+.router-link-active {
+ background-color: transparent!important;
+}
 .contact{
   position: absolute;
   bottom: 20px;

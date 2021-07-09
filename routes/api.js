@@ -26,6 +26,8 @@ module.exports = function (app, io) {
     app.get('/getClients', verifyAccess, clientController.getClients);
     app.post('/addClient', verifyAccess, clientController.addClient);
     app.put('/updateClient/:client', clientController.updateClient);
+    app.post('/saveAvatar', clientController.saveAvatar);
+    app.post('/checkPromocode', clientController.checkPromocode);
     app.put('/updateClientsCategory', verifyAccess, clientController.updateClientsCategory);
     app.delete('/deleteClient/:client', verifyAccess, clientController.deleteClient);
     app.delete('/deleteClients', verifyAccess, clientController.deleteClients);

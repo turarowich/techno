@@ -63,6 +63,7 @@ class catalogController{
         //
         let db = useDB(req.db)
         let Settings = db.model("Settings");
+        let Cashback = db.model("Cashback");
         let Delivery = db.model("Delivery");
         let Branch = db.model("Branch");
         let Discount = db.model("Discount");
@@ -84,12 +85,19 @@ class catalogController{
             }
             let branches = await Branch.find()
             let deliveries = await Delivery.find()
+            let cashback = await Cashback.find()
             let discounts = await Discount.find().sort({ "discount_percentage": "asc" })
+
+            let share_points_status = false;
+            if(cashback && cashback[0]){
+                share_points_status = cashback[0].share_points_status;
+            }
 
             result['object'] = settings[0];
             result['branches'] = branches;
             result['deliveries'] = deliveries;
             result['discounts'] = discounts;
+            result['share_points_status'] = share_points_status;
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }

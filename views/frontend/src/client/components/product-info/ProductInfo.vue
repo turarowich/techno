@@ -19,7 +19,7 @@
 
                   <span v-if="deliveryType.type==='Delivery service'" style="color:#8C94A5">
                  <span>{{deliveryType.object.name || ''}}</span><br>
-                 <span>{{deliveryType.object.price || ''}} $</span><br>
+                 <span>{{deliveryType.object.price || ''}} {{catalog_settings.currency}}</span><br>
                  <span>{{getAddress || ''}}</span>
                </span>
                   <span v-else style="color:#8C94A5">
@@ -53,7 +53,7 @@
                       <span class="basket-code" style="flex: 2;">{{ cart_item.quantity }}x</span>
                     </div>
                   </div>
-                  <div class="basket-price " style="width:20%">{{cart_item.current_price}} $</div>
+                  <div class="basket-price " style="width:20%">{{cart_item.current_price}} {{catalog_settings.currency}}</div>
                 </div>
               </div>
               <div class="mt-5">
@@ -62,7 +62,7 @@
                     Subtotal
                   </div>
                   <div>
-                    <h5>{{getTotalPrice}}</h5>
+                    <h5>{{getTotalPrice}} {{catalog_settings.currency}}</h5>
                   </div>
                 </div>
                 <div class="d-flex">
@@ -70,7 +70,7 @@
                     Delivery
                   </div>
                   <div>
-                    <h5>{{getDeliveryCost}}</h5>
+                    <h5>{{getDeliveryCost}} {{catalog_settings.currency}}</h5>
                   </div>
                 </div>
                 <div class="d-flex">
@@ -78,7 +78,7 @@
                     Points used
                   </div>
                   <div>
-                    <h5 style="color:#007bff;">-{{getUsedPoints}}</h5>
+                    <h5 style="color:#007bff;">-{{getUsedPoints}} {{catalog_settings.currency}}</h5>
                   </div>
                 </div>
                 <div class="d-flex">
@@ -86,13 +86,13 @@
                     <h5>Total</h5>
                   </div>
                   <div>
-                    <h4>{{getFinalSum}}</h4>
+                    <h4>{{getFinalSum}} {{catalog_settings.currency}}</h4>
                   </div>
                 </div>
                 <div class="d-flex">
                   <div v-if="futurePoints>0" style="flex: 1;color: #616CF5;">
                     <span v-if="clientAuth">You will receive {{futurePoints}} cashback points</span>
-                    <span v-else>Login to receive {{futurePoints}} cashback points</span>
+                    <span v-else>Login to receive {{futurePoints}} {{catalog_settings.currency}} cashback points</span>
                   </div>
                 </div>
               </div>
@@ -128,6 +128,9 @@ export default {
     }
   },
   computed:{
+    catalog_settings(){
+      return this.$store.getters['Catalog/getCatalog_settings'];
+    },
     clientAuth() {
       return this.getClientAuth();
     },
@@ -270,7 +273,7 @@ export default {
   margin-bottom: 47px;
 }
 .info-order{
-  width: 80%;
+  /*width: 80%;*/
 }
 .info-title{
   font-weight: 600;

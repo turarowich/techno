@@ -4,7 +4,16 @@
       <div class="col-lg-10 m-auto">
         <div class="profile-info">
           <div class="d-flex align-items-center">
-            <img class="client-avatar" src="../../../assets/clients/clientProfile.svg">
+              <div class="client_avatar_container" style="position: relative;margin-right: 16px;">
+              <div class="client_avatar_with_back" v-if="!user.error && user.avatar!=undefined" @error="user.error=true" v-bind:style="{ backgroundImage: 'url(' + server+'/'+user.avatar + '?rand=' + rand+ ')' }">
+              </div>
+              <img v-else class="client-avatar" src="../../../assets/clients/clientProfile.svg">
+              <input @change="uploadPhoto($event)" type="file" class="d-none" id="uploadClientImage">
+              <label for="uploadClientImage" style="position: absolute;left: 44px;bottom: 0;margin-bottom: 0;">
+                <img src="../../../assets/icons/addBtn.svg" style="height: 18px;width: 18px;">
+              </label>
+            </div>
+
             <div v-if="user">
               <h1 class="profile-title">
                 {{user.name}}
@@ -21,7 +30,27 @@
             <img class="ml-2" src="../../../assets/clients/log-out.svg">
           </div>
         </div>
+        <div v-if="catalog_settings.share_points_status" class="w-50">
+          <div  class="d-flex justify-content-between">
+            <div >
+              Your Promocode that you can send to your friends
+            </div>
+            <div style="font-weight: bold">
+              {{user.promocode || ''}}
+            </div>
+          </div>
 
+          <div v-if="!user.promocodeIsUsed" class="d-flex justify-content-between">
+            <div class="d-flex justify-content-center align-items-center">
+              Enter promo
+            </div>
+            <div class="d-flex">
+              <input class="enterPromocodeClass" v-model="enteredPromocode" type="text">
+              <span @click="checkPromocode" class="checkPromocodeBtn">CHECK</span>
+            </div>
+          </div>
+
+        </div>
         <div class="bonus-notification">
           <div class="d-flex align-items-center">
             <img class="mr-2" src="../../../assets/clients/Discount.svg"> <span class="bonus-span mb-0" v-if="user">My bonuses: {{user.points}}</span>
@@ -51,8 +80,8 @@
         <div class="tab-content">
           <div id="menu1" class="tab-pane fade">
             <div class="d-flex main-content-header">
-              <div class="table-head" style="width: 20%;">Name order</div>
-              <div class="table-head" style="width: 14%;">Deliver address</div>
+              <div class="table-head" style="width: 10%;">Order #</div>
+              <div class="table-head" style="width: 24%;">Deliver address</div>
               <div class="table-head table-link " @click="sortByDate" style="width: 10%;">Date<img class="date-pol" style="margin-left:10px" src="../../../assets/icons/polygon.svg"></div>
               <div class="table-head " style="width: 12%;" >Total quantity </div>
               <div class="table-head " style="width: 12%; cursor: pointer">Delivery price</div>
@@ -93,6 +122,8 @@ name: "ClientAccount",
   },
   data(){
   return{
+    enteredPromocode:'',
+    rand: 1,
     orderList:[
       {id:1,name:"Essential Shoes",client:"Tomas Levins", phone:"0550457834", total:"450 $",date:"T2021-03-19",notes:"Please",status:'New'},
       {id:3,name:"AirForces",client:"Tomas Levins", phone:"0775896542", total:"13 $",date:"2021-03-19",notes:"Please" ,status:'New'},
@@ -104,6 +135,12 @@ name: "ClientAccount",
   }
   },
   computed:{
+    catalog_settings(){
+      return this.$store.getters['Catalog/getCatalog_settings'];
+    },
+    server(){
+      return this.$server;
+    },
     user(){
       return this.$store.getters['Client/getUser'];
     },
@@ -124,6 +161,70 @@ name: "ClientAccount",
     },
   },
   methods:{
+    checkPromocode() {
+      let that=this;
+      const options = {
+        headers: {
+          "x-client-url": this.currentCompanyCatalog,
+          "x-access-token": this.userToken,
+        }
+      }
+      let url = this.url('checkPromocode');
+      this.axios.post(url, {
+        promocode:this.enteredPromocode,
+        client:this.user._id,
+      },options).then(function () {
+        that.$successAlert("Received");
+      }).catch(function(error){
+        if (error.response) {
+           that.$warningAlert(error.response.data.msg)
+        }
+      });
+    },
+    uploadPhoto(event){
+      let valid = ["image/png", "image/jpg", "image/jpeg"];
+      let that = this;
+      if(event.target.files[0] && event.target.files[0].size > 1000000){
+        that.$warningAlert('Image size exceed 3 mb');
+      }else if(event.target.files[0] && !valid.includes(event.target.files[0].type)){
+        that.$warningAlert('Image type can be jpg or png');
+      }else{
+        const reader = new FileReader();
+        reader.readAsDataURL(event.target.files[0]);
+        reader.onload = e =>{
+          //check
+          let im = new Image;
+          im.src = e.target.result;
+          im.onload = function (){
+            that.saveFile(e.target.result);
+          }
+        };
+      }
+    },
+    saveFile(file){
+      console.log("SAVING FILE");
+      let that=this;
+      const options = {
+        headers: {
+          "x-client-url": this.currentCompanyCatalog,
+          "x-access-token": this.userToken,
+        }
+      }
+      let url = this.url('saveAvatar');
+      let formData = new FormData();
+      formData.append('avatar', file);
+      formData.append('client', this.user._id);
+      this.axios.post(url, formData,options).then(function (response) {
+        that.user.avatar = response.data.avatar;
+        that.rand = Date.now();
+      }).catch(function(error){
+        if (error.response) {
+          if(error.response.data && !error.response.data.errors){
+            that.$warningAlert(error.response.data.msg)
+          }
+        }
+      });
+    },
     sortByDate() {
       if (this.orderList.length === 0) {
         return null;
@@ -197,11 +298,34 @@ name: "ClientAccount",
 </script>
 
 <style scoped>
+.enterPromocodeClass{
+  height: 35px;
+  border: 1px solid #D3D3D3;
+  border-radius: 5px;
+  width: 100%;
+}
+.checkPromocodeBtn{
+  background: #616CF5;
+  border-radius: 5px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 0 0 75px;
+  margin-left: 5px;
+  color: white;
+}
 .disable-underline:hover{
   text-decoration: none;
 }
 .disable-underline.active .order-tab{
   opacity: 1;
+}
+.client_avatar_with_back{
+  height:62px;
+  width:62px;
+  background-size: cover;
+  border-radius: 50%;
 }
 .logout{
   font-size: 16px;

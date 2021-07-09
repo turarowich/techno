@@ -32,8 +32,8 @@
            <div class="col-lg-5 detail-left" :class="{active: getProduct.imgArray.length===0}">
              <h3 class="product-name">{{getProduct.name}}</h3>
              <h5 class="product-code">{{getProduct.code}}</h5>
-             <h1 v-if="checkDates(getProduct.promoStart,getProduct.promoEnd)" class="product-price">{{getProduct.promoPrice}} $</h1>
-             <h3 :class="{lineThrough:checkDates(getProduct.promoStart,getProduct.promoEnd)}" class="product-price">{{getProduct.price}} $</h3>
+             <h1 v-if="checkDates(getProduct.promoStart,getProduct.promoEnd)" class="product-price">{{getProduct.promoPrice}} {{catalog_settings.currency}}</h1>
+             <h3 :class="{lineThrough:checkDates(getProduct.promoStart,getProduct.promoEnd)}" class="product-price">{{getProduct.price}} {{catalog_settings.currency}}</h3>
              <br>
 
              <div v-if="!catalog_settings.catalogMode">
