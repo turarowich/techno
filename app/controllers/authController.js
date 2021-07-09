@@ -218,13 +218,15 @@ class AuthController{
 
             //cashback
             let cashback_points = await addWelcomePoints(db);
-            client.points = parseFloat(client.points ) + cashback_points;
-            await new ClientBonusHistory({
-                client: client._id,
-                points: cashback_points,
-                source: 'Welcome points',
-                type: 'received',
-            }).save();
+            if(cashback_points>0){
+                client.points = parseFloat(client.points ) + cashback_points;
+                await new ClientBonusHistory({
+                    client: client._id,
+                    points: cashback_points,
+                    source: 'Welcome points',
+                    type: 'received',
+                }).save();
+            }
 
             await client.save();
             client.password = ""

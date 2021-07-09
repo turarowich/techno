@@ -14,7 +14,6 @@
               </label>
             </div>
 
-
             <div v-if="user">
               <h1 class="profile-title">
                 {{user.name}}
@@ -31,7 +30,27 @@
             <img class="ml-2" src="../../../assets/clients/log-out.svg">
           </div>
         </div>
+        <div v-if="catalog_settings.share_points_status" class="w-50">
+          <div  class="d-flex justify-content-between">
+            <div >
+              Your Promocode that you can send to your friends
+            </div>
+            <div style="font-weight: bold">
+              {{user.promocode || ''}}
+            </div>
+          </div>
 
+          <div v-if="!user.promocodeIsUsed" class="d-flex justify-content-between">
+            <div class="d-flex justify-content-center align-items-center">
+              Enter promo
+            </div>
+            <div class="d-flex">
+              <input class="enterPromocodeClass" v-model="enteredPromocode" type="text">
+              <span @click="checkPromocode" class="checkPromocodeBtn">CHECK</span>
+            </div>
+          </div>
+
+        </div>
         <div class="bonus-notification">
           <div class="d-flex align-items-center">
             <img class="mr-2" src="../../../assets/clients/Discount.svg"> <span class="bonus-span mb-0" v-if="user">My bonuses: {{user.points}}</span>
@@ -103,6 +122,7 @@ name: "ClientAccount",
   },
   data(){
   return{
+    enteredPromocode:'',
     rand: 1,
     orderList:[
       {id:1,name:"Essential Shoes",client:"Tomas Levins", phone:"0550457834", total:"450 $",date:"T2021-03-19",notes:"Please",status:'New'},
@@ -115,6 +135,9 @@ name: "ClientAccount",
   }
   },
   computed:{
+    catalog_settings(){
+      return this.$store.getters['Catalog/getCatalog_settings'];
+    },
     server(){
       return this.$server;
     },
@@ -138,6 +161,26 @@ name: "ClientAccount",
     },
   },
   methods:{
+    checkPromocode() {
+      let that=this;
+      const options = {
+        headers: {
+          "x-client-url": this.currentCompanyCatalog,
+          "x-access-token": this.userToken,
+        }
+      }
+      let url = this.url('checkPromocode');
+      this.axios.post(url, {
+        promocode:this.enteredPromocode,
+        client:this.user._id,
+      },options).then(function () {
+        that.$successAlert("Received");
+      }).catch(function(error){
+        if (error.response) {
+           that.$warningAlert(error.response.data.msg)
+        }
+      });
+    },
     uploadPhoto(event){
       let valid = ["image/png", "image/jpg", "image/jpeg"];
       let that = this;
@@ -255,6 +298,23 @@ name: "ClientAccount",
 </script>
 
 <style scoped>
+.enterPromocodeClass{
+  height: 35px;
+  border: 1px solid #D3D3D3;
+  border-radius: 5px;
+  width: 100%;
+}
+.checkPromocodeBtn{
+  background: #616CF5;
+  border-radius: 5px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 0 0 75px;
+  margin-left: 5px;
+  color: white;
+}
 .disable-underline:hover{
   text-decoration: none;
 }

@@ -42,6 +42,11 @@ const cashbackSchema = new Schema({
         required: false,
         default: false
     },
+    receive_back_points_status: {
+        type: Boolean,
+        required: false,
+        default: false
+    },
     share_points_quant: {
         type: Number,
         required: false,

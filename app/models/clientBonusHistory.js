@@ -7,7 +7,7 @@ const clientBonusHistorySchema = new Schema({
         ref: 'Client'
     },
     points: {
-        type: String,
+        type: Number,
         required: false,
     },
     order: {

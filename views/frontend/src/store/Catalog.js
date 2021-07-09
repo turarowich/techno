@@ -8,6 +8,7 @@ export const CatalogModule = {
             currency:'',
             catalogMode:'',
             foodMode:'',
+            share_points_status:false,
             email:'',
             banner:'',
             logo:'',
