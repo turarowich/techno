@@ -270,14 +270,21 @@ class OrderController{
         }
 
         order_try: try {
+            
             let discounts = await Discount.find();
             let client = await Client.findById(req.fields.client);
+            
+            if (req.fields.promoCode == "") {
+                req.fields.promoCode = null
+            }
             let promocode = await PromocodeModel.findById(req.fields.promoCode);
             let delivery = await DeliveryModel.findById(req.fields.delivery);
             let deliveryPrice = 0;
             if(delivery){
                 deliveryPrice = delivery.price;
             }
+            console.log(req.fields)
+            
             //params: product->list of products ids and quantity, Product model,promocode obj,client obj,discounts list.
             let result_object = await products_with_discounts(
                 req.fields.products, // list of product ids and quant
@@ -290,7 +297,7 @@ class OrderController{
 
             //update promocode
             await checkAndUpdatePromo(promocode,client);
-
+            
             let order = await new Order({
                  // client: client._id,
                  // client_name: client.name,
@@ -535,7 +542,7 @@ class OrderController{
 
                 ////deduct cashback
                 //calculate cashback
-                /////////////////////////////////////////////////////////////////////////////////////////////////
+                
                 //duplicate code redo later
                 let cashback_model = db.model("Cashback");
                 let products_and_quantity = [];

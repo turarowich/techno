@@ -565,6 +565,29 @@ class ClientController{
 
         res.status(result.status).json(result);
     }
+    getPoints = async function (req, res) {
+        let db = useDB(req.db)
+        let ClientBonusHistory = db.model("clientBonusHistory");
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
+        }
+        let result = {
+            'status': 200,
+            'msg': 'Points sending'
+        }
+        try {
+            let query = {
+                client: req.userID
+            }
+            let points = await ClientBonusHistory.find(query)
+            result['objects'] = points
+        } catch (error) {
+            result = sendError(error, lang)
+        }
+
+        res.status(result.status).json(result);
+    }
 
 }
 

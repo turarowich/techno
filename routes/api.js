@@ -35,6 +35,9 @@ module.exports = function (app, io) {
     app.post('/getNewMessages', clientController.getNewMessages);
     app.post('/addPoints', verifyAccess, clientController.addPoints);
     app.post('/deductPoints', verifyAccess, clientController.deductPoints);
+    app.get('/getPoints', clientController.getPoints);
+    
+
     //Online menu
     app.post('/saveTempoOrder',  catalogController.saveTempoOrder);
     app.get('/getTempoOrder', catalogController.getTempoOrder);
