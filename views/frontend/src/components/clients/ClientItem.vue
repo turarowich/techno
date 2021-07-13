@@ -2,7 +2,7 @@
   <div v-for="client in clientList" class="table-item d-flex align-items-center justify-content-between" :key="client._id">
       <div  class="client-names table-child d-flex align-items-center">
         <div><label class="custom-checkbox"><input  type="checkbox"  @click="checkMainSelect" :ref="`select`+client._id"><span class="checkmark"></span></label></div>
-        <div class="d-flex align-items-center justify-content-between" @click="$router.push('/edit-client-page')" style="cursor:pointer">
+        <div class="d-flex align-items-center justify-content-between" @click="clientProfile(client._id)" style="cursor:pointer">
            <div class="table-img">
              <img v-if="!client.avatar" src="../../assets/icons/chat.svg">
              <img v-else :src="imgSrc+'/'+client.avatar">
@@ -28,7 +28,7 @@
       </div>
       <div v-if="check()" class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
         <ul class="list-group" >
-          <li class="list-group-item" data-toggle="modal" data-target="#edit-client" @click="$emit('selectClient', client._id)">Edit</li>
+          <li class="list-group-item" data-toggle="modal" id="editUser" value="1beka" data-target="#edit-client" @click="$emit('selectClient', client._id)">Edit</li>
           <li class="list-group-item" v-on:click="$emit('deleteClient',client._id)">Delete</li>
         </ul>
       </div>
@@ -47,13 +47,22 @@ export default {
     }
   },
   methods: {
+    clientProfile(id){
+      this.$router.push(`/edit-client-page/${id}`);
+    },
+    clickEdit(){
+      this.$root.$on('clickEdit');
+    },
     check(access="clients", parametr="active", parametr2="canEdit"){
         return this.checkAccess(access, parametr, parametr2)
     },
     checkAll(item) {
+
       return  this.$refs[`select${item._id}`].checked === true
+
     },
     checkMainSelect() {
+      this.clickEdit()
       if(this.clientList.every(this.checkAll)){
           this.newCheck = true;
           this.$emit('checkAll', this.newCheck)

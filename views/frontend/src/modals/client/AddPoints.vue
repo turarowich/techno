@@ -6,7 +6,7 @@
           <div class="modal-header category-header align-items-center">
            <div>
              <h3 class="modal-title">Add points</h3>
-             <span class="under-title">Сurrent number of points 20</span>
+             <span class="under-title">Сurrent number of points {{client.points}}</span>
            </div>
             <button type="button" data-dismiss="modal" aria-label="Close" class="close">
               <span aria-hidden="true">
@@ -17,11 +17,11 @@
           <div class="modal-body category-body">
             <!-- <form class="modal-form"> -->
               <label>Quantity</label><br>
-              <input  class="cashback-input mb-3"  placeholder="Enter a quantity">
+              <input v-model="points" class="cashback-input mb-3"  placeholder="Enter a quantity">
 
               <label>Comments</label><br>
-              <textarea class="general-area p-2" placeholder="Description"></textarea>
-              <button  class="save">Add</button>
+              <textarea v-model="comment" class="general-area p-2" placeholder="Description"></textarea>
+              <button  class="save" @click.prevent="onSubmit">Add</button>
             <!-- </form> -->
           </div>
         </div>
@@ -34,24 +34,27 @@
 import $ from "jquery";
 export default {
     name: "AddPoints",
+  props:['client','getClient'],
     data(){
         return{
-            points: 0,
-            comment: 0,
+            points: '',
+            comment: '',
         }
     },
     methods:{
 
         onSubmit(){
             this.axios.post(this.url('addPoints'),{
-                // client: this.client._id,
+                client: this.client._id,
                 points: this.points,
                 comment: this.comment,
             })
             .then(()=>{
-                this.$informationAlert("Successfull")
-                this.getClients()
-                $('#add-points').modal("hide")
+                this.$informationAlert("Point has been added")
+                this.getClient()
+              $('#add-points').modal("hide")
+              this.points = '';
+                this.comment = ''
             }).catch((error)=>{
                 if(error.response && error.response.data){
                     this.$warningAlert(error.response.data.msg)

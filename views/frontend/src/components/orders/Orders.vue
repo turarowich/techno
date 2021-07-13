@@ -34,7 +34,7 @@
         </div>
       </div>
       <div>
-        <span @click="test">SERVER LOG ROOMS</span>
+
         <button class="app-buttons-item" @click="showYesterday"><img src="../../assets/icons/yesterday.svg"><span>Yesterday</span></button>
         <button class="app-buttons-item" @click="showTodayData"><img src="../../assets/icons/yesterday.svg"><span>Today</span></button>
         <button class="app-buttons-item" @click="clickOnDate"><img src="../../assets/icons/yesterday.svg"><input :value="between_value"  class="date-pick" id="datepicker"></button>
@@ -449,6 +449,9 @@ name: "Orders",
 .show-field{
   margin-bottom: 0;
   cursor:pointer;
+}
+.pagination{
+  width: calc(100% - 310px);
 }
 .orders{
   margin: 0 30px;

@@ -29,7 +29,17 @@
 
 <script>
 export default {
-  name: "SendPush"
+  name: "SendPush",
+  data(){
+    return{
+      sendPush:{
+        client:[],
+        news:'',
+        title:'',
+        description:''
+      }
+    }
+  }
 }
 </script>
 
@@ -43,6 +53,7 @@ export default {
 }
 .general-area{
   margin-bottom: 30px;
+  font-size: 14px;
 }
 .save{
   width: 120px;

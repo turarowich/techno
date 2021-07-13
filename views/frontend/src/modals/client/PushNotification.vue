@@ -42,7 +42,7 @@
                     {{client.name}}
                   </div>
                   <div style="width:35%">{{client.category ? client.category.name : "No cat" }}</div>
-                  <div style="width:13%">{{client.bonus}}</div>
+
                 </div>
 
 
@@ -55,7 +55,7 @@
                 <h2 class="notification-title">Choose from category</h2>
                 <input class="cashback-input" placeholder="Search" v-model="search_category">
                 <ul style="height:120px" class="push-cat p-0 m-0">
-                  <li v-if="filteredCategories.length>0" class="category-list"><div v-for="category in filteredCategories" :key="category._id" @click="filterClient = category._id">{{category.name}}</div></li>
+                  <li v-if="filteredCategories.length>0" class="category-list"><div  v-for="category in filteredCategories" :key="category._id" @click="filterClient = category._id" :class="{active: filterClient === category._id}">{{category.name}}</div></li>
                   <li v-else class="category-list">You have no categories</li>
                 </ul>
               </div>
@@ -89,12 +89,12 @@
               </div>
             </div>
 
-              <div v-if="newData.news !== ''" class="sale d-flex align-items-center justify-content-between">
+              <div v-if="newsObj !== ''" class="sale d-flex align-items-center justify-content-between">
                 <div style="width:100%">
-                  <h4 class="sale-title">{{newData.news.name}}</h4>
-                  <span class="news-desc">{{newData.news.desc}}</span>
+                  <h4 class="sale-title">{{newsObj.name}}</h4>
+                  <span class="news-desc">{{newsObj.desc}}</span>
                 </div>
-                <img @click="newData.news = ''" src="../../assets/icons/deleteClient.svg">
+                <img @click="newsObj = ''" src="../../assets/icons/deleteClient.svg">
               </div>
 
               <h3 class="notification-title">Custom text</h3>
@@ -120,13 +120,14 @@ export default {
   data(){
     return{
       clientList:[],
-      search_client:'',
+      newsList:[],
       clientCategory:[],
+      search_news:'',
+      search_client:'',
       search_category:'',
       selectAll:false,
-      newsList:[],
-      search_news:'',
       filterClient:'',
+      newsObj:'',
       newData:{
         clients:[],
         news:'',
@@ -170,6 +171,7 @@ export default {
   methods:{
     selectedNews(selected){
       this.newData.news = selected._id
+      this.newsObj = selected
       this.search_news = ''
     },
     getClients(){
@@ -222,7 +224,6 @@ export default {
     },
     onSubmit(){
       const new_data = this.newData;
-      console.log(new_data)
       this.clientList.forEach((client)=>{
         if(this.$refs[`select${client._id}`]!==undefined && this.$refs[`select${client._id}`] !== null){
           if(this.$refs[`select${client._id}`].checked === true){
@@ -235,6 +236,7 @@ export default {
       }
       this.axios.post(this.url('sendPushNotification'),new_data)
       .then((res)=>{
+        this.$successAlert('Push has been sent')
         console.log(res, 'Success push')
       })
       $('#push-notification').modal("hide")
@@ -254,6 +256,10 @@ export default {
 </script>
 
 <style scoped>
+.category-list .active{
+  background: #EBEEFF;
+  color: #616CF5;
+}
 .news-title{
   font-size:14px;
   padding:7px 0;
@@ -345,14 +351,14 @@ export default {
 .main-search{
   margin-bottom: 30px;
 }
+.category-list div{
+  padding: 5px 10px;
+}
 .category-list{
   list-style-type:none;
-  margin-bottom: 10px;
   cursor:pointer;
 }
-.category-list div{
-  margin-bottom: 10px;
-}
+
 .selects:before{
   content:'';
   background: url("../../assets/icons/selectDown.svg") no-repeat;

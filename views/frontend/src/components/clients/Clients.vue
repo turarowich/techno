@@ -30,7 +30,7 @@
                <div class="row">
                   <div class="col-lg-6">
                     <div>
-                      <div class="filter-list" data-toggle="collapse" data-target="#register-collapse" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
+                      <div class="filter-list" @click="rotateArrow" data-toggle="collapse" data-target="#register-collapse" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
                         Registration date
                       <img src="../../assets/icons/down.svg" class="filter-img">
                       </div>
@@ -47,7 +47,7 @@
                           <div class="d-flex align-items-center">
                             <label>To</label>
                             <div class="calendar d-flex align-items-center">
-                              <input  class="calendar-input" id="to-date">
+                              <input v-model="to_register_date"  class="calendar-input" id="to-date">
                               <img src="../../assets/icons/Calendar.svg">
                             </div>
                           </div>
@@ -192,24 +192,22 @@
       </div>
     </div>
   </div>
-  <div class="main-search d-flex align-items-center mb-2 ">
+  <div class="main-search d-flex align-items-center">
     <img src="../../assets/icons/search-icon.svg">
     <input class="main-input" type="text" placeholder="Search" v-model="search">
   </div>
     <div>
-      <span class="show-properties"  v-if="f_from_register_date!== '2000-01-01'">Register from{{f_from_register_date}} <img src="../../assets/icons/xBlack.svg"></span>
-      <span class="show-properties" v-if="f_to_register_date!== ''">Register to{{f_to_register_date}} <img src="../../assets/icons/xBlack.svg"></span>
-      <span class="show-properties" v-if="f_category!== ''">Category{{f_category}} <img src="../../assets/icons/xBlack.svg"></span>
-      <span class="show-properties" v-if="f_birthday !== ''">Birthday{{f_birthday}} <img src="../../assets/icons/xBlack.svg"></span>
+      <span class="show-properties" v-if="f_from_register_date!== ''">Register date from: {{f_from_register_date}} <img @click="f_from_register_date = ''" src="../../assets/icons/xreset.svg"></span>
+      <span class="show-properties" v-if="f_to_register_date!== ''">Register date to: {{f_to_register_date}} <img @click="f_to_register_date=''" src="../../assets/icons/xreset.svg"></span>
+      <span class="show-properties" v-if="f_birthday !== ''">Birthday: {{f_birthday.slice(5,10)}} <img @click="f_birthday=''" src="../../assets/icons/xreset.svg"></span>
+      <span class="show-properties" style="text-transform: capitalize;" v-if="f_gender_client !== ''">Gender: {{f_gender_client}} <img @click="f_gender_client=''" src="../../assets/icons/xreset.svg"></span>
     </div>
-
-
   </div>
   <div class="d-flex">
     <div class="client-category-menu" style="width:24%">
 
       <div class="category-box">
-        <h3 class="category-title">Client category</h3>
+        <h3 class="category-title" @click="edits">Client category</h3>
         <input v-model="search_category" placeholder="Search" style="height:35px; margin-bottom:15px" class="cashback-input">
 
         <ul class="list-group" >
@@ -289,7 +287,7 @@
           <div class="d-flex align-items-center">
             <span>Rows per page</span>
             <select class="form-control pagination-select" v-model='perPage'>
-              <option value="8">8</option>
+              <option value="2">2</option>
               <option value="16">16</option>
               <option value="32">32</option>
             </select>
@@ -304,7 +302,6 @@
       </div>
     </div>
   </div>
-
 </div>
 </template>
 
@@ -318,8 +315,6 @@ import PushNotification from "@/modals/client/PushNotification";
 import IndividualPush from "@/modals/client/IndividualPush";
 import Swal from "sweetalert2";
 import $ from 'jquery'
-
-
 export default {
   name: "Clients",
   components:{
@@ -361,7 +356,7 @@ export default {
       discount:'',
       from_register_date:'',
       to_register_date:'',
-      from_purchase_date:'2000-01-01',
+      from_purchase_date:'',
       to_purchase_date:'',
       from_number_purchase:'',
       to_number_purchase:'',
@@ -371,9 +366,9 @@ export default {
       f_category:'',
       f_gender_client:'',
       f_birthday:'',
-      f_from_register_date:'2000-01-01',
+      f_from_register_date:'',
       f_to_register_date:'',
-      f_from_purchase_date:'2000-01-01',
+      f_from_purchase_date:'',
       f_to_purchase_date:'',
       f_from_number_purchase:'',
       f_to_number_purchase:'',
@@ -403,41 +398,26 @@ export default {
             return true
           })
           .filter(client=>{
-            if(this.f_to_register_date.length > 0){
-              return (new Date(client.createdAt).getTime() >= new Date(this.f_from_register_date).getTime() &&
-                  new Date(client.createdAt).getTime() <= new Date(this.f_to_register_date).getTime())
-            }
-            else if(this.f_to_register_date === ''){
-              return new Date(client.createdAt).getTime() >= new Date(this.f_from_register_date).getTime()
-            }
-            return true            
+              if(this.f_to_register_date === '' && this.f_from_register_date === '') {
+                return client
+              }
+            else if(this.f_from_register_date === ''){
+               return new Date(client.createdAt) <= new Date(this.f_to_register_date)
+             }
+             else if(this.f_to_register_date === ''){
+               return new Date(client.createdAt) >= new Date(this.f_from_register_date)
+             }
+             else if(this.f_to_register_date !== '' && this.f_from_register_date !== ''){
+               return (new Date(client.createdAt) >= new Date(this.f_from_register_date) &&
+                   new Date(client.createdAt) <= new Date(this.f_to_register_date))
+             }
+
+
           })
           .filter(client=>{
             return client.gender.includes(this.f_gender_client)
           })
-      // .filter(client=>{
-          //   if(this.f_to_number_purchase.length>0){
-          //     return +client.number_of_purchase >= this.f_from_number_purchase && +client.number_of_purchase <= this.f_to_number_purchase
-          //   }
-          //   else if(this.f_to_number_purchase === ''){
-          //     return +client.number_of_purchase >=this.f_from_number_purchase;
-          //   }
-          //   else{
-          //     return client
-          //   }
-          // })
-          // .filter(client=>{
-          //   if(this.f_to_purchase_date.length > 0){
-          //     return (new Date(client.last_purchase).getTime() >= new Date(this.f_from_purchase_date).getTime() &&
-          //         new Date(client.last_purchase).getTime() <= new Date(this.f_to_purchase_date).getTime())
-          //   }
-          //   else if(this.f_to_purchase_date === ''){
-          //     return new Date(client.last_purchase).getTime() >= new Date(this.f_from_purchase_date).getTime()
-          //   }
-          //   else{
-          //     return client
-          //   }
-          // })
+
 
     },
     filterCategory(){
@@ -469,6 +449,9 @@ export default {
   },
 
   methods: {
+edits(){
+  $('#editUser').click()
+},
     check(access="clients", parametr="active", parametr2="canEdit"){
         return this.checkAccess(access, parametr, parametr2)
     },
@@ -502,9 +485,9 @@ export default {
       this.category = '';
       this.birthday = '';
       this.gender_client = '';
-      this.from_purchase_date = '2000-01-01';
+      this.from_purchase_date = '';
       this.to_purchase_date='';
-      this.from_register_date='2000-01-01';
+      this.from_register_date='';
       this.to_register_date = '';
       this.from_number_purchase='';
       this.to_number_purchase='';
@@ -547,7 +530,8 @@ export default {
     selectClient(id){
       this.clientList.map((item)=>{
         if(item._id === id){
-          this.select_client = item
+          this.select_client = item;
+          console.log(this.select_client, 'KUDAIBERDIEV')
         }
       })
 
@@ -666,8 +650,7 @@ export default {
     getClients(){
       this.axios.get(this.url('getClients'))
       .then((res)=>{
-        this.clientList = res.data.objects
-        console.log(this.clientList, '000000000000000000')
+        this.clientList = res.data.objects;
       })
     },
     getCategories(){
@@ -744,6 +727,7 @@ export default {
    mounted(){
     this.getClients()
     this.getCategories()
+     $('.filter-list').addClass('collapsed')
     new this.$lightpick({
       field: document.getElementById('from-date'),
       format:'YYYY-MM-DD',
@@ -789,20 +773,26 @@ export default {
 .client .modal-backdrop {
     width:100%;
     left: 250px;
-
+}
+.main-search{
+  margin-bottom: 11px;
 }
 .show-properties img{
   margin-bottom: 2px;
+  margin-left: 5px;
 }
 .show-properties{
-  font-size: 12px;
-
+  font-size: 14px;
   display: inline-flex;
   align-items:center;
-  background: lightgrey;
+  background: #F8F9FB;
+  border: 1px solid #E3E3E3;
   margin-right: 10px;
   padding:2px 10px;
-  border-radius:5px;
+  border-radius:100px;
+  color: #606877;
+  transition: .3s;
+
 }
 .total{
   width: 6px;
@@ -843,6 +833,7 @@ export default {
 .reset{
   color:#E94A4A !important;
 }
+
 .general-dropdown.settings-dropdown{
   transform: translate3d(-166px, -19px, 0px) !important;
   width: 190px;
@@ -872,6 +863,8 @@ export default {
   position: absolute;
   right: 0;
   top:18%;
+  transform:rotate(180deg);
+  transition:0.3s
 }
 .filter-list{
   font-weight: normal;
@@ -880,9 +873,10 @@ export default {
   padding-bottom: 13px;
   position: relative;
   margin-bottom: 15px;
-
 }
-
+.filter-list:hover{
+  color:#616cf5;
+}
 .client{
   margin: 0 30px;
   height: calc(100vh - 90px);

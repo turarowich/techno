@@ -159,7 +159,7 @@ img{
 
 .table-content{
     overflow-y: auto;
-    height:calc(100vh - 351px);
+    height:calc(100vh - 330px);
 }
 .table-head{
     list-style: none;
@@ -180,6 +180,7 @@ img{
 /*============Search=================*/
 .searchAndButtons{
     margin-bottom: 25px;
+    transition:.3s;
 }
 .main-input{
     border:none;
@@ -644,7 +645,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     transform: rotate(180deg);
 }
 .pagination{
-    height: 90px;
+    width: calc(76% - 235px);
+    position: absolute;
+    bottom: 15px;
     color: #8C94A5;
 }
 .pagination-btns{
@@ -1352,6 +1355,10 @@ input.value-success, select.value-success, textarea.value-success,div.value-succ
     margin-right: 0;
 }
 
+.collapsed .filter-img{
+    transform: rotate(0deg) !important;
+    transition:.3s;
+}
 
 @media(max-width:992px){
         .multiple-items .slick-track{

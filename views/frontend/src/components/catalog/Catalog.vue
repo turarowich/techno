@@ -543,6 +543,9 @@ name: "Catalog",
 .filter-product label{
   font-size: 15px;
 }
+.pagination{
+  width: calc(82% - 275px);
+}
 .filter-product{
   padding: 20px;
 }

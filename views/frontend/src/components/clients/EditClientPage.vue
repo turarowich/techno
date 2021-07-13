@@ -5,11 +5,12 @@
       <img class="close-edit" src="../../assets/icons/xBlack.svg" @click="$router.go(-1)">
       <div class="edit-header-left d-flex align-items-center">
         <div class="d-flex align-items-center edit-header-item">
-          <img class="edit-img" src="../../assets/icons/editUserAvatar.svg">
+          <img v-if="client.avatar" class="edit-img" :src="imgSrc+'/'+client.avatar">
+          <img v-else class="edit-img" src="../../assets/icons/editUserAvatar.svg">
           <div>
-            <h3 class="edit-name">Tomas Levins</h3>
-            <div class="edit-category">Category: <span> Vip</span></div>
-            <span class="edit-user" data-toggle="modal" data-target="#edit-client">Edit user</span>
+            <h3 class="edit-name">{{client.name !== undefined ? client.name : ''}}</h3>
+            <div class="edit-category">Category: <span>{{client.category !== undefined ? client.category.name : 'No category'}}</span></div>
+            <span class="edit-user"  data-toggle="modal"  data-target="#edit-client" >Edit user</span>
           </div>
         </div>
       </div>
@@ -31,28 +32,37 @@
 
     <div class="line"></div>
 
-    <EditClient/>
-    <AddPoints/>
-    <RemovePoints/>
+
+    <AddPoints
+        :client="client"
+        :getClient="getClient"
+    />
+    <RemovePoints
+        :client="client"
+        :getClient="getClient"
+    />
     <SendPush/>
+    <EditClient v-bind:select_client="client"
+      :getClient="getClient"
+    />
 <!-------------------------End of Header --------------------------------------- - -->
 
     <div class="row client-number-row">
       <div class="col-lg-2 client-number-box">
         <span class="client-number-label">Points</span>
-        <h5 class="client-number" style="color:#616cf5">100</h5>
+        <h5 class="client-number" style="color:#616cf5">{{client.points}}</h5>
       </div>
       <div class="col-lg-2 client-number-box">
         <span class="client-number-label">Paid by points</span>
-        <h5 class="client-number">100</h5>
+        <h5 class="client-number">0</h5>
       </div>
       <div class="col-lg-2 client-number-box">
         <span class="client-number-label">Total of paid</span>
-        <h5 class="client-number">52900</h5>
+        <h5 class="client-number">0</h5>
       </div>
       <div class="col-lg-2 client-number-box">
         <span class="client-number-label">Remaining points</span>
-        <h5 class="client-number">10</h5>
+        <h5 class="client-number">0</h5>
       </div>
 
 
@@ -96,25 +106,16 @@
 <!--              <h3 class="cashback-sub-title">Still empty</h3>-->
 <!--              <p class="client-paragraph">Information about your orders will be stored here</p>-->
 <!--            </div>-->
-          <div class="table-item d-flex align-items-center">
+          <div v-for="order in purchaseHistory"  :key="order._id" class="table-item d-flex align-items-center">
               <div style="width:45%" class="d-flex align-items-center">
-                <div class="table-img">
-                  <img src="../../assets/img/sneak.webp">
-                </div>
-             235534
+
+                {{order.code}}
               </div>
-              <div style="width:25%"> 04.04.2021</div>
-              <div style="width:25%">500$</div>
+              <div style="width:25%"> {{order.createdAt.slice(0,10)}}</div>
+              <div style="width:25%">{{order.totalPrice}} $</div>
               <div style="width:5%;" class="detail" @click="$router.push('/order-detail')">details</div>
-
-            </div>
-
-
-
           </div>
-
-
-
+        </div>
       </div>
       <div id="bonuses" class="tab-pane fade">
         <div class="d-flex main-content-header">
@@ -133,9 +134,6 @@
           <!--            </div>-->
           <div class="table-item d-flex align-items-center">
             <div style="width:40%" class="d-flex align-items-center">
-              <div class="table-img">
-                <img src="../../assets/img/sneak.webp">
-              </div>
               Initial points
             </div>
             <div style="width:20%"> 04.04.2021</div>
@@ -143,32 +141,6 @@
             <div style="width:10%">100P</div>
 
           </div>
-          <div class="table-item d-flex align-items-center">
-            <div style="width:40%" class="d-flex align-items-center">
-              <div class="table-img">
-                <img src="../../assets/img/sneak.webp">
-              </div>
-              Initial points
-            </div>
-            <div style="width:20%"> 04.04.2021</div>
-            <div style="width:30%" class="pr-3">Please, can you do it quickly?</div>
-            <div style="width:10%">100P</div>
-
-          </div>
-          <div class="table-item d-flex align-items-center">
-            <div style="width:40%" class="d-flex align-items-center">
-              <div class="table-img">
-                <img src="../../assets/img/sneak.webp">
-              </div>
-              Initial points
-            </div>
-            <div style="width:20%"> 04.04.2021</div>
-            <div style="width:30%" class="pr-3">Please, can you do it quickly?</div>
-            <div style="width:10%">100P</div>
-
-          </div>
-
-
 
         </div>
       </div>
@@ -182,21 +154,52 @@
 
 <script>
 import $ from "jquery";
-import EditClient from "@/modals/client/EditClient";
 import AddPoints from "@/modals/client/AddPoints";
 import RemovePoints from "@/modals/client/RemovePoints";
 import SendPush from "@/modals/client/SendPush";
-
+import EditClient from "../../modals/client/EditClient";
 export default {
   name: "EditClientPage",
   components:{
-    EditClient,
     AddPoints,
     RemovePoints,
-    SendPush
+    SendPush,
+    EditClient
+
+  },
+  data(){
+    return{
+      client:{},
+      imgSrc:'',
+      purchaseHistory:[]
+
+    }
+  },
+
+  methods:{
+
+    getClient(){
+      this.axios.get(this.url('getClient',this.$route.params.id))
+      .then((res)=>{
+        this.client = res.data.object;
+      })
+    },
+    getOrders(){
+      this.axios.get(this.url('getOrders'))
+          .then((response)=>{
+           this.purchaseHistory = response.data.objects.filter((item)=> {
+              return item.client_id === this.client._id
+            })
+          })
+    },
   },
   mounted(){
+    this.getClient();
+    this.getOrders()
     $('.nav-tabs a:first').click();
+
+
+    this.imgSrc = this.$server;
   }
 }
 </script>
@@ -207,6 +210,9 @@ export default {
   top: 25%;
   left: -30px;
 }
+.table-content{
+  height: 250px;
+}
 .edit-header{
   position: relative;
 }
@@ -216,6 +222,9 @@ export default {
 .detail{
   color:#616cf5;
   cursor:pointer;
+}
+.table-item{
+  height: 60px;
 }
 .order-tab{
   opacity:0.5;
@@ -304,10 +313,11 @@ export default {
 .edit-category{
   color:#8C94A5;
   margin-bottom: 5px;
+
 }
 .edit-category span{
   color:#000;
-  text-transform: uppercase;
+  text-transform: capitalize;
 }
 
 

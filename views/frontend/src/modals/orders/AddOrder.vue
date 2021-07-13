@@ -142,8 +142,8 @@
               <h3 class="client-sub-title">Payment upon receipt</h3>
 
               <ul class="p-0">
-                <li class="payment-list d-flex justify-content-between">Inovoice amount<span>0 $</span></li>
-                <li class="payment-list d-flex justify-content-between">Discount<span>0 $(0%)</span></li>
+                <li class="payment-list d-flex justify-content-between">Inovoice amount<span>{{totalPrice}} $</span></li>
+                <li class="payment-list d-flex justify-content-between">Discount<span>{{total_discount}}$</span></li>
                 <li class="payment-list d-flex justify-content-between">Personal discount<span>0%</span></li>
                 <li class="payment-list d-flex justify-content-between">Promocode<span>0(0%)</span></li>
                 <li class="payment-list d-flex justify-content-between">Points<span>0</span></li>
@@ -179,7 +179,7 @@ export default {
   data(){
     return {
       imgSrc:'',
-      products:[],
+      products:[1,2,3],
       clients:[],
       search_product:'',
       search_client:'',
@@ -190,7 +190,7 @@ export default {
         status:'New',
         deliveryType:'self',
         notes:'',
-        promoCode:''
+        promoCode:null
 
       }
 
@@ -214,7 +214,15 @@ export default {
         return client.name.toLowerCase().includes(this.search_client.toLowerCase())
       })
     },
+    total_discount(){
+      if(this.new_order.products.length !==0){
+        this.new_order.products.reduce((sum,current)=>{
+          return sum + current.promoPrice;
+        })
+      }
+      return 0;
 
+    },
   },
   methods:{
     cancel(){
@@ -222,14 +230,15 @@ export default {
       this.new_order = {
         products:[],
         client:'',
-        status:'new',
+        status:'New',
         deliveryType:'self',
         notes:'',
-        promoCode:''
+        promoCode:null
       }
       this.clientObj = ''
     },
     onSubmit(){
+      console.log(this.new_order, 'SAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
       this.axios.post(this.url('addOrder'),this.new_order)
             .then(()=>{
               this.getOrders()
@@ -241,7 +250,7 @@ export default {
                 status:'New',
                 deliveryType:'self',
                 notes:'',
-                promoCode:''
+                promoCode:null
               }
               this.clientObj = ''
             }).catch((error)=>{
@@ -251,27 +260,38 @@ export default {
             });
 
     },
-    selectProduct(selected){
+    selectProduct(prod){
+      let selected = JSON.parse(JSON.stringify(prod));
+      if(this.new_order.products.length === 0){
+        if(selected.quantity > 0){
+          selected.quantity = 1
+          this.new_order.products.push(selected)
+        }
+        else{
+         this.$warningAlert('No product in catalog')
+        }
+      }
+      else{
+        let product = null;
+        for (let i = 0; i < this.new_order.products.length; i++) {
+          if(this.new_order.products[i]._id === selected._id){
+            if(this.new_order.products[i].quantity>=prod.quantity){
+              this.$warningAlert('You have no other products in you catalog')
+            }
+            else{
+              this.new_order.products[i].quantity = +this.new_order.products[i].quantity+1;
+            }
+            product = null;
+            break;
+          }
+          product = selected
 
-     if(this.new_order.products.length === 0){
-       this.new_order.products.push(selected)
-       selected.quantity = 1;
-     }
-     else{
-       let product = null;
-       for (let i = 0; i < this.new_order.products.length; i++) {
-         if(this.new_order.products[i]._id === selected._id){
-           this.new_order.products[i].quantity = +this.new_order.products[i].quantity+1
-           product = null;
-           break;
-         }
-         product = selected
-       }
-       if(product){
-         product.quantity = 1;
-         this.new_order.products.push(product)
-       }
-     }
+        }
+        if(product){
+          product.quantity = 1;
+          this.new_order.products.push(product)
+        }
+      }
       this.search_product = ''
     },
     selectClient(id){

@@ -110,7 +110,7 @@ const schedulePushSchema = new Schema({
             }
         }],
     },
-    thursday: {
+    thirsday: {
         isActive: {
             type: Boolean,
             required: true,
@@ -208,12 +208,12 @@ const schedulePushSchema = new Schema({
             },
             title: {
                 type: String,
-                required: true,
+                required: false,
                 default: ""
             },
             desc: {
                 type: String,
-                required: true,
+                required: false,
                 default: ""
             },
             sendAt: {

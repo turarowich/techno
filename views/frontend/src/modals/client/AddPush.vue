@@ -50,7 +50,7 @@
                      <div class="category-logo d-flex justify-content-center align-items-center">V</div>
                      <div class="category">
                        <div class="category-name">{{selectedClient.name}}</div>
-                       <span class="category-people" v-if="selectedClient.category">Category <span style="color:#000; text-transform:capitalize">{{ selectedClient.category.name}}</span></span>
+                       <span class="category-people" v-if="selectedClient.phone">Category <span style="color:#000; text-transform:capitalize">{{ selectedClient.phone}}</span></span>
                      </div>
                     </div>
                    <img @click="deleteClient(selectedClient)" src="../../assets/icons/deleteClient.svg">
@@ -143,7 +143,7 @@
 
             <div class="d-flex">
               <button class="save mr-2" @click.prevent="onSubmit">Save</button>
-              <button class="cancel" @click="cancel">Cancel</button>
+              <button class="cancel" @click.prevent="cancel">Cancel</button>
             </div>
 
           </form>
@@ -167,27 +167,25 @@ export default {
         '01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00',
         '13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00','00:00',
       ],
-      push_content:[
-        {time:'',title: '',description:''},
-      ],
-      selectedDay:{isActive:false, push:[{time:'',title: '',desc:''}],name:'Select day'},
+
+      selectedDay:'',
       clients:[],
       search_client:'',
       clientCategory:[],
       value:'week',
       selectedClients:[],
-      turnOnDay:false,
       week:{
-        monday: {isActive:false, push:[{time:'',title: '',desc:''}],name:'monday'},
-        tuesday:{isActive:false, push:[{time:'',title: '',desc:''}],name:'tuesday'},
-        wednesday:{isActive:false, push:[{time:'',title: '',desc:''}],name:'wednesday'},
-        thirsday:{isActive:false, push:[{time:'',title: '',desc:''}],name:'thirsday'},
-        friday:{isActive:false, push:[{time:'',title: '',desc:''}],name:'friday'},
-        saturday: {isActive:false, push:[{time:'',title: '',desc:''}],name:'saturday'},
-        sunday: {isActive:false, push:[{time:'',title: '',desc:''}],name:'sunday'},
+        monday: {isActive:true, push:[{time:'',title: '',desc:''}],name:'monday'},
+        tuesday:{isActive:true, push:[{time:'',title: '',desc:''}],name:'tuesday'},
+        wednesday:{isActive:true, push:[{time:'',title: '',desc:''}],name:'wednesday'},
+        thirsday:{isActive:true, push:[{time:'',title: '',desc:''}],name:'thirsday'},
+        friday:{isActive:true, push:[{time:'',title: '',desc:''}],name:'friday'},
+        saturday: {isActive:true, push:[{time:'',title: '',desc:''}],name:'saturday'},
+        sunday: {isActive:true, push:[{time:'',title: '',desc:''}],name:'sunday'},
         sendToAll:false,
         clients:[],
         title: "",
+        isActive:true
       }
 
     }
@@ -202,17 +200,22 @@ export default {
   },
   methods:{
     onSubmit(){
-      this.axios.post(this.url('addSchedulePush'),this.week)
-      .then((res)=>{
-        console.log(res, "sucesss")
-        this.$successAlert('Push has been added')
-        this.getSchedulePushes()
-        $('#add-push').modal("hide");
-      })
-      .catch(()=>{
-        console.log(this.week)
-      })
+      if(this.week.title === ''){
+        this.$warningAlert('Please fill the fields')
+      }
+      else{
+        this.axios.post(this.url('addSchedulePush'),this.week)
+            .then((res)=>{
+              console.log(res, "sucesss")
+              this.$successAlert('Push has been added')
+              this.getSchedulePushes()
+              $('#add-push').modal("hide");
+            })
+            .catch(()=>{
+              console.log(this.week)
+            })
 
+      }
     },
     setDay(day){
       this.selectedDay = day;
@@ -287,6 +290,7 @@ export default {
       lang:'en',
       inline:true,
     });
+    this.selectedDay = this.week.monday;
   }
 
 }

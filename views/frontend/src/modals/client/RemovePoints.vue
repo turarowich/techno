@@ -6,7 +6,7 @@
           <div class="modal-header category-header align-items-center">
             <div>
               <h3 class="modal-title">Remove points</h3>
-              <span class="under-title">Сurrent number of points 20</span>
+              <span class="under-title">Сurrent number of points {{client.points}}</span>
             </div>
             <button type="button" data-dismiss="modal" aria-label="Close" class="close">
               <span aria-hidden="true">
@@ -17,11 +17,11 @@
           <div class="modal-body category-body">
             <form class="modal-form">
               <label>Quantity</label><br>
-              <input  class="cashback-input mb-3"  placeholder="Enter a quantity">
+              <input v-model="points" class="cashback-input mb-3"  placeholder="Enter a quantity">
 
               <label>Comments</label><br>
-              <textarea placeholder="Description" class="p-2 general-area"></textarea>
-              <button  class="save">Write off</button>
+              <textarea v-model="comment" placeholder="Description" class="p-2 general-area"></textarea>
+              <button @click.prevent="onSubmit"  class="save">Write off</button>
             </form>
           </div>
         </div>
@@ -31,8 +31,39 @@
 </template>
 
 <script>
+import $ from "jquery";
+
 export default {
-  name: "RemovePoints"
+  name: "RemovePoints",
+  props:['client','getClient'],
+  data(){
+    return{
+      points:'',
+      comment:'',
+    }
+  },
+  methods:{
+    onSubmit(){
+      this.axios.post(this.url('deductPoints'),{
+        client: this.client._id,
+        points: this.points,
+        comment: this.comment,
+      })
+          .then(()=>{
+            this.$informationAlert("Point has been deleted")
+            this.getClient()
+            $('#remove-points').modal("hide")
+            this.points = '';
+            this.comment = ''
+          }).catch((error)=>{
+        if(error.response && error.response.data){
+          this.$warningAlert(error.response.data.msg)
+        }
+      });
+
+    },
+  }
+
 }
 </script>
 

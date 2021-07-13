@@ -542,13 +542,17 @@ export default {
   height: 75px;
 }
 .url-icon{
-  width: 34px;
+  width: 50px;
   height: 34px;
   background: #616cf5;
   border-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.url-icon img{
+  width: 18px;
+  height: 18px;
 }
 .cashback-input{
   width: 100%;
@@ -562,6 +566,8 @@ export default {
   width: 100px;
   height: 100px;
   position: relative;
+  border:1px solid #d3d3d3;
+  border-radius:10px;
 }
 .profile-img img{
   width: 100%;

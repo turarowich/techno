@@ -67,9 +67,8 @@ const routes = [
         component: Orders,
 
     },
-
     {
-        path: "/edit-client-page",
+        path: "/edit-client-page/:id",
         name: "EditClientPage",
         component: EditClientPage,
 

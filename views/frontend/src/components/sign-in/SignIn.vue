@@ -36,10 +36,7 @@
 
     <div class="have-account">Don't have an account? <a  @click="$router.push('/signup')">Sign up now</a></div>
 
-    <div class="social-link">
-      <a href="http://localhost:8080/auth/facebook"><img src="../../assets/icons/facebook.svg"></a>
-      <a href="http://localhost:8080/auth/google"><img src="../../assets/icons/google.svg"></a>
-    </div>
+
   </div>
 
   <p class="footer-text">Cashback. Loyalty program. Client base. Offline cashback.

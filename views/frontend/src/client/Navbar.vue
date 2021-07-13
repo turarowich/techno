@@ -35,7 +35,7 @@
       <ul class="client-menu">
         <li @click="removeActive" class="client-list"><router-link class="client-link" :to="`/${currentCompanyCatalog}/about`"><img src="../assets/clients/info.svg"/>About us</router-link></li>
 
-        <span v-if="!catalog_settings.catalogMode && !catalog_settings.foodMode">
+        <span class="client-list" v-if="!catalog_settings.catalogMode && !catalog_settings.foodMode">
           <li @click="removeActive" v-if="!isLogged" class="client-list "><router-link class="client-link" :to="`/${currentCompanyCatalog}/signin`"><img class="mr-3" src="../assets/clients/Profile.svg"/>Login</router-link></li>
           <li  v-else class="client-list"><img src="../assets/clients/Profile.svg"/><router-link class="client-link" :to="`/${currentCompanyCatalog}/client-account`">My Account</router-link></li>
         </span>
@@ -279,6 +279,10 @@ export default {
 .mobile-basket ,.basket-menu{
   display:none;
 
+}
+.mobile-basket{
+  width: 26px;
+  height: 26px;
 }
 .basket-menu{
   position: relative;
