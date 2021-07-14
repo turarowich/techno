@@ -176,6 +176,15 @@ export default {
         that.name = settings.name || '';
         that.email = settings.email || '';
         that.customFields = settings.customFields || false;
+        if(!settings.custom_field_0.values.length){
+            settings.custom_field_0.values = ['']
+        }
+        if(!settings.custom_field_1.values.length){
+            settings.custom_field_1.values = ['']
+        }
+        if(!settings.custom_field_2.values.length){
+            settings.custom_field_2.values = ['']
+        }
         that.custom_field_0 = settings.custom_field_0;
         that.custom_field_1 = settings.custom_field_1;
         that.custom_field_2 = settings.custom_field_2;
