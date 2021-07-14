@@ -16,10 +16,7 @@
         <input v-model="name" class="form-input cashback-input mb-2" placeholder="Company">
         <label class="sum-point">Email</label><br>
         <input v-model="email" class="form-input cashback-input mb-2" placeholder="Company email">
-      </div>
-
-      <div class="col-lg-5">
-        <h2 class="cashback-title">
+        <h2 class="cashback-title mt-3">
           Chat settings
         </h2>
         <div class="d-flex enable-title">
@@ -30,6 +27,70 @@
           <h2 class="cashback-sub-title">Chat</h2>
         </div>
         <p class="cashback-description mb-5">Disables the ability to write to you in the chat</p>
+      </div>
+      <div class="col-lg-5">
+        <h2 class="cashback-title mt-3">
+          Custom fields settings
+        </h2>
+        <div class="d-flex enable-title">
+          <label class="switch d-flex">
+            <input v-model="customFields" type="checkbox" >
+            <span class="slider round"></span>
+          </label>
+          <h2 class="cashback-sub-title">Fields</h2>
+        </div>
+        <p class="cashback-description mb-5">Disables the ability to write to you in the chat</p>
+        <h2 class="cashback-sub-title">First field</h2>
+        <div class="d-flex flex-wrap ">
+            <div class="col-9 pl-0 d-flex align-items-center my-2">
+                <input v-model="custom_field_0.fieldName" class="form-input cashback-input  mr-2" placeholder="field name">
+                <label class="switch d-flex">
+                    <input v-model="custom_field_0.required" type="checkbox" >
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="col-9 pl-0" v-for="(item, index) in custom_field_0.values" :key="index" >
+                <div class="d-flex" v-if="custom_field_0.fieldName.length">
+                    <input v-model="custom_field_0.values[index]" class="form-input cashback-input mb-2" placeholder="field value">
+                    <button v-if="index == 0" type="button" @click="addNewVal('custom_field_0')" class="discount-btn ml-2"><img src="../../assets/icons/enable+.svg"></button>
+                    <button v-if="index != 0" type="button" @click="removeVal('custom_field_0', index)" class="discount-btn ml-2"><img alt="x" src="../../assets/icons/x.svg"></button>
+                </div>
+            </div>
+        </div>
+        <h2 class="cashback-sub-title mt-3">Second field</h2>
+        <div class="d-flex flex-wrap ">
+            <div class="col-9 pl-0 d-flex align-items-center my-2">
+                <input v-model="custom_field_1.fieldName" class="form-input cashback-input  mr-2" placeholder="field name">
+                <label class="switch d-flex">
+                    <input v-model="custom_field_1.required" type="checkbox" >
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="col-9 pl-0" v-for="(item, index) in custom_field_1.values" :key="index" >
+                <div class="d-flex" v-if="custom_field_1.fieldName.length">
+                    <input v-model="custom_field_1.values[index]" class="form-input cashback-input mb-2" placeholder="field value">
+                    <button v-if="index == 0" type="button" @click="addNewVal('custom_field_1')" class="discount-btn ml-2"><img src="../../assets/icons/enable+.svg"></button>
+                    <button v-if="index != 0" type="button" @click="removeVal('custom_field_1', index)" class="discount-btn ml-2"><img alt="x" src="../../assets/icons/x.svg"></button>
+                </div>
+            </div>
+        </div>
+        <h2 class="cashback-sub-title mt-3">Third field</h2>
+        <div class="d-flex flex-wrap ">
+            <div class="col-9 pl-0 d-flex align-items-center my-2">
+                <input v-model="custom_field_2.fieldName" class="form-input cashback-input  mr-2" placeholder="field name">
+                <label class="switch d-flex">
+                    <input v-model="custom_field_2.required" type="checkbox" >
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="col-9 pl-0" v-for="(item, index) in custom_field_2.values" :key="index" >
+                <div class="d-flex" v-if="custom_field_2.fieldName.length">
+                    <input v-model="custom_field_2.values[index]" class="form-input cashback-input mb-2" placeholder="field value">
+                    <button v-if="index == 0" type="button" @click="addNewVal('custom_field_2')" class="discount-btn ml-2"><img src="../../assets/icons/enable+.svg"></button>
+                    <button v-if="index != 0" type="button" @click="removeVal('custom_field_2', index)" class="discount-btn ml-2"><img alt="x" src="../../assets/icons/x.svg"></button>
+                </div>
+            </div>
+        </div>
       </div>
     </div>
     <button type="button" @click="updateSettings" class="save">Save</button>
@@ -43,14 +104,36 @@ export default {
   name: "General",
   data(){
     return{
-      currency:'',
-      country:'',
-      chat:false,
-      name:'',
-      email:'',
+        currency:"",
+        country:"",
+        chat: false,
+        name:'',
+        email:'',
+        customFields: false,
+        custom_field_0:{
+            required: false,
+            fieldName: '',
+            values: ['']
+        },
+        custom_field_1:{
+            required: false,
+            fieldName: '',
+            values: ['']
+        },
+        custom_field_2:{
+            required: false,
+            fieldName: '',
+            values: ['']
+        },
     }
   },
   methods:{
+        addNewVal(field){
+            this[field].values.unshift('')
+        },
+        removeVal(field, index){
+            this[field].values.splice(index, 1)
+        },
     updateSettings(){
       let that=this;
       let url = this.url('updateSettings');
@@ -60,6 +143,10 @@ export default {
         chat:this.chat,
         name:this.name,
         email:this.email,
+        customFields: this.customFields,
+        custom_field_0: this.custom_field_0,
+        custom_field_1: this.custom_field_1,
+        custom_field_2: this.custom_field_2,
       }).then(function (response) {
         console.log(response);
         that.$successAlert('Updated');
@@ -76,6 +163,7 @@ export default {
       });
     },
   },
+  
   beforeCreate(){
     let that = this;
     this.axios
@@ -84,9 +172,13 @@ export default {
         let settings = response.data.object;
         that.currency = settings.currency || '';
         that.country = settings.country || '';
-        that.chat = settings.chat || '';
+        that.chat = settings.chat || false;
         that.name = settings.name || '';
         that.email = settings.email || '';
+        that.customFields = settings.customFields || false;
+        that.custom_field_0 = settings.custom_field_0;
+        that.custom_field_1 = settings.custom_field_1;
+        that.custom_field_2 = settings.custom_field_2;
       })
   },
 }
@@ -94,6 +186,13 @@ export default {
 </script>
 
 <style scoped>
+.discount-btn{
+  height: 45px;
+  flex: 0 0 45px;
+  border-radius:5px;
+  background: none;
+  border: none;
+}
 .cashback-input{
   width: 100%;
 }
@@ -127,7 +226,6 @@ export default {
   display: inline-block;
   margin-bottom: 30px;
 }
-
 
 
 

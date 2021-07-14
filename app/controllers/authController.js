@@ -210,6 +210,9 @@ class AuthController{
                 phone: req.fields.phone,
                 email: req.fields.email,
                 password: req.fields.password,
+                custom_field_0: req.fields.custom_field_0,
+                custom_field_1: req.fields.custom_field_1,
+                custom_field_2: req.fields.custom_field_2,
                 uniqueCode: number.toString(),
                 QRCode: qrCode
             })
