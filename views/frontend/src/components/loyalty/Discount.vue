@@ -77,6 +77,7 @@ export default {
             copy
         ).then((response)=> {
             this.list_of_discounts = response.data.discounts;
+              console.log(response)
         }).catch((error)=>{
             if(error.response.data && !error.response.data.errors){
                 this.$warningAlert(error.response.data.msg)

@@ -17,10 +17,10 @@
           <div class="modal-body category-body">
             <form class="modal-form">
               <label>Quantity</label><br>
-              <input v-model="points" class="cashback-input mb-3"  placeholder="Enter a quantity">
+              <input type="number" v-model="points" class="cashback-input mb-3"  placeholder="Enter a quantity">
 
               <label>Comments</label><br>
-              <textarea v-model="comment" placeholder="Description" class="p-2 general-area"></textarea>
+              <textarea v-model="comments" placeholder="Description" class="p-2 general-area"></textarea>
               <button @click.prevent="onSubmit"  class="save">Write off</button>
             </form>
           </div>
@@ -39,7 +39,7 @@ export default {
   data(){
     return{
       points:'',
-      comment:'',
+      comments:'',
     }
   },
   methods:{
@@ -47,14 +47,14 @@ export default {
       this.axios.post(this.url('deductPoints'),{
         client: this.client._id,
         points: this.points,
-        comment: this.comment,
+        comments: this.comments,
       })
           .then(()=>{
             this.$informationAlert("Point has been deleted")
             this.getClient()
             $('#remove-points').modal("hide")
             this.points = '';
-            this.comment = ''
+            this.comments = ''
           }).catch((error)=>{
         if(error.response && error.response.data){
           this.$warningAlert(error.response.data.msg)
@@ -76,6 +76,7 @@ export default {
 }
 .general-area{
   margin-bottom: 30px;
+  font-size: 14px;
 }
 .save{
   width: 120px;

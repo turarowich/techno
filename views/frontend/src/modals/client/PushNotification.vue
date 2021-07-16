@@ -74,7 +74,7 @@
               </div>
 
               <h3 class="notification-title">News</h3>
-              <input class="cashback-input news-input" placeholder="Select news" v-model="search_news">
+              <input :disabled="newData.title !== '' || newData.description !== ''" :class="{disableInput: newData.title!==''||newData.description!=='' }" class="cashback-input news-input" placeholder="Select news" v-model="search_news">
 
             <div class="parent-news">
               <div v-if="search_news!==''" class="news pt-3">
@@ -94,12 +94,12 @@
                   <h4 class="sale-title">{{newsObj.name}}</h4>
                   <span class="news-desc">{{newsObj.desc}}</span>
                 </div>
-                <img @click="newsObj = ''" src="../../assets/icons/deleteClient.svg">
+                <img @click="clearNews" src="../../assets/icons/deleteClient.svg">
               </div>
 
               <h3 class="notification-title">Custom text</h3>
-              <input v-model="newData.title" class="cashback-input mb-3" placeholder="Title">
-              <textarea v-model="newData.description" class="general-area p-2" placeholder="Description"></textarea>
+              <input v-model="newData.title"  :disabled="newData.news !== ''" :class="{disableInput: newData.news!==''}" class="cashback-input mb-3" placeholder="Title">
+              <textarea v-model="newData.description" :disabled="newData.news !== ''" :class="{disableInput: newData.news!==''}" class="general-area p-2" placeholder="Description"></textarea>
               <button class="save" @click.prevent="onSubmit">Send</button>
             </div>
           </div>
@@ -169,6 +169,10 @@ export default {
 
   },
   methods:{
+    clearNews(){
+      this.newsObj = '';
+      this.newData.news = ''
+    },
     selectedNews(selected){
       this.newData.news = selected._id
       this.newsObj = selected

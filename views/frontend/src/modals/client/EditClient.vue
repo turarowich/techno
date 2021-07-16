@@ -111,7 +111,7 @@ export default {
       }
 
       if(!updatedData.birthDate){
-        updatedData.birthDate = new Date.now()
+        updatedData.birthDate = this.$moment().format("YYYY-MM-DD")
       }
 
       form.append('birthDate', updatedData.birthDate)

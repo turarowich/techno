@@ -226,6 +226,9 @@ export default {
 
         })
       }
+      else{
+        this.$warningAlert('Choose pushes to delete')
+      }
 
 
 

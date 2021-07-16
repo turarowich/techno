@@ -525,7 +525,7 @@ export default {
 
 .payment-list{
   color:#606877;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 .payment-list span{
   color:#000;

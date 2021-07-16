@@ -359,6 +359,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .save:hover{
     background: #3B4DB3;
 }
+.disableInput{
+    background: #F4F4F4;
+    /* Stroke */
+
+    border: 1px solid #D3D3D3;
+}
 .remove{
     color:#D81919;
     border-radius: 5px;

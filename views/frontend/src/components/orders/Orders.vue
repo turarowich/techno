@@ -215,7 +215,7 @@ name: "Orders",
         if(item._id === id) {
           this.select_order = item;
           this.addNewProperty(this.select_order.products, "_id", 0, 'product')
-          console.log(this.select_order,"ddddddddddddddddddddddddddddddddd");
+
         }
       })
     },
@@ -223,6 +223,7 @@ name: "Orders",
       this.axios.get(this.url('getOrders')+'?populate=client')
       .then((response)=>{
         this.orderList = response.data.objects;
+
       })
     },
     checkAll(item){
@@ -321,13 +322,16 @@ name: "Orders",
           }
         })
       }
+      else{
+        this.$warningAlert('Choose orders to delete')
+      }
     },
     sortByDate() {
       if (this.orderList.length === 0) {
         return null;
       } else {
         this.orderList.sort((a, b) => {
-          return this.sorting ? new Date(a.date) - new Date(b.date) : new Date(b.date) - new Date(a.date)
+          return this.sorting ? new Date(a.createdAt) - new Date(b.createdAt) : new Date(b.createdAt) - new Date(a.createdAt)
         })
         this.sorting = !this.sorting;
        $('.date-pol').toggleClass('active')
@@ -390,13 +394,13 @@ name: "Orders",
         singleDate: false,
         numberOfMonths: 2,
         numberOfColumns:2,
+        autoClose:true,
         format:'YYYY-MM-DD',
         onSelect: (start,end)=>{
           var str = '';
           str += start ? start.format('YYYY-MM-DD') + ' to ' : '';
           str += end ? end.format('YYYY-MM-DD') : '...';
           this.between_value = str;
-          this.filter_between_date = str
           this.filteredBetweenDate()
       }
     });
@@ -452,6 +456,7 @@ name: "Orders",
 }
 .pagination{
   width: calc(100% - 310px);
+  color: #8C94A5;
 }
 .orders{
   margin: 0 30px;
@@ -462,10 +467,7 @@ name: "Orders",
   margin-left: 0;
 }
 
-.pagination{
-  height: 90px;
-  color: #8C94A5;
-}
+
 .pagination img{
   cursor:pointer;
 }

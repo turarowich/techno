@@ -23,9 +23,9 @@
                   </div>
                 </div>
 
-                <div class="main-search d-flex align-items-center ">
+                <div  :class="{errorInput: main_input === true}"  class="main-search d-flex align-items-center ">
                   <img src="../../assets/icons/search-icon.svg">
-                  <input class="main-input" type="text" placeholder="Search" v-model="search_client">
+                  <input class="main-input bg-transparent" type="text" placeholder="Search" v-model="search_client">
                 </div>
                 <div class="parent-order-client">
                   <div v-if="search_client.length !==0" class="child-order-client">
@@ -61,7 +61,7 @@
               <div class="col-lg-6">
                   <h3 class="push-title settings">Notification settings</h3>
                 <label>Push name</label>
-                <input type="text"  v-model="week.title"  name="week" class="cashback-input w-100 mb-3" placeholder="Please set push name">
+                <input type="text"   v-model="week.title" style="font-size:14px" :class="{errorInput: push_title === true}"  name="week" class="push-title cashback-input w-100 mb-3" placeholder="Please set push name">
                 <div class="radio-toolbar">
                   <div class="d-flex align-items-center mr-4">
                     <input type="radio" id="radioWeek" v-model="value" value="week"  name="week"  >
@@ -167,7 +167,8 @@ export default {
         '01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00',
         '13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00','00:00',
       ],
-
+      push_title:false,
+      main_input:false,
       selectedDay:'',
       clients:[],
       search_client:'',
@@ -201,19 +202,23 @@ export default {
   methods:{
     onSubmit(){
       if(this.week.title === ''){
-        this.$warningAlert('Please fill the fields')
+        this.push_title = true
+      }
+      if(this.week.clients.length === 0){
+        this.main_input = true;
       }
       else{
+        const that = this;
         this.axios.post(this.url('addSchedulePush'),this.week)
-            .then((res)=>{
-              console.log(res, "sucesss")
+            .then(()=>{
               this.$successAlert('Push has been added')
               this.getSchedulePushes()
               $('#add-push').modal("hide");
+              this.push_title = false
+              that.week.clients = [];
+              this.week.title = ''
             })
-            .catch(()=>{
-              console.log(this.week)
-            })
+
 
       }
     },
@@ -271,6 +276,7 @@ export default {
           this.selectedClients.push(selected)
           this.week.clients.push(selected._id)
         }
+        this.main_input = false;
         this.search_client = ''
     },
     deleteClient(client){

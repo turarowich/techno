@@ -479,37 +479,7 @@ export default {
 .cancel{
   width: 120px;
 }
-.client-box{
-  padding: 0 20px;
-  background: #F8F9FF;
-  border-radius: 5px;
-  margin-bottom: 19px;
-  height: 80px;
-}
-.client-avatar{
-  width: 50px;
-  height: 50px;
-  border-radius:50%;
-  object-fit: cover;
-  margin-right: 13px;
-}
-.name-client{
-  font-size: 18px;
-  font-weight:  normal;
-  margin-bottom: 5px;
-}
-.category{
-  color: #8C94A5;
-}
-.category span{
-  color:#000;
-  text-transform: capitalize;
 
-}
-
-.line{
-  margin: 18px 0;
-}
 .cashback-input{
   width: 100%;
   margin-bottom: 12px;
@@ -517,7 +487,7 @@ export default {
 
 .payment-list{
   color:#606877;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 .payment-list span{
   color:#000;

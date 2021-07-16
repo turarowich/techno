@@ -165,7 +165,7 @@
                           <div class="d-flex align-items-center mr-2">
                             <label>From</label>
                             <div class="calendar d-flex align-items-center">
-                              <input class="calendar-input" id="from-purchase">
+                              <input v-model="from_purchase_date" class="calendar-input" id="from-purchase">
                               <img src="../../assets/icons/Calendar.svg">
                             </div>
                           </div>
@@ -173,7 +173,7 @@
                           <div class="d-flex align-items-center">
                             <label>to</label>
                             <div class="calendar d-flex align-items-center">
-                              <input class="calendar-input" id="to-purchase">
+                              <input v-model="to_purchase_date" class="calendar-input" id="to-purchase">
                               <img src="../../assets/icons/Calendar.svg">
                             </div>
                           </div>
@@ -199,6 +199,8 @@
     <div>
       <span class="show-properties" v-if="f_from_register_date!== ''">Register date from: {{f_from_register_date}} <img @click="f_from_register_date = ''" src="../../assets/icons/xreset.svg"></span>
       <span class="show-properties" v-if="f_to_register_date!== ''">Register date to: {{f_to_register_date}} <img @click="f_to_register_date=''" src="../../assets/icons/xreset.svg"></span>
+      <span class="show-properties" v-if="f_from_purchase_date!== ''">Last purchase date from: {{f_from_purchase_date}} <img @click="f_from_purchase_date=''" src="../../assets/icons/xreset.svg"></span>
+      <span class="show-properties" v-if="f_to_purchase_date!== ''">Last purchase to: {{f_to_purchase_date}} <img @click="f_to_purchase_date=''" src="../../assets/icons/xreset.svg"></span>
       <span class="show-properties" v-if="f_birthday !== ''">Birthday: {{f_birthday.slice(5,10)}} <img @click="f_birthday=''" src="../../assets/icons/xreset.svg"></span>
       <span class="show-properties" style="text-transform: capitalize;" v-if="f_gender_client !== ''">Gender: {{f_gender_client}} <img @click="f_gender_client=''" src="../../assets/icons/xreset.svg"></span>
     </div>
@@ -243,14 +245,14 @@
           <div v-if="data_check.register_date_checked" class="table-head" style="width: 18%;">Registration date</div>
           <div class="table-head client-phone" style="width:14%">Phone number</div>
           <div class="table-head table-link d-flex align-item-center" style="width: 8%;" @click="sortByTotal"><span>Total</span> <img class="total-pol total" style="margin-left:5px" src="../../assets/icons/polygon.svg"></div>
-          <div v-if="data_check.bonus_checked" class="table-head table-link d-flex align-items-center" style="width: 8%;" @click="sortByBonus">Bonus <img class="date-pol" style="margin-left:5px" src="../../assets/icons/polygon.svg"></div>
+          <div v-if="data_check.bonus_checked" class="table-head table-link d-flex align-items-center" style="width: 8%;" @click="sortByBonus">Points <img class="date-pol" style="margin-left:5px" src="../../assets/icons/polygon.svg"></div>
           <div v-if="data_check.last_purchase_checked" class="table-head" style="width: 16%;">Last purchase</div>
           <div style="width:3%" class="dropdown dropdown-settings pl-3">
             <div class="table-head text-right dropdown-toggle"  id="dropdownBlue" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:5%"><img src="../../assets/icons/BlueSetting.svg"></div>
             <div class="dropdown-menu general-dropdown settings-dropdown" aria-labelledby="#dropdownBlue">
               <form>
                 <div><label class="custom-checkbox"><input id="last" v-model="data_check.last_purchase_checked" type="checkbox"><span class="checkmark"></span></label><label class="show-fields" for="last">Last purchase</label></div>
-                <div><label class="custom-checkbox"><input v-model="data_check.bonus_checked" type="checkbox" id="show-bonus" ><span class="checkmark"></span></label> <label  class="show-fields" for="show-bonus">Bonus</label></div>
+                <div><label class="custom-checkbox"><input v-model="data_check.bonus_checked" type="checkbox" id="show-bonus" ><span class="checkmark"></span></label> <label  class="show-fields" for="show-bonus">Points</label></div>
                 <div><label class="custom-checkbox"><input v-model="data_check.register_date_checked" id="date" type="checkbox" ><span class="checkmark"></span></label> <label  class="show-fields" for="date">Registration date</label></div>
                 <div><label class="custom-checkbox"><input v-model="data_check.discount_checked" type="checkbox" id="discount" ><span class="checkmark"></span></label> <label  class="show-fields" for="discount">Discount</label></div>
                 <div class="mb-0"><label class="custom-checkbox"><input v-model="data_check.birthday_checked" id="birthday" type="checkbox" ><span class="checkmark"></span></label> <label  class="show-fields" for="birthday">Birthday</label></div>
@@ -417,6 +419,22 @@ export default {
           .filter(client=>{
             return client.gender.includes(this.f_gender_client)
           })
+          .filter(client=>{
+            if(this.f_to_purchase_date === '' && this.f_from_purchase_date === '') {
+              return client
+            }
+            else if(this.f_from_purchase_date === ''){
+              return new Date(client.last_purchase) <= new Date(this.f_to_purchase_date)
+            }
+            else if(this.f_to_purchase_date === ''){
+              return new Date(client.last_purchase) >= new Date(this.f_from_purchase_date)
+            }
+            else if(this.f_to_purchase_date !== '' && this.f_from_purchase_date !== ''){
+              return (new Date(client.last_purchase) >= new Date(this.f_from_purchase_date) &&
+                  new Date(client.last_purchase) <= new Date(this.f_to_purchase_date))
+            }
+          })
+
 
 
     },
@@ -449,9 +467,6 @@ export default {
   },
 
   methods: {
-edits(){
-  $('#editUser').click()
-},
     check(access="clients", parametr="active", parametr2="canEdit"){
         return this.checkAccess(access, parametr, parametr2)
     },
@@ -515,14 +530,14 @@ edits(){
       }
     },
     sortByBonus() {
-      this.clientList.sort((a, b) => this.sorting ? (parseInt(a.bonus) - parseInt(b.bonus)) : (parseInt(b.bonus) - parseInt(a.bonus)));
+      this.clientList.sort((a, b) => this.sorting ? (parseInt(a.points) - parseInt(b.points)) : (parseInt(b.points) - parseInt(a.points)));
       this.sorting = !this.sorting;
       $('.date-pol').toggleClass('active')
       $('.total-pol').removeClass('active')
 
     },
     sortByTotal(){
-      this.clientList.sort((a, b) => this.sorting? (parseInt(a.total) - parseInt(b.total)) : (parseInt(b.total) - parseInt(a.total)));
+      this.clientList.sort((a, b) => this.sorting ? (parseInt(a.total) - parseInt(b.total)) : (parseInt(b.total) - parseInt(a.total)));
       this.sorting = !this.sorting;
       $('.total-pol').toggleClass('active')
       $('.date-pol').removeClass('active')
@@ -639,6 +654,9 @@ edits(){
 
         })
       }
+      else{
+        this.$warningAlert('Choose clients to delete')
+      }
 
 
 
@@ -651,7 +669,19 @@ edits(){
       this.axios.get(this.url('getClients'))
       .then((res)=>{
         this.clientList = res.data.objects;
+        console.log(this.clientList,"====================");
+        this.clientList.map((item)=>{
+          item['total'] = item.orders.reduce((acc,it)=>acc+it.totalPrice, 0);
+          if(item.orders.length>0){
+            item['last_purchase'] = new Date(Math.max(...item.orders.map(e => new Date(e.createdAt))))
+          }
+          else{
+            item['last_purchase'] = null
+          }
+          return item;
+        })
       })
+
     },
     getCategories(){
       this.axios.get(this.url('getCategories')+'?type=client')
@@ -720,9 +750,6 @@ edits(){
            })
      }
     }
-
-
-
   },
    mounted(){
     this.getClients()

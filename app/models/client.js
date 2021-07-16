@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const clientSchema = new Schema({
+
     name: {
         type: String,
         trim: true,
@@ -65,6 +66,7 @@ const clientSchema = new Schema({
         required: false,
         default: ''
     },
+
     balance: {
         type: Number,
         required: true,

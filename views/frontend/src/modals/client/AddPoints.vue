@@ -17,10 +17,10 @@
           <div class="modal-body category-body">
             <!-- <form class="modal-form"> -->
               <label>Quantity</label><br>
-              <input v-model="points" class="cashback-input mb-3"  placeholder="Enter a quantity">
+              <input type="number" v-model="points" class="cashback-input mb-3"  placeholder="Enter a quantity">
 
               <label>Comments</label><br>
-              <textarea v-model="comment" class="general-area p-2" placeholder="Description"></textarea>
+              <textarea v-model="comments" class="general-area p-2" placeholder="Description"></textarea>
               <button  class="save" @click.prevent="onSubmit">Add</button>
             <!-- </form> -->
           </div>
@@ -38,23 +38,24 @@ export default {
     data(){
         return{
             points: '',
-            comment: '',
+            comments: '',
         }
     },
     methods:{
 
-        onSubmit(){
+      onSubmit(){
             this.axios.post(this.url('addPoints'),{
                 client: this.client._id,
                 points: this.points,
-                comment: this.comment,
+                comments: this.comments,
             })
-            .then(()=>{
+            .then((res)=>{
                 this.$informationAlert("Point has been added")
+              console.log(res)
                 this.getClient()
               $('#add-points').modal("hide")
               this.points = '';
-                this.comment = ''
+                this.comments = ''
             }).catch((error)=>{
                 if(error.response && error.response.data){
                     this.$warningAlert(error.response.data.msg)
@@ -75,6 +76,7 @@ export default {
 }
 .general-area{
   margin-bottom: 30px;
+  font-size:14px;
 }
 .save{
   width: 120px;
