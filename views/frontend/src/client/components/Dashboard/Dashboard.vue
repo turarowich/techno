@@ -11,7 +11,7 @@
   </div>
   <div class="new">
     <div class="news">
-      <div class="d-flex justify-content-between mb-3" >
+      <div class="d-flex justify-content-between align-items-center mb-3" >
         <div style="font-weight: bold;font-size: 20px;">News</div>
         <div><router-link class="view-all" :to="`/${currentCompanyCatalog}/client-news`">View all</router-link></div>
       </div>

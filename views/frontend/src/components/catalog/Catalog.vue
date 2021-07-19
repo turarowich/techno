@@ -8,24 +8,12 @@
         <button v-if="check()" class="app-buttons-item adding-btns"  data-toggle="modal" data-target="#add-category"><span>+ Add category </span></button>
       </div>
       <div class="d-flex align-items-center">
-        <button v-if="check()" class="app-buttons-item" @click="deleteAllOrder"><img src="../../assets/icons/trash_empty.svg"><span>Remove</span></button>
-        <div class="dropdown">
-          <button v-if="check()" class="dropdown-toggle app-buttons-item" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <img src="../../assets/icons/moveto.svg"><span>Move to</span>
-          </button>
-
-          <div class="move-category dropdown-menu" aria-labelledby="dropdownMenuTotal">
-                <div class="move-category-item" v-for="cat in listCategory.slice(1)" :key="cat._id" @click="moveCategory(cat._id)">{{cat.name}}</div>
-          </div>
-        </div>
-        <button v-if="check()" class="app-buttons-item" data-turbolinks="true"  data-toggle="modal" data-target="#import-client"><img src="../../assets/icons/import.svg"><span>Import</span></button>
-
         <div class="dropdown">
           <button class="app-buttons-item dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
             <img class="img-btn" src="../../assets/icons/filter.svg"><span>Filter</span>
           </button>
 
-          <div class="dropdown-menu general-dropdown" aria-labelledby="dropdownMenuButton">
+          <div class=" dropdown-menu filter-catalogs animate slideIn" aria-labelledby="dropdownMenuButton">
             <form class="filter-product">
               <label>By price</label>
               <div class="d-flex">
@@ -52,12 +40,26 @@
               </div>
 
               <label>By category</label>
-                <select v-model="filtered" class="select-category form-control">
-                  <option v-for="cat in listCategory" :key="cat._id" :value="cat._id">{{cat.name}}</option>
-                </select>
+              <select v-model="filtered" class="select-category form-control">
+                <option v-for="cat in listCategory" :key="cat._id" :value="cat._id">{{cat.name}}</option>
+              </select>
             </form>
           </div>
         </div>
+        <button v-if="check()" class="app-buttons-item" @click="deleteAllOrder"><img src="../../assets/icons/trash_empty.svg"><span>Remove</span></button>
+
+        <div class="dropdown">
+          <button v-if="check()" class="dropdown-toggle app-buttons-item" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img src="../../assets/icons/moveto.svg"><span>Move to</span>
+          </button>
+
+          <div class="move-category animate slideIn dropdown-menu" aria-labelledby="dropdownMenuTotal">
+                <div class="move-category-item" v-for="cat in listCategory.slice(1)" :key="cat._id" @click="moveCategory(cat._id)">{{cat.name}}</div>
+          </div>
+        </div>
+        <button v-if="check()" class="app-buttons-item" data-turbolinks="true"  data-toggle="modal" data-target="#import-client"><img src="../../assets/icons/import.svg"><span>Import</span></button>
+
+
 
       </div>
     </div>
@@ -120,6 +122,7 @@
           <div class="table-content" >
             <CatalogItem
                   ref="catalog_item"
+                  v-bind:getProducts="getProducts"
                   v-on:unCheckAll="unCheckAll"
                   v-on:checkAll="checkAll"
                   v-on:selectProduct="selectProduct"
@@ -552,9 +555,10 @@ name: "Catalog",
 .filter-product label{
   font-weight: normal;
 }
-.general-dropdown{
+.filter-catalogs{
   width: 17rem;
-  transform: translate3d(-167px, -10px, 0px) !important;
+  margin-top: 44px;
+
 }
 .catalog{
   margin: 0 30px;

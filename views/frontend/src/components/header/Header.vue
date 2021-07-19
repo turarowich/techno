@@ -38,7 +38,7 @@
           <img class="profile-arrow" src="../../assets/icons/down.svg">
         </div>
 
-        <div class="dropdown-menu general-dropdown">
+        <div class="dropdown-menu animate slideIn general-dropdown">
           <div class="profile-dropdown">
             <div class="d-flex align-items-center profile-header dropdown-toggle">
               <span class="profile-logo d-flex align-items-center justify-content-center">{{user_info ? user_info.name.charAt(0).toUpperCase() : ""}}</span>
@@ -122,7 +122,11 @@ data(){
 
   stroke:#616cf5;
 }
-
+.general-dropdown{
+  width: 18rem;
+  margin-left: -118px;
+  margin-top: 44px;
+}
 .header{
   background: #fff;
   height: 60px;

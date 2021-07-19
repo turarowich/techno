@@ -84,13 +84,13 @@
                   </div>
                   <div class="d-flex justify-content-between">
                     <div class="d-flex align-items-center mb-4">
-                      <h2 class="selected-day">March 27 - April 12</h2>
                       <label class="switch d-flex">
                         <input  type="checkbox">
                         <span class="slider round"></span>
                       </label>
+                      <h2 class="selected-day">March 27 - April 12</h2>
                     </div>
-                    <span class="add-more" @click="addContent">+ Add more</span>
+                    <span class="add-more">+ Add more</span>
                   </div>
                 </div>
 

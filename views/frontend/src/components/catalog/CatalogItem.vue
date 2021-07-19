@@ -10,26 +10,29 @@
     </div>
 
     <div v-else>
-      <div  v-for="catalog in  catalogList" class="catalog-item table-item d-flex align-items-center" :key="catalog._id">
+      <div  v-for="catalog in  catalogList" :class="{isVisible:!catalog.active}" class="catalog-item table-item d-flex align-items-center" :key="catalog._id">
         <div  style="width: 5%;"><label class="custom-checkbox"><input type="checkbox" :value="catalog" @click="checkMainSelect" :ref="`select${catalog._id}`">
           <span class="checkmark"></span></label>
         </div>
 
         <div  class="d-flex align-items-center"  style="width: 36%;">
-          <div class="table-img">
+          <div :class="{imgVisible: !catalog.active}" class="table-img">
             <img v-if="catalog.img"  :src="imgSrc+'/'+catalog.img">
             <img v-else-if="catalog.imgArray.length !== 0"  :src="imgSrc+'/'+catalog.imgArray[0]">
             <img v-else  src="../../assets/icons/no-catalog.svg">
 
           </div>
-          {{catalog.name}}
+          <div>{{catalog.name}}
+            <div v-if="!catalog.active" class="d-flex align-items-center" style="color:#8C94A5;font-size:12px;"><img style="width:12px; height:12px; margin-right:5px" src="../../assets/icons/isVisible.svg">Product is hidden</div>
+          </div>
         </div>
         <div  style="width: 24%;"><div class="long-text">{{catalog.description}}</div></div>
         <div  style="width: 13%;">{{catalog.quantity}}</div>
         <div  style="width: 13%;">{{catalog.price}}</div>
-        <div  style="width:8%;" class="see-catalog"><img @click="$emit('hideCatalog',catalog.id)" class="see-catalog" src="../../assets/icons/see.svg"><img class="nonsee-catalog" src="../../assets/icons/nonsee.svg"></div>
+        <div  style="width:8%;" class="see-catalog"><img @click="hideProduct(catalog,isFalse)"  v-if="catalog.active" class="see-catalog" src="../../assets/icons/see.svg"><img v-else @click="hideProduct(catalog ,isTrue)"  class="nonsee-catalog" src="../../assets/icons/nonsee.svg"></div>
         <div  style="width:8%;">
           <div v-if="check()" class="dropleft dropMenu">
+
             <div class="dropdown-toggle" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <img  src="../../assets/icons/three-dots.svg"
                     class="three-dots">
@@ -53,15 +56,25 @@
 import $ from 'jquery';
 export default {
   name: "CatalogItem",
-  props:['catalogList', 'displayList'],
+  props:['catalogList', 'displayList','getProducts'],
   data(){
     return {
       newCheck:false,
-      imgSrc:''
+      imgSrc:'',
+      isTrue:true,
+      isFalse:false,
     }
   },
 
   methods:{
+    hideProduct(product,active){
+
+      this.axios.put(this.url('updateProduct',product._id), {active:active})
+          .then(()=>{
+            product.active = active
+          })
+
+    },
     check(access="catalog", parametr="active", parametr2="canEdit"){
         return this.checkAccess(access, parametr, parametr2)
     },
@@ -94,6 +107,9 @@ export default {
 .see-catalog{
   cursor:pointer;
 }
+.imgVisible{
+  opacity: 0.5;
+}
 .no-img-product{
   background: #F4F4F4;
   border-radius:50%;
@@ -107,9 +123,7 @@ export default {
   height:30px;
   object-fit: contain;
 }
-.nonsee-catalog{
-  display: none;
-}
+
 .no-product{
   width: 300px;
 
@@ -129,6 +143,11 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis
+}
+.isVisible{
+  background: #F8F9FF;
+  color:#8C94A5;
+
 }
 
 </style>

@@ -59,7 +59,7 @@
         <div class="search_product_input">{{item.name}}</div>
         <div class="cashback_percentage_input">{{item.percentage_cashback}}</div>
         <div class="cashback_fixed_input">{{item.fixed_cashback}}</div>
-        <div @click="removeSelectedItem(item.id)" :this_id="item.id" class="selectedItems_remove" style="flex: 0 0 44px;">
+        <div @click="removeSelectedItem(item.id)" :this_id="item.id" class="selectedItems_remove border-none" style="flex: 0 0 44px;">
           <img alt="x" src="../../assets/icons/x.svg">
         </div>
       </div>
@@ -419,6 +419,11 @@ export default {
 </script>
 
 <style scoped>
+.selectedItems_list{
+  max-height: 300px;
+  overflow-y: auto;
+}
+
 .result-item{
   padding:7px 10px;
 }
@@ -518,7 +523,7 @@ export default {
 }
 .selectedItem{
   display: flex;
-  margin-bottom: 3px;
+  margin-bottom: 10px;
 }
 .selectedItem div{
   height: 45px;
@@ -535,6 +540,6 @@ export default {
   cursor: pointer;
   flex:0 0 45px;
   border-radius: 5px;
-  border: 1px solid black!important;
+  border: none !important;
 }
 </style>

@@ -15,13 +15,13 @@
           <img src="../../assets/icons/moveto.svg"><span>Move to</span>
         </button>
 
-        <div class="move-category dropdown-menu" aria-labelledby="dropdownMenuTotal">
+        <div class="move-category animate slideIn dropdown-menu" aria-labelledby="dropdownMenuTotal">
           <div class="move-category-item" v-for="cat in clientCategory" :key="cat._id" @click="moveCategory(cat._id)">{{cat.name}}</div>
         </div>
       </div>
       <div class="dropdown filter">
         <button class="dropdown-toggle app-buttons-item mr-0" id="dropdownFilterClient" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="../../assets/icons/filter.svg"><span>Filter</span></button>
-        <div class="dropdown-menu filter-box" aria-labelledby="dropdownFilterClient">
+        <div class="dropdown-menu animate slideIn  filter-box" aria-labelledby="dropdownFilterClient">
           <form id="form">
               <div class="filter-header">
                 <h3>Filters</h3>
@@ -30,7 +30,7 @@
                <div class="row">
                   <div class="col-lg-6">
                     <div>
-                      <div class="filter-list" @click="rotateArrow" data-toggle="collapse" data-target="#register-collapse" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
+                      <div class="filter-list"  data-toggle="collapse" data-target="#register-collapse" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
                         Registration date
                       <img src="../../assets/icons/down.svg" class="filter-img">
                       </div>
@@ -149,8 +149,7 @@
                       <div class="collapse" id="discount-collapse">
                         <div class="filter-body">
                           <select v-model="discount" class="filter-form  form-control long-form-control  form-control-lg" aria-label=".form-select-lg example">
-                            <option value="vip">vip</option>
-                            <option value="standart">standart</option>
+                           <option v-for="discount in discountList" :key="discount._id" :value="discount.discount_percentage">{{discount.name}} {{discount.discount_percentage}} %</option>
                           </select>
                         </div>
                       </div>
@@ -192,24 +191,27 @@
       </div>
     </div>
   </div>
-  <div class="main-search d-flex align-items-center">
+  <div v-if="showMainSearch" class="main-search d-flex align-items-center">
     <img src="../../assets/icons/search-icon.svg">
     <input class="main-input" type="text" placeholder="Search" v-model="search">
   </div>
     <div>
-      <span class="show-properties" v-if="f_from_register_date!== ''">Register date from: {{f_from_register_date}} <img @click="f_from_register_date = ''" src="../../assets/icons/xreset.svg"></span>
-      <span class="show-properties" v-if="f_to_register_date!== ''">Register date to: {{f_to_register_date}} <img @click="f_to_register_date=''" src="../../assets/icons/xreset.svg"></span>
-      <span class="show-properties" v-if="f_from_purchase_date!== ''">Last purchase date from: {{f_from_purchase_date}} <img @click="f_from_purchase_date=''" src="../../assets/icons/xreset.svg"></span>
-      <span class="show-properties" v-if="f_to_purchase_date!== ''">Last purchase to: {{f_to_purchase_date}} <img @click="f_to_purchase_date=''" src="../../assets/icons/xreset.svg"></span>
-      <span class="show-properties" v-if="f_birthday !== ''">Birthday: {{f_birthday.slice(5,10)}} <img @click="f_birthday=''" src="../../assets/icons/xreset.svg"></span>
-      <span class="show-properties" style="text-transform: capitalize;" v-if="f_gender_client !== ''">Gender: {{f_gender_client}} <img @click="f_gender_client=''" src="../../assets/icons/xreset.svg"></span>
+      <span class="show-properties" v-if="f_from_register_date!== ''">Register date from: {{f_from_register_date}} <img @click="f_from_register_date = ''; from_register_date=''" src="../../assets/icons/xreset.svg"></span>
+      <span class="show-properties" v-if="f_to_register_date!== ''">Register date to: {{f_to_register_date}} <img @click="f_to_register_date=''; to_register_date=''" src="../../assets/icons/xreset.svg"></span>
+      <span class="show-properties" v-if="f_from_number_purchase!== ''">Number of purchase from: {{f_from_number_purchase}} <img @click="f_from_number_purchase=''; from_number_purchase=''" src="../../assets/icons/xreset.svg"></span>
+      <span class="show-properties" v-if="f_to_number_purchase!== ''">Number of purchase from: {{f_to_number_purchase}} <img @click="f_to_number_purchase=''; to_number_purchase=''" src="../../assets/icons/xreset.svg"></span>
+      <span class="show-properties" v-if="f_from_purchase_date!== ''">Last purchase date from: {{f_from_purchase_date}} <img @click="f_from_purchase_date=''; from_purchase_date=''" src="../../assets/icons/xreset.svg"></span>
+      <span class="show-properties" v-if="f_to_purchase_date!== ''">Last purchase to: {{f_to_purchase_date}} <img @click="f_to_purchase_date=''; to_purchase_date =''" src="../../assets/icons/xreset.svg"></span>
+      <span class="show-properties" v-if="f_birthday !== ''">Birthday: {{f_birthday.slice(5,10)}} <img @click="f_birthday=''; birthday=''" src="../../assets/icons/xreset.svg"></span>
+      <span class="show-properties" v-if="f_discount !== ''">Discount: {{f_discount}} % <img @click="f_discount=''; discount=''" src="../../assets/icons/xreset.svg"></span>
+      <span class="show-properties" style="text-transform: capitalize;" v-if="f_gender_client !== ''">Gender: {{f_gender_client}} <img @click="f_gender_client=''; gender_client=''" src="../../assets/icons/xreset.svg"></span>
     </div>
   </div>
   <div class="d-flex">
     <div class="client-category-menu" style="width:24%">
 
       <div class="category-box">
-        <h3 class="category-title" @click="edits">Client category</h3>
+        <h3 class="category-title" >Client category</h3>
         <input v-model="search_category" placeholder="Search" style="height:35px; margin-bottom:15px" class="cashback-input">
 
         <ul class="list-group" >
@@ -343,6 +345,7 @@ export default {
       clientCategory:[
         {_id:'',name:'All'}
       ],
+      discountList:[],
       select_category:'',
       selectAll:false,
       search:'',
@@ -368,6 +371,7 @@ export default {
       f_category:'',
       f_gender_client:'',
       f_birthday:'',
+      f_discount:'',
       f_from_register_date:'',
       f_to_register_date:'',
       f_from_purchase_date:'',
@@ -424,7 +428,9 @@ export default {
               return client
             }
             else if(this.f_from_purchase_date === ''){
-              return new Date(client.last_purchase) <= new Date(this.f_to_purchase_date)
+              if(client.last_purchase){
+                return new Date(client.last_purchase) <= new Date(this.f_to_purchase_date)
+              }
             }
             else if(this.f_to_purchase_date === ''){
               return new Date(client.last_purchase) >= new Date(this.f_from_purchase_date)
@@ -434,9 +440,29 @@ export default {
                   new Date(client.last_purchase) <= new Date(this.f_to_purchase_date))
             }
           })
-
-
-
+          .filter(client=>{
+              if(this.f_to_number_purchase.length>0){
+                return +client.number_of_purchase >= this.f_from_number_purchase && +client.number_of_purchase <= this.f_to_number_purchase
+              }
+              else if(this.f_to_number_purchase === ''){
+                return +client.number_of_purchase >=this.f_from_number_purchase;
+              }
+              else{
+                return client
+              }
+          })
+          .filter(client=>{
+            if(client.discount === null){
+              client.discount = 0;
+            }
+            return client.discount.toString().includes(this.f_discount.toString())
+          })
+    },
+    showMainSearch(){
+      if(this.f_from_register_date !== '' || this.f_to_register_date !== '' || this.f_from_purchase_date!=='' || this.f_to_purchase_date !== ''|| this.f_gender_client !== '' || this.f_birthday !==''){
+        return false
+      }
+      return true;
     },
     filterCategory(){
       return this.clientCategory.filter((cat)=>{
@@ -461,9 +487,6 @@ export default {
     showPrev(){
       return this.currentPage > 1;
     },
-
-
-
   },
 
   methods: {
@@ -490,9 +513,7 @@ export default {
         this.$refs.client_item.$refs[`select${client._id}`].checked = true
 
       }
-      else{
-        this.$refs.client_item.$refs[`select${client._id}`].checked = false
-      }
+
     }
     })
   },
@@ -506,10 +527,12 @@ export default {
       this.to_register_date = '';
       this.from_number_purchase='';
       this.to_number_purchase='';
+      this.discount = '';
       this.filterSubmit()
       document.getElementById('form').reset()
     },
     filterSubmit(){
+        this.f_discount = this.discount;
         this.f_category = this.category;
         this.f_gender_client = this.gender_client;
         this.f_birthday = this.birthday;
@@ -672,11 +695,9 @@ export default {
         console.log(this.clientList,"====================");
         this.clientList.map((item)=>{
           item['total'] = item.orders.reduce((acc,it)=>acc+it.totalPrice, 0);
+          item['number_of_purchase'] = item.orders.length;
           if(item.orders.length>0){
             item['last_purchase'] = new Date(Math.max(...item.orders.map(e => new Date(e.createdAt))))
-          }
-          else{
-            item['last_purchase'] = null
           }
           return item;
         })
@@ -689,6 +710,12 @@ export default {
         this.clientCategory = response.data.objects
         this.clientCategory.unshift({_id:'',name:'All'})
       })
+    },
+    getDiscounts() {
+      this.axios.get(this.url('getDiscounts'))
+          .then((res) => {
+            this.discountList = res.data.discounts;
+          })
     },
     deleteCategory(id){
       Swal.fire({
@@ -754,6 +781,7 @@ export default {
    mounted(){
     this.getClients()
     this.getCategories()
+     this.getDiscounts()
      $('.filter-list').addClass('collapsed')
     new this.$lightpick({
       field: document.getElementById('from-date'),
@@ -797,10 +825,6 @@ export default {
 </script>
 
 <style scoped>
-.client .modal-backdrop {
-    width:100%;
-    left: 250px;
-}
 .main-search{
   margin-bottom: 11px;
 }
@@ -808,6 +832,8 @@ export default {
   margin-bottom: 2px;
   margin-left: 5px;
 }
+
+
 .show-properties{
   font-size: 14px;
   display: inline-flex;
@@ -819,6 +845,7 @@ export default {
   border-radius:100px;
   color: #606877;
   transition: .3s;
+  margin-bottom: 10px;
 
 }
 .total{
@@ -862,7 +889,7 @@ export default {
 }
 
 .general-dropdown.settings-dropdown{
-  transform: translate3d(-166px, -19px, 0px) !important;
+  transform: translate3d(-147px, 25px, 0px) !important;
   width: 190px;
   padding: 20px;
   font-size: 14px;
@@ -917,14 +944,14 @@ export default {
 .filter-box{
   width: 662px;
   margin-right: 20px;
-  margin-top: 10px;
+  margin-top: 44px;
   padding-left: 35px;
   padding-right: 35px;
   padding-top: 23px;
   padding-bottom: 30px;
   height: auto;
   overflow-y: auto;
-  transform: translate3d(-575px, 33px, 0px) !important;
+  margin-left: -575px;
   position: relative;
 }
 .save{

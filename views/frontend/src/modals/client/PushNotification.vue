@@ -42,6 +42,7 @@
                     {{client.name}}
                   </div>
                   <div style="width:35%">{{client.category ? client.category.name : "No cat" }}</div>
+                  <div style="width:13%">{{client.points}}</div>
 
                 </div>
 

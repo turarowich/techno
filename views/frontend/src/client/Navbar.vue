@@ -37,7 +37,7 @@
 
         <span class="client-list" v-if="!catalog_settings.catalogMode && !catalog_settings.foodMode">
           <li @click="removeActive" v-if="!isLogged" class="client-list "><router-link class="client-link" :to="`/${currentCompanyCatalog}/signin`"><img  src="../assets/clients/Profile.svg"/>Login</router-link></li>
-          <li  v-else class="client-list"><img src="../assets/clients/Profile.svg"/><router-link class="client-link" :to="`/${currentCompanyCatalog}/client-account`">My Account</router-link></li>
+          <li @click="removeActive"  v-else class="client-list"><img src="../assets/clients/Profile.svg"/><router-link class="client-link" :to="`/${currentCompanyCatalog}/client-account`">My Account</router-link></li>
         </span>
 
 
@@ -101,8 +101,14 @@
       </div>
     </div>
 
-    <img v-if="!catalog_settings.catalogMode"  @click="$router.push(`/${currentCompanyCatalog}/basket`)" class="mobile-basket" src="../assets/clients/Buy.svg"/>
+    <div class="basket-menu" v-if="!catalog_settings.catalogMode">
+      <div class="bg-not d-flex align-items-center">
+        <span class="basket-not" v-if="countOrders > 0">{{countOrders}}</span>
+      </div>
 
+      <img   @click="$router.push(`/${currentCompanyCatalog}/basket`)" class="mobile-basket" src="../assets/clients/Buy.svg"/>
+
+    </div>
 
 
 </nav>
@@ -461,6 +467,11 @@ font-size: 14px;
   background-size: cover;
   background-position: center;
   border-radius: 5px;
+}
+@media(min-width:1200px){
+  .client-container{
+    width: calc(100vw - 240px);
+  }
 }
 @media(max-width:992px){
   .menu-wrapper .client-menu {

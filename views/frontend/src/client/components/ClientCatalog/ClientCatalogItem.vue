@@ -2,8 +2,8 @@
   <div>
 
     <div class="row add-padding" >
-      <div  class="col-lg-3 col-6  product-box"  v-for="(product) in catalog" :key="product._id" >
-          <div v-if="product.quantity>0">
+      <div v-show="product.quantity>0 && product.active" class="col-lg-3 col-6  product-box"  v-for="(product) in catalog" :key="product._id" >
+          <div >
             <div class="product-img"  @click="selectProduct(product._id)">
               <img v-if="!product.error" :src="server+'/'+product.img" @error="product.error=true">
               <!--          <img v-else src="../../../assets/img/default.svg" >-->

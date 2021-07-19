@@ -11,7 +11,7 @@
             <img class="img-btn" src="../../assets/icons/filter.svg"><span>Filter</span>
           </button>
 
-          <div class="dropdown-menu general-dropdown" aria-labelledby="dropdownMenuButton">
+          <div class="dropdown-menu animate slideIn filter-orders general-dropdown" aria-labelledby="dropdownMenuButton">
             <form class="filter-dropdown">
                 <h3 class="drop-title">By price</h3>
                 <div class="d-flex">
@@ -426,7 +426,7 @@ name: "Orders",
   padding-right: 0;
 }
 .general-dropdown.settings-dropdown{
-  transform: translate3d(-166px, -19px, 0px) !important;
+  transform: translate3d(-139px, 25px, 0px) !important;
   width: 190px;
   padding: 20px;
   font-size: 14px;
@@ -441,6 +441,9 @@ name: "Orders",
 .general-dropdown.settings-dropdown .custom-checkbox{
   margin-right: 10px;
   width: 12px;
+}
+.filter-orders{
+  margin-top: 44px;
 }
 .date-pick{
   width:182px;
@@ -466,8 +469,6 @@ name: "Orders",
 .total-order img, .date-order img{
   margin-left: 0;
 }
-
-
 .pagination img{
   cursor:pointer;
 }

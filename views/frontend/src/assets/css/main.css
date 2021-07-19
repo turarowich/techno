@@ -5,6 +5,7 @@ input{
 }
 body{
     font-size:14px;
+
 }
 a:hover{
     text-decoration: none;
@@ -873,6 +874,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .nav-tabs{
     border-bottom: none;
 }
+
 /*========================= End Input slider in catalog======================*/
 
 
@@ -924,14 +926,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     margin-bottom: 56px;
 }
 
+
 .general-dropdown{
     background: #FFFFFF;
     box-shadow: 2px 11px 35px rgba(0, 0, 0, 0.1);
     border-radius: 7px;
-    right: 0;
+
     width: 18rem;
-    transform: translate3d(-118px, -5px, 0px) !important;
-    top: 50px !important;
+
 }
 .drop-title{
     font-size: 15px;
@@ -1125,6 +1127,31 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .category-header{
     padding:34px 50px;
 }
+
+.animate {
+    animation-duration: 0.3s;
+    -webkit-animation-duration: 0.3s;
+    animation-fill-mode: both;
+    -webkit-animation-fill-mode: both;
+}
+.slideIn {
+    -webkit-animation-name: slideIn;
+    animation-name: slideIn;
+}
+@keyframes slideIn {
+    0% {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+    100% {
+        transform:translateY(0px);
+        opacity: 1;
+    }
+    0% {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+}
 /*==================Radio Button====================*/
 
 
@@ -1188,6 +1215,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     width:100px;
     max-height:250px;
     overflow-y: auto;
+    margin-top: 44px;
 }
 
 .general-title{
