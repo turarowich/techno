@@ -23,7 +23,7 @@ class CashbackController{
             }else{
                 cashback_one = await new cashback_model().save();
             }
-            result['cashback'] = cashback_one;
+            result['object'] = cashback_one;
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }

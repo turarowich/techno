@@ -1,5 +1,5 @@
 var bcrypt = require('bcryptjs');
-const { useDB, sendError, saveImage, createQrFile, randomNumber, checkAccess } = require('../../services/helper')
+const { useDB, sendError, saveImage, createQrFile, randomNumber, checkAccess, getClientDiscount } = require('../../services/helper')
 var validate = require('../../config/messages');
 const { query } = require('express');
 const client = require('../models/client');
@@ -7,6 +7,7 @@ const LOG = require('./logController');
 const Analytics = require('./analyticsController');
 var path = require('path');
 const fs = require('fs');
+
 class ClientController{
     
     getClient = async function (req, res) {
@@ -29,12 +30,7 @@ class ClientController{
             let discounts = await Discount.find()
             let client = await Client.findById(req.params.client).populate('messages').populate('category').exec()
             if(client){
-                let discount = null
-                for (let i = 0; i < discounts.length; i++) {
-                    if (client.balance >= discounts[i].min_sum_of_purchases) {
-                        discount = discounts[i]
-                    }
-                }
+                let discount = getClientDiscount(client,discounts);
                 if (discount){
                     result['discount'] = discount
                 }
@@ -67,6 +63,7 @@ class ClientController{
         try {
             
             let clients = await Client.find().populate('messages').populate('category').exec()
+
             result['objects'] = clients
         
         } catch (error) {
@@ -281,6 +278,11 @@ class ClientController{
             //check if client already has received the promo points
             //check if client that shared also receives points
             let check = await clientModel.find({promocode:promocode,_id:{ "$ne": client_id }});
+            if (check.length===0){
+                result.status = 404;
+                result.msg = "Promocode not found";
+                break all_check;
+            }
             let client = await clientModel.findById(client_id);
             let sender = await clientModel.findById(check[0]._id);
 
@@ -289,10 +291,7 @@ class ClientController{
                 result.msg = "Already used promocode";
                 break all_check;
             }
-            if (check.length===0){
-                result.msg = "Promocode not found";
-                break all_check;
-            }
+
 
             //Cashback points
             let cashback_model = db.model("Cashback");

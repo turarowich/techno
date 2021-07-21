@@ -15,7 +15,7 @@
           <img  v-if="order.products[0] && order.products[0].img" :src="imgSrc+'/'+order.products[0].img">
           <img v-else src="../../assets/icons/no-catalog.svg">
          </div>
-         <span>{{order.products[0] ? order.products[0].name : 'empty'}}</span>
+         <span style="overflow: hidden;text-overflow: ellipsis;">{{order.products[0] ? order.products[0].name : 'empty'}}</span>
       </div>
       <div v-if="order.client" class="table-child" v-show="data_check.client_checked"  style="width: 25%;">
         {{order.client ? order.client.name : ''}}
@@ -48,7 +48,8 @@
           </div>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
             <ul class="list-group " >
-              <li v-if="!['Cancelled','Done'].includes(order.status) && check()" class="list-group-item" data-toggle="modal" data-target="#edit-order" @click="$emit('selectOrder',order._id)">Edit</li>
+<!--              <li v-if="!['Cancelled','Done'].includes(order.status) && check()" class="list-group-item" data-toggle="modal" data-target="#edit-order" @click="$emit('selectOrder',order._id)">Edit</li>-->
+              <li v-if="!['Cancelled','Done'].includes(order.status) && check()" class="list-group-item" data-toggle="modal" data-target="#add-order" @click="$emit('selectOrder',order._id)">Edit</li>
               <li class="list-group-item" v-if="check()" v-on:click="$emit('deleteOrder',order._id)">Delete</li>
               <li v-if="!['Cancelled','Done'].includes(order.status) && check('canChangeOrderStatus', null, null)" class="list-group-item" v-on:click="statusChange(order,'Done')">Done</li>
               <li v-if="!['Cancelled'].includes(order.status) && check('canChangeOrderStatus', null, null)" class="list-group-item" @click="statusChange(order, 'Cancelled')">Cancel</li>
@@ -83,8 +84,7 @@ export default {
         return this.checkAccess(access, parametr, parametr2)
     },
     statusChange(order,status){
-        console.log(status,"statusChange",order);
-        this.axios.put(this.url('updateOrder',order._id), {status: status}).then(()=>{
+        this.axios.put(this.url('updateOrderStatus',order._id), {status: status}).then(()=>{
             order.status = status;
         }).catch((error)=>{
                 if(error.response && error.response.data){

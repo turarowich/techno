@@ -163,7 +163,8 @@ export default {
     this.axios
       .get(this.base_url +'/api/getCashback')
       .then(function (response){
-        let cashback = response.data.cashback;
+        console.log(response,"-------------------------------------");
+        let cashback = response.data.object;
         that.status = cashback.discounts_status;
         that.id= cashback._id;
       })

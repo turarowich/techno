@@ -2,6 +2,63 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const orderSchema = new Schema({
+    statusDiscount: {
+        name:{
+            type: String,
+            required: false,
+            default: '',
+        },
+        discount_percentage:{
+            type:Number,
+            default:0,
+            required: false,
+        },
+    },
+    productsDetails: [{
+        name: {
+            type: String,
+            required: false,
+            default:'',
+        },
+        current_price:{
+            type:Number,
+            default:0,
+            required: false,
+        },
+        old_price:{
+            type:Number,
+            default:0,
+            required: false,
+        },
+        quantity:{
+            type:Number,
+            default:0,
+            required: false,
+        },
+        product:{
+            type: Schema.Types.Mixed,
+            required: false,
+        },
+        discounted:{
+            type: Boolean,
+            required: false,
+        },
+        discountType: {
+            type: String,
+            required: false,
+        },
+    }],
+    personalDiscount: {
+        percent:{
+            type: Boolean,
+            required: false,
+        },
+        sum:{
+            type:Number,
+            default:0,
+            required: false,
+        },
+    },
     products: [{
         type: Schema.Types.ObjectId,
         ref: 'OrderProduct'
@@ -30,6 +87,10 @@ const orderSchema = new Schema({
         type: String,
         required: false,
     },
+    promoCodeObject: {
+        type: Schema.Types.Mixed,
+        required: false,
+    },
     address: {
         type: String,
         required: false,
@@ -43,6 +104,10 @@ const orderSchema = new Schema({
     delivery: {
         type: Schema.Types.ObjectId,
         ref: 'Delivery'
+    },
+    deliveryObject: {
+        type: Schema.Types.Mixed,
+        required: false,
     },
     deliveryPrice: {
         type: Number,
@@ -67,6 +132,10 @@ const orderSchema = new Schema({
     branch: {
         type: Schema.Types.ObjectId,
         ref: 'Branch'
+    },
+    branchObject: {
+        type: Schema.Types.Mixed,
+        required: false,
     },
     deliveryType: {
         type: String,

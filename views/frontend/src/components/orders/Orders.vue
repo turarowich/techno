@@ -3,7 +3,7 @@
     <div class="searchAndButtons">
     <div class="d-flex justify-content-between app-buttons">
       <div class="d-flex align-items-center">
-        <button v-if="check()" class="app-buttons-item adding-btns" data-toggle="modal" data-target="#add-order" ><span>+ Add order</span></button>
+        <button v-if="check()" class="app-buttons-item adding-btns" data-toggle="modal" @click="unSetSelectedOrder" data-target="#add-order" ><span>+ Add order</span></button>
         <button v-if="check()" class="app-buttons-item" @click="deleteAllOrder"><img class="img-btn" src="../../assets/icons/trash_empty.svg" ><span>Remove</span></button>
         <button v-if="check()" class="app-buttons-item" @click="exportOrder"><img class="img-btn" src="../../assets/icons/set.svg"><span>Export to Excell </span></button>
         <div class="dropdown filter-drops">
@@ -83,9 +83,10 @@
     </div>
     <AddOrder
       :getOrders="getOrders"
+      :selected_order="select_order"
     />
     <EditOrder
-        :getOrders="getOrders"
+      :getOrders="getOrders"
       :select_order="select_order"
     />
     <div class="pagination d-flex justify-content-between align-items-center">
@@ -123,28 +124,28 @@ name: "Orders",
   },
   data(){
     return{
-        between_value:'',
-        deletedOrders:[],
-        orderList:[],
-        select_order:'',
-        data_check:{
-            client_checked:true,
-            phone_checked:false,
-            date_checked:false,
-            notes_checked:false
-        },
-        filter_by_status: '',
-        price_from:'',
-        price_to:'',
-        sorting:true,
-        search:'',
-        filtered:this.$moment().format("YYYY-MM-DD"),
-        selectAll: false,
-        currentPage:1,
-        perPage:8,
-        total_price:'',
-        user: this.getUser(),
-        isAdmin: this.isAdmin()
+      between_value:'',
+      deletedOrders:[],
+      orderList:[],
+      select_order:'',
+      data_check:{
+          client_checked:true,
+          phone_checked:false,
+          date_checked:false,
+          notes_checked:false
+      },
+      filter_by_status: '',
+      price_from:'',
+      price_to:'',
+      sorting:true,
+      search:'',
+      filtered:this.$moment().format("YYYY-MM-DD"),
+      selectAll: false,
+      currentPage:1,
+      perPage:8,
+      total_price:'',
+      user: this.getUser(),
+      isAdmin: this.isAdmin()
     }
   },
 
@@ -199,6 +200,9 @@ name: "Orders",
     },
   },
   methods: {
+    unSetSelectedOrder(){
+      this.select_order = '';
+    },
     test(){
       this.axios.post(this.url('socketRooms'), {status: 'Done'}).then(()=>{
       }).catch((error)=>{
@@ -211,17 +215,19 @@ name: "Orders",
         return this.checkAccess(access, parametr, parametr2)
     },
     selectOrder(id){
+      console.log(id,"selectOrder");
+      this.select_order = '';
       this.orderList.map((item)=>{
         if(item._id === id) {
           this.select_order = item;
           this.addNewProperty(this.select_order.products, "_id", 0, 'product')
-          console.log(this.select_order,"ddddddddddddddddddddddddddddddddd");
         }
       })
     },
     getOrders(){
       this.axios.get(this.url('getOrders')+'?populate=client')
       .then((response)=>{
+        console.log(response.data.objects);
         this.orderList = response.data.objects;
       })
     },

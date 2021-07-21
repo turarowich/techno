@@ -90,7 +90,6 @@
               </div>
             </div>
 
-
             <!------------------------------------------Right Side-------------------------->
             <div class="col-lg-4">
               <h3 class="client-sub-title">Client</h3>
@@ -247,9 +246,12 @@ export default {
         return client
     },
     filteredProducts(){
+      if(!this.products){
+        return  [];
+      }
       if(this.products.length){
         return this.products.filter((product)=>{
-          return product.name.toLowerCase().includes(this.search_product.toLowerCase())
+          return product.name.toLowerCase().includes(this.search_product.toLowerCase());
         })
       }else{
         return [];
@@ -335,20 +337,20 @@ export default {
     this.getClients()
     this.imgSrc = this.$server;
   },
-  watch:{
-    select_order(newCat){
-      console.log(newCat,"select_order WATCH EDIT");
-      this.currentData = Object.assign({}, newCat);
-
-    },
-    currentData:{
-      handler(val) {
-        console.log(val,"total_price CHANGE TO STORE",val);
-      },
-      deep: true,
-      immediate:true,
-    },
-  },
+  // watch:{
+  //   select_order(newCat){
+  //     console.log(newCat,"select_order WATCH EDIT");
+  //     this.currentData = Object.assign({}, newCat);
+  //
+  //   },
+  //   currentData:{
+  //     handler(val) {
+  //       console.log(val,"total_price CHANGE TO STORE",val);
+  //     },
+  //     deep: true,
+  //     immediate:true,
+  //   },
+  // },
 }
 </script>
 
@@ -536,5 +538,11 @@ export default {
 }
 .reload-code{
   margin-bottom: 20px;
+}
+@media (max-width: 992px) {
+  .modal-dialog{
+    width: 100%;
+    max-width: 100%!important;
+  }
 }
 </style>

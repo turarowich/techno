@@ -410,7 +410,7 @@ export default {
     this.axios
         .get(this.url('getCashback'))
         .then(function (response){
-          let cashback = response.data.cashback;
+          let cashback = response.data.object;
           console.log(cashback);
           that.status = cashback.status;
           that.birthday_points_quant = cashback.birthday_points_quant;
