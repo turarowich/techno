@@ -18,7 +18,6 @@
         <div class="d-flex align-items-center">
           <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">
             <div v-if="catalog_settings.logo && catalog_settings.logo !==''"  v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.logo + ')' }" class="catalog_logo Q3">
-
             </div>
             <span v-else>
               {{catalog_settings.name || 'Company Name'}}

@@ -10,7 +10,7 @@
         <div><label class="custom-checkbox"><input  type="checkbox"  @click="checkMainSelect"  :ref="'select'+order._id" :value="order._id" ><span class="checkmark"></span></label></div>
         {{order.code}}
         </div>
-      <div v-if="order.products" class="table-child d-flex align-items-center"  style="width: 30%;">
+      <div v-if="order.products" class="table-child d-flex align-items-center"  style="width: 25%;">
         <div  class="table-img">
           <img  v-if="order.products[0] && order.products[0].img" :src="imgSrc+'/'+order.products[0].img">
           <img v-else src="../../assets/icons/no-catalog.svg">
@@ -30,16 +30,20 @@
       <div  class="table-child"  style="width: 10%;">{{order.totalPrice}} $</div>
       <div class="table-child" v-show="data_check.date_checked"  style="width: 15%;">{{order.createdAt.split('').slice(0,10).join('')}}</div>
       <div class="table-child pr-3" v-show="data_check.notes_checked" style="width: 10%;" ><div>{{order.notes}}</div></div>
-      <div class="table-child" style="width: 15%;"
+      <div class="table-child" style="width: 12%;"
            :class="[{red: order.status === 'Cancelled'},
           {green: order.status === 'Done'},
           {orange: order.status === 'In Progress'},
           {new: order.status === 'New'}
           ]">
-
         <i class=" circle-status fas fa-circle"></i>
         {{order.status}}
       </div>
+
+      <div style="width: 8%;"   v-bind:class="{ disabled: order.pointsStatus.received || order.status == 'Cancelled' }">
+        <img  v-on:click="$emit('startScanning',{id:order._id,code:order.code})"   src="../../assets/icons/qr_icon.svg">
+      </div>
+
       <div class="table-child" style="width:3%">
         <div class="dropleft dropMenu">
           <div class="dropdown-toggle" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -53,8 +57,6 @@
               <li class="list-group-item" v-if="check()" v-on:click="$emit('deleteOrder',order._id)">Delete</li>
               <li v-if="!['Cancelled','Done'].includes(order.status) && check('canChangeOrderStatus', null, null)" class="list-group-item" v-on:click="statusChange(order,'Done')">Done</li>
               <li v-if="!['Cancelled'].includes(order.status) && check('canChangeOrderStatus', null, null)" class="list-group-item" @click="statusChange(order, 'Cancelled')">Cancel</li>
-<!--          
-        <li class="list-group-item" v-on:click="statusChange(order, 'In Progress')">In progress</li>-->
             </ul>
           </div>
         </div>
@@ -80,6 +82,9 @@ export default {
   },
 
   methods: {
+    onDecode (decodedString) {
+      console.log(decodedString);
+    },
     check(access="orders", parametr="active", parametr2="canEdit"){
         return this.checkAccess(access, parametr, parametr2)
     },
@@ -101,30 +106,7 @@ export default {
             }
           });
         }
-
-
     },
-    // statusCancel(order){
-    //
-    //   this.axios.put(this.url('updateOrder',order._id), {status: 'Canceled'}).then(()=>{
-    //       order.status = 'Canceled';
-    //   }).catch((error)=>{
-    //         if(error.response && error.response.data){
-    //             this.$warningAlert(error.response.data.msg)
-    //         }
-    //   });
-    //
-    // },
-    // statusProgress(order){
-    //     this.axios.put(this.url('updateOrder',order._id), {status: 'In proccess'}).then(()=>{
-    //         order.status = 'In proccess';
-    //     }).catch((error)=>{
-    //         if(error.response && error.response.data){
-    //             this.$warningAlert(error.response.data.msg)
-    //         }
-    //     });
-    //
-    // },
     checkAll(item) {
       return  this.$refs[`select${item._id}`].checked === true
     },
@@ -138,8 +120,7 @@ export default {
         this.$emit('unCheckAll', this.newCheck)
       }
 
-    }
-
+    },
   }
 ,
 mounted() {
@@ -178,6 +159,8 @@ mounted() {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: clip;
-
+}
+.disabled {
+  pointer-events: none;
 }
 </style>

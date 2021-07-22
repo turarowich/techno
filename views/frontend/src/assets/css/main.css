@@ -1378,12 +1378,12 @@ input.value-success, select.value-success, textarea.value-success,div.value-succ
     }
 }
 
-.modal-backdrop {
-    margin-left: 250px;
-}
-.modal-backdrop.active{
-    margin-left: 0 !important;
-}
+/*.modal-backdrop {*/
+/*    margin-left: 250px;*/
+/*}*/
+/*.modal-backdrop.active{*/
+/*    margin-left: 0 !important;*/
+/*}*/
 /*Responsive Web Catalog*/
 .mobile-header{
     border-bottom: 1px solid #E4E4E4;

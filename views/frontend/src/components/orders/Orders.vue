@@ -50,13 +50,14 @@
         <div><label class="custom-checkbox"><input type="checkbox" id="parent-check"  @click="toggleSelect" v-model="selectAll"><span class="checkmark"></span></label></div>
 
         Name order</div>
-      <div class="table-head" style="width: 30%;">Product</div>
+      <div class="table-head" style="width: 25%;">Product</div>
       <div v-show="data_check.client_checked" class="table-head" style="width: 25%;">Client</div>
       <div v-show="data_check.phone_checked" class="table-head" style="width: 20%;">Phone number</div>
       <div class="table-head table-link d-flex align-items-center" style="width: 10%;" @click="sortByTotal()" >Total <img class="total-pol" style="margin-left:7px" src="../../assets/icons/polygon.svg"></div>
       <div v-if="data_check.date_checked" class="table-head table-link d-flex align-items-center" style="width: 15%; cursor: pointer" v-on:click="sortByDate" >Date <img class="date-pol" style="margin-left:7px" src="../../assets/icons/polygon.svg"></div>
       <div v-show="data_check.notes_checked" class="table-head" style="width: 10%;">Notes</div>
-      <div class="table-head" style="width: 15%;">Status</div>
+      <div class="table-head" style="width: 12%;">Status</div>
+      <div class="table-head" style="width: 8%;"></div>
       <div style="width:3%" class="dropdown pl-3">
         <div class="table-head text-right dropdown-toggle"  id="dropdownBlue" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:3%"><img src="../../assets/icons/BlueSetting.svg"></div>
         <div class="dropdown-menu general-dropdown settings-dropdown" aria-labelledby="dropdownBlue">
@@ -72,13 +73,14 @@
 
     <div class="table-content">
         <OrderItem
-             ref="order_item"
-             v-on:selectOrder="selectOrder"
-              v-on:unCheckAll="unCheckAll"
-              v-on:checkAll="checkAll"
-              v-bind:orderList="orderToDisplay"
-              v-on:deleteOrder="deleteOrder"
-             v-bind:data_check="data_check"
+          ref="order_item"
+          v-on:selectOrder="selectOrder"
+          v-on:unCheckAll="unCheckAll"
+          v-on:checkAll="checkAll"
+          v-bind:orderList="orderToDisplay"
+          v-on:deleteOrder="deleteOrder"
+          v-bind:data_check="data_check"
+          @startScanning="startScanning"
         />
     </div>
     <AddOrder
@@ -105,6 +107,44 @@
       </div>
     </div>
   </div>
+
+
+  <div class="parent-modal">
+    <div class="modal myModal fade" id="QRCodeModalPreview" tabindex="-1" role="dialog" aria-labelledby="QRCodeModalPreview" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-body">
+           <div>
+             <div style="width: 500px" id="reader"></div>
+             <div class="stream">
+               <div class="qr_header d-flex justify-content-between">
+                 <div>
+                   <span>Order #</span>
+                   <span>{{ orderForScanning.code }}</span>
+                 </div>
+                 <div>
+                   <span style="color:green;">{{scanResult.pointsAdded}}</span>
+                   <span style="color:red;">{{scanResult.error}}</span>
+                 </div>
+
+
+               </div>
+
+               <qr-stream @decode="onDecode" @init="onInit" class="mb">
+                 <div style="color: red;" class="frame"></div>
+               </qr-stream>
+             </div>
+
+           </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
 </template>
 
 <script>
@@ -113,23 +153,32 @@ import AddOrder from "@/modals/orders/AddOrder";
 import EditOrder from "@/modals/orders/EditOrder";
 import Swal from "sweetalert2";
 import $ from 'jquery';
+import { QrStream} from 'vue3-qr-reader';
 export default {
 name: "Orders",
 
   components:{
     OrderItem,
     AddOrder,
-    EditOrder
-
+    EditOrder,
+    QrStream,
   },
   data(){
     return{
+      scanResult:{
+        error:'',
+        pointsAdded:'',
+      },
+      orderForScanning:{
+        id:'',
+        code:'',
+      },
       between_value:'',
       deletedOrders:[],
       orderList:[],
       select_order:'',
       data_check:{
-          client_checked:true,
+          client_checked:false,
           phone_checked:false,
           date_checked:false,
           notes_checked:false
@@ -161,17 +210,6 @@ name: "Orders",
           .filter(order=>{
             return order.status.includes(this.filter_by_status)
           })
-          // .filter(order=>{
-          //   if(this.price_to.length>0){
-          //     return +order.total >= this.price_from && +order.total <= this.price_to
-          //   }
-          //   else if(this.price_to === ''){
-          //     return +order.total >=this.price_from;
-          //   }
-          //   else{
-          //     return order
-          //   }
-          // })
           .filter(order=>{
             return order.createdAt.slice(0,10).includes(this.filtered)
                 || (new Date(order.createdAt).getTime() >= new Date(this.filtered.slice(0,10)).getTime() &&
@@ -387,6 +425,47 @@ name: "Orders",
         }
       })
     },
+    startScanning(order){
+      this.orderForScanning.id = order.id;
+      this.orderForScanning.code = order.code;
+      $('#QRCodeModalPreview').modal('show');
+      this.scanResult.error = '';
+      this.scanResult.pointsAdded = '';
+    },
+    onDecode(uniqueCode) {
+      this.axios.post(this.url('addOderPoints'),{clientCode:uniqueCode,orderId:this.orderForScanning.id})
+        .then((response)=>{
+          console.log(response.data);
+          this.scanResult.pointsAdded = `${response.data.pointsAdded} points were added`;
+          this.scanResult.error = '';
+        }).catch((error)=>{
+          console.log(error);
+          if (error.response) {
+            this.scanResult.error = error.response.data;
+            this.scanResult.pointsAdded = '';
+        }
+      });
+    },
+
+    async onInit (promise) {
+      try {
+        await promise
+      } catch (error) {
+        if (error.name === 'NotAllowedError') {
+          this.scanResult.error = "ERROR: you need to grant camera access permisson"
+        } else if (error.name === 'NotFoundError') {
+          this.scanResult.error = "ERROR: no camera on this device"
+        } else if (error.name === 'NotSupportedError') {
+          this.scanResult.error = "ERROR: secure context required (HTTPS, localhost)"
+        } else if (error.name === 'NotReadableError') {
+          this.scanResult.error = "ERROR: is the camera already in use?"
+        } else if (error.name === 'OverconstrainedError') {
+          this.scanResult.error = "ERROR: installed cameras are not suitable"
+        } else if (error.name === 'StreamApiNotSupportedError') {
+          this.scanResult.error = "ERROR: Stream API is not supported in this browser"
+        }
+      }
+    }
 
   },
   mounted(){

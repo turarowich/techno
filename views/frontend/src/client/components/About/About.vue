@@ -91,8 +91,13 @@ export default {
             this.$store.dispatch("Catalog/setCompany_delivery_options",response.data.deliveries);
             let catalog_settings={
               name:settings.name,
+              currency:settings.currency,
+              catalogMode:settings.catalogMode,
+              foodMode:settings.foodMode,
+              share_points_status:response.data.share_points_status,
               email:settings.email,
               banner:settings.banner,
+              logo:settings.logo,
               description:settings.description,
               welcome:settings.welcome,
               delivery:settings.delivery,

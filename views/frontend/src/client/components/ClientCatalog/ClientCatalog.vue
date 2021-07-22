@@ -81,22 +81,16 @@ export default {
 name: "Catalog",
   components:{
     ClientCatalogItem,
-
-
   },
   data(){
-  return{
-    catalog:[],
-    listCategory:[{_id:'', name:'All'},{_id:'1', name:'clothes'},{_id:'2', name:'shoes'}],
-    filtered: 'all',
-    from:0,
-    to:0,
-    showCategory:'All',
-
-
-
-
-  }
+    return{
+      catalog:[],
+      listCategory:[{_id:'', name:'All'},{_id:'1', name:'clothes'},{_id:'2', name:'shoes'}],
+      filtered: 'all',
+      from:0,
+      to:0,
+      showCategory:'All',
+    }
   },
   computed:{
     filteredList: function(){
@@ -209,17 +203,12 @@ name: "Catalog",
     async  getProducts(){
       const options = {
         headers: {"x-client-url": this.currentCompanyCatalog},
-
-
       }
 
        await this.axios.get(this.url('getClientProducts'),options)
-           .then((response) => {
-             this.catalog = response.data.objects;
-
-           })
-
-
+         .then((response) => {
+           this.catalog = response.data.objects;
+         })
     },
 
     async getCategories() {
@@ -241,6 +230,13 @@ name: "Catalog",
         instance.update({
           from: that.minPrice,
           to:that.maxPrice,
+          max:that.maxPrice,
+        });
+        let instance2 = $("#range-slider2").data("ionRangeSlider");
+        instance2.update({
+          from: that.minPrice,
+          to:that.maxPrice,
+          max:that.maxPrice,
         });
         that.from = that.minPrice;
         that.to = that.maxPrice;
