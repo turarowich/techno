@@ -145,7 +145,8 @@ const settingsSchema = new Schema({
     custom_field_0: {
         required: {
             type: Boolean,
-            required: true
+            required: false,
+            default: false
         },
         fieldName:{
             type: String,
@@ -161,7 +162,8 @@ const settingsSchema = new Schema({
     custom_field_1: {
         required: {
             type: Boolean,
-            required: true
+            required: false,
+            default: false
         },
         fieldName: {
             type: String,
@@ -177,7 +179,8 @@ const settingsSchema = new Schema({
     custom_field_2: {
         required: {
             type: Boolean,
-            required: true
+            required: false,
+            default: false
         },
         fieldName: {
             type: String,
