@@ -217,7 +217,7 @@ export default {
     margin-bottom: 0;
 }
 .chat{
-  height:calc(100vh - 169px)
+  height:calc(100vh - 90px)
 }
 .search-chat input{
   border:none;

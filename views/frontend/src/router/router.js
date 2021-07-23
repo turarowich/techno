@@ -67,9 +67,8 @@ const routes = [
         component: Orders,
 
     },
-
     {
-        path: "/edit-client-page",
+        path: "/edit-client-page/:id",
         name: "EditClientPage",
         component: EditClientPage,
 
@@ -358,18 +357,22 @@ const routes = [
 ]
 
 
-
 const router = createRouter({
     history: createWebHistory(),
-    scrollBehavior(to, from, savedPosition) {
-        if (savedPosition) {
-            return savedPosition
-        }
-        else{
-            return { top:0}
-        }
-
+    scrollBehavior (to, from, savedPosition) {
+        return new Promise((resolve) => {
+            resolve( savedPosition || { top:0} )
+        })
     },
+    // scrollBehavior(to, from, savedPosition) {
+    //     if (savedPosition) {
+    //         return savedPosition
+    //     }
+    //     else{
+    //         return { top:0}
+    //     }
+    //
+    // },
     routes,
 });
 
@@ -393,7 +396,6 @@ function nextFactory(context, middleware, index) {
 }
 
 router.beforeEach((to, from, next) => {
-
     if (to.meta.middleware) {
         const middleware = Array.isArray(to.meta.middleware) ?
             to.meta.middleware : [to.meta.middleware];

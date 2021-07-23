@@ -8,7 +8,7 @@
             <img class="img-btn" src="../../assets/icons/filter.svg"><span>Filter</span>
           </button>
 
-          <div class="dropdown-menu general-dropdown" aria-labelledby="dropdownMenuButton">
+          <div class="dropdown-menu general-dropdown animate slideIn log-filter" aria-labelledby="dropdownMenuButton">
             <div class="filter-dropdown">
              <form>
                <div>
@@ -185,6 +185,9 @@ export default {
 </script>
 
 <style scoped>
+.log-filter{
+  margin-top: 44px;
+}
 .order_users{
   font-size: 14px;
 }
@@ -203,13 +206,12 @@ export default {
   font-size: 14px;
 
 }
+
 .general-dropdown{
   width: 19rem;
-  transform: translate3d(0px, -5px, 0px) !important;
 }
 .filter-dropdown{
   padding: 17px;
-  transform: translate3d(0px, -5px, 0px) !important;
 }
 .main-content-header{
   padding-right:10px;

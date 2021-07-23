@@ -52,8 +52,8 @@
 
         </div>
         <div class="bonus-notification">
-          <div class="d-flex align-items-center">
-            <img class="mr-2" src="../../../assets/clients/Discount.svg"> <span class="bonus-span mb-0" v-if="user">My bonuses: {{user.points}}</span>
+          <div class=" bonus-title d-flex align-items-center">
+            <img class="mr-2" src="../../../assets/clients/Discount.svg"> <span class="bonus-span" v-if="user">My bonuses: {{user.points}}</span>
           </div>
           <p @click="sendCLientEmit" class="client-paragraph mb-0">You can spend your current points or continue to accumulate them</p>
         </div>
@@ -63,14 +63,14 @@
               <div class="order-tab d-flex align-items-center mr-4">
                 <img src="../../../assets/clients/trash.svg">
                 <h2 class="orders-title">Orders</h2>
-                <div class="order-count">{{userOrders.length}}</div>
+                <div class="order-count">{{filterUserOrders.length}}</div>
               </div>
             </a>
           </li>
           <li>
             <a class="disable-underline" data-toggle="tab" href="#menu2">
               <div data-toggle="tab" class="order-tab d-flex align-items-center">
-                <img src="../../../assets/clients/DiscountBlack.svg">
+<!--                <img src="../../../assets/clients/DiscountBlack.svg">-->
                 <h2 class="orders-title">Bonus history</h2>
               </div>
             </a>
@@ -89,7 +89,7 @@
               <div class="table-head table-link" @click="sortByTotal" style="width: 11%;">Total <img class="total-pol" style="margin-left:10px" src="../../../assets/icons/polygon.svg"></div>
               <div class="table-head" style="width:10%">Status</div>
             </div>
-            <OrdersItem :orderList="userOrders"/>
+            <OrdersItem :orderList="filterUserOrders"/>
 
           </div>
           <div id="menu2" class="tab-pane fade">
@@ -159,6 +159,11 @@ name: "ClientAccount",
     currentCompanyCatalog() {
       return this.$route.params.bekon;
     },
+    filterUserOrders(){
+      return this.userOrders.filter((order)=>{
+        return order.status === 'Cancelled' || order.status === 'Done'
+      })
+    }
   },
   methods:{
     checkPromocode() {
@@ -226,11 +231,11 @@ name: "ClientAccount",
       });
     },
     sortByDate() {
-      if (this.orderList.length === 0) {
+      if (this.userOrders.length === 0) {
         return null;
       } else {
-        this.orderList.sort((a, b) => {
-          return this.sorting ? new Date(a.date) - new Date(b.date) : new Date(b.date) - new Date(a.date)
+        this.userOrders.sort((a, b) => {
+          return this.sorting ? new Date(a.createdAt) - new Date(b.createdAt) : new Date(b.createdAt) - new Date(a.createdAt)
         })
         this.sorting = !this.sorting;
         $('.date-pol').toggleClass('active')
@@ -238,10 +243,10 @@ name: "ClientAccount",
       }
     },
     sortByTotal() {
-      if (this.orderList.length === 0) {
+      if (this.userOrders.length === 0) {
         return null;
       } else {
-        this.orderList.sort((a, b) => this.sorting ? (parseInt(a.total) - parseInt(b.total)) : (parseInt(b.total) - parseInt(a.total)));
+        this.userOrders.sort((a, b) => this.sorting ? (parseInt(a.totalPrice) - parseInt(b.totalPrice)) : (parseInt(b.totalPrice) - parseInt(a.totalPrice)));
         this.sorting = !this.sorting;
         $('.total-pol').toggleClass('active')
         $('.date-pol').removeClass('active')
@@ -333,15 +338,29 @@ name: "ClientAccount",
   cursor:pointer;
   font-weight: 600;
 }
+.client-paragraph{
+  font-size: 14px;
+}
+.nav-tabs{
+  align-items:center;
+}
+.bonus-title{
+  margin-bottom: 3px;
+}
 .profile-title{
   font-size: 20px;
   font-weight: bold;
+  margin-bottom: 5px;
 }
 .client-avatar{
-  margin-right: 10px;
+  margin-right: 20px;
+  width: 80px;
+  height: 80px;
 }
 .profile-phone{
   color: #B0B0B0;
+  margin-bottom: 5px;
+  display: block;
 }
 .profile-info{
   margin-bottom: 34px;
@@ -353,11 +372,19 @@ name: "ClientAccount",
 
 .orders-title{
   font-size: 20px;
-  font-weight: bold;
-  margin: 0 20px;
+  font-weight: 400;
+  margin-left: 10px;
+  margin-right: 20px;
   color:#222;
   cursor:pointer;
 
+}
+.table-item{
+  height:70px;
+}
+.bonus-span{
+  font-size: 16px;
+  margin-bottom: 0;
 }
 .order-tab{
   opacity:0.5;
@@ -373,12 +400,14 @@ name: "ClientAccount",
   color:#616CF5;
 }
 .user_status_class{
-  height: 17px;
+  height: 23px;
   background: #616CF5;
   border-radius: 10px;
   color: white;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding:5px 25px;
+
 }
 </style>

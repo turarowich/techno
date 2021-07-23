@@ -50,17 +50,13 @@ export default {
   name: "ImportClient",
 
   methods:{
-    uploadFile(){
 
-    },
     importClient(){
-
-       Dropzone.options.myAwesomeDropzone = {
+      Dropzone.options.myAwesomeDropzone = {
         paramName: "file", // The name that will be used to transfer the file
         maxFilesize: 1000, // MB
         addRemoveLinks:true,
-
-        maxFiles:1,
+         maxFiles:1,
          init: function() {
           this.on("maxfilesexceeded", function(file) {
             this.removeAllFiles();

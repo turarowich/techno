@@ -69,6 +69,38 @@ catalog<template>
         <ClientCatalogItem v-bind:catalog="filteredList"/>
 
   </div>
+
+
+
+
+
+  <div class="parent-modal">
+    <div class="modal myModal fade" id="categoriess" tabindex="-1" role="dialog" aria-labelledby="add-points" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content category-content">
+          <div class="modal-header category-header align-items-center">
+            <h3 class="modal-title">Edit Category</h3>
+            <button type="button" data-dismiss="modal" aria-label="Close" class="close">
+              <span aria-hidden="true">
+                <img src="../../../assets/icons/xBlack.svg" alt="">
+              </span>
+            </button>
+          </div>
+          <div class="modal-body category-body">
+            <form class="modal-form">
+              <label>Name</label>
+              <input  class="form-input cashback-input mb-3"  placeholder="Enter a name">
+
+              <textarea class="general-area"></textarea>
+              <div class="d-flex justify-content-end">
+                <button  class="save">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 </template>
@@ -146,6 +178,7 @@ name: "Catalog",
           }
         })
         $('.showCategory').removeClass('active')
+      $('body').css({'overflow':'auto'})
       },
     showFilterCategory(item){
       if(item==='category'){
@@ -154,6 +187,9 @@ name: "Catalog",
       else{
         $('.showFilter').addClass('active')
       }
+      $('body').css({'overflow':'hidden'})
+
+
 
 
     },
@@ -161,11 +197,11 @@ name: "Catalog",
       if(item === 'category'){
         $('.showCategory').removeClass('active')
 
-
       }
       else{
         $('.showFilter').removeClass('active')
       }
+      $('body').css({'overflow':'auto'})
 
 
     },
@@ -287,7 +323,8 @@ name: "Catalog",
   top: 0;
   left:0;
   display: none;
-  background: #fff;
+  overflow-y: scroll;
+  background:#fff;
   padding:0 20px;
   transition:.3s;
   -webkit-animation: fadeIn 0.3s;

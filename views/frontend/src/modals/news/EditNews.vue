@@ -41,7 +41,7 @@
                         <p class="news-description margin-bottom-30">Set the end time for creating a special offer</p>
                         <div class=" product-calendar d-flex align-items-center ">
                             <div class="d-flex align-items-center mr-2">
-                            <label >From</label>
+                            <label class="mr-2">From</label>
                             <div class="calendar d-flex align-items-center">
                                 <input  name="startDate" v-model="news.startDate" class="calendar-input" id="startDateEdit" autocomplete="off">
                                 <img src="../../assets/icons/Calendar.svg">
@@ -49,7 +49,7 @@
                             </div>
 
                             <div class="d-flex align-items-center">
-                            <label>to</label>
+                            <label class="mr-2">to</label>
                             <div class="calendar d-flex align-items-center">
                                 <input   name="endDate" v-model="news.endDate"  class="calendar-input" id="endDateEdit" autocomplete="off">
                                 <img src="../../assets/icons/Calendar.svg">

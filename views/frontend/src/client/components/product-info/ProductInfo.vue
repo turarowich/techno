@@ -56,32 +56,32 @@
                   <div class="basket-price " style="width:20%">{{cart_item.current_price}} {{catalog_settings.currency}}</div>
                 </div>
               </div>
-              <div class="mt-5">
-                <div class="d-flex">
-                  <div  style="flex: 1;">
-                    Subtotal
-                  </div>
-                  <div>
-                    <h5>{{getTotalPrice}} {{catalog_settings.currency}}</h5>
-                  </div>
-                </div>
-                <div class="d-flex">
-                  <div  style="flex: 1;">
-                    Delivery
-                  </div>
-                  <div>
-                    <h5>{{getDeliveryCost}} {{catalog_settings.currency}}</h5>
-                  </div>
-                </div>
-                <div class="d-flex">
-                  <div style="flex: 1; margin-bottom:15px;">
-                    Points used
-                  </div>
-                  <div>
-                    <h5 style="color:#007bff;">-{{getUsedPoints}} {{catalog_settings.currency}}</h5>
-                  </div>
-                </div>
-                <div class="d-flex">
+              <div >
+<!--                <div class="d-flex">-->
+<!--                  <div  style="flex: 1;">-->
+<!--                    Subtotal-->
+<!--                  </div>-->
+<!--                  <div>-->
+<!--                    <h5>{{getTotalPrice}}</h5>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--                <div class="d-flex">-->
+<!--                  <div  style="flex: 1;">-->
+<!--                    Delivery-->
+<!--                  </div>-->
+<!--                  <div>-->
+<!--                    <h5>{{getDeliveryCost}}</h5>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--                <div class="d-flex">-->
+<!--                  <div style="flex: 1; margin-bottom:15px;">-->
+<!--                    Points used-->
+<!--                  </div>-->
+<!--                  <div>-->
+<!--                    <h5 style="color:#007bff;">-{{getUsedPoints}}</h5>-->
+<!--                  </div>-->
+<!--                </div>-->
+                <div class="total-price d-flex">
                   <div style="flex: 1;">
                     <h5>Total</h5>
                   </div>
@@ -100,15 +100,11 @@
           </div>
         </div>
 
-     <div class="container">
-       <div class="row">
-         <div class="col-lg-6 p-0 d-flex justify-content-center">
+
            <button @click="confirmNorder" class=" save final_order_btn">
              Confirm and order
            </button>
-         </div>
-       </div>
-     </div>
+
       </div>
 
     </div>
@@ -249,6 +245,7 @@ export default {
 .scroll-basket{
   max-height: 350px;
   overflow-y: auto;
+  margin-bottom: 70px;
 }
 .long-text{
   width: 160px;
@@ -258,7 +255,8 @@ export default {
 }
 .order-item{
   border-bottom: 1px solid #F4F4F4;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
 }
 .order-title{
   font-weight: 700;
@@ -273,7 +271,7 @@ export default {
   margin-bottom: 47px;
 }
 .info-order{
-  /*width: 80%;*/
+  width: 400px;
 }
 .info-title{
   font-weight: 600;
@@ -293,12 +291,20 @@ export default {
 .pick-up{
   margin-bottom: 8px;
 }
+.total-price h5{
+  font-size: 22px;
+  font-weight: normal;
+  padding-top: 24px;
+  border-top: 1px solid #E4E4E4;
+  padding-bottom: 15px;
+}
 .basket-hover{
-
+  width: 400px;
   border-radius: 10px;
   padding: 20px;
   padding-bottom:24px;
   background: #FCFCFF;
+  margin-left: 50px;
 
 }
 
@@ -347,18 +353,32 @@ export default {
   font-weight: 600;
   font-size: 16px;
   cursor: pointer;
-  width: 90%;
+  width: 400px;
 }
 .final_order_btn:hover{
   background: #3B4DB3;
   transition:.3s;
 }
+@media(max-width:992px){
+  .basket-hover{
+    margin-left: 0;
+    margin-top: 50px;
+  }
+  .scroll-basket{
+    margin-bottom: 10px;
+  }
+  .total-price h5{
+    border-top: none;
+  }
+}
 @media(max-width:576px){
   .info-order, .basket-hover{
     width: 100%;
   }
+  .final_order_btn{
+    width: 100%;
+  }
   .basket-hover{
-    margin-top: 50px;
     padding: 0;
     background: #fff;
   }

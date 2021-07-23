@@ -36,7 +36,7 @@ name: "OrdersItem",
   methods:{
     format_date(value){
       if (value) {
-        return this.$moment(String(value)).format('MM-DD-YY');
+        return this.$moment(String(value)).format('YYYY-MM-DD');
       }
     },
   },
@@ -44,5 +44,16 @@ name: "OrdersItem",
 </script>
 
 <style scoped>
-
+.table-item{
+  height: 70px;
+}
+.red{
+  color:red;
+}
+.done{
+  color:green;
+}
+.orange{
+  color:orange;
+}
 </style>

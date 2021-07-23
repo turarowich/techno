@@ -212,8 +212,8 @@ class ProductController{
                     delete product.imgArray[$i]
                 }
             }
-            for (let $i = 0; $i < 3; $i++) {
-                if(!product.imgArray[$i]){
+            for (let $i = 2; $i >= 0; $i--) {
+                if (product.imgArray[$i] == null || product.imgArray[$i] == undefined){
                     product.imgArray.splice($i, 1)
                 }
             }

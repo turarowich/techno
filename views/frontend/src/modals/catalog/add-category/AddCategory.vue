@@ -81,7 +81,9 @@ name: "AddCategory",
 </script>
 
 <style scoped>
-
+.modal-select{
+  font-size: 14px;
+}
 .category-content{
   border:0;
   border-radius: 0;

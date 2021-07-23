@@ -8,6 +8,21 @@ const Analytics = require('./analyticsController');
 var path = require('path');
 const fs = require('fs');
 
+
+
+function getClientDiscountStatus(discountsList=[],balance=0){
+    let discount = 0;
+    const newArray = []
+    for (let i = 0; i < discountsList.length; i++) {
+        if (balance >= discountsList[i].min_sum_of_purchases) {
+            newArray.push(discountsList[i].discount_percentage)
+        }
+
+    }
+    discount = Math.max(...newArray)
+    return discount;
+
+}
 class ClientController{
     
     getClient = async function (req, res) {
@@ -34,11 +49,14 @@ class ClientController{
                 if (discount){
                     result['discount'] = discount
                 }
-                result['orders'] = await Order.find({client:client._id});
+                result['orders'] = await Order.find({client:client._id}).populate('client').populate('products').exec();
                 result['history'] = await ClientBonusHistory.find({client:client._id});
             }
-            
-            result['object'] = client
+            let newClient = '';
+            const copy = JSON.parse(JSON.stringify(client));
+            copy.discount = getClientDiscountStatus(discounts,client.balance);
+            newClient = copy
+            result['object'] = newClient
 
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
@@ -50,6 +68,9 @@ class ClientController{
     getClients = async function (req, res) {
         let db = useDB(req.db)
         let Client = db.model("Client");
+        let Order = db.model("Order");
+        let Discount = db.model("Discount");
+        let discounts = await Discount.find()
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "clients", parametr: "active" }, db, res)
             if (checkResult) {
@@ -62,10 +83,20 @@ class ClientController{
         }
         try {
             
-            let clients = await Client.find().populate('messages').populate('category').exec()
+            let clients = await Client.find().populate('messages').populate('category').exec();
 
-            result['objects'] = clients
-        
+
+
+            let newClient = [];
+            for (const cl of clients) {
+                let copy = JSON.parse(JSON.stringify(cl));
+                copy.orders = await Order.find({client:cl._id});
+                copy.discount = getClientDiscountStatus(discounts,cl.balance);
+                newClient.push(copy);
+            }
+
+            result['objects'] = newClient
+
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
@@ -156,6 +187,7 @@ class ClientController{
             if (req.fields.birthDate) {
                 req.fields.birthDate = req.fields.birthDate.replace('\r\n', '');
             }
+
             console.log(req.fields)
             if (req.fields.password && req.fields.password != "\r\n") {
                 req.fields.password = req.fields.password.trim()
@@ -602,6 +634,7 @@ class ClientController{
                 await client.save({ validateBeforeSave: false });
                 await new ClientBonusHistory({
                     client: client._id,
+                    comments:req.fields.comments,
                     points: req.fields.points,
                     source: 'Points added by company',
                     type: 'received',
@@ -657,6 +690,7 @@ class ClientController{
                 await new ClientBonusHistory({
                     client: client._id,
                     points: -req.fields.points,
+                    comments:req.fields.comments,
                     source: 'Points deducted by company',
                     type: 'deducted',
                 }).save();

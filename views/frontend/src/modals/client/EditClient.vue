@@ -15,9 +15,9 @@
           <form  class="modal-form ">
 
             <div class="client-profile-img">
-                <img class="img"  v-if="typeof currentData.avatar === 'string'" :src="imgSrc+'/'+currentData.avatar">
-                <img class="img" v-else-if="typeof currentData.avatar === 'object'" :src="imagePreview">
-                <img class="img" v-else src="../../assets/icons/clientUser.svg">
+                <img  class="img"  v-if="typeof currentData.avatar === 'string'" :src="imgSrc+'/'+currentData.avatar">
+                <img  class="img" v-else-if="typeof currentData.avatar === 'object'" :src="imagePreview">
+                <img  class="img" v-else src="../../assets/icons/chat.svg">
                 <input @change="uploadPhoto($event)" type="file" class="d-none" id="add-user-img">
                 <label for="add-user-img"><img class="add-profile-img" src="../../assets/icons/addBtn.svg"></label>
             </div>
@@ -48,12 +48,12 @@
 
             <div class="radio-toolbar">
               <div class="d-flex align-items-center mr-4">
-                <input type="radio" id="radioMale" name="radioFruit" value="apple" checked>
+                <input  type="radio" id="radioMale" :checked="currentData.gender === 'men'" @click="currentData.gender = 'men'" name="gender" value="apple" >
                 <label for="radioMale"></label>
                 <span class="male">Male</span>
               </div>
               <div class="d-flex align-items-center">
-                <input type="radio" id="radioFemale" name="radioFruit" value="orange">
+                <input  type="radio" id="radioFemale" :checked="currentData.gender === 'woman'"  @click="currentData.gender = 'woman'" name="gender" value="orange">
                 <label for="radioFemale"></label>
                 <span class="maled">Female</span>
               </div>
@@ -74,9 +74,10 @@ import $ from "jquery";
 
 export default {
   name: "EditClient",
-  props:['select_client', 'getClients'],
+  props:['select_client', 'getClients','getClient'],
   data(){
     return{
+
       currentData:{
         avatar:''
       },
@@ -102,21 +103,32 @@ export default {
         this.currentData.avatar = event.target.files[0]
       }
     },
-    onSubmit(id){
+ onSubmit(id){
       const updatedData = this.currentData;
-     let form = new FormData;
+      let form = new FormData;
       if(updatedData.avatar){
         form.append('avatar', updatedData.avatar)
       }
+
+      if(!updatedData.birthDate){
+        updatedData.birthDate = this.$moment().format("YYYY-MM-DD")
+      }
+
       form.append('birthDate', updatedData.birthDate)
+      form.append('gender',updatedData.gender)
       form.append('name', updatedData.name);
       form.append('email',updatedData.email);
       form.append('phone',updatedData.phone);
 
       this.axios.put(this.url('updateClient',id),form)
       .then(()=>{
+        if(this.$route.path.startsWith('/edit-client-page')){
+          this.getClient()
+        }
+        else{
+          this.getClients()
+        }
         this.$informationAlert("Change are saved")
-        this.getClients()
         $('#edit-client').modal("hide")
       }).catch((error)=>{
             if(error.response && error.response.data){
@@ -140,11 +152,15 @@ export default {
     this.selectDate();
     this.imgSrc = this.$server;
 
+
   },
   watch:{
     select_client(newCat){
       this.currentData = Object.assign({}, newCat)
+      if(this.currentData.birthDate){
+        this.currentData.birthDate = this.currentData.birthDate.slice(0,10)
       }
+    }
   },
 }
 </script>

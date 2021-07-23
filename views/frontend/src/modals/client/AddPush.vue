@@ -23,9 +23,9 @@
                   </div>
                 </div>
 
-                <div class="main-search d-flex align-items-center ">
+                <div  :class="{errorInput: main_input === true}"  class="main-search d-flex align-items-center ">
                   <img src="../../assets/icons/search-icon.svg">
-                  <input class="main-input" type="text" placeholder="Search" v-model="search_client">
+                  <input class="main-input bg-transparent" type="text" placeholder="Search" v-model="search_client">
                 </div>
                 <div class="parent-order-client">
                   <div v-if="search_client.length !==0" class="child-order-client">
@@ -50,7 +50,7 @@
                      <div class="category-logo d-flex justify-content-center align-items-center">V</div>
                      <div class="category">
                        <div class="category-name">{{selectedClient.name}}</div>
-                       <span class="category-people" v-if="selectedClient.category">Category <span style="color:#000; text-transform:capitalize">{{ selectedClient.category.name}}</span></span>
+                       <span class="category-people" v-if="selectedClient.phone">Category <span style="color:#000; text-transform:capitalize">{{ selectedClient.phone}}</span></span>
                      </div>
                     </div>
                    <img @click="deleteClient(selectedClient)" src="../../assets/icons/deleteClient.svg">
@@ -61,7 +61,7 @@
               <div class="col-lg-6">
                   <h3 class="push-title settings">Notification settings</h3>
                 <label>Push name</label>
-                <input type="text"  v-model="week.title"  name="week" class="cashback-input w-100 mb-3" placeholder="Please set push name">
+                <input type="text"   v-model="week.title" style="font-size:14px" :class="{errorInput: push_title === true}"  name="week" class="push-title cashback-input w-100 mb-3" placeholder="Please set push name">
                 <div class="radio-toolbar">
                   <div class="d-flex align-items-center mr-4">
                     <input type="radio" id="radioWeek" v-model="value" value="week"  name="week"  >
@@ -84,13 +84,13 @@
                   </div>
                   <div class="d-flex justify-content-between">
                     <div class="d-flex align-items-center mb-4">
-                      <h2 class="selected-day">March 27 - April 12</h2>
                       <label class="switch d-flex">
                         <input  type="checkbox">
                         <span class="slider round"></span>
                       </label>
+                      <h2 class="selected-day">March 27 - April 12</h2>
                     </div>
-                    <span class="add-more" @click="addContent">+ Add more</span>
+                    <span class="add-more">+ Add more</span>
                   </div>
                 </div>
 
@@ -143,7 +143,7 @@
 
             <div class="d-flex">
               <button class="save mr-2" @click.prevent="onSubmit">Save</button>
-              <button class="cancel" @click="cancel">Cancel</button>
+              <button class="cancel" @click.prevent="cancel">Cancel</button>
             </div>
 
           </form>
@@ -167,27 +167,26 @@ export default {
         '01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00',
         '13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00','00:00',
       ],
-      push_content:[
-        {time:'',title: '',description:''},
-      ],
-      selectedDay:{isActive:false, push:[{time:'',title: '',desc:''}],name:'Select day'},
+      push_title:false,
+      main_input:false,
+      selectedDay:'',
       clients:[],
       search_client:'',
       clientCategory:[],
       value:'week',
       selectedClients:[],
-      turnOnDay:false,
       week:{
-        monday: {isActive:false, push:[{time:'',title: '',desc:''}],name:'monday'},
-        tuesday:{isActive:false, push:[{time:'',title: '',desc:''}],name:'tuesday'},
-        wednesday:{isActive:false, push:[{time:'',title: '',desc:''}],name:'wednesday'},
-        thirsday:{isActive:false, push:[{time:'',title: '',desc:''}],name:'thirsday'},
-        friday:{isActive:false, push:[{time:'',title: '',desc:''}],name:'friday'},
-        saturday: {isActive:false, push:[{time:'',title: '',desc:''}],name:'saturday'},
-        sunday: {isActive:false, push:[{time:'',title: '',desc:''}],name:'sunday'},
+        monday: {isActive:true, push:[{time:'',title: '',desc:''}],name:'monday'},
+        tuesday:{isActive:true, push:[{time:'',title: '',desc:''}],name:'tuesday'},
+        wednesday:{isActive:true, push:[{time:'',title: '',desc:''}],name:'wednesday'},
+        thirsday:{isActive:true, push:[{time:'',title: '',desc:''}],name:'thirsday'},
+        friday:{isActive:true, push:[{time:'',title: '',desc:''}],name:'friday'},
+        saturday: {isActive:true, push:[{time:'',title: '',desc:''}],name:'saturday'},
+        sunday: {isActive:true, push:[{time:'',title: '',desc:''}],name:'sunday'},
         sendToAll:false,
         clients:[],
         title: "",
+        isActive:true
       }
 
     }
@@ -202,17 +201,26 @@ export default {
   },
   methods:{
     onSubmit(){
-      this.axios.post(this.url('addSchedulePush'),this.week)
-      .then((res)=>{
-        console.log(res, "sucesss")
-        this.$successAlert('Push has been added')
-        this.getSchedulePushes()
-        $('#add-push').modal("hide");
-      })
-      .catch(()=>{
-        console.log(this.week)
-      })
+      if(this.week.title === ''){
+        this.push_title = true
+      }
+      if(this.week.clients.length === 0){
+        this.main_input = true;
+      }
+      else{
+        const that = this;
+        this.axios.post(this.url('addSchedulePush'),this.week)
+            .then(()=>{
+              this.$successAlert('Push has been added')
+              this.getSchedulePushes()
+              $('#add-push').modal("hide");
+              this.push_title = false
+              that.week.clients = [];
+              this.week.title = ''
+            })
 
+
+      }
     },
     setDay(day){
       this.selectedDay = day;
@@ -268,6 +276,7 @@ export default {
           this.selectedClients.push(selected)
           this.week.clients.push(selected._id)
         }
+        this.main_input = false;
         this.search_client = ''
     },
     deleteClient(client){
@@ -287,6 +296,7 @@ export default {
       lang:'en',
       inline:true,
     });
+    this.selectedDay = this.week.monday;
   }
 
 }

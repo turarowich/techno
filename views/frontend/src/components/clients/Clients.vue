@@ -15,13 +15,13 @@
           <img src="../../assets/icons/moveto.svg"><span>Move to</span>
         </button>
 
-        <div class="move-category dropdown-menu" aria-labelledby="dropdownMenuTotal">
+        <div class="move-category animate slideIn dropdown-menu" aria-labelledby="dropdownMenuTotal">
           <div class="move-category-item" v-for="cat in clientCategory" :key="cat._id" @click="moveCategory(cat._id)">{{cat.name}}</div>
         </div>
       </div>
       <div class="dropdown filter">
         <button class="dropdown-toggle app-buttons-item mr-0" id="dropdownFilterClient" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="../../assets/icons/filter.svg"><span>Filter</span></button>
-        <div class="dropdown-menu filter-box" aria-labelledby="dropdownFilterClient">
+        <div class="dropdown-menu animate slideIn  filter-box" aria-labelledby="dropdownFilterClient">
           <form id="form">
               <div class="filter-header">
                 <h3>Filters</h3>
@@ -30,7 +30,7 @@
                <div class="row">
                   <div class="col-lg-6">
                     <div>
-                      <div class="filter-list" data-toggle="collapse" data-target="#register-collapse" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
+                      <div class="filter-list"  data-toggle="collapse" data-target="#register-collapse" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
                         Registration date
                       <img src="../../assets/icons/down.svg" class="filter-img">
                       </div>
@@ -47,7 +47,7 @@
                           <div class="d-flex align-items-center">
                             <label>To</label>
                             <div class="calendar d-flex align-items-center">
-                              <input  class="calendar-input" id="to-date">
+                              <input v-model="to_register_date"  class="calendar-input" id="to-date">
                               <img src="../../assets/icons/Calendar.svg">
                             </div>
                           </div>
@@ -149,8 +149,7 @@
                       <div class="collapse" id="discount-collapse">
                         <div class="filter-body">
                           <select v-model="discount" class="filter-form  form-control long-form-control  form-control-lg" aria-label=".form-select-lg example">
-                            <option value="vip">vip</option>
-                            <option value="standart">standart</option>
+                           <option v-for="discount in discountList" :key="discount._id" :value="discount.discount_percentage">{{discount.name}} {{discount.discount_percentage}} %</option>
                           </select>
                         </div>
                       </div>
@@ -165,7 +164,7 @@
                           <div class="d-flex align-items-center mr-2">
                             <label>From</label>
                             <div class="calendar d-flex align-items-center">
-                              <input class="calendar-input" id="from-purchase">
+                              <input v-model="from_purchase_date" class="calendar-input" id="from-purchase">
                               <img src="../../assets/icons/Calendar.svg">
                             </div>
                           </div>
@@ -173,7 +172,7 @@
                           <div class="d-flex align-items-center">
                             <label>to</label>
                             <div class="calendar d-flex align-items-center">
-                              <input class="calendar-input" id="to-purchase">
+                              <input v-model="to_purchase_date" class="calendar-input" id="to-purchase">
                               <img src="../../assets/icons/Calendar.svg">
                             </div>
                           </div>
@@ -192,24 +191,28 @@
       </div>
     </div>
   </div>
-  <div class="main-search d-flex align-items-center mb-2 ">
+  <div v-if="showMainSearch" class="main-search d-flex align-items-center">
     <img src="../../assets/icons/search-icon.svg">
     <input class="main-input" type="text" placeholder="Search" v-model="search">
   </div>
-    <div>
-      <span class="show-properties"  v-if="f_from_register_date!== '2000-01-01'">Register from{{f_from_register_date}} <img src="../../assets/icons/xBlack.svg"></span>
-      <span class="show-properties" v-if="f_to_register_date!== ''">Register to{{f_to_register_date}} <img src="../../assets/icons/xBlack.svg"></span>
-      <span class="show-properties" v-if="f_category!== ''">Category{{f_category}} <img src="../../assets/icons/xBlack.svg"></span>
-      <span class="show-properties" v-if="f_birthday !== ''">Birthday{{f_birthday}} <img src="../../assets/icons/xBlack.svg"></span>
+    <div class="d-flex align-items-center flex-wrap">
+      <span class="show-properties" v-if="f_from_register_date!== ''">Register from: {{f_from_register_date}} <img @click="f_from_register_date = ''; from_register_date=''" src="../../assets/icons/xreset.svg"></span>
+      <span class="show-properties" v-if="f_to_register_date!== ''">Register to: {{f_to_register_date}} <img @click="f_to_register_date=''; to_register_date=''" src="../../assets/icons/xreset.svg"></span>
+      <span class="show-properties" v-if="f_from_number_purchase!== ''">Number of purchase from: {{f_from_number_purchase}} <img @click="f_from_number_purchase=''; from_number_purchase=''" src="../../assets/icons/xreset.svg"></span>
+      <span class="show-properties" v-if="f_to_number_purchase!== ''">Number of purchase from: {{f_to_number_purchase}} <img @click="f_to_number_purchase=''; to_number_purchase=''" src="../../assets/icons/xreset.svg"></span>
+      <span class="show-properties" v-if="f_from_purchase_date!== ''">Last purchase from: {{f_from_purchase_date}} <img @click="f_from_purchase_date=''; from_purchase_date=''" src="../../assets/icons/xreset.svg"></span>
+      <span class="show-properties" v-if="f_to_purchase_date!== ''">Last purchase to: {{f_to_purchase_date}} <img @click="f_to_purchase_date=''; to_purchase_date =''" src="../../assets/icons/xreset.svg"></span>
+      <span class="show-properties" v-if="f_birthday !== ''">Birthday: {{f_birthday.slice(5,10)}} <img @click="f_birthday=''; birthday=''" src="../../assets/icons/xreset.svg"></span>
+      <span class="show-properties" v-if="f_discount !== ''">Discount: {{f_discount}} % <img @click="f_discount=''; discount=''" src="../../assets/icons/xreset.svg"></span>
+      <span class="show-properties" style="text-transform: capitalize;" v-if="f_gender_client !== ''">Gender: {{f_gender_client}} <img @click="f_gender_client=''; gender_client=''" src="../../assets/icons/xreset.svg"></span>
+      <span v-if="!showMainSearch" @click="resetFilter()" class="reset" style="margin-bottom:10px; color:#616cf5 !important;">Reset all</span>
     </div>
-
-
   </div>
   <div class="d-flex">
     <div class="client-category-menu" style="width:24%">
 
       <div class="category-box">
-        <h3 class="category-title">Client category</h3>
+        <h3 class="category-title" >Client category</h3>
         <input v-model="search_category" placeholder="Search" style="height:35px; margin-bottom:15px" class="cashback-input">
 
         <ul class="list-group" >
@@ -245,14 +248,14 @@
           <div v-if="data_check.register_date_checked" class="table-head" style="width: 18%;">Registration date</div>
           <div class="table-head client-phone" style="width:14%">Phone number</div>
           <div class="table-head table-link d-flex align-item-center" style="width: 8%;" @click="sortByTotal"><span>Total</span> <img class="total-pol total" style="margin-left:5px" src="../../assets/icons/polygon.svg"></div>
-          <div v-if="data_check.bonus_checked" class="table-head table-link d-flex align-items-center" style="width: 8%;" @click="sortByBonus">Bonus <img class="date-pol" style="margin-left:5px" src="../../assets/icons/polygon.svg"></div>
+          <div v-if="data_check.bonus_checked" class="table-head table-link d-flex align-items-center" style="width: 8%;" @click="sortByBonus">Points <img class="date-pol" style="margin-left:5px" src="../../assets/icons/polygon.svg"></div>
           <div v-if="data_check.last_purchase_checked" class="table-head" style="width: 16%;">Last purchase</div>
           <div style="width:3%" class="dropdown dropdown-settings pl-3">
             <div class="table-head text-right dropdown-toggle"  id="dropdownBlue" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:5%"><img src="../../assets/icons/BlueSetting.svg"></div>
             <div class="dropdown-menu general-dropdown settings-dropdown" aria-labelledby="#dropdownBlue">
               <form>
                 <div><label class="custom-checkbox"><input id="last" v-model="data_check.last_purchase_checked" type="checkbox"><span class="checkmark"></span></label><label class="show-fields" for="last">Last purchase</label></div>
-                <div><label class="custom-checkbox"><input v-model="data_check.bonus_checked" type="checkbox" id="show-bonus" ><span class="checkmark"></span></label> <label  class="show-fields" for="show-bonus">Bonus</label></div>
+                <div><label class="custom-checkbox"><input v-model="data_check.bonus_checked" type="checkbox" id="show-bonus" ><span class="checkmark"></span></label> <label  class="show-fields" for="show-bonus">Points</label></div>
                 <div><label class="custom-checkbox"><input v-model="data_check.register_date_checked" id="date" type="checkbox" ><span class="checkmark"></span></label> <label  class="show-fields" for="date">Registration date</label></div>
                 <div><label class="custom-checkbox"><input v-model="data_check.discount_checked" type="checkbox" id="discount" ><span class="checkmark"></span></label> <label  class="show-fields" for="discount">Discount</label></div>
                 <div class="mb-0"><label class="custom-checkbox"><input v-model="data_check.birthday_checked" id="birthday" type="checkbox" ><span class="checkmark"></span></label> <label  class="show-fields" for="birthday">Birthday</label></div>
@@ -295,16 +298,17 @@
             </select>
 
           </div>
-          <div class="d-flex align-items-center"><span>{{currentPage}}</span> <span class="mr-1 ml-1">of</span> <span class="mr-2">{{totalPages}}</span>
-            <div v-show='showPrev' @click.stop.prevent='currentPage-=1' class=" pagination-btns prevBtn " ><img src="../../assets/icons/side-arrow.svg"></div>
-            <div class=" pagination-btns" v-show='showNext' @click.stop.prevent='currentPage+=1'> <img  src="../../assets/icons/side-arrow.svg"></div>
+          <div class="d-flex align-items-center"><span>{{current_page}}</span> <span class="mr-1 ml-1">of</span> <span class="mr-2">{{totalPages}}</span>
+            <div v-if='showPrev' @click.stop.prevent='currentPage-=1' class=" pagination-btns"><img class="pagination-img"  src="../../assets/icons/prevArrow.svg"></div>
+            <div v-else class="pagination-btns " style="opacity: 0.5;"><img class="pagination-img"  src="../../assets/icons/prevArrow.svg"></div>
+            <div class=" pagination-btns" v-if='showNext' @click.stop.prevent='currentPage+=1'>  <img class="pagination-img"  src="../../assets/icons/side-arrow.svg"></div>
+            <div v-else class=" pagination-btns"  style="opacity: 0.5;">  <img class="pagination-img"   src="../../assets/icons/side-arrow.svg"></div>
           </div>
         </div>
 
       </div>
     </div>
   </div>
-
 </div>
 </template>
 
@@ -318,8 +322,6 @@ import PushNotification from "@/modals/client/PushNotification";
 import IndividualPush from "@/modals/client/IndividualPush";
 import Swal from "sweetalert2";
 import $ from 'jquery'
-
-
 export default {
   name: "Clients",
   components:{
@@ -346,6 +348,7 @@ export default {
       clientCategory:[
         {_id:'',name:'All'}
       ],
+      discountList:[],
       select_category:'',
       selectAll:false,
       search:'',
@@ -361,7 +364,7 @@ export default {
       discount:'',
       from_register_date:'',
       to_register_date:'',
-      from_purchase_date:'2000-01-01',
+      from_purchase_date:'',
       to_purchase_date:'',
       from_number_purchase:'',
       to_number_purchase:'',
@@ -371,9 +374,10 @@ export default {
       f_category:'',
       f_gender_client:'',
       f_birthday:'',
-      f_from_register_date:'2000-01-01',
+      f_discount:'',
+      f_from_register_date:'',
       f_to_register_date:'',
-      f_from_purchase_date:'2000-01-01',
+      f_from_purchase_date:'',
       f_to_purchase_date:'',
       f_from_number_purchase:'',
       f_to_number_purchase:'',
@@ -403,51 +407,82 @@ export default {
             return true
           })
           .filter(client=>{
-            if(this.f_to_register_date.length > 0){
-              return (new Date(client.createdAt).getTime() >= new Date(this.f_from_register_date).getTime() &&
-                  new Date(client.createdAt).getTime() <= new Date(this.f_to_register_date).getTime())
-            }
-            else if(this.f_to_register_date === ''){
-              return new Date(client.createdAt).getTime() >= new Date(this.f_from_register_date).getTime()
-            }
-            return true            
+              if(this.f_to_register_date === '' && this.f_from_register_date === '') {
+                return client
+              }
+            else if(this.f_from_register_date === ''){
+               return new Date(client.createdAt) <= new Date(this.f_to_register_date)
+             }
+             else if(this.f_to_register_date === ''){
+               return new Date(client.createdAt) >= new Date(this.f_from_register_date)
+             }
+             else if(this.f_to_register_date !== '' && this.f_from_register_date !== ''){
+               return (new Date(client.createdAt) >= new Date(this.f_from_register_date) &&
+                   new Date(client.createdAt) <= new Date(this.f_to_register_date))
+             }
+
+
           })
           .filter(client=>{
             return client.gender.includes(this.f_gender_client)
           })
-      // .filter(client=>{
-          //   if(this.f_to_number_purchase.length>0){
-          //     return +client.number_of_purchase >= this.f_from_number_purchase && +client.number_of_purchase <= this.f_to_number_purchase
-          //   }
-          //   else if(this.f_to_number_purchase === ''){
-          //     return +client.number_of_purchase >=this.f_from_number_purchase;
-          //   }
-          //   else{
-          //     return client
-          //   }
-          // })
-          // .filter(client=>{
-          //   if(this.f_to_purchase_date.length > 0){
-          //     return (new Date(client.last_purchase).getTime() >= new Date(this.f_from_purchase_date).getTime() &&
-          //         new Date(client.last_purchase).getTime() <= new Date(this.f_to_purchase_date).getTime())
-          //   }
-          //   else if(this.f_to_purchase_date === ''){
-          //     return new Date(client.last_purchase).getTime() >= new Date(this.f_from_purchase_date).getTime()
-          //   }
-          //   else{
-          //     return client
-          //   }
-          // })
-
+          .filter(client=>{
+            if(this.f_to_purchase_date === '' && this.f_from_purchase_date === '') {
+              return client
+            }
+            else if(this.f_from_purchase_date === ''){
+              if(client.last_purchase){
+                return new Date(client.last_purchase) <= new Date(this.f_to_purchase_date)
+              }
+            }
+            else if(this.f_to_purchase_date === ''){
+              return new Date(client.last_purchase) >= new Date(this.f_from_purchase_date)
+            }
+            else if(this.f_to_purchase_date !== '' && this.f_from_purchase_date !== ''){
+              return (new Date(client.last_purchase) >= new Date(this.f_from_purchase_date) &&
+                  new Date(client.last_purchase) <= new Date(this.f_to_purchase_date))
+            }
+          })
+          .filter(client=>{
+              if(this.f_to_number_purchase.length>0){
+                return +client.number_of_purchase >= this.f_from_number_purchase && +client.number_of_purchase <= this.f_to_number_purchase
+              }
+              else if(this.f_to_number_purchase === ''){
+                return +client.number_of_purchase >=this.f_from_number_purchase;
+              }
+              else{
+                return client
+              }
+          })
+          .filter(client=>{
+            if(client.discount === null){
+              client.discount = 0;
+            }
+            return client.discount.toString().includes(this.f_discount.toString())
+          })
+    },
+    showMainSearch(){
+      if(this.f_from_register_date||this.f_to_register_date||this.f_from_purchase_date||this.f_to_purchase_date||this.f_gender_client||this.f_birthday||this.f_discount||this.f_from_number_purchase||this.f_to_number_purchase){
+        return false
+      }
+      return true;
     },
     filterCategory(){
       return this.clientCategory.filter((cat)=>{
         return cat.name.toLowerCase().includes(this.search_category.toLowerCase())
       })
     },
+    current_page(){
+      if(this.currentPage> this.totalPages){
+        return Math.ceil(this.filteredList.length / this.perPage)
+      }
+
+      return this.currentPage
+    },
+
     clientToDisplay: function(){
-      let start = (this.currentPage - 1) * this.perPage
-      let end = this.currentPage * this.perPage
+      let start = (this.current_page - 1) * this.perPage
+      let end = this.current_page * this.perPage
       this.filteredList.map((value, index) =>{
         value.index = index
         return value
@@ -463,9 +498,6 @@ export default {
     showPrev(){
       return this.currentPage > 1;
     },
-
-
-
   },
 
   methods: {
@@ -490,7 +522,6 @@ export default {
     if(this.$refs.client_item.$refs[`select${client._id}`]!==undefined && this.$refs.client_item.$refs[`select${client._id}`] !== null){
       if(this.selectAll === false){
         this.$refs.client_item.$refs[`select${client._id}`].checked = true
-
       }
       else{
         this.$refs.client_item.$refs[`select${client._id}`].checked = false
@@ -502,16 +533,18 @@ export default {
       this.category = '';
       this.birthday = '';
       this.gender_client = '';
-      this.from_purchase_date = '2000-01-01';
+      this.from_purchase_date = '';
       this.to_purchase_date='';
-      this.from_register_date='2000-01-01';
+      this.from_register_date='';
       this.to_register_date = '';
       this.from_number_purchase='';
       this.to_number_purchase='';
+      this.discount = '';
       this.filterSubmit()
       document.getElementById('form').reset()
     },
     filterSubmit(){
+        this.f_discount = this.discount;
         this.f_category = this.category;
         this.f_gender_client = this.gender_client;
         this.f_birthday = this.birthday;
@@ -532,14 +565,14 @@ export default {
       }
     },
     sortByBonus() {
-      this.clientList.sort((a, b) => this.sorting ? (parseInt(a.bonus) - parseInt(b.bonus)) : (parseInt(b.bonus) - parseInt(a.bonus)));
+      this.clientList.sort((a, b) => this.sorting ? (parseInt(a.points) - parseInt(b.points)) : (parseInt(b.points) - parseInt(a.points)));
       this.sorting = !this.sorting;
       $('.date-pol').toggleClass('active')
       $('.total-pol').removeClass('active')
 
     },
     sortByTotal(){
-      this.clientList.sort((a, b) => this.sorting? (parseInt(a.total) - parseInt(b.total)) : (parseInt(b.total) - parseInt(a.total)));
+      this.clientList.sort((a, b) => this.sorting ? (parseInt(a.total) - parseInt(b.total)) : (parseInt(b.total) - parseInt(a.total)));
       this.sorting = !this.sorting;
       $('.total-pol').toggleClass('active')
       $('.date-pol').removeClass('active')
@@ -547,7 +580,8 @@ export default {
     selectClient(id){
       this.clientList.map((item)=>{
         if(item._id === id){
-          this.select_client = item
+          this.select_client = item;
+          console.log(this.select_client, 'KUDAIBERDIEV')
         }
       })
 
@@ -655,6 +689,9 @@ export default {
 
         })
       }
+      else{
+        this.$warningAlert('Choose clients to delete')
+      }
 
 
 
@@ -666,9 +703,18 @@ export default {
     getClients(){
       this.axios.get(this.url('getClients'))
       .then((res)=>{
-        this.clientList = res.data.objects
-        console.log(this.clientList, '000000000000000000')
+        this.clientList = res.data.objects;
+        console.log(this.clientList,"====================");
+        this.clientList.map((item)=>{
+          item['total'] = item.orders.reduce((acc,it)=>acc+it.totalPrice, 0);
+          item['number_of_purchase'] = item.orders.length;
+          if(item.orders.length>0){
+            item['last_purchase'] = new Date(Math.max(...item.orders.map(e => new Date(e.createdAt))))
+          }
+          return item;
+        })
       })
+
     },
     getCategories(){
       this.axios.get(this.url('getCategories')+'?type=client')
@@ -676,6 +722,12 @@ export default {
         this.clientCategory = response.data.objects
         this.clientCategory.unshift({_id:'',name:'All'})
       })
+    },
+    getDiscounts() {
+      this.axios.get(this.url('getDiscounts'))
+          .then((res) => {
+            this.discountList = res.data.discounts;
+          })
     },
     deleteCategory(id){
       Swal.fire({
@@ -737,13 +789,12 @@ export default {
            })
      }
     }
-
-
-
   },
    mounted(){
     this.getClients()
     this.getCategories()
+     this.getDiscounts()
+     $('.filter-list').addClass('collapsed')
     new this.$lightpick({
       field: document.getElementById('from-date'),
       format:'YYYY-MM-DD',
@@ -786,23 +837,28 @@ export default {
 </script>
 
 <style scoped>
-.client .modal-backdrop {
-    width:100%;
-    left: 250px;
-
+.main-search{
+  margin-bottom: 11px;
 }
 .show-properties img{
   margin-bottom: 2px;
+  margin-left: 5px;
 }
-.show-properties{
-  font-size: 12px;
 
+
+.show-properties{
+  font-size: 14px;
   display: inline-flex;
   align-items:center;
-  background: lightgrey;
+  background: #F8F9FB;
+  border: 1px solid #E3E3E3;
   margin-right: 10px;
   padding:2px 10px;
-  border-radius:5px;
+  border-radius:100px;
+  color: #606877;
+  transition: .3s;
+  margin-bottom: 10px;
+
 }
 .total{
   width: 6px;
@@ -843,8 +899,9 @@ export default {
 .reset{
   color:#E94A4A !important;
 }
+
 .general-dropdown.settings-dropdown{
-  transform: translate3d(-166px, -19px, 0px) !important;
+  transform: translate3d(-148px, 25px, 0px) !important;
   width: 190px;
   padding: 20px;
   font-size: 14px;
@@ -872,6 +929,8 @@ export default {
   position: absolute;
   right: 0;
   top:18%;
+  transform:rotate(180deg);
+  transition:0.3s
 }
 .filter-list{
   font-weight: normal;
@@ -880,9 +939,10 @@ export default {
   padding-bottom: 13px;
   position: relative;
   margin-bottom: 15px;
-
 }
-
+.filter-list:hover{
+  color:#616cf5;
+}
 .client{
   margin: 0 30px;
   height: calc(100vh - 90px);
@@ -896,14 +956,14 @@ export default {
 .filter-box{
   width: 662px;
   margin-right: 20px;
-  margin-top: 10px;
+  margin-top: 44px;
   padding-left: 35px;
   padding-right: 35px;
   padding-top: 23px;
   padding-bottom: 30px;
   height: auto;
   overflow-y: auto;
-  transform: translate3d(-575px, 33px, 0px) !important;
+  margin-left: -575px;
   position: relative;
 }
 .save{

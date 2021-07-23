@@ -48,7 +48,7 @@
           <span class="or-text">or</span>
           <div class="or-div"></div>
         </div>
-        <div class="have-account mb-0">Don't have an account? <router-link class="client-link" :to="`/${currentCompanyCatalog}/signin`">Sign in now</router-link></div>
+        <div class="have-account mb-0">Have an account? <router-link class="client-link" :to="`/${currentCompanyCatalog}/signin`">Sign in now</router-link></div>
 
       </div>
     </div>

@@ -7,9 +7,7 @@
     </div>
     <div v-else class="table-item d-flex align-items-center" v-for="order in orderList" :key="order.id">
       <div style="width:50%" class="d-flex align-items-center">
-        <div class="table-img">
-          <img src="../../../assets/img/sneak.webp">
-        </div>
+
         {{order.source}}
       </div>
       <div style="width:30%"> {{order.createdAt.slice(0,10)}}</div>
@@ -32,5 +30,8 @@ export default {
 }
 .used{
   color: red;
+}
+.table-item{
+  height: 70px;
 }
 </style>
