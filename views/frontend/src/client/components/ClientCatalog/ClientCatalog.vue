@@ -140,6 +140,9 @@ name: "Catalog",
         .filter((product)=>{
           return product.quantity > 0;
         })
+        .filter((product)=>{
+          return product.active === true;
+        })
     },
     currentCompanyCatalog() {
       return this.$route.params.bekon;

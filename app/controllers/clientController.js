@@ -8,21 +8,6 @@ const Analytics = require('./analyticsController');
 var path = require('path');
 const fs = require('fs');
 
-
-
-function getClientDiscountStatus(discountsList=[],balance=0){
-    let discount = 0;
-    const newArray = []
-    for (let i = 0; i < discountsList.length; i++) {
-        if (balance >= discountsList[i].min_sum_of_purchases) {
-            newArray.push(discountsList[i].discount_percentage)
-        }
-
-    }
-    discount = Math.max(...newArray)
-    return discount;
-
-}
 class ClientController{
     
     getClient = async function (req, res) {
@@ -54,7 +39,7 @@ class ClientController{
             }
             let newClient = '';
             const copy = JSON.parse(JSON.stringify(client));
-            copy.discount = getClientDiscountStatus(discounts,client.balance);
+            copy.discount = getClientDiscount(client,discounts) ? getClientDiscount(client,discounts).discount_percentage : 0;
             newClient = copy
             result['object'] = newClient
 
@@ -91,7 +76,7 @@ class ClientController{
             for (const cl of clients) {
                 let copy = JSON.parse(JSON.stringify(cl));
                 copy.orders = await Order.find({client:cl._id});
-                copy.discount = getClientDiscountStatus(discounts,cl.balance);
+                copy.discount = getClientDiscount(cl,discounts) ? getClientDiscount(cl,discounts).discount_percentage : 0;
                 newClient.push(copy);
             }
 
