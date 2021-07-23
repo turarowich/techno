@@ -50,19 +50,16 @@ export default {
     clientProfile(id){
       this.$router.push(`/edit-client-page/${id}`);
     },
-    clickEdit(){
-      this.$root.$on('clickEdit');
-    },
+
     check(access="clients", parametr="active", parametr2="canEdit"){
         return this.checkAccess(access, parametr, parametr2)
     },
     checkAll(item) {
-
       return  this.$refs[`select${item._id}`].checked === true
 
     },
     checkMainSelect() {
-      this.clickEdit()
+
       if(this.clientList.every(this.checkAll)){
           this.newCheck = true;
           this.$emit('checkAll', this.newCheck)

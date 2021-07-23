@@ -5,9 +5,10 @@
     <img src="../assets/icons/menu.svg">
   </div>
     <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">
-      <div v-if="catalog_settings.logo && catalog_settings.logo !==''"  v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.logo + ')' }" class="catalog_logo 2Q">
-      </div>
-      <span v-else>
+<!--      <div v-if="catalog_settings.logo && catalog_settings.logo !==''"  v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.logo + ')' }" class="catalog_logo 2Q">-->
+<!--      </div>-->
+      <img class="web-catalog-logo" v-if="catalog_settings.logo && catalog_settings.logo !==''" :src="server+'/'+catalog_settings.logo">
+      <span v-else >
         {{catalog_settings.name || 'Company Name'}}
       </span>
     </router-link>
@@ -20,9 +21,8 @@
 <!--            <img  src="../assets/icons/no-catalog.svg">-->
 <!--          </div>-->
           <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">
-            <div v-if="catalog_settings.logo && catalog_settings.logo !==''"  v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.logo + ')' }" class="catalog_logo Q3">
+            <img @click="removeActive" class="web-catalog-logo" v-if="catalog_settings.logo && catalog_settings.logo !==''" :src="server+'/'+catalog_settings.logo">
 
-            </div>
             <span v-else>
               {{catalog_settings.name || 'Company Name'}}
             </span>
@@ -34,7 +34,6 @@
 
       <ul class="client-menu">
         <li @click="removeActive" class="client-list"><router-link class="client-link" :to="`/${currentCompanyCatalog}/about`"><img src="../assets/clients/info.svg"/>About us</router-link></li>
-
         <span class="client-list" v-if="!catalog_settings.catalogMode && !catalog_settings.foodMode">
           <li @click="removeActive" v-if="!isLogged" class="client-list "><router-link class="client-link" :to="`/${currentCompanyCatalog}/signin`"><img  src="../assets/clients/Profile.svg"/>Login</router-link></li>
           <li @click="removeActive"  v-else class="client-list"><img src="../assets/clients/Profile.svg"/><router-link class="client-link" :to="`/${currentCompanyCatalog}/client-account`">My Account</router-link></li>
@@ -116,6 +115,7 @@
 
   </div>
 
+
   <!--Centered Modal-->
   <div class="parent-modal">
     <div class="modal myModal fade" id="orderStatus"  role="dialog" aria-hidden="true">
@@ -193,9 +193,14 @@ export default {
     removeActive(){
       $('.menu-wrapper').removeClass('active')
 
+      $('body').css({'overflow':''})
+
     },
     showNavbar(){
       $('.menu-wrapper').addClass('active')
+
+      $('body').css({'overflow':'hidden'})
+
 
 
     },
@@ -238,7 +243,9 @@ export default {
   width: 88%;
   padding-top: 20px;
   display:none;
-
+}
+.router-link-active{
+  background: none;
 }
 .contact-title{
   color: #222222;
@@ -254,7 +261,9 @@ export default {
 .list-span{
   margin-right: 40px;
 }
-
+.web-catalog-logo{
+  height:55px;
+}
 .footer-info img{
   margin-right: 10px;
 }
@@ -279,6 +288,7 @@ export default {
   background: #fafafa;
   padding: 0 20px;
   transition:.4s;
+  overflow:hidden;
 
 
 }
@@ -460,11 +470,12 @@ font-size: 14px;
   color: #B0B0B0;
 }
 .catalog_logo{
+  background-repeat: no-repeat;
   max-height: 55px;
   height: 45px;
   max-width: 45px;
   width: 55px;
-  background-size: cover;
+  background-size: contain;
   background-position: center;
   border-radius: 5px;
 }
@@ -506,4 +517,5 @@ font-size: 14px;
   }
 
 }
+
 </style>

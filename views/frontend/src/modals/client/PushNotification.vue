@@ -75,7 +75,7 @@
               </div>
 
               <h3 class="notification-title">News</h3>
-              <input :disabled="newData.title !== '' || newData.description !== ''" :class="{disableInput: newData.title!==''||newData.description!=='' }" class="cashback-input news-input" placeholder="Select news" v-model="search_news">
+              <input  class="cashback-input news-input" placeholder="Select news" v-model="search_news">
 
             <div class="parent-news">
               <div v-if="search_news!==''" class="news pt-3">
@@ -99,8 +99,8 @@
               </div>
 
               <h3 class="notification-title">Custom text</h3>
-              <input v-model="newData.title"  :disabled="newData.news !== ''" :class="{disableInput: newData.news!==''}" class="cashback-input mb-3" placeholder="Title">
-              <textarea v-model="newData.description" :disabled="newData.news !== ''" :class="{disableInput: newData.news!==''}" class="general-area p-2" placeholder="Description"></textarea>
+              <input v-model="newData.title"  class="cashback-input mb-3" placeholder="Title">
+              <textarea v-model="newData.description"  class="general-area p-2" placeholder="Description"></textarea>
               <button class="save" @click.prevent="onSubmit">Send</button>
             </div>
           </div>
@@ -239,12 +239,29 @@ export default {
       if(this.selectAll === true){
           new_data.sendToAll = true
       }
-      this.axios.post(this.url('sendPushNotification'),new_data)
-      .then((res)=>{
-        this.$successAlert('Push has been sent')
-        console.log(res, 'Success push')
-      })
-      $('#push-notification').modal("hide")
+      console.log(new_data)
+      if(new_data.clients.length === 0 ){
+        this.$warningAlert('Please select whom you want to send push notification')
+      }
+      else if(new_data.news === ''){
+          this.$warningAlert('Choose a news')
+      }
+      else{
+
+        const form = new FormData();
+        form.append('title', new_data.title);
+        form.append('description', new_data.description);
+        form.append('sendToAll', new_data.sendToAll);
+        form.append('clients', new_data.clients);
+        form.append('news',new_data.news)
+         this.axios.post(this.url('sendPushNotification'),form)
+            .then((res)=>{
+              this.$successAlert('Push has been sent')
+              console.log(res, 'Success push')
+            })
+        $('#push-notification').modal("hide")
+      }
+
     },
 
   },

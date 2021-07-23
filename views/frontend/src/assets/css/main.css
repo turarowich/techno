@@ -2,10 +2,11 @@ input{
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
+    background: transparent;
 }
 body{
     font-size:14px;
-
+    padding-right: 0 !important;
 }
 a:hover{
     text-decoration: none;
@@ -28,6 +29,7 @@ input:focus, button:focus,textarea:focus{
 img{
     cursor:pointer;
 }
+
 .app-buttons-item{
     background: #F9F9F9;
     border-radius: 5px;
@@ -133,7 +135,6 @@ img{
 }
 .table-item:hover{
     background: #F8F9FF;
-    transition:.3s;
 }
 .table-img{
     width: 40px;
@@ -447,7 +448,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     width:100%;
     resize: none;
     height: 125px;
-    font-size: 16px;
+    font-size: 14px;
 }
 /*=============================Login and register style =======================*/
 .login-input{
@@ -586,6 +587,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     text-align:left;
     margin-bottom: 20px;
     color: #8C94A5;
+}
+body.swal2-shown{
+    overflow-y: auto !important;
+    padding-right: 0;
 }
 .swal2-popup.sweet-delete{
     border: 1px solid #D3D3D3;
@@ -1419,9 +1424,7 @@ input.value-success, select.value-success, textarea.value-success,div.value-succ
     }
 }
 
-.modal-backdrop {
-    margin-left: 250px;
-}
+
 .modal-backdrop.active{
     margin-left: 0 !important;
 }

@@ -32,7 +32,7 @@
         <div class="d-flex align-items-center profile-cursor dropdown-toggle"   id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <span class="profile-logo d-flex align-items-center justify-content-center">{{user_info ? user_info.name.charAt(0).toUpperCase() : ""}}</span>
           <div>
-              <h3 class="mb-0 cashback-sub-title" style="font-weight:400">{{user_info ? user_info.name : ""}}</h3>
+              <h3 class="mb-0 cashback-sub-title" style="font-weight:400">{{user_info ? user_info.name.slice(0,22) : ""}}</h3>
               <span style="color:#8C94A5">Your tariff is lite</span>
           </div>
           <img class="profile-arrow" src="../../assets/icons/down.svg">
@@ -43,7 +43,7 @@
             <div class="d-flex align-items-center profile-header dropdown-toggle">
               <span class="profile-logo d-flex align-items-center justify-content-center">{{user_info ? user_info.name.charAt(0).toUpperCase() : ""}}</span>
               <div>
-                <h3 class="profile-title mb-0 cashback-sub-title">{{user_info ? user_info.name : ""}}</h3>
+                <h3 class="profile-title mb-0 cashback-sub-title">{{user_info ? user_info.name.slice(0,22) : ""}}</h3>
                 <span style="color:#8C94A5">Your tariff is lite</span>
               </div>
             </div>
@@ -124,8 +124,8 @@ data(){
 }
 .general-dropdown{
   width: 18rem;
-  margin-left: -118px;
-  margin-top: 44px;
+  left: calc(100% - 18rem + -30px) !important;
+  top:55px !important;
 }
 .header{
   background: #fff;
@@ -144,6 +144,9 @@ data(){
 #sidebarCollapse{
   display: none;
 }
+.profile{
+  position: static !important;
+}
 
 .profile-logo{
   width: 40px;
@@ -159,6 +162,7 @@ data(){
 }
 .profile-arrow{
   margin-left: 14px;
+  transition: .3s;
 }
 .profile-cursor{
   cursor:pointer;
@@ -168,7 +172,7 @@ data(){
   margin-bottom: 20px;
 }
 .profile-dropdown{
-  padding:25px;
+  padding:22px;
 }
 .profile-title{
   font-size: 18px;
@@ -180,6 +184,10 @@ data(){
   height: 40px;
   padding:0 20px;
   margin-bottom: 20px;
+}
+.profile.show .profile-arrow{
+  transform: rotate(180deg);
+  transition:0.3s;
 }
 .warning .number{
   font-weight: 500;

@@ -195,16 +195,17 @@
     <img src="../../assets/icons/search-icon.svg">
     <input class="main-input" type="text" placeholder="Search" v-model="search">
   </div>
-    <div>
-      <span class="show-properties" v-if="f_from_register_date!== ''">Register date from: {{f_from_register_date}} <img @click="f_from_register_date = ''; from_register_date=''" src="../../assets/icons/xreset.svg"></span>
-      <span class="show-properties" v-if="f_to_register_date!== ''">Register date to: {{f_to_register_date}} <img @click="f_to_register_date=''; to_register_date=''" src="../../assets/icons/xreset.svg"></span>
+    <div class="d-flex align-items-center flex-wrap">
+      <span class="show-properties" v-if="f_from_register_date!== ''">Register from: {{f_from_register_date}} <img @click="f_from_register_date = ''; from_register_date=''" src="../../assets/icons/xreset.svg"></span>
+      <span class="show-properties" v-if="f_to_register_date!== ''">Register to: {{f_to_register_date}} <img @click="f_to_register_date=''; to_register_date=''" src="../../assets/icons/xreset.svg"></span>
       <span class="show-properties" v-if="f_from_number_purchase!== ''">Number of purchase from: {{f_from_number_purchase}} <img @click="f_from_number_purchase=''; from_number_purchase=''" src="../../assets/icons/xreset.svg"></span>
       <span class="show-properties" v-if="f_to_number_purchase!== ''">Number of purchase from: {{f_to_number_purchase}} <img @click="f_to_number_purchase=''; to_number_purchase=''" src="../../assets/icons/xreset.svg"></span>
-      <span class="show-properties" v-if="f_from_purchase_date!== ''">Last purchase date from: {{f_from_purchase_date}} <img @click="f_from_purchase_date=''; from_purchase_date=''" src="../../assets/icons/xreset.svg"></span>
+      <span class="show-properties" v-if="f_from_purchase_date!== ''">Last purchase from: {{f_from_purchase_date}} <img @click="f_from_purchase_date=''; from_purchase_date=''" src="../../assets/icons/xreset.svg"></span>
       <span class="show-properties" v-if="f_to_purchase_date!== ''">Last purchase to: {{f_to_purchase_date}} <img @click="f_to_purchase_date=''; to_purchase_date =''" src="../../assets/icons/xreset.svg"></span>
       <span class="show-properties" v-if="f_birthday !== ''">Birthday: {{f_birthday.slice(5,10)}} <img @click="f_birthday=''; birthday=''" src="../../assets/icons/xreset.svg"></span>
       <span class="show-properties" v-if="f_discount !== ''">Discount: {{f_discount}} % <img @click="f_discount=''; discount=''" src="../../assets/icons/xreset.svg"></span>
       <span class="show-properties" style="text-transform: capitalize;" v-if="f_gender_client !== ''">Gender: {{f_gender_client}} <img @click="f_gender_client=''; gender_client=''" src="../../assets/icons/xreset.svg"></span>
+      <span v-if="!showMainSearch" @click="resetFilter()" class="reset" style="margin-bottom:10px; color:#616cf5 !important;">Reset all</span>
     </div>
   </div>
   <div class="d-flex">
@@ -291,15 +292,17 @@
           <div class="d-flex align-items-center">
             <span>Rows per page</span>
             <select class="form-control pagination-select" v-model='perPage'>
-              <option value="2">2</option>
+              <option value="8">8</option>
               <option value="16">16</option>
               <option value="32">32</option>
             </select>
 
           </div>
-          <div class="d-flex align-items-center"><span>{{currentPage}}</span> <span class="mr-1 ml-1">of</span> <span class="mr-2">{{totalPages}}</span>
-            <div v-show='showPrev' @click.stop.prevent='currentPage-=1' class=" pagination-btns prevBtn " ><img src="../../assets/icons/side-arrow.svg"></div>
-            <div class=" pagination-btns" v-show='showNext' @click.stop.prevent='currentPage+=1'> <img  src="../../assets/icons/side-arrow.svg"></div>
+          <div class="d-flex align-items-center"><span>{{current_page}}</span> <span class="mr-1 ml-1">of</span> <span class="mr-2">{{totalPages}}</span>
+            <div v-if='showPrev' @click.stop.prevent='currentPage-=1' class=" pagination-btns"><img class="pagination-img"  src="../../assets/icons/prevArrow.svg"></div>
+            <div v-else class="pagination-btns " style="opacity: 0.5;"><img class="pagination-img"  src="../../assets/icons/prevArrow.svg"></div>
+            <div class=" pagination-btns" v-if='showNext' @click.stop.prevent='currentPage+=1'>  <img class="pagination-img"  src="../../assets/icons/side-arrow.svg"></div>
+            <div v-else class=" pagination-btns"  style="opacity: 0.5;">  <img class="pagination-img"   src="../../assets/icons/side-arrow.svg"></div>
           </div>
         </div>
 
@@ -459,7 +462,7 @@ export default {
           })
     },
     showMainSearch(){
-      if(this.f_from_register_date !== '' || this.f_to_register_date !== '' || this.f_from_purchase_date!=='' || this.f_to_purchase_date !== ''|| this.f_gender_client !== '' || this.f_birthday !==''){
+      if(this.f_from_register_date||this.f_to_register_date||this.f_from_purchase_date||this.f_to_purchase_date||this.f_gender_client||this.f_birthday||this.f_discount||this.f_from_number_purchase||this.f_to_number_purchase){
         return false
       }
       return true;
@@ -469,9 +472,17 @@ export default {
         return cat.name.toLowerCase().includes(this.search_category.toLowerCase())
       })
     },
+    current_page(){
+      if(this.currentPage> this.totalPages){
+        return Math.ceil(this.filteredList.length / this.perPage)
+      }
+
+      return this.currentPage
+    },
+
     clientToDisplay: function(){
-      let start = (this.currentPage - 1) * this.perPage
-      let end = this.currentPage * this.perPage
+      let start = (this.current_page - 1) * this.perPage
+      let end = this.current_page * this.perPage
       this.filteredList.map((value, index) =>{
         value.index = index
         return value
@@ -511,9 +522,10 @@ export default {
     if(this.$refs.client_item.$refs[`select${client._id}`]!==undefined && this.$refs.client_item.$refs[`select${client._id}`] !== null){
       if(this.selectAll === false){
         this.$refs.client_item.$refs[`select${client._id}`].checked = true
-
       }
-
+      else{
+        this.$refs.client_item.$refs[`select${client._id}`].checked = false
+      }
     }
     })
   },
@@ -889,7 +901,7 @@ export default {
 }
 
 .general-dropdown.settings-dropdown{
-  transform: translate3d(-147px, 25px, 0px) !important;
+  transform: translate3d(-148px, 25px, 0px) !important;
   width: 190px;
   padding: 20px;
   font-size: 14px;

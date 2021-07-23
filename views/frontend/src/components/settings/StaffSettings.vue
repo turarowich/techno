@@ -100,6 +100,7 @@ export default {
     methods:{
         selectAllEmployees(){
             this.filteredEmployees.map((employee) => employee['selected'] = this.selectAll);
+
         },
         checkSelection(){
             let selected =  this.filteredEmployees.filter(employee => {
@@ -115,7 +116,6 @@ export default {
             if(onlyOne){
                 selected = [onlyOne]
             }
-
             if(selected.length){
                 Swal.fire({
                     showConfirmButton: true,
@@ -132,17 +132,27 @@ export default {
                         content:'content-sweet',
                         closeButton:'close-btn'
                     },
+                  showClass: {
+                    popup: 'animate__animated animate__slideInDown'
+                  },
+                  hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                  }
 
-                    }).then((result) => {
+
+
+                }).then((result) => {
                         if (result.isConfirmed) {
                             this.axios.post(this.url('deleteEmployees'),{
                                 objects: selected
                             })
                             .then((res)=>{
-                                this.employees = res.data.objects
-                                this.$successAlert('Successfull')
-                            }).catch(()=>{
+                                this.employees = res.data.objects;
+
+                                this.$successAlert('Cashier has been deleted')
+                            }).catch((err)=>{
                                 this.$warningAlert('Something went wrong')
+                                console.log(err)
                             })
                         }
                     })

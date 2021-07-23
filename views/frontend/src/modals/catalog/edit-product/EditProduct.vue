@@ -103,9 +103,9 @@
                       <img  @click="currentData.img = ''" class="remove-images" src="../../../assets/icons/deleteClient.svg">
                     </div>
                    <div v-for="(img, index) in imagePreview" :key="index" >
-                      <div v-if="img !== ''" class="selected-images">
-                        <img v-if="img.startsWith('images')" :src="imgSrc+'/'+img" class="show-images mr-2" />
-                        <img v-else   :src="img" class="show-images mr-2" />
+                      <div v-if="img !== '' && img !== null" class="selected-images">
+                        <img v-if="img !== null ? img.startsWith('images'): ''" :src="imgSrc+'/'+img" class="show-images mr-2" />
+                        <img v-else-if="img !== null"   :src="img" class="show-images mr-2" />
                         <div class="selected-overlay">
                           <img @click="removeImage(index)" class="remove-image"  src="../../../assets/icons/deleteClient.svg">
                         </div>
@@ -164,12 +164,17 @@ export default {
     return this.currentData.img
     },
     imagePreview(){
-      return  this.currentData.imgArray.map((item)=>{
-        if(typeof item === 'object'){
-         return URL.createObjectURL(item)
-       }
-         return item;
 
+      return  this.currentData.imgArray.map((item)=>{
+      if(this.currentData.imgArray.length>0){
+      if(item !== null){
+        if(typeof item === 'object'){
+          return URL.createObjectURL(item)
+        }
+      }
+        return item;
+
+      }
       })
     },
     isDiscount(){
@@ -219,8 +224,12 @@ export default {
             this.currentData.img = file
           }
           else{
-             for (let j = 0; j <=this.currentData.imgArray.length; j++) {
-                if(this.currentData.imgArray[j] === ""){
+            if(this.currentData.imgArray.length === 0){
+              this.currentData.imgArray.push(file)
+            }
+            else{
+              for (let j = 0; j <this.currentData.imgArray.length; j++) {
+                if(this.currentData.imgArray[j] === null || this.currentData.imgArray[j] === ''){
                   this.currentData.imgArray[j] = file;
                   break;
                 }
@@ -228,6 +237,7 @@ export default {
                   this.currentData.imgArray.push(file)
                   break;
                 }
+              }
             }
           }
           console.log(this.currentData.imgArray)
@@ -236,9 +246,9 @@ export default {
     onSubmit(){
       const updatedProduct = this.currentData;
       const form = new FormData();
-
      for(let item in updatedProduct.imgArray){
          form.append('imgArray'+item, updatedProduct.imgArray[item])
+       console.log('imgArray'+item)
       }
 
       if(this.promoStart.obj != ""){

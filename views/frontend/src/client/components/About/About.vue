@@ -126,7 +126,9 @@ export default {
 </script>
 
 <style scoped>
-
+.client-paragraph{
+  font-size: 15px;
+}
 .relatives{
   position: absolute;
   width: 100%;

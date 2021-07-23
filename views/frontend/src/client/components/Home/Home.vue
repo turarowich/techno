@@ -45,7 +45,6 @@ name: "Home",
           document.body.scrollTop = 0;
           document.documentElement.scrollTop = 0;
 
-
       }
 
   },
@@ -152,13 +151,10 @@ name: "Home",
   /*display: none;*/
 }
 .client{
-  overflow-y: auto;
-  height: 100%;
+
+
 }
-.client.active{
-  height: 300px;
-  overflow:hidden;
-}
+
 
 .main-box h1{
   font-size: 34px;

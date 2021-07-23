@@ -134,17 +134,17 @@
             <div class="d-flex align-items-center">
               <span>Rows per page</span>
               <select class="form-control pagination-select" v-model='perPage'>
-                <option value="2">2</option>
-                <option value="5">5</option>
                 <option value="8">8</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
+                <option value="16">16</option>
+                <option value="32">32</option>
               </select>
             </div>
-            <div><span>{{currentPage}}</span> of <span class="mr-3">{{totalPages}}</span>
-              <img v-show='showPrev' @click.stop.prevent='currentPage-=1' class="prevBtn mr-3" src="../../assets/icons/side-arrow.svg">
-              <img v-show='showNext' @click.stop.prevent='currentPage+=1' src="../../assets/icons/side-arrow.svg"></div>
-
+            <div class="d-flex align-items-center"><span>{{current_page}}</span> <span class="mr-1 ml-1">of</span> <span class="mr-2">{{totalPages}}</span>
+              <div v-if='showPrev' @click.stop.prevent='currentPage-=1' class=" pagination-btns"><img class="pagination-img"  src="../../assets/icons/prevArrow.svg"></div>
+              <div v-else class="pagination-btns " style="opacity: 0.5;"><img class="pagination-img"  src="../../assets/icons/prevArrow.svg"></div>
+              <div class=" pagination-btns" v-if='showNext' @click.stop.prevent='currentPage+=1'>  <img class="pagination-img"  src="../../assets/icons/side-arrow.svg"></div>
+              <div v-else class=" pagination-btns"  style="opacity: 0.5;">  <img class="pagination-img"   src="../../assets/icons/side-arrow.svg"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -235,9 +235,17 @@ name: "Catalog",
           })
 
     },
+    current_page(){
+      if(this.currentPage> this.totalPages){
+        return Math.ceil(this.filteredList.length / this.perPage)
+      }
+
+      return this.currentPage
+    },
+
     catalogToDisplay: function(){
-      let start = (this.currentPage - 1) * this.perPage
-      let end = this.currentPage * this.perPage
+      let start = (this.current_page - 1) * this.perPage;
+      let end = this.current_page * this.perPage
       this.filteredList.map((value, index) =>{
         value.index = index
         return value
@@ -477,6 +485,7 @@ name: "Catalog",
           .then((response) => {
               this.catalogList = response.data.objects;
               console.log(this.catalogList)
+
 
 
   })

@@ -26,7 +26,7 @@
                 <option value="">All</option>
                 <option value="Done">Done</option>
                 <option value="In Progress">In process</option>
-                <option value="Canceled">Canceled</option>
+                <option value="Cancelled">Cancelled</option>
                 <option value="New">New</option>
               </select>
             </form>
@@ -98,9 +98,11 @@
         </select>
         <img src="../../assets/icons/select.svg">
       </div>
-      <div class="d-flex align-items-center"><span>{{currentPage}}</span> <span class="mr-1 ml-1">of</span> <span class="mr-2">{{totalPages}}</span>
-        <div v-show='showPrev' @click.stop.prevent='currentPage-=1' class=" pagination-btns prevBtn " ><img src="../../assets/icons/side-arrow.svg"></div>
-        <div class=" pagination-btns" v-show='showNext' @click.stop.prevent='currentPage+=1'>  <img  src="../../assets/icons/side-arrow.svg"></div>
+      <div class="d-flex align-items-center"><span>{{current_page}}</span> <span class="mr-1 ml-1">of</span> <span class="mr-2">{{totalPages}}</span>
+        <div v-if='showPrev' @click.stop.prevent='currentPage-=1' class=" pagination-btns"><img class="pagination-img"  src="../../assets/icons/prevArrow.svg"></div>
+        <div v-else class="pagination-btns " style="opacity: 0.5;"><img class="pagination-img"  src="../../assets/icons/prevArrow.svg"></div>
+        <div class=" pagination-btns" v-if='showNext' @click.stop.prevent='currentPage+=1'>  <img class="pagination-img"  src="../../assets/icons/side-arrow.svg"></div>
+        <div v-else class=" pagination-btns"  style="opacity: 0.5;">  <img class="pagination-img"   src="../../assets/icons/side-arrow.svg"></div>
       </div>
     </div>
   </div>
@@ -160,17 +162,17 @@ name: "Orders",
           .filter(order=>{
             return order.status.includes(this.filter_by_status)
           })
-          // .filter(order=>{
-          //   if(this.price_to.length>0){
-          //     return +order.total >= this.price_from && +order.total <= this.price_to
-          //   }
-          //   else if(this.price_to === ''){
-          //     return +order.total >=this.price_from;
-          //   }
-          //   else{
-          //     return order
-          //   }
-          // })
+          .filter(order=>{
+            if(this.price_to.length>0){
+              return +order.totalPrice >= this.price_from && +order.totalPrice <= this.price_to
+            }
+            else if(this.price_to === ''){
+              return +order.totalPrice >=this.price_from;
+            }
+            else{
+              return order
+            }
+          })
           .filter(order=>{
             return order.createdAt.slice(0,10).includes(this.filtered)
                 || (new Date(order.createdAt).getTime() >= new Date(this.filtered.slice(0,10)).getTime() &&
@@ -179,9 +181,17 @@ name: "Orders",
           })
           return newOrders
     },
+    current_page(){
+      if(this.currentPage> this.totalPages){
+        return Math.ceil(this.filteredList.length / this.perPage)
+      }
+
+      return this.currentPage
+    },
+
     orderToDisplay: function(){
-      let start = (this.currentPage - 1) * this.perPage
-      let end = this.currentPage * this.perPage
+      let start = (this.current_page - 1) * this.perPage
+      let end = this.current_page * this.perPage
       this.filteredList.map((value, index) =>{
         value.index = index
         return value
@@ -342,7 +352,7 @@ name: "Orders",
       if (this.orderList.length === 0) {
         return null;
       } else {
-        this.orderList.sort((a, b) => this.sorting ? (parseInt(a.total) - parseInt(b.total)) : (parseInt(b.total) - parseInt(a.total)));
+        this.orderList.sort((a, b) => this.sorting ? (parseInt(a.totalPrice) - parseInt(b.totalPrice)) : (parseInt(b.totalPrice) - parseInt(a.totalPrice)));
         this.sorting = !this.sorting;
         $('.total-pol').toggleClass('active')
         $('.date-pol').removeClass('active')
@@ -425,8 +435,9 @@ name: "Orders",
   width:32px;
   padding-right: 0;
 }
+
 .general-dropdown.settings-dropdown{
-  transform: translate3d(-139px, 25px, 0px) !important;
+  transform: translate3d(-141px, 25px, 0px) !important;
   width: 190px;
   padding: 20px;
   font-size: 14px;
@@ -445,6 +456,7 @@ name: "Orders",
 .filter-orders{
   margin-top: 44px;
 }
+
 .date-pick{
   width:182px;
   height: 20px;
@@ -472,9 +484,7 @@ name: "Orders",
 .pagination img{
   cursor:pointer;
 }
-.prevBtn{
-  transform: rotate(180deg);
-}
+
 
 .filter-drops .general-dropdown{
   width: 260px;

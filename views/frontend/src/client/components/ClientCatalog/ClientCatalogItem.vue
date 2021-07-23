@@ -12,9 +12,9 @@
             </div>
             <div class="product-add">
               <h2 class="long-text"  style="overflow: hidden;text-overflow: ellipsis;">{{product.name}}</h2>
-              <span v-if="checkDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} сом</span>
-              <br>
+              <span class="mr-3" v-if="checkDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} сом</span>
               <span :class="{lineThrough:checkDates(product.promoStart,product.promoEnd)}">{{product.price}} сом</span>
+
             </div>
             <button v-if="!catalog_settings.catalogMode" class="add-to-card" @click="addToCart(product._id)">Add to cart</button>
             <button v-else class="add-to-card" @click="selectProduct(product._id)">View</button>
@@ -151,7 +151,7 @@ name: "ClientCatalogItem",
   width: 100%;
   height: 100%;
   object-fit: contain;
-  border-radius: 10px;
+  border-radius: 5px;
 }
 .product-add{
   font-weight: bold;
@@ -210,6 +210,7 @@ name: "ClientCatalogItem",
   text-decoration: line-through;
   font-size: 12px!important;
   font-weight: normal;
+
 }
 @media(max-width:576px){
   .product-box:hover{

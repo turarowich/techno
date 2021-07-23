@@ -14,7 +14,7 @@
           <div class="modal-body category-body">
             <form id="form" class="modal-form">
               <label>News</label><br>
-              <input  v-if="sendPush.news === ''" v-model="search" :class="{disableInput: sendPush.title !== '' || sendPush.description!==''}" :disabled="sendPush.title !=='' || sendPush.description !== '' " class="cashback-input mb-3"  placeholder="Select news">
+              <input  v-if="sendPush.news === ''" v-model="search"  class="cashback-input mb-3"  placeholder="Select news">
               <div v-else class="cashback-input bg-transparent d-flex align-items-center mb-3">{{sendPush.news.name}}</div>
               <img v-if="sendPush.news !== ''"  @click="clearNews" class="delete-new" src="../../assets/icons/deleteClient.svg">
               <div class="parent-news">
@@ -30,8 +30,8 @@
                 </div>
               </div>
               <label>Custom text</label><br>
-              <input v-model="sendPush.title" :disabled="sendPush.news !== ''" :class="{disableInput: sendPush.news !== ''}" class="disables cashback-input mb-2"  placeholder="Title">
-              <textarea v-model="sendPush.description" :disabled="sendPush.news !== ''" :class="{disableInput: sendPush.news !== ''}" class=" disables general-area p-2" placeholder="Description"></textarea>
+              <input v-model="sendPush.title"  class="disables cashback-input mb-2"  placeholder="Title">
+              <textarea v-model="sendPush.description"  class=" disables general-area p-2" placeholder="Description"></textarea>
               <button  class="save" @click.prevent="onSubmit">Send</button>
             </form>
           </div>
@@ -72,15 +72,20 @@ export default {
      const new_data = this.sendPush;
       new_data.clients.push(this.client._id);
 
-      console.log(new_data)
-      that.axios.post(this.url('sendPushNotification'),new_data)
-      .then(()=>{
-        document.getElementById('form').reset();
-        that.$successAlert('Push has been sent')
-        $('#send-push').modal("hide")
-        that.sendPush.news = '';
+      if(new_data.news === ''){
+        this.$warningAlert('Choose a news')
+      }
+      else{
+        that.axios.post(this.url('sendPushNotification'),new_data)
+            .then(()=>{
+              document.getElementById('form').reset();
+              that.$successAlert('Push has been sent')
+              $('#send-push').modal("hide")
+              that.sendPush.news = '';
 
-      })
+            })
+      }
+
     },
     clearNews(){
       this.sendPush.news = '';

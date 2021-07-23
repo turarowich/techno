@@ -8,7 +8,7 @@
     </div>
     <div class="row">
 
-            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 pr-0 news-box" v-for="newss in news" :key="newss._id" @click="openNews(newss._id)">
+      <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 pr-0 news-box" v-for="newss in news" :key="newss._id" @click="openNews(newss._id)">
               <div class="new-img">
 <!--                <img :src="server+'/'+newss.img">-->
                 <img v-if="!newss.error" :src="server+'/'+newss.img" @error="newss.error=true">
@@ -57,6 +57,7 @@ export default {
 }
 .news-box{
   margin-bottom: 37px;
+  cursor:pointer;
 }
 .calendar-news{
   border-bottom: 1px solid #e3e3e3;
@@ -81,6 +82,10 @@ export default {
   font-size: 14px;
 
 }
+.news-box:hover .news-content{
+  color:#616cf5;
+
+}
 .news-content{
   color:#222;
   font-size: 16px;
@@ -88,7 +93,7 @@ export default {
   margin-bottom: 10px;
 }
 .news-text{
-  padding: 10px 20px;
+  padding: 10px 0;
 }
 .news-text img{
   width: 15px;

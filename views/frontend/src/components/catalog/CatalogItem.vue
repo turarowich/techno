@@ -27,7 +27,7 @@
           </div>
         </div>
         <div  style="width: 24%;"><div class="long-text">{{catalog.description}}</div></div>
-        <div  style="width: 13%;">{{catalog.quantity}}</div>
+        <div  style="width: 13%;">{{catalog.quantity > 0?catalog.quantity:'-'}}</div>
         <div  style="width: 13%;">{{catalog.price}}</div>
         <div  style="width:8%;" class="see-catalog"><img @click="hideProduct(catalog,isFalse)"  v-if="catalog.active" class="see-catalog" src="../../assets/icons/see.svg"><img v-else @click="hideProduct(catalog ,isTrue)"  class="nonsee-catalog" src="../../assets/icons/nonsee.svg"></div>
         <div  style="width:8%;">
