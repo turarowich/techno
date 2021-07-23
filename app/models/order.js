@@ -2,6 +2,18 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const orderSchema = new Schema({
+    pointsStatus:{
+        received:{
+            type: Boolean,
+            required: false,
+            default: false,
+        },
+        amount:{
+            type:Number,
+            default:0,
+            required: false,
+        },
+    },
     statusDiscount: {
         name:{
             type: String,

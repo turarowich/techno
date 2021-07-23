@@ -117,6 +117,14 @@
            <div>
              <div style="width: 500px" id="reader"></div>
              <div class="stream">
+               <div>
+                 <p class="error" v-if="camSettings.noFrontCamera">
+                   You don't seem to have a front camera on your device
+                 </p>
+                 <p class="error" v-if="camSettings.noRearCamera">
+                   You don't seem to have a rear camera on your device
+                 </p>
+               </div>
                <div class="qr_header d-flex justify-content-between">
                  <div>
                    <span>Order #</span>
@@ -126,24 +134,20 @@
                    <span style="color:green;">{{scanResult.pointsAdded}}</span>
                    <span style="color:red;">{{scanResult.error}}</span>
                  </div>
-
-
                </div>
-
-               <qr-stream @decode="onDecode" @init="onInit" class="mb">
+               <qr-stream @decode="onDecode" :camera="camSettings.camera" @init="onInit" class="mb">
+                 <button @click="switchCamera" style="border-radius:5px;margin: 4px;">
+                   switch camera
+                 </button>
                  <div style="color: red;" class="frame"></div>
                </qr-stream>
              </div>
-
            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-
-
 
 </template>
 
@@ -165,7 +169,13 @@ name: "Orders",
   },
   data(){
     return{
+      camSettings:{
+        camera: 'rear',
+        noRearCamera: false,
+        noFrontCamera: false
+      },
       scanResult:{
+        camError:'',
         error:'',
         pointsAdded:'',
       },
@@ -253,7 +263,6 @@ name: "Orders",
         return this.checkAccess(access, parametr, parametr2)
     },
     selectOrder(id){
-      console.log(id,"selectOrder");
       this.select_order = '';
       this.orderList.map((item)=>{
         if(item._id === id) {
@@ -425,6 +434,16 @@ name: "Orders",
         }
       })
     },
+    switchCamera () {
+      switch (this.camSettings.camera) {
+        case 'front':
+          this.camSettings.camera = 'rear'
+          break
+        case 'rear':
+          this.camSettings.camera = 'front'
+          break
+      }
+    },
     startScanning(order){
       this.orderForScanning.id = order.id;
       this.orderForScanning.code = order.code;
@@ -451,18 +470,30 @@ name: "Orders",
       try {
         await promise
       } catch (error) {
+        const triedFrontCamera = this.camSettings.camera === 'front';
+        const triedRearCamera = this.camSettings.camera === 'rear';
+        const cameraMissingError = error.name === 'OverconstrainedError';
+
+        if (triedRearCamera && cameraMissingError) {
+          this.camSettings.noRearCamera = true
+        }
+
+        if (triedFrontCamera && cameraMissingError) {
+          this.camSettings.noFrontCamera = true
+        }
+
         if (error.name === 'NotAllowedError') {
-          this.scanResult.error = "ERROR: you need to grant camera access permisson"
+          this.scanResult.camError = "ERROR: you need to grant camera access permisson"
         } else if (error.name === 'NotFoundError') {
-          this.scanResult.error = "ERROR: no camera on this device"
+          this.scanResult.camError = "ERROR: no camera on this device"
         } else if (error.name === 'NotSupportedError') {
-          this.scanResult.error = "ERROR: secure context required (HTTPS, localhost)"
+          this.scanResult.camError = "ERROR: secure context required (HTTPS, localhost)"
         } else if (error.name === 'NotReadableError') {
-          this.scanResult.error = "ERROR: is the camera already in use?"
+          this.scanResult.camError = "ERROR: is the camera already in use?"
         } else if (error.name === 'OverconstrainedError') {
-          this.scanResult.error = "ERROR: installed cameras are not suitable"
+          this.scanResult.camError = "ERROR: installed cameras are not suitable"
         } else if (error.name === 'StreamApiNotSupportedError') {
-          this.scanResult.error = "ERROR: Stream API is not supported in this browser"
+          this.scanResult.camError = "ERROR: Stream API is not supported in this browser"
         }
       }
     }

@@ -38,7 +38,7 @@ module.exports = function (app, io) {
     app.post('/addPoints', verifyAccess, clientController.addPoints);
     app.post('/deductPoints', verifyAccess, clientController.deductPoints);
     app.get('/getPoints', clientController.getPoints);
-    
+
 
     //Online menu
     app.post('/saveTempoOrder',  catalogController.saveTempoOrder);
@@ -111,6 +111,7 @@ module.exports = function (app, io) {
     app.delete('/deleteOrder/:order', verifyAccess, orderController.deleteOrder);
     app.delete('/deleteOrders', verifyAccess, orderController.deleteOrders);
     app.post('/getOrderExcel', verifyAccess, orderController.getOrderExcel);
+    app.post('/addOderPoints', verifyAccess, orderController.addOderPoints);
     //Change Order status
     app.post('/updateOrderWeb', orderStatusController.create(io));
     app.post('/socketRooms', orderStatusController.rooms(io));

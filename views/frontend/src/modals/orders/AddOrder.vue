@@ -3,12 +3,12 @@
     <div class="modal-dialog  modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: calc(100vw - 250px);" role="document" >
       <div class="modal-content myModal-content h-100">
         <div class="modal-header justify-content-start align-items-start">
-            <img data-dismiss="modal" aria-label="Close" class="close" src="../../assets/icons/x.svg" alt="">
-          <div>
+          <img data-dismiss="modal" aria-label="Close" class="close" src="../../assets/icons/x.svg" alt="">
+          <div v-if="!['Cancelled','Done'].includes(selected_order.status)">
            <h3 v-if="!editState" class="modal-title">New order</h3>
            <h3 v-else class="modal-title">Edit order</h3>
            <span class="detail-date">{{today}}</span>
-         </div>
+          </div>
         </div>
         <div class=" myModal-body">
           <div class="row">
@@ -309,7 +309,7 @@
           </div>
 
           <div class="d-flex">
-            <button class="save mr-2 mb-5" type="button" @click="save">
+            <button v-if="!['Cancelled','Done'].includes(selected_order.status)" class="save mr-2 mb-5" type="button" @click="save">
               <span v-if="!editState">Add order</span>
               <span v-else>Update order</span>
             </button>
@@ -855,7 +855,6 @@ export default {
           that.new_order.deliveryType = deliveryType;
           that.setSelectedDeliveryOption(val.deliveryObject);
           that.new_order.address = val.address;
-
           that.guest.name = val.client_name;
           that.guest.phone = val.client_phone;
 

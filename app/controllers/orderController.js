@@ -811,7 +811,6 @@ class OrderController{
         res.status(result.status).json(result);
     };
     updateOrderStatus = async function (req, res) {
-        console.log(req.fields,"=>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         let db = useDB(req.db)
         let Order = db.model("Order");
         let Product = db.model("Product");
@@ -1034,6 +1033,72 @@ class OrderController{
 
         res.status(result.status).json(result);
     };
+    addOderPoints = async function (req, res) {
+        let db = useDB(req.db)
+        let Order = db.model("Order");
+        let Log = db.model("Log");
+        let ClientBonusHistory = db.model("clientBonusHistory");
+        let Client = db.model("Client");
+        let cashback_model = db.model("Cashback");
+        let Product = db.model("Product");
+        if (req.userType == "employee") {
+            let checkResult = await checkAccess(req.userID, { access: "orders", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
+        }
+        let result = {
+            'status': 200,
+            'msg': 'Points were transferred',
+        };
+        try {
+            let order = await Order.findById(req.fields.orderId);
+            let clients = await Client.find({uniqueCode:req.fields.clientCode});
+            let client = null;
+            if(clients.length>0){
+                client = clients[0];
+            }else{
+                return res.status(400).send(`Client not found`);
+            }
+
+            if(!order){
+                return res.status(400).send(`Orders not found`);
+            }
+            if(order.status === "Cancelled"){
+                return res.status(400).send(`Orders is already cancelled`);
+            }
+
+                console.log(order.pointsStatus);
+                let products = order.productsDetails.map(function (item){
+                    return {id:item.product._id,quantity:item.quantity}
+                })
+                let result_object = await products_with_discounts(
+                    products,   // list of product ids $ quant
+                    Product,     // Product model
+                    order.promoCodeObject,// promocode object
+                    order.statusDiscount,// discount object or null
+                );
+                let cashback_from_order = await calcCashback(result_object.productCurrentPrice,cashback_model);
+                await createClientHistory(
+                    ClientBonusHistory,
+                    client,
+                    cashback_from_order,
+                    `Points received order # ${order.code}`,
+                    order._id,
+                    "received",
+                    0
+                );
+                result['pointsAdded'] = cashback_from_order;
+                order.pointsStatus.received = true;
+                order.pointsStatus.amount = cashback_from_order;
+                await order.save();
+
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.status(result.status).json(result);
+
+    }
 }
 
 
