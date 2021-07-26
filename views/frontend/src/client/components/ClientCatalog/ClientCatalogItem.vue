@@ -146,7 +146,6 @@ name: "ClientCatalogItem",
   width: 100%;
   height: 100%;
   object-fit: contain;
-  border-radius: 5px;
 }
 .product-add{
   font-weight: bold;
@@ -182,7 +181,7 @@ name: "ClientCatalogItem",
 .product-box:hover{
   border: 0.5px solid rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
-  border-radius: 10px;
+  border-radius: 5px;
   transition:0.3s;
   /*transform:scale(1.1,1.1)*/
 }

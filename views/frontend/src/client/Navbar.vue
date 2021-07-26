@@ -70,10 +70,10 @@
                   <div>
                     <h3 class="basket-title">{{item.product.name}}</h3>
                   </div>
-                  <div style="display: flex;align-items: center;">
-                    <span class="basket-code" style="flex: 3">{{item.product.vendorCode}}</span>
-                    <div class="basket-code " style="flex: 2">{{item.quantity}}x</div>
-                    <div class="basket-price " style="flex: 2">{{item.product.price}} {{catalog_settings.currency}}</div>
+                  <div style="display: flex;align-items: center; justify-content: space-between">
+                    <span class="basket-code" >{{item.product.vendorCode}}</span>
+                    <div class="basket-code " >{{item.quantity}}x</div>
+                    <div class="basket-price " >{{item.product.price}} {{catalog_settings.currency}}</div>
                   </div>
                 </div>
               </div>
@@ -247,7 +247,7 @@ export default {
   margin-right: 40px;
 }
 .web-catalog-logo{
-  height:55px;
+  height:45px;
 }
 .footer-info img{
   margin-right: 10px;
@@ -408,7 +408,7 @@ font-size: 14px;
 
 .basket-hover .save{
   width:100%;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 .basket-header{
   padding-bottom:10px;
@@ -445,7 +445,7 @@ font-size: 14px;
   font-weight: normal;
 }
 .scroll-basket{
-  height: 250px;
+  max-height: 250px;
   overflow-y: auto;
 }
 .empty_basket_title{

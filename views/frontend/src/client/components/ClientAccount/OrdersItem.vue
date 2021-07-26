@@ -1,8 +1,7 @@
 <template>
   <div>
     <div v-if="orderList.length === 0" class="text-center mt-5">
-          <img src="../../../assets/clients/box.png">
-          <h3 class="cashback-sub-title">Still empty</h3>
+          <img src="../../../assets/clients/box.png" class="mb-3">
           <p class="client-paragraph">Information about your orders will be stored here</p>
     </div>
 <div v-else class="table-item d-flex align-items-center" v-for="order in orderList" :key="order.id">
@@ -21,6 +20,19 @@
   <div style="width:11%">{{order.totalPrice}} {{catalog_settings.currency}}</div>
   <div style="width:10%">{{order.status}}</div>
 </div>
+
+    <div class="mobile-item d-flex align-items-center justify-content-between" v-for="order in orderList" :key="order.id">
+      <div style="width:50%">
+        <div class="mb-1" style="font-size:16px">Order {{order.code}}</div>
+        <span style="color:#b0b0b0">{{order.createdAt?order.createdAt.slice(0,10): ''}}</span>
+      </div>
+      <div style="width:50%" class="d-flex justify-content-end flex-column align-items-end">
+        <div class="mobile-price mb-1">{{order.totalPrice}} {{catalog_settings.currency}}</div>
+        <span class="d-flex align-items-center" :class="{red:order.status === 'Cancelled', done: order.status=== 'Done'}"> <i class=" circle-status fas fa-circle"></i>{{order.status}}</span>
+      </div>
+
+    </div>
+
   </div>
 </template>
 
@@ -51,9 +63,22 @@ name: "OrdersItem",
   color:red;
 }
 .done{
-  color:green;
+  color:
+      #5CBD85;
 }
-.orange{
-  color:orange;
+
+.mobile-price{
+  font-size: 16px;
+  font-weight: 600;
+}
+.mobile-item{
+  border-bottom: 1px solid #E4E4E4;
+  height: 72px;
+}
+@media(max-width:992px){
+  .table-item{
+    display: none !important;
+  }
+
 }
 </style>

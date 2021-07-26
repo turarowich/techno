@@ -428,6 +428,7 @@ name: "Catalog",
   .mobile-btns{
     display: block;
   }
+
 }
 
 

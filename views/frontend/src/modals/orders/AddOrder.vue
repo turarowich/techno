@@ -236,9 +236,9 @@
               <h3 class="client-sub-title">Personal discount</h3>
               <div style="margin-bottom: 12px; display:flex">
 
-                <span  class="cashback-input  d-flex align-items-center mr-2" style="width: 31%">
-                  <input  style="border: none;width: 100%;height: 100%;" type="number" min="0" max="100" v-model="new_order.personalDiscount.sum" placeholder="Enter amount or percentage">
-                  <span style="margin-right: 11px;">
+                <span  class="cashback-input  d-flex align-items-center mr-3" style="width: 28%">
+                  <input class="numb"  style="border: none;width: 100%;height: 100%;" type="number" min="0" max="100" v-model="new_order.personalDiscount.sum" placeholder="Enter amount or percentage">
+                  <span v-if="new_order.personalDiscount.sum" style="margin-right: 11px;">
                     <img @click="unSetPersonalDiscount" src="../../assets/icons/x_round_grey.svg" style="cursor: pointer;margin-top: -4px;">
                   </span>
                 </span>
@@ -246,7 +246,7 @@
                 <div>
                 <div  style="display: flex;flex:1; margin-bottom:3px">
                   <label class="custom-checkbox mr-2">
-                    <input v-model="new_order.personalDiscount.percent" type="checkbox">
+                    <input  v-model="new_order.personalDiscount.percent" type="checkbox">
                     <span class="checkmark">
                     </span>
 
@@ -1072,6 +1072,11 @@ export default {
   border-radius:50%;
   background: #F19C4B;
   margin-right: 5px;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .detail-date{
