@@ -1,5 +1,5 @@
 <template>
-<div class="container client-container">
+<div class="container">
   <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg"><div @click="$router.go(-1)" class="mr-1">Back </div> | <span>Shopping cart</span>
 
   </div>

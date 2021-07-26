@@ -1,5 +1,5 @@
 <template>
-<div class="container client-container">
+<div class="container">
 <!--  <div class="main-box" v-bind:style="{ backgroundImage: 'url(' + bannerPath + ')' }" >-->
 
   <div class="main-box" v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.banner + ')' }" >

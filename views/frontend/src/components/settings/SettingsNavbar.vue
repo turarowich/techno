@@ -55,7 +55,9 @@ export default {
 
 <style scoped>
 
-
+.router-link-active{
+  background: none;
+}
 .loyalty-menu{
   margin-bottom: 10px;
 }

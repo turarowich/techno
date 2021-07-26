@@ -9,6 +9,10 @@
            <h3 v-else class="modal-title">Edit order</h3>
            <span class="detail-date">{{today}}</span>
           </div>
+          <div v-else>
+            <h3  class="modal-title">View order</h3>
+            <span class="detail-date">{{today}}</span>
+          </div>
         </div>
         <div class=" myModal-body">
           <div class="row">
@@ -119,7 +123,7 @@
             <div class="col-lg-4">
               <h3 class="client-sub-title">Client</h3>
 
-              <div class="d-flex margin-10">
+              <div class="d-flex guest-name">
                 <label class="switch d-flex">
                   <input v-model="guestMode" type="checkbox">
                   <span class="slider round"></span>
@@ -133,12 +137,12 @@
                   <input v-model="search_client" placeholder="Enter clients name or number" class="search-client">
                 </div>
                 <div v-else class="d-flex align-items-center">
-                  <img class="client-avatar" v-if="client.clientObj.avatar" :src="igSrc+'/'+client.clientObj.avatar">
+                  <img class="client-avatar" v-if="client.clientObj.avatar" :src="imgSrc+'/'+client.clientObj.avatar">
                   <img class="client-avatar" v-else src="../../assets/icons/chat.svg">
                   <div class="position-relative">
                     <h2 class="name-client">{{client.clientObj.name}}</h2>
                     <div class="category">
-                      {{ client.client_status_name }}:
+                      {{ client.client_status_name ? client.client_status_name : 'Discount' }}:
                       <span>
                         {{client.client_status_discount}}%
                       </span>
@@ -150,9 +154,9 @@
                 </div>
               </div>
               <div v-else>
-                  <span>Name</span>
+                  <label>Name</label>
                   <input class="cashback-input" v-model="guest.name">
-                  <span >Phone</span>
+                  <label>Phone</label>
                   <input class="cashback-input" v-model="guest.phone">
               </div>
 
@@ -183,20 +187,23 @@
               <h3 class="client-sub-title">Delivery method</h3>
               <div class="selects">
                 <select v-model="new_order.deliveryType" class=" form-control long-form-control  form-control-lg" aria-label=".form-select-lg example">
-                  <option value="self" >Pick Up</option>
+                  <option value="self" >Pick up</option>
                   <option value="delivery">Delivery</option>
                 </select>
               </div>
 
               <div v-if="new_order.deliveryType == 'self'">
-                <span>Select address where order will be taken</span>
+                <label>Select address where order will be taken</label>
                 <div @click="setBranch(branch)" v-for="branch in all_branches" :key="branch._id"   :class="{active_branch:branch._id===selectedBranchObject._id}" class="d-flex pick_up_block_item">
                   <div>
-                    <img src="../../assets/icons/location.svg">
+                    <img src="../../assets/icons/location.svg" class="mr-2">
                   </div>
                   <div>
-                    <div class="pick_up_block_item_address" style="display: inline;vertical-align: middle;">
+                    <div class="pick_up_block_item_address">
                       {{branch.address}}
+                    </div>
+                    <div class="pick_up_block_item_wh">
+                      Mn-Fr 08:00 - 19:00
                     </div>
                   </div>
                 </div>
@@ -227,29 +234,26 @@
 
               <div class="line"></div>
               <h3 class="client-sub-title">Personal discount</h3>
-              <div style="display: flex;margin-bottom: 12px">
+              <div style="margin-bottom: 12px; display:flex">
 
-                <span class="cashback-input m-0 d-flex align-items-center" style="flex: 1;">
+                <span  class="cashback-input  d-flex align-items-center mr-2" style="width: 31%">
                   <input  style="border: none;width: 100%;height: 100%;" type="number" min="0" max="100" v-model="new_order.personalDiscount.sum" placeholder="Enter amount or percentage">
                   <span style="margin-right: 11px;">
                     <img @click="unSetPersonalDiscount" src="../../assets/icons/x_round_grey.svg" style="cursor: pointer;margin-top: -4px;">
                   </span>
                 </span>
 
-                <div style="display: flex;flex:1;flex-direction: column;margin-left: 16px;">
-                  <div class="d-flex align-items-center">
-                    <label class="custom-checkbox mr-2">
-                      <input v-model="new_order.personalDiscount.percent" type="checkbox">
-                      <span class="checkmark">
+                <div>
+                <div  style="display: flex;flex:1; margin-bottom:3px">
+                  <label class="custom-checkbox mr-2">
+                    <input v-model="new_order.personalDiscount.percent" type="checkbox">
+                    <span class="checkmark">
                     </span>
-                    </label>
-                    <span style="margin-top: -2px;">is %</span>
-                  </div>
-                  <div>
-                    <span>
-                      Check if input is in percentage
-                    </span>
-                  </div>
+
+                  </label>
+                  <span>Entry to %</span>
+                </div>
+                  <span style="color:#8C94A5">Check if input is in percentage</span>
                 </div>
               </div>
 
@@ -282,7 +286,7 @@
                 <li class="payment-list d-flex justify-content-between">Subtotal<span>{{totalNonDiscounted}}{{currency}}</span></li>
                 <li class="payment-list d-flex justify-content-between">Discount<span>{{totalDiscount}}{{currency}}</span></li>
                 <li class="payment-list d-flex justify-content-between">
-                  <span>Personal discount</span>
+                  <span style="color:#606877">Personal discount</span>
                   <span>
                     <span>{{new_order.personalDiscount.sum}}</span>
                     <span v-if="new_order.personalDiscount.percent">%</span>
@@ -666,6 +670,7 @@ export default {
           branch:this.selectedBranchObject._id,
           personalDiscount:this.new_order.personalDiscount,
           old_order:order,
+          guest:this.guest,
         }
 
         this.axios.put(this.url('updateOrder',this.editOrderId),data)
@@ -693,6 +698,7 @@ export default {
           notes:this.new_order.notes,
           branch:this.selectedBranchObject._id,
           personalDiscount:this.new_order.personalDiscount,
+          guest:this.guest,
         }
 
         this.axios.post(this.url('addOrder'),data)
@@ -926,7 +932,7 @@ export default {
 }
 .pick_up_block_item{
   border-radius: 7px;
-  padding: 10px;
+  padding: 15px;
   margin-bottom: 10px;
   background: #F8F9FF;
   cursor: pointer;
@@ -950,6 +956,15 @@ export default {
   padding-bottom: 0;
   max-height:300px;
   overflow-y: auto;
+}
+.pick_up_block_item_wh{
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  color: #8C94A5;
+  line-height: 1;
+
+
 }
 .selected_delivery_option{
   display: flex;
@@ -1028,8 +1043,8 @@ export default {
 .promo-btn{
   background: #F4F4F4;
   /* Stroke */
-  width: 34px;
-  height: 32px;
+  width: 40px;
+  height: 33px;
   border: 1px solid #D3D3D3;
   box-sizing: border-box;
   border-radius: 5px;
@@ -1037,7 +1052,9 @@ export default {
 .notes{
   margin-bottom: 38px;
 }
-
+.guest-name{
+  margin-bottom: 15px;
+}
 .client-sub-title{
   font-size: 16px;
   font-weight: normal;

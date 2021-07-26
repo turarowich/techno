@@ -13,7 +13,7 @@
             <h3 class="modal-title d-flex align-items-center">
               Order {{currentData.code}}
               <div class="ml-4 d-flex align-items-center  detail-status"
-                   :class="[{red: currentData.status === 'Canceled'},
+                   :class="[{red: currentData.status === 'Cancelled'},
                     {green: currentData.status=== 'Done'},
                     {orange: currentData.status === 'In Progress'},
                     {new: currentData.status === 'New'}

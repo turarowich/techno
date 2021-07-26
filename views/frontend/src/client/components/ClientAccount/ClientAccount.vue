@@ -9,7 +9,7 @@
               </div>
               <img v-else class="client-avatar" src="../../../assets/clients/clientProfile.svg">
               <input @change="uploadPhoto($event)" type="file" class="d-none" id="uploadClientImage">
-              <label for="uploadClientImage" style="position: absolute;left: 44px;bottom: 0;margin-bottom: 0;">
+              <label for="uploadClientImage" style="position: absolute;left: 60px;bottom: 0;margin-bottom: 0;">
                 <img src="../../../assets/icons/addBtn.svg" style="height: 18px;width: 18px;">
               </label>
             </div>
@@ -21,7 +21,7 @@
                   <img src="../../../assets/clients/Edit.svg">
                 </router-link>
               </h1>
-              <span class="profile-phone">{{user.phone}}</span><br>
+              <span class="profile-phone">{{user.phone}}</span>
               <span class="user_status_class">{{userDiscountStatus.name || ''}} {{userDiscountStatus.discount_percentage || 0}}%</span>
             </div>
           </div>
@@ -327,8 +327,8 @@ name: "ClientAccount",
   opacity: 1;
 }
 .client_avatar_with_back{
-  height:62px;
-  width:62px;
+  height:80px;
+  width:80px;
   background-size: cover;
   border-radius: 50%;
 }
@@ -400,7 +400,7 @@ name: "ClientAccount",
   color:#616CF5;
 }
 .user_status_class{
-  height: 23px;
+  height: 20px;
   background: #616CF5;
   border-radius: 10px;
   color: white;

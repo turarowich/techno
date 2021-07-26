@@ -1,5 +1,5 @@
 <template>
-  <div class="container client-container ">
+  <div class="container">
 <nav class="navigation d-flex  align-items-center justify-content-between">
   <div class="burger" @click="showNavbar">
     <img src="../assets/icons/menu.svg">

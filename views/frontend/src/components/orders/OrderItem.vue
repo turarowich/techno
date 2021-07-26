@@ -17,20 +17,20 @@
          </div>
          <span style="overflow: hidden;text-overflow: ellipsis;">{{order.products[0] ? order.products[0].name : 'empty'}}</span>
       </div>
-      <div v-if="order.client" class="table-child" v-show="data_check.client_checked"  style="width: 25%;">
+      <div v-if="order.client" class="table-child" v-show="data_check.client_checked"  style="width: 20%;">
         {{order.client ? order.client.name : ''}}
       </div>
       <div v-else class="table-child" v-show="data_check.client_checked"  style="width: 25%;">
         Guest - {{order.client_name}}
       </div>
 
-      <div class="table-child" v-show="data_check.phone_checked" style="width: 20%;">
-        {{order.client ? order.client.phone : ''}}
+      <div class="table-child" v-show="data_check.phone_checked" style="width: 18%;">
+        {{order.client_name ? order.client_phone : ''}}
       </div>
-      <div  class="table-child"  style="width: 10%;">{{order.totalPrice}} $</div>
-      <div class="table-child" v-show="data_check.date_checked"  style="width: 15%;">{{order.createdAt.split('').slice(0,10).join('')}}</div>
-      <div class="table-child pr-3" v-show="data_check.notes_checked" style="width: 10%;" ><div>{{order.notes}}</div></div>
-      <div class="table-child" style="width: 12%;"
+      <div  class="table-child"  style="width: 15%;">{{order.totalPrice}} {{catalog_settings.currency}}</div>
+      <div class="table-child" v-show="data_check.date_checked"  style="width: 13%;">{{order.createdAt.split('').slice(0,10).join('')}}</div>
+      <div class="table-child  pr-3" v-show="data_check.notes_checked" style="width: 10%;" ><div class="long-text">{{order.notes}}</div></div>
+      <div class="table-child" style="width: 15%;"
            :class="[{red: order.status === 'Cancelled'},
           {green: order.status === 'Done'},
           {orange: order.status === 'In Progress'},
@@ -83,7 +83,11 @@ export default {
       imgSrc:''
     }
   },
-
+  computed:{
+    catalog_settings(){
+      return this.$store.getters['Catalog/getCatalog_settings'];
+    },
+  },
   methods: {
     onDecode (decodedString) {
       console.log(decodedString);
@@ -156,6 +160,12 @@ mounted() {
 
 .status{
   color:#000;
+}
+.long-text{
+  width: 50px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .comment-width{
 

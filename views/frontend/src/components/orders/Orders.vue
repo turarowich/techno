@@ -51,12 +51,12 @@
 
         Name order</div>
       <div class="table-head" style="width: 25%;">Product</div>
-      <div v-show="data_check.client_checked" class="table-head" style="width: 25%;">Client</div>
-      <div v-show="data_check.phone_checked" class="table-head" style="width: 20%;">Phone number</div>
-      <div class="table-head table-link d-flex align-items-center" style="width: 10%;" @click="sortByTotal()" >Total <img class="total-pol" style="margin-left:7px" src="../../assets/icons/polygon.svg"></div>
-      <div v-if="data_check.date_checked" class="table-head table-link d-flex align-items-center" style="width: 15%; cursor: pointer" v-on:click="sortByDate" >Date <img class="date-pol" style="margin-left:7px" src="../../assets/icons/polygon.svg"></div>
+      <div v-show="data_check.client_checked" class="table-head" style="width: 20%;">Client</div>
+      <div v-show="data_check.phone_checked" class="table-head" style="width: 18%;">Phone number</div>
+      <div class="table-head table-link d-flex align-items-center" style="width: 15%;" @click="sortByTotal()" >Total <img class="total-pol" style="margin-left:7px" src="../../assets/icons/polygon.svg"></div>
+      <div v-if="data_check.date_checked" class="table-head table-link d-flex align-items-center" style="width: 13%; cursor: pointer" v-on:click="sortByDate" >Date <img class="date-pol" style="margin-left:7px" src="../../assets/icons/polygon.svg"></div>
       <div v-show="data_check.notes_checked" class="table-head" style="width: 10%;">Notes</div>
-      <div class="table-head" style="width: 12%;">Status</div>
+      <div class="table-head" style="width: 15%;">Status</div>
       <div class="table-head" style="width: 8%;"></div>
       <div style="width:3%" class="dropdown pl-3">
         <div class="table-head text-right dropdown-toggle"  id="dropdownBlue" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:3%"><img src="../../assets/icons/BlueSetting.svg"></div>
@@ -493,9 +493,11 @@ name: "Orders",
     },
 
     async onInit (promise) {
+      console.log('init-------------------------------------------------------------');
       try {
         await promise
       } catch (error) {
+        console.log(error,'init-------------------------------------------------------------');
         const triedFrontCamera = this.camSettings.camera === 'front';
         const triedRearCamera = this.camSettings.camera === 'rear';
         const cameraMissingError = error.name === 'OverconstrainedError';

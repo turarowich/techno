@@ -19,7 +19,7 @@
         <div class="selects">
 
           <select @change="changeDiscount(client._id)" id="change-discount" class=" form-control long-form-control  form-control-lg" aria-label=".form-select-lg example">
-            <option value='0' v-if="client.discount === null" selected>no discount</option>
+            <option value='0' selected>no discount</option>
             <option v-for="discount in discountList" :key="discount._id" :selected="client.discount == discount.discount_percentage" :value="discount.min_sum_of_purchases">{{discount.name}} {{discount.discount_percentage}} %</option>
           </select>
 

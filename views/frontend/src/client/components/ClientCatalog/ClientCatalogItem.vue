@@ -11,9 +11,8 @@
               <!--        <img :src="server+'/'+product.img">-->
             </div>
             <div class="product-add">
-              <h2 class="long-text"  style="overflow: hidden;text-overflow: ellipsis;">{{product.name}} {{product.quantity}}</h2>
-              <span v-if="checkDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} {{catalog_settings.currency}}</span>
-              <br>
+              <h2 class="long-text"  style="overflow: hidden;text-overflow: ellipsis; margin-bottom:10px;">{{product.name}} {{product.quantity}}</h2>
+              <span class="mr-2" v-if="checkDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} {{catalog_settings.currency}}</span>
               <span :class="{lineThrough:checkDates(product.promoStart,product.promoEnd)}">{{product.price}} {{catalog_settings.currency}}</span>
             </div>
             <button v-if="!catalog_settings.catalogMode" class="add-to-card" @click="addToCart(product._id)">Add to cart</button>

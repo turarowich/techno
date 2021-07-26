@@ -66,6 +66,9 @@ export default {
   padding-bottom: 11px;
 
 }
+.router-link-active{
+  background: none;
+}
 
 .loaylty-list{
   list-style-type:none;
