@@ -1,4 +1,4 @@
-const { useDB, sendError, checkAccess } = require('../../services/helper')
+const { useDB, sendError, checkAccess,compareDates } = require('../../services/helper')
 var validate = require('../../config/messages');
 class PromocodeController{
     
@@ -239,11 +239,9 @@ class PromocodeController{
                     result['msg'] = validate[lang]['promo_already_used']
                     break promocode
                 }
-                var start = new Date(promocode.startDate);
-                var end = new Date(promocode.endDate);
+                console.log(!compareDates(promocode.startDate,promocode.endDate),"uuuuuuuuuuuuuuu");
                 if(date){
-                    var now = new Date(date);
-                    if (start >= now || now >= end) {
+                    if (!compareDates(promocode.startDate,promocode.endDate)){
                         result['msg'] = validate[lang]['promo_not_usable']
                         break promocode
                     }

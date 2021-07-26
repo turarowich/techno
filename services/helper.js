@@ -360,6 +360,18 @@ function getClientDiscount(client=null,discounts = []){
     }
     return discount_object;
 }
+
+function compareDates(dateStart_,dateEnd_,editDate_=null){
+    if(!dateStart_ || !dateEnd_){
+        return false;
+    }
+    let today = editDate_ ? moment(editDate_) : moment();
+    let dateStart = moment(dateStart_);
+    let dateEnd = moment(dateEnd_);
+    console.log(dateStart,dateEnd,"------------------");
+    //(start<=today<=end)
+    return(dateStart.isSameOrBefore(today,'day') && dateEnd.isSameOrAfter(today,'day'))
+}
 module.exports = {
     useDB: useDB,
     saveImage: saveImage,
@@ -371,4 +383,5 @@ module.exports = {
     createQrFile: createQrFile,
     checkAccess: checkAccess,
     getClientDiscount: getClientDiscount,
+    compareDates:compareDates,
 }
