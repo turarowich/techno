@@ -1,4 +1,4 @@
-const { useDB, sendError, createExcel, randomNumber, checkAccess ,getClientDiscount} = require('../../services/helper')
+const { useDB, sendError, createExcel, randomNumber, checkAccess ,getClientDiscount,compareDates} = require('../../services/helper')
 
 var validate = require('../../config/messages');
 const fs = require('fs');
@@ -75,16 +75,16 @@ async function createClientHistory(ClientBonusHistory,client,points=0,source='',
 
 }
 
-function compareDates(dateStart_,dateEnd_,editDate_=null){
-    if(!dateStart_ || !dateEnd_){
-        return false;
-    }
-    let today = editDate_ ? moment(editDate_) : moment();
-    let dateStart = moment(dateStart_);
-    let dateEnd = moment(dateEnd_);
-    //(start<=today<=end)
-    return(dateStart.isSameOrBefore(today,'day') && dateEnd.isSameOrAfter(today,'day'))
-}
+// function compareDates(dateStart_,dateEnd_,editDate_=null){
+//     if(!dateStart_ || !dateEnd_){
+//         return false;
+//     }
+//     let today = editDate_ ? moment(editDate_) : moment();
+//     let dateStart = moment(dateStart_);
+//     let dateEnd = moment(dateEnd_);
+//     //(start<=today<=end)
+//     return(dateStart.isSameOrBefore(today,'day') && dateEnd.isSameOrAfter(today,'day'))
+// }
 async function products_with_discounts(products=[],Product,promocode=null,discount_obj=null,editDate_=null) {
     //params: product->list of products ids and quantity, Product model,promocode obj,client obj,discounts list.
     //stuff that can affect the price
