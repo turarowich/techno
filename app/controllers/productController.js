@@ -188,6 +188,7 @@ class ProductController{
                 }
             }
             for (let $i = 0; $i < 3; $i++) {
+                // console.log('image array before', product.imgArray)
                 if (req.files['imgArray' + $i] != undefined && req.files['imgArray' + $i] != null) {
                     let filename = saveImage(req.files['imgArray' + $i], req.db, product.imgArray[$i])
                     if (filename == 'Not image') {
@@ -200,7 +201,6 @@ class ProductController{
                         }
                         break updateProduct
                     } else {
-                        console.log(product.imgArray[$i], $i)
                         if (product.imgArray[$i] != undefined){
                             product.imgArray[$i] = filename
                         }else{
@@ -212,11 +212,13 @@ class ProductController{
                     delete product.imgArray[$i]
                 }
             }
-            for (let $i = 0; $i < 3; $i++) {
-                if(!product.imgArray[$i]){
+            console.log(product.imgArray)
+            for (let $i = 2; $i >= 0; $i--) {
+                if (product.imgArray[$i] == null || product.imgArray[$i] == undefined){
                     product.imgArray.splice($i, 1)
                 }
             }
+            console.log(product.imgArray)
             await product.save({new:true})
             await new Log({
                 type: "product_updated",
