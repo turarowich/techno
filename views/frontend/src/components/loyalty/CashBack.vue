@@ -155,10 +155,23 @@
       At the end of the term, all customer points will be canceled</p>
 
     <div v-if="points_lifetime_status">
-      <label>Points expires after days:</label><br>
+      <label>Points expires after (days):</label><br>
       <input type="number" v-model="points_expiration_period" class="cashback-input" style="width:40%">
     </div>
 
+    <div class="d-flex enable-title">
+      <div>
+        <label class="switch">
+          <input type="checkbox" data-toggle="collapse"  v-model="minScans.status">
+          <span class="slider round"></span>
+        </label>
+      </div>
+      <h3 class="cashback-sub-title">Alert </h3>
+    </div>
+    <div v-if="minScans.status">
+      <label>Send message after (n) scans of QR Code in one day:</label><br>
+      <input type="number" v-model="minScans.number" class="cashback-input" style="width:40%">
+    </div>
   </div>
 
 </div>
@@ -173,6 +186,10 @@ export default {
   name: "CashBack",
   data(){
       return{
+        minScans:{
+          status:false,
+          number:0,
+        },
         birthday_points_quant: 0,
         birthday_points_status: false,
         grant_points_when: "buy",
@@ -346,6 +363,7 @@ export default {
         welcome_points_status:that.welcome_points_status,
         bday_message_body:that.bday_message_body,
         bday_message_title:that.bday_message_title,
+        minScans:that.minScans,
       }).then(function (response) {
         console.log(response);
         that.displayMessages(['Updated'],"Success");
@@ -428,6 +446,7 @@ export default {
           that.welcome_points_status = cashback.welcome_points_status;
           that.bday_message_body= cashback.bday_message_body;
           that.bday_message_title= cashback.bday_message_title;
+          that.minScans= cashback.minScans;
           that.id= cashback._id;
         })
   },

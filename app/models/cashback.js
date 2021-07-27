@@ -2,6 +2,18 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const cashbackSchema = new Schema({
+    minScans:{
+        status:{
+            type: Boolean,
+            required: false,
+            default: false,
+        },
+        number:{
+            type: Number,
+            required: false,
+            default: 2,
+        },
+    },
     status: {
         type: Boolean,
         required: false,

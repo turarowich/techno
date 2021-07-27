@@ -5,6 +5,58 @@ const fs = require('fs');
 const moment = require('moment');
 const { connect } = require('mongodb');
 const Analytics = require('./analyticsController');
+const nodemailer = require('nodemailer');
+const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 587,
+    auth: {
+        user: 'helpLoygift@gmail.com',
+        pass: 'helpLoygift321',
+    },
+});
+
+async function checkAndSendWarning(client,cashback_model,transporter,bonus_history_model,company){
+    let users = useDB('loygift');
+    let personal_model = users.model("User");
+    let user = await personal_model.findById(company);
+
+
+    if(!client || !cashback_model || !bonus_history_model || !transporter || !user){
+        return;
+    }
+
+    let histories = await bonus_history_model.find({client:client._id,createdAt:{
+        $gte: new Date(new Date().setHours(0o0, 0o0, 0o0)),
+        $lt: new Date(new Date().setHours(23, 59, 59))
+    }});
+    console.log(histories.length,"yjjjjjjjjjjjjjjjjjjjjjjjjjj");
+    try {
+        let cashback = await cashback_model.find();
+        let first_cashback = cashback[0];
+        if (first_cashback) {
+            if(first_cashback.minScans.status &&  histories.length>=first_cashback.minScans.number){
+                //send message
+                console.log('sending');
+                let  message =  `
+                    client: ${client.name}, scanned QR code ${histories.length} times
+                `;
+                transporter.sendMail({
+                    from: 'loygift', // sender address
+                    to: user.email, // list of receivers
+                    subject: "Suspicious activities", // Subject line
+                    html: "<b>" + message + " </b>", // html body
+                }).catch(console.error);
+            }
+        }
+    }catch (e) {
+        console.log(e);
+    }
+
+
+}
+
+
+
 async function cancelOrDeleteOrder(ClientBonusHistory,Product,cashback_model,client,order){
     //subtract cashback, balance, add cashback used to client, create new bonus history
     await createClientHistory(
@@ -1068,30 +1120,31 @@ class OrderController{
                 return res.status(400).send(`Orders is already cancelled`);
             }
 
-                console.log(order.pointsStatus);
-                let products = order.productsDetails.map(function (item){
-                    return {id:item.product._id,quantity:item.quantity}
-                })
-                let result_object = await products_with_discounts(
-                    products,   // list of product ids $ quant
-                    Product,     // Product model
-                    order.promoCodeObject,// promocode object
-                    order.statusDiscount,// discount object or null
-                );
-                let cashback_from_order = await calcCashback(result_object.productCurrentPrice,cashback_model);
-                await createClientHistory(
-                    ClientBonusHistory,
-                    client,
-                    cashback_from_order,
-                    `Points received order # ${order.code}`,
-                    order._id,
-                    "received",
-                    0
-                );
-                result['pointsAdded'] = cashback_from_order;
-                order.pointsStatus.received = true;
-                order.pointsStatus.amount = cashback_from_order;
-                await order.save();
+            let products = order.productsDetails.map(function (item){
+                return {id:item.product._id,quantity:item.quantity}
+            })
+            let result_object = await products_with_discounts(
+                products,   // list of product ids $ quant
+                Product,     // Product model
+                order.promoCodeObject,// promocode object
+                order.statusDiscount,// discount object or null
+            );
+            await checkAndSendWarning(client, cashback_model, transporter, ClientBonusHistory,req.db.slice(7));
+
+            let cashback_from_order = await calcCashback(result_object.productCurrentPrice,cashback_model);
+            await createClientHistory(
+                ClientBonusHistory,
+                client,
+                cashback_from_order,
+                `Points received order # ${order.code}`,
+                order._id,
+                "received",
+                0
+            );
+            result['pointsAdded'] = cashback_from_order;
+            order.pointsStatus.received = true;
+            order.pointsStatus.amount = cashback_from_order;
+            await order.save();
 
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
