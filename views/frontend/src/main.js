@@ -36,7 +36,7 @@ import QRCode from 'qrcode';
 app.config.globalProperties.$QRCode = QRCode;
 
 const ax = axios.create({
-    timeout: 1000,
+    timeout: 10000,
     proxy: {
         host: 'localhost',
         port: 8443
