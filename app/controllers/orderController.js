@@ -258,7 +258,6 @@ class OrderController{
         if (lang != 'ru') {
             lang = 'en'
         }
-        console.log("herer  sdfadfgsdkjgwoeirhgwt98576983475894tjgrhnejg")
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "orders", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {

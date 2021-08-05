@@ -263,7 +263,6 @@ class AuthController{
         if (lang != 'ru') {
             lang = 'en'
         }
-        console.log(lang)
         socialAuth: try {
             console.log(req.fields)
             social_res = await socialRegister(req.fields.social, req.fields.token, req.fields.screen_name, req.fields.full_name, req.fields.email)
@@ -639,9 +638,10 @@ async function fbRegister(token){
     if (fb_response.data.email) {
         check = { $or: [{ fb_id: fb_response.data.id }, { email: fb_response.data.email }] }
     }
-    
+    let rand_name = "guest" + randomNumber(100000, 1000000)
+    let full_name = fb_response.data.first_name + ' ' + fb_response.data.last_name
     let save = {
-        name: fb_response.data.first_name + ' ' + fb_response.data.last_name,
+        name: full_name || rand_name,
         email: fb_response.data.email,
         birthDate: fb_response.data.birthday,
         gender: fb_response.data.gender,
@@ -726,9 +726,9 @@ async function appleRegister(token, screen_name, full_name, email) {
     if (email) {
         check = { $or: [{ apple_id: screen_name }, { email: email }] }
     }
-
+    let rand_name = "guest" + randomNumber(100000, 1000000)
     let save = {
-        name: full_name,
+        name: full_name || rand_name,
         email: email,
         apple_id: screen_name,
     }
@@ -764,9 +764,9 @@ async function googleRegister(token) {
     if (response.data.email) {
         check = { $or: [{ google_id: response.data.sub }, { email: response.data.email }] }
     }
-
+    let rand_name = "guest" + randomNumber(100000, 1000000)
     let save = {
-        name: response.data.name,
+        name: response.data.name || rand_name,
         email: response.data.email,
         google_id: response.data.sub,
     }

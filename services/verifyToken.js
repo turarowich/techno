@@ -4,6 +4,7 @@ function verifyToken(req, res, next) {
     
     // Header names in Express are auto-converted to lowercase
     let token = req.headers['x-access-token'] || req.headers['authorization'];
+    console.log(token)
     let validWithoutToken = ['/getProducts', '/getNews', '/getCategories?type=product', '/getCategories']
     console.log(req.url)
     if (!token){
@@ -18,8 +19,10 @@ function verifyToken(req, res, next) {
         token = token.replace(/^Bearer\s+/, "");
     }
     jwt.verify(token, config.secret_key, function (err, decoded) {
-        if (err)
+        if (err){
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+        }
+
         // if everything good, save to request for use in other routes
         if (decoded.type){
             req.userType = decoded.type
