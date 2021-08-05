@@ -67,10 +67,10 @@ class AuthController{
                 'auth': true,
                 'object': user,
                 'refresh_token': jwt.sign({ id: user._id, user: user._id, name: user.name, type: "admin" }, config.secret_key, {
-                    expiresIn: "30 days"
+                    expiresIn: "60 days"
                 }),
                 'token': jwt.sign({ id: user._id, user: user._id, name: user.name, type: "admin"  }, config.secret_key, {
-                    expiresIn: 86400 // expires in 24 hours
+                    expiresIn: "30 days" // expires in 24 hours
                 }),
             }
         } catch (error) {
@@ -92,10 +92,10 @@ class AuthController{
             if (!passwordIsValid) return res.status(401).json({ auth: false, token: null });
 
             var token = jwt.sign({ id: user._id, user: user._id, name: user.name, type: "admin" }, config.secret_key, {
-                expiresIn: 86400 // expires in 24 hours
+                expiresIn: "30 days" // expires in 24 hours
             });
             var refresh_token = jwt.sign({ id: user._id, user: user._id, name: user.name, type: "admin" }, config.secret_key, {
-                expiresIn: "30 days"
+                expiresIn: "60 days"
             });
             user.password = ""
             res.status(200).json({ auth: true, token: token, refresh_token: refresh_token, object: user });
