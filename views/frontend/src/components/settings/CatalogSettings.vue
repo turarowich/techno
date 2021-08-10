@@ -28,7 +28,7 @@
      <h3 class="catalog-sub-title margin-20">QR code for online catalog</h3>
 <!--     <h3 class="catalog-sub-title mb-3" style="text-overflow: ellipsis;overflow: hidden">{{catalogFullUrl}}</h3>-->
      <div class="d-flex align-items-center margin-50">
-       <img :src="qrcodePath" class="mr-3">
+       <img :src="qrcodePath" class="mr-2" style="width:90px; height:90px">
        <div>
          <p class="catalog-description mb-2">You can print this code - this is the<br> menu for users to quickly go online</p>
          <div>
@@ -526,12 +526,16 @@ export default {
 }
 .big-profile-img{
   width: 100% !important;
-  height:100px;
+  height:150px;
   border:1px solid #d3d3d3;
   display: flex;
   justify-content: center;
   border-radius: 10px;
-  padding: 10px;
+
+
+}
+.big-profile-img img{
+  border-radius: 10px;
 }
 .big-addPhoto{
   right: -18px !important;

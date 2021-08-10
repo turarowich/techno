@@ -63,9 +63,8 @@
       </div>
       <div class="col-lg-2 client-number-box">
         <span class="client-number-label">Total of paid</span>
-        <h5 class="client-number">{{totalPaid}}</h5>
+        <h5 class="client-number">{{totalPaid.toFixed(2)}}</h5>
       </div>
-
     </div>
 
     <div class="d-flex align-items-center nav-buttons justify-content-between">
@@ -303,7 +302,7 @@ export default {
   left: -30px;
 }
 .table-content{
-  height: 250px;
+  height: 245px;
 }
 .edit-header{
   position: relative;

@@ -34,7 +34,7 @@
           <div v-if="!user.promocodeIsUsed" class="pr-5 mr-5" style="border-right:1px solid #f4f4f4" >
             <h3 class="cashback-sub-title mb-2">Enter promo</h3>
             <span class="mb-3 d-block" style="color:#8C94A5">If you have promo please enter here</span>
-            <div class="d-flex align-items-center enterPromocodeClass justify-content-around">
+            <div class="d-flex align-items-center enterPromocodeClass justify-content-between">
               <input style="border:none;" v-model="enteredPromocode" type="text">
               <span @click="checkPromocode" class="checkPromocodeBtn"><img src="../../../assets/icons/bird.svg"></span>
             </div>
@@ -307,16 +307,17 @@ name: "ClientAccount",
   border: 1px solid #D3D3D3;
   border-radius: 5px;
   width: 100%;
+  padding: 0 5px;
 }
 .client_avatar_container{
   margin-right: 16px;
 }
 .checkPromocodeBtn{
-
+  cursor:pointer;
   background: #616CF5;
   border-radius: 5px;
-  width: 32px;
-  height: 31px;
+  width: 29px;
+  height: 28px;
   display: flex;
   justify-content: center;
   align-items: center;

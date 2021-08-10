@@ -1,8 +1,8 @@
 <template>
   <div>
     <div v-if="orderList.length === 0" class="text-center mt-5">
-      <img src="../../../assets/clients/box.png">
-      <h3 class="cashback-sub-title">Still empty</h3>
+      <img src="../../../assets/clients/box.png" class="mb-3">
+
       <p class="client-paragraph">Information about your orders will be stored here</p>
     </div>
     <div v-else class="table-item d-flex align-items-center justify-content-between" v-for="order in orderList" :key="order.id">

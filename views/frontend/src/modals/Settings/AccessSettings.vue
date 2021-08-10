@@ -310,9 +310,7 @@ export default {
 .settings-box{
   height: 80px;
 }
-.loyalty-box{
-  height: 45px;
-}
+
 .settings-icon{
   width: 30px;
   height: 30px;

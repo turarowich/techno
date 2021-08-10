@@ -4,18 +4,18 @@
     <div class="row ">
       <div class="col-lg-5 mr-5">
         <label class="sum-point">Currency</label><br>
-        <input v-model="currency" class="form-input cashback-input mb-2" placeholder="USD">
+        <input v-model="currency" class="form-input cashback-input" placeholder="USD">
 
         <label class="sum-point">Your country</label>
-        <select v-model="country" class="form-control long-form-control  form-control-lg mb-2" aria-label=".form-select-lg example">
+        <select v-model="country" class="form-control long-form-control  form-control-lg " aria-label=".form-select-lg example">
           <option val="Kyrgyzstan">Kyrgyzstan</option>
           <option val="Russia">Russia</option>
           <option val="USA">USA</option>
         </select>
         <label class="sum-point">Name of the company</label><br>
-        <input v-model="name" class="form-input cashback-input mb-2" placeholder="Company">
+        <input v-model="name" class="form-input cashback-input" placeholder="Company">
         <label class="sum-point">Email</label><br>
-        <input v-model="email" class="form-input cashback-input mb-2" placeholder="Company email">
+        <input v-model="email" class="form-input cashback-input " placeholder="Company email">
       </div>
 
       <div class="col-lg-5">
@@ -94,9 +94,7 @@ export default {
 </script>
 
 <style scoped>
-.cashback-input{
-  width: 100%;
-}
+
 .save{
   width: 120px;
   position: absolute;
@@ -112,10 +110,13 @@ export default {
 .cashback-title{
   margin-bottom: 20px;
 }
-
-.help-settings .cashback-input{
+.form-control{
+  margin-bottom: 20px;
+}
+.cashback-input{
   width: 100%;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+
 }
 .rm-question{
   position: absolute;

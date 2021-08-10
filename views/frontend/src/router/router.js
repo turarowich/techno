@@ -123,12 +123,15 @@ const routes = [
         component: Home,
         meta: {
             hideNavbar: true,
+            noScroll:true
+
         },
         children: [
             {
                 path: '',
                 name: "Home",
-                component: Dashboard
+                component: Dashboard,
+
             },
             {
                 path: 'about',
@@ -157,6 +160,7 @@ const routes = [
                 path: 'catalog-detail/:id',
                 name: "CatalogDetail",
                 component: CatalogDetail,
+                meta: { disableScroll: true }
 
             },
             {
@@ -356,24 +360,24 @@ const routes = [
     },
 ]
 
+const scrollBehavior = (to,from,savedPosition) => {
+    let clone = '';
+  if(clone !== ''){
+      return clone
+  }
 
+  else{
+      if(savedPosition){
+          clone = JSON.parse(JSON.stringify(savedPosition));
+      }
+      return {top:0}
+  }
+}
 const router = createRouter({
+
     history: createWebHistory(),
-    scrollBehavior (to, from, savedPosition) {
-        return new Promise((resolve) => {
-            resolve( savedPosition || { top:0} )
-        })
-    },
-    // scrollBehavior(to, from, savedPosition) {
-    //     if (savedPosition) {
-    //         return savedPosition
-    //     }
-    //     else{
-    //         return { top:0}
-    //     }
-    //
-    // },
     routes,
+    scrollBehavior
 });
 
 // Creates a nextMiddleware() function which not only
@@ -396,6 +400,7 @@ function nextFactory(context, middleware, index) {
 }
 
 router.beforeEach((to, from, next) => {
+
     if (to.meta.middleware) {
         const middleware = Array.isArray(to.meta.middleware) ?
             to.meta.middleware : [to.meta.middleware];
@@ -425,4 +430,11 @@ router.beforeEach((to, from, next) => {
     else next();
 });
 
+router.beforeEach((to, from, next) => {
+    console.log('window.scrollY:', window.scrollY)
+    from.meta?.scrollTop && (from.meta.scrollTop = window.scrollY)
+    console.log('from:\t', from.name, '\t', from.meta)
+    console.log('to:\t\t', to.name, '\t', to.meta)
+    return next()
+})
 export default router;

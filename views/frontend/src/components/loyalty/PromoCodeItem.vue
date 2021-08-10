@@ -1,11 +1,8 @@
 <template>
  <div>
    <div v-for="promocode in promocodes" :key='promocode._id' class="table-item d-flex align-items-center" >
-     <div  style="width: 3%;"><label class="custom-checkbox"><input  type="checkbox"  ><span class="checkmark"></span></label></div>
+     <div  style="width: 3%;"><label class="custom-checkbox"><input  type="checkbox" v-model="promocode.selected" ><span class="checkmark"></span></label></div>
      <div  class="d-flex align-items-center"  style="width: 24%;">
-       <div class="table-img">
-         <img src="../../assets/img/sneak.webp">
-       </div>
        {{promocode.name}}
      </div>
 
@@ -37,8 +34,10 @@
 
 <script>
 import $ from 'jquery';
+import Swal from "sweetalert2";
 export default {
   name: "PromoCodeItem",
+  props:['selectAll'],
   computed:{
     promocodes(){
       return this.$store.state.Promocode.promocodes;
@@ -48,6 +47,7 @@ export default {
     this.$store.dispatch("Promocode/setPromocodeAPI",{axios:this.axios,url:this.url('getPromocodes')});
   },
   methods:{
+
     check(access="loyalty", parametr="active", parametr2="canEdit"){
         return this.checkAccess(access, parametr, parametr2)
     },
@@ -99,22 +99,52 @@ export default {
     },
 
     removeAddPromocode(id){
-      let that = this;
-      let url = this.url('deletePromocode/'+id);
-      this.axios.delete(url).then(function (response) {
-        console.log(response);
-        that.$store.dispatch("Promocode/setPromocodeAPI",{axios:that.axios,url:that.url('getPromocodes')});
-      }).catch((error)=>{
-        if (error.response) {
-            if(error.response.data && !error.response.data.errors){
-                this.$warningAlert(error.response.data.msg)
-            }
+      Swal.fire({
+        showConfirmButton: true,
+        html: 'Are you sure to remove this <br>promocode',
+        showCloseButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Delete',
+        buttonsStyling:false,
+        customClass:{
+          popup: 'sweet-delete',
+          confirmButton: 'confirm-btn',
+          cancelButton:'cancel-btn',
+          actions:'btn-group',
+          content:'content-sweet',
+          closeButton:'close-btn'
+
+        },
+        showClass: {
+          popup: 'animate__animated animate__slideInDown'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp'
         }
-      });
+
+      }).then((result) => {
+        if (result.isConfirmed) {
+          let that = this;
+          let url = this.url('deletePromocode/'+id);
+          this.axios.delete(url).then(function (response) {
+            console.log(response);
+            that.$store.dispatch("Promocode/setPromocodeAPI",{axios:that.axios,url:that.url('getPromocodes')});
+          }).catch((error)=>{
+            if (error.response) {
+              if(error.response.data && !error.response.data.errors){
+                this.$warningAlert(error.response.data.msg)
+              }
+            }
+          });
+        }
+      })
+
 
 
     },
   },
+
+
 }
 </script>
 

@@ -239,7 +239,7 @@
       <div class="main-content">
         <div class="d-flex main-content-header justify-content-between">
           <div class="table-head d-flex align-items-center client-names">
-            <div class="table-head"><label class="custom-checkbox"><input type="checkbox"  @click="toggleSelect" class="main_select" v-model="selectAll"><span class="checkmark"></span></label></div>
+            <div class="table-head"><label class="custom-checkbox"><input type="checkbox"  @change="selectAllClient" class="main_select" v-model="selectAll"><span class="checkmark"></span></label></div>
             Name
           </div>
           <div v-if="data_check.birthday_checked" class="table-head" style="width: 12%;">Birthday</div>
@@ -266,11 +266,9 @@
         </div>
         <div class="table-content">
           <ClientItem
-              v-on:checkAll="checkAll"
-              v-on:unCheckAll="unCheckAll"
+              v-on:checkSelection="checkSelection"
               v-on:selectClient="selectClient"
               v-on:deleteClient="deleteClient"
-              ref="client_item"
               :clientList="clientToDisplay"
               :data_check="data_check"
           />
@@ -504,6 +502,15 @@ export default {
     check(access="clients", parametr="active", parametr2="canEdit"){
         return this.checkAccess(access, parametr, parametr2)
     },
+    selectAllClient(){
+      this.clientToDisplay.map(client=>client['selected'] = this.selectAll)
+    },
+    checkSelection(){
+      let selected =  this.clientToDisplay.filter(employee => {
+        return employee.selected
+      })
+      this.selectAll = selected.length === this.filteredList.length
+    },
     selectCategory(id){
       this.clientCategory.map((item)=>{
         if(item._id === id){
@@ -511,24 +518,6 @@ export default {
         }
       })
     },
-    checkAll(item){
-      this.selectAll = item
-    },
-    unCheckAll(item){
-      this.selectAll = item
-    },
-    toggleSelect(){
-    this.clientList.forEach((client)=>{
-    if(this.$refs.client_item.$refs[`select${client._id}`]!==undefined && this.$refs.client_item.$refs[`select${client._id}`] !== null){
-      if(this.selectAll === false){
-        this.$refs.client_item.$refs[`select${client._id}`].checked = true
-      }
-      else{
-        this.$refs.client_item.$refs[`select${client._id}`].checked = false
-      }
-    }
-    })
-  },
     resetFilter(){
       this.category = '';
       this.birthday = '';
@@ -640,10 +629,8 @@ export default {
      },
     deleteAllClient() {
       this.clientList.forEach((user)=> {
-        if(this.$refs.client_item.$refs[`select${user._id}`] !== undefined && this.$refs.client_item.$refs[`select${user._id}`] !== null){
-          if(this.$refs.client_item.$refs[`select${user._id}`].checked === true){
-            this.deletedClients.push(user._id)
-          }
+        if(user.selected){
+          this.deletedClients.push(user._id)
         }
       });
       if(this.deletedClients.length > 0){
@@ -675,7 +662,7 @@ export default {
                 .then(()=>{
                   this.deletedClients = []
                   this.getClients()
-                  $('#parent-check').prop('checked',false)
+                this.selectAll = false
                   this.$successAlert('All clients have been removed')
                 }).catch((error)=>{
                     if(error.response && error.response.data){
@@ -768,10 +755,8 @@ export default {
     },
     moveCategory(id){
       this.clientList.forEach((user)=> {
-        if(this.$refs.client_item.$refs[`select${user._id}`] !== undefined && this.$refs.client_item.$refs[`select${user._id}`] !== null){
-          if(this.$refs.client_item.$refs[`select${user._id}`].checked === true){
-            this.movedCategories.push(user._id)
-          }
+        if(user.selected){
+          this.movedCategories.push(user._id)
         }
       });
      if(this.movedCategories.length === 0){
@@ -786,6 +771,7 @@ export default {
              this.getClients()
              this.movedCategories = []
              this.$informationAlert("Categories changed")
+             this.selectAll = false
            })
      }
     }

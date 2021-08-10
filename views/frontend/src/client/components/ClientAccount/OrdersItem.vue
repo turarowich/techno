@@ -21,7 +21,7 @@
   <div style="width:10%">{{order.status}}</div>
 </div>
 
-    <div class="mobile-item d-flex align-items-center justify-content-between" v-for="order in orderList" :key="order.id">
+    <div class="mobile-item  align-items-center justify-content-between" v-for="order in orderList" :key="order.id">
       <div style="width:50%">
         <div class="mb-1" style="font-size:16px">Order {{order.code}}</div>
         <span style="color:#b0b0b0">{{order.createdAt?order.createdAt.slice(0,10): ''}}</span>
@@ -60,7 +60,7 @@ name: "OrdersItem",
   height: 70px;
 }
 .red{
-  color:red;
+  color:#E94A4A;
 }
 .done{
   color:
@@ -74,10 +74,14 @@ name: "OrdersItem",
 .mobile-item{
   border-bottom: 1px solid #E4E4E4;
   height: 72px;
+  display:none;
 }
 @media(max-width:992px){
   .table-item{
     display: none !important;
+  }
+  .mobile-item{
+    display:flex;
   }
 
 }

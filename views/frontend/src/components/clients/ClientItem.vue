@@ -1,7 +1,7 @@
 <template>
   <div v-for="client in clientList" class="table-item d-flex align-items-center justify-content-between" :key="client._id">
       <div  class="client-names table-child d-flex align-items-center">
-        <div><label class="custom-checkbox"><input  type="checkbox"  @click="checkMainSelect" :ref="`select`+client._id"><span class="checkmark"></span></label></div>
+        <div><label class="custom-checkbox"><input  type="checkbox"  v-model="client.selected" @change="$emit('checkSelection')"><span class="checkmark"></span></label></div>
         <div class="d-flex align-items-center justify-content-between" @click="clientProfile(client._id)" style="cursor:pointer">
            <div class="table-img">
              <img v-if="!client.avatar" src="../../assets/icons/chat.svg">
@@ -18,8 +18,8 @@
         {{ client.category ? client.category.name : "no category" }}
       </div>
       <div class="table-child" v-if="data_check.register_date_checked"  style="width: 18%;">{{ client.createdAt ? client.createdAt.slice(0,10) : ""}}</div>
-      <div class="client-phone table-child" style="width:14%" >{{client.phone}}</div>
-      <div class="table-child"  style="width: 8%;">{{client.total}}</div>
+      <div class="client-phone table-child pr-2" style="width:14%" >{{client.phone}}</div>
+      <div class="table-child"  style="width: 8%;">{{client.total.toFixed(0)}}</div>
       <div class="table-child" v-show="data_check.bonus_checked"  style="width: 8%;">{{client.points}}</div>
       <div class="table-child" v-show="data_check.last_purchase_checked"  style="width: 16%;">{{client.last_purchase?JSON.stringify(client.last_purchase).slice(1,11):'-'}}</div>
       <div  style="width:3%" class="table-child dropleft dropMenu">
@@ -42,7 +42,6 @@ export default {
   props: ['clientList', 'data_check',],
   data(){
     return {
-      newCheck: false,
       imgSrc:''
     }
   },
@@ -54,22 +53,8 @@ export default {
     check(access="clients", parametr="active", parametr2="canEdit"){
         return this.checkAccess(access, parametr, parametr2)
     },
-    checkAll(item) {
-      return  this.$refs[`select${item._id}`].checked === true
 
-    },
-    checkMainSelect() {
 
-      if(this.clientList.every(this.checkAll)){
-          this.newCheck = true;
-          this.$emit('checkAll', this.newCheck)
-      }
-      else{
-          this.newCheck = false;
-          this.$emit('unCheckAll', this.newCheck)
-      }
-
-    }
 
   },
   mounted(){

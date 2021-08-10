@@ -220,11 +220,17 @@
                     {{selectedDeliveryOptionObject.price}}
                   </div>
                 </div>
-                <div class="delivery_option_wrapper_class" v-if="showDeliveryOption">
-                  <div @click="setSelectedDeliveryOption(opt)"  v-for="opt in delivery_options" :key="opt._id" class="d-flex delivery_option_class">
-                    <div style="flex:1;">{{opt.name}}</div>
-                    <div>{{opt.price}}{{currency}}</div>
+                <div v-if="showDeliveryOption" class="delivery_option_wrapper_class" >
+                  <div v-if="delivery_options.length!==0">
+                    <div @click="setSelectedDeliveryOption(opt)"  v-for="opt in delivery_options" :key="opt._id" class="d-flex delivery_option_class">
+                      <div style="flex:1;">{{opt.name}}</div>
+                      <div>{{opt.price}}{{currency}}</div>
+                    </div>
                   </div>
+                  <div v-else class="mb-2">
+                      Minimum sum of purchase isn't enough
+                  </div>
+
                 </div>
 
               </div>
@@ -945,6 +951,9 @@ export default {
   color: #616CF5;
   line-height: 1;
   margin-bottom: 5px;
+}
+.empty_delivery{
+  border-color:red;
 }
 .delivery_option_wrapper_class{
   position:absolute;

@@ -209,6 +209,9 @@ props:['listCategory', 'getProducts'],
 
       let new_product = this.newProduct;
       const form  = new FormData;
+
+
+
       for(let item in new_product.imgArray){
           if(item<1){
            form.append('img', new_product.imgArray[item])
@@ -217,6 +220,11 @@ props:['listCategory', 'getProducts'],
            form.append('imgArray'+(item-1),new_product.imgArray[item])
           }
         }
+
+
+
+
+
       if(new_product.promoStart.obj !== ""){
         form.append('promoStart', new_product.promoStart.obj)
 

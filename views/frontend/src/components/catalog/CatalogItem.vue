@@ -11,14 +11,13 @@
 
     <div v-else>
       <div  v-for="catalog in  catalogList" :class="{isVisible:!catalog.active}" class="catalog-item table-item d-flex align-items-center" :key="catalog._id">
-        <div  style="width: 5%;"><label class="custom-checkbox"><input type="checkbox" :value="catalog" @click="checkMainSelect" :ref="`select${catalog._id}`">
+        <div  style="width: 5%;"><label class="custom-checkbox"><input type="checkbox" v-model="catalog.selected" @change="$emit('checkSelection')">
           <span class="checkmark"></span></label>
         </div>
 
         <div  class="d-flex align-items-center"  style="width: 36%;">
           <div :class="{imgVisible: !catalog.active}" class="table-img">
             <img v-if="catalog.img"  :src="imgSrc+'/'+catalog.img">
-            <img v-else-if="catalog.imgArray.length !== 0"  :src="imgSrc+'/'+catalog.imgArray[0]">
             <img v-else  src="../../assets/icons/no-catalog.svg">
 
           </div>

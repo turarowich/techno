@@ -4,10 +4,10 @@
     <div class="row mb-5">
       <div class="col-lg-5">
         <label class="sum-point">Name</label>
-        <input v-model="name" class="form-input cashback-input mb-4" placeholder="Your name">
+        <input v-model="name" class="form-input cashback-input " placeholder="Your name">
 
         <label class="sum-point">Password</label>
-        <div class="pswrd-input mb-4">
+        <div class="pswrd-input ">
           <input id="show-password" v-model="password" type="password" placeholder="Password">
           <img class="hide-eye" @click="showPassword" src="../../assets/icons/Hide.svg">
           <img class="show-eye"  @click="showPassword" src="../../assets/icons/eye.svg">
@@ -22,7 +22,7 @@
 
       <div class="col-lg-5">
         <label class="sum-point">Phone number</label>
-        <div class="d-flex mb-4">
+        <div class="d-flex">
 <!--          <select class="form-control select-phone" aria-label="Default select example">-->
 <!--            <option>+996</option>-->
 <!--            <option>+792</option>-->
@@ -38,7 +38,7 @@
           <input v-model="phone" class="cashback-input">
         </div>
         <label class="sum-point">Email</label>
-        <input v-model="email" class="form-input cashback-input mb-4" placeholder="Email">
+        <input v-model="email" class="form-input cashback-input" placeholder="Email">
       </div>
     </div>
 
@@ -160,6 +160,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 20px;
 }
 .pswrd-input input{
   border:none;

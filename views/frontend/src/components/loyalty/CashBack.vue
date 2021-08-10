@@ -15,8 +15,8 @@
     <div class="minimum-cashback">
       <h3 class="cashback-sub-title">Default cashback %</h3>
       <div class="d-flex align-items-center">
-        <input type="number" v-model="default_cashback" style="width:40%" class="cashback-input mr-3">
-        <span style="width:40%" class="cashback-description mb-0">Если ничего не выбрано, кэшбэк действует на все товары и услуги</span>
+        <input type="number" v-model="default_cashback" style="width:20%" class="cashback-input mr-3">
+        <span style="width:60%" class="cashback-description mb-0">Если ничего не выбрано, кэшбэк действует на все товары и услуги</span>
       </div>
     </div>
     <div class="minimum-cashback">
@@ -84,13 +84,13 @@
         </label>
         <h2 class="cashback-sub-title mb-0">Share with a friend</h2>
       </div>
-
+      <p class="cashback-description mb-4">Friends will share the link and receive a bonus on the account</p>
       <div class="d-flex enable-title align-items-center">
         <label class="switch d-flex ">
           <input type="checkbox" v-model="receive_back_points_status">
           <span class="slider round"></span>
         </label>
-        <h2 class="cashback-sub-title mb-0">Client that shared also receives the same amount of points</h2>
+        <h2 class="cashback-sub-title mb-0">Shared client also gets the same amount of points</h2>
       </div>
 
       <p class="cashback-description">Increase customer loyalty with the help of this tool</p>

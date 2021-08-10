@@ -1,13 +1,12 @@
 <template>
   <div>
-
     <div class="row add-padding" >
-      <div  class="col-lg-3 col-6  product-box"  v-for="(product) in catalog" :key="product._id" >
+      <div  class="col-lg-3 col-6  product-box"  v-for="(product) in catalog" :key="product._id"   >
           <div>
-            <div class="product-img"  @click="selectProduct(product._id)">
+            <div @click="goDetail(product._id)" class="product-img"  >
               <img v-if="!product.error" :src="server+'/'+product.img" @error="product.error=true">
               <!--          <img v-else src="../../../assets/img/default.svg" >-->
-              <img v-else src="../../../assets/icons/no-catalog.svg" >
+              <img v-else src="../../../assets/icons/noProd.png" >
               <!--        <img :src="server+'/'+product.img">-->
             </div>
             <div class="product-add">
@@ -62,7 +61,9 @@ name: "ClientCatalogItem",
   },
   methods:{
 
-
+    goDetail(id){
+        this.$router.push(`/${this.currentCompanyCatalog}/catalog-detail/${id}`)
+    },
 
     checkDates(start,end){
       let itsPromo = false;
@@ -117,7 +118,7 @@ name: "ClientCatalogItem",
       this.$store.dispatch("Orders/setVersion",version);
     },
       selectProduct(id){
-        this.$router.push({ path: `/${this.currentCompanyCatalog}/catalog-detail/${id}` });
+        this.$router.push({ path: `/${this.currentCompanyCatalog}/catalog-detail/${id}`});
       },
     },
   mounted(){

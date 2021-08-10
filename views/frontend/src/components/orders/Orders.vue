@@ -47,7 +47,7 @@
     </div>
     <div class="d-flex main-content-header justify-content-between align-items-center">
       <div class="table-head d-flex align-items-center" style="width: 18%;">
-        <div><label class="custom-checkbox"><input type="checkbox" id="parent-check"  @click="toggleSelect" v-model="selectAll"><span class="checkmark"></span></label></div>
+        <div><label class="custom-checkbox"><input type="checkbox" id="parent-check"  v-model="selectAll"  @change="selectAllOrder"><span class="checkmark"></span></label></div>
 
         Name order</div>
       <div class="table-head" style="width: 25%;">Product</div>
@@ -73,14 +73,12 @@
 
     <div class="table-content">
         <OrderItem
-          ref="order_item"
-          v-on:selectOrder="selectOrder"
-          v-on:unCheckAll="unCheckAll"
-          v-on:checkAll="checkAll"
-          v-bind:orderList="orderToDisplay"
-          v-on:deleteOrder="deleteOrder"
-          v-bind:data_check="data_check"
-          @startScanning="startScanning"
+            v-on:checkSelection="checkSelection"
+            v-on:selectOrder="selectOrder"
+            v-bind:orderList="orderToDisplay"
+            v-on:deleteOrder="deleteOrder"
+            v-bind:data_check="data_check"
+            @startScanning="startScanning"
         />
     </div>
     <AddOrder
@@ -245,7 +243,6 @@ name: "Orders",
       if(this.currentPage> this.totalPages){
         return Math.ceil(this.filteredList.length / this.perPage)
       }
-
       return this.currentPage
     },
 
@@ -269,6 +266,15 @@ name: "Orders",
     },
   },
   methods: {
+    selectAllOrder(){
+      this.orderToDisplay.map(order=>order['selected'] = this.selectAll)
+    },
+    checkSelection(){
+      let selected =  this.filteredList.filter(employee => {
+        return employee.selected
+      })
+      this.selectAll = selected.length === this.filteredList.length
+    },
     unSetSelectedOrder(){
       this.select_order = '';
     },
@@ -301,12 +307,7 @@ name: "Orders",
 
       })
     },
-    checkAll(item){
-      this.selectAll = item
-    },
-    unCheckAll(item){
-      this.selectAll = item
-    },
+
     exportOrder(){
         this.axios.post(this.url('getOrderExcel'),{
             orders: ['608a5131405656e224436194', '608a5102405656e224436191']
@@ -335,24 +336,11 @@ name: "Orders",
     filteredBetweenDate(){
       this.filtered = this.between_value
     },
-    toggleSelect: function () {
-      this.orderList.forEach((user)=> {
-        if(this.$refs.order_item.$refs[`select${user._id}`] !== undefined && this.$refs.order_item.$refs[`select${user._id}`] !== null){
-           if(this.selectAll === false){
-              this.$refs.order_item.$refs[`select${user._id}`].checked = true
-           }
-           else{
-             this.$refs.order_item.$refs[`select${user._id}`].checked = false
-           }
-         }
-      });
-    },
+
     deleteAllOrder() {
       this.orderList.forEach((user)=> {
-        if(this.$refs.order_item.$refs[`select${user._id}`] !== undefined && this.$refs.order_item.$refs[`select${user._id}`] !== null){
-          if(this.$refs.order_item.$refs[`select${user._id}`].checked === true){
-            this.deletedOrders.push(user._id)
-          }
+        if(user.selected){
+          this.deletedOrders.push(user._id)
         }
       });
 

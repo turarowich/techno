@@ -467,7 +467,7 @@ export default {
 }
 
 .selectedItems_TEXT{
-  border: 2px solid #252726;
+  border: 1px solid #d3d3d3;
   border-radius: 5px;
   display: flex;
   align-items: center;
@@ -475,7 +475,7 @@ export default {
   padding: 5px;
 }
 .selectedItems_remove{
-  border: 2px solid #252726;
+
   border-radius: 5px;
   flex: 0 0 44px;
   display: flex;

@@ -196,6 +196,7 @@ name: "Dashboard",
   -webkit-line-clamp: 3; /* number of lines to show */
   -webkit-box-orient: vertical;
 }
+
 .date{
   color: #B0B0B0;
   margin: 10px 0;

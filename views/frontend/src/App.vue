@@ -7,7 +7,9 @@
         <Header  v-if="homePage()"  v-bind:openSideBar="openSideBar"/>
         <NewMessageAlert v-if="homePage()"/>
         <div  class="router-view">
-            <router-view/>
+            <keep-alive>
+              <router-view/>
+            </keep-alive>
         </div>
     </div>
   </div>

@@ -172,7 +172,9 @@ class ProductController{
             }
             let product = await Product.findOneAndUpdate(query, data)
 
-            if (req.files.img) {
+            if (typeof req.fields.img === 'string' && req.fields.img != product.img) {
+                product.img = req.fields.img
+            }else if (req.files.img) {
                 let filename = saveImage(req.files.img, req.db, product.img)
                 if (filename == 'Not image') {
                     result = {
@@ -184,12 +186,18 @@ class ProductController{
                     }
                     break updateProduct
                 } else {
-                    product.img = filename   
+                    product.img = filename
                 }
             }
             for (let $i = 0; $i < 3; $i++) {
                 if (req.files['imgArray' + $i] != undefined && req.files['imgArray' + $i] != null) {
-                    let filename = saveImage(req.files['imgArray' + $i], req.db, product.imgArray[$i])
+                    console.log('image array first')
+                    let filename = ""
+                    if (product.img != product.imgArray[$i]) {
+                        filename = saveImage(req.files['imgArray' + $i], req.db, product.imgArray[$i])
+                    }else{
+                        filename = saveImage(req.files['imgArray' + $i], req.db)
+                    }
                     if (filename == 'Not image') {
                         result = {
                             status: 500,
@@ -200,15 +208,17 @@ class ProductController{
                         }
                         break updateProduct
                     } else {
-                        console.log(product.imgArray[$i], $i)
                         if (product.imgArray[$i] != undefined){
                             product.imgArray[$i] = filename
                         }else{
                             product.imgArray.push(filename)
                         }
                     }
-                }else if (req.fields['imgArray' + $i] == "" && product.imgArray[$i]){
-                    removeImage(product.imgArray[$i])
+                } else if (req.fields['imgArray' + $i] == "" && product.imgArray[$i]){
+                    console.log('image array before')
+                    if (product.img != product.imgArray[$i]){
+                        removeImage(product.imgArray[$i])
+                    }
                     delete product.imgArray[$i]
                 }
             }

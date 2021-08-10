@@ -7,7 +7,7 @@
     <div v-else v-for="order in orderList" class="table-item d-flex justify-content-between align-items-center" :key="order._id">
 
       <div class="table-child d-flex align-items-center"  style="width: 18%;">
-        <div><label class="custom-checkbox"><input  type="checkbox"  @click="checkMainSelect"  :ref="'select'+order._id" :value="order._id" ><span class="checkmark"></span></label></div>
+        <div><label class="custom-checkbox"><input  type="checkbox"  v-model="order.selected" @change="$emit('checkSelection')"><span class="checkmark"></span></label></div>
         {{order.code}}
         </div>
       <div v-if="order.products" class="table-child d-flex align-items-center"  style="width: 25%;">
@@ -34,7 +34,7 @@
            :class="[{red: order.status === 'Cancelled'},
           {green: order.status === 'Done'},
           {orange: order.status === 'In Progress'},
-          {new: order.status === 'New'}
+
           ]">
         <i class=" circle-status fas fa-circle"></i>
         {{order.status}}
@@ -114,20 +114,7 @@ export default {
           });
         }
     },
-    checkAll(item) {
-      return  this.$refs[`select${item._id}`].checked === true
-    },
-    checkMainSelect() {
-      if(this.orderList.every(this.checkAll)){
-        this.newCheck = true;
-        this.$emit('checkAll', this.newCheck)
-      }
-      else{
-        this.newCheck = false;
-        this.$emit('unCheckAll', this.newCheck)
-      }
 
-    },
   }
 ,
 mounted() {
@@ -172,6 +159,9 @@ mounted() {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: clip;
+}
+.red{
+  color:#E94A4A;
 }
 .disabled {
   pointer-events: none;

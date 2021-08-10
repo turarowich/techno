@@ -111,7 +111,7 @@
 
         <div class="catalog-content" style="width:82%">
           <div class="d-flex main-content-header">
-            <div class="table-head" style="width: 5%;"><label class="custom-checkbox"><input id="parent-check" type="checkbox"  @click="toggleSelect" v-model="selectAll"><span class="checkmark"></span></label></div>
+            <div class="table-head" style="width: 5%;"><label class="custom-checkbox"><input id="parent-check" type="checkbox" @change="selectAllProduct" v-model="selectAll"><span class="checkmark"></span></label></div>
             <div class="table-head" style="width: 36%;">Name</div>
             <div class="table-head" style="width: 24%;">Article</div>
             <div class="table-head table-link pr-3" style="width: 13%;" @click="sortByQunatity">Quantity<img class="date-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
@@ -121,10 +121,8 @@
           </div>
           <div class="table-content" >
             <CatalogItem
-                  ref="catalog_item"
+                  v-on:checkSelection="checkSelection"
                   v-bind:getProducts="getProducts"
-                  v-on:unCheckAll="unCheckAll"
-                  v-on:checkAll="checkAll"
                   v-on:selectProduct="selectProduct"
                   v-bind:catalogList="catalogToDisplay"
                   v-on:deleteProduct="deleteProduct"
@@ -267,31 +265,20 @@ name: "Catalog",
     check(access="catalog", parametr="active", parametr2="canEdit"){
         return this.checkAccess(access, parametr, parametr2)
     },
-    checkAll(item){
-      this.selectAll = item
-    },
-    unCheckAll(item){
-      this.selectAll = item
-    },
-    toggleSelect: function () {
-      this.catalogList.forEach((user)=> {
-        if(this.$refs.catalog_item.$refs[`select${user._id}`] !== undefined && this.$refs.catalog_item.$refs[`select${user._id}`] !== null){
-          if(this.selectAll === false){
-            this.$refs.catalog_item.$refs[`select${user._id}`].checked = true
-          }
-          else{
-            this.$refs.catalog_item.$refs[`select${user._id}`].checked = false
-          }
-        }
-      });
+  selectAllProduct(){
+      this.catalogToDisplay.map(product=>product['selected'] = this.selectAll)
+  },
+    checkSelection(){
+      let selected =  this.filteredList.filter(employee => {
+        return employee.selected
+      })
+      this.selectAll = selected.length === this.filteredList.length
     },
     deleteAllOrder() {
       this.catalogList.forEach((user)=> {
-        if(this.$refs.catalog_item.$refs[`select${user._id}`] !== undefined && this.$refs.catalog_item.$refs[`select${user._id}`] !== null){
-          if(this.$refs.catalog_item.$refs[`select${user._id}`].checked === true){
-            this.deletedProducts.push(user._id)
-          }
-        }
+       if(user.selected){
+         this.deletedProducts.push(user._id);
+       }
       });
     if(this.deletedProducts.length>0){
       Swal.fire({
@@ -323,7 +310,7 @@ name: "Catalog",
             }}).then(()=>{
                 this.getProducts()
                 this.deletedProducts = []
-                $('#parent-check').prop('checked',false)
+                this.selectAll = false;
                 this.$successAlert('All products have been removed')
             }).catch((error)=>{
                 if(error.response && error.response.data){
@@ -336,6 +323,7 @@ name: "Catalog",
         }
       })
     }
+
 
     },
     sortByQunatity() {
@@ -367,9 +355,12 @@ name: "Catalog",
     selectProduct(id){
       this.catalogList.map((product)=>{
         if(product._id === id){
-          this.select_product = product
+          this.select_product = product;
+
         }
+
       })
+      console.log(this.select_product,'ssssssssssssss')
     },
     deleteProduct(id){
       Swal.fire({
@@ -485,6 +476,7 @@ name: "Catalog",
           .then((response) => {
               this.catalogList = response.data.objects;
               console.log(this.catalogList)
+            console.log(response)
 
 
 
@@ -501,11 +493,9 @@ name: "Catalog",
     },
     moveCategory(id){
       this.catalogList.forEach((user)=> {
-        if(this.$refs.catalog_item.$refs[`select${user._id}`] !== undefined && this.$refs.catalog_item.$refs[`select${user._id}`] !== null){
-          if(this.$refs.catalog_item.$refs[`select${user._id}`].checked === true){
+          if(user.selected){
             this.movedCategories.push(user._id)
           }
-        }
       });
     if(this.movedCategories.length === 0){
       this.$warningAlert("Please choose a product")
@@ -522,6 +512,7 @@ name: "Catalog",
       this.axios.put(this.url('updateProductsCategory'), submitObj)
           .then(()=>{
             this.movedCategories = [];
+            this.selectAll = false;
             this.getProducts()
             this.$informationAlert("Change are saved")
           }).catch((error)=>{

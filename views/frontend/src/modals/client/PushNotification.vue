@@ -8,7 +8,7 @@
                 <img src="../../assets/icons/xBlack.svg" alt="">
               </span>
           </button>
-          <h3 class="modal-title">Push notification</h3>
+          <h3 class="modal-title" @click="sends">Push notification </h3>
         </div>
         <div class=" myModal-body">
           <div class="row">
@@ -170,6 +170,13 @@ export default {
 
   },
   methods:{
+    sends(){
+      console.log(this.clientList)
+      let x = this.$moment().format('YYYY-MM-DD')
+      // x.setDate(1);
+      // x.setMonth(x.getMonth()-1);
+      console.log(x)
+    },
     clearNews(){
       this.newsObj = '';
       this.newData.news = ''
@@ -183,6 +190,7 @@ export default {
       this.axios.get(this.url('getClients'))
           .then((res)=>{
             this.clientList= res.data.objects;
+
           })
     },
     getCategories(){

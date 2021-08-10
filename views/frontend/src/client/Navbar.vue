@@ -16,8 +16,8 @@
 <!--    <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">{{catalog_settings.name || 'Company Name'}} </router-link>-->
     <div class="menu-wrapper">
       <div class="mobile-header d-flex justify-content-between align-items-center" >
-        <div class="d-flex align-items-center">
-          <router-link :to="`/${currentCompanyCatalog}`" class="brand-navbar ">
+        <div class="d-flex align-items-center" @click="removeActive">
+          <router-link  :to="`/${currentCompanyCatalog}`" class="brand-navbar ">
             <div v-if="catalog_settings.logo && catalog_settings.logo !==''"  v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.logo + ')' }" class="catalog_logo Q3">
             </div>
             <span v-else>
@@ -95,10 +95,10 @@
         <p class="footer-info"><img src="../assets/clients/Message.svg"><a href="/">{{catalog_settings.email || "example@gmail.com"}}</a></p>
       </div>
     </div>
-
+      <div class="backdrop-menu"></div>
     <div class="basket-menu" v-if="!catalog_settings.catalogMode">
       <div class="bg-not d-flex align-items-center">
-        <span class="basket-not" v-if="countOrders > 0">{{countOrders}}</span>
+        <div class="basket-not" v-if="countOrders > 0">{{countOrders}}</div>
       </div>
 
       <img   @click="$router.push(`/${currentCompanyCatalog}/basket`)" class="mobile-basket" src="../assets/clients/Buy.svg"/>
@@ -178,18 +178,25 @@ export default {
     server(){
       return this.$server;
     },
+
   },
   methods:{
     removeActive(){
       $('.menu-wrapper').removeClass('active')
-
+      setTimeout(()=>{
+        $('.backdrop-menu').removeClass('active')
+      },400)
       $('body').css({'overflow':''})
+
+
 
     },
     showNavbar(){
       $('.menu-wrapper').addClass('active')
-
+      $('.backdrop-menu').addClass('active')
       $('body').css({'overflow':'hidden'})
+
+
 
 
 
@@ -220,6 +227,19 @@ export default {
 </script>
 
 <style scoped>
+.backdrop-menu.active{
+  display: block;
+}
+.backdrop-menu{
+  display: none;
+  width: 100%;
+  height:100%;
+  position: fixed;
+  top:0;
+  left: 0;
+  background: #000;
+  opacity:0.5;
+}
 .contact{
   position: absolute;
   bottom: 20px;
@@ -477,7 +497,7 @@ font-size: 14px;
   .menu-wrapper{
     position: fixed;
     width: 100vw;
-    height: 100%;
+    height: 100vh;
     z-index:9999;
     top: 0;
     left: -100vw;
