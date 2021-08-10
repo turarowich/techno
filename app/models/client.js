@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const uid = require('rand-token');
 const clientSchema = new Schema({
+
     name: {
         type: String,
         trim: true,
@@ -58,12 +59,14 @@ const clientSchema = new Schema({
     birthDate: {
         type: Date,
         required: [false, 'birthday_required'],
+        default: ''
     },
     address: {
         type: String,
         required: false,
         default: ''
     },
+
     balance: {
         type: Number,
         required: true,

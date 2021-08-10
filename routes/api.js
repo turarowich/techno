@@ -38,7 +38,7 @@ module.exports = function (app, io) {
     app.post('/addPoints', verifyAccess, clientController.addPoints);
     app.post('/deductPoints', verifyAccess, clientController.deductPoints);
     app.get('/getPoints', clientController.getPoints);
-    
+
 
     //Online menu
     app.post('/saveTempoOrder',  catalogController.saveTempoOrder);
@@ -86,6 +86,7 @@ module.exports = function (app, io) {
     app.get('/searchProductService', promocodeController.searchProductService);
     app.get('/searchPromocode', promocodeController.searchPromocode);
     app.get('/searchPromocodeByCode', promocodeController.searchPromocodeByCode);
+    app.get('/searchPromocodeByCodeApi', promocodeController.searchPromocodeByCode);
 
     // Cashback url
     app.get('/getCashback', cashbackController.getCashback);
@@ -106,9 +107,11 @@ module.exports = function (app, io) {
     app.get('/getOrders', orderController.getOrders);
     app.post('/addOrder', orderController.addOrder);
     app.put('/updateOrder/:order', verifyAccess, orderController.updateOrder);
+    app.put('/updateOrderStatus/:order', verifyAccess, orderController.updateOrderStatus);
     app.delete('/deleteOrder/:order', verifyAccess, orderController.deleteOrder);
     app.delete('/deleteOrders', verifyAccess, orderController.deleteOrders);
     app.post('/getOrderExcel', verifyAccess, orderController.getOrderExcel);
+    app.post('/addOderPoints', verifyAccess, orderController.addOderPoints);
     //Change Order status
     app.post('/updateOrderWeb', orderStatusController.create(io));
     app.post('/socketRooms', orderStatusController.rooms(io));

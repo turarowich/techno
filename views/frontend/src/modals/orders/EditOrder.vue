@@ -13,7 +13,7 @@
             <h3 class="modal-title d-flex align-items-center">
               Order {{currentData.code}}
               <div class="ml-4 d-flex align-items-center  detail-status"
-                   :class="[{red: currentData.status === 'Canceled'},
+                   :class="[{red: currentData.status === 'Cancelled'},
                     {green: currentData.status=== 'Done'},
                     {orange: currentData.status === 'In Progress'},
                     {new: currentData.status === 'New'}
@@ -89,7 +89,6 @@
                 <input v-model="currentData.notes" class="cashback-input">
               </div>
             </div>
-
 
             <!------------------------------------------Right Side-------------------------->
             <div class="col-lg-4">
@@ -247,9 +246,12 @@ export default {
         return client
     },
     filteredProducts(){
+      if(!this.products){
+        return  [];
+      }
       if(this.products.length){
         return this.products.filter((product)=>{
-          return product.name.toLowerCase().includes(this.search_product.toLowerCase())
+          return product.name.toLowerCase().includes(this.search_product.toLowerCase());
         })
       }else{
         return [];
@@ -335,20 +337,20 @@ export default {
     this.getClients()
     this.imgSrc = this.$server;
   },
-  watch:{
-    select_order(newCat){
-      console.log(newCat,"select_order WATCH EDIT");
-      this.currentData = Object.assign({}, newCat);
-
-    },
-    currentData:{
-      handler(val) {
-        console.log(val,"total_price CHANGE TO STORE",val);
-      },
-      deep: true,
-      immediate:true,
-    },
-  },
+  // watch:{
+  //   select_order(newCat){
+  //     console.log(newCat,"select_order WATCH EDIT");
+  //     this.currentData = Object.assign({}, newCat);
+  //
+  //   },
+  //   currentData:{
+  //     handler(val) {
+  //       console.log(val,"total_price CHANGE TO STORE",val);
+  //     },
+  //     deep: true,
+  //     immediate:true,
+  //   },
+  // },
 }
 </script>
 
@@ -525,7 +527,7 @@ export default {
 
 .payment-list{
   color:#606877;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 .payment-list span{
   color:#000;
@@ -536,5 +538,11 @@ export default {
 }
 .reload-code{
   margin-bottom: 20px;
+}
+@media (max-width: 992px) {
+  .modal-dialog{
+    width: 100%;
+    max-width: 100%!important;
+  }
 }
 </style>

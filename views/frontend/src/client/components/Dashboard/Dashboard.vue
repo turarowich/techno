@@ -1,17 +1,17 @@
 <template>
-<div class="container client-container">
+<div class="container">
 <!--  <div class="main-box" v-bind:style="{ backgroundImage: 'url(' + bannerPath + ')' }" >-->
 
   <div class="main-box" v-bind:style="{ backgroundImage: 'url(' + server+'/'+catalog_settings.banner + ')' }" >
 
     <div class="relatives">
-      <h1>{{catalog_settings.name || 'Company Name'}}</h1>
+      <h1 class="text-center">{{catalog_settings.name || 'Company Name'}}</h1>
       <p>{{catalog_settings.welcome || 'Welcome to our thingy'}}</p>
     </div>
   </div>
   <div class="new">
     <div class="news">
-      <div class="d-flex justify-content-between mb-3" >
+      <div class="d-flex justify-content-between align-items-center mb-3" >
         <div style="font-weight: bold;font-size: 20px;">News</div>
         <div><router-link class="view-all" :to="`/${currentCompanyCatalog}/client-news`">View all</router-link></div>
       </div>
@@ -27,7 +27,7 @@
                 <div class="d-flex align-items-center calendar-news" >
                   <img src="../../../assets/icons/Calendar.svg">
                   <span class="date">
-                    {{new Date(news.createdAt).toDateString()}}
+                  {{news.updatedAt.slice(0,10)}}
                   </span></div>
                 <h4 class="news-content">{{news.name}}</h4>
                 <p class="news-description">{{news.desc}}</p>
@@ -172,6 +172,9 @@ name: "Dashboard",
 .main-news{
   padding-right:30px;
 }
+.childNews{
+  cursor:pointer;
+}
 .calendar-news{
   border-bottom: 1px solid #E3E3E3;
   margin-bottom: 10px;
@@ -193,6 +196,7 @@ name: "Dashboard",
   -webkit-line-clamp: 3; /* number of lines to show */
   -webkit-box-orient: vertical;
 }
+
 .date{
   color: #B0B0B0;
   margin: 10px 0;
@@ -219,7 +223,10 @@ name: "Dashboard",
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 5px;
+}
+.childNews:hover .news-content{
+  color:#616cf5;
 }
 .new{
   margin-bottom: 70px;

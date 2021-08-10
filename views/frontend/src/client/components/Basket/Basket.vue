@@ -1,5 +1,5 @@
 <template>
-<div class="container client-container">
+<div class="container">
   <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg"><div @click="$router.go(-1)" class="mr-1">Back </div> | <span>Shopping cart</span>
 
   </div>
@@ -31,15 +31,16 @@
 
           <div v-if="!catalog_settings.foodMode">
             <div v-if="!clientAuth">
-              <h3 class="cashback-sub-title mb-4" style="color:#616CF5;">Log In or register, to receive points and/or use them</h3>
+              <h3 class="cashback-sub-title mb-4" style="color:#616CF5;">To use or get points, log in or register</h3>
               <div  class="auth_btns_wrapper">
                 <router-link style="flex: 1;" :to="`/${currentCompanyCatalog}/signin`"><span>Log In</span></router-link>
                 <router-link style="flex: 1;" :to="`/${currentCompanyCatalog}/signup`"><span>Register</span></router-link>
               </div>
             </div>
             <div v-else>
-              <span class="client_points_title">User your points for an additional discount</span>
-              <div class="d-flex mb-2 client_points_block" style="align-items: center;">
+              <h3 class="cashback-sub-title mb-2">Sales</h3>
+              <span class="client_points_title">Take advantage of the points for additional discount</span>
+              <div class="d-flex  client_points_block" style="align-items: center;">
 
                 <div class="d-flex" style="flex: 1;">
                   <label class="custom-checkbox">
@@ -51,7 +52,8 @@
                 </div>
                 <div>
                 <span class="client_points">
-                  {{user.points}} -- {{userDiscountStatus.discount_percentage || 0}}%
+                  {{user.points}}
+<!--                  {{userDiscountStatus.discount_percentage || 0}}%-->
                 </span>
                 </div>
               </div>
@@ -60,9 +62,10 @@
 
 
           <div v-if="!catalog_settings.foodMode">
-            <div class="mb-3 sales-input d-flex">
+            <div class=" sales-input d-flex">
+
               <input v-model="searchText" class="cashback-input" placeholder="Enter a promocode">
-              <img @click="searchPromocode" class="promocodeCheckBtn" src="../../../assets/icons/check_mark.svg">
+             <div class="promocodeCheckBtn" @click="searchPromocode" ><img  src="../../../assets/icons/bird.svg"></div>
             </div>
             <div v-if="basket_promocode != null" class="promocode_result">
               <div class="d-flex">
@@ -90,13 +93,13 @@
               </div>
 
               <div v-if="deliveryService" class="delivery_block position-relative">
-                <div class="py-3">
-                  {{catalog_settings ? catalog_settings.deliveryDescription : ''}}
-                </div>
+<!--                <div class="py-3">-->
+<!--                  {{catalog_settings ? catalog_settings.deliveryDescription : ''}}-->
+<!--                </div>-->
                 <label class="cashback-label">Delivery address</label><br>
                 <input v-model="deliveryAddress" type="text" class="cashback-input" placeholder="Enter your address"/>
                 <label class="cashback-label">Delivery service</label><br>
-                <div class="selected_delivery_option w-100 d-flex" @click="showDeliveryOption= !showDeliveryOption">
+                <div class="selected_delivery_option w-100 d-flex long-form-control" @click="showDeliveryOption= !showDeliveryOption">
                   <div style="flex: 1;">
                     {{selectedDeliveryType.object.name}}
                   </div>
@@ -112,7 +115,7 @@
                 </div>
               </div>
               <div v-if="pickUp" class="pick_up_block">
-                <span>Select address where u would like to pick up ur order</span>
+                <label class="cashback-label">Select address</label>
                 <div @click="setBranch(branch)" v-for="branch in branches" :key="branch._id" :class="{active_branch:branch._id===selectedBranchObject._id}" class="d-flex pick_up_block_item">
                   <div>
                     <img src="../../../assets/icons/location.svg">
@@ -142,12 +145,12 @@
                 <span>-{{ total_discounts }} {{catalog_settings.currency}}</span>
               </div>
 
-              <div v-if="deliveryService" class="mb-3 delivery d-flex justify-content-between">
+              <div v-if="deliveryService" class=" delivery d-flex justify-content-between">
                 <h3>Delivery</h3>
                 <span style="color:#5CBD85;">{{delivery_cost}} {{catalog_settings.currency}}</span>
               </div>
 
-              <div class="mb-4 d-flex justify-content-between">
+              <div class="mb-4  totals d-flex justify-content-between">
                 <h4>Total</h4>
                 <h4>{{total_price_discount_delivery}} {{catalog_settings.currency}}</h4>
               </div>
@@ -161,7 +164,6 @@
                 <button v-else @click="checkNcontinue()" class="save">
                   Continue
                 </button>
-
               </div>
             </div>
           </div>
@@ -172,9 +174,6 @@
       <BasketConfirm @continueAsGuest_child="continueAsGuest" />
     </div>
   </div>
-
-
-
 </div>
 
   <!--Centered Modal-->
@@ -627,9 +626,9 @@ name: "Basket",
   border-radius: 5px;
   height: 40px;
   padding:0 6px;
-  /*margin-bottom: 42px;*/
+  margin-bottom: 20px;
   align-items: center;
- 
+
 }
 .empty-basket{
   height: 300px;
@@ -664,9 +663,11 @@ name: "Basket",
   height: 40px;
   margin-bottom: 27px;
 }
-
-.delivery .map-box{
-  margin-bottom: 48px;
+.line{
+  margin-bottom: 25px;
+}
+.totals{
+  margin-top: 40px;
 }
 .total h3{
   font-size: 15px;
@@ -676,8 +677,9 @@ name: "Basket",
 .discount{
   margin-bottom: 10px;
 }
-.total .delivery{
-  margin-bottom: 5px;
+
+.client_points_block{
+  margin-bottom: 20px;
 }
 .discount span{
   font-size: 16px;
@@ -699,20 +701,21 @@ name: "Basket",
 .save{
   width: 50%;
 }
+
 .promocodeCheckBtn{
   width: 33px;
   height: 33px;
   border-radius: 5px;
   border: 1px solid #D3D3D3;
-  background: #616cf5;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor:pointer;
+  background: #616cf5;
 }
 .promocodeCheckBtn img{
   width: 15px;
-  height: 11px;
+  height: 15px;
 }
 .promocode_result{
   border:1px solid #d3d3d3;
@@ -760,7 +763,7 @@ name: "Basket",
   cursor: pointer;
 }
 .personal-btns{
-  margin-bottom: 10px;
+  margin-bottom: 25px;
 }
 .delivery_service{
   width: 100%;
@@ -773,7 +776,7 @@ name: "Basket",
 .pick_up_block_item{
   border-radius: 7px;
   padding: 15px;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
   background: #F8F9FF;
   cursor: pointer;
   border: 1px solid #f0f0f0;
@@ -828,6 +831,7 @@ name: "Basket",
   padding-bottom: 0;
   max-height:300px;
   overflow-y: auto;
+  margin-top: -30px;
 
 }
 .delivery_option_class{
@@ -849,6 +853,7 @@ name: "Basket",
   border-radius: 5px;
   padding: 5px 10px;
   cursor: pointer;
+  margin-bottom: 30px;
 
 }
 .QRCodeModalContent{

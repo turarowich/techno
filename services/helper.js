@@ -348,6 +348,30 @@ async function checkAccess(user_id, settings, db, res=null){
     }
     return result
 }
+
+function getClientDiscount(client=null,discounts = []){
+    let discount_object = null;
+    let discounts_array = []
+    if(client && discounts.length>0){
+        discounts_array = discounts.filter(discount => client.balance>=discount.min_sum_of_purchases);
+        if(discounts_array.length > 0){
+            discount_object = discounts_array.reduce((max, obj) => (max.discount_percentage > obj.discount_percentage) ? max : obj);
+        }
+    }
+    return discount_object;
+}
+
+function compareDates(dateStart_,dateEnd_,editDate_=null){
+    if(!dateStart_ || !dateEnd_){
+        return false;
+    }
+    let today = editDate_ ? moment(editDate_) : moment();
+    let dateStart = moment(dateStart_);
+    let dateEnd = moment(dateEnd_);
+    console.log(dateStart,dateEnd,"------------------");
+    //(start<=today<=end)
+    return(dateStart.isSameOrBefore(today,'day') && dateEnd.isSameOrAfter(today,'day'))
+}
 module.exports = {
     useDB: useDB,
     saveImage: saveImage,
@@ -357,5 +381,7 @@ module.exports = {
     randomNumber: randomNumber,
     randomPassword: randomPassword,
     createQrFile: createQrFile,
-    checkAccess: checkAccess
+    checkAccess: checkAccess,
+    getClientDiscount: getClientDiscount,
+    compareDates:compareDates,
 }

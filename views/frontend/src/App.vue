@@ -7,7 +7,9 @@
         <Header  v-if="homePage()"  v-bind:openSideBar="openSideBar"/>
         <NewMessageAlert v-if="homePage()"/>
         <div  class="router-view">
-            <router-view/>
+            <keep-alive>
+              <router-view/>
+            </keep-alive>
         </div>
     </div>
   </div>
@@ -31,7 +33,7 @@ export default {
     homePage(){
       if(['Home','Settings','SignIn', 'SignUp', 'OrderDetail','EditClientPage', 'PushNotification',
             'EditProductPage','IndividualPush','EditPromo','AddPromoPage','AddProductPage','AccessSettings','AddNews','EditNews','AddOrder'].includes(this.$route.name) || this.$route.meta.hideNavbar
-          || this.$route.path.startsWith("/loyalty")
+
       ){
         return false
       }
@@ -85,8 +87,7 @@ export default {
  width: calc(100% - 250px);
   margin-left: 250px;
   font-size: 14px;
-  /*overflow-y: hidden;*/
-  /* height: 100vh;*/
+
 }
 .hun{
   width: 100%;

@@ -171,7 +171,8 @@ class ProductController{
                 data['category'] = null
             }
             let product = await Product.findOneAndUpdate(query, data)
-            if (req.fields.img instanceof String && req.fields.img != product.img) {
+
+            if (typeof req.fields.img === 'string' && req.fields.img != product.img) {
                 product.img = req.fields.img
             }else if (req.files.img) {
                 let filename = saveImage(req.files.img, req.db, product.img)
@@ -185,7 +186,7 @@ class ProductController{
                     }
                     break updateProduct
                 } else {
-                    product.img = filename   
+                    product.img = filename
                 }
             }
             for (let $i = 0; $i < 3; $i++) {

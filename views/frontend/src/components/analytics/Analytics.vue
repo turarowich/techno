@@ -18,15 +18,15 @@
         </div>
         <div class="analytics-box" >
             <p><img class="mr-2" src="../../assets/icons/analytics/customer.svg">The amount of discounts</p>
-            <h2 class="analytics-title">{{analyticsFiltered.discounts}}</h2>
+            <h2 class="analytics-title">{{analyticsFiltered.discounts.toFixed(2)}}</h2>
         </div>
         <div class="analytics-box" >
             <p><img class="mr-2" src="../../assets/icons/analytics/check.svg">Average check</p>
-            <h2 class="analytics-title">{{analyticsFiltered.averageCheck}}</h2>
+            <h2 class="analytics-title">{{analyticsFiltered.averageCheck.toFixed(4)}}</h2>
         </div>
         <div class="analytics-box" >
             <p><img class="mr-2" src="../../assets/icons/analytics/coin.svg">The amount of profit</p>
-            <h2 class="analytics-title">{{analyticsFiltered.profit}}</h2>
+            <h2 class="analytics-title">{{analyticsFiltered.profit.toFixed(2)}}</h2>
         </div>
         <div class="analytics-box" >
             <p><img class="mr-2" src="../../assets/icons/analytics/numUser.svg">Number of clients</p>

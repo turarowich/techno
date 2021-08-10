@@ -8,24 +8,12 @@
         <button v-if="check()" class="app-buttons-item adding-btns"  data-toggle="modal" data-target="#add-category"><span>+ Add category </span></button>
       </div>
       <div class="d-flex align-items-center">
-        <button v-if="check()" class="app-buttons-item" @click="deleteAllOrder"><img src="../../assets/icons/trash_empty.svg"><span>Remove</span></button>
-        <div class="dropdown">
-          <button v-if="check()" class="dropdown-toggle app-buttons-item" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <img src="../../assets/icons/moveto.svg"><span>Move to</span>
-          </button>
-
-          <div class="move-category dropdown-menu" aria-labelledby="dropdownMenuTotal">
-                <div class="move-category-item" v-for="cat in listCategory.slice(1)" :key="cat._id" @click="moveCategory(cat._id)">{{cat.name}}</div>
-          </div>
-        </div>
-        <button v-if="check()" class="app-buttons-item" data-turbolinks="true"  data-toggle="modal" data-target="#import-client"><img src="../../assets/icons/import.svg"><span>Import</span></button>
-
         <div class="dropdown">
           <button class="app-buttons-item dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
             <img class="img-btn" src="../../assets/icons/filter.svg"><span>Filter</span>
           </button>
 
-          <div class="dropdown-menu general-dropdown" aria-labelledby="dropdownMenuButton">
+          <div class=" dropdown-menu filter-catalogs animate slideIn" aria-labelledby="dropdownMenuButton">
             <form class="filter-product">
               <label>By price</label>
               <div class="d-flex">
@@ -52,12 +40,26 @@
               </div>
 
               <label>By category</label>
-                <select v-model="filtered" class="select-category form-control">
-                  <option v-for="cat in listCategory" :key="cat._id" :value="cat._id">{{cat.name}}</option>
-                </select>
+              <select v-model="filtered" class="select-category form-control">
+                <option v-for="cat in listCategory" :key="cat._id" :value="cat._id">{{cat.name}}</option>
+              </select>
             </form>
           </div>
         </div>
+        <button v-if="check()" class="app-buttons-item" @click="deleteAllOrder"><img src="../../assets/icons/trash_empty.svg"><span>Remove</span></button>
+
+        <div class="dropdown">
+          <button v-if="check()" class="dropdown-toggle app-buttons-item" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img src="../../assets/icons/moveto.svg"><span>Move to</span>
+          </button>
+
+          <div class="move-category animate slideIn dropdown-menu" aria-labelledby="dropdownMenuTotal">
+                <div class="move-category-item" v-for="cat in listCategory.slice(1)" :key="cat._id" @click="moveCategory(cat._id)">{{cat.name}}</div>
+          </div>
+        </div>
+        <button v-if="check()" class="app-buttons-item" data-turbolinks="true"  data-toggle="modal" data-target="#import-client"><img src="../../assets/icons/import.svg"><span>Import</span></button>
+
+
 
       </div>
     </div>
@@ -109,7 +111,7 @@
 
         <div class="catalog-content" style="width:82%">
           <div class="d-flex main-content-header">
-            <div class="table-head" style="width: 5%;"><label class="custom-checkbox"><input id="parent-check" type="checkbox"  @click="toggleSelect" v-model="selectAll"><span class="checkmark"></span></label></div>
+            <div class="table-head" style="width: 5%;"><label class="custom-checkbox"><input id="parent-check" type="checkbox" @change="selectAllProduct" v-model="selectAll"><span class="checkmark"></span></label></div>
             <div class="table-head" style="width: 36%;">Name</div>
             <div class="table-head" style="width: 24%;">Article</div>
             <div class="table-head table-link pr-3" style="width: 13%;" @click="sortByQunatity">Quantity<img class="date-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
@@ -119,9 +121,8 @@
           </div>
           <div class="table-content" >
             <CatalogItem
-                  ref="catalog_item"
-                  v-on:unCheckAll="unCheckAll"
-                  v-on:checkAll="checkAll"
+                  v-on:checkSelection="checkSelection"
+                  v-bind:getProducts="getProducts"
                   v-on:selectProduct="selectProduct"
                   v-bind:catalogList="catalogToDisplay"
                   v-on:deleteProduct="deleteProduct"
@@ -131,17 +132,17 @@
             <div class="d-flex align-items-center">
               <span>Rows per page</span>
               <select class="form-control pagination-select" v-model='perPage'>
-                <option value="2">2</option>
-                <option value="5">5</option>
                 <option value="8">8</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
+                <option value="16">16</option>
+                <option value="32">32</option>
               </select>
             </div>
-            <div><span>{{currentPage}}</span> of <span class="mr-3">{{totalPages}}</span>
-              <img v-show='showPrev' @click.stop.prevent='currentPage-=1' class="prevBtn mr-3" src="../../assets/icons/side-arrow.svg">
-              <img v-show='showNext' @click.stop.prevent='currentPage+=1' src="../../assets/icons/side-arrow.svg"></div>
-
+            <div class="d-flex align-items-center"><span>{{current_page}}</span> <span class="mr-1 ml-1">of</span> <span class="mr-2">{{totalPages}}</span>
+              <div v-if='showPrev' @click.stop.prevent='currentPage-=1' class=" pagination-btns"><img class="pagination-img"  src="../../assets/icons/prevArrow.svg"></div>
+              <div v-else class="pagination-btns " style="opacity: 0.5;"><img class="pagination-img"  src="../../assets/icons/prevArrow.svg"></div>
+              <div class=" pagination-btns" v-if='showNext' @click.stop.prevent='currentPage+=1'>  <img class="pagination-img"  src="../../assets/icons/side-arrow.svg"></div>
+              <div v-else class=" pagination-btns"  style="opacity: 0.5;">  <img class="pagination-img"   src="../../assets/icons/side-arrow.svg"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -232,9 +233,17 @@ name: "Catalog",
           })
 
     },
+    current_page(){
+      if(this.currentPage> this.totalPages){
+        return Math.ceil(this.filteredList.length / this.perPage)
+      }
+
+      return this.currentPage
+    },
+
     catalogToDisplay: function(){
-      let start = (this.currentPage - 1) * this.perPage
-      let end = this.currentPage * this.perPage
+      let start = (this.current_page - 1) * this.perPage;
+      let end = this.current_page * this.perPage
       this.filteredList.map((value, index) =>{
         value.index = index
         return value
@@ -256,31 +265,20 @@ name: "Catalog",
     check(access="catalog", parametr="active", parametr2="canEdit"){
         return this.checkAccess(access, parametr, parametr2)
     },
-    checkAll(item){
-      this.selectAll = item
-    },
-    unCheckAll(item){
-      this.selectAll = item
-    },
-    toggleSelect: function () {
-      this.catalogList.forEach((user)=> {
-        if(this.$refs.catalog_item.$refs[`select${user._id}`] !== undefined && this.$refs.catalog_item.$refs[`select${user._id}`] !== null){
-          if(this.selectAll === false){
-            this.$refs.catalog_item.$refs[`select${user._id}`].checked = true
-          }
-          else{
-            this.$refs.catalog_item.$refs[`select${user._id}`].checked = false
-          }
-        }
-      });
+  selectAllProduct(){
+      this.catalogToDisplay.map(product=>product['selected'] = this.selectAll)
+  },
+    checkSelection(){
+      let selected =  this.filteredList.filter(employee => {
+        return employee.selected
+      })
+      this.selectAll = selected.length === this.filteredList.length
     },
     deleteAllOrder() {
       this.catalogList.forEach((user)=> {
-        if(this.$refs.catalog_item.$refs[`select${user._id}`] !== undefined && this.$refs.catalog_item.$refs[`select${user._id}`] !== null){
-          if(this.$refs.catalog_item.$refs[`select${user._id}`].checked === true){
-            this.deletedProducts.push(user._id)
-          }
-        }
+       if(user.selected){
+         this.deletedProducts.push(user._id);
+       }
       });
     if(this.deletedProducts.length>0){
       Swal.fire({
@@ -312,7 +310,7 @@ name: "Catalog",
             }}).then(()=>{
                 this.getProducts()
                 this.deletedProducts = []
-                $('#parent-check').prop('checked',false)
+                this.selectAll = false;
                 this.$successAlert('All products have been removed')
             }).catch((error)=>{
                 if(error.response && error.response.data){
@@ -325,6 +323,7 @@ name: "Catalog",
         }
       })
     }
+
 
     },
     sortByQunatity() {
@@ -356,9 +355,12 @@ name: "Catalog",
     selectProduct(id){
       this.catalogList.map((product)=>{
         if(product._id === id){
-          this.select_product = product
+          this.select_product = product;
+
         }
+
       })
+      console.log(this.select_product,'ssssssssssssss')
     },
     deleteProduct(id){
       Swal.fire({
@@ -474,6 +476,8 @@ name: "Catalog",
           .then((response) => {
               this.catalogList = response.data.objects;
               console.log(this.catalogList)
+            console.log(response)
+
 
 
   })
@@ -489,11 +493,9 @@ name: "Catalog",
     },
     moveCategory(id){
       this.catalogList.forEach((user)=> {
-        if(this.$refs.catalog_item.$refs[`select${user._id}`] !== undefined && this.$refs.catalog_item.$refs[`select${user._id}`] !== null){
-          if(this.$refs.catalog_item.$refs[`select${user._id}`].checked === true){
+          if(user.selected){
             this.movedCategories.push(user._id)
           }
-        }
       });
     if(this.movedCategories.length === 0){
       this.$warningAlert("Please choose a product")
@@ -510,6 +512,7 @@ name: "Catalog",
       this.axios.put(this.url('updateProductsCategory'), submitObj)
           .then(()=>{
             this.movedCategories = [];
+            this.selectAll = false;
             this.getProducts()
             this.$informationAlert("Change are saved")
           }).catch((error)=>{
@@ -543,15 +546,19 @@ name: "Catalog",
 .filter-product label{
   font-size: 15px;
 }
+.pagination{
+  width: calc(82% - 275px);
+}
 .filter-product{
   padding: 20px;
 }
 .filter-product label{
   font-weight: normal;
 }
-.general-dropdown{
+.filter-catalogs{
   width: 17rem;
-  transform: translate3d(-167px, -10px, 0px) !important;
+  margin-top: 44px;
+
 }
 .catalog{
   margin: 0 30px;

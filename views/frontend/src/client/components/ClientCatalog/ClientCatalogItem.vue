@@ -1,19 +1,17 @@
 <template>
   <div>
-
     <div class="row add-padding" >
-      <div  class="col-lg-3 col-6  product-box"  v-for="(product) in catalog" :key="product._id" >
+      <div  class="col-lg-3 col-6  product-box"  v-for="(product) in catalog" :key="product._id"   >
           <div>
-            <div class="product-img"  @click="selectProduct(product._id)">
+            <div @click="goDetail(product._id)" class="product-img"  >
               <img v-if="!product.error" :src="server+'/'+product.img" @error="product.error=true">
               <!--          <img v-else src="../../../assets/img/default.svg" >-->
-              <img v-else src="../../../assets/icons/no-catalog.svg" >
+              <img v-else src="../../../assets/icons/noProd.png" >
               <!--        <img :src="server+'/'+product.img">-->
             </div>
             <div class="product-add">
-              <h2 class="long-text"  style="overflow: hidden;text-overflow: ellipsis;">{{product.name}} {{product.quantity}}</h2>
-              <span v-if="checkDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} {{catalog_settings.currency}}</span>
-              <br>
+              <h2 class="long-text"  style="overflow: hidden;text-overflow: ellipsis; margin-bottom:10px;">{{product.name}} {{product.quantity}}</h2>
+              <span class="mr-2" v-if="checkDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} {{catalog_settings.currency}}</span>
               <span :class="{lineThrough:checkDates(product.promoStart,product.promoEnd)}">{{product.price}} {{catalog_settings.currency}}</span>
             </div>
             <button v-if="!catalog_settings.catalogMode" class="add-to-card" @click="addToCart(product._id)">Add to cart</button>
@@ -63,7 +61,9 @@ name: "ClientCatalogItem",
   },
   methods:{
 
-
+    goDetail(id){
+        this.$router.push(`/${this.currentCompanyCatalog}/catalog-detail/${id}`)
+    },
 
     checkDates(start,end){
       let itsPromo = false;
@@ -118,7 +118,7 @@ name: "ClientCatalogItem",
       this.$store.dispatch("Orders/setVersion",version);
     },
       selectProduct(id){
-        this.$router.push({ path: `/${this.currentCompanyCatalog}/catalog-detail/${id}` });
+        this.$router.push({ path: `/${this.currentCompanyCatalog}/catalog-detail/${id}`});
       },
     },
   mounted(){
@@ -147,7 +147,6 @@ name: "ClientCatalogItem",
   width: 100%;
   height: 100%;
   object-fit: contain;
-  border-radius: 10px;
 }
 .product-add{
   font-weight: bold;
@@ -183,7 +182,7 @@ name: "ClientCatalogItem",
 .product-box:hover{
   border: 0.5px solid rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
-  border-radius: 10px;
+  border-radius: 5px;
   transition:0.3s;
   /*transform:scale(1.1,1.1)*/
 }

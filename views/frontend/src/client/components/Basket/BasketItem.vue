@@ -163,7 +163,7 @@ export default {
 .client-table-img img{
   height: 90px;
   width: 90px;
-  border-radius: 5px;
+  border-radius: 50%;
   margin-right: 20px;
   object-fit: contain;
 }

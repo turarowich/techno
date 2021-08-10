@@ -14,7 +14,7 @@
     </div>
   </div>
   <div class="d-flex main-content-header">
-    <div class="table-head" style="width: 3%;"><label class="custom-checkbox"><input type="checkbox" ><span class="checkmark"></span></label></div>
+    <div class="table-head" style="width: 3%;"><label class="custom-checkbox"><input type="checkbox" v-model="select_all"  ><span class="checkmark"></span></label></div>
     <div class="table-head" style="width: 24%;">Name</div>
     <div class="table-head" style="width: 12%;">User amount</div>
     <div class="table-head" style="width: 13%;">Discount</div>
@@ -24,7 +24,7 @@
     <div class="table-head" style="width:3%"></div>
   </div>
   <div class="table-content tytyty">
-   <PromoCodeItem/>
+   <PromoCodeItem v-bind:selectAll="selectAll"/>
 
   </div>
   <AddPromocode/>
@@ -44,6 +44,7 @@ export default {
     return{
       searchText:'',
       searchResult:[],
+      select_all:'',
     }
   },
   components:{
@@ -51,7 +52,13 @@ export default {
     AddPromocode,
     HistoryPromocode
   },
+  computed:{
+    selectAll(){
+      return this.select_all
+    }
+  },
   methods:{
+
     check(access="loyalty", parametr="active", parametr2="canEdit"){
         return this.checkAccess(access, parametr, parametr2)
     },

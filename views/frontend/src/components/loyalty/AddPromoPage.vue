@@ -450,13 +450,13 @@ export default {
   position: absolute;
   background: white;
   width: 100%;
-  padding:5px;
-  border: 1px solid grey;
-  border-radius: 5px;
+  padding:15px;
   margin-top: 2px;
+  box-shadow: 2px 11px 35px rgba(0, 0, 0, 0.1);
 }
 .resultList div{
   cursor: pointer;
+  padding: 5px 0;
 }
 .selectedItems{
   height: 45px;
@@ -467,7 +467,7 @@ export default {
 }
 
 .selectedItems_TEXT{
-  border: 2px solid #252726;
+  border: 1px solid #d3d3d3;
   border-radius: 5px;
   display: flex;
   align-items: center;
@@ -475,7 +475,7 @@ export default {
   padding: 5px;
 }
 .selectedItems_remove{
-  border: 2px solid #252726;
+
   border-radius: 5px;
   flex: 0 0 44px;
   display: flex;

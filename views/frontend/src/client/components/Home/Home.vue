@@ -3,14 +3,10 @@
     <div>
       <div class="fixed-top " v-if="!['ClientLogin', 'ClientRegister', 'EmployeeLogin'].includes($route.name)">
         <Navbar/>
-
       </div>
-
-        <div class="router-content" id="router-content">
+      <div class="router-content" id="router-content">
           <router-view />
-        </div>
-
-
+      </div>
     </div>
     <div v-if="!['ClientLogin', 'ClientRegister'].includes($route.name)">
       <Footer/>
@@ -23,7 +19,7 @@
 import $ from 'jquery';
 import Navbar from "@/client/Navbar";
 import Footer from "@/client/components/footer/Footer";
-// import $ from 'jquery';
+
 export default {
 name: "Home",
   components:{
@@ -95,6 +91,7 @@ name: "Home",
 
   },
   mounted() {
+
     $(".modal-backdrop").attr('class', 'active');
     $(document).ready(function(){
       $(window).on("scroll",function() {
@@ -152,13 +149,10 @@ name: "Home",
   /*display: none;*/
 }
 .client{
-  overflow-y: auto;
-  height: 100%;
+
+
 }
-.client.active{
-  height: 300px;
-  overflow:hidden;
-}
+
 
 .main-box h1{
   font-size: 34px;

@@ -6,12 +6,12 @@
     </div> -->
     <div class="chat d-flex">
     <div class="overflow-hidden contacts-container">
-        <div class="d-flex align-items-center  search-chat">
+        <div class="d-flex align-items-center  search-chat bbnone">
             <img class="mr-3" src="../../assets/icons/search-icon.svg">
             <input type="text" placeholder="Search, user or chat" v-model="search" @input="checkSelection">
         </div>
         <div class="d-flex align-items-center justify-content-between search-chat pl-0 pr-1">
-            <div class="pl-1" style="width: 100px;"><label class="custom-checkbox checkbox-text w-100 d-flex align-items-center"><input id="parent-check" type="checkbox"  v-model="selectAll" @change="selectAllContact"><span class="checkmark"></span><p class="mb-0 pl-1">Select all</p>  </label></div>
+            <div class="pl-1" style="width: 100px;"><label class="custom-checkbox checkbox-text w-100 d-flex align-items-center"><input id="parent-check" type="checkbox"  v-model="selectAll" @change="selectAllContact"><span class="checkmark"></span><p class="mb-0 pl-2">Select all</p>  </label></div>
             <button class="clear-chat" @click="clearChats" v-if="selectedQuantity">
                 <img src="../../assets/icons/redX.svg" alt="">
                 Clear chat(s)
@@ -120,7 +120,7 @@ export default {
     clearChats(){
         Swal.fire({
         showConfirmButton: true,
-        html: 'Are you sure to remove this chats',
+        html: 'Are you sure to remove these<br> chats',
         showCloseButton: true,
         showCancelButton: true,
         confirmButtonText: 'Delete',
@@ -133,6 +133,12 @@ export default {
             content:'content-sweet',
             closeButton:'close-btn'
         },
+          showClass: {
+            popup: 'animate__animated animate__slideInDown'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          }
 
         }).then((result) => {
             if (result.isConfirmed) {
@@ -216,8 +222,11 @@ export default {
     color: #222222;   
     margin-bottom: 0;
 }
+.bbnone{
+  border-bottom: none !important;
+}
 .chat{
-  height:calc(100vh - 169px)
+  height:calc(100vh - 90px)
 }
 .search-chat input{
   border:none;

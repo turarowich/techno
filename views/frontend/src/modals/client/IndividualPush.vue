@@ -86,6 +86,11 @@ export default {
       edit_push:''
     }
   },
+  computed:{
+    countLength(){
+      return this.schedulePushes.length;
+    }
+  },
   methods:{
     checkAll(item) {
       return  this.$refs[`select${item._id}`].checked === true
@@ -220,6 +225,9 @@ export default {
           }
 
         })
+      }
+      else{
+        this.$warningAlert('Choose pushes to delete')
       }
 
 

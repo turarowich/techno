@@ -1,7 +1,7 @@
 <template>
   <div class="parent-modal">
     <div class="modal myModal  pr-0 fade" id="add_branch" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" role="document"  style="max-width: calc(100% - 250px);">
+      <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 " role="document"  style="max-width: calc(100% - 250px);">
         <div class="modal-content add_branch_modal_content h-100">
           <div class="modal-header justify-content-start align-items-center ">
 
@@ -290,6 +290,7 @@ export default {
   cursor:pointer;
   margin-right: 10px;
 }
+
 .days.active{
   background: #616cf5;
   color:white;

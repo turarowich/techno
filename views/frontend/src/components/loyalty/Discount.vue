@@ -77,6 +77,7 @@ export default {
             copy
         ).then((response)=> {
             this.list_of_discounts = response.data.discounts;
+              console.log(response)
         }).catch((error)=>{
             if(error.response.data && !error.response.data.errors){
                 this.$warningAlert(error.response.data.msg)
@@ -201,7 +202,7 @@ export default {
 }
 .selectedItem{
   display: flex;
-  margin-bottom: 3px;
+  margin-bottom: 10px;
 }
 .selectedItem div{
   height: 45px;
@@ -209,6 +210,10 @@ export default {
   border-radius: 5px;
   display: flex;
   align-items: center;
+}
+.selectedItems_list{
+  height: 300px;
+  overflow-y: auto;
 }
 .discount_list_item_name{
   flex:65%;
@@ -231,6 +236,6 @@ export default {
   cursor: pointer;
   flex:0 0 45px;
   border-radius: 5px;
-  border: 1px solid black!important;
+  border:none!important;
 }
 </style>

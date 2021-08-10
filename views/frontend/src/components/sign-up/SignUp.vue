@@ -65,15 +65,8 @@
                      <div class="have-account">Have an account? <a style="color:#616cf5; cursor:pointer;" @click="$router.push('/')">Sign in now</a></div>
                    </div>
                  </div>
-        <div class="main-or d-flex align-items-center justify-content-center">
-          <div class="or-div"></div>
-          <span class="or-text">or</span>
-          <div class="or-div"></div>
-        </div>
-        <div class="social-link">
-          <a href="http://localhost:8080/auth/facebook"><img src="../../assets/icons/facebook.svg"></a>
-          <a href="http://localhost:8080/auth/google"><img src="../../assets/icons/google.svg"></a>
-        </div>
+
+
 
       </form>
       </div>
@@ -201,21 +194,7 @@ name: "SignUp",
   font-size:14px;
   color:#E94A4A;
 }
-.or-div{
-  height: 0;
-  width: 30%;
-  border-bottom:1px solid #b0b0b0;
-}
-.or-text{
-  margin:0 20px;
-  color:#b0b0b0;
-  font-size:18px;
 
-}
-.main-or{
-  margin-top:15px;
-  margin-bottom: 11px;
-}
 form {
   text-align: left;
 }

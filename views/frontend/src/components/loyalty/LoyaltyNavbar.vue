@@ -1,8 +1,5 @@
 <template>
 <div>
-  <div class="loyalty-header d-flex align-items-center">
-    <h3 class="loyalty-title">Loyalty program</h3>
-  </div>
   <div class="loyalty-nav d-flex align-items-end">
     <ul class="loyalty-menu p-0 d-flex">
       <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='CashBack' }" to="/loyalty" exact>Cashback</router-link></li>
@@ -53,7 +50,7 @@ export default {
   margin-bottom: 10px;
 }
 .loyalty-nav{
-  height: 76px;
+
   border-bottom: 1px solid #D3D3D3;
   margin-bottom: 22px;
 }
@@ -68,6 +65,9 @@ export default {
   border-bottom: 3px solid #616CF5;
   padding-bottom: 11px;
 
+}
+.router-link-active{
+  background: none;
 }
 
 .loaylty-list{

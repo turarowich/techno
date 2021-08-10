@@ -72,6 +72,11 @@ app.config.globalProperties.$api = process.env.VUE_APP_API_URL;
 app.config.globalProperties.$server = process.env.VUE_APP_SERVER_URL;
 app.config.globalProperties.format_price = function (sum){parseFloat(sum).toFixed(2)};
 app.config.globalProperties.base_url = process.env.VUE_APP_SERVER_URL;
+app.config.globalProperties.$callEditUser = function(){
+    const eb = document.getElementById('editUser');
+    console.log(eb.innerHTML)
+
+}
 app.config.globalProperties.checkCatalogStorageLife = function (){
     ///move to router js
     let life = 2;//hours

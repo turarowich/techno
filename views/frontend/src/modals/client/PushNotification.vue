@@ -8,7 +8,7 @@
                 <img src="../../assets/icons/xBlack.svg" alt="">
               </span>
           </button>
-          <h3 class="modal-title">Push notification</h3>
+          <h3 class="modal-title" @click="sends">Push notification </h3>
         </div>
         <div class=" myModal-body">
           <div class="row">
@@ -42,7 +42,8 @@
                     {{client.name}}
                   </div>
                   <div style="width:35%">{{client.category ? client.category.name : "No cat" }}</div>
-                  <div style="width:13%">{{client.bonus}}</div>
+                  <div style="width:13%">{{client.points}}</div>
+
                 </div>
 
 
@@ -55,7 +56,7 @@
                 <h2 class="notification-title">Choose from category</h2>
                 <input class="cashback-input" placeholder="Search" v-model="search_category">
                 <ul style="height:120px" class="push-cat p-0 m-0">
-                  <li v-if="filteredCategories.length>0" class="category-list"><div v-for="category in filteredCategories" :key="category._id" @click="filterClient = category._id">{{category.name}}</div></li>
+                  <li v-if="filteredCategories.length>0" class="category-list"><div  v-for="category in filteredCategories" :key="category._id" @click="filterClient = category._id" :class="{active: filterClient === category._id}">{{category.name}}</div></li>
                   <li v-else class="category-list">You have no categories</li>
                 </ul>
               </div>
@@ -74,7 +75,7 @@
               </div>
 
               <h3 class="notification-title">News</h3>
-              <input class="cashback-input news-input" placeholder="Select news" v-model="search_news">
+              <input  class="cashback-input news-input" placeholder="Select news" v-model="search_news">
 
             <div class="parent-news">
               <div v-if="search_news!==''" class="news pt-3">
@@ -89,17 +90,17 @@
               </div>
             </div>
 
-              <div v-if="newData.news !== ''" class="sale d-flex align-items-center justify-content-between">
+              <div v-if="newsObj !== ''" class="sale d-flex align-items-center justify-content-between">
                 <div style="width:100%">
-                  <h4 class="sale-title">{{newData.news.name}}</h4>
-                  <span class="news-desc">{{newData.news.desc}}</span>
+                  <h4 class="sale-title">{{newsObj.name}}</h4>
+                  <span class="news-desc">{{newsObj.desc}}</span>
                 </div>
-                <img @click="newData.news = ''" src="../../assets/icons/deleteClient.svg">
+                <img @click="clearNews" src="../../assets/icons/deleteClient.svg">
               </div>
 
               <h3 class="notification-title">Custom text</h3>
-              <input v-model="newData.title" class="cashback-input mb-3" placeholder="Title">
-              <textarea v-model="newData.description" class="general-area p-2" placeholder="Description"></textarea>
+              <input v-model="newData.title"  class="cashback-input mb-3" placeholder="Title">
+              <textarea v-model="newData.description"  class="general-area p-2" placeholder="Description"></textarea>
               <button class="save" @click.prevent="onSubmit">Send</button>
             </div>
           </div>
@@ -120,13 +121,14 @@ export default {
   data(){
     return{
       clientList:[],
-      search_client:'',
+      newsList:[],
       clientCategory:[],
+      search_news:'',
+      search_client:'',
       search_category:'',
       selectAll:false,
-      newsList:[],
-      search_news:'',
       filterClient:'',
+      newsObj:'',
       newData:{
         clients:[],
         news:'',
@@ -168,14 +170,27 @@ export default {
 
   },
   methods:{
+    sends(){
+      console.log(this.clientList)
+      let x = this.$moment().format('YYYY-MM-DD')
+      // x.setDate(1);
+      // x.setMonth(x.getMonth()-1);
+      console.log(x)
+    },
+    clearNews(){
+      this.newsObj = '';
+      this.newData.news = ''
+    },
     selectedNews(selected){
       this.newData.news = selected._id
+      this.newsObj = selected
       this.search_news = ''
     },
     getClients(){
       this.axios.get(this.url('getClients'))
           .then((res)=>{
             this.clientList= res.data.objects;
+
           })
     },
     getCategories(){
@@ -222,7 +237,6 @@ export default {
     },
     onSubmit(){
       const new_data = this.newData;
-      console.log(new_data)
       this.clientList.forEach((client)=>{
         if(this.$refs[`select${client._id}`]!==undefined && this.$refs[`select${client._id}`] !== null){
           if(this.$refs[`select${client._id}`].checked === true){
@@ -233,11 +247,29 @@ export default {
       if(this.selectAll === true){
           new_data.sendToAll = true
       }
-      this.axios.post(this.url('sendPushNotification'),new_data)
-      .then((res)=>{
-        console.log(res, 'Success push')
-      })
-      $('#push-notification').modal("hide")
+      console.log(new_data)
+      if(new_data.clients.length === 0 ){
+        this.$warningAlert('Please select whom you want to send push notification')
+      }
+      else if(new_data.news === ''){
+          this.$warningAlert('Choose a news')
+      }
+      else{
+
+        const form = new FormData();
+        form.append('title', new_data.title);
+        form.append('description', new_data.description);
+        form.append('sendToAll', new_data.sendToAll);
+        form.append('clients', new_data.clients);
+        form.append('news',new_data.news)
+         this.axios.post(this.url('sendPushNotification'),form)
+            .then((res)=>{
+              this.$successAlert('Push has been sent')
+              console.log(res, 'Success push')
+            })
+        $('#push-notification').modal("hide")
+      }
+
     },
 
   },
@@ -254,6 +286,10 @@ export default {
 </script>
 
 <style scoped>
+.category-list .active{
+  background: #EBEEFF;
+  color: #616CF5;
+}
 .news-title{
   font-size:14px;
   padding:7px 0;
@@ -345,14 +381,14 @@ export default {
 .main-search{
   margin-bottom: 30px;
 }
+.category-list div{
+  padding: 5px 10px;
+}
 .category-list{
   list-style-type:none;
-  margin-bottom: 10px;
   cursor:pointer;
 }
-.category-list div{
-  margin-bottom: 10px;
-}
+
 .selects:before{
   content:'';
   background: url("../../assets/icons/selectDown.svg") no-repeat;

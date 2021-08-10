@@ -1,5 +1,5 @@
 var bcrypt = require('bcryptjs');
-const { useDB, sendError, saveImage, createQrFile, randomNumber, checkAccess } = require('../../services/helper')
+const { useDB, sendError, saveImage, createQrFile, randomNumber, checkAccess, getClientDiscount } = require('../../services/helper')
 var validate = require('../../config/messages');
 const { query } = require('express');
 const client = require('../models/client');
@@ -7,6 +7,7 @@ const LOG = require('./logController');
 const Analytics = require('./analyticsController');
 var path = require('path');
 const fs = require('fs');
+
 class ClientController{
     
     getClient = async function (req, res) {
@@ -29,20 +30,18 @@ class ClientController{
             let discounts = await Discount.find()
             let client = await Client.findById(req.params.client).populate('messages').populate('category').exec()
             if(client){
-                let discount = null
-                for (let i = 0; i < discounts.length; i++) {
-                    if (client.balance >= discounts[i].min_sum_of_purchases) {
-                        discount = discounts[i]
-                    }
-                }
+                let discount = getClientDiscount(client,discounts);
                 if (discount){
                     result['discount'] = discount
                 }
-                result['orders'] = await Order.find({client:client._id});
+                result['orders'] = await Order.find({client:client._id}).populate('client').populate('products').exec();
                 result['history'] = await ClientBonusHistory.find({client:client._id});
             }
-            
-            result['object'] = client
+            let newClient = '';
+            const copy = JSON.parse(JSON.stringify(client));
+            copy.discount = getClientDiscount(client,discounts) ? getClientDiscount(client,discounts).discount_percentage : 0;
+            newClient = copy
+            result['object'] = newClient
 
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
@@ -54,6 +53,9 @@ class ClientController{
     getClients = async function (req, res) {
         let db = useDB(req.db)
         let Client = db.model("Client");
+        let Order = db.model("Order");
+        let Discount = db.model("Discount");
+        let discounts = await Discount.find()
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "clients", parametr: "active" }, db, res)
             if (checkResult) {
@@ -66,9 +68,20 @@ class ClientController{
         }
         try {
             
-            let clients = await Client.find().populate('messages').populate('category').exec()
-            result['objects'] = clients
-        
+            let clients = await Client.find().populate('messages').populate('category').exec();
+
+
+
+            let newClient = [];
+            for (const cl of clients) {
+                let copy = JSON.parse(JSON.stringify(cl));
+                copy.orders = await Order.find({client:cl._id});
+                copy.discount = getClientDiscount(cl,discounts) ? getClientDiscount(cl,discounts).discount_percentage : 0;
+                newClient.push(copy);
+            }
+
+            result['objects'] = newClient
+
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
@@ -159,6 +172,7 @@ class ClientController{
             if (req.fields.birthDate) {
                 req.fields.birthDate = req.fields.birthDate.replace('\r\n', '');
             }
+
             console.log(req.fields)
             if (req.fields.password && req.fields.password != "\r\n") {
                 req.fields.password = req.fields.password.trim()
@@ -287,6 +301,7 @@ class ClientController{
             let check = await clientModel.find({promocode:promocode,_id:{ "$ne": client_id }});
     
             if (check.length===0){
+                result.status = 404;
                 result.msg = "Promocode not found";
                 result.client_title = validate[lang]['promo_404']
                 break all_check;
@@ -301,7 +316,6 @@ class ClientController{
                 result.client_title = validate[lang]['promo_already_used']
                 break all_check;
             }
-            
 
             //Cashback points
             let cashback_model = db.model("Cashback");
@@ -614,6 +628,7 @@ class ClientController{
                 await client.save({ validateBeforeSave: false });
                 await new ClientBonusHistory({
                     client: client._id,
+                    comments:req.fields.comments,
                     points: req.fields.points,
                     source: 'Points added by company',
                     type: 'received',
@@ -669,6 +684,7 @@ class ClientController{
                 await new ClientBonusHistory({
                     client: client._id,
                     points: -req.fields.points,
+                    comments:req.fields.comments,
                     source: 'Points deducted by company',
                     type: 'deducted',
                 }).save();

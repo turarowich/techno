@@ -70,14 +70,9 @@ footer{
 .poweredby{
   color:#858585;
 }
-.footer-container{
-  max-width: calc(100vw - 240px);
-}
 
 @media(max-width:640px){
-  .footer-container{
-    max-width:100% !important;
-  }
+
   footer{
     padding: 50px 0;
 

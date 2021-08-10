@@ -1,8 +1,8 @@
-catalog<template>
+<template>
 <div class="row catalog">
   <div id="categories" class="pt-3 col-lg-3 col-md-4">
     <div class="catalog-left">
-    <h3 @click="test" class="product-title"><img src="../../../assets/clients/Icon.svg">Products</h3>
+    <h3  class="product-title"><img src="../../../assets/clients/Icon.svg">Products</h3>
 
     <h3 class="price">Price:</h3>
 
@@ -69,6 +69,38 @@ catalog<template>
         <ClientCatalogItem v-bind:catalog="filteredList"/>
 
   </div>
+
+
+
+
+
+  <div class="parent-modal">
+    <div class="modal myModal fade" id="categoriess" tabindex="-1" role="dialog" aria-labelledby="add-points" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content category-content">
+          <div class="modal-header category-header align-items-center">
+            <h3 class="modal-title">Edit Category</h3>
+            <button type="button" data-dismiss="modal" aria-label="Close" class="close">
+              <span aria-hidden="true">
+                <img src="../../../assets/icons/xBlack.svg" alt="">
+              </span>
+            </button>
+          </div>
+          <div class="modal-body category-body">
+            <form class="modal-form">
+              <label>Name</label>
+              <input  class="form-input cashback-input mb-3"  placeholder="Enter a name">
+
+              <textarea class="general-area"></textarea>
+              <div class="d-flex justify-content-end">
+                <button  class="save">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 </template>
@@ -81,22 +113,16 @@ export default {
 name: "Catalog",
   components:{
     ClientCatalogItem,
-
-
   },
   data(){
-  return{
-    catalog:[],
-    listCategory:[{_id:'', name:'All'},{_id:'1', name:'clothes'},{_id:'2', name:'shoes'}],
-    filtered: 'all',
-    from:0,
-    to:0,
-    showCategory:'All',
-
-
-
-
-  }
+    return{
+      catalog:[],
+      listCategory:[{_id:'', name:'All'},{_id:'1', name:'clothes'},{_id:'2', name:'shoes'}],
+      filtered: 'all',
+      from:0,
+      to:0,
+      showCategory:'All',
+    }
   },
   computed:{
     filteredList: function(){
@@ -113,6 +139,9 @@ name: "Catalog",
         })
         .filter((product)=>{
           return product.quantity > 0;
+        })
+        .filter((product)=>{
+          return product.active === true;
         })
     },
     currentCompanyCatalog() {
@@ -152,6 +181,7 @@ name: "Catalog",
           }
         })
         $('.showCategory').removeClass('active')
+      $('body').css({'overflow':'auto'})
       },
     showFilterCategory(item){
       if(item==='category'){
@@ -160,6 +190,9 @@ name: "Catalog",
       else{
         $('.showFilter').addClass('active')
       }
+      $('body').css({'overflow':'hidden'})
+
+
 
 
     },
@@ -167,11 +200,11 @@ name: "Catalog",
       if(item === 'category'){
         $('.showCategory').removeClass('active')
 
-
       }
       else{
         $('.showFilter').removeClass('active')
       }
+      $('body').css({'overflow':'auto'})
 
 
     },
@@ -209,17 +242,12 @@ name: "Catalog",
     async  getProducts(){
       const options = {
         headers: {"x-client-url": this.currentCompanyCatalog},
-
-
       }
 
        await this.axios.get(this.url('getClientProducts'),options)
-           .then((response) => {
-             this.catalog = response.data.objects;
-
-           })
-
-
+         .then((response) => {
+           this.catalog = response.data.objects;
+         })
     },
 
     async getCategories() {
@@ -241,6 +269,13 @@ name: "Catalog",
         instance.update({
           from: that.minPrice,
           to:that.maxPrice,
+          max:that.maxPrice,
+        });
+        let instance2 = $("#range-slider2").data("ionRangeSlider");
+        instance2.update({
+          from: that.minPrice,
+          to:that.maxPrice,
+          max:that.maxPrice,
         });
         that.from = that.minPrice;
         that.to = that.maxPrice;
@@ -291,7 +326,8 @@ name: "Catalog",
   top: 0;
   left:0;
   display: none;
-  background: #fff;
+  overflow-y: scroll;
+  background:#fff;
   padding:0 20px;
   transition:.3s;
   -webkit-animation: fadeIn 0.3s;
@@ -392,6 +428,7 @@ name: "Catalog",
   .mobile-btns{
     display: block;
   }
+
 }
 
 
