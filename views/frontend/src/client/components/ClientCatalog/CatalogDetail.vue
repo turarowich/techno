@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import Spinner from "../Spinner";
+import Spinner from "../../../components/Spinner";
 import $ from 'jquery';
 export default {
   name: "CatalogDetail",

@@ -261,4 +261,8 @@ export default {
   margin-bottom: 30px;
 }
 
+.switch{
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+}
 </style>

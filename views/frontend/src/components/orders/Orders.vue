@@ -72,6 +72,10 @@
     </div>
 
     <div class="table-content">
+      <div class="mt-5" v-if="orderList.length===0">
+        <Spinner/>
+      </div>
+      <div v-else>
         <OrderItem
             v-on:checkSelection="checkSelection"
             v-on:selectOrder="selectOrder"
@@ -80,6 +84,8 @@
             v-bind:data_check="data_check"
             @startScanning="startScanning"
         />
+      </div>
+
     </div>
     <AddOrder
       :getOrders="getOrders"
@@ -155,6 +161,7 @@
 import OrderItem from "@/components/orders/OrderItem";
 import AddOrder from "@/modals/orders/AddOrder";
 import EditOrder from "@/modals/orders/EditOrder";
+import Spinner from "../Spinner";
 import Swal from "sweetalert2";
 import $ from 'jquery';
 import { QrStream} from 'vue3-qr-reader';
@@ -166,6 +173,7 @@ name: "Orders",
     AddOrder,
     EditOrder,
     QrStream,
+    Spinner
   },
   data(){
     return{

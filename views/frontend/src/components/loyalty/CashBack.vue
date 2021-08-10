@@ -449,6 +449,7 @@ export default {
 }
 .cashback-right .cashback-input{
   width: 100%;
+  margin-bottom: 10px;
 }
 .minimum-cashback{
   margin-bottom: 25px;
@@ -458,6 +459,7 @@ export default {
 }
 .minimum-cashback .cashback-description{
   line-height: 20.8px;
+  margin-bottom:  23px;
 }
 .box-switches{
   margin-bottom: 30px;
@@ -466,7 +468,9 @@ export default {
 .cashback{
   padding-bottom:60px;
 }
-
+.enable-title{
+  margin-bottom: 10px;
+}
 .select-left{
   width: 70%;
   margin-right: 10px;

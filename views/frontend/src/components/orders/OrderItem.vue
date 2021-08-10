@@ -5,7 +5,6 @@
       <p class="empty-page-text">There are no orders for the selected period</p>
     </div>
     <div v-else v-for="order in orderList" class="table-item d-flex justify-content-between align-items-center" :key="order._id">
-
       <div class="table-child d-flex align-items-center"  style="width: 18%;">
         <div><label class="custom-checkbox"><input  type="checkbox"  v-model="order.selected" @change="$emit('checkSelection')"><span class="checkmark"></span></label></div>
         {{order.code}}
@@ -71,6 +70,7 @@
 
 export default {
   name: "OrderItem",
+
   props: {
     orderList: { },
     data_check: {
