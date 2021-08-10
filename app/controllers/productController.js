@@ -171,8 +171,9 @@ class ProductController{
                 data['category'] = null
             }
             let product = await Product.findOneAndUpdate(query, data)
-
-            if (req.files.img) {
+            if (req.fields.img instanceof String && req.fields.img != product.img) {
+                product.img = req.fields.img
+            }else if (req.files.img) {
                 let filename = saveImage(req.files.img, req.db, product.img)
                 if (filename == 'Not image') {
                     result = {
@@ -188,9 +189,13 @@ class ProductController{
                 }
             }
             for (let $i = 0; $i < 3; $i++) {
-                // console.log('image array before', product.imgArray)
                 if (req.files['imgArray' + $i] != undefined && req.files['imgArray' + $i] != null) {
-                    let filename = saveImage(req.files['imgArray' + $i], req.db, product.imgArray[$i])
+                    let filename = ""
+                    if (product.img != product.imgArray[$i]) {
+                        filename = saveImage(req.files['imgArray' + $i], req.db, product.imgArray[$i])
+                    }else{
+                        filename = saveImage(req.files['imgArray' + $i], req.db)
+                    }
                     if (filename == 'Not image') {
                         result = {
                             status: 500,
@@ -207,18 +212,18 @@ class ProductController{
                             product.imgArray.push(filename)
                         }
                     }
-                }else if (req.fields['imgArray' + $i] == "" && product.imgArray[$i]){
-                    removeImage(product.imgArray[$i])
+                } else if (req.fields['imgArray' + $i] == "" && product.imgArray[$i]){
+                    if (product.img != product.imgArray[$i]){
+                        removeImage(product.imgArray[$i])
+                    }
                     delete product.imgArray[$i]
                 }
             }
-            console.log(product.imgArray)
             for (let $i = 2; $i >= 0; $i--) {
                 if (product.imgArray[$i] == null || product.imgArray[$i] == undefined){
                     product.imgArray.splice($i, 1)
                 }
             }
-            console.log(product.imgArray)
             await product.save({new:true})
             await new Log({
                 type: "product_updated",
