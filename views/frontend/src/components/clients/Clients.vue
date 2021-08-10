@@ -265,13 +265,19 @@
 
         </div>
         <div class="table-content">
-          <ClientItem
-              v-on:checkSelection="checkSelection"
-              v-on:selectClient="selectClient"
-              v-on:deleteClient="deleteClient"
-              :clientList="clientToDisplay"
-              :data_check="data_check"
-          />
+          <div class="mt-5" v-if="clientList.length===0">
+            <Spinner/>
+          </div>
+          <div v-else>
+            <ClientItem
+                v-on:checkSelection="checkSelection"
+                v-on:selectClient="selectClient"
+                v-on:deleteClient="deleteClient"
+                :clientList="clientToDisplay"
+                :data_check="data_check"
+            />
+          </div>
+
 
         </div>
         <IndividualPush/>
@@ -312,6 +318,7 @@
 
 
 <script>
+import Spinner from "../Spinner";
 import ClientItem from "@/components/clients/ClientItem";
 import EditClient from "@/modals/client/EditClient";
 import AddCategory from "@/modals/client/AddCategory";
@@ -328,7 +335,8 @@ export default {
     AddCategory,
     EditCategory,
     PushNotification,
-    IndividualPush
+    IndividualPush,
+    Spinner
   },
 
 

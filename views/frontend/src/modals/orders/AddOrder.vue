@@ -160,13 +160,7 @@
                   <input class="cashback-input" v-model="guest.phone">
               </div>
 
-
-
-
-
-
-
-             <div class="parent-order-client">
+              <div class="parent-order-client">
                <div v-if="search_client.length !==0" class="child-order-client">
                 <div v-if="filteredClients.length === 0">
                   <div class="pl-3">Not found</div>
@@ -186,7 +180,7 @@
              </div>
               <h3 class="client-sub-title">Delivery method</h3>
               <div class="selects">
-                <select v-model="new_order.deliveryType" class=" form-control long-form-control  form-control-lg" aria-label=".form-select-lg example">
+                <select @change="checkMinimumSum" v-model="new_order.deliveryType" class=" form-control long-form-control  form-control-lg" aria-label=".form-select-lg example">
                   <option value="self" >Pick up</option>
                   <option value="delivery">Delivery</option>
                 </select>
@@ -221,15 +215,15 @@
                   </div>
                 </div>
                 <div v-if="showDeliveryOption" class="delivery_option_wrapper_class" >
-                  <div v-if="delivery_options.length!==0">
-                    <div @click="setSelectedDeliveryOption(opt)"  v-for="opt in delivery_options" :key="opt._id" class="d-flex delivery_option_class">
-                      <div style="flex:1;">{{opt.name}}</div>
-                      <div>{{opt.price}}{{currency}}</div>
-                    </div>
+
+                  <div @click="setSelectedDeliveryOption(opt)"  v-for="opt in delivery_options" :key="opt._id" class="d-flex delivery_option_class">
+                    <div style="flex:1;">{{opt.name}}</div>
+                    <div>{{opt.price}}{{currency}}</div>
                   </div>
-                  <div v-else class="mb-2">
-                      Minimum sum of purchase isn't enough
-                  </div>
+
+
+
+
 
                 </div>
 
@@ -401,6 +395,7 @@ export default {
       let options = this.all_delivery_options.filter(function (option){
         return option.minPrice<=that.totalPrice || 0;
       })
+      that.unSetSelectedDeliveryOption();
       return options;
     },
     totalPrice(){
@@ -523,6 +518,8 @@ export default {
     },
   },
   methods:{
+
+
     unSetPersonalDiscount(){
       this.new_order.personalDiscount={
         percent:true,
@@ -612,6 +609,11 @@ export default {
         this.showDeliveryOption = false;
       }
     },
+    unSetSelectedDeliveryOption(){
+        this.selectedDeliveryOptionObject = {};
+        this.showDeliveryOption = false;
+       
+    },
     compareDates(dateStart_,dateEnd_){
       if(!dateStart_ || !dateEnd_){
         return false;
@@ -638,11 +640,11 @@ export default {
       }
       if(this.new_order.deliveryType === "self"){
         if(Object.keys(this.selectedBranchObject).length === 0){
-          this.$warningAlert('Select branch');
+        this.$warningAlert('Select branch');
           return;
         }
       }else{
-        if(Object.keys(this.selectedDeliveryOptionObject).length === 0){
+        if(Object.keys(this.selectedDeliveryOptionObject).length < 3){
           this.$warningAlert('Select delivery option');
           return;
         }
@@ -856,6 +858,7 @@ export default {
           this.editOrderId = val._id;
           this.editState = true;
           that.new_order.items = val.productsDetails;
+          that.new_order.notes = val.notes;
           that.new_order.personalDiscount = val.personalDiscount ? val.personalDiscount : {percent:true,sum:0,};
           that.checkPromocode(val.promoCodeObject);
           that.searchPromoText = val.promoCodeObject ? val.promoCodeObject.code : '';
@@ -954,6 +957,9 @@ export default {
 }
 .empty_delivery{
   border-color:red;
+}
+.delivery_option_class:hover{
+  color:#616cf5
 }
 .delivery_option_wrapper_class{
   position:absolute;

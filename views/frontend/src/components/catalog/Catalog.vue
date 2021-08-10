@@ -120,13 +120,19 @@
             <div class="table-head" style="width: 8%;"></div>
           </div>
           <div class="table-content" >
-            <CatalogItem
+            <div class="mt-5" v-if="catalogList.length===0">
+              <Spinner/>
+            </div>
+            <div v-else>
+              <CatalogItem
                   v-on:checkSelection="checkSelection"
                   v-bind:getProducts="getProducts"
                   v-on:selectProduct="selectProduct"
                   v-bind:catalogList="catalogToDisplay"
                   v-on:deleteProduct="deleteProduct"
               />
+            </div>
+
           </div>
           <div class="pagination d-flex justify-content-between align-items-center">
             <div class="d-flex align-items-center">
@@ -152,6 +158,7 @@
 </template>
 
 <script>
+import Spinner from "../Spinner";
 import EditProduct from "@/modals/catalog/edit-product/EditProduct";
 import CatalogItem from "@/components/catalog/CatalogItem";
 import AddCategory from "@/modals/catalog/add-category/AddCategory";
@@ -168,7 +175,8 @@ name: "Catalog",
     ImportClient,
     EditCategory,
     AddProduct,
-    EditProduct
+    EditProduct,
+    Spinner
   },
 
   data(){

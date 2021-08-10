@@ -20,7 +20,7 @@ export default {
   position: absolute;
   width: 30px;
   height: 30px;
-  border: 5px solid #616cf5;
+  border: 2px solid #616cf5;
   border-top-color: transparent;
   border-radius: 50%;
 }

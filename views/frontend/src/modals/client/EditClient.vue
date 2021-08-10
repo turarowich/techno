@@ -60,7 +60,7 @@
             </div>
             <div class="modal-btn d-flex">
               <button class="save" @click.prevent="onSubmit(currentData._id)">Save</button>
-              <button class="remove">Remove</button>
+              <button class="remove" @click.prevent="deleteClient(currentData._id)">Remove</button>
             </div>
           </form>
         </div>
@@ -71,6 +71,7 @@
 
 <script>
 import $ from "jquery";
+import Swal from "sweetalert2";
 
 export default {
   name: "EditClient",
@@ -93,6 +94,60 @@ export default {
     }
   },
   methods:{
+
+    deleteClient(id){
+      Swal.fire({
+        showConfirmButton: true,
+        html: 'Are you sure to remove this <br>client',
+        showCloseButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Delete',
+        buttonsStyling:false,
+        customClass:{
+          popup: 'sweet-delete',
+          confirmButton: 'confirm-btn',
+          cancelButton:'cancel-btn',
+          actions:'btn-group',
+          content:'content-sweet',
+          closeButton:'close-btn'
+
+        },
+        showClass: {
+          popup: 'animate__animated animate__slideInDown'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp'
+        }
+
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.axios.delete(this.url('deleteClient', id))
+              .then(()=>{
+                this.getClients()
+                $('#edit-client').modal("hide")
+                Swal.fire({
+                      title:'Success',
+                      timer:1500,
+                      text:'Order has been removed',
+                      showConfirmButton:false,
+                      position: 'top-right',
+                      customClass:{
+                        popup:'success-popup',
+                        content:'success-content',
+                        title:'success-title',
+                        header:'success-header',
+                        image:'success-img'
+                      },
+                    }
+                )
+              }).catch((error)=>{
+            if(error.response && error.response.data){
+              this.$warningAlert(error.response.data.msg)
+            }
+          });
+        }
+      })
+    },
     uploadPhoto(event){
       var valid = ["image/png", "image/jpg", "image/jpeg"];
       if(event.target.files[0] && event.target.files[0].size > 3000000){

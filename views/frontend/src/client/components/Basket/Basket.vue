@@ -256,6 +256,7 @@ name: "Basket",
       let options = all_options.filter(function (option){
         return option.minPrice<=that.total_price;
       })
+      that.unSetSelectedDeliveryOption();
       return options;
     },
     shoppingCart(){
@@ -338,6 +339,10 @@ name: "Basket",
   },
     setSelectedDeliveryOption(obj){
       this.selectedDeliveryOptionObject = obj;
+      this.showDeliveryOption = false;
+    },
+    unSetSelectedDeliveryOption(){
+      this.selectedDeliveryOptionObject = {};
       this.showDeliveryOption = false;
     },
     saveTempoOrderFunc(menu_url){
