@@ -23,6 +23,11 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const { initClientDbConnection } = require('./config/dbutil');
 const userConnection = initClientDbConnection()
 
+
+//Event emitter
+require('events').EventEmitter.defaultMaxListeners = 15;
+
+
 app.use((req, res, next) => {
     if (userConnection.readyState == 0) {
         res.status(500).json({ status: 500, msg: 'DB not connected' });

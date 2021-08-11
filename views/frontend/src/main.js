@@ -36,14 +36,23 @@ import QRCode from 'qrcode';
 app.config.globalProperties.$QRCode = QRCode;
 
 const ax = axios.create({
-    timeout: 1000,
+    timeout: 10000,
     proxy: {
         host: 'localhost',
         port: 8443
     },
 });
-console.log(process.env.VUE_APP_SERVER_URL,"process.env.VUE_APP_SERVER_URL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-console.log(localStorage.getItem('token'),"process.env.VUE_APP_SERVER_URL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+ax.interceptors.response.use(function (response) {
+    // Do something with response data
+    return response;
+}, function (error) {
+    // Do something with response error
+    if (error.response.data.auth == false && error.response.data.message == 'Failed to authenticate token.' && window.location.pathname != "/" ) {
+        localStorage.clear()
+        document.location.href = "/";
+    }
+    return Promise.reject(error);
+});
 
 const socket = io(process.env.VUE_APP_SERVER_URL, {
     extraHeaders: {

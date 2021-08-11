@@ -38,7 +38,7 @@ class CategoryController {
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
-
+        console.log(result)
         res.status(result.status).json(result);
     };
 

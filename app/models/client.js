@@ -157,6 +157,21 @@ const clientSchema = new Schema({
             message: props => 'code_unique'
         },
     },
+    custom_field_0: {
+        type: String,
+        required: false,
+        default: ""
+    },
+    custom_field_1: {
+        type: String,
+        required: false,
+        default: ""
+    },
+    custom_field_2: {
+        type: String,
+        required: false,
+        default: ""
+    },
     lastMessageAt: {
         type: Date,
         required: true,

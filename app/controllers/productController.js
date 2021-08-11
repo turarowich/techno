@@ -50,7 +50,7 @@ class ProductController{
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
-
+        // console.log(result)
         res.status(result.status).json(result);
     };
 
@@ -191,7 +191,6 @@ class ProductController{
             }
             for (let $i = 0; $i < 3; $i++) {
                 if (req.files['imgArray' + $i] != undefined && req.files['imgArray' + $i] != null) {
-                    console.log('image array first')
                     let filename = ""
                     if (product.img != product.imgArray[$i]) {
                         filename = saveImage(req.files['imgArray' + $i], req.db, product.imgArray[$i])
@@ -215,7 +214,6 @@ class ProductController{
                         }
                     }
                 } else if (req.fields['imgArray' + $i] == "" && product.imgArray[$i]){
-                    console.log('image array before')
                     if (product.img != product.imgArray[$i]){
                         removeImage(product.imgArray[$i])
                     }
