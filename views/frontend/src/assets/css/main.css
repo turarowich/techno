@@ -274,7 +274,7 @@ img{
     height: 16px;
     width: 17px;
     left: 3px;
-    bottom: 2.5px;
+    bottom: calc(50% - 8px);
     background-color: white;
     -webkit-transition: .4s;
     transition: .4s;

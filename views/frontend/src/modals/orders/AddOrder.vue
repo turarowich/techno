@@ -399,6 +399,7 @@ export default {
       return options;
     },
     totalPrice(){
+
       //products own discount
       //promocode discount
       //clients status discount
@@ -407,6 +408,7 @@ export default {
       //client points if used
       //personal discount entered as % or fixed sum --- new
       let that = this;
+      that.unSetSelectedDeliveryOption();
       let subArray = [];
       this.new_order.items.forEach((item)=>{
         let obj_ = {
@@ -612,7 +614,7 @@ export default {
     unSetSelectedDeliveryOption(){
         this.selectedDeliveryOptionObject = {};
         this.showDeliveryOption = false;
-       
+
     },
     compareDates(dateStart_,dateEnd_){
       if(!dateStart_ || !dateEnd_){
