@@ -9,7 +9,7 @@
           <img v-else class="edit-img" src="../../assets/icons/editUserAvatar.svg">
           <div>
             <h3 class="edit-name">{{client.name !== undefined ? client.name : ''}}</h3>
-            <div class="edit-category">Category: <span>{{client.category !== undefined ? client.category.name : 'No category'}}</span></div>
+            <div  class="edit-category">Category: <span>{{client.category && client.category!== null ? client.category.name : 'No category'}}</span></div>
             <span class="edit-user"  data-toggle="modal"  data-target="#edit-client" >Edit user</span>
           </div>
         </div>
@@ -236,7 +236,7 @@ export default {
             this.client = res.data.object;
             this.historyBonus = res.data.history;
             this.purchaseHistory = res.data.orders;
-            console.log(res)
+            console.log(res, 'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFf')
           })
     },
     getDiscounts() {

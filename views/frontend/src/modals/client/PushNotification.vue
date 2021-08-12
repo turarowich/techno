@@ -247,25 +247,30 @@ export default {
       if(this.selectAll === true){
           new_data.sendToAll = true
       }
+
       console.log(new_data)
       if(new_data.clients.length === 0 ){
         this.$warningAlert('Please select whom you want to send push notification')
       }
-      else if(new_data.news === ''){
-          this.$warningAlert('Choose a news')
-      }
       else{
-
         const form = new FormData();
-        form.append('title', new_data.title);
-        form.append('description', new_data.description);
+
+
+        if(new_data.news !== ''){
+          form.append('news', new_data.news)
+        }
+        else{
+          form.append('title', new_data.title);
+          form.append('description', new_data.description);
+        }
+
         form.append('sendToAll', new_data.sendToAll);
         form.append('clients', new_data.clients);
-        form.append('news',new_data.news)
-         this.axios.post(this.url('sendPushNotification'),form)
+        this.axios.post(this.url('sendPushNotification'),form)
             .then((res)=>{
               this.$successAlert('Push has been sent')
               console.log(res, 'Success push')
+
             })
         $('#push-notification').modal("hide")
       }

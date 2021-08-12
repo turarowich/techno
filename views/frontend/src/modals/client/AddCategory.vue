@@ -20,7 +20,6 @@
                 <label>Select category</label>
                 <select class="form-control long-form-control modal-select mb-5">
                   <option value="">Without category</option>
-                  <option ></option>
                 </select>
               </div>
 
@@ -82,6 +81,7 @@ export default {
   border:0;
   border-radius: 0;
   width: 562px;
+
 }
 .parent-modal{
   display: flex;
@@ -95,5 +95,8 @@ export default {
 }
 .category-header{
   padding:34px 50px;
+}
+.form-control{
+  font-size: 14px;
 }
 </style>

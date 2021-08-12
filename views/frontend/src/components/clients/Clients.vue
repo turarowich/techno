@@ -16,7 +16,7 @@
         </button>
 
         <div class="move-category animate slideIn dropdown-menu" aria-labelledby="dropdownMenuTotal">
-          <div class="move-category-item" v-for="cat in clientCategory" :key="cat._id" @click="moveCategory(cat._id)">{{cat.name}}</div>
+          <div class="move-category-item" v-for="cat in clientCategory.slice(1)" :key="cat._id" @click="moveCategory(cat._id)">{{cat.name}}</div>
         </div>
       </div>
       <div class="dropdown filter">
@@ -215,24 +215,27 @@
         <h3 class="category-title" >Client category</h3>
         <input v-model="search_category" placeholder="Search" style="height:35px; margin-bottom:15px" class="cashback-input">
 
-        <ul class="list-group" >
-          <li class="catalog-list" :ref="`menu`+index"   v-for="(category,index) in filterCategory" :key="category._id" :class="{active: f_category === category._id}"  @click="f_category = category._id">
-            <p class="category-text tool-tip" data-toggle="tooltip" data-placement="right" :title="category.name">
+
+          <ul class="list-group" >
+            <li class="catalog-list" :ref="`menu`+index"   v-for="(category,index) in filterCategory" :key="category._id" :class="{active: f_category === category._id}"  @click="f_category = category._id">
+              <p class="category-text tool-tip" data-toggle="tooltip" data-placement="right" :title="category.name">
                 {{category.name}}
-            </p>
-            <div class="dropdown dropMenu">
-              <div class="dropdown-toggle" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <img v-if="category._id !== ''" src="../../assets/icons/three-dots.svg">
+              </p>
+              <div class="dropdown dropMenu">
+                <div class="dropdown-toggle" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <img v-if="category._id !== ''  && category._id !== null" src="../../assets/icons/three-dots.svg">
+                </div>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+                  <ul class="list-group" >
+                    <li class="list-group-item" data-toggle="modal" data-target="#edit-client-category" @click="selectCategory(category._id)">Edit</li>
+                    <li class="list-group-item" @click="deleteCategory(category._id)">Delete</li>
+                  </ul>
+                </div>
               </div>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenu">
-                <ul class="list-group" >
-                  <li class="list-group-item" data-toggle="modal" data-target="#edit-client-category" @click="selectCategory(category._id)">Edit</li>
-                  <li class="list-group-item" @click="deleteCategory(category._id)">Delete</li>
-                </ul>
-              </div>
-            </div>
-          </li>
-        </ul>
+            </li>
+          </ul>
+
+
       </div>
     </div>
     <div class="client-content" style="width:76%">
@@ -265,7 +268,7 @@
 
         </div>
         <div class="table-content">
-          <div class="mt-5" v-if="clientList.length===0">
+          <div  style="height:100%; " class="d-flex align-items-center" v-if="spinner">
             <Spinner/>
           </div>
           <div v-else>
@@ -342,6 +345,7 @@ export default {
 
   data(){
     return {
+      spinner:true,
       clientList:[],
       movedCategories:[],
       data_check:{
@@ -377,7 +381,7 @@ export default {
 
       /*-------- initial values filtered first--------*/
 
-      f_category:'',
+      f_category:null,
       f_gender_client:'',
       f_birthday:'',
       f_discount:'',
@@ -465,6 +469,12 @@ export default {
               client.discount = 0;
             }
             return client.discount.toString().includes(this.f_discount.toString())
+          })
+          .filter(client=>{
+            if(this.f_category === ""){
+              return client.category === null
+            }
+            return true
           })
     },
     showMainSearch(){
@@ -699,6 +709,7 @@ export default {
       this.axios.get(this.url('getClients'))
       .then((res)=>{
         this.clientList = res.data.objects;
+        this.spinner = false;
         console.log(this.clientList,"====================");
         this.clientList.map((item)=>{
           item['total'] = item.orders.reduce((acc,it)=>acc+it.totalPrice, 0);
@@ -714,8 +725,9 @@ export default {
     getCategories(){
       this.axios.get(this.url('getCategories')+'?type=client')
       .then((response)=>{
-        this.clientCategory = response.data.objects
-        this.clientCategory.unshift({_id:'',name:'All'})
+        this.clientCategory = response.data.objects;
+        this.clientCategory.unshift({_id:"", name: 'Without category'})
+        this.clientCategory.unshift({_id:null, name: 'All'})
       })
     },
     getDiscounts() {
@@ -771,10 +783,16 @@ export default {
        this.$warningAlert('Please choose a clients');
      }
      else{
-       this.axios.put(this.url('updateClientsCategory'),{
-         objects: this.movedCategories,
-         category: id
-       })
+
+       const submitObj = {
+         objects:this.movedCategories,
+         category:id
+       }
+       if(id === ""){
+         submitObj['category'] = null;
+       }
+
+       this.axios.put(this.url('updateClientsCategory'),submitObj)
            .then(()=>{
              this.getClients()
              this.movedCategories = []
@@ -870,7 +888,8 @@ export default {
   border: 1px solid #E3E3E3;
   box-sizing: border-box;
   border-radius: 5px;
-  padding:20px 15px;
+  padding:0 15px;
+  padding-top: 20px;
   margin-right: 20px;
 }
 .category-title{

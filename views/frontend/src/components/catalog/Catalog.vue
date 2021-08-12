@@ -120,7 +120,7 @@
             <div class="table-head" style="width: 8%;"></div>
           </div>
           <div class="table-content" >
-            <div class="mt-5" v-if="catalogList.length===0">
+            <div  style="height:100%; " class="d-flex align-items-center" v-if="spinner">
               <Spinner/>
             </div>
             <div v-else>
@@ -181,6 +181,7 @@ name: "Catalog",
 
   data(){
     return{
+      spinner:true,
       listCategory:[{_id:'', name:'All'}],
       catalogList:[],
       deletedProducts:[],
@@ -484,7 +485,8 @@ name: "Catalog",
           .then((response) => {
               this.catalogList = response.data.objects;
               console.log(this.catalogList)
-            console.log(response)
+              this.spinner = false;
+
 
 
 

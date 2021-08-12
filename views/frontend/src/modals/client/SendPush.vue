@@ -14,8 +14,8 @@
           <div class="modal-body category-body">
             <form id="form" class="modal-form">
               <label>News</label><br>
-              <input  v-if="sendPush.news === ''" v-model="search"  class="cashback-input mb-3"  placeholder="Select news">
-              <div v-else class="cashback-input bg-transparent d-flex align-items-center mb-3">{{sendPush.news.name}}</div>
+              <input :disabled="sendPush.title !== '' || sendPush.description !== ''" :class="{disableInput: sendPush.title !=='' || sendPush.description!==''}"  v-if="sendPush.news === ''" v-model="search"  class="cashback-input mb-3"  placeholder="Select news">
+              <div v-else class="cashback-input bg-transparent d-flex align-items-center mb-3">{{newsObj.name}}</div>
               <img v-if="sendPush.news !== ''"  @click="clearNews" class="delete-new" src="../../assets/icons/deleteClient.svg">
               <div class="parent-news">
                 <div v-if="search!==''" class="news pt-3">
@@ -30,8 +30,8 @@
                 </div>
               </div>
               <label>Custom text</label><br>
-              <input v-model="sendPush.title"  class="disables cashback-input mb-2"  placeholder="Title">
-              <textarea v-model="sendPush.description"  class=" disables general-area p-2" placeholder="Description"></textarea>
+              <input :disabled="sendPush.news!==''" v-model="sendPush.title" :class="{disableInput: sendPush.news!== ''}"  class="disables cashback-input mb-2"  placeholder="Title">
+              <textarea :disabled="sendPush.news!==''" v-model="sendPush.description" :class="{disableInput: sendPush.news!== ''}"  class=" disables general-area p-2" placeholder="Description"></textarea>
               <button  class="save" @click.prevent="onSubmit">Send</button>
             </form>
           </div>
@@ -50,12 +50,14 @@ export default {
     return{
       search:'',
       newsList:[],
+      newsObj:'',
       sendPush:{
         clients:[],
         news:'',
         title:'',
         description:'',
-        sendToAll:false
+        sendToAll:false,
+
       }
     }
   },
@@ -69,14 +71,20 @@ export default {
   methods:{
     onSubmit(){
       const that = this;
-     const new_data = this.sendPush;
+      const new_data = this.sendPush;
       new_data.clients.push(this.client._id);
+      const form = new FormData;
 
-      if(new_data.news === ''){
-        this.$warningAlert('Choose a news')
+      if(new_data.news !== ''){
+        form.append('news',new_data.news)
       }
       else{
-        that.axios.post(this.url('sendPushNotification'),new_data)
+        form.append('title',new_data.title);
+        form.append('description',new_data.description);
+      }
+      form.append('sendToAll', new_data.sendToAll);
+      form.append('clients',new_data.clients)
+      this.axios.post(this.url('sendPushNotification'),form)
             .then(()=>{
               document.getElementById('form').reset();
               that.$successAlert('Push has been sent')
@@ -84,11 +92,12 @@ export default {
               that.sendPush.news = '';
 
             })
-      }
+
 
     },
     clearNews(){
       this.sendPush.news = '';
+      this.newsObj = ''
     },
     getNews(){
       this.axios.get(this.url('getNews'))
@@ -97,7 +106,8 @@ export default {
           })
     },
     selectNew(news){
-      this.sendPush.news = news;
+      this.sendPush.news = news._id;
+      this.newsObj = news;
       this.search = '';
 
 

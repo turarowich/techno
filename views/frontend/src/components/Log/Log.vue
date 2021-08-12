@@ -76,21 +76,29 @@
      <div class="table-head" style="width: 20%;">Date and time</div>
   </div>
   <div class="table-content">
-    <LogItem v-bind:logs="logsList"/>
+    <div v-if="spinner" style="height:100%; " class="d-flex align-items-center">
+      <Spinner/>
+    </div>
+    <div v-else>
+      <LogItem v-bind:logs="logsList"/>
+    </div>
   </div>
 
 </div>
 </template>
 
 <script>
+import Spinner from "../Spinner";
 import LogItem from "@/components/Log/LogItem";
 export default {
   name: "Log",
   components:{
-    LogItem
+    LogItem,
+    Spinner
   },
   data(){
     return{
+        spinner:true,
         logs:[],
         between_value:'',
         startDate:'',
@@ -137,6 +145,7 @@ export default {
                 }
             }).then((response) => {
                 this.logs = this.changeTitle(response.data.objects);
+                this.spinner = false
             })
         },
         getEmployees(){
