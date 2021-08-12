@@ -20,7 +20,7 @@
       <p class="catalog-description margin-20">
         Describe the possible delivery options
       </p>
-      <textarea v-model="deliveryDescription" class="general-area"></textarea>
+      <textarea v-model="deliveryDescription" class="general-area pt-2"></textarea>
 
       <div v-for="option in deliveryOptions" :key="option._id">
         <div class="catalog-sub-title">
