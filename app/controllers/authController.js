@@ -173,7 +173,8 @@ class AuthController{
             }
 
             if (!user) return res.status(404).json({ status: 404, msg: 'No user found', errors: errors});
-
+            if (!user.password) return res.status(401).json({ status: 401, msg: "Not valid password", auth: false, token: null, errors: errors });
+            console.log(user.password)
             var passwordIsValid = bcrypt.compareSync(req.fields.password, user.password);
             delete errors.phone
             if (!passwordIsValid) return res.status(401).json({ status: 401, msg: "Not valid password", auth: false, token: null, errors: errors });
