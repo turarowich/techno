@@ -1,6 +1,9 @@
 <template>
 <div>
-  <div class="row mb-5">
+ <div v-if="spinner"  style="height:65vh; " class="d-flex align-items-center">
+   <Spinner/>
+ </div>
+  <div v-else class="row mb-5">
     <div class="col-lg-5">
       <h2 class="cashback-title address-titles">Address delivery</h2>
       <div class="d-flex margin-10">
@@ -17,7 +20,7 @@
       <p class="catalog-description margin-20">
         Describe the possible delivery options
       </p>
-      <textarea v-model="deliveryDescription" class="general-area"></textarea>
+      <textarea v-model="deliveryDescription" class="general-area pt-2"></textarea>
 
       <div v-for="option in deliveryOptions" :key="option._id">
         <div class="catalog-sub-title">
@@ -59,6 +62,7 @@
 <script>
 import AddBranch from "@/modals/client/AddBranch";
 import AddDeliveryOption from "@/modals/client/AddDeliveryOption";
+import Spinner from "../Spinner";
 import $ from "jquery";
 import Swal from "sweetalert2";
 export default {
@@ -66,9 +70,11 @@ export default {
   components:{
     AddBranch,
     AddDeliveryOption,
+    Spinner
   },
   data(){
     return{
+      spinner:true,
       branches:[],
       deliveryOptions:[],
       edit_branch:{},
@@ -208,6 +214,8 @@ export default {
           that.deliveryDescription= settings.deliveryDescription || '';
           that.branches = response.data.branches || [];
           that.deliveryOptions = response.data.deliveries || [];
+          that.spinner = false;
+
         })
   },
 }

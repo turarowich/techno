@@ -1,6 +1,9 @@
 <template>
 <div class="discount">
-  <div class="row">
+  <div v-if="spinner" style="height:65vh; " class="d-flex align-items-center">
+    <Spinner/>
+  </div>
+  <div v-else class="row">
     <div class="col-lg-9">
       <div class="mb-2 d-flex">
         <label class="switch d-flex">
@@ -34,7 +37,7 @@
           </div>
         </div>
       </div>
-<!--      <button class="save">Save</button>-->
+      <!--      <button class="save">Save</button>-->
     </div>
   </div>
 </div>
@@ -43,11 +46,15 @@
 <script>
 import Swal from "sweetalert2";
 import $ from "jquery";
-
+import Spinner from "../Spinner";
 export default {
   name: "Discount",
+  components:{
+    Spinner
+  },
   data(){
     return {
+      spinner:true,
       status:false,
       id:'',
       current_discount:{
@@ -167,6 +174,7 @@ export default {
         let cashback = response.data.object;
         that.status = cashback.discounts_status;
         that.id= cashback._id;
+        that.spinner = false;
       })
     this.axios
       .get(this.base_url +'/api/getDiscounts')

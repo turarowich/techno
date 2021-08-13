@@ -65,6 +65,9 @@ const routes = [
         path: "/orders",
         name: "Orders",
         component: Orders,
+        meta:{
+            title:"Orders"
+        }
 
     },
     {
@@ -415,6 +418,7 @@ router.beforeEach((to, from, next) => {
 
         return middleware[0]({ ...context, next: nextMiddleware });
     }
+
 
     return next();
 });

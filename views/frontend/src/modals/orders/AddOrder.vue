@@ -395,10 +395,10 @@ export default {
       let options = this.all_delivery_options.filter(function (option){
         return option.minPrice<=that.totalPrice || 0;
       })
-      that.unSetSelectedDeliveryOption();
       return options;
     },
     totalPrice(){
+
       //products own discount
       //promocode discount
       //clients status discount
@@ -504,6 +504,7 @@ export default {
         subDiscount = subDiscount + discount;
       }
       this.setTotalDiscount(subDiscount);
+      console.log("AAAAAAAAAAAAAAAAAAAAAAAA",subTotal.toFixed(2))
       return subTotal.toFixed(2);//type string
     },
     filteredProducts(){
@@ -612,7 +613,6 @@ export default {
     unSetSelectedDeliveryOption(){
         this.selectedDeliveryOptionObject = {};
         this.showDeliveryOption = false;
-       
     },
     compareDates(dateStart_,dateEnd_){
       if(!dateStart_ || !dateEnd_){
@@ -887,6 +887,16 @@ export default {
         }else{
           this.editState = false;
           this.resetData();
+        }
+      },
+      // deep: true,
+      immediate: true,
+    },
+    totalPrice: {
+      handler(val, old) {
+        console.log(val,"--------unSetSelectedDeliveryOption UNSET---------", old);
+        if(val<old){
+          this.unSetSelectedDeliveryOption()
         }
       },
       // deep: true,

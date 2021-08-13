@@ -47,10 +47,10 @@ ax.interceptors.response.use(function (response) {
     return response;
 }, function (error) {
     // Do something with response error
-    if (error.response.data.auth == false && error.response.data.message == 'Failed to authenticate token.' && window.location.pathname != "/" ) {
-        localStorage.clear()
-        document.location.href = "/";
-    }
+    // if (error.response.data.auth == false && error.response.data.message == 'Failed to authenticate token.' && window.location.pathname != "/" ) {
+    //     localStorage.clear()
+    //     document.location.href = "/";
+    // }
     return Promise.reject(error);
 });
 

@@ -173,5 +173,6 @@ export default {
 }
 .cashback-input{
   width: 100%;
+  margin-bottom: 20px;
 }
 </style>

@@ -142,15 +142,14 @@ class PushController {
             'status': 500,
             'msg': 'Something went wrong'
         }
-        
         if (clients && settings) {
             let query = { 'type': 'ios', 'client': { $in: clients } }
-            
+
             if (req.fields.sendToAll){
                 query = {}
             }
             let devicesIOS = await Device.find(query)
-            
+
             let noteIOS = new apn.Notification({
                 alert: {
                     title: data.name,

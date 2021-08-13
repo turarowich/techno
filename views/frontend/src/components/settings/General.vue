@@ -1,7 +1,10 @@
 <template>
   <div class="general">
-    <form>
-      <div class="row ">
+  <div v-if="spinner"  style="height:65vh; " class="d-flex align-items-center">
+    <Spinner/>
+  </div>
+    <form v-else class="mb-5">
+      <div class="row">
         <div class="col-lg-5 mr-5 left-general">
           <label class="sum-point">Currency</label><br>
           <input v-model="currency" class="form-input cashback-input " placeholder="USD">
@@ -99,11 +102,15 @@
 </template>
 
 <script>
-
+import Spinner from "../Spinner";
 export default {
   name: "General",
+  components:{
+    Spinner
+  },
   data(){
     return{
+      spinner:true,
       currency:"",
       country:"",
       chat: false,
@@ -169,6 +176,7 @@ export default {
     this.axios
         .get(this.url('getSettings'))
         .then(function (response){
+          that.spinner = false;
           let settings = response.data.object;
           that.currency = settings.currency || '';
           that.country = settings.country || '';
@@ -216,9 +224,7 @@ export default {
   bottom:1.5px;
 }
 
-.general{
-  padding: 20px 0;
-}
+
 .form input{
   width: 100%;
 }
@@ -248,6 +254,7 @@ export default {
   margin-bottom: 20px;
   font-size: 14px;
   color:#222;
+  padding-left: 10px;
 }
 /*
 

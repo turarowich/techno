@@ -27,7 +27,6 @@
                 <option value="Done">Done</option>
                 <option value="In Progress">In process</option>
                 <option value="Cancelled">Cancelled</option>
-                <option value="New">New</option>
               </select>
             </form>
           </div>
@@ -72,7 +71,7 @@
     </div>
 
     <div class="table-content">
-      <div class="mt-5" v-if="orderList.length===0">
+      <div v-if="spinner" style="height:100%; " class="d-flex align-items-center">
         <Spinner/>
       </div>
       <div v-else>
@@ -85,7 +84,6 @@
             @startScanning="startScanning"
         />
       </div>
-
     </div>
     <AddOrder
       :getOrders="getOrders"
@@ -158,10 +156,10 @@
 </template>
 
 <script>
+import Spinner from "../Spinner";
 import OrderItem from "@/components/orders/OrderItem";
 import AddOrder from "@/modals/orders/AddOrder";
 import EditOrder from "@/modals/orders/EditOrder";
-import Spinner from "../Spinner";
 import Swal from "sweetalert2";
 import $ from 'jquery';
 import { QrStream} from 'vue3-qr-reader';
@@ -174,6 +172,7 @@ name: "Orders",
     EditOrder,
     QrStream,
     Spinner
+
   },
   data(){
     return{
@@ -201,6 +200,7 @@ name: "Orders",
           date_checked:false,
           notes_checked:false
       },
+      spinner:true,
       filter_by_status: '',
       price_from:'',
       price_to:'',
@@ -310,8 +310,8 @@ name: "Orders",
     getOrders(){
       this.axios.get(this.url('getOrders')+'?populate=client')
       .then((response)=>{
-        console.log(response.data.objects);
         this.orderList = response.data.objects;
+        this.spinner = false;
 
       })
     },
