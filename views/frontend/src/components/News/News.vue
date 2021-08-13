@@ -94,8 +94,15 @@ export default {
           content:'content-sweet',
           closeButton:'close-btn'
         },
+          showClass: {
+            popup: 'animate__animated animate__slideInDown'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          }
 
-      }).then((result) => {
+
+        }).then((result) => {
         if (result.isConfirmed) {
           this.axios.delete(this.url('deleteNews', newsID))
           .then(()=>{
@@ -146,4 +153,8 @@ export default {
   padding-left: 40px;
   padding-right: 40px;
 }
+.table-content{
+  height: calc(100vh - 270px) ;
+}
+
 </style>

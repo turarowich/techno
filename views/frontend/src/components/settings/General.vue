@@ -254,6 +254,7 @@ export default {
   margin-bottom: 20px;
   font-size: 14px;
   color:#222;
+  padding-left: 10px;
 }
 /*
 

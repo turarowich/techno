@@ -123,8 +123,11 @@ export default {
         if (result.isConfirmed) {
           this.axios.delete(this.url('deleteClient', id))
               .then(()=>{
-                this.getClients()
+                if(this.$route.name === 'Clients'){
+                  this.getClients();
+                }
                 $('#edit-client').modal("hide")
+                this.$router.push('/clients');
                 Swal.fire({
                       title:'Success',
                       timer:1500,

@@ -284,7 +284,7 @@
 
         </div>
         <IndividualPush/>
-        <PushNotification/>
+        <PushNotification v-bind:clientList="clientList"/>
         <EditClient
             v-bind:getClients="getClients"
             v-bind:select_client="select_client"/>

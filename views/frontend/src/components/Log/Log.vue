@@ -215,6 +215,9 @@ export default {
   font-size: 14px;
 
 }
+.table-content{
+  height: calc(100vh - 270px) ;
+}
 
 .general-dropdown{
   width: 19rem;
