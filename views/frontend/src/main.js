@@ -25,8 +25,6 @@ import moment from 'moment';
 import Lightpick from 'lightpick'
 import axios from "axios";
 import store from './store';
-import 'magnific-popup/dist/magnific-popup.css'
-import 'magnific-popup/dist/jquery.magnific-popup.min'
 import 'dropzone/dist/dropzone';
 import 'dropzone/dist/dropzone.css';
 import io from "socket.io-client";
