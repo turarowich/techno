@@ -277,6 +277,7 @@ name: "Dashboard",
   align-items: center;justify-content: center;
   flex-direction: column;
   color:#fff;
+  border-radius:5px;
 }
 .main-box{
   height: 320px;
@@ -286,8 +287,7 @@ name: "Dashboard",
   position: relative;
   margin-bottom: 25px;
   margin-top: -28px;
-  margin-left: -15px;
-  margin-right: -15px;
+ border-radius:5px;
 
 
 }
@@ -299,6 +299,14 @@ name: "Dashboard",
   }
   .new{
     margin-bottom: 40px;
+  }
+  .relatives{
+    border-radius:0;
+  }
+  .main-box{
+    margin-left: -15px;
+    margin-right: -15px;
+    border-radius: 0;
   }
 }
 </style>

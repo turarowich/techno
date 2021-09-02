@@ -269,10 +269,7 @@ export default {
       })
       console.log(this.currentData.imgArray,'imgArray')
     },
-    unSetDates(){
-      this.promoStartLightpick.setDate('')
-      this.promoEndLightpick.setDate('')
-    },
+
     onSubmit(){
       const updatedProduct = this.currentData;
       const form = new FormData();

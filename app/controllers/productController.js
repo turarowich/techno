@@ -239,8 +239,6 @@ class ProductController{
                     product.imgArray.splice($i, 1)
                 }
             }
-
-
             await product.save({new:true})
 
             let test2 = await Product.findById(product.id);
