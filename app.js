@@ -5,7 +5,6 @@ const config = require('./config/config.js');
 const fs = require('fs');
 const path = require('path');
 const bodyParser = require('body-parser');
-const favicon = require('serve-favicon');
 const http = require('http');
 const https = require('https');
 

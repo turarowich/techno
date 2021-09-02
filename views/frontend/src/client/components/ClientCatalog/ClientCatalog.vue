@@ -16,7 +16,7 @@
         <input class="client-input" v-model="to" style="width:100%">
       </div>
     </div>
-    <input type="text" id="range-slider" name="example_name" value="" />
+    <input type="text" id="range-slider" name="example_name" value="" class="d-none"/>
     <div class="line"></div>
       <h3 class="price">Categories:</h3>
     <ul class="list-group">
@@ -24,8 +24,8 @@
     </ul>
     </div>
     <div class="mobile-btns">
-      <button class="save" @click="showFilterCategory('category')"><img class="list-icon" src="../../../assets/icons/list.svg"><span>Select categories</span></button>
-      <div class="showCategory" >
+      <button  class="save" @click="showFilterCategory('category')" ><img class="list-icon" src="../../../assets/icons/list.svg"><span>Select categories</span></button>
+      <div class="showCategory">
         <div class="mobile-header d-flex justify-content-between align-items-center" >
           <h3 class="filter-category">Categories</h3>
           <img @click="removeFilterCategory('category')" class="close-nav" src="../../../assets/icons/xBlack.svg">
@@ -33,7 +33,6 @@
         <ul class="list-group">
           <li v-for="category in listCategory" :key="category._id" :class="{active: category._id === filtered}" class="catalog-list" @click="displayFiltered(category._id)">{{category.name}}</li>
         </ul>
-
       </div>
       <div class="d-flex mb-3">
         <button class="app-buttons-item" @click="showFilterCategory('filter')"><img src="../../../assets/icons/filter-btn.svg"><span>Filters</span></button>
@@ -64,13 +63,15 @@
       <div class="category-key">Category: <span class="category-value">{{showCategory}}</span></div>
     </div>
   </div>
-  <div id="products" class="pt-3 col-lg-9 col-md-8">
 
-        <ClientCatalogItem v-bind:catalog="filteredList"/>
-
+  <div  id="products" class="pt-3 col-lg-9 col-md-8">
+    <div v-if="spinner">
+      <Spinner/>
+    </div>
+    <div v-else>
+      <ClientCatalogItem v-bind:catalog="filteredList"/>
+    </div>
   </div>
-
-
 
 
 
@@ -108,16 +109,18 @@
 <script>
 import $ from 'jquery';
 import ClientCatalogItem from "@/client/components/ClientCatalog/ClientCatalogItem";
-
+import Spinner from "../../../components/Spinner";
 export default {
 name: "Catalog",
   components:{
     ClientCatalogItem,
+    Spinner
   },
   data(){
     return{
+      spinner:true,
       catalog:[],
-      listCategory:[{_id:'', name:'All'},{_id:'1', name:'clothes'},{_id:'2', name:'shoes'}],
+      listCategory:[],
       filtered: 'all',
       from:0,
       to:0,
@@ -190,7 +193,7 @@ name: "Catalog",
       else{
         $('.showFilter').addClass('active')
       }
-      $('body').css({'overflow':'hidden'})
+
 
 
 
@@ -247,6 +250,7 @@ name: "Catalog",
        await this.axios.get(this.url('getClientProducts'),options)
          .then((response) => {
            this.catalog = response.data.objects;
+           this.spinner = false;
          })
     },
 
@@ -288,6 +292,9 @@ name: "Catalog",
     this.getRangeValues()
     this.getCategories()
     this.getProducts()
+
+
+
 }
 
 }
@@ -313,12 +320,12 @@ name: "Catalog",
 }
 
 
-.showCategory.active,.showFilter.active{
+.showCategory.active, .showFilter.active{
   display: block;
   -webkit-animation: fadeIn 0.3s;
   animation-fill-mode:forwards;
 }
-.showCategory, .showFilter{
+.showCategory,.showFilter{
   position: fixed;
   width: 100vw;
   height: 100%;
@@ -333,6 +340,7 @@ name: "Catalog",
   -webkit-animation: fadeIn 0.3s;
   animation-fill-mode:forwards;
   animation-direction: reverse;
+
 
 }
 .filter-category{
@@ -378,6 +386,7 @@ name: "Catalog",
   position: sticky;
   top:40px;
   z-index: 1000;
+  transition:0.3s;
 
 
 }

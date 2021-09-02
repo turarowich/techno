@@ -126,7 +126,8 @@ export default {
   created() {
     console.log(this.currentCompanyCatalogStorage);
     console.log(this.currentCompanyCatalog);
-  }
+  },
+
 }
 </script>
 

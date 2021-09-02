@@ -170,7 +170,21 @@ class ProductController{
             if(data['category'] === ""){
                 data['category'] = null
             }
+
+            if(!data.promoPrice || data.promoPrice <= 0){
+                data.promoPrice = 0;
+                delete data.promoStart;
+                delete data.promoEnd;
+            }
+
+
             let product = await Product.findOneAndUpdate(query, data)
+
+
+            // let test2 = await Product.findById(product.id);
+            //
+            // console.log(product,"1111111111");
+            // console.log(test2,"222222222222");
 
             if (typeof req.fields.img === 'string' && req.fields.img != product.img) {
                 product.img = req.fields.img
@@ -225,7 +239,21 @@ class ProductController{
                     product.imgArray.splice($i, 1)
                 }
             }
+
+
             await product.save({new:true})
+
+            let test2 = await Product.findById(product.id);
+            if(test2.promoPrice === 0){
+                await Product.updateOne(query, { $unset: { promoStart: "", promoEnd: ""}})
+            }
+            let test3 = await Product.findById(product.id);
+            // if(product.promoPrice === 0){
+            //     await Product.updateOne(query, { $unset: { promoStart: "", promoEnd: ""}})
+            // }
+
+            console.log(test2,"222222222222");
+            console.log(test3,"333333333333");
             await new Log({
                 type: "product_updated",
                 description: product.name,

@@ -1,5 +1,7 @@
 import {createApp} from 'vue'
+import Vue3SmoothScroll from "vue3-smooth-scroll";
 import App from './App.vue'
+
 import 'select2/dist/css/select2.min.css';
 import 'slick-carousel/slick/slick';
 import 'slick-carousel/slick/slick.css';
@@ -23,6 +25,8 @@ import moment from 'moment';
 import Lightpick from 'lightpick'
 import axios from "axios";
 import store from './store';
+import 'magnific-popup/dist/magnific-popup.css'
+import 'magnific-popup/dist/jquery.magnific-popup.min'
 import 'dropzone/dist/dropzone';
 import 'dropzone/dist/dropzone.css';
 import io from "socket.io-client";
@@ -30,6 +34,7 @@ import messages from "./assets/js/messages";
 const app = createApp(App)
 app.use(router);
 app.use(store);
+app.use(Vue3SmoothScroll)
 let token = localStorage.getItem('token')
 
 import QRCode from 'qrcode';
@@ -47,10 +52,10 @@ ax.interceptors.response.use(function (response) {
     return response;
 }, function (error) {
     // Do something with response error
-    // if (error.response.data.auth == false && error.response.data.message == 'Failed to authenticate token.' && window.location.pathname != "/" ) {
-    //     localStorage.clear()
-    //     document.location.href = "/";
-    // }
+    if (error.response.data.auth == false && error.response.data.message == 'Failed to authenticate token.' && window.location.pathname != "/" ) {
+        localStorage.clear()
+        document.location.href = "/";
+    }
     return Promise.reject(error);
 });
 

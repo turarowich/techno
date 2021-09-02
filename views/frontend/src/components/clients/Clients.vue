@@ -717,6 +717,9 @@ export default {
           if(item.orders.length>0){
             item['last_purchase'] = new Date(Math.max(...item.orders.map(e => new Date(e.createdAt))))
           }
+          if(!item.category){
+            item['category']=null
+          }
           return item;
         })
       })

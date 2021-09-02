@@ -18,7 +18,7 @@
                     <button class="upload-photo margin-bottom-30" @click="selectPhoto">+ Upload photo</button><br>        
                     <input class="d-none" type="file" name="" ref="uploadPhoto" @change="uploadPhoto($event)" accept="image/*">
                     <div class="image-preview position-relative" v-if="news.img">
-                        <img :src="imagePreview" alt="" class="w-100 d-block" accept="image/png, image/jpeg">
+                        <img  :src="imagePreview" alt="" class="img-new w-100 d-block" accept="image/png, image/jpeg">
                         <button class="deleteImage" @click="clearInput">
                             <img src="../../assets/icons/deleteClient.svg">
                         </button>
@@ -31,7 +31,7 @@
                     <label>Description</label>
                     <textarea v-model="news.desc"  name="" id="" cols="30" rows="10" class="form-control"></textarea>    
                     <div class="rules d-flex my-3">
-                        <label class="custom-checkbox"><input type="checkbox" v-model="news.category"><span class="checkmark"></span></label>
+                        <label class="custom-checkbox"><input type="checkbox"  @change="checkPromo" v-model="news.category"><span class="checkmark"></span></label>
                         <span class="ml-2">Promotion</span>
                     </div>
                     
@@ -122,23 +122,35 @@ name: "AddNews",
         this.$refs.uploadPhoto.value = ""
         this.news.img = ""
     },
+    checkPromo(){
+      if(this.news.category===false){
+        this.news.startDate = ''
+        this.news.endDate = ''
+
+      }
+    },
     onSubmit(){
         let news = this.news;
         const form  = new FormData;
-    
         if (news.img){
             form.append('img', news.img)
         }
-        if (news.startDate){
+        if(news.category){
+          if (!news.startDate && !news.endDate){
+            this.$warningAlert('Add promotion')
+            return;
+          }
+          else{
             form.append('startDate', news.startDate)
-        }
-        if (news.endDate){
             form.append('endDate', news.endDate)
+          }
         }
-        
+
+        form.append('category',news.category)
         form.append('name', news.name)
         form.append('desc', news.desc)
-        
+
+
         this.axios.post(this.url('addNews'), form)
             .then(() => {
                 setTimeout(()=>{ 
@@ -194,6 +206,11 @@ name: "AddNews",
 .valid-label{
   margin-bottom: 22px !important;
 }
+.image-preview .img-new{
+  height: 192px;
+  object-fit: cover;
+}
+
 
 .show-price{
   display:none;

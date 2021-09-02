@@ -552,7 +552,7 @@ export default {
   height: 100px;
 }
 .url-icon{
-  width: 50px;
+  width: 55px;
   height: 34px;
   background: #616cf5;
   border-radius: 5px;
@@ -582,7 +582,7 @@ export default {
 .profile-img img{
   width: 100%;
   height: 100%;
-  background-size:contain;
+  object-fit:cover;
 }
 .profile-logo{
   width: 100%;
