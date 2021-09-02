@@ -38,13 +38,12 @@ class SettingsController{
                 result['branches'] = branches
                 result['deliveries'] = deliveries
                 result['discounts'] = discounts;
+                console.log(discounts)
 
             } catch (error) {
                 result = sendError(error, req.headers["accept-language"])
             }
         }
-
-
         res.status(result.status).json(result);
     };
 
@@ -91,11 +90,11 @@ class SettingsController{
             result['branches'] = branches;
             result['deliveries'] = deliveries;
             result['discounts'] = discounts;
-
+            console.log(await Discount.find())
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
-
+        console.log(result)
         res.status(result.status).json(result);
     };
 

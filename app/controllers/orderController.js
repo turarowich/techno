@@ -327,9 +327,9 @@ class OrderController{
             let orders = {}
             if (req.query.populate == "client"){
                 // orders = await Order.find(query).populate('client').populate('products').exec();
-                orders = await Order.find(query).populate('client').populate({path:'products',populate: { path: 'product', model: 'Product' }}).exec();
+                orders = await Order.find(query).sort({ updatedAt: -1 }).populate('client').populate({path:'products',populate: { path: 'product', model: 'Product' }}).exec();
             }else{
-                orders = await Order.find(query).populate('products').exec()
+                orders = await Order.find(query).sort({ updatedAt: -1 }).populate('products').exec()
             }
             
             result['objects'] = orders

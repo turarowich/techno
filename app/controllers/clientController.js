@@ -8,7 +8,7 @@ const Analytics = require('./analyticsController');
 var path = require('path');
 const fs = require('fs');
 
-class ClientController{
+class ClientController {
     
     getClient = async function (req, res) {
         let db = useDB(req.db)
@@ -16,6 +16,7 @@ class ClientController{
         let Discount = db.model("Discount");
         let Order = db.model("Order");
         let ClientBonusHistory = db.model("clientBonusHistory");
+        console.log("here")
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "clients", parametr: "active" }, db, res)
             if (checkResult) {
@@ -172,8 +173,28 @@ class ClientController{
             if (req.fields.birthDate) {
                 req.fields.birthDate = req.fields.birthDate.replace('\r\n', '');
             }
+            var validate_result = {
+                status: 500,
+                msg: "Validation error",
+                errors: { },
+            }
+            let user_email = await Client.find({ 'email': req.fields.email })
+            let user_phone = await Client.find({ 'phone': req.fields.phone })
+            if (user_email.length > 1 || (user_email.length > 0 && user_email[0]._id != req.params.client)) {
+                result = validate_result
+                result.errors = {
+                    email: validate[lang]['email_unique']
+                }
+                break updateClient
+            }
+            if (user_phone.length > 1 || (user_phone.length > 0 && user_phone[0]._id != req.params.client)) {
+                result = validate_result
+                result.errors = {
+                    phone: validate[lang]['phone_unique']
+                }
+                break updateClient
+            }
 
-            console.log(req.fields)
             if (req.fields.password && req.fields.password != "\r\n") {
                 req.fields.password = req.fields.password.trim()
                 client = await Client.findOneAndUpdate(query, req.fields, {
@@ -182,10 +203,8 @@ class ClientController{
                 await client.save()
                 client.password = bcrypt.hashSync(req.fields.password, 8);
                 await client.save()
-
             }else{
                 delete req.fields.password
-                
                 client = await Client.findOneAndUpdate(query, req.fields, {
                     new: true
                 })
@@ -228,7 +247,7 @@ class ClientController{
             console.log(error)
             result = sendError(error, req.headers["accept-language"])
         }
-
+        console.log(result)
         res.status(result.status).json(result);
     };
     saveAvatar = async function (req, res) {
@@ -278,11 +297,11 @@ class ClientController{
         }
         res.status(result.status).json(result);
     }
+
     checkPromocode = async function (req, res) {
-        console.log(req.fields);
         let db = useDB(req.db);
         let promocode = req.fields.promocode;
-        let client_id = req.fields.client;
+        let client_id = req.userID;
         let clientModel = db.model("Client");
         let ClientBonusHistory = db.model("clientBonusHistory");
         let receives_points_back = false;
@@ -294,6 +313,7 @@ class ClientController{
         if (lang != 'ru') {
             lang = 'en'
         }
+        console.log("promocode is", req.fields)
         all_check: try{
             //check if exists and its not his own
             //check if client already has received the promo points

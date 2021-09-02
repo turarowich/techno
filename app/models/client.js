@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const uid = require('rand-token');
+const { randomNumber } = require('../../services/helper')
 const clientSchema = new Schema({
 
     name: {
@@ -13,9 +14,10 @@ const clientSchema = new Schema({
         type: String,
         required: [true, 'phone_required'],
         trim: true,
+        // unique: true,
         validate: {
             validator: async function (phone) {
-                const user = await this.constructor.findOne({ phone });
+                const user = await this.constructor.findOne({ phone: phone });
                 if (user) {
                     if (this.id === user.id) {
                         return true;
@@ -33,9 +35,10 @@ const clientSchema = new Schema({
         type: String,
         trim: true,
         required: [true, 'email_required'],
+        // unique: true,
         validate: {
             validator: async function (email) {
-                const user = await this.constructor.findOne({ email });
+                const user = await this.constructor.findOne({ email }).exec();
                 if (user) {
                     if (this.id === user.id) {
                         return true;
@@ -141,7 +144,7 @@ const clientSchema = new Schema({
     },
     uniqueCode: {
         type: String,
-        required: true,
+        required: false,
         trim: true,
         validate: {
             validator: async function (uniqueCode) {
@@ -156,6 +159,7 @@ const clientSchema = new Schema({
             },
             message: props => 'code_unique'
         },
+        default: randomNumber(100000, 1000000)
     },
     custom_field_0: {
         type: String,
@@ -174,19 +178,18 @@ const clientSchema = new Schema({
     },
     lastMessageAt: {
         type: Date,
-        required: true,
+        required: false,
         default: Date.now,
     },
     createdAt: {
         type: Date,
-        required: true,
+        required: false,
         default: Date.now,
     },
     updatedAt: {
         type: Date,
-        required: true,
+        required: false,
         default: Date.now,
     },
 })
-
 module.exports = mongoose.model('Client', clientSchema)

@@ -265,7 +265,6 @@ class AuthController{
             lang = 'en'
         }
         socialAuth: try {
-            console.log(req.fields)
             social_res = await socialRegister(req.fields.social, req.fields.token, req.fields.screen_name, req.fields.full_name, req.fields.email)
 
             if (social_res.error) {
@@ -273,7 +272,6 @@ class AuthController{
                 break socialAuth
             }
             let user = await Client.findOne(social_res.check)
-            console.log(user, req.headers['access-place'], "sdfasdfasgsdfgsdfgdkfhjgkjdfhgkljhgjw43h4563456")
             if(user){
                 result = {
                     status: 500,

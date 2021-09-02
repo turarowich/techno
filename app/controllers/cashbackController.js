@@ -6,6 +6,7 @@ class CashbackController{
         let cashback_model = db.model("Cashback");
         let one = await cashback_model.find();
         let cashback_one = {};
+        console.log("here")
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "loyalty", parametr: "active" }, db, res)
             if (checkResult) {

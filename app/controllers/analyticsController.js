@@ -57,9 +57,10 @@ class AnalyticsController {
             for (let client of clients) {
                 mans      += client.gender == "man" ? 1 : 0;
                 women     += client.gender == "women" ? 1 : 0;
-                middleAge += moment().diff(client.birthDate, 'years', false);
+                if (client.birthDate){
+                    middleAge += moment().diff(client.birthDate, 'years', false);
+                }
             }
-
             analytic.mans  = mans
             analytic.women = women
             if (clients.length){

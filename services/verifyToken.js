@@ -4,9 +4,7 @@ function verifyToken(req, res, next) {
     
     // Header names in Express are auto-converted to lowercase
     let token = req.headers['x-access-token'] || req.headers['authorization'];
-    console.log(token)
-    let validWithoutToken = ['/getProducts', '/getNews', '/getCategories?type=product', '/getCategories']
-    console.log(req.url)
+    let validWithoutToken = ['/getProducts', '/getNews', '/getCategories?type=product', '/getCategories', '/getSettings']
     if (!token){
         if (req.headers['access-place'] && validWithoutToken.includes(req.url)){
             
@@ -16,7 +14,7 @@ function verifyToken(req, res, next) {
         return res.status(403).send({ auth: false, message: 'No token provided.' });
     }else{
         // Remove Bearer from string
-        token = token.replace(/^Bearer\s+/, "");
+        token = token.replace(/^Bearer\s+/, "").replace(/^x-access-token\s+/, "");
     }
     jwt.verify(token, config.secret_key, function (err, decoded) {
         if (err){
