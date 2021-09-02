@@ -4,19 +4,21 @@ function verifyToken(req, res, next) {
     
     // Header names in Express are auto-converted to lowercase
     let token = req.headers['x-access-token'] || req.headers['authorization'];
-    let validWithoutToken = ['/getProducts', '/getNews', '/getCategories?type=product', '/getCategories']
-    console.log(req.url)
+    let validWithoutToken = ['/searchPromocodeByCodeApi','/getSettings','/getProducts', '/getNews', '/getCategories?type=product', '/getCategories']
+    let url = '/'+req.path.split('/')[1]
+    console.log(url,"VERIFY TOKEN",req.headers['access-place'])
+    console.log(url,"VERIFY TOKEN",token)
     if (!token){
-        if (req.headers['access-place'] && validWithoutToken.includes(req.url)){
-            
+        if (req.headers['access-place'] && validWithoutToken.includes(url)){
             req.db = 'loygift' + req.headers['access-place']
             return next();
         }
-        return res.status(403).send({ auth: false, message: 'No token provided.' });
+        return res.status(403).send({ auth: false, message: 'No token provided.45' });
     }else{
         // Remove Bearer from string
         token = token.replace(/^Bearer\s+/, "");
     }
+
     jwt.verify(token, config.secret_key, function (err, decoded) {
         if (err)
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
@@ -26,9 +28,12 @@ function verifyToken(req, res, next) {
         }else{
             req.userType = "client"
         }
+        console.log("PASSSSER",token,"=====================================")
         req.userID = decoded.user;
         req.userName = decoded.name;
         req.db = "loygift" + decoded.id;
+
+        console.log('NEXT')
         next();
     });
 }

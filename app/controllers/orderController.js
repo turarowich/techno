@@ -392,6 +392,12 @@ class OrderController{
     };
 
     addOrder = async function (req, res) {
+        console.log(req)
+        // console.log("start")
+        // const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+        // await delay(5000) /// waiting 1 second.
+        // console.log("end 5 start")
+
         let db = useDB(req.db)
         let Order = db.model("Order");
         let Client = db.model("Client");  
@@ -419,7 +425,6 @@ class OrderController{
         }
 
         order_try: try {
-            
             let discounts = await Discount.find();
             let client = await Client.findById(req.fields.client);
             let discount_obj = getClientDiscount(client,discounts);
@@ -433,6 +438,7 @@ class OrderController{
             if(delivery){
                 deliveryPrice = delivery.price;
             }
+
             //params: product->list of products ids and quantity, Product model,promocode obj,client obj,discounts list.
             let result_object = await products_with_discounts(
                 req.fields.products, // list of product ids and quant
@@ -546,7 +552,9 @@ class OrderController{
                 user_id: req.userID,
                 icon: "add"
             }).save()
+
             await order.save();
+            console.log(order,"oders")
             result['object'] = await order.populate('products').execPopulate();
         } catch (error) {
             console.log("errror890");

@@ -200,6 +200,10 @@ export default {
         $('.show-price').removeClass('active')
       }
     },
+    unSetDates(){
+      this.promoStartLightpick.setDate('')
+      this.promoEndLightpick.setDate('')
+    },
     selectDates(){
       let that=this;
       this.promoStartLightpick = new this.$lightpick({
@@ -304,7 +308,17 @@ export default {
       this.promoStartLightpick.setDate(this.currentData.promoStart);
       // this.promoEnd.obj = this.currentData.promoEnd;
       this.promoEndLightpick.setDate(this.currentData.promoEnd);
-    }
+    },
+    currentData:{
+      handler(val) {
+        console.log(val.promoPrice, !val.promoPrice || val.promoPrice<=0)
+        if(!val.promoPrice || val.promoPrice<=0){
+          this.unSetDates
+        }
+      },
+      deep: true,
+      immediate:true,
+    },
   },
   mounted() {
     this.selectDates();

@@ -62,7 +62,10 @@ module.exports = function(app, passport){
             console.log("IN99");
             req.king="IN99";
             res.sendFile(path.resolve('views/frontend/dist/index.html'));
-        } 
+        } else{
+            console.log("ELSE * HOME")
+            res()
+        }
     });
     return app
 }

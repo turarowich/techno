@@ -211,6 +211,12 @@ class PromocodeController{
         res.json(result);
     };
     searchPromocodeByCode = async function (req, res) {
+        // console.log("start")
+        // const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+        // await delay(5000) /// waiting 1 second.
+        // console.log("end 5 start")
+        // console.log(req.query.search,"==================",req.db)
+        console.log(req.query)
         let db = useDB(req.db)
         let Promocode = db.model("Promocode");
         let search = req.query.search;
@@ -233,7 +239,6 @@ class PromocodeController{
         }
         promocode: try {
             let promocode = await Promocode.findOne({ "code": search });
-            console.log(promocode);
             if(promocode){
                 if(promocode.already_used >= promocode.number_of_uses){
                     result['msg'] = validate[lang]['promo_already_used']

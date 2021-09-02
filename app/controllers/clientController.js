@@ -46,7 +46,6 @@ class ClientController{
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
-
         res.status(result.status).json(result);
     };
 

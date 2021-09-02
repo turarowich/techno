@@ -170,7 +170,20 @@ class ProductController{
             if(data['category'] === ""){
                 data['category'] = null
             }
+            //
+            if(!data.promoPrice || data.promoPrice <= 0){
+                data.promoPrice = 0;
+                delete data.promoStart;
+                delete data.promoEnd;
+            }
+            //
             let product = await Product.findOneAndUpdate(query, data)
+            //
+            if(product.promoPrice === 0){
+                await Product.updateOne(query, { $unset: { promoStart: "", promoEnd: ""}})
+            }
+            //
+
 
             if (req.files.img) {
                 let filename = saveImage(req.files.img, req.db, product.img)

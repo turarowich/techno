@@ -81,9 +81,9 @@ const clientSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Message'
     }],
-    category: { 
-        type: Schema.Types.ObjectId, 
-        ref: 'Category' 
+    category: {
+        type: Schema.Types.ObjectId,
+        ref: 'Category'
     },
     fb_id: {
         type: String,
@@ -156,6 +156,21 @@ const clientSchema = new Schema({
             },
             message: props => 'code_unique'
         },
+    },
+    custom_field_0: {
+        type: String,
+        required: false,
+        default: ""
+    },
+    custom_field_1: {
+        type: String,
+        required: false,
+        default: ""
+    },
+    custom_field_2: {
+        type: String,
+        required: false,
+        default: ""
     },
     lastMessageAt: {
         type: Date,
