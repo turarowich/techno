@@ -287,27 +287,34 @@ class ClientController{
         let receives_points_back = false;
         let result = {
             'status': 200,
-            'msg': '',
+            'msg': 'Sending points',
+        }
+        let lang = req.headers["accept-language"]
+        if (lang != 'ru') {
+            lang = 'en'
         }
         all_check: try{
             //check if exists and its not his own
             //check if client already has received the promo points
             //check if client that shared also receives points
             let check = await clientModel.find({promocode:promocode,_id:{ "$ne": client_id }});
+    
             if (check.length===0){
                 result.status = 404;
                 result.msg = "Promocode not found";
+                result.client_title = validate[lang]['promo_404']
                 break all_check;
             }
+            
             let client = await clientModel.findById(client_id);
             let sender = await clientModel.findById(check[0]._id);
 
             if(client.promocodeIsUsed){
                 result.status = 404;
                 result.msg = "Already used promocode";
+                result.client_title = validate[lang]['promo_already_used']
                 break all_check;
             }
-
 
             //Cashback points
             let cashback_model = db.model("Cashback");
@@ -322,13 +329,14 @@ class ClientController{
                 client.points = parseFloat(client.points ) + parseFloat(cashback_points);
                 client.promocodeIsUsed = true;
                 client.whosePromoUsed = sender ? sender._id : null;
-                await client.save();
-                await new ClientBonusHistory({
+                await client.save({validateBeforeSave: false});
+                let point = await new ClientBonusHistory({
                     client: client._id,
                     points: cashback_points,
                     source: 'Share points received',
                     type: 'received',
                 }).save();
+                result.object = point
                 //sender
                 if(sender && receives_points_back){
                     sender.points = parseFloat(sender.points ) + parseFloat(cashback_points);
@@ -345,6 +353,7 @@ class ClientController{
             result.msg = "AAAA";
             console.log(e);
         }
+        console.log(result)
         res.status(result.status).json(result);
     }
 
@@ -364,12 +373,10 @@ class ClientController{
         
         try {
             let  query = {}
-            if (req.fields.category){
-                req.fields.objects.forEach(async function(client, index){
-                    query = { '_id': client }
-                    await Client.findOneAndUpdate(query, req.fields)
-                })
-            }
+            req.fields.objects.forEach(async function(client, index){
+                query = { '_id': client }
+                await Client.findOneAndUpdate(query, req.fields)
+            })
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }

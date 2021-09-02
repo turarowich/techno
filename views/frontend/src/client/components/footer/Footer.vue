@@ -1,16 +1,19 @@
 <template>
 <footer >
   <div class="footer d-flex justify-content-between  footer-container container">
-  <div class="footer-contact mb-3">
-    <h3>Contacts</h3>
-    <p class="footer-info"><img src="../../../assets/clients/Call.svg"><a  href="/">{{companyAddresses[0] ? companyAddresses[0].phone : "+996771236478"}}</a></p>
-    <p class="footer-info"><img src="../../../assets/clients/Message.svg"><a href="/">{{catalog_settings.email || "example@gmail.com"}}</a></p>
-  </div>
-  <div class="footer-address mb-3">
-    <h3>Address</h3>
-    <p class="footer-info" >{{companyAddresses[0] ? companyAddresses[0].address : "Bishkek, Kyrgyzstan"}}</p>
-  </div>
-  <div class="footer-logo d-flex align-items-center">
+ <div class="d-flex">
+   <div class="footer-contact mb-3">
+     <h3>Contacts</h3>
+     <p class="footer-info"><img src="../../../assets/clients/Call.svg"><a  href="/">{{companyAddresses[0] ? companyAddresses[0].phone : "+996771236478"}}</a></p>
+     <p class="footer-info"><img src="../../../assets/clients/Message.svg"><a href="/">{{catalog_settings.email || "example@gmail.com"}}</a></p>
+   </div>
+   <div class="footer-address mb-3">
+     <h3>Address</h3>
+     <p class="footer-info" >{{companyAddresses[0] ? companyAddresses[0].address : "Bishkek, Kyrgyzstan"}}</p>
+     <p class="footer-info" >08:00-19:00 Every day</p>
+   </div>
+ </div>
+  <div @click="$router.push('/')" class="footer-logo d-flex align-items-center">
     <img class="mr-2" src="../../../assets/clients/footerLogo.svg">
     <div>
       <span class="poweredby">powered by</span>
@@ -41,9 +44,10 @@ footer{
   background: #F4F4F4;
   margin-top: 100px;
 }
-.footer{
-  align-items: center;
+.footer-contact{
+  margin-right: 100px;
 }
+
 .footer-address h3, .footer-contact h3{
   color: #222222;
   font-size: 16px;
@@ -70,14 +74,9 @@ footer{
 .poweredby{
   color:#858585;
 }
-.footer-container{
-  max-width: calc(100vw - 240px);
-}
 
 @media(max-width:640px){
-  .footer-container{
-    max-width:100% !important;
-  }
+
   footer{
     padding: 50px 0;
 

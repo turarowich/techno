@@ -137,6 +137,62 @@ const settingsSchema = new Schema({
         required: false,
         default: ""
     },
+    customFields: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    custom_field_0: {
+        required: {
+            type: Boolean,
+            required: false,
+            default: false
+        },
+        fieldName:{
+            type: String,
+            required: false,
+            default: ""
+        },
+        values: [{
+            type: String,
+            required: false,
+            default: ""
+        }]
+    },
+    custom_field_1: {
+        required: {
+            type: Boolean,
+            required: false,
+            default: false
+        },
+        fieldName: {
+            type: String,
+            required: false,
+            default: ""
+        },
+        values: [{
+            type: String,
+            required: false,
+            default: ""
+        }]
+    },
+    custom_field_2: {
+        required: {
+            type: Boolean,
+            required: false,
+            default: false
+        },
+        fieldName: {
+            type: String,
+            required: false,
+            default: ""
+        },
+        values: [{
+            type: String,
+            required: false,
+            default: ""
+        }]
+    },
     //////catalog end
     createdAt: {
         type: Date,

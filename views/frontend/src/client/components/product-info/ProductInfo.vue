@@ -294,9 +294,7 @@ export default {
 .total-price h5{
   font-size: 22px;
   font-weight: normal;
-  padding-top: 24px;
-  border-top: 1px solid #E4E4E4;
-  padding-bottom: 15px;
+
 }
 .basket-hover{
   width: 400px;
@@ -326,7 +324,11 @@ export default {
 .basket-img{
   width: 20%;
 }
-
+.total-price{
+  padding-top: 24px;
+  border-top: 1px solid #E4E4E4;
+  padding-bottom: 15px;
+}
 .basket-title{
   font-size:16px;
   font-weight: normal;

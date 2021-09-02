@@ -34,7 +34,8 @@
                     </div>
                     <div v-else v-for="client in filteredClients" :key="client._id"  @click="selectClient(client)" class="table-child d-flex align-items-center">
                       <div class="table-img">
-                        <img src="../../assets/img/sneak.webp">
+                        <img v-if="client.avatar" :src="imgSrc+'/'+client.avatar">
+                        <img v-else src="../../assets/icons/chat.svg">
                       </div>
                       <div>
                         <h4 class="general-title">{{client.name}}</h4>
@@ -47,10 +48,13 @@
                <div class="all-clients">
                  <div  v-for="selectedClient in selectedClients" :key="selectedClient._id" class="choosed-client d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
-                     <div class="category-logo d-flex justify-content-center align-items-center">V</div>
+                      <div class="table-img">
+                        <img v-if="selectedClient.avatar" :src="imgSrc+'/'+selectedClient.avatar">
+                        <img v-else src="../../assets/icons/chat.svg">
+                      </div>
                      <div class="category">
                        <div class="category-name">{{selectedClient.name}}</div>
-                       <span class="category-people" v-if="selectedClient.phone">Category <span style="color:#000; text-transform:capitalize">{{ selectedClient.phone}}</span></span>
+                       <span class="category-people" v-if="selectedClient.phone">Phone: <span style="color:#000; text-transform:capitalize">{{ selectedClient.phone}}</span></span>
                      </div>
                     </div>
                    <img @click="deleteClient(selectedClient)" src="../../assets/icons/deleteClient.svg">
@@ -106,8 +110,8 @@
                   <div  @click="setDay('saturday')" :class="{is_active: selectedDay.name === 'saturday',active: week.saturday.isActive}"  class="days d-flex justify-content-center align-items-center">SA</div>
                   <div  @click="setDay('sunday')" :class="{is_active: selectedDay.name === 'sunday',active: week.sunday.isActive}"  class="days d-flex justify-content-center align-items-center">SU</div>
                 </div>
-                <div class="d-flex align-items-center mb-4 justify-content-between">
-                  <div class="d-flex align-items-center ">
+                <div class=" d-flex align-items-center mb-4 justify-content-between">
+                  <div class="d-flex pt-1 align-items-center ">
                     <label class="switch d-flex ">
                       <input v-model="selectedDay.isActive" type="checkbox">
                       <span class="slider round"></span>
@@ -297,6 +301,9 @@ export default {
       inline:true,
     });
     this.selectedDay = this.week.monday;
+
+      this.imgSrc=this.$server
+
   }
 
 }

@@ -1,5 +1,6 @@
 const { useDB, sendError, checkAccess,compareDates } = require('../../services/helper')
 var validate = require('../../config/messages');
+const client = require("../models/client");
 class PromocodeController{
     
     getPromocode = async function (req, res) {
@@ -168,6 +169,59 @@ class PromocodeController{
 
         res.status(result.status).json(result);
     };
+
+    deletePromocodes = async function (req, res) {
+        let db = useDB(req.db)
+        let Promocode = db.model("Promocode");
+        let Log = db.model("Log");
+        if (req.userType == "employee") {
+            let checkResult = await checkAccess(req.userID, { access: "clients", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
+        }
+        let result = {
+            'status': 200,
+            'msg': 'Promocodes deleted'
+        }
+        if (req.fields.objects.length) {
+            try {
+                let query = {
+                    '_id': {
+                        $in: req.fields.objects
+                    }
+                }
+                let clients = await Promocode.find(query, 'name')
+
+                if (clients.length) {
+                    let desc = clients.map(function (elem) {
+                        return elem.name;
+                    }).join(", ")
+                    await new Log({
+                        type: "promocodes_deleted",
+                        description: desc,
+                        user: req.userName,
+                        user_id: req.userID,
+                        icon: "delete"
+                    }).save()
+                }
+
+                await Promocode.deleteMany(query)
+            } catch (error) {
+                result = sendError(error, req.headers["accept-language"])
+            }
+        } else {
+            result = {
+                'status': 200,
+                'msg': 'Parametr objects is empty'
+            }
+        }
+
+
+        res.status(result.status).json(result);
+    };
+
+
     searchProductService = async function (req, res) {
         let db = useDB(req.db);
         let type   = req.query.type.toLowerCase();

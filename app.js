@@ -5,7 +5,6 @@ const config = require('./config/config.js');
 const fs = require('fs');
 const path = require('path');
 const bodyParser = require('body-parser');
-
 const http = require('http');
 const https = require('https');
 
@@ -22,6 +21,11 @@ const TwitterStrategy = require("passport-twitter").Strategy;
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const { initClientDbConnection } = require('./config/dbutil');
 const userConnection = initClientDbConnection()
+
+
+//Event emitter
+require('events').EventEmitter.defaultMaxListeners = 15;
+
 
 app.use((req, res, next) => {
     if (userConnection.readyState == 0) {
@@ -150,7 +154,6 @@ app.use((err, req, res, next) => {
         res.status(err.httpStatusCode || 500).render('UnknownError');
     }
 });
-
 
 
 httpServer.listen(config.port_http, () => {

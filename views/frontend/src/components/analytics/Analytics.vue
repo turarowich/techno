@@ -11,58 +11,67 @@
       </div>
     </div>
 
-    <div class="analytics-wrapper">
-        <div class="analytics-box" >
-            <p><img class="mr-2" src="../../assets/icons/analytics/spent.svg">Spent with bonuses</p>
-            <h2 class="analytics-title">{{analyticsFiltered.spentPoints}}</h2>
-        </div>
-        <div class="analytics-box" >
-            <p><img class="mr-2" src="../../assets/icons/analytics/customer.svg">The amount of discounts</p>
-            <h2 class="analytics-title">{{analyticsFiltered.discounts.toFixed(2)}}</h2>
-        </div>
-        <div class="analytics-box" >
-            <p><img class="mr-2" src="../../assets/icons/analytics/check.svg">Average check</p>
-            <h2 class="analytics-title">{{analyticsFiltered.averageCheck.toFixed(4)}}</h2>
-        </div>
-        <div class="analytics-box" >
-            <p><img class="mr-2" src="../../assets/icons/analytics/coin.svg">The amount of profit</p>
-            <h2 class="analytics-title">{{analyticsFiltered.profit.toFixed(2)}}</h2>
-        </div>
-        <div class="analytics-box" >
-            <p><img class="mr-2" src="../../assets/icons/analytics/numUser.svg">Number of clients</p>
-            <h2 class="analytics-title">{{analyticsFiltered.clients}}</h2>
-        </div>
-        <div class="analytics-box" >
-            <p><img class="mr-2" src="../../assets/icons/analytics/middle.svg">Mans</p>
-            <h2 class="analytics-title">{{analyticsFiltered.mans}}</h2>
-        </div>
-        <div class="analytics-box" >
-            <p><img class="mr-2" src="../../assets/icons/analytics/middle.svg">Women</p>
-            <h2 class="analytics-title">{{analyticsFiltered.women}}</h2>
-        </div>
-        <div class="analytics-box" >
-            <p><img class="mr-2" src="../../assets/icons/analytics/middle.svg">Middle age</p>
-            <h2 class="analytics-title">{{analyticsFiltered.middleAge}}</h2>
-        </div>
-        
+    <div v-if="spinner">
+      <Spinner/>
     </div>
+    <div v-else>
+      <div class="analytics-wrapper">
+        <div class="analytics-box" >
+          <p><img class="mr-2" src="../../assets/icons/analytics/spent.svg">Spent with bonuses</p>
+          <h2 class="analytics-title">{{analyticsFiltered.spentPoints}}</h2>
+        </div>
+        <div class="analytics-box" >
+          <p><img class="mr-2" src="../../assets/icons/analytics/customer.svg">The amount of discounts</p>
+          <h2 class="analytics-title">{{analyticsFiltered.discounts.toFixed(2)}}</h2>
+        </div>
+        <div class="analytics-box" >
+          <p><img class="mr-2" src="../../assets/icons/analytics/check.svg">Average check</p>
+          <h2 class="analytics-title">{{analyticsFiltered.averageCheck.toFixed(4)}}</h2>
+        </div>
+        <div class="analytics-box" >
+          <p><img class="mr-2" src="../../assets/icons/analytics/coin.svg">The amount of profit</p>
+          <h2 class="analytics-title">{{analyticsFiltered.profit.toFixed(2)}}</h2>
+        </div>
+        <div class="analytics-box" >
+          <p><img class="mr-2" src="../../assets/icons/analytics/numUser.svg">Number of clients</p>
+          <h2 class="analytics-title">{{analyticsFiltered.clients}}</h2>
+        </div>
+        <div class="analytics-box" >
+          <p><img class="mr-2" src="../../assets/icons/analytics/middle.svg">Mans</p>
+          <h2 class="analytics-title">{{analyticsFiltered.mans}}</h2>
+        </div>
+        <div class="analytics-box" >
+          <p><img class="mr-2" src="../../assets/icons/analytics/middle.svg">Women</p>
+          <h2 class="analytics-title">{{analyticsFiltered.women}}</h2>
+        </div>
+        <div class="analytics-box" >
+          <p><img class="mr-2" src="../../assets/icons/analytics/middle.svg">Middle age</p>
+          <h2 class="analytics-title">{{analyticsFiltered.middleAge}}</h2>
+        </div>
 
-    <div class="graph">
+      </div>
+
+      <div class="graph">
         <h3 class="graph-title mb-4">Number and amount of orders</h3>
         <div class="canvas-graph">
-            <canvas ref="canvas" id="planet-chart" width="100%"></canvas>
+          <canvas ref="canvas" id="planet-chart" width="100%"></canvas>
         </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import Chart from 'chart.js'
-
+import Spinner from "../Spinner";
 export default {
     name: "Analytics",
+  components:{
+      Spinner
+  },
     data(){
         return{
+            spinner: false,
             between_value:'',
             startDate:'',
             endDate:'',
@@ -234,8 +243,10 @@ export default {
                 end: this.endDate
             }
         }).then((response)=>{
+
             this.analytics = response.data.objects;
             this.chart = response.data.chart;
+
             this.updateChart();
         }).catch((error)=>{
             if(error.response && error.response.data){

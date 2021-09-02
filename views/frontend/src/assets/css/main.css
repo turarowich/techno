@@ -7,7 +7,9 @@ input{
 body{
     font-size:14px;
     padding-right: 0 !important;
+
 }
+
 a:hover{
     text-decoration: none;
 }
@@ -235,7 +237,7 @@ img{
     position: relative;
     display: inline-block;
     width: 40px;
-    height: 21px;
+    height: 20px;
     margin-right: 10px;
     margin-bottom: 0;
 
@@ -272,7 +274,7 @@ img{
     height: 16px;
     width: 17px;
     left: 3px;
-    bottom: 2.5px;
+    bottom: calc(50% - 8px);
     background-color: white;
     -webkit-transition: .4s;
     transition: .4s;
@@ -328,7 +330,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     margin-bottom: 5px;
 }
 .cashback-description{
-    font-size: 16px;
+    font-size: 14px;
     color: #B0B0B0;
     margin-bottom: 10px;
 }

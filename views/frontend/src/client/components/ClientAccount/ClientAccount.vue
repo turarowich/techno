@@ -3,13 +3,13 @@
     <div class="row">
       <div class="col-lg-10 m-auto">
         <div class="profile-info">
-          <div class="d-flex align-items-center">
-              <div class="client_avatar_container" style="position: relative;margin-right: 16px;">
+          <div class="d-flex align-items-center mobile-profile">
+              <div class="client_avatar_container" style="position: relative;">
               <div class="client_avatar_with_back" v-if="!user.error && user.avatar!=undefined" @error="user.error=true" v-bind:style="{ backgroundImage: 'url(' + server+'/'+user.avatar + '?rand=' + rand+ ')' }">
               </div>
               <img v-else class="client-avatar" src="../../../assets/clients/clientProfile.svg">
               <input @change="uploadPhoto($event)" type="file" class="d-none" id="uploadClientImage">
-              <label for="uploadClientImage" style="position: absolute;left: 44px;bottom: 0;margin-bottom: 0;">
+              <label for="uploadClientImage" style="position: absolute;left: 50px;bottom: 0;margin-bottom: 0;">
                 <img src="../../../assets/icons/addBtn.svg" style="height: 18px;width: 18px;">
               </label>
             </div>
@@ -21,7 +21,7 @@
                   <img src="../../../assets/clients/Edit.svg">
                 </router-link>
               </h1>
-              <span class="profile-phone">{{user.phone}}</span><br>
+              <span class="profile-phone">{{user.phone}}</span>
               <span class="user_status_class">{{userDiscountStatus.name || ''}} {{userDiscountStatus.discount_percentage || 0}}%</span>
             </div>
           </div>
@@ -30,25 +30,24 @@
             <img class="ml-2" src="../../../assets/clients/log-out.svg">
           </div>
         </div>
-        <div v-if="catalog_settings.share_points_status" class="w-50">
-          <div  class="d-flex justify-content-between">
-            <div >
-              Your Promocode that you can send to your friends
+        <div v-if="catalog_settings.share_points_status" class="d-flex mb-5 promo-check">
+          <div v-if="!user.promocodeIsUsed" class="pr-5 mr-5" style="border-right:1px solid #f4f4f4" >
+            <h3 class="cashback-sub-title mb-2">Enter promo</h3>
+            <span class="mb-3 d-block" style="color:#8C94A5">If you have promo please enter here</span>
+            <div class="d-flex align-items-center enterPromocodeClass justify-content-between">
+              <input style="border:none;" v-model="enteredPromocode" type="text">
+              <span @click="checkPromocode" class="checkPromocodeBtn"><img src="../../../assets/icons/bird.svg"></span>
             </div>
-            <div style="font-weight: bold">
+          </div>
+          <div>
+            <h3 class="cashback-sub-title mb-2">Share with friend</h3>
+            <span class="mb-3 d-block" style="color:#8C94A5">Your Promocode that you can send to your friends</span>
+            <div style="font-weight: bold; border-bottom:1px solid #d3d3d3; height:40px; padding-top:10px;">
               {{user.promocode || ''}}
             </div>
           </div>
 
-          <div v-if="!user.promocodeIsUsed" class="d-flex justify-content-between">
-            <div class="d-flex justify-content-center align-items-center">
-              Enter promo
-            </div>
-            <div class="d-flex">
-              <input class="enterPromocodeClass" v-model="enteredPromocode" type="text">
-              <span @click="checkPromocode" class="checkPromocodeBtn">CHECK</span>
-            </div>
-          </div>
+
 
         </div>
         <div class="bonus-notification">
@@ -79,7 +78,7 @@
 
         <div class="tab-content">
           <div id="menu1" class="tab-pane fade">
-            <div class="d-flex main-content-header">
+            <div class="d-flex main-content-header order">
               <div class="table-head" style="width: 10%;">Order #</div>
               <div class="table-head" style="width: 24%;">Deliver address</div>
               <div class="table-head table-link " @click="sortByDate" style="width: 10%;">Date<img class="date-pol" style="margin-left:10px" src="../../../assets/icons/polygon.svg"></div>
@@ -308,15 +307,21 @@ name: "ClientAccount",
   border: 1px solid #D3D3D3;
   border-radius: 5px;
   width: 100%;
+  padding: 0 5px;
+}
+.client_avatar_container{
+  margin-right: 16px;
 }
 .checkPromocodeBtn{
+  cursor:pointer;
   background: #616CF5;
   border-radius: 5px;
-  height: 35px;
+  width: 29px;
+  height: 28px;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex: 0 0 75px;
+
   margin-left: 5px;
   color: white;
 }
@@ -327,8 +332,8 @@ name: "ClientAccount",
   opacity: 1;
 }
 .client_avatar_with_back{
-  height:62px;
-  width:62px;
+  height:70px;
+  width:70px;
   background-size: cover;
   border-radius: 50%;
 }
@@ -343,6 +348,9 @@ name: "ClientAccount",
 }
 .nav-tabs{
   align-items:center;
+}
+.main-content-header{
+  padding-right: 10px;
 }
 .bonus-title{
   margin-bottom: 3px;
@@ -400,14 +408,55 @@ name: "ClientAccount",
   color:#616CF5;
 }
 .user_status_class{
-  height: 23px;
+  height: 17px;
   background: #616CF5;
   border-radius: 10px;
   color: white;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding:5px 25px;
+  font-size: 12px;
 
+}
+@media(max-width:992px){
+  .main-content-header{
+    display: none !important;
+  }
+  .promo-check, .logout{
+    display: none !important;
+  }
+  .mobile-profile{
+    flex-direction:column;
+    justify-content: center;
+    text-align: center;
+  }
+  .profile-info{
+    justify-content: center;
+    margin-top: 0;
+  }
+  .profile-title{
+    font-size: 22px;
+  }
+  .client_avatar_container{
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+  .orders-title{
+    font-size: 16px;
+    margin-right: 0;
+  }
+  .order-tab img{
+    width: 24px;
+    height: 24px;
+  }
+  .order-count{
+    display: none;
+  }
+  .table-item{
+    padding: 0;
+  }
+  .nav-tabs{
+    margin-bottom: 30px !important;
+  }
 }
 </style>

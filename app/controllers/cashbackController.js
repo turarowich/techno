@@ -27,7 +27,7 @@ class CashbackController{
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
-
+        console.log(result)
         res.status(result.status).json(result);
     };
     updateCashback = async function (req, res) {

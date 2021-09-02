@@ -4,35 +4,36 @@
     <!-- <div class="notification">
       <button class="app-buttons-item"><img class="img-btn" src="../../assets/icons/ring.svg"><span>Push notification</span></button>
     </div> -->
-    <div class="chat d-flex">
-    <div class="overflow-hidden contacts-container">
-        <div class="d-flex align-items-center  search-chat">
-            <img class="mr-3" src="../../assets/icons/search-icon.svg">
-            <input type="text" placeholder="Search, user or chat" v-model="search" @input="checkSelection">
+
+    <div  class="chat d-flex">
+      <div class="overflow-hidden contacts-container">
+        <div class="d-flex align-items-center  search-chat bbnone">
+          <img class="mr-3" src="../../assets/icons/search-icon.svg">
+          <input type="text" placeholder="Search, user or chat" v-model="search" @input="checkSelection">
         </div>
         <div class="d-flex align-items-center justify-content-between search-chat pl-0 pr-1">
-            <div class="pl-1" style="width: 100px;"><label class="custom-checkbox checkbox-text w-100 d-flex align-items-center"><input id="parent-check" type="checkbox"  v-model="selectAll" @change="selectAllContact"><span class="checkmark"></span><p class="mb-0 pl-1">Select all</p>  </label></div>
-            <button class="clear-chat" @click="clearChats" v-if="selectedQuantity">
-                <img src="../../assets/icons/redX.svg" alt="">
-                Clear chat(s)
-            </button>
+          <div class="pl-1" style="width: 100px;"><label class="custom-checkbox checkbox-text w-100 d-flex align-items-center"><input id="parent-check" type="checkbox"  v-model="selectAll" @change="selectAllContact"><span class="checkmark"></span><p class="mb-0 pl-2">Select all</p>  </label></div>
+          <button class="clear-chat" @click="clearChats" v-if="selectedQuantity">
+            <img src="../../assets/icons/redX.svg" alt="">
+            Clear chat(s)
+          </button>
         </div>
         <div class="list-people">
-            <Contacts v-bind:contactList="filteredContact" @selected="startConversation" @checkSelection="checkSelection"/>
+          <Contacts v-bind:contactList="filteredContact" @selected="startConversation" @checkSelection="checkSelection"/>
         </div>
-    </div>
-    <div class="conversation">
+      </div>
+      <div class="conversation">
         <Conversation
-           v-bind:contact="selectedContact"
+            v-bind:contact="selectedContact"
             v-bind:messages="messages"
             v-on:message="sendMessage"
         />
-    </div>
-    <div class="people-info">
-      <div class="chat-line"></div>
+      </div>
+      <div class="people-info">
+        <div class="chat-line"></div>
         <ChatProfile v-bind:contact="selectedContact"/>
+      </div>
     </div>
-        </div>
   </div>
 
 </template>
@@ -41,16 +42,19 @@
 import Conversation from "@/components/chats/conversation/Conversation";
 import Contacts from "@/components/chats/contacts/Contacts";
 import ChatProfile from "@/components/chats/chat-profile/ChatProfile";
+
 import Swal from 'sweetalert2';
 export default {
   name: "Chats",
   components:{
     Conversation,
     Contacts,
-    ChatProfile
+    ChatProfile,
+
   },
   data(){
     return{
+
       contactList:[
       ],
       search:'',
@@ -92,6 +96,7 @@ export default {
         then(result => {
             this.contactList = result.data.objects
             this.selectAll = false
+
         });
     },
     checkSelection(){
@@ -120,7 +125,7 @@ export default {
     clearChats(){
         Swal.fire({
         showConfirmButton: true,
-        html: 'Are you sure to remove this chats',
+        html: 'Are you sure to remove these<br> chats',
         showCloseButton: true,
         showCancelButton: true,
         confirmButtonText: 'Delete',
@@ -133,6 +138,12 @@ export default {
             content:'content-sweet',
             closeButton:'close-btn'
         },
+          showClass: {
+            popup: 'animate__animated animate__slideInDown'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          }
 
         }).then((result) => {
             if (result.isConfirmed) {
@@ -215,6 +226,9 @@ export default {
     line-height: 17px;
     color: #222222;   
     margin-bottom: 0;
+}
+.bbnone{
+  border-bottom: none !important;
 }
 .chat{
   height:calc(100vh - 90px)

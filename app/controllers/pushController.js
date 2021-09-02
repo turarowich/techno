@@ -129,23 +129,32 @@ class PushController {
         settings = settings[0]
         let clients = req.fields.clients
         let data = await News.findById(req.fields.news)
+        if (!data) {
+            data = await new News({
+                name: req.fields.title,
+                name_ru: req.fields.title,
+                desc: req.fields.description,
+                desc_ru: req.fields.description,
+                category: "news",
+            });
+        }
         let result = {
             'status': 500,
             'msg': 'Something went wrong'
         }
         if (clients && settings) {
             let query = { 'type': 'ios', 'client': { $in: clients } }
-            
+
             if (req.fields.sendToAll){
                 query = {}
             }
             let devicesIOS = await Device.find(query)
-            
+
             let noteIOS = new apn.Notification({
                 alert: {
-                    title: req.fields.title != "" ? req.fields.title : data.name,
+                    title: data.name,
                     subtitle: "",
-                    body: req.fields.description != "" ? req.fields.description : data.desc,
+                    body: data.desc,
                 },
                 mutableContent: 1,
                 payload: {

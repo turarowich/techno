@@ -2,7 +2,7 @@
     <div class="h-100 overflow-auto">  
         <li v-for="(contact,index) in filteredContact" :key="contact.id" :class="{'selected' : index === selected}" class="w-100 pr-1 pl-0">
             <div class="contact-list d-flex align-items-center w-100">
-                <div class="pl-1"  style="width: 26px;"><label class="custom-checkbox mb-0"><input type="checkbox" v-model="contact.selected" @change="checkSelection">
+                <div class="pl-1"  style="width: 28px;"><label class="custom-checkbox mb-0"><input type="checkbox" v-model="contact.selected" @change="checkSelection">
                     <span class="checkmark"></span></label>
                 </div>
                 <div  class="overflow-hidden" @click="selectContact(index, contact)">

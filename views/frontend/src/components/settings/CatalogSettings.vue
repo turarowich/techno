@@ -1,170 +1,176 @@
 <template>
 <div>
 
- <div class="row pb-5">
-   <div class="col-lg-5">
-
-     <div class="d-flex margin-10">
-       <label class="switch d-flex">
-         <input type="checkbox" v-model="catalog_status">
-         <span class="slider round"></span>
-       </label>
-       <h2 class="catalog-title">Web catalog</h2>
-     </div>
-     <p class="catalog-description margin-30">Here you can flexibly customize your online catalog</p>
-
-     <h3 class="catalog-sub-title margin-10">Your url from online catalog</h3>
-     <p class="catalog-description mb-3">You can send a link to your catalog to your clients</p>
-     <div class="reload-code d-flex align-items-center">
-       <span style="color:#858585;">{{domainNameShop}}/</span>
-       <input style="color:#616CF5;padding-bottom: 1px;padding-left: 0;" v-model="catalogUrl">
-       <div @click="generateQrcode();" class="url-icon mr-1">
-         <img src="../../assets/icons/Setting.svg">
-       </div>
-       <div @click="copyCatalogUrl" class="url-icon">
-        <img src="../../assets/icons/urlIcon.svg">
-       </div>
-     </div>
-     <h3 class="catalog-sub-title margin-20">QR code for online catalog</h3>
-<!--     <h3 class="catalog-sub-title mb-3" style="text-overflow: ellipsis;overflow: hidden">{{catalogFullUrl}}</h3>-->
-     <div class="d-flex align-items-center margin-50">
-       <img :src="qrcodePath" class="mr-3">
-       <div>
-         <p class="catalog-description mb-2">You can print this code - this is the<br> menu for users to quickly go online</p>
-         <div>
-           <img src="../../assets/icons/printer.svg" class="mr-2">
-           <span @click="printQRCode" style="color:#616cf5;cursor: pointer">Print</span>
-         </div>
-       </div>
-     </div>
-
-     <div class="d-flex margin-10">
-       <label class="switch d-flex">
-         <input v-model="catalog_mode_status" type="checkbox">
-         <span class="slider round"></span>
-       </label>
-       <h2 class="catalog-sub-title">Catalog mode</h2>
-     </div>
-     <p class="catalog-description margin-50">
-        This setting disables the ability to place an order, your catalog will work as an online menu,
-       customers can also place an order only within your institution
-     </p>
-
-
-
-
-<!--     <div class="d-flex margin-10">-->
-<!--       <label class="switch d-flex">-->
-<!--         <input v-model="news_status" type="checkbox">-->
-<!--         <span class="slider round"></span>-->
-<!--       </label>-->
-<!--       <h2 class="catalog-sub-title">News</h2>-->
-<!--     </div>-->
-<!--     -->
-<!--     <p class="catalog-description margin-30">Disable news in the directory</p>-->
-
-<!--     <label>News title</label>-->
-<!--     <input v-model="news_title" class="cashback-input">-->
-
-<!--     <label>News description</label>-->
-<!--     <textarea v-model="news_description" class="margin-50 general-area"></textarea>-->
-
-<!--     <div class="d-flex margin-10">-->
-<!--       <label class="switch d-flex">-->
-<!--         <input v-model="filters_n_category_status" type="checkbox">-->
-<!--         <span class="slider round"></span>-->
-<!--       </label>-->
-<!--       <h2 class="catalog-sub-title">Filters and category</h2>-->
-<!--     </div>-->
-<!--     <p class="catalog-description margin-50">-->
-<!--       Disable categories and filters in the catalog-->
-<!--     </p>-->
-
-
-     <div class="d-flex margin-10">
-       <label class="switch d-flex">
-         <input v-model="food_mode_status" type="checkbox">
-         <span class="slider round"></span>
-       </label>
-       <h2 class="catalog-sub-title">Food mode</h2>
-     </div>
-     <p class="catalog-description margin-50">
-       Necessary if you want to use the catalog only as an online menu suitable for cafes, coffee houses, etc.
-     </p>
-     <button type="button" @click="saveCatalogSettings" class="save mb-3">Save</button>
-   </div>
-
-<!------------------Right Side-------------------------------------   -->
-
-   <div class="col-lg-5">
-
-     <h2 class="catalog-title mb-1">Additional settings</h2>
-     <p class="catalog-description margin-30">Catalog appearance settings</p>
-
-     <div class="margin-30">
-       <label>Logo</label>
-       <p class="catalog-description margin-30">You can upload JPG or PNG photos, the size is not more than 3 MB.</p>
-       <div class="profile-img ">
-<!--         <img class="profile-logo" :src="previewImage" >-->
-         <img class="profile-logo" :src="logoPath">
-         <input type="file" id="logo_file" @change="uploadImage($event,'logo')">
-         <label class="addPhoto" for="logo_file"><img src="../../assets/icons/addBtn.svg"></label>
-       </div>
-     </div>
-
-     <h3 class="catalog-sub-title margin-10">Banner</h3>
-     <p class="catalog-description margin-30">You can upload JPG or PNG photos, the size is not more than 3 MB.</p>
-
-     <div class="profile-img big-profile-img margin-30">
-       <img :src="bannerPath">
-       <input type="file" id="big-img" @change="uploadImage($event,'banner')">
-       <label class="addPhoto big-addPhoto"  for="big-img"><img src="../../assets/icons/addBtn.svg"></label>
-     </div>
-
-     <label>Description</label>
-     <textarea v-model="description" class="general-area definition-area margin-30"></textarea>
-     <!-- //dont remove-->
-     <!--     <h3 class="catalog-sub-title mb-1">Accent colors</h3>-->
-<!--     <p class="catalog-description margin-20">You can supply any color</p>-->
-
-<!--     <div style="position: relative" class="color-box margin-50 d-flex justify-content-between align-items-center">-->
-<!--       <div style="width:100%;" class="d-flex align-items-center">-->
-<!--         <div v-bind:style="{ background: color}" v-on:click="seen = !seen" class="color-picker mr-2"></div>-->
-<!--         <input disabled v-model="color" class="color-input pr-2" placeholder="#616cf5">-->
-
-<!--         <div v-if="seen" class="picker_conteiner" style="position: absolute;right: 0;">-->
-<!--           <span v-on:click="seen = !seen" class="picker_close_btn"><img src="../../assets/icons/addBtn.svg"></span>-->
-<!--           <Picker v-on:sendColor="onColorPick"/>-->
-<!--         </div>-->
-
-<!--       </div>-->
-<!--       <span @click="color='#616cf5'" style="color:#616cf5;cursor: pointer">Clear</span>-->
-<!--     </div>-->
-
-     <h3 class="catalog-sub-title margin-20">Social networks</h3>
-     <div class="margin-50">
-       <input v-model="whatsapp" class="social-btns" placeholder="Whatsapp">
-       <input v-model="telegram" class="social-btns" placeholder="Telegram">
-       <input v-model="facebook" class="social-btns" placeholder="Facebook">
-       <input v-model="instagram" class="social-btns" placeholder="Instagram">
-       <input v-model="website" class="social-btns" placeholder="Website">
-     </div>
-   </div>
+ <div v-if="spinner"  style="height:65vh" class="d-flex align-items-center">
+   <Spinner/>
  </div>
+
+  <div v-else class="row pb-5">
+    <div class="col-lg-5">
+
+      <div class="d-flex margin-10">
+        <label class="switch d-flex">
+          <input type="checkbox" v-model="catalog_status">
+          <span class="slider round"></span>
+        </label>
+        <h2 class="catalog-title">Web catalog</h2>
+      </div>
+      <p class="catalog-description margin-30">Here you can flexibly customize your online catalog</p>
+
+      <h3 class="catalog-sub-title margin-10">Your url from online catalog</h3>
+      <p class="catalog-description mb-3">You can send a link to your catalog to your clients</p>
+      <div class="reload-code d-flex align-items-center">
+        <span style="color:#858585;">{{domainNameShop}}/</span>
+        <input style="color:#616CF5;padding-bottom: 1px;padding-left: 0;" v-model="catalogUrl">
+        <div @click="generateQrcode();" class="url-icon mr-1">
+          <img src="../../assets/icons/bird.svg" style="width:14px;height:14px">
+        </div>
+        <div @click="copyCatalogUrl" class="url-icon">
+          <img src="../../assets/icons/urlIcon.svg">
+        </div>
+      </div>
+      <h3 class="catalog-sub-title margin-20">QR code for online catalog</h3>
+      <!--     <h3 class="catalog-sub-title mb-3" style="text-overflow: ellipsis;overflow: hidden">{{catalogFullUrl}}</h3>-->
+      <div class="d-flex align-items-center margin-50">
+        <img :src="qrcodePath" class="mr-2" style="width:90px; height:90px">
+        <div>
+          <p class="catalog-description mb-2">You can print this code - this is the<br> menu for users to quickly go online</p>
+          <div>
+            <img src="../../assets/icons/printer.svg" class="mr-2">
+            <span @click="printQRCode" style="color:#616cf5;cursor: pointer">Print</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex margin-10">
+        <label class="switch d-flex">
+          <input v-model="catalog_mode_status" type="checkbox">
+          <span class="slider round"></span>
+        </label>
+        <h2 class="catalog-sub-title">Catalog mode</h2>
+      </div>
+      <p class="catalog-description margin-50">
+        This setting disables the ability to place an order, your catalog will work as an online menu,
+        customers can also place an order only within your institution
+      </p>
+
+
+
+
+      <!--     <div class="d-flex margin-10">-->
+      <!--       <label class="switch d-flex">-->
+      <!--         <input v-model="news_status" type="checkbox">-->
+      <!--         <span class="slider round"></span>-->
+      <!--       </label>-->
+      <!--       <h2 class="catalog-sub-title">News</h2>-->
+      <!--     </div>-->
+      <!--     -->
+      <!--     <p class="catalog-description margin-30">Disable news in the directory</p>-->
+
+      <!--     <label>News title</label>-->
+      <!--     <input v-model="news_title" class="cashback-input">-->
+
+      <!--     <label>News description</label>-->
+      <!--     <textarea v-model="news_description" class="margin-50 general-area"></textarea>-->
+
+      <!--     <div class="d-flex margin-10">-->
+      <!--       <label class="switch d-flex">-->
+      <!--         <input v-model="filters_n_category_status" type="checkbox">-->
+      <!--         <span class="slider round"></span>-->
+      <!--       </label>-->
+      <!--       <h2 class="catalog-sub-title">Filters and category</h2>-->
+      <!--     </div>-->
+      <!--     <p class="catalog-description margin-50">-->
+      <!--       Disable categories and filters in the catalog-->
+      <!--     </p>-->
+
+
+      <div class="d-flex margin-10">
+        <label class="switch d-flex">
+          <input v-model="food_mode_status" type="checkbox">
+          <span class="slider round"></span>
+        </label>
+        <h2 class="catalog-sub-title">Food mode</h2>
+      </div>
+      <p class="catalog-description margin-50">
+        Necessary if you want to use the catalog only as an online menu suitable for cafes, coffee houses, etc.
+      </p>
+      <button type="button" @click="saveCatalogSettings" class="save mb-3">Save</button>
+    </div>
+
+    <!------------------Right Side-------------------------------------   -->
+
+    <div class="col-lg-5">
+
+      <h2 class="catalog-title mb-1">Additional settings</h2>
+      <p class="catalog-description margin-30">Catalog appearance settings</p>
+
+      <div class="margin-30">
+        <label>Logo</label>
+        <p class="catalog-description margin-30">You can upload JPG or PNG photos, the size is not more than 3 MB.</p>
+        <div class="profile-img ">
+          <!--         <img class="profile-logo" :src="previewImage" >-->
+          <img class="profile-logo" :src="logoPath">
+          <input type="file" id="logo_file" @change="uploadImage($event,'logo')">
+          <label class="addPhoto" for="logo_file"><img src="../../assets/icons/addBtn.svg"></label>
+        </div>
+      </div>
+
+      <h3 class="catalog-sub-title margin-10">Banner</h3>
+      <p class="catalog-description margin-30">You can upload JPG or PNG photos, the size is not more than 3 MB.</p>
+
+      <div class="profile-img big-profile-img margin-30">
+        <img :src="bannerPath">
+        <input type="file" id="big-img" @change="uploadImage($event,'banner')">
+        <label class="addPhoto big-addPhoto"  for="big-img"><img src="../../assets/icons/addBtn.svg"></label>
+      </div>
+
+      <label>Description</label>
+      <textarea v-model="description" class="general-area definition-area margin-30 pt-2"></textarea>
+      <!-- //dont remove-->
+      <!--     <h3 class="catalog-sub-title mb-1">Accent colors</h3>-->
+      <!--     <p class="catalog-description margin-20">You can supply any color</p>-->
+
+      <!--     <div style="position: relative" class="color-box margin-50 d-flex justify-content-between align-items-center">-->
+      <!--       <div style="width:100%;" class="d-flex align-items-center">-->
+      <!--         <div v-bind:style="{ background: color}" v-on:click="seen = !seen" class="color-picker mr-2"></div>-->
+      <!--         <input disabled v-model="color" class="color-input pr-2" placeholder="#616cf5">-->
+
+      <!--         <div v-if="seen" class="picker_conteiner" style="position: absolute;right: 0;">-->
+      <!--           <span v-on:click="seen = !seen" class="picker_close_btn"><img src="../../assets/icons/addBtn.svg"></span>-->
+      <!--           <Picker v-on:sendColor="onColorPick"/>-->
+      <!--         </div>-->
+
+      <!--       </div>-->
+      <!--       <span @click="color='#616cf5'" style="color:#616cf5;cursor: pointer">Clear</span>-->
+      <!--     </div>-->
+
+      <h3 class="catalog-sub-title margin-20">Social networks</h3>
+      <div class="margin-50">
+        <input v-model="whatsapp" class="social-btns" placeholder="Whatsapp">
+        <input v-model="telegram" class="social-btns" placeholder="Telegram">
+        <input v-model="facebook" class="social-btns" placeholder="Facebook">
+        <input v-model="instagram" class="social-btns" placeholder="Instagram">
+        <input v-model="website" class="social-btns" placeholder="Website">
+      </div>
+    </div>
+  </div>
 </div>
 </template>
 
 <script>
 
 // import Picker from "@/components/settings/Picker";
-
+import Spinner from "../Spinner";
 export default {
   name: "CatalogSettings",
   components:{
     // Picker
+    Spinner
   },
   data(){
     return{
+      spinner:true,
       company:'',
       id:'',
       catalog_status:false,
@@ -451,6 +457,7 @@ export default {
         that.facebook = settings.facebook || '';
         that.instagram = settings.instagram || '';
         that.website = settings.website || '';
+        that.spinner = false;
       })
   },
   mounted() {
@@ -526,19 +533,23 @@ export default {
 }
 .big-profile-img{
   width: 100% !important;
-  height:100px;
+  height:150px;
   border:1px solid #d3d3d3;
   display: flex;
   justify-content: center;
   border-radius: 10px;
-  padding: 10px;
+
+
+}
+.big-profile-img img{
+  border-radius: 10px;
 }
 .big-addPhoto{
   right: -18px !important;
   bottom: -23px !important;
 }
 .definition-area{
-  height: 75px;
+  height: 100px;
 }
 .url-icon{
   width: 50px;

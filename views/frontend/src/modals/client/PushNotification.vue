@@ -8,7 +8,7 @@
                 <img src="../../assets/icons/xBlack.svg" alt="">
               </span>
           </button>
-          <h3 class="modal-title">Push notification</h3>
+          <h3 class="modal-title" @click="sends">Push notification </h3>
         </div>
         <div class=" myModal-body">
           <div class="row">
@@ -63,19 +63,13 @@
 
               <h3 class="notification-title">Select by last purchase date</h3>
               <div class="selects">
-                <select v-model="newData.last_pruchase" class=" form-control long-form-control  form-control-lg" aria-label=".form-select-lg example">
-                  <option value="1">1 month</option>
-                  <option value="2">2 month</option>
-                  <option value="3">3 month</option>
-                  <option value="4">4 month</option>
-                  <option value="5">5 month</option>
-                  <option value="6">6 month</option>
-                  <option value="12">12 month</option>
+                <select v-model="last_purchase_filter" class=" form-control long-form-control  form-control-lg" aria-label=".form-select-lg example">
+                <option v-for="(date,index) in lastMonth" :key="index" :value="date.date">{{date.name}}</option>
                 </select>
               </div>
 
               <h3 class="notification-title">News</h3>
-              <input  class="cashback-input news-input" placeholder="Select news" v-model="search_news">
+              <input :disable="newData.title!=='' || newData.description!==''" :class="{disableInput: newData.title!=='' || newData.description!==''}"  class="cashback-input news-input" placeholder="Select news" v-model="search_news">
 
             <div class="parent-news">
               <div v-if="search_news!==''" class="news pt-3">
@@ -93,14 +87,14 @@
               <div v-if="newsObj !== ''" class="sale d-flex align-items-center justify-content-between">
                 <div style="width:100%">
                   <h4 class="sale-title">{{newsObj.name}}</h4>
-                  <span class="news-desc">{{newsObj.desc}}</span>
+                  <span class="news-desc long-text">{{newsObj.desc}}</span>
                 </div>
                 <img @click="clearNews" src="../../assets/icons/deleteClient.svg">
               </div>
 
               <h3 class="notification-title">Custom text</h3>
-              <input v-model="newData.title"  class="cashback-input mb-3" placeholder="Title">
-              <textarea v-model="newData.description"  class="general-area p-2" placeholder="Description"></textarea>
+              <input :disabled="newData.news!==''" :class="{disableInput:newData.news!==''}" v-model="newData.title"  class="cashback-input mb-3" placeholder="Title">
+              <textarea :disabled="newData.news!==''" :class="{disableInput:newData.news!==''}"  v-model="newData.description"  class="general-area p-2" placeholder="Description"></textarea>
               <button class="save" @click.prevent="onSubmit">Send</button>
             </div>
           </div>
@@ -118,9 +112,19 @@ import $ from "jquery";
 
 export default {
   name: "Push notification",
+  props:['clientList'],
   data(){
     return{
-      clientList:[],
+      lastMonth:[
+        {date: this.$moment().subtract(1,'months').endOf('month').format('YYYY-MM'), name:'1 month'},
+        {date: this.$moment().subtract(2,'months').endOf('month').format('YYYY-MM') , name:'2 month'},
+        {date: this.$moment().subtract(3,'months').endOf('month').format('YYYY-MM') , name:'3 month'},
+        {date: this.$moment().subtract(4,'months').endOf('month').format('YYYY-MM'), name:'4 month' },
+        {date: this.$moment().subtract(5,'months').endOf('month').format('YYYY-MM'), name:'5 month'},
+        {date: this.$moment().subtract(6,'months').endOf('month').format('YYYY-MM'), name:'6 month'},
+        {date: this.$moment().subtract(12,'months').endOf('month').format('YYYY-MM'),name:'12 month'},
+      ],
+
       newsList:[],
       clientCategory:[],
       search_news:'',
@@ -129,6 +133,7 @@ export default {
       selectAll:false,
       filterClient:'',
       newsObj:'',
+      last_purchase_filter:'',
       newData:{
         clients:[],
         news:'',
@@ -147,13 +152,14 @@ export default {
           .filter((item)=>{
             return item.name.toLowerCase().includes(this.search_client.toLowerCase())
           })
-      .filter((item)=>{
-        if(item.category){
-          return item.category._id.includes(this.filterClient);
-        }else{
-          return item;
-        }
-      })
+          .filter((item)=>{
+            if(item.category){
+              return item.category._id.includes(this.filterClient);
+            }else{
+              return item;
+            }
+          })
+
 
 
     },
@@ -170,6 +176,13 @@ export default {
 
   },
   methods:{
+    sends(){
+      console.log(this.clientList)
+      let x = this.$moment().format('YYYY-MM-DD')
+      // x.setDate(1);
+      // x.setMonth(x.getMonth()-1);
+      console.log(x)
+    },
     clearNews(){
       this.newsObj = '';
       this.newData.news = ''
@@ -179,12 +192,7 @@ export default {
       this.newsObj = selected
       this.search_news = ''
     },
-    getClients(){
-      this.axios.get(this.url('getClients'))
-          .then((res)=>{
-            this.clientList= res.data.objects;
-          })
-    },
+
     getCategories(){
       this.axios.get(this.url('getCategories')+'?type=client')
           .then((response)=>{
@@ -239,25 +247,30 @@ export default {
       if(this.selectAll === true){
           new_data.sendToAll = true
       }
+
       console.log(new_data)
       if(new_data.clients.length === 0 ){
         this.$warningAlert('Please select whom you want to send push notification')
       }
-      else if(new_data.news === ''){
-          this.$warningAlert('Choose a news')
-      }
       else{
-
         const form = new FormData();
-        form.append('title', new_data.title);
-        form.append('description', new_data.description);
+
+
+        if(new_data.news !== ''){
+          form.append('news', new_data.news)
+        }
+        else{
+          form.append('title', new_data.title);
+          form.append('description', new_data.description);
+        }
+
         form.append('sendToAll', new_data.sendToAll);
         form.append('clients', new_data.clients);
-        form.append('news',new_data.news)
-         this.axios.post(this.url('sendPushNotification'),form)
+        this.axios.post(this.url('sendPushNotification'),form)
             .then((res)=>{
               this.$successAlert('Push has been sent')
               console.log(res, 'Success push')
+
             })
         $('#push-notification').modal("hide")
       }
@@ -266,7 +279,7 @@ export default {
 
   },
   mounted(){
-    this.getClients()
+
     this.getCategories()
     this.getNews()
   }
@@ -296,6 +309,13 @@ export default {
 .news-desc{
   color:#8C94A5;
   font-size: 14px;
+}
+.long-text{
+  width: 280px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
 }
 .news{
   height:100px;

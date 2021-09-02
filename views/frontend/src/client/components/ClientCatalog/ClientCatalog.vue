@@ -1,8 +1,8 @@
-catalog<template>
+<template>
 <div class="row catalog">
   <div id="categories" class="pt-3 col-lg-3 col-md-4">
     <div class="catalog-left">
-    <h3 @click="test" class="product-title"><img src="../../../assets/clients/Icon.svg">Products</h3>
+    <h3  class="product-title"><img src="../../../assets/clients/Icon.svg">Products</h3>
 
     <h3 class="price">Price:</h3>
 
@@ -428,6 +428,7 @@ name: "Catalog",
   .mobile-btns{
     display: block;
   }
+
 }
 
 

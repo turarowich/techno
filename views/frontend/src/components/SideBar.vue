@@ -14,7 +14,7 @@
       <router-link class="router-link" v-if="check('news', 'active')" to="/news"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/VolumeUp.svg" >News</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
       <router-link class="router-link" v-if="check('log', 'active')" to="/log"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/logs.svg" >Log</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
      <div class="help-setting">
-        <router-link class="router-link help" to="/"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/question.svg" >Help</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+        <router-link class="d-none router-link help" to="/"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/question.svg" >Help</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
         <div class="line-side"></div>
         <router-link class="router-link" v-if="check('settings', 'active')" to="/settings"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Setting.svg" >Settings</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
       </div>

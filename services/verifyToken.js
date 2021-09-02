@@ -13,27 +13,25 @@ function verifyToken(req, res, next) {
             req.db = 'loygift' + req.headers['access-place']
             return next();
         }
-        return res.status(403).send({ auth: false, message: 'No token provided.45' });
+        return res.status(403).send({ auth: false, message: 'No token provided.' });
     }else{
         // Remove Bearer from string
         token = token.replace(/^Bearer\s+/, "");
     }
-
     jwt.verify(token, config.secret_key, function (err, decoded) {
-        if (err)
+        if (err){
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+        }
+
         // if everything good, save to request for use in other routes
         if (decoded.type){
             req.userType = decoded.type
         }else{
             req.userType = "client"
         }
-        console.log("PASSSSER",token,"=====================================")
         req.userID = decoded.user;
         req.userName = decoded.name;
         req.db = "loygift" + decoded.id;
-
-        console.log('NEXT')
         next();
     });
 }

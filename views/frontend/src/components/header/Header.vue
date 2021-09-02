@@ -6,7 +6,9 @@
 
       </button>
       <div class="total-order">
-        <h5 class="route-name">{{$route.name}}</h5>
+        <h5 v-if="$route.path.startsWith('/settings')" class="route-name">Settings</h5>
+        <h5 v-else-if="$route.path.startsWith('/loyalty')" class="route-name">Loyalty</h5>
+        <h5 v-else class="route-name">{{$route.name}}</h5>
         <span class="total-order"></span>
       </div>
       <div class="d-flex align-items-center">

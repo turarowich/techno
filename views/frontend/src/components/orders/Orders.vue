@@ -27,7 +27,6 @@
                 <option value="Done">Done</option>
                 <option value="In Progress">In process</option>
                 <option value="Cancelled">Cancelled</option>
-                <option value="New">New</option>
               </select>
             </form>
           </div>
@@ -47,16 +46,16 @@
     </div>
     <div class="d-flex main-content-header justify-content-between align-items-center">
       <div class="table-head d-flex align-items-center" style="width: 18%;">
-        <div><label class="custom-checkbox"><input type="checkbox" id="parent-check"  @click="toggleSelect" v-model="selectAll"><span class="checkmark"></span></label></div>
+        <div><label class="custom-checkbox"><input type="checkbox" id="parent-check"  v-model="selectAll"  @change="selectAllOrder"><span class="checkmark"></span></label></div>
 
         Name order</div>
       <div class="table-head" style="width: 25%;">Product</div>
-      <div v-show="data_check.client_checked" class="table-head" style="width: 25%;">Client</div>
-      <div v-show="data_check.phone_checked" class="table-head" style="width: 20%;">Phone number</div>
-      <div class="table-head table-link d-flex align-items-center" style="width: 10%;" @click="sortByTotal()" >Total <img class="total-pol" style="margin-left:7px" src="../../assets/icons/polygon.svg"></div>
-      <div v-if="data_check.date_checked" class="table-head table-link d-flex align-items-center" style="width: 15%; cursor: pointer" v-on:click="sortByDate" >Date <img class="date-pol" style="margin-left:7px" src="../../assets/icons/polygon.svg"></div>
+      <div v-show="data_check.client_checked" class="table-head" style="width: 20%;">Client</div>
+      <div v-show="data_check.phone_checked" class="table-head" style="width: 18%;">Phone number</div>
+      <div class="table-head table-link d-flex align-items-center" style="width: 15%;" @click="sortByTotal()" >Total <img class="total-pol" style="margin-left:7px" src="../../assets/icons/polygon.svg"></div>
+      <div v-if="data_check.date_checked" class="table-head table-link d-flex align-items-center" style="width: 13%; cursor: pointer" v-on:click="sortByDate" >Date <img class="date-pol" style="margin-left:7px" src="../../assets/icons/polygon.svg"></div>
       <div v-show="data_check.notes_checked" class="table-head" style="width: 10%;">Notes</div>
-      <div class="table-head" style="width: 12%;">Status</div>
+      <div class="table-head" style="width: 15%;">Status</div>
       <div class="table-head" style="width: 8%;"></div>
       <div style="width:3%" class="dropdown pl-3">
         <div class="table-head text-right dropdown-toggle"  id="dropdownBlue" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:3%"><img src="../../assets/icons/BlueSetting.svg"></div>
@@ -72,16 +71,19 @@
     </div>
 
     <div class="table-content">
+      <div v-if="spinner" style="height:100%; " class="d-flex align-items-center">
+        <Spinner/>
+      </div>
+      <div v-else>
         <OrderItem
-          ref="order_item"
-          v-on:selectOrder="selectOrder"
-          v-on:unCheckAll="unCheckAll"
-          v-on:checkAll="checkAll"
-          v-bind:orderList="orderToDisplay"
-          v-on:deleteOrder="deleteOrder"
-          v-bind:data_check="data_check"
-          @startScanning="startScanning"
+            v-on:checkSelection="checkSelection"
+            v-on:selectOrder="selectOrder"
+            v-bind:orderList="orderToDisplay"
+            v-on:deleteOrder="deleteOrder"
+            v-bind:data_check="data_check"
+            @startScanning="startScanning"
         />
+      </div>
     </div>
     <AddOrder
       :getOrders="getOrders"
@@ -154,6 +156,7 @@
 </template>
 
 <script>
+import Spinner from "../Spinner";
 import OrderItem from "@/components/orders/OrderItem";
 import AddOrder from "@/modals/orders/AddOrder";
 import EditOrder from "@/modals/orders/EditOrder";
@@ -168,6 +171,8 @@ name: "Orders",
     AddOrder,
     EditOrder,
     QrStream,
+    Spinner
+
   },
   data(){
     return{
@@ -195,6 +200,7 @@ name: "Orders",
           date_checked:false,
           notes_checked:false
       },
+      spinner:true,
       filter_by_status: '',
       price_from:'',
       price_to:'',
@@ -245,7 +251,6 @@ name: "Orders",
       if(this.currentPage> this.totalPages){
         return Math.ceil(this.filteredList.length / this.perPage)
       }
-
       return this.currentPage
     },
 
@@ -269,6 +274,15 @@ name: "Orders",
     },
   },
   methods: {
+    selectAllOrder(){
+      this.orderToDisplay.map(order=>order['selected'] = this.selectAll)
+    },
+    checkSelection(){
+      let selected =  this.filteredList.filter(employee => {
+        return employee.selected
+      })
+      this.selectAll = selected.length === this.filteredList.length
+    },
     unSetSelectedOrder(){
       this.select_order = '';
     },
@@ -296,17 +310,12 @@ name: "Orders",
     getOrders(){
       this.axios.get(this.url('getOrders')+'?populate=client')
       .then((response)=>{
-        console.log(response.data.objects);
         this.orderList = response.data.objects;
+        this.spinner = false;
 
       })
     },
-    checkAll(item){
-      this.selectAll = item
-    },
-    unCheckAll(item){
-      this.selectAll = item
-    },
+
     exportOrder(){
         this.axios.post(this.url('getOrderExcel'),{
             orders: ['608a5131405656e224436194', '608a5102405656e224436191']
@@ -335,24 +344,11 @@ name: "Orders",
     filteredBetweenDate(){
       this.filtered = this.between_value
     },
-    toggleSelect: function () {
-      this.orderList.forEach((user)=> {
-        if(this.$refs.order_item.$refs[`select${user._id}`] !== undefined && this.$refs.order_item.$refs[`select${user._id}`] !== null){
-           if(this.selectAll === false){
-              this.$refs.order_item.$refs[`select${user._id}`].checked = true
-           }
-           else{
-             this.$refs.order_item.$refs[`select${user._id}`].checked = false
-           }
-         }
-      });
-    },
+
     deleteAllOrder() {
       this.orderList.forEach((user)=> {
-        if(this.$refs.order_item.$refs[`select${user._id}`] !== undefined && this.$refs.order_item.$refs[`select${user._id}`] !== null){
-          if(this.$refs.order_item.$refs[`select${user._id}`].checked === true){
-            this.deletedOrders.push(user._id)
-          }
+        if(user.selected){
+          this.deletedOrders.push(user._id)
         }
       });
 
@@ -493,9 +489,11 @@ name: "Orders",
     },
 
     async onInit (promise) {
+      console.log('init-------------------------------------------------------------');
       try {
         await promise
       } catch (error) {
+        console.log(error,'init-------------------------------------------------------------');
         const triedFrontCamera = this.camSettings.camera === 'front';
         const triedRearCamera = this.camSettings.camera === 'rear';
         const cameraMissingError = error.name === 'OverconstrainedError';

@@ -9,7 +9,7 @@
           <img v-else class="edit-img" src="../../assets/icons/editUserAvatar.svg">
           <div>
             <h3 class="edit-name">{{client.name !== undefined ? client.name : ''}}</h3>
-            <div class="edit-category">Category: <span>{{client.category !== undefined ? client.category.name : 'No category'}}</span></div>
+            <div  class="edit-category">Category: <span>{{client.category && client.category!== null ? client.category.name : 'No category'}}</span></div>
             <span class="edit-user"  data-toggle="modal"  data-target="#edit-client" >Edit user</span>
           </div>
         </div>
@@ -19,7 +19,7 @@
         <div class="selects">
 
           <select @change="changeDiscount(client._id)" id="change-discount" class=" form-control long-form-control  form-control-lg" aria-label=".form-select-lg example">
-            <option value='0' v-if="client.discount === null" selected>no discount</option>
+            <option value='0' selected>no discount</option>
             <option v-for="discount in discountList" :key="discount._id" :selected="client.discount == discount.discount_percentage" :value="discount.min_sum_of_purchases">{{discount.name}} {{discount.discount_percentage}} %</option>
           </select>
 
@@ -63,9 +63,8 @@
       </div>
       <div class="col-lg-2 client-number-box">
         <span class="client-number-label">Total of paid</span>
-        <h5 class="client-number">{{totalPaid}}</h5>
+        <h5 class="client-number">{{totalPaid.toFixed(2)}}</h5>
       </div>
-
     </div>
 
     <div class="d-flex align-items-center nav-buttons justify-content-between">
@@ -237,7 +236,7 @@ export default {
             this.client = res.data.object;
             this.historyBonus = res.data.history;
             this.purchaseHistory = res.data.orders;
-            console.log(res)
+            console.log(res, 'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFf')
           })
     },
     getDiscounts() {
@@ -303,7 +302,7 @@ export default {
   left: -30px;
 }
 .table-content{
-  height: 250px;
+  height: 245px;
 }
 .edit-header{
   position: relative;

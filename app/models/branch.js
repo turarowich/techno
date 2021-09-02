@@ -29,7 +29,7 @@ const branchSchema = new Schema({
     },
     phone2: {
         type: String,
-        required: true,
+        required: false,
         default: ""
     },
     monday: {

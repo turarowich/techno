@@ -1,7 +1,7 @@
 <template>
   <div class="parent-modal">
     <div class="modal myModal  pr-0 fade" id="add_branch" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" role="document"  style="max-width: calc(100% - 250px);">
+      <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 h-100 " role="document"  style="max-width: calc(100% - 250px);">
         <div class="modal-content add_branch_modal_content h-100">
           <div class="modal-header justify-content-start align-items-center ">
 
@@ -92,7 +92,7 @@ export default {
     return{
       working_hours:[
         '01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00',
-        '13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00','00:00',
+        '13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00','23:59',
       ],
       current_selected_day:{
         day:'',
@@ -290,6 +290,7 @@ export default {
   cursor:pointer;
   margin-right: 10px;
 }
+
 .days.active{
   background: #616cf5;
   color:white;
@@ -325,6 +326,7 @@ export default {
 .add_branch_modal_content{
   border-radius:0;
   border:none;
+  overflow-y:auto;
 }
 .save{
   width: 120px;

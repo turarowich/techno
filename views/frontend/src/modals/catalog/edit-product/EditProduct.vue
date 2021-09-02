@@ -94,17 +94,17 @@
                   <input @change="onFileChange($event)" ref="addImage" class="d-none" multiple id="imgsArray" type="file" name="imgArray">
                 </label>
                 <div  class="d-flex">
-                   <div v-if="currentData.img">
-                      <img v-if="typeof currentData.img === 'string'" :src="imgSrc+'/'+currentData.img" class="show-images mr-2">
-                      <img v-else :src="mainImg" class="show-images mr-2">
+<!--                   <div v-if="currentData.img">-->
+<!--                      <img v-if="typeof currentData.img === 'string'" :src="imgSrc+'/'+currentData.img" class="show-images mr-2">-->
+<!--                      <img v-else :src="mainImg" class="show-images mr-2">-->
 
-                   </div>
-                    <div v-if="currentData.img" class="selected-overlay">
-                      <img  @click="currentData.img = ''" class="remove-images" src="../../../assets/icons/deleteClient.svg">
-                    </div>
+<!--                   </div>-->
+<!--                    <div v-if="currentData.img" class="selected-overlay">-->
+<!--                      <img  @click="currentData.img = ''" class="remove-images" src="../../../assets/icons/deleteClient.svg">-->
+<!--                    </div>-->
                    <div v-for="(img, index) in imagePreview" :key="index" >
-                      <div v-if="img !== '' && img !== null" class="selected-images">
-                        <img v-if="img !== null ? img.startsWith('images'): ''" :src="imgSrc+'/'+img" class="show-images mr-2" />
+                      <div v-if="img" class="selected-images">
+                        <img v-if="img ? img.startsWith('images'): ''" :src="imgSrc+'/'+img" class="show-images mr-2" />
                         <img v-else-if="img !== null"   :src="img" class="show-images mr-2" />
                         <div class="selected-overlay">
                           <img @click="removeImage(index)" class="remove-image"  src="../../../assets/icons/deleteClient.svg">
@@ -222,43 +222,61 @@ export default {
       });
     },
     onFileChange() {
+      var valid = ["image/png", "image/jpg", "image/jpeg", "image/svg"];
       $.each($("#imgsArray")[0].files, (i,file)=> {
          console.log(i)
-          if(this.currentData.img === '' || this.currentData.img === undefined){
-            this.currentData.img = file
+          if(file && file.size > 3000000){
+            this.$warningAlert('Image size exceeds 3 mb ')
+          }
+          else if(file && !valid.includes(file.type)){
+            this.$warningAlert('Image type not png or jpg')
           }
           else{
-            if(this.currentData.imgArray.length === 0){
+            if(this.currentData.imgArray.length<4) {
               this.currentData.imgArray.push(file)
+
             }
             else{
               for (let j = 0; j <this.currentData.imgArray.length; j++) {
-                if(this.currentData.imgArray[j] === null || this.currentData.imgArray[j] === ''){
+                if(this.currentData.imgArray[j] === ''){
                   this.currentData.imgArray[j] = file;
                   break;
                 }
-                if(this.currentData.imgArray.length<3){
-                  this.currentData.imgArray.push(file)
-                  break;
+                else{
+                  this.$warningAlert('Maximum is 4 images')
                 }
               }
             }
           }
-          console.log(this.currentData.imgArray)
-    });
+      })
+      console.log(this.currentData.imgArray,'imgArray')
     },
+
     onSubmit(){
       const updatedProduct = this.currentData;
       const form = new FormData();
-     for(let item in updatedProduct.imgArray){
-         form.append('imgArray'+item, updatedProduct.imgArray[item])
-       console.log('imgArray'+item)
-      }
+      const img = updatedProduct.imgArray.find((item=>item!==''))
+      if(!img){
+        form.append('img', '')
+      }else{
+        form.append('img',img)
 
-      if(this.promoStart.obj != ""){
+      }
+      const newImgArray = []
+       for(let item in updatedProduct.imgArray){
+         if(updatedProduct.imgArray[item] !== img){
+           newImgArray.push(updatedProduct.imgArray[item])
+         }
+       }
+      for (let itm in newImgArray) {
+        form.append('imgArray'+itm,  newImgArray[itm])
+
+
+      }
+      if(this.promoStart.obj !== ""){
         form.append("promoStart", this.promoStart.obj)
       }
-      if(this.promoEnd.obj != ""){
+      if(this.promoEnd.obj !== ""){
         form.append("promoEnd", this.promoEnd.obj)
       }
 
@@ -268,9 +286,8 @@ export default {
       else{
        form.append('category',this.no_category)
       }
-      if(updatedProduct.img || updatedProduct.img === ''){
-        form.append('img', updatedProduct.img)
-      }
+
+
 
       form.append("name", updatedProduct.name)
       form.append("name_ru", updatedProduct.name_ru)
@@ -304,6 +321,12 @@ export default {
   watch:{
     select_product(newCat){
       this.currentData = Object.assign({}, newCat);
+
+      if(this.currentData.img){
+        this.currentData.imgArray.unshift(this.currentData.img);
+
+      }
+      delete this.currentData['img']
       // this.promoStart.obj = this.currentData.promoStart;
       this.promoStartLightpick.setDate(this.currentData.promoStart);
       // this.promoEnd.obj = this.currentData.promoEnd;

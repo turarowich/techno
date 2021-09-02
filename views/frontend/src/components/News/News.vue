@@ -18,13 +18,22 @@
     <div class="table-head" style="width: 10%;"></div>
   </div>
 
-  <NewsItem v-bind:newsList="newsList" v-on:selectNews="selectNews" v-on:deleteNews="deleteNews"/>
+ <div class="table-content">
+   <div v-if="spinner" class="mt-5">
+     <Spinner/>
+   </div>
+   <div v-else>
+     <NewsItem v-bind:newsList="newsList" v-on:selectNews="selectNews" v-on:deleteNews="deleteNews"/>
+   </div>
+
+ </div>
   <AddNews v-on:getNews="getNews"/>
   <EditNews v-bind:selectedNews="selectedNews" v-on:getNews="getNews"/>
 </div>
 </template>
 
 <script>
+import Spinner from "../Spinner";
 import NewsItem from "@/components/News/NewsItem";
 import AddNews from "@/modals/news/AddNews";
 import EditNews from "@/modals/news/EditNews";
@@ -34,13 +43,15 @@ export default {
   components:{
     NewsItem,
     AddNews,
-    EditNews
+    EditNews,
+    Spinner
   },
   data(){
     return{
       newsListServer:[],
       selectedNews:{},
-      search:""
+      search:"",
+      spinner:true,
     }
   },
   computed:{
@@ -61,6 +72,7 @@ export default {
         this.axios.get(this.url('getNews'))
             .then((response) => {
                 this.newsListServer = response.data.objects;
+                this.spinner = false
             })
     },
     selectNews(news){
@@ -82,8 +94,15 @@ export default {
           content:'content-sweet',
           closeButton:'close-btn'
         },
+          showClass: {
+            popup: 'animate__animated animate__slideInDown'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          }
 
-      }).then((result) => {
+
+        }).then((result) => {
         if (result.isConfirmed) {
           this.axios.delete(this.url('deleteNews', newsID))
           .then(()=>{
@@ -134,4 +153,8 @@ export default {
   padding-left: 40px;
   padding-right: 40px;
 }
+.table-content{
+  height: calc(100vh - 270px) ;
+}
+
 </style>

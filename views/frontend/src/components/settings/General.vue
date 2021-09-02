@@ -1,56 +1,146 @@
 <template>
-<div class="general">
-  <form>
-    <div class="row ">
-      <div class="col-lg-5 mr-5">
-        <label class="sum-point">Currency</label><br>
-        <input v-model="currency" class="form-input cashback-input mb-2" placeholder="USD">
+  <div class="general">
+  <div v-if="spinner"  style="height:65vh; " class="d-flex align-items-center">
+    <Spinner/>
+  </div>
+    <form v-else class="mb-5">
+      <div class="row">
+        <div class="col-lg-5 mr-5 left-general">
+          <label class="sum-point">Currency</label><br>
+          <input v-model="currency" class="form-input cashback-input " placeholder="USD">
 
-        <label class="sum-point">Your country</label>
-        <select v-model="country" class="form-control long-form-control  form-control-lg mb-2" aria-label=".form-select-lg example">
-          <option val="Kyrgyzstan">Kyrgyzstan</option>
-          <option val="Russia">Russia</option>
-          <option val="USA">USA</option>
-        </select>
-        <label class="sum-point">Name of the company</label><br>
-        <input v-model="name" class="form-input cashback-input mb-2" placeholder="Company">
-        <label class="sum-point">Email</label><br>
-        <input v-model="email" class="form-input cashback-input mb-2" placeholder="Company email">
-      </div>
-
-      <div class="col-lg-5">
-        <h2 class="cashback-title">
-          Chat settings
-        </h2>
-        <div class="d-flex enable-title">
-          <label class="switch d-flex">
-            <input v-model="chat" type="checkbox" >
-            <span class="slider round"></span>
-          </label>
-          <h2 class="cashback-sub-title">Chat</h2>
+          <label class="sum-point">Your country</label>
+          <select v-model="country" class="form-control long-form-control  form-control-lg " aria-label=".form-select-lg example">
+            <option val="Kyrgyzstan">Kyrgyzstan</option>
+            <option val="Russia">Russia</option>
+            <option val="USA">USA</option>
+          </select>
+          <label class="sum-point">Name of the company</label><br>
+          <input v-model="name" class="form-input cashback-input " placeholder="Company">
+          <label class="sum-point">Email</label><br>
+          <input v-model="email" class="form-input cashback-input " placeholder="Company email">
+          <h2 class="cashback-title mt-3">
+            Chat settings
+          </h2>
+          <div class="d-flex enable-title">
+            <label class="switch d-flex">
+              <input v-model="chat" type="checkbox" >
+              <span class="slider round"></span>
+            </label>
+            <h2 class="cashback-sub-title">Chat</h2>
+          </div>
+          <p class="cashback-description mb-5">Disables the ability to write to you in the chat</p>
         </div>
-        <p class="cashback-description mb-5">Disables the ability to write to you in the chat</p>
+        <div class="col-lg-5">
+          <h2 class="cashback-title mt-3">
+            Custom fields settings
+          </h2>
+          <div class="d-flex enable-title">
+            <label class="switch d-flex">
+              <input v-model="customFields" type="checkbox" >
+              <span class="slider round"></span>
+            </label>
+            <h2 class="cashback-sub-title">Fields</h2>
+          </div>
+          <p class="cashback-description mb-5">Disables the ability to write to you in the chat</p>
+          <h2 class="cashback-sub-title">First field</h2>
+          <div class="d-flex flex-wrap ">
+            <div class="custom-fields col-12 pr-0 pl-0 d-flex align-items-center my-2">
+              <input v-model="custom_field_0.fieldName" class="form-input cashback-input  mr-3" placeholder="field name">
+              <label class="switch d-flex">
+                <input v-model="custom_field_0.required" type="checkbox" >
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div class="custom-fields col-12 pr-0 pl-0" v-for="(item, index) in custom_field_0.values" :key="index" >
+              <div class="d-flex" v-if="custom_field_0.fieldName.length">
+                <input v-model="custom_field_0.values[index]" class="form-input cashback-input mb-2" placeholder="field value">
+                <button v-if="index == 0" type="button" @click="addNewVal('custom_field_0')" class="discount-btn ml-2"><img src="../../assets/icons/enable+.svg"></button>
+                <button v-if="index != 0" type="button" @click="removeVal('custom_field_0', index)" class="discount-btn ml-2"><img alt="x" src="../../assets/icons/x.svg"></button>
+              </div>
+            </div>
+          </div>
+          <h2 class="cashback-sub-title mt-3">Second field</h2>
+          <div class="d-flex flex-wrap ">
+            <div class="custom-fields col-12 pr-0 pl-0 d-flex align-items-center my-2">
+              <input v-model="custom_field_1.fieldName" class="form-input cashback-input  mr-3" placeholder="field name">
+              <label class="switch d-flex">
+                <input v-model="custom_field_1.required" type="checkbox" >
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div class="custom-fields col-12 pr-0 pl-0" v-for="(item, index) in custom_field_1.values" :key="index" >
+              <div class="d-flex" v-if="custom_field_1.fieldName.length">
+                <input v-model="custom_field_1.values[index]" class="form-input cashback-input mb-2" placeholder="field value">
+                <button v-if="index == 0" type="button" @click="addNewVal('custom_field_1')" class="discount-btn ml-2"><img src="../../assets/icons/enable+.svg"></button>
+                <button v-if="index != 0" type="button" @click="removeVal('custom_field_1', index)" class="discount-btn ml-2"><img alt="x" src="../../assets/icons/x.svg"></button>
+              </div>
+            </div>
+          </div>
+          <h2 class="cashback-sub-title mt-3">Third field</h2>
+          <div class="d-flex flex-wrap ">
+            <div class="custom-fields col-12 pr-0 pl-0 d-flex align-items-center my-2">
+              <input v-model="custom_field_2.fieldName" class="form-input cashback-input  mr-3" placeholder="field name">
+              <label class="switch d-flex">
+                <input v-model="custom_field_2.required" type="checkbox" >
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div class="custom-fields col-12 pl-0" v-for="(item, index) in custom_field_2.values" :key="index" >
+              <div class="d-flex" v-if="custom_field_2.fieldName.length">
+                <input v-model="custom_field_2.values[index]" class="form-input cashback-input mb-2" placeholder="field value">
+                <button v-if="index == 0" type="button" @click="addNewVal('custom_field_2')" class="discount-btn ml-2"><img src="../../assets/icons/enable+.svg"></button>
+                <button v-if="index != 0" type="button" @click="removeVal('custom_field_2', index)" class="discount-btn ml-2"><img alt="x" src="../../assets/icons/x.svg"></button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <button type="button" @click="updateSettings" class="save">Save</button>
-  </form>
-</div>
+      <button type="button" @click="updateSettings" class="save">Save</button>
+    </form>
+  </div>
 </template>
 
 <script>
-
+import Spinner from "../Spinner";
 export default {
   name: "General",
+  components:{
+    Spinner
+  },
   data(){
     return{
-      currency:'',
-      country:'',
-      chat:false,
+      spinner:true,
+      currency:"",
+      country:"",
+      chat: false,
       name:'',
       email:'',
+      customFields: false,
+      custom_field_0:{
+        required: false,
+        fieldName: '',
+        values: ['']
+      },
+      custom_field_1:{
+        required: false,
+        fieldName: '',
+        values: ['']
+      },
+      custom_field_2:{
+        required: false,
+        fieldName: '',
+        values: ['']
+      },
     }
   },
   methods:{
+    addNewVal(field){
+      this[field].values.unshift('')
+    },
+    removeVal(field, index){
+      this[field].values.splice(index, 1)
+    },
     updateSettings(){
       let that=this;
       let url = this.url('updateSettings');
@@ -60,52 +150,81 @@ export default {
         chat:this.chat,
         name:this.name,
         email:this.email,
+        customFields: this.customFields,
+        custom_field_0: this.custom_field_0,
+        custom_field_1: this.custom_field_1,
+        custom_field_2: this.custom_field_2,
       }).then(function (response) {
         console.log(response);
         that.$successAlert('Updated');
       }).catch(function(error){
         if (error.response) {
-            if(error.response.data && !error.response.data.errors){
-                that.$warningAlert(error.response.data.msg)
-            }else{
-                that.$warningAlert('Something went wrong');
-            }
-          
+          if(error.response.data && !error.response.data.errors){
+            that.$warningAlert(error.response.data.msg)
+          }else{
+            that.$warningAlert('Something went wrong');
+          }
+
           that.$warningAlert(Object.values(error.response.data.errors),"Errors");
         }
       });
     },
   },
+
   beforeCreate(){
     let that = this;
     this.axios
-      .get(this.url('getSettings'))
-      .then(function (response){
-        let settings = response.data.object;
-        that.currency = settings.currency || '';
-        that.country = settings.country || '';
-        that.chat = settings.chat || '';
-        that.name = settings.name || '';
-        that.email = settings.email || '';
-      })
+        .get(this.url('getSettings'))
+        .then(function (response){
+          that.spinner = false;
+          let settings = response.data.object;
+          that.currency = settings.currency || '';
+          that.country = settings.country || '';
+          that.chat = settings.chat || false;
+          that.name = settings.name || '';
+          that.email = settings.email || '';
+          that.customFields = settings.customFields || false;
+          if(!settings.custom_field_0.values.length){
+            settings.custom_field_0.values = ['']
+          }
+          if(!settings.custom_field_1.values.length){
+            settings.custom_field_1.values = ['']
+          }
+          if(!settings.custom_field_2.values.length){
+            settings.custom_field_2.values = ['']
+          }
+          that.custom_field_0 = settings.custom_field_0;
+          that.custom_field_1 = settings.custom_field_1;
+          that.custom_field_2 = settings.custom_field_2;
+        })
   },
 }
 
 </script>
 
 <style scoped>
+.discount-btn{
+  height: 45px;
+  flex: 0 0 45px;
+  border-radius:5px;
+  background: none;
+  border: none;
+}
+.custom-fields .cashback-input{
+  width: 80%;
+}
 .cashback-input{
   width: 100%;
 }
 .save{
   width: 120px;
-  position: absolute;
-  bottom:50px;
+
+}
+.custom-fields .slider:before{
+  bottom:1.5px;
 }
 
-.general{
-  padding: 20px 0;
-}
+
 .form input{
   width: 100%;
 }
@@ -127,10 +246,16 @@ export default {
   display: inline-block;
   margin-bottom: 30px;
 }
+.left-general .cashback-input{
+  margin-bottom: 20px;
+}
 
-
-
-
+.form-control{
+  margin-bottom: 20px;
+  font-size: 14px;
+  color:#222;
+  padding-left: 10px;
+}
 /*
 
 

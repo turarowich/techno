@@ -83,6 +83,7 @@ module.exports = function (app, io) {
     app.post('/addPromocode', verifyAccess, promocodeController.addPromocode);
     app.post('/updatePromocode', verifyAccess, promocodeController.updatePromocode);
     app.delete('/deletePromocode/:promocode', verifyAccess, promocodeController.deletePromocode);
+    app.delete('/deletePromocodes', verifyAccess, promocodeController.deletePromocodes);
     app.get('/searchProductService', promocodeController.searchProductService);
     app.get('/searchPromocode', promocodeController.searchPromocode);
     app.get('/searchPromocodeByCode', promocodeController.searchPromocodeByCode);
