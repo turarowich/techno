@@ -99,31 +99,31 @@
                     You can upload 4 more JPG or PNG photos, the minimum resolution is 400*400px, the size is<br>
                     not more than 3 MB. The first photo will be shown as the main one by default .</p>
 
-              <div class="d-flex">
-                <label >
-                  <img src="../../../assets/img/modal-img.svg">
-                  <input @change="onFileChange($event)" ref="addImage" class="d-none" multiple id="imgsArray" type="file" name="imgArray">
-                </label>
-                <div  class="d-flex">
-<!--                   <div v-if="currentData.img">-->
-<!--                      <img v-if="typeof currentData.img === 'string'" :src="imgSrc+'/'+currentData.img" class="show-images mr-2">-->
-<!--                      <img v-else :src="mainImg" class="show-images mr-2">-->
+                  <div class="d-flex">
+                    <label >
+                      <img src="../../../assets/img/modal-img.svg">
+                      <input @change="onFileChange($event)" ref="addImage" class="d-none" multiple id="imgsArray" type="file" name="imgArray">
+                    </label>
+                    <div  class="d-flex">
+                      <!--                   <div v-if="currentData.img">-->
+                      <!--                      <img v-if="typeof currentData.img === 'string'" :src="imgSrc+'/'+currentData.img" class="show-images mr-2">-->
+                      <!--                      <img v-else :src="mainImg" class="show-images mr-2">-->
 
-<!--                   </div>-->
-<!--                    <div v-if="currentData.img" class="selected-overlay">-->
-<!--                      <img  @click="currentData.img = ''" class="remove-images" src="../../../assets/icons/deleteClient.svg">-->
-<!--                    </div>-->
-                   <div v-for="(img, index) in imagePreview" :key="index" >
-                      <div v-if="img" class="selected-images">
-                        <img v-if="img ? img.startsWith('images'): ''" :src="imgSrc+'/'+img" class="show-images mr-2" />
-                        <img v-else-if="img !== null"   :src="img" class="show-images mr-2" />
-                        <div class="selected-overlay">
-                          <img @click="removeImage(index)" class="remove-image"  src="../../../assets/icons/deleteClient.svg">
+                      <!--                   </div>-->
+                      <!--                    <div v-if="currentData.img" class="selected-overlay">-->
+                      <!--                      <img  @click="currentData.img = ''" class="remove-images" src="../../../assets/icons/deleteClient.svg">-->
+                      <!--                    </div>-->
+                      <div v-for="(img, index) in imagePreview" :key="index" >
+                        <div v-if="img" class="selected-images">
+                          <img v-if="img ? img.startsWith('images'): ''" :src="imgSrc+'/'+img" class="show-images mr-2" />
+                          <img v-else-if="img !== null"   :src="img" class="show-images mr-2" />
+                          <div class="selected-overlay">
+                            <img @click="removeImage(index)" class="remove-image"  src="../../../assets/icons/deleteClient.svg">
+                          </div>
                         </div>
                       </div>
                     </div>
-                </div>
-              </div>
+                  </div>
                 </div>
                 <div class="modal-btn d-flex">
                   <button @click.prevent="onSubmit" class="save">Save</button>
@@ -177,23 +177,23 @@ export default {
   },
   computed:{
     mainImg(){
-    if(typeof this.currentData.img === 'object'){
-      return URL.createObjectURL(this.currentData.img)
-    }
-    return this.currentData.img
+      if(typeof this.currentData.img === 'object'){
+        return URL.createObjectURL(this.currentData.img)
+      }
+      return this.currentData.img
     },
     imagePreview(){
 
       return  this.currentData.imgArray.map((item)=>{
-      if(this.currentData.imgArray.length>0){
-      if(item !== null){
-        if(typeof item === 'object'){
-          return URL.createObjectURL(item)
-        }
-      }
-        return item;
+        if(this.currentData.imgArray.length>0){
+          if(item !== null){
+            if(typeof item === 'object'){
+              return URL.createObjectURL(item)
+            }
+          }
+          return item;
 
-      }
+        }
       })
     },
 
@@ -201,11 +201,11 @@ export default {
   methods:{
 
     removeImage(idx){
-     this.currentData.imgArray.forEach((item,index)=>{
-       if(index === idx){
-         this.currentData.imgArray[index] = ""
-       }
-     })
+      this.currentData.imgArray.forEach((item,index)=>{
+        if(index === idx){
+          this.currentData.imgArray[index] = ""
+        }
+      })
       console.log(this.currentData.imgArray)
     },
 
@@ -221,10 +221,6 @@ export default {
         }
         this.currentData.promoPrice = 0
       }
-    },
-    unSetDates(){
-      this.promoStartLightpick.setDate('')
-      this.promoEndLightpick.setDate('')
     },
     selectDates(){
       let that=this;
@@ -246,30 +242,30 @@ export default {
     onFileChange() {
       var valid = ["image/png", "image/jpg", "image/jpeg", "image/svg"];
       $.each($("#imgsArray")[0].files, (i,file)=> {
-         console.log(i)
-          if(file && file.size > 3000000){
-            this.$warningAlert('Image size exceeds 3 mb ')
-          }
-          else if(file && !valid.includes(file.type)){
-            this.$warningAlert('Image type not png or jpg')
+        console.log(i)
+        if(file && file.size > 3000000){
+          this.$warningAlert('Image size exceeds 3 mb ')
+        }
+        else if(file && !valid.includes(file.type)){
+          this.$warningAlert('Image type not png or jpg')
+        }
+        else{
+          if(this.currentData.imgArray.length<4) {
+            this.currentData.imgArray.push(file)
+
           }
           else{
-            if(this.currentData.imgArray.length<4) {
-              this.currentData.imgArray.push(file)
-
-            }
-            else{
-              for (let j = 0; j <this.currentData.imgArray.length; j++) {
-                if(this.currentData.imgArray[j] === ''){
-                  this.currentData.imgArray[j] = file;
-                  break;
-                }
-                else{
-                  this.$warningAlert('Maximum is 4 images')
-                }
+            for (let j = 0; j <this.currentData.imgArray.length; j++) {
+              if(this.currentData.imgArray[j] === ''){
+                this.currentData.imgArray[j] = file;
+                break;
+              }
+              else{
+                this.$warningAlert('Maximum is 4 images')
               }
             }
           }
+        }
       })
       console.log(this.currentData.imgArray,'imgArray')
     },
@@ -285,11 +281,11 @@ export default {
 
       }
       const newImgArray = []
-       for(let item in updatedProduct.imgArray){
-         if(updatedProduct.imgArray[item] !== img){
-           newImgArray.push(updatedProduct.imgArray[item])
-         }
-       }
+      for(let item in updatedProduct.imgArray){
+        if(updatedProduct.imgArray[item] !== img){
+          newImgArray.push(updatedProduct.imgArray[item])
+        }
+      }
       for (let itm in newImgArray) {
         form.append('imgArray'+itm,  newImgArray[itm])
 
@@ -319,7 +315,7 @@ export default {
         form.append('category',updatedProduct.category._id)
       }
       else{
-       form.append('category',this.no_category)
+        form.append('category',this.no_category)
       }
 
       if(updatedProduct.promoPrice > updatedProduct.price){

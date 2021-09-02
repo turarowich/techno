@@ -63,7 +63,7 @@
                         <div class="mr-2">
                           <label >From</label>
                           <div :class="{errorInput: validateFrom=== true}" class="calendar d-flex align-items-center">
-                            <input   name="promoStart" v-model="newProduct.promoStart.formatted" class="calendar-input" id="promoStart">
+                            <input  autocomplete="off" name="promoStart" v-model="newProduct.promoStart.formatted" class="calendar-input" id="promoStart">
                             <img src="../../../assets/icons/Calendar.svg">
                           </div>
                           <div class="fill-fields" v-if="validateFrom===true">Fill in the fields</div>
@@ -72,7 +72,7 @@
                         <div>
                           <label>To</label>
                           <div :class="{errorInput: validateTo === true}" class="calendar d-flex align-items-center">
-                            <input   name="promoEnd" v-model="newProduct.promoEnd.formatted"  class="calendar-input" id="promoEnd">
+                            <input  autocomplete="off" name="promoEnd" v-model="newProduct.promoEnd.formatted"  class="calendar-input" id="promoEnd">
                             <img src="../../../assets/icons/Calendar.svg">
                           </div>
                           <div class="fill-fields" v-if="validateTo===true">Fill in the fields</div>
@@ -361,10 +361,6 @@ props:['listCategory', 'getProducts'],
       $('#add-products').on('shown', function () {
         $("#modal-content").scrollTop(0);
       });
-
-
-
-
     },
 
   },
@@ -380,6 +376,8 @@ props:['listCategory', 'getProducts'],
         that.newProduct.promoStart.formatted = date.format('YYYY-MM-DD');
       }
     });
+
+
     new this.$lightpick({
       field: document.getElementById('promoEnd'),
       format:'',

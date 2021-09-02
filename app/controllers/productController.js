@@ -179,12 +179,6 @@ class ProductController{
 
 
             let product = await Product.findOneAndUpdate(query, data)
-            //
-            if(product.promoPrice === 0){
-                await Product.updateOne(query, { $unset: { promoStart: "", promoEnd: ""}})
-            }
-            //
-
 
 
             // let test2 = await Product.findById(product.id);
