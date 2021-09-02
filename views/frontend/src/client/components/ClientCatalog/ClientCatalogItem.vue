@@ -11,7 +11,6 @@
             </div>
             <div class="product-add">
               <h2 class="long-text"  style="overflow: hidden;text-overflow: ellipsis; margin-bottom:10px;">{{product.name}} {{product.quantity}}</h2>
-              <div>{{product.vendorCode}}</div>
               <span class="mr-2" v-if="checkDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} {{catalog_settings.currency}}</span>
               <span :class="{lineThrough:checkDates(product.promoStart,product.promoEnd)}">{{product.price}} {{catalog_settings.currency}}</span>
             </div>
