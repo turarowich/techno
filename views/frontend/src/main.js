@@ -1,5 +1,7 @@
 import {createApp} from 'vue'
+import Vue3SmoothScroll from "vue3-smooth-scroll";
 import App from './App.vue'
+
 import 'select2/dist/css/select2.min.css';
 import 'slick-carousel/slick/slick';
 import 'slick-carousel/slick/slick.css';
@@ -30,6 +32,7 @@ import messages from "./assets/js/messages";
 const app = createApp(App)
 app.use(router);
 app.use(store);
+app.use(Vue3SmoothScroll)
 let token = localStorage.getItem('token')
 
 import QRCode from 'qrcode';
@@ -47,10 +50,10 @@ ax.interceptors.response.use(function (response) {
     return response;
 }, function (error) {
     // Do something with response error
-    // if (error.response.data.auth == false && error.response.data.message == 'Failed to authenticate token.' && window.location.pathname != "/" ) {
-    //     localStorage.clear()
-    //     document.location.href = "/";
-    // }
+    if (error.response.data.auth == false && error.response.data.message == 'Failed to authenticate token.' && window.location.pathname != "/" ) {
+        localStorage.clear()
+        document.location.href = "/";
+    }
     return Promise.reject(error);
 });
 

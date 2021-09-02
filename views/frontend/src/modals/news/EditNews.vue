@@ -18,8 +18,8 @@
                     <button class="upload-photo margin-bottom-30" @click="selectPhoto">+ Upload photo</button><br>        
                     <input class="d-none" type="file" name="" ref="uploadPhoto" @change="uploadPhoto($event)" accept="image/*">
                     <div class="image-preview position-relative" v-if="news.img">
-                        <img v-if="newImage" :src="imagePreview" alt="" class="w-100 d-block" accept="image/png, image/jpeg">
-                        <img v-else :src="makeImg(news.img)" alt="" class="w-100 d-block" accept="image/png, image/jpeg">
+                        <img v-if="newImage" :src="imagePreview" alt="" class="img-new w-100 d-block" accept="image/png, image/jpeg">
+                        <img v-else :src="makeImg(news.img)" alt="" class="w-100 img-new d-block" accept="image/png, image/jpeg">
                         <button class="deleteImage" @click="clearInput">
                             <img src="../../assets/icons/deleteClient.svg">
                         </button>
@@ -32,7 +32,7 @@
                     <label>Description</label>
                     <textarea v-model="news.desc"  name="" id="" cols="30" rows="10" class="form-control"></textarea>    
                     <div class="rules d-flex my-3">
-                        <label class="custom-checkbox"><input type="checkbox" v-model="news.category"><span class="checkmark"></span></label>
+                        <label class="custom-checkbox"><input type="checkbox" @change="checkPromo" v-model="news.category"><span class="checkmark"></span></label>
                         <span class="ml-2">Promotion</span>
                     </div>
                     
@@ -111,6 +111,13 @@ export default {
             return null
         }
     },
+  checkPromo(){
+    if(this.news.category===false){
+      this.news.startDate = ''
+      this.news.endDate = ''
+
+    }
+  },
     methods:{
         selectPhoto(){
             this.$refs.uploadPhoto.click();
@@ -140,13 +147,17 @@ export default {
         if (news.img){
             form.append('img', news.img)
         }
-        if (news.startDate){
-            form.append('startDate', news.startDate)
+      if(news.category){
+        if (!news.startDate && !news.endDate){
+          this.$warningAlert('Add promotion')
+          return;
         }
-        if (news.endDate){
-            form.append('endDate', news.endDate)
+        else{
+          form.append('startDate', news.startDate)
+          form.append('endDate', news.endDate)
         }
-        
+      }
+        form.append('category',news.category)
         form.append('name', news.name)
         form.append('desc', news.desc)
         
@@ -216,6 +227,10 @@ export default {
 }
 .product-calendar{
   margin-bottom: 40px;
+}
+.image-preview .img-new{
+  height: 192px;
+  object-fit: cover;
 }
 .product-calendar label{
   color: #8C94A5;

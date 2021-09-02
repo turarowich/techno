@@ -1,16 +1,17 @@
 <template>
   <div class="client  overlay_404">
     <div>
-      <div class="fixed-top " v-if="!['ClientLogin', 'ClientRegister', 'EmployeeLogin'].includes($route.name)">
+      <div id="navbar" class="fixed-top " v-if="!['ClientLogin', 'ClientRegister', 'EmployeeLogin'].includes($route.name)">
         <Navbar/>
       </div>
       <div class="router-content" id="router-content">
           <router-view />
       </div>
     </div>
+
     <div v-if="!['ClientLogin', 'ClientRegister'].includes($route.name)">
       <Footer/>
-      <img @click="scrollToTop" id="back-top" src="../../../assets/icons/back-top.svg">
+      <img @click="scrollToTop" id="back-top" class="d-none" src="../../../assets/icons/back-top.svg">
     </div>
   </div>
 </template>
@@ -101,14 +102,27 @@ name: "Home",
           $('.navigation').css({'border-bottom': '1px solid transparent'})
           $('#back-top').css({'display':'block'})
         }
-        else
-        {
+        else {
           $(".fixed-top").removeClass("nav-top");
           $('.navigation').css({'border-bottom': '1px solid #e4e4e4'})
           $('#back-top').css({'display':'none'})
         }
       })
     })
+
+
+    var prevScrollpos = window.pageYOffset;
+    window.onscroll = function() {
+      var currentScrollPos = window.pageYOffset;
+      if (prevScrollpos > currentScrollPos) {
+        document.getElementById("navbar").style.top = "0";
+        $('.catalog-left').css({'top':'100px'})
+      } else {
+        document.getElementById("navbar").style.top = "-62px";
+        $('.catalog-left').css({'top':'40px'})
+      }
+      prevScrollpos = currentScrollPos;
+    }
 
 
 
@@ -135,6 +149,9 @@ name: "Home",
   z-index:10000;
   left: 0;
   top: 0;
+}
+#navbar{
+  transition: 0.3s;
 }
 .router-content{
   margin-top:90px;

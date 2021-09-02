@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="row add-padding" >
-      <div  class="col-lg-3 col-6  product-box"  v-for="(product) in catalog" :key="product._id"   >
+      <div  class="col-lg-3 col-6  product-box" :id="`catalog${product._id}`"  v-for="(product) in catalog" :key="product._id"   >
           <div>
-            <div @click="goDetail(product._id)" class="product-img"  >
+            <div @click="$router.push({ path:`/${currentCompanyCatalog}/catalog-detail/${product._id}`})" class="product-img"  >
               <img v-if="!product.error" :src="server+'/'+product.img" @error="product.error=true">
               <!--          <img v-else src="../../../assets/img/default.svg" >-->
               <img v-else src="../../../assets/icons/noProd.png" >
@@ -11,6 +11,7 @@
             </div>
             <div class="product-add">
               <h2 class="long-text"  style="overflow: hidden;text-overflow: ellipsis; margin-bottom:10px;">{{product.name}} {{product.quantity}}</h2>
+              <div>{{product.vendorCode}}</div>
               <span class="mr-2" v-if="checkDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} {{catalog_settings.currency}}</span>
               <span :class="{lineThrough:checkDates(product.promoStart,product.promoEnd)}">{{product.price}} {{catalog_settings.currency}}</span>
             </div>
@@ -61,11 +62,11 @@ name: "ClientCatalogItem",
   },
   methods:{
 
-    goDetail(id){
-        this.$router.push(`/${this.currentCompanyCatalog}/catalog-detail/${id}`)
-    },
-
     checkDates(start,end){
+      console.log(start,end,"000000000000000000000000000000")
+      if(!start || !start){
+        return false
+      }
       let itsPromo = false;
       let startDate = new Date(start);
       let endDate = new Date(end);
@@ -217,7 +218,7 @@ name: "ClientCatalogItem",
 
 @media(max-width:380px){
   .product-img img{
-    height: 163px;
+    height: 170px;
   }
   .product-img{
     margin-bottom: 0;

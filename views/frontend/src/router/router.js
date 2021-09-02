@@ -1,6 +1,5 @@
 import store from '../store/index';
 import { createWebHistory, createRouter } from "vue-router";
-// import auth from '../middle-ware/auth';
 import SignIn from "@/components/sign-in/SignIn";
 import SignUp from "@/components/sign-up/SignUp";
 import Orders from "@/components/orders/Orders";
@@ -363,65 +362,22 @@ const routes = [
     },
 ]
 
-const scrollBehavior = (to,from,savedPosition) => {
-    let clone = '';
-  if(clone !== ''){
-      return clone
-  }
 
-  else{
-      if(savedPosition){
-          clone = JSON.parse(JSON.stringify(savedPosition));
-      }
-      return {top:0}
-  }
-}
 const router = createRouter({
-
     history: createWebHistory(),
     routes,
-    scrollBehavior
-});
-
-// Creates a nextMiddleware() function which not only
-// runs the default next() callback but also triggers
-// the subsequent Middleware function.
-function nextFactory(context, middleware, index) {
-    const subsequentMiddleware = middleware[index];
-    // If no subsequent Middleware exists,
-    // the default next() callback is returned.
-    if (!subsequentMiddleware) return context.next;
-
-    return (...parameters) => {
-        // Run the default Vue Router next() callback first.
-        context.next(...parameters);
-        // Than run the subsequent Middleware with a new
-        // nextMiddleware() callback.
-        const nextMiddleware = nextFactory(context, middleware, index + 1);
-        subsequentMiddleware({ ...context, next: nextMiddleware });
-    };
-}
-
-router.beforeEach((to, from, next) => {
-
-    if (to.meta.middleware) {
-        const middleware = Array.isArray(to.meta.middleware) ?
-            to.meta.middleware : [to.meta.middleware];
-
-        const context = {
-            from,
-            next,
-            router: router,
-            to,
-        };
-        const nextMiddleware = nextFactory(context, middleware, 1);
-
-        return middleware[0]({ ...context, next: nextMiddleware });
+    scrollBehavior (to, from, savedPosition) {
+     if(savedPosition){
+         return savedPosition
+     }
+     else{
+         return {top: 0}
+     }
     }
 
-
-    return next();
 });
+
+
 //WEB Catalog auth guard.
 router.beforeEach((to, from, next) => {
     console.log('router BEFORE EACH');
@@ -434,11 +390,11 @@ router.beforeEach((to, from, next) => {
     else next();
 });
 
-router.beforeEach((to, from, next) => {
-    console.log('window.scrollY:', window.scrollY)
-    from.meta?.scrollTop && (from.meta.scrollTop = window.scrollY)
-    console.log('from:\t', from.name, '\t', from.meta)
-    console.log('to:\t\t', to.name, '\t', to.meta)
-    return next()
-})
+// router.beforeEach((to, from, next) => {
+//     console.log('window.scrollY:', window.scrollY)
+//     from.meta?.scrollTop && (from.meta.scrollTop = window.scrollY)
+//     console.log('from:\t', from.name, '\t', from.meta)
+//     console.log('to:\t\t', to.name, '\t', to.meta)
+//     return next()
+// })
 export default router;

@@ -215,16 +215,15 @@
                   </div>
                 </div>
                 <div v-if="showDeliveryOption" class="delivery_option_wrapper_class" >
-
-                  <div @click="setSelectedDeliveryOption(opt)"  v-for="opt in delivery_options" :key="opt._id" class="d-flex delivery_option_class">
-                    <div style="flex:1;">{{opt.name}}</div>
-                    <div>{{opt.price}}{{currency}}</div>
+                 <div v-if="delivery_options.length">
+                   <div @click="setSelectedDeliveryOption(opt)"  v-for="opt in delivery_options" :key="opt._id" class="d-flex delivery_option_class">
+                     <div style="flex:1;">{{opt.name}}</div>
+                     <div>{{opt.price}}{{currency}}</div>
+                   </div>
+                 </div>
+                  <div v-else class="delivery_option_class">
+                    Your purchase is not enough to use delivery option
                   </div>
-
-
-
-
-
                 </div>
 
               </div>
@@ -978,7 +977,6 @@ export default {
   background-color: white;
   border-top: none;
   padding: 10px;
-  padding-bottom: 0;
   max-height:300px;
   overflow-y: auto;
 }

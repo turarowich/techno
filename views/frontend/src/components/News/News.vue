@@ -73,6 +73,7 @@ export default {
             .then((response) => {
                 this.newsListServer = response.data.objects;
                 this.spinner = false
+                console.log(response)
             })
     },
     selectNews(news){

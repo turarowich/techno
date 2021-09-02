@@ -92,7 +92,7 @@ export default {
   border-radius: 20px;
 }
 .modal-content .modal-header{
-  margin-top: 50px;
+  margin-top: 30px;
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -132,13 +132,13 @@ export default {
   margin-left: 5px;
 }
 .modal-body {
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 @media(max-width:576px){
   .add_branch_modal_content{
     width: 96%;
-    padding: 0 20px;
-    border-radius:10px;
+    padding: 0;
+    border-radius:5px;
     margin-left: 2%;
 
 

@@ -206,6 +206,7 @@ class AuthController{
             let number = randomNumber(100000, 1000000)
             // let number = 1000001
             let qrCode = createQrFile(number.toString(), 'loygift' + req.headers['access-place'])
+            console.log(req.headers['access-place']);
             var client = new Client({
                 name: req.fields.name,
                 phone: req.fields.phone,
@@ -219,7 +220,6 @@ class AuthController{
             })
             await client.validate()
             client.password = hashedPassword;
-
             //cashback
             let cashback_points = await addWelcomePoints(db);
             if(cashback_points>0){

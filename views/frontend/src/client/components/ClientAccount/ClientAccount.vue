@@ -42,7 +42,7 @@
           <div>
             <h3 class="cashback-sub-title mb-2">Share with friend</h3>
             <span class="mb-3 d-block" style="color:#8C94A5">Your Promocode that you can send to your friends</span>
-            <div style="font-weight: bold; border-bottom:1px solid #d3d3d3; height:40px; padding-top:10px;">
+            <div style="font-weight: bold; border-bottom:1px solid #d3d3d3; height:35px; padding-top:10px;">
               {{user.promocode || ''}}
             </div>
           </div>
@@ -419,6 +419,9 @@ name: "ClientAccount",
 
 }
 @media(max-width:992px){
+  .client-avatar{
+    margin-right: 0;
+  }
   .main-content-header{
     display: none !important;
   }
