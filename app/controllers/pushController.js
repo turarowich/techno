@@ -142,7 +142,6 @@ class PushController {
             'status': 500,
             'msg': 'Something went wrong'
         }
-
         if (clients && settings) {
             let query = { 'type': 'ios', 'client': { $in: clients } }
 

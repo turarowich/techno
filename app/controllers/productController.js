@@ -179,6 +179,12 @@ class ProductController{
 
 
             let product = await Product.findOneAndUpdate(query, data)
+            //
+            if(product.promoPrice === 0){
+                await Product.updateOne(query, { $unset: { promoStart: "", promoEnd: ""}})
+            }
+            //
+
 
 
             // let test2 = await Product.findById(product.id);
@@ -239,8 +245,6 @@ class ProductController{
                     product.imgArray.splice($i, 1)
                 }
             }
-
-
             await product.save({new:true})
 
             let test2 = await Product.findById(product.id);

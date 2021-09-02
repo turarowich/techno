@@ -17,7 +17,7 @@ module.exports = io => {
             socket.join(socket.handshake.headers.db)
         });
         socket.on('init', (user) => {
-            console.log(user )
+            console.log(user ,"init")
             socket.join(user)
         });
         socket.on('join_cat', (data) => {

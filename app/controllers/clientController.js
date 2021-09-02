@@ -46,7 +46,6 @@ class ClientController{
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
-
         res.status(result.status).json(result);
     };
 
@@ -374,12 +373,10 @@ class ClientController{
         
         try {
             let  query = {}
-
-                req.fields.objects.forEach(async function(client, index){
-                    query = { '_id': client }
-                    await Client.findOneAndUpdate(query, req.fields)
-                })
-
+            req.fields.objects.forEach(async function(client, index){
+                query = { '_id': client }
+                await Client.findOneAndUpdate(query, req.fields)
+            })
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }

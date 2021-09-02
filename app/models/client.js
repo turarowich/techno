@@ -81,9 +81,9 @@ const clientSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Message'
     }],
-    category: { 
-        type: Schema.Types.ObjectId, 
-        ref: 'Category' 
+    category: {
+        type: Schema.Types.ObjectId,
+        ref: 'Category'
     },
     fb_id: {
         type: String,

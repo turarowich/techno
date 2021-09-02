@@ -222,6 +222,10 @@ export default {
         this.currentData.promoPrice = 0
       }
     },
+    unSetDates(){
+      this.promoStartLightpick.setDate('')
+      this.promoEndLightpick.setDate('')
+    },
     selectDates(){
       let that=this;
       this.promoStartLightpick = new this.$lightpick({
@@ -269,10 +273,7 @@ export default {
       })
       console.log(this.currentData.imgArray,'imgArray')
     },
-    unSetDates(){
-      this.promoStartLightpick.setDate('')
-      this.promoEndLightpick.setDate('')
-    },
+
     onSubmit(){
       const updatedProduct = this.currentData;
       const form = new FormData();
