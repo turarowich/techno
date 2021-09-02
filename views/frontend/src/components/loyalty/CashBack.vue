@@ -163,20 +163,24 @@
         <input type="number" v-model="points_expiration_period" class="cashback-input" style="width:40%">
       </div>
 
-    </div>
-    <div class="d-flex enable-title">
-      <div>
-        <label class="switch">
-          <input type="checkbox" data-toggle="collapse"  v-model="minScans.status">
-          <span class="slider round"></span>
-        </label>
+
+      <div class="d-flex enable-title">
+        <div>
+          <label class="switch">
+            <input type="checkbox" data-toggle="collapse"  v-model="minScans.status">
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <h3 class="cashback-sub-title">Alert </h3>
       </div>
-      <h3 class="cashback-sub-title">Alert </h3>
+      <div v-if="minScans.status">
+        <label>Send message after (n) scans of QR Code in one day:</label><br>
+        <input type="number" v-model="minScans.number" class="cashback-input" style="width:40%">
+      </div>
+
+
     </div>
-    <div v-if="minScans.status">
-      <label>Send message after (n) scans of QR Code in one day:</label><br>
-      <input type="number" v-model="minScans.number" class="cashback-input" style="width:40%">
-    </div>
+
   </div>
 
 </div>
