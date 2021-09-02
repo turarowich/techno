@@ -2,11 +2,12 @@
  <div>
   <div v-if="!getProduct.name"><Spinner/></div>
    <div v-else class="container client-container" >
-     <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg"><div @click="$router.go(-1)" class="mr-1">Back </div> | <span > {{getProduct.name}}</span> </div>
+     <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg"><div @click="$router.go(-1)"  class="mr-1">Back </div> | <span > {{getProduct.name}}</span> </div>
      <div class="row  mb-5" >
-       <div class="col-lg-10  m-auto"  id="bektemir">
+       <div class="col-lg-10  m-auto">
          <div class="row">
            <div class="col-lg-7 detail-right">
+
              <div class="product-img" :class="{active: getProduct.imgArray.length===0}" id="container">
                <!--            <img :src="server+'/'+getProduct.img">-->
                <img v-if="!getProduct.error" :src="server+'/'+getProduct.img" @error="getProduct.error=true">
@@ -191,6 +192,8 @@ export default {
           })
       this.slide()
     },
+
+
 
 
   },

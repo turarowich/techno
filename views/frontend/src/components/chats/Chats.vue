@@ -4,8 +4,10 @@
     <!-- <div class="notification">
       <button class="app-buttons-item"><img class="img-btn" src="../../assets/icons/ring.svg"><span>Push notification</span></button>
     </div> -->
-
-    <div  class="chat d-flex">
+    <div v-if="spinner">
+      <Spinner/>
+    </div>
+    <div v-else  class="chat d-flex">
       <div class="overflow-hidden contacts-container">
         <div class="d-flex align-items-center  search-chat bbnone">
           <img class="mr-3" src="../../assets/icons/search-icon.svg">
@@ -42,6 +44,7 @@
 import Conversation from "@/components/chats/conversation/Conversation";
 import Contacts from "@/components/chats/contacts/Contacts";
 import ChatProfile from "@/components/chats/chat-profile/ChatProfile";
+import Spinner from "../Spinner";
 
 import Swal from 'sweetalert2';
 export default {
@@ -50,13 +53,12 @@ export default {
     Conversation,
     Contacts,
     ChatProfile,
-
+    Spinner
   },
   data(){
     return{
-
-      contactList:[
-      ],
+      spinner:false,
+      contactList:[],
       search:'',
       messages:[
       ],
@@ -94,8 +96,11 @@ export default {
     getClients(){
         this.axios.get(this.url('getClients')).
         then(result => {
-            this.contactList = result.data.objects
-            this.selectAll = false
+          this.spinner = false;
+            this.contactList = result.data.objects;
+
+            this.selectAll = false;
+
 
         });
     },
@@ -254,7 +259,7 @@ export default {
   outline:none;
 }
 .list-people{
-  height:calc(100% - 40px);
+  height:calc(100% - 82px);
   width: 100%;
   overflow-y: auto;
 }

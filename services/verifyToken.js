@@ -1,7 +1,7 @@
 var jwt = require('jsonwebtoken');
 var config = require('../config/config');
 function verifyToken(req, res, next) {
-    
+
     // Header names in Express are auto-converted to lowercase
     let token = req.headers['x-access-token'] || req.headers['authorization'];
     let validWithoutToken = ['/searchPromocodeByCodeApi','/getSettings','/getProducts', '/getNews', '/getCategories?type=product', '/getCategories']
@@ -13,16 +13,14 @@ function verifyToken(req, res, next) {
             req.db = 'loygift' + req.headers['access-place']
             return next();
         }
-        return res.status(403).send({ auth: false, message: 'No token provided.' });
+        return res.status(403).send({ auth: false, message: 'No token provided.45' });
     }else{
         // Remove Bearer from string
         token = token.replace(/^Bearer\s+/, "");
     }
     jwt.verify(token, config.secret_key, function (err, decoded) {
-        if (err){
+        if (err)
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
-        }
-
         // if everything good, save to request for use in other routes
         if (decoded.type){
             req.userType = decoded.type

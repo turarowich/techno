@@ -15,10 +15,19 @@
                 <img v-else src="../../../assets/img/default.svg" >
               </div>
              <div class="news-text">
-               <div class="d-flex align-items-center calendar-news" ><img src="../../../assets/icons/Calendar.svg">
+               <div class="d-flex align-items-center calendar-news justify-content-between" >
+               <div>
+                 <img src="../../../assets/icons/Calendar.svg">
                  <span class="date">
-                 {{newss.updatedAt.slice(0,10)}}
+                 {{newss.updatedAt}}
                </span>
+               </div>
+                 <div  v-if="newss.startDate || newss.endDate">
+                   <span class="date mr-2">Promotion</span>
+                   <img style="width:23px;height:23px;" src="../../../assets/icons/promotion.svg">
+                 </div>
+
+
                </div>
                <h4 class="news-content">{{newss.name}}</h4>
                <p class="news-description">

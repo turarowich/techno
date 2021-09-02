@@ -1,13 +1,13 @@
 <template>
 <footer >
   <div class="footer d-flex justify-content-between  footer-container container">
- <div class="d-flex">
+ <div class="d-flex contact-address">
    <div class="footer-contact mb-3">
      <h3>Contacts</h3>
      <p class="footer-info"><img src="../../../assets/clients/Call.svg"><a  href="/">{{companyAddresses[0] ? companyAddresses[0].phone : "+996771236478"}}</a></p>
      <p class="footer-info"><img src="../../../assets/clients/Message.svg"><a href="/">{{catalog_settings.email || "example@gmail.com"}}</a></p>
    </div>
-   <div class="footer-address mb-3">
+   <div class="footer-address mb-4">
      <h3>Address</h3>
      <p class="footer-info" >{{companyAddresses[0] ? companyAddresses[0].address : "Bishkek, Kyrgyzstan"}}</p>
      <p class="footer-info" >08:00-19:00 Every day</p>
@@ -83,7 +83,7 @@ footer{
   }
 }
 @media(max-width:481px){
-  .footer{
+  .footer, .contact-address{
     flex-direction: column;
     align-items: flex-start;
 

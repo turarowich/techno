@@ -37,7 +37,7 @@
                       <textarea class="general-area mb-3" style="height:160px" v-model="newProduct.description"  name="description"></textarea>
 
                       <div class="d-flex mb-3">
-                        <label class="custom-checkbox"><input @click="showPrice" id="show-price" type="checkbox" ><span class="checkmark"></span></label>
+                        <label class="custom-checkbox"><input v-model="showPrice" @change="checkDiscount" id="show-price" type="checkbox" ><span class="checkmark"></span></label>
                         <span>Discount</span>
                       </div>
 
@@ -47,9 +47,10 @@
                           <input :class="{errorInput: validatePrice === true}"  v-model="newProduct.price"  type="number" class="form-input cashback-input"  name="price">
                           <div class="fill-fields" v-if="validatePrice===true">Fill in the fields</div>
                         </div>
-                        <div class="show-price" style="width:33.33%; margin-right:8px;">
+                        <div  v-if="showPrice" style="width:33.33%; margin-right:8px;">
                           <label>Promotional prices</label>
-                          <input v-model="newProduct.promoPrice" class="form-input cashback-input mb-4" placeholder="Price">
+                          <input :class="{errorInput: validatePromoPrice === true}" v-model="newProduct.promoPrice" class="form-input cashback-input" placeholder="Price">
+                          <div class="fill-fields" v-if="validatePromoPrice===true">Fill in the fields</div>
                         </div>
                         <div style="width:33.33%;">
                           <label>Vendor code</label>
@@ -58,23 +59,31 @@
                       </div>
 
                       <label class="valid-label">Period of action</label>
-                      <div class=" product-calendar d-flex align-items-center ">
-                        <div class="d-flex align-items-center mr-2">
+                      <div class=" product-calendar d-flex">
+                        <div class="mr-2">
                           <label >From</label>
-                          <div class="calendar d-flex align-items-center">
-                            <input  name="promoStart" v-model="newProduct.promoStart.formatted" class="calendar-input" id="promoStart">
+                          <div :class="{errorInput: validateFrom=== true}" class="calendar d-flex align-items-center">
+                            <input   name="promoStart" v-model="newProduct.promoStart.formatted" class="calendar-input" id="promoStart">
                             <img src="../../../assets/icons/Calendar.svg">
                           </div>
+                          <div class="fill-fields" v-if="validateFrom===true">Fill in the fields</div>
                         </div>
 
-                        <div class="d-flex align-items-center">
-                          <label>to</label>
-                          <div class="calendar d-flex align-items-center">
+                        <div>
+                          <label>To</label>
+                          <div :class="{errorInput: validateTo === true}" class="calendar d-flex align-items-center">
                             <input   name="promoEnd" v-model="newProduct.promoEnd.formatted"  class="calendar-input" id="promoEnd">
                             <img src="../../../assets/icons/Calendar.svg">
                           </div>
+                          <div class="fill-fields" v-if="validateTo===true">Fill in the fields</div>
                         </div>
 
+                      </div>
+
+
+                      <div class="d-flex mb-3">
+                        <label class="custom-checkbox"><input v-model="newProduct.recommend"  type="checkbox" ><span class="checkmark"></span></label>
+                        <span>Recommended</span>
                       </div>
 
 
@@ -99,6 +108,7 @@
                           </div>
                         </div>
                         </div>
+
                       <div class="modal-btn d-flex">
                         <button  type="submit" class="save">Save</button>
                         <div class="cancel" @click="cancel">Cancel</div>
@@ -121,11 +131,17 @@ name: "AddProduct",
 props:['listCategory', 'getProducts'],
   data(){
     return{
+      today:this.$moment().format("YYYY-MM-DD"),
+      validateFrom: false,
+      validateTo: false,
       validateName:false,
       validateQuantity:false,
       validatePrice:false,
+      validatePromoPrice:false,
       previewImage:[],
+      showPrice:false,
       newProduct:{
+        recommend:false,
         name_ru:'',
         imgArray: [],
         name: '',
@@ -167,7 +183,8 @@ props:['listCategory', 'getProducts'],
       quantity:'',
       category: '',
       img:'',
-      imgArray: []
+      imgArray: [],
+
     }
   },
     removeImage(idx){
@@ -177,12 +194,17 @@ props:['listCategory', 'getProducts'],
     })
       console.log(this.newProduct.imgArray)
   },
-    showPrice(){
-      if($('#show-price').prop('checked')){
-        $('.show-price').addClass('active')
-      }
-      else{
-        $('.show-price').removeClass('active')
+    checkDiscount(){
+      if(this.showPrice===false){
+        this.newProduct.promoStart = {
+              obj:'',
+              formatted:'',
+        }
+        this.newProduct.promoEnd={
+             obj:'',
+              formatted:'',
+        }
+        this.newProduct.promoPrice = 0
       }
     },
     onFileChange() {
@@ -223,49 +245,82 @@ props:['listCategory', 'getProducts'],
 
 
 
-
-
-      if(new_product.promoStart.obj !== ""){
-        form.append('promoStart', new_product.promoStart.obj)
-
-      }
-      if(new_product.promoEnd !== ""){
-        form.append('promoEnd', new_product.promoEnd.obj)
-      }
       if(new_product.name === ""){
         this.validateName = true
       }
       else{
         this.validateName = false
       }
+
       if(new_product.quantity === ""){
         this.validateQuantity = true
       }
       else{
         this.validateQuantity = false
       }
+
       if(new_product.price === ""){
         this.validatePrice = true
       }
       else{
         this.validatePrice = false
       }
-
-      form.append('category', new_product.category)
-      form.append('name', new_product.name)
-      form.append('name_ru', new_product.name_ru)
-      form.append('price', new_product.price)
-      form.append('quantity', new_product.quantity)
-      form.append('promoPrice', new_product.promoPrice)
-      form.append('description', new_product.description)
-      form.append('vendorCode', new_product.vendorCode)
-
-
       if(new_product.promoPrice > new_product.price){
-        this.$warningAlert("Promotional price must be < original price")
+        this.$warningAlert('Promotional price must be less than original price')
+        return;
+      }
+
+    if(this.showPrice === true){
+      if(new_product.promoPrice === 0){
+        this.validatePromoPrice = true;
       }
       else{
-        this.axios.post(this.url('addProduct'), form)
+        this.validatePromoPrice = false
+      }
+      if(new_product.promoStart.obj === ''){
+        this.validateFrom = true;
+
+      }
+      else{
+        this.validateFrom  = false
+      }
+
+      if(new_product.promoEnd.obj === ''){
+        this.validateTo = true;
+        return;
+      }
+      else{
+        this.validateTo  = false
+      }
+
+    }
+    else{
+      this.validateFrom = false;
+      this.validateTo = false;
+      this.validatePromoPrice = false;
+    }
+
+
+      if((new Date(new_product.promoEnd.formatted).getTime() < new Date(this.today).getTime())){
+        this.$warningAlert('End date must greater than todays date')
+        return;
+      }
+
+        form.append('promoStart', new_product.promoStart.obj)
+        form.append('promoEnd', new_product.promoEnd.obj)
+        form.append('category', new_product.category)
+        form.append('name', new_product.name)
+        form.append('name_ru', new_product.name_ru)
+        form.append('price', new_product.price)
+        form.append('quantity', new_product.quantity)
+        form.append('promoPrice', new_product.promoPrice)
+        form.append('description', new_product.description)
+        form.append('vendorCode', new_product.vendorCode)
+        form.append('recommend',new_product.recommend)
+
+
+
+      this.axios.post(this.url('addProduct'), form)
             .then(() => {
               this.getProducts()
               this.$successAlert('Product has been added');
@@ -288,16 +343,20 @@ props:['listCategory', 'getProducts'],
                   obj:"",
                   formatted:'',
                 },
-                promoPrice:0
+                promoPrice:0,
+                recommend:false
               }
               this.validateQuantity = false;
               this.validateName = false;
               this.validatePrice = false;
+              this.validateFrom = false;
+              this.validateTo = false;
+              this.showPrice = false;
             }).catch((error) => {
           console.log("fail", error)
 
         })
-      }
+
 
       $('#add-products').on('shown', function () {
         $("#modal-content").scrollTop(0);
@@ -318,7 +377,7 @@ props:['listCategory', 'getProducts'],
       onSelect:(date)=>{
         // that.promoStart = date.format().toString().slice(0,16)
         that.newProduct.promoStart.obj = date;
-        that.newProduct.promoStart.formatted = date.format('DD-MM-YYYY');
+        that.newProduct.promoStart.formatted = date.format('YYYY-MM-DD');
       }
     });
     new this.$lightpick({
@@ -327,7 +386,7 @@ props:['listCategory', 'getProducts'],
       lang:'en',
       onSelect:(date)=>{
         that.newProduct.promoEnd.obj = date;
-        that.newProduct.promoEnd.formatted = date.format('DD-MM-YYYY');
+        that.newProduct.promoEnd.formatted = date.format('YYYY-MM-DD');
       }
     });
   }
@@ -363,17 +422,9 @@ props:['listCategory', 'getProducts'],
   margin-bottom: 22px !important;
 }
 
-.show-price{
-  display:none;
-}
-.show-price.active{
-  display: block;
-}
 .product-calendar{
   margin-bottom: 40px;
-}
-.product-calendar label{
-  color: #8C94A5;
+
 }
 .calendar{
   margin-bottom: 0;

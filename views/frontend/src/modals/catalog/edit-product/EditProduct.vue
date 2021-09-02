@@ -10,15 +10,17 @@
           <div class="row">
             <div class="col-11 m-auto">
               <form  class="modal-form">
-                <div class="d-flex align-items-center mb-3">
+                <div class="d-flex  mb-3">
                   <div style="width:50%" class="mr-3">
                     <label class="product-label">Name</label>
-                    <input name="name"  v-model="currentData.name" style="width:100%" class="cashback-input">
+                    <input :class="{errorInput: validateName}" name="name"  v-model="currentData.name" style="width:100%" class="cashback-input">
+                    <div v-if="validateName" class="fill-fields">Fill in the fields</div>
                   </div>
 
                   <div class="quantity-category mr-3">
                     <label class="product-label">Quantity</label>
-                    <input name="quantity"  v-model="currentData.quantity" class="cashback-input">
+                    <input :class="{errorInput: validateQuantity}" name="quantity"  v-model="currentData.quantity" class="cashback-input">
+                    <div v-if="validateQuantity" class="fill-fields" >Fill in the fields</div>
                   </div>
 
                   <div style="width:25%;">
@@ -41,7 +43,7 @@
 
                 <div class="d-flex mb-3">
                   <label class="custom-checkbox">
-                    <input @click="editShowPrice()"  id="edit-show-price" type="checkbox" :checked="isDiscount">
+                    <input v-model="showPrice" @change="checkDiscount"  id="edit-show-price" type="checkbox">
                     <span class="checkmark"></span>
                   </label>
                   <span>Discount</span>
@@ -50,11 +52,13 @@
                 <div class="d-flex ">
                   <div style=" width:33.33%; margin-right:8px;">
                     <label>Price</label>
-                    <input name="price" v-model="currentData.price" class="form-input cashback-input mb-4" placeholder="Price"  >
+                    <input :class="{errorInput: validatePrice}" name="price" v-model="currentData.price" class="form-input cashback-input" placeholder="Price"  >
+                    <div v-if="validatePrice" class="fill-fields">Fill in the fields</div>
                   </div>
-                  <div :class="{active:isDiscount}" class="show-price" style="width:33.33%; margin-right:8px;">
+                  <div v-if="showPrice"  style="width:33.33%; margin-right:8px;">
                     <label>Promotional prices</label>
-                    <input name="promoPrice" v-model="currentData.promoPrice" class="form-input cashback-input mb-4" placeholder="Price">
+                    <input :class="{errorInput:validatePromoPrice}"  name="promoPrice" v-model="currentData.promoPrice" class="form-input cashback-input" placeholder="Price">
+                    <div class="fill-fields" v-if="validatePromoPrice">Fill in the fields</div>
                   </div>
                   <div style="width:33.33%;">
                     <label>Vendor Code</label>
@@ -62,28 +66,35 @@
                   </div>
                 </div>
 
-                <label class="valid-label">Period of action</label>
-                <div class=" product-calendar d-flex align-items-center ">
-                  <div class="d-flex align-items-center mr-2">
+                <label class="valid-label mt-4">Period of action</label>
+                <div class=" product-calendar d-flex">
+                  <div class="mr-2">
                     <label >From</label>
-                    <div class="calendar d-flex align-items-center">
+                    <div :class="{errorInput:validateFrom}" class="calendar d-flex align-items-center">
                       <input v-model="promoStart.formatted" id="promoStart_input" class="calendar-input">
                       <img src="../../../assets/icons/Calendar.svg">
                     </div>
+                    <div class="fill-fields" v-if="validateFrom">Fill in the fields</div>
                   </div>
 
-                  <div class="d-flex align-items-center">
-                    <label>to</label>
-                    <div class="calendar d-flex align-items-center">
+                  <div>
+                    <label>To</label>
+                    <div :class="{errorInput: validateTo}" class="calendar d-flex align-items-center">
                       <input v-model="promoEnd.formatted" id="promoEnd_input" class="calendar-input">
                       <img src="../../../assets/icons/Calendar.svg">
                     </div>
+                    <div class="fill-fields" v-if="validateTo">Fill in the fields</div>
                   </div>
 
                 </div>
 
+                <div class="d-flex mb-3">
+                  <label class="custom-checkbox"><input v-model="currentData.recommend"  type="checkbox" ><span class="checkmark"></span></label>
+                  <span>Recommended</span>
+                </div>
+
                 <div class="modal-img ">
-                  <label @click="beka">Photos</label>
+                  <label>Photos</label>
                   <p>
                     You can upload 4 more JPG or PNG photos, the minimum resolution is 400*400px, the size is<br>
                     not more than 3 MB. The first photo will be shown as the main one by default .</p>
@@ -138,6 +149,14 @@ export default {
   props: ['listCategory','select_product','getProducts'],
   data(){
     return{
+      validateName:false,
+      validateQuantity:false,
+      validatePrice:false,
+      showPrice:false,
+      validateTo:false,
+      validateFrom:false,
+      validatePromoPrice:false,
+      today:this.$moment().format("YYYY-MM-DD"),
       no_category:'',
       currentData:{
         img:'',
@@ -177,9 +196,7 @@ export default {
       }
       })
     },
-    isDiscount(){
-      return this.currentData.promoPrice>0;
-    },
+
   },
   methods:{
 
@@ -191,13 +208,18 @@ export default {
      })
       console.log(this.currentData.imgArray)
     },
-    editShowPrice(){
-      if($('#edit-show-price').prop('checked')){
-        $('.show-price').addClass('active')
 
-      }
-      else{
-        $('.show-price').removeClass('active')
+    checkDiscount(){
+      if(this.showPrice===false){
+        this.promoStart = {
+          obj:'',
+          formatted:'',
+        }
+        this.promoEnd={
+          obj:'',
+          formatted:'',
+        }
+        this.currentData.promoPrice = 0
       }
     },
     unSetDates(){
@@ -210,14 +232,14 @@ export default {
         field: document.getElementById('promoStart_input'),
         onSelect: function(date){
           that.promoStart.obj = date;
-          that.promoStart.formatted = date.format('DD-MM-YYYY');
+          that.promoStart.formatted = date.format('YYYY-MM-DD');
         }
       });
       this.promoEndLightpick = new this.$lightpick({
         field: document.getElementById('promoEnd_input'),
         onSelect: function(date){
           that.promoEnd.obj = date;
-          that.promoEnd.formatted = date.format('DD-MM-YYYY');
+          that.promoEnd.formatted = date.format('YYYY-MM-DD');
         }
       });
     },
@@ -273,13 +295,26 @@ export default {
 
 
       }
-      if(this.promoStart.obj !== ""){
-        form.append("promoStart", this.promoStart.obj)
+      if(updatedProduct.name === ""){
+        this.validateName = true
       }
-      if(this.promoEnd.obj !== ""){
-        form.append("promoEnd", this.promoEnd.obj)
+      else{
+        this.validateName = false
       }
 
+      if(updatedProduct.quantity === ""){
+        this.validateQuantity = true
+      }
+      else{
+        this.validateQuantity = false
+      }
+
+      if(updatedProduct.price === ""){
+        this.validatePrice = true
+      }
+      else{
+        this.validatePrice = false
+      }
       if(updatedProduct.category){
         form.append('category',updatedProduct.category._id)
       }
@@ -287,7 +322,46 @@ export default {
        form.append('category',this.no_category)
       }
 
+      if(updatedProduct.promoPrice > updatedProduct.price){
+        this.$warningAlert('Promotional price must be less than original price')
+        return;
+      }
 
+      if(this.showPrice===true){
+        if(updatedProduct.promoPrice === 0 || updatedProduct.promoPrice === ''){
+          this.validatePromoPrice = true
+        }
+        else{
+          this.validatePromoPrice = false
+        }
+        if(this.promoStart.obj === ''){
+          this.validateFrom = true;
+
+        }
+        else{
+          this.validateFrom  = false
+        }
+
+        if(this.promoEnd.obj === ''){
+          this.validateTo = true;
+          return;
+        }
+        else{
+          this.validateTo  = false
+        }
+      }
+      else{
+        this.validateFrom = false;
+        this.validateTo = false;
+        this.validatePromoPrice = false;
+      }
+
+
+
+      if((new Date(this.promoEnd.formatted).getTime() < new Date(this.today).getTime())){
+        this.$warningAlert('End date must greater than todays date')
+        return;
+      }
 
       form.append("name", updatedProduct.name)
       form.append("name_ru", updatedProduct.name_ru)
@@ -296,6 +370,10 @@ export default {
       form.append("description", updatedProduct.description)
       form.append("promoPrice", updatedProduct.promoPrice)
       form.append("vendorCode", updatedProduct.vendorCode)
+      form.append("recommend", updatedProduct.recommend)
+      form.append('promoStart',this.promoStart.obj)
+      form.append('promoEnd',this.promoEnd.obj)
+
 
       if(updatedProduct.promoPrice > updatedProduct.price){
         this.$warningAlert("Promotional price must be < original price")
@@ -306,12 +384,13 @@ export default {
               this.getProducts()
               this.$informationAlert('Changes are saved')
               $('#edit-product').modal("hide")
+              this.validateFrom = false;
+              this.validateTo = false
               this.no_category = '';
-            }).catch((error)=>{
-          if(error.response && error.response.data){
-            this.$warningAlert(error.response.data.msg)
-          }
-        });
+              this.validateQuantity = false;
+              this.validateName = false;
+              this.validatePrice = false;
+            })
       }
 
 
@@ -324,19 +403,29 @@ export default {
 
       if(this.currentData.img){
         this.currentData.imgArray.unshift(this.currentData.img);
-
+      }
+      if(this.currentData.promoPrice>0){
+        this.showPrice = true;
+      }
+      else{
+        this.showPrice = false
       }
       delete this.currentData['img']
       // this.promoStart.obj = this.currentData.promoStart;
       this.promoStartLightpick.setDate(this.currentData.promoStart);
       // this.promoEnd.obj = this.currentData.promoEnd;
       this.promoEndLightpick.setDate(this.currentData.promoEnd);
+
     },
     currentData:{
       handler(val) {
         console.log(val.promoPrice, !val.promoPrice || val.promoPrice<=0)
         if(!val.promoPrice || val.promoPrice<=0){
-          this.unSetDates
+          this.unSetDates()
+          this.promoEnd.obj = '';
+          this.promoEnd.formatted = "";
+          this.promoStart.obj = '';
+          this.promoStart.formatted = "";
         }
       },
       deep: true,
@@ -372,8 +461,11 @@ export default {
 .modal-header .close{
   margin: 0;
 }
-.show-price{
-  display:none;
+
+.fill-fields{
+  color:#E94A4A;
+  margin-top: 5px;
+
 }
 .show-price.active{
   display:block;
@@ -381,9 +473,7 @@ export default {
 .product-calendar{
   margin-bottom: 40px;
 }
-.product-calendar label{
-  color: #8C94A5;
-}
+
 .calendar{
   margin-bottom: 0;
 }

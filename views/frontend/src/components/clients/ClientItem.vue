@@ -1,16 +1,22 @@
 <template>
-  <div v-for="client in clientList" class="table-item d-flex align-items-center justify-content-between" :key="client._id">
+  <div>
+    <div v-if="clientList.length==0" class="d-flex align-items-center flex-column justify-content-center" style="height:calc(100vh - 350px)">
+          <img style="width:70px; height:70px; margin-bottom:10px" src="../../assets/icons/clientbase.svg">
+          <span style="color:#8C94A5">Client base is empty</span>
+    </div>
+
+    <div v-else v-for="client in clientList" class="table-item d-flex align-items-center justify-content-between" :key="client._id">
       <div  class="client-names table-child d-flex align-items-center">
         <div><label class="custom-checkbox"><input  type="checkbox"  v-model="client.selected" @change="$emit('checkSelection')"><span class="checkmark"></span></label></div>
         <div class="d-flex align-items-center justify-content-between" @click="clientProfile(client._id)" style="cursor:pointer">
-           <div class="table-img">
-             <img v-if="!client.avatar" src="../../assets/icons/chat.svg">
-             <img v-else :src="imgSrc+'/'+client.avatar">
-           </div>
-           <span>
+          <div class="table-img">
+            <img v-if="!client.avatar" src="../../assets/icons/chat.svg">
+            <img v-else :src="imgSrc+'/'+client.avatar">
+          </div>
+          <span>
            {{client.name}}
            </span>
-         </div>
+        </div>
       </div>
       <div class="table-child" v-if="data_check.birthday_checked" style="width: 12%;">{{client.birthDate ? client.birthDate.slice(0,10) :  '' }}</div>
       <div class="table-child" v-show="data_check.discount_checked" style="width: 10%;">{{client.discount? client.discount : '0'}} %</div>
@@ -23,17 +29,20 @@
       <div class="table-child" v-show="data_check.bonus_checked"  style="width: 8%;">{{client.points}}</div>
       <div class="table-child" v-show="data_check.last_purchase_checked"  style="width: 16%;">{{client.last_purchase?JSON.stringify(client.last_purchase).slice(1,11):'-'}}</div>
       <div  style="width:3%" class="table-child dropleft dropMenu">
-      <div v-if="check()" class="dropdown-toggle" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <img  src="../../assets/icons/three-dots.svg" class="three-dots">
-      </div>
-      <div v-if="check()" class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
-        <ul class="list-group" >
-          <li class="list-group-item" data-toggle="modal" id="editUser" value="1beka" data-target="#edit-client" @click="$emit('selectClient', client._id)">Edit</li>
-          <li class="list-group-item" v-on:click="$emit('deleteClient',client._id)">Delete</li>
-        </ul>
+        <div v-if="check()" class="dropdown-toggle" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <img  src="../../assets/icons/three-dots.svg" class="three-dots">
+        </div>
+        <div v-if="check()" class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
+          <ul class="list-group" >
+            <li class="list-group-item" data-toggle="modal" id="editUser" value="1beka" data-target="#edit-client" @click="$emit('selectClient', client._id)">Edit</li>
+            <li class="list-group-item" v-on:click="$emit('deleteClient',client._id)">Delete</li>
+          </ul>
+        </div>
       </div>
     </div>
+
   </div>
+
 </template>
 
 <script>

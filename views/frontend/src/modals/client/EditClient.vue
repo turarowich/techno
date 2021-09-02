@@ -60,7 +60,7 @@
             </div>
             <div class="modal-btn d-flex">
               <button class="save" @click.prevent="onSubmit(currentData._id)">Save</button>
-              <button class="remove" @click.prevent="deleteClient(currentData._id)">Remove</button>
+<!--              <button class="remove" @click.prevent="deleteClient(currentData._id)">Remove</button>-->
             </div>
           </form>
         </div>

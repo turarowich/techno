@@ -15,20 +15,31 @@
         <div style="font-weight: bold;font-size: 20px;">News</div>
         <div><router-link class="view-all" :to="`/${currentCompanyCatalog}/client-news`">View all</router-link></div>
       </div>
-      <div class="row">
+      <div v-if="spinner">
+        <Spinner/>
+      </div>
+      <div v-else class="row">
         <div class="col-lg-12 main-news">
           <div class="row parentNews">
             <div v-for="(news,index) in newsArray.slice(0,4)" :key="index"  class="childNews col-lg-3 col-md-4 col-sm-6 mb-4 pr-0" @click="openNews(news._id)">
               <div class="new-img">
                 <img v-if="!news.error" :src="server+'/'+news.img" @error="news.error=true">
-                <img v-else src="../../../assets/img/default.svg" >
+                <img v-else src="../../../assets/icons/no-news.svg" >
               </div>
               <div class="news-text">
-                <div class="d-flex align-items-center calendar-news" >
-                  <img src="../../../assets/icons/Calendar.svg">
-                  <span class="date">
-                  {{news.updatedAt.slice(0,10)}}
-                  </span></div>
+                <div class="d-flex align-items-center calendar-news justify-content-between" >
+                  <div>
+                    <img src="../../../assets/icons/Calendar.svg">
+                    <span class="date">
+                  {{news.updatedAt}}
+                  </span>
+                  </div>
+                  <div  v-if="news.category == 'promotions'">
+                    <span class="date mr-2">Promotion</span>
+                    <img style="width:23px;height:23px;" src="../../../assets/icons/promotion.svg">
+                  </div>
+
+                </div>
                 <h4 class="news-content">{{news.name}}</h4>
                 <p class="news-description">{{news.desc}}</p>
               </div>
@@ -36,6 +47,7 @@
           </div>
         </div>
       </div>
+
     </div>
   </div>
   <ClientCatalog/>
@@ -44,16 +56,21 @@
 
 <script>
 import ClientCatalog from "@/client/components/ClientCatalog/ClientCatalog";
+import Spinner from "../../../components/Spinner";
 import $ from 'jquery';
 export default {
 name: "Dashboard",
   components:{
-    ClientCatalog
+    ClientCatalog,
+    Spinner
   },
   data(){
     return{
       // settings:{},
-      newsArray:[],
+      spinner:true,
+      newsArray:[
+
+      ],
     }
   },
   computed:{
@@ -94,8 +111,11 @@ name: "Dashboard",
       }
       await this.axios.get(this.url('getNewsWeb'),options)
           .then((response) => {
-            console.log(response);
+            this.spinner = false;
             this.newsArray = response.data.objects;
+            this.newsArray.map((item)=>{
+            item.updatedAt = this.$moment(String(item.updatedAt)).format('MMMM Do YYYY');
+            })
           })
     },
   },
@@ -213,6 +233,9 @@ name: "Dashboard",
   text-decoration: none;
   font-size: 16px;
 }
+.view-all:hover{
+  color: #3B4DB3;
+}
 .new-img{
   height: 150px;
   width: 100%;
@@ -250,7 +273,6 @@ name: "Dashboard",
   width: 100%;
   height: 100%;
   background: rgba(0,0,0,0.4);
-  border-radius: 5px;
   display: flex;
   align-items: center;justify-content: center;
   flex-direction: column;
@@ -262,9 +284,10 @@ name: "Dashboard",
   background-position: center;
   background-repeat: no-repeat;
   position: relative;
-  border-radius: 5px;
   margin-bottom: 25px;
   margin-top: -28px;
+  margin-left: -15px;
+  margin-right: -15px;
 
 
 }

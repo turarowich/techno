@@ -63,7 +63,8 @@ class NewsController {
             'status': 200,
             'msg': 'News added'
         }
-        if (req.fields.category){
+
+        if (JSON.parse(req.fields.category)){
             req.fields.category = "promotions"
         }else{
             req.fields.category = "news"
@@ -138,6 +139,7 @@ class NewsController {
 
             let query = { '_id': req.params.news }
             req.fields['updatedAt'] = new Date()
+            console.log(req.fields,'+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
             if (req.fields.category) {
                 req.fields.category = "promotions"
             } else {

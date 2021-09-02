@@ -347,6 +347,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     height:45px;
     padding-left:10px;
 }
+.open-modal-body{
+    position: fixed;
+
+}
 .save{
     background: #616CF5;
     border-radius: 5px;
@@ -362,6 +366,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 .save:hover{
     background: #3B4DB3;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+    background: none;
 }
 .disableInput{
     background: #F4F4F4;
@@ -1121,7 +1129,6 @@ body.swal2-shown{
 .category-content{
     border:0;
     width: 562px;
-    margin-top: 30%;
     border-radius:5px
 }
 .parent-modal{

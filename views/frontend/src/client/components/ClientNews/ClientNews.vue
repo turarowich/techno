@@ -29,8 +29,10 @@ name: "News",
       }
       await this.axios.get(this.url('getNewsWeb'),options)
           .then((response) => {
-            console.log(response);
             this.newsArray = response.data.objects;
+            this.newsArray.map((item)=>{
+              item.updatedAt = this.$moment(String(item.updatedAt)).format('MMMM Do YYYY');
+            })
           })
     },
   },

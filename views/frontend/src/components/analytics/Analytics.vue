@@ -147,6 +147,7 @@ export default {
         console.log(maxProfit,this.profitChart.options)
         this.profitChart.options.scales.yAxes[0].ticks.max = maxProfit
         this.profitChart.update();
+
     },
     createChart(){
         var ctx = document.getElementById('planet-chart').getContext("2d");
@@ -246,6 +247,7 @@ export default {
 
             this.analytics = response.data.objects;
             this.chart = response.data.chart;
+
 
             this.updateChart();
         }).catch((error)=>{

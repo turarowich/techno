@@ -2,7 +2,7 @@
 
   <div class="parent-modal">
     <div class="modal myModal fade" id="edit-category" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
+      <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content category-content">
           <div class="modal-header category-header align-items-center">
             <h3 class="modal-title">Edit Category</h3>

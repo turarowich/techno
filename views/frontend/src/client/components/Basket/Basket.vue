@@ -108,16 +108,24 @@
                   </div>
                 </div>
                 <div class="delivery_option_wrapper_class" v-if="showDeliveryOption">
-                  <div @click="setSelectedDeliveryOption(opt)" v-for="opt in delivery_options" :key="opt._id" class="d-flex delivery_option_class">
-                    <div style="flex:1;">{{opt.name}}</div>
-                    <div>{{opt.price}}{{catalog_settings.currency}}</div>
+                  <div v-if="delivery_options.length!==0">
+                    <div  @click="setSelectedDeliveryOption(opt)" v-for="opt in delivery_options" :key="opt._id" class="d-flex delivery_option_class">
+                      <div style="flex:1;">{{opt.name}}</div>
+                      <div>{{opt.price}}{{catalog_settings.currency}}</div>
+                    </div >
                   </div>
+
+                  <div v-else class="d-flex delivery_option_class">
+                    Your purchase is not enough to use delivery option
+
+                  </div>
+
                 </div>
               </div>
               <div v-if="pickUp" class="pick_up_block">
                 <label class="cashback-label">Select address</label>
                 <div @click="setBranch(branch)" v-for="branch in branches" :key="branch._id" :class="{active_branch:branch._id===selectedBranchObject._id}" class="d-flex pick_up_block_item">
-                  <div>
+                  <div class="mr-2">
                     <img src="../../../assets/icons/location.svg">
                   </div>
                   <div>
@@ -708,7 +716,7 @@ name: "Basket",
 }
 
 .promocodeCheckBtn{
-  width: 33px;
+  width: 36px;
   height: 33px;
   border-radius: 5px;
   border: 1px solid #D3D3D3;
