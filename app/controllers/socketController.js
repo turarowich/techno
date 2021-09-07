@@ -3,6 +3,26 @@ const user = require('../models/user');
 const pushController = require('./pushController');
 class SocketController {
     addMessage = async function (io, socket, data) {
+        if(typeof data == 'string' ){
+            data = JSON.parse(data)
+        }
+        console.log(data,"addMessageSocketController")
+        const admin = require("../../app");
+        const registrationToken = 'f-VRzRunR1SkfnVNCv55X6:APA91bGJKXyqiXtsdmk0GcuiqHMF4Gb8PQNxgvXlqwAowurur_oNAJEywx3SzQ3_QfGoIlKnEWNRWQ3ol8XnUegsD_z7RbtfEEQyaygKM1NBijrNK4mN7k1pg9GwLS_MiHXT8Yzxxefw';
+        const message1 = {
+            notification : {
+                body : data.text,
+                title: "New message"
+            },
+            data: {
+                text: data.text,
+                time: '2:45'
+            },
+            token: registrationToken
+        };
+
+        ///
+
         let db = useDB(socket.handshake.headers.db)
         let Message = db.model("Message");
         let Client = db.model("Client");
@@ -16,14 +36,36 @@ class SocketController {
         }
         let message = await new Message({
             client: data.user,
-            text: data.text,
+            text: data.text || "uu",
             isIncoming: data.isIncoming,
             new: true,
         }).save();
 
-        Client.findOneAndUpdate({ '_id': data.user }, { $push: { messages: message }, 'lastMessageAt': new Date() }).exec()
+        await Client.findOneAndUpdate({'_id': data.user}, {
+            $push: {messages: message},
+            'lastMessageAt': new Date()
+        }).exec()
         if (data.isIncoming){
-            await pushController.sendNewMessage(socket.handshake.headers.db, data.user, message)
+            console.log("PUSHING")
+            try{
+                await pushController.sendNewMessage(socket.handshake.headers.db, data.user, message)
+            }catch (e){
+
+            }
+
+            try{
+                admin.messaging().send(message1)
+                    .then((response) => {
+                        // Response is a message ID string.
+                        console.log('Successfully sent message:', response);
+                    })
+                    .catch((error) => {
+                        console.log('Error sending message:', error);
+                    });
+            }catch (e) {
+
+            }
+            
         }
         
     }

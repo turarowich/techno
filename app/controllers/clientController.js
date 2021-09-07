@@ -578,8 +578,10 @@ class ClientController {
         res.status(result.status).json(result);
     };
     getNewMessages = async function (req, res) {
+        console.log("REQ",req.fields)
         let db = useDB(req.db)
         let Message = db.model("Message");
+
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "chat", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -602,7 +604,7 @@ class ClientController {
                 query['client'] = req.fields.client
             }
 
-            if (req.fields.isIncoming !== '') {
+            if (req.fields.isIncoming !== '' && req.fields.isIncoming !== undefined) {
                 query['isIncoming'] = req.fields.isIncoming
             }
             console.log(query, req.fields.isIncoming)

@@ -14,7 +14,9 @@ module.exports = io => {
         console.log(allClients,"ALL SOCKET ID <<<<<<<<<<<<<<<<<<<<");
         socket.on("details", listener)
         socket.on('init_admin', () => {
+            console.log("init_admin")
             socket.join(socket.handshake.headers.db)
+            console.log(io.sockets.adapter.rooms,"ROOMS");
         });
         socket.on('init', (user) => {
             console.log(user ,"init")
@@ -35,6 +37,7 @@ module.exports = io => {
             controller.readMessage(socket, msg)
         });
         socket.on('message', (data) => {
+            console.log(data,"message")
             controller.addMessage(io, socket, data)
             socket.join(data.user)
             socket.broadcast.to(data.user).to(socket.handshake.headers.db).emit("server message", data)

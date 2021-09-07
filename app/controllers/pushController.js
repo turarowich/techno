@@ -24,7 +24,6 @@ try {
 }
 
 class PushController {
-
     sendNewsPN = async function (req, res) {
         let db = useDB(req.db)
         let News = db.model("News");

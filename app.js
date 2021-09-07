@@ -155,7 +155,13 @@ app.use((err, req, res, next) => {
     }
 });
 
-
+// FB
+const admin = require("firebase-admin");
+const serviceAccount = require('./serviceAccountKey.json');
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+});
+module.exports = admin
 httpServer.listen(config.port_http, () => {
     console.log(`App listening at http://${config.localhost}:${config.port_http}`);
     console.log(`App listening at http://${config.ip}:${config.port_http}`);
