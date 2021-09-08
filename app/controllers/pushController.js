@@ -119,6 +119,44 @@ class PushController {
         }
     };
 
+    sendNewMessageAndroid = async function (req_db, client, message) {
+        console.log("sendNewMessageAndroid")
+        let db = useDB(req_db)
+        let Device = db.model("Device");
+        const admin = require("../../app");
+        try{
+            let devicesAndroid = await Device.find({ 'type': 'android', 'client': message.client })
+            console.log("sendNewMessageAndroid",devicesAndroid)
+            let registrationToken = ""
+            if(devicesAndroid.length > 0){
+                registrationToken = devicesAndroid[0].token
+            }
+            const message1 = {
+                notification : {
+                    body : message.text,
+                    title: "New message"
+                },
+                data: {
+                    text: message.text,
+                },
+                token: registrationToken
+            };
+
+            admin.messaging().send(message1)
+                .then((response) => {
+                    // Response is a message ID string.
+                    console.log('Successfully sent message:', response);
+                })
+                .catch((error) => {
+                    console.log('Error sending message:', error);
+                });
+        }catch (e) {
+            console.log("EEEE",e)
+        }
+
+    };
+
+
     sendPushNotification = async function (req, res) {
         let db = useDB(req.db)
         let Device = db.model("Device");
@@ -385,8 +423,8 @@ class PushController {
                 console.log("Get info from", today, info[today])
                 for (let push of todayInfo.push) {
                     // First compare two dates
-                    nowDate = (new Date()).setHours(0, 0, 0, 0)
-                    infoDate = (new Date(info.sendAt)).setHours(0, 0, 0, 0)
+                    let nowDate = (new Date()).setHours(0, 0, 0, 0)
+                    let infoDate = (new Date(info.sendAt)).setHours(0, 0, 0, 0)
                     if (nowDate <= infoDate) {
                         console.log("Already send push", today)
                         return;
