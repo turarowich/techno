@@ -53,6 +53,7 @@ class catalogController{
     };
 
     getCatalogSettings = async function (req, res) {
+        console.log("IN getCatalogSettings")
         if(!req.db){
             console.log('should not come this far');
             return res.status('404');
