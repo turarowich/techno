@@ -641,7 +641,6 @@ class ClientController {
         } catch (error) {
             result = sendError(error, lang)
         }
-
         res.status(result.status).json(result);
     }
 

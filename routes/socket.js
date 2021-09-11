@@ -29,12 +29,17 @@ module.exports = io => {
             controller.readMessage(socket, msg)
         });
         socket.on('message', (data) => {
+            if(typeof data == 'string' ){
+                data = JSON.parse(data)
+            }
+            console.log(data,"message")
             controller.addMessage(io, socket, data)
             socket.join(data.user)
             socket.broadcast.to(data.user).to(socket.handshake.headers.db).emit("server message", data)
         });
 
         socket.on('get messages', (user) => {
+            console.log("GET MESSAGES",user)
             socket.join(user)
             controller.getMessages(io, socket, user)
         });
