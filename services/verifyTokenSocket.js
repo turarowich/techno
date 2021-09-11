@@ -5,7 +5,6 @@ function verifyTokenSocket(socket, next) {
     // Header names in Express are auto-converted to lowercase
     // console.log(socket.id,"verifyTokenSocket",token,'o');
     var token = socket.handshake.headers.token
-    console.log(socket.handshake.headers,"HEADER")
     if (!token){
         // return res.status(403).send({ auth: false, message: 'No token provided.' });
         // console.log(socket.id,"No verifyTokenSocket");

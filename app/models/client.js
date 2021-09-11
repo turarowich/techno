@@ -84,6 +84,10 @@ const clientSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Message'
     }],
+    news: [{
+        type: Schema.Types.ObjectId,
+        ref: 'ClientNews'
+    }],
     category: {
         type: Schema.Types.ObjectId,
         ref: 'Category'

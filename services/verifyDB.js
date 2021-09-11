@@ -1,9 +1,7 @@
 // var config = require('../config/config');
 
 function verifyDB(req, res, next) {
-    console.log("asdasdasdas")
     let path = req.path.split('/')[1]
-    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>ThePath",path,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>TheFullPath",req.path,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     //check if its client url or company;
     let catalog_urls = [

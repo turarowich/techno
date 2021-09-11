@@ -12,7 +12,6 @@ class catalogController{
     };
 
     getClientProducts = async function (req, res) {
-        console.log('clients catalog',req.db)
         let db = useDB(req.db)
         let Product = db.model("Product");
 
@@ -54,7 +53,6 @@ class catalogController{
 
     getCatalogSettings = async function (req, res) {
         if(!req.db){
-            console.log('should not come this far');
             return res.status('404');
         }
         //
@@ -129,7 +127,6 @@ class catalogController{
                     order.save();
                 }else{
                     //throw error
-                    console.log('company settings not found');
                 }
             })
             .catch(error => {

@@ -2,8 +2,6 @@
 
 function verifyDB(req, res, next) {
     let path = req.path.split('/')[1]
-    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>ThePath",path,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>TheFullPath",req.path,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     //check if its client url or company;
     let catalog_urls = [
         'getCatalogSettings',
@@ -33,16 +31,13 @@ function verifyDB(req, res, next) {
                 if(repo){
                     req.db = "loygift" + repo.company;
                     req.headers['access-place'] = repo.company;
-                    console.log(repo.company,"repo.company");
                     next();
                 }else{
                     //throw error
-                    console.log('company settings not found');
                     return res.status(404).send('Unable to find the requested company!');
                 }
             })
             .catch(error => {
-                console.log({ error })
                 next();
             })
     }

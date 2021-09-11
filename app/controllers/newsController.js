@@ -86,7 +86,6 @@ class NewsController {
                 let dir = path.join(__dirname, '/../../views/frontend/images/' + req.db);
                 if (!fs.existsSync(dir)) {
                     fs.mkdirSync(dir, {recursive: true}, err => {
-                        console.log(err)
                     })
                 }
                 //
@@ -139,7 +138,6 @@ class NewsController {
 
             let query = { '_id': req.params.news }
             req.fields['updatedAt'] = new Date()
-            console.log(req.fields,'+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
             if (req.fields.category) {
                 req.fields.category = "promotions"
             } else {

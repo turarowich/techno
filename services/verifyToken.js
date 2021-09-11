@@ -6,6 +6,7 @@ function verifyToken(req, res, next) {
     let token = req.headers['x-access-token'] || req.headers['authorization'];
     let validWithoutToken = ['/searchPromocodeByCodeApi','/getSettings','/getProducts', '/getNews', '/getCategories?type=product', '/getCategories']
     let url = '/'+req.path.split('/')[1]
+    console.log(url)
     if (!token){
         if (req.headers['access-place'] && validWithoutToken.includes(url)){
             req.db = 'loygift' + req.headers['access-place']

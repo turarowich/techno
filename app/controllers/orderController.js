@@ -29,14 +29,12 @@ async function checkAndSendWarning(client,cashback_model,transporter,bonus_histo
         $gte: new Date(new Date().setHours(0o0, 0o0, 0o0)),
         $lt: new Date(new Date().setHours(23, 59, 59))
     }});
-    console.log(histories.length,"yjjjjjjjjjjjjjjjjjjjjjjjjjj");
     try {
         let cashback = await cashback_model.find();
         let first_cashback = cashback[0];
         if (first_cashback) {
             if(first_cashback.minScans.status &&  histories.length>=first_cashback.minScans.number){
                 //send message
-                console.log('sending');
                 let  message =  `
                     client: ${client.name}, scanned QR code ${histories.length} times
                 `;
@@ -303,30 +301,24 @@ async function checkAndUpdatePromo(promocode=null,client=null) {
         promocode.already_used +=1;
         let usedBy = promocode.usedBy;
         if(client){
-            console.log('YASSS CLIENT');
             let exists = usedBy.find(used => used.user == client._id.toString());
             if(!exists){
-                console.log("NEW USER");
                 usedBy.push({
                     user:client._id,
                     quantity:1,
                     name:client.name,
                 })
             }else{
-                console.log("OLD USER");
                 exists.quantity +=1;
             }
         }else{
-            console.log("else");
             let exists = usedBy.find(used => used.user == null);
             if(!exists){
-                console.log("NEW null");
                 usedBy.push({
                     user:null,
                     quantity:1,
                 })
             }else{
-                console.log("OLD null");
                 exists.quantity +=1;
             }
         }
@@ -554,10 +546,8 @@ class OrderController{
             }).save()
 
             await order.save();
-            console.log(order,"oders")
             result['object'] = await order.populate('products').execPopulate();
         } catch (error) {
-            console.log("errror890");
             result = sendError(error, req.headers["accept-language"])
         }
         res.status(result.status).json(result);
@@ -725,9 +715,7 @@ class OrderController{
             if((old_client && new_client) && (old_client._id.toString() == new_client._id.toString())){
                 //4 old client unchanged but new sums -> add/subtract points, add/subtract balance from/to old client
                 //check points and total
-                console.log("4");
                 if (diff_points > 0){
-                    console.log('4.1');
                     //used points have increased
                     await createClientHistory(
                         ClientBonusHistory,
@@ -739,7 +727,6 @@ class OrderController{
                         0,
                     );
                 }else if(diff_points < 0){
-                    console.log('4.2');
                     //used points have decreased
                     await createClientHistory(
                         ClientBonusHistory,
@@ -762,7 +749,6 @@ class OrderController{
                     diff_total
                 );
             }else{
-                console.log('5');
                 //5 old client to new client -> subtract points, add balance from/to new client
                 //                            add points, subtract balance from/to old client
                 await createClientHistory(
@@ -959,7 +945,6 @@ class OrderController{
         res.status(result.status).json(result);
     };
     deleteOrder = async function (req, res) {
-        console.log('deleting');
         let db = useDB(req.db)
         let Order = db.model("Order");
         let Log = db.model("Log");

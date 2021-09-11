@@ -38,6 +38,7 @@ module.exports = function (app, io) {
     app.post('/addPoints', verifyAccess, clientController.addPoints);
     app.post('/deductPoints', verifyAccess, clientController.deductPoints);
     app.get('/getPoints', clientController.getPoints);
+    app.delete('/deleteClientNews/:news', clientController.deleteClientNews);
 
 
     //Online menu

@@ -16,7 +16,6 @@ class ClientController {
         let Discount = db.model("Discount");
         let Order = db.model("Order");
         let ClientBonusHistory = db.model("clientBonusHistory");
-        console.log("here")
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "clients", parametr: "active" }, db, res)
             if (checkResult) {
@@ -27,15 +26,16 @@ class ClientController {
             'status': 200,
             'msg': 'Sending client'
         }
+        console.log("result is", result)
         try {
             let discounts = await Discount.find()
-            let client = await Client.findById(req.params.client).populate('messages').populate('category').exec()
+            let client = await Client.findById(req.params.client).populate('messages').populate('category').populate('news').exec()
             if(client){
                 let discount = getClientDiscount(client,discounts);
                 if (discount){
                     result['discount'] = discount
                 }
-                result['orders'] = await Order.find({client:client._id}).populate('client').populate('products').exec();
+                result['orders'] = await Order.find({ client: client._id }).populate('client').populate('products').exec();
                 result['history'] = await ClientBonusHistory.find({client:client._id});
             }
             let newClient = '';
@@ -47,6 +47,7 @@ class ClientController {
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
+        console.log("result is", result)
         res.status(result.status).json(result);
     };
 
@@ -432,6 +433,33 @@ class ClientController {
                 }).save()
             }
             await Client.findByIdAndRemove(query)
+
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+
+        res.status(result.status).json(result);
+    };
+
+    deleteClientNews = async function (req, res) {
+        let db = useDB(req.db)
+        let Client = db.model("Client");
+        let ClientNews = db.model("ClientNews");
+        let Log = db.model("Log");
+        let result = {
+            'status': 200,
+            'msg': 'Client news deleted'
+        }
+        try {
+
+            let query = { '_id': req.userID }
+            let client = await Client.findById(query)
+            for(let news of client.news){
+                if (news._id == req.params.news){
+                    await ClientNews.findOneAndDelete({ '_id': news._id})
+                    break
+                }
+            }
 
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])

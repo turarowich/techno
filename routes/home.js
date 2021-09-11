@@ -57,13 +57,10 @@ module.exports = function(app, passport){
     
     app.get('*', function (req, res) {
         let main_path = req.path
-        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>","Backup",main_path,"<<<<<<<<<<<<<<<<<<<<<<<<<<<")
         if (!req.url.includes('socket.io')){
-            console.log("IN99");
             req.king="IN99";
             res.sendFile(path.resolve('views/frontend/dist/index.html'));
         } else{
-            console.log("ELSE * HOME")
             res()
         }
     });

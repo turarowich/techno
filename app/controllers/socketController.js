@@ -6,7 +6,6 @@ class SocketController {
         if(typeof data == 'string' ){
             data = JSON.parse(data)
         }
-        console.log(data,"addMessageSocketController")
         const admin = require("../../app");
         const registrationToken = 'f-VRzRunR1SkfnVNCv55X6:APA91bGJKXyqiXtsdmk0GcuiqHMF4Gb8PQNxgvXlqwAowurur_oNAJEywx3SzQ3_QfGoIlKnEWNRWQ3ol8XnUegsD_z7RbtfEEQyaygKM1NBijrNK4mN7k1pg9GwLS_MiHXT8Yzxxefw';
         const message1 = {
@@ -46,7 +45,6 @@ class SocketController {
             'lastMessageAt': new Date()
         }).exec()
         if (data.isIncoming){
-            console.log("PUSHING")
             try{
                 await pushController.sendNewMessage(socket.handshake.headers.db, data.user, message)
             }catch (e){

@@ -38,7 +38,6 @@ class SettingsController{
                 result['branches'] = branches
                 result['deliveries'] = deliveries
                 result['discounts'] = discounts;
-                console.log(discounts)
 
             } catch (error) {
                 result = sendError(error, req.headers["accept-language"])
@@ -90,11 +89,9 @@ class SettingsController{
             result['branches'] = branches;
             result['deliveries'] = deliveries;
             result['discounts'] = discounts;
-            console.log(await Discount.find())
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
-        console.log(result)
         res.status(result.status).json(result);
     };
 
@@ -161,7 +158,6 @@ class SettingsController{
             }).then(async function (set){
                 //new func
                 let company = req.db.slice(7);//removing loygift
-                console.log(company,"settings company");
                 await catalogs_model.findOneAndUpdate({ 'company': company }, {cat_url:set.catalogUrl}, {
                     new: true
                 })
@@ -280,7 +276,6 @@ class SettingsController{
                     }
                 }, function (err) {
                     if (err) throw err
-                    console.log('done')
                 })
             }
 
@@ -325,7 +320,6 @@ class SettingsController{
             'status': 200,
             'msg': '',
         }
-        console.log('try STARTING SER SAVE');
         try {
             // strip off the data: url prefix to get just the base64-encoded bytes
             let data = img.replace(/^data:image\/\w+;base64,/, "");
@@ -458,7 +452,6 @@ class SettingsController{
     };
 
     addDeliveryOption = async function (req, res) {
-        console.log(req);
         let new_option = req.fields.option;
         let db = useDB(req.db)
         let Delivery = db.model("Delivery");

@@ -131,7 +131,6 @@ app.use('/', VerifyOrder,require('./routes/menu.js')(router))
 
 // handles not found errors
 app.use((err, req, res, next) => {
-    console.log('NEIIIIIIIIIIIIIIIIIIIIIn');
     if (err.httpStatusCode === 404) {
         res.status(404).render('NotFound');
     }

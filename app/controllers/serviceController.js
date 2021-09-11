@@ -38,7 +38,6 @@ class ServiceController{
     };
 
     addService = async function (req, res) {
-        console.log(req.db);
         let db = useDB(req.db)
         let Service = db.model("Service");
         

@@ -270,7 +270,6 @@ class PromocodeController{
         // await delay(5000) /// waiting 1 second.
         // console.log("end 5 start")
         // console.log(req.query.search,"==================",req.db)
-        console.log(req.query)
         let db = useDB(req.db)
         let Promocode = db.model("Promocode");
         let search = req.query.search;
@@ -298,7 +297,6 @@ class PromocodeController{
                     result['msg'] = validate[lang]['promo_already_used']
                     break promocode
                 }
-                console.log(!compareDates(promocode.startDate,promocode.endDate),"uuuuuuuuuuuuuuu");
                 if(date){
                     if (!compareDates(promocode.startDate,promocode.endDate)){
                         result['msg'] = validate[lang]['promo_not_usable']
