@@ -120,7 +120,7 @@
       <p class="catalog-description margin-30">You can upload JPG or PNG photos, the size is not more than 3 MB.</p>
 
       <div class="profile-img big-profile-img margin-30">
-        <img :src="bannerPath">
+        <img :class="{now_imgs:!banner}" :src="bannerPath">
         <input type="file" id="big-img" @change="uploadImage($event,'banner')">
         <label class="addPhoto big-addPhoto"  for="big-img"><img src="../../assets/icons/addBtn.svg"></label>
       </div>
@@ -505,7 +505,10 @@ export default {
 .save{
   width: 120px;
 }
-
+.now_imgs{
+  object-fit: contain !important;
+  padding:10px 0;
+}
 .catalog-title{
   font-size: 20px;
   font-weight: 600;
