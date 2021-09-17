@@ -169,47 +169,22 @@ class ClientController {
         }
         updateClient: try {
             let query = { '_id': req.params.client }
-            let client = null
+            let client = await Client.findById(query).populate("news")
+            client.name = req.fields.name
+            client.phone = req.fields.phone
+            client.email = req.fields.email
+            client.custom_field_0 = req.fields.custom_field_0
+            client.custom_field_1 = req.fields.custom_field_1
+            client.custom_field_2 = req.fields.custom_field_2
             if (req.fields.birthDate) {
-                req.fields.birthDate = req.fields.birthDate.replace('\r\n', '');
+                client.birthDate = req.fields.birthDate.replace('\r\n', '');
             }
-            var validate_result = {
-                status: 500,
-                msg: "Validation error",
-                errors: { },
-            }
-            let user_email = await Client.find({ 'email': req.fields.email })
-            let user_phone = await Client.find({ 'phone': req.fields.phone })
-            if (user_email.length > 1 || (user_email.length > 0 && user_email[0]._id != req.params.client)) {
-                result = validate_result
-                result.errors = {
-                    email: validate[lang]['email_unique']
-                }
-                break updateClient
-            }
-            if (user_phone.length > 1 || (user_phone.length > 0 && user_phone[0]._id != req.params.client)) {
-                result = validate_result
-                result.errors = {
-                    phone: validate[lang]['phone_unique']
-                }
-                break updateClient
-            }
-
             if (req.fields.password && req.fields.password != "\r\n") {
-                req.fields.password = req.fields.password.trim()
-                client = await Client.findOneAndUpdate(query, req.fields, {
-                    new: true
-                }).select('+password')
+                client.password = req.fields.password.trim()
                 await client.save()
                 client.password = bcrypt.hashSync(req.fields.password, 8);
                 await client.save()
-            }else{
-                delete req.fields.password
-                client = await Client.findOneAndUpdate(query, req.fields, {
-                    new: true
-                })
             }
-
             if (req.files.avatar) {
                 let filename = saveImage(req.files.avatar, req.db, null, true)
                 if (filename == 'Not image') {
@@ -233,6 +208,7 @@ class ClientController {
                 client.apns.push(req.fields.apns)
                 await client.save()
             }
+            await client.save()
             await new Log({
                 type: "client_updated",
                 description: client.name + " "+ client.phone,
@@ -244,7 +220,6 @@ class ClientController {
             await Analytics.updateAnalytics(req, client.createdAt, false, true)
             result['object'] = client
         } catch (error) {
-            console.log(error)
             result = sendError(error, req.headers["accept-language"])
         }
         console.log(result)

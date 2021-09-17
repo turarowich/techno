@@ -131,6 +131,7 @@ app.use('/', VerifyOrder,require('./routes/menu.js')(router))
 
 // handles not found errors
 app.use((err, req, res, next) => {
+    console.log(err);
     if (err.httpStatusCode === 404) {
         res.status(404).render('NotFound');
     }
@@ -140,6 +141,7 @@ app.use((err, req, res, next) => {
 
 
 app.use((err, req, res, next) => {
+    console.log(err);
     if (err.httpStatusCode === 304) {
         res.status(304).render('Unauthorized');
     }
@@ -148,7 +150,7 @@ app.use((err, req, res, next) => {
 
 // catch all
 app.use((err, req, res, next) => {
-    console.log(err);
+    console.log(err); 
     if (!res.headersSent) {
         res.status(err.httpStatusCode || 500).render('UnknownError');
     }
