@@ -127,29 +127,35 @@ class PushController {
         try{
             let devicesAndroid = await Device.find({ 'type': 'android', 'client': message.client })
             console.log("sendNewMessageAndroid",devicesAndroid)
-            let registrationToken = ""
-            if(devicesAndroid.length > 0){
-                registrationToken = devicesAndroid[0].token
-            }
-            const message1 = {
-                notification : {
-                    body : message.text,
-                    title: "New message"
-                },
-                data: {
-                    text: message.text,
-                },
-                token: registrationToken
-            };
+            // let registrationToken = ""
+            // if(devicesAndroid.length > 0){
+            //     registrationToken = devicesAndroid[3].token
+            // }
+            devicesAndroid.forEach(function (device){
+                try{
+                    const message1 = {
+                        notification : {
+                            body : message.text,
+                            title: "New message"
+                        },
+                        data: {
+                            text: message.text,
+                        },
+                        token: device.token
+                    };
 
-            admin.messaging().send(message1)
-                .then((response) => {
-                    // Response is a message ID string.
-                    console.log('Successfully sent message:', response);
-                })
-                .catch((error) => {
-                    console.log('Error sending message:', error);
-                });
+                    admin.messaging().send(message1)
+                        .then((response) => {
+                            // Response is a message ID string.
+                            console.log('Successfully sent message:', response);
+                        })
+                        .catch((error) => {
+                            console.log('Error sending message:', error);
+                        });
+                }catch (er){
+                    console.log(er)
+                }
+            })
         }catch (e) {
             console.log("EEEE",e)
         }

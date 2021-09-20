@@ -17,14 +17,15 @@ function verifyToken(req, res, next) {
         return res.status(403).send({ auth: false, message: 'No token provided.45' });
     }else{
         // Remove Bearer from string
-        console.log("got token--",token)
+        console.log("got token--",url,token)
         token = token.replace(/^Bearer\s+/, "").replace(/^x-access-token\s+/, "");
     }
     jwt.verify(token, config.secret_key, function (err, decoded) {
         if (err){
+            console.log(err,"jwt error")
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
         }
-
+        console.log(decoded,"DECODED")
         // if everything good, save to request for use in other routes
         if (decoded.type){
             req.userType = decoded.type

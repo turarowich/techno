@@ -276,7 +276,7 @@ class PromocodeController{
         let search = req.query.search;
         let sum = req.query.sum;
         let type = req.query.type;
-        let date = req.query.date;
+        let date = req.query.date || new Date();
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "loyalty", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -301,7 +301,8 @@ class PromocodeController{
                 console.log(!compareDates(promocode.startDate,promocode.endDate),"uuuuuuuuuuuuuuu");
                 if(date){
                     if (!compareDates(promocode.startDate,promocode.endDate)){
-                        result['msg'] = validate[lang]['promo_not_usable']
+                        console.log("DIDNOT PASS DATE")
+                        result['msg'] = validate[lang]['promo_not_usable_date']
                         break promocode
                     }
                 }

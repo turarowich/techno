@@ -368,7 +368,6 @@ function compareDates(dateStart_,dateEnd_,editDate_=null){
     let today = editDate_ ? moment(editDate_) : moment();
     let dateStart = moment(dateStart_);
     let dateEnd = moment(dateEnd_);
-    console.log(dateStart,dateEnd,"------------------");
     //(start<=today<=end)
     return(dateStart.isSameOrBefore(today,'day') && dateEnd.isSameOrAfter(today,'day'))
 }

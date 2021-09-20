@@ -247,8 +247,6 @@ class AuthController{
                 }),
             }
 
-
-
         } catch (error) {
             result = sendError(error, lang)
         }
