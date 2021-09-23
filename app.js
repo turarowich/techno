@@ -106,7 +106,7 @@ router.get("/auth/google", passport.authenticate("google", { authType: 'reauthen
 router.get("/auth/twitter", passport.authenticate("twitter", { authType: 'reauthenticate'}));
 
 
-const io = require('socket.io')(httpServer, {
+const io = require('socket.io')(httpsServer, {
     cors: {
         // origin: "http://localhost:3000",
         origin: ["http://10.121.6.75:8080","http://localhost:3000", "http://127.0.0.1:3000", "https://app.loygift.com", "http://10.121.6.29:3000", "*:*"],
