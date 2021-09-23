@@ -26,7 +26,6 @@ class ClientController {
             'status': 200,
             'msg': 'Sending client'
         }
-        console.log("result is", result)
         try {
             let discounts = await Discount.find()
             let client = await Client.findById(req.params.client).populate('messages').populate('category').populate('news').exec()
