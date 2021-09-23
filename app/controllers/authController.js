@@ -243,8 +243,6 @@ class AuthController{
                 }),
             }
 
-
-
         } catch (error) {
             result = sendError(error, lang)
         }
@@ -254,6 +252,7 @@ class AuthController{
     registerClientSocial = async function (req, res) {
         let db = useDB('loygift' + req.headers['access-place']);
         let Client = db.model("Client");
+        let ClientBonusHistory = db.model("clientBonusHistory");
         let result = []
         let social_res = []
         let lang = req.headers["accept-language"]
@@ -285,6 +284,19 @@ class AuthController{
             let qrCode = createQrFile(social_res.uniqueCode, 'loygift' + req.headers['access-place'])
             client.QRCode = qrCode
             client.uniqueCode = social_res.uniqueCode
+
+            //cashback
+            let cashback_points = await addWelcomePoints(db);
+            if(cashback_points>0){
+                client.points = parseFloat(client.points ) + cashback_points;
+                await new ClientBonusHistory({
+                    client: client._id,
+                    points: cashback_points,
+                    source: 'Welcome points',
+                    type: 'received',
+                }).save();
+            }
+
             await client.save({ validateBeforeSave: false })
             result = {
                 'status': 200,
@@ -594,7 +606,7 @@ class AuthController{
         res.redirect('/');
     };
 }
-async function socialRegister(type, token, screen_name="", full_name="", email=""){
+async function socialRegister(type, token, screen_name="", full_name="", email="",google_id=""){
     let response = []
     if (type == "facebook") {
         response = await fbRegister(token)
@@ -604,6 +616,16 @@ async function socialRegister(type, token, screen_name="", full_name="", email="
         response = await googleRegister(token)
     } else if (type == "apple") {
         response = await appleRegister(token, screen_name, full_name, email)
+    } else if (type == "android"){
+        let save = {
+            name: full_name,
+            email: email,
+            google_id: google_id,
+        }
+        response = {
+            check: {email:email},
+            save: save
+        }
     }
     return response
 } 
@@ -754,6 +776,7 @@ async function googleRegister(token) {
     if (response.error) {
         return response
     }
+    console.log("9999999",response)
     let check = { google_id: response.data.sub }
     if (response.data.email) {
         check = { $or: [{ google_id: response.data.sub }, { email: response.data.email }] }

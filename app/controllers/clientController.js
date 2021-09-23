@@ -11,6 +11,7 @@ const fs = require('fs');
 class ClientController {
     
     getClient = async function (req, res) {
+        console.log("GEtting client")
         let db = useDB(req.db)
         let Client = db.model("Client");
         let Discount = db.model("Discount");

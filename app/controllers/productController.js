@@ -32,6 +32,11 @@ class ProductController{
     };
 
     getProducts = async function (req, res) {
+        // console.log("start")
+        // const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+        // await delay(5000) /// waiting 1 second.
+        // console.log("end 5 start")
+
         let db = useDB(req.db)
         let Product = db.model("Product");
         if(req.userType == "employee") {
