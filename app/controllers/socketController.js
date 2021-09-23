@@ -30,7 +30,6 @@ class SocketController {
             'lastMessageAt': new Date()
         }).exec()
         if (data.isIncoming){
-            console.log("PUSHING")
             try{
                 await pushController.sendNewMessage(socket.handshake.headers.db, data.user, message)
             }catch (e){

@@ -6,7 +6,8 @@ const { query } = require('express');
 var apn = require('apn');
 var path = require('path')
 var dir = path.join(__dirname, "../../keys/" + config.APNs)
-var moment = require('moment')
+var moment = require('moment');
+const news = require('../models/news');
 var options = {
     token: {
         key: dir,
@@ -22,12 +23,20 @@ try {
 }catch (err){
     console.log(err);
 }
+async function createClientNews(data, db){
+    let News = db.model("ClientNews")
+    let clientNews = await new News(data)
+    await clientNews.save()
+    return clientNews
+}
 
 class PushController {
+
     sendNewsPN = async function (req, res) {
         let db = useDB(req.db)
         let News = db.model("News");
         let Device = db.model("Device");
+        let Client = db.model("Client");
         let Settings = db.model("Settings");
         let settings = await Settings.find()
         settings = settings[0]
@@ -41,6 +50,18 @@ class PushController {
             result['msg'] = "Sending news"
             result['object'] = data
             let devicesIOS = await Device.find({'type': 'ios'})
+            let dataForNews = {
+                name: data.name,
+                name_ru: data.name_ru,
+                desc: data.desc,
+                desc_ru: data.desc_ru,
+                img: data.img,
+                date: data.startDate,
+                type: "news",
+                category: data.category,
+            }
+            let clientNews = await createClientNews(dataForNews, db)
+            await Client.updateMany({}, { $push: { news: clientNews } });
             let noteIOS = new apn.Notification({
                 alert: {
                     title: data.name,
@@ -48,25 +69,14 @@ class PushController {
                     body: data.desc,
                 },
                 mutableContent: 1,
-                payload:{
-                    name: data.name,
-                    name_ru: data.name_ru,
-                    desc: data.desc,
-                    desc_ru: data.desc_ru,
-                    img: data.img,
-                    date: data.startDate,
-                    type: "news",
-                },
+                payload: dataForNews,
                 sound: "default",
                 topic: settings.APNsTopic
             });
-            console.log('this is topic',settings.APNsTopic)
             apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
-                console.log(response)
                 if (response.failed.length){
                     
                     response.failed.forEach((fail) => {
-                        console.log(fail.response)
                         if (fail.status == '400' && fail.response.reason == 'BadDeviceToken'){
                             let device = devicesIOS.find(device => device.token == fail.device)
                             if(device) device.deleteOne()
@@ -106,7 +116,6 @@ class PushController {
             apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
                 if (response.failed.length) {
                     response.failed.forEach((fail) => {
-                        console.log(fail.response)
                         if (fail.status == '400' && fail.response.reason == 'BadDeviceToken') {
                             let device = devicesIOS.find(device => device.token == fail.device)
                             if (device) device.deleteOne()
@@ -167,6 +176,7 @@ class PushController {
         let db = useDB(req.db)
         let Device = db.model("Device");
         let Settings = db.model("Settings");
+        let Client = db.model("Client");
         let settings = await Settings.find()
         let News = db.model("News");
         settings = settings[0]
@@ -192,7 +202,18 @@ class PushController {
                 query = {}
             }
             let devicesIOS = await Device.find(query)
-
+            let dataForNews = {
+                name: data.name,
+                name_ru: data.name_ru,
+                desc: data.desc,
+                desc_ru: data.desc_ru,
+                img: data.img,
+                date: data.startDate,
+                category: data.category,
+                type: "news",
+            }
+            let clientNews = await createClientNews(dataForNews, db)
+            await Client.updateMany({}, { $push: { news: clientNews } });
             let noteIOS = new apn.Notification({
                 alert: {
                     title: data.name,
@@ -200,15 +221,7 @@ class PushController {
                     body: data.desc,
                 },
                 mutableContent: 1,
-                payload: {
-                    name: data.name,
-                    name_ru: data.name_ru,
-                    desc: data.desc,
-                    desc_ru: data.desc_ru,
-                    img: data.img,
-                    date: data.startDate,
-                    type: "news",
-                },
+                payload: dataForNews,
                 sound: "default",
                 topic: settings.APNsTopic
             });
@@ -405,7 +418,6 @@ class PushController {
         let db = useDB("loygift")
         let User = db.model("User");
         let users = await User.find()
-        console.log("Starting push loop")
         let today = (moment().format('dddd')).toLowerCase();
         let query = { 'isActive': true }
         query[`${today}.isActive`] = true

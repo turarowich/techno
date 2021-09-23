@@ -64,7 +64,6 @@ const socket = io(process.env.VUE_APP_SERVER_URL, {
     withCredentials: true,
     reconnection: (process.env.VUE_APP_RECONNECTION === 'true'),
 })
-console.log(process.env.VUE_APP_RECONNECTION === 'true')
 
 ax.defaults.headers.common['Authorization'] = 'Bearer '+ token
 app.config.globalProperties.$moment = moment;
@@ -77,8 +76,7 @@ app.config.globalProperties.format_price = function (sum){parseFloat(sum).toFixe
 app.config.globalProperties.base_url = process.env.VUE_APP_SERVER_URL;
 app.config.globalProperties.$callEditUser = function(){
     const eb = document.getElementById('editUser');
-    console.log(eb.innerHTML)
-
+    console.log(eb)
 }
 app.config.globalProperties.checkCatalogStorageLife = function (){
     ///move to router js
@@ -90,9 +88,7 @@ app.config.globalProperties.checkCatalogStorageLife = function (){
         return;
     }
     let diff =  (version- new Date( storage_version))/1000/60/60;//get hours
-    console.log(diff,"HOURS");
     if(diff>life){
-        console.log('Time TO UPDATE &&&');
         //clear basket storage
         this.$store.dispatch("Orders/clearAll");
         //set new version
@@ -206,7 +202,6 @@ app.config.globalProperties.url = function (main, id = null, search = null) {
         additional += '?' + search[0] + '=' + search[1]
     }
     if (home_url.includes(main)){
-        console.log(this.$server + '/' + main + additional);
         return this.$server + '/' + main + additional
     }
     return this.$api + '/' + main + additional

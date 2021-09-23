@@ -255,8 +255,6 @@ class ProductController{
             //     await Product.updateOne(query, { $unset: { promoStart: "", promoEnd: ""}})
             // }
 
-            console.log(test2,"222222222222");
-            console.log(test3,"333333333333");
             await new Log({
                 type: "product_updated",
                 description: product.name,
@@ -483,8 +481,6 @@ class ProductController{
             'status': 200,
             'msg': 'Sending product'
         }
-
-        console.log(req.query);
 
         try {
             let product = await Product.find( { "name": {$regex: search} } )

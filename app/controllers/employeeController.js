@@ -36,7 +36,6 @@ class EmployeeController{
         let Employee = db.model("Employee");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "settings", parametr: "active" }, db, res)
-            console.log(checkResult);
             if (checkResult) {
                 return;
             }
@@ -134,7 +133,6 @@ class EmployeeController{
             if (req.fields.birthDate) {
                 req.fields.birthDate = req.fields.birthDate.replace('\r\n', '');
             }
-            console.log(req.fields)
             if (req.fields.password && req.fields.password != "\r\n") {
                 req.fields.password = req.fields.password.trim()
                 employee = await Employee.findOneAndUpdate(query, req.fields, {
@@ -173,7 +171,6 @@ class EmployeeController{
             }
             result['object'] = employee
         } catch (error) {
-            console.log(error)
             result = sendError(error, req.headers["accept-language"])
         }
 

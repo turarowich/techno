@@ -37,7 +37,6 @@ async function addWelcomePoints(db) {
 
 class AuthController{
     register = async function (req, res) {
-        console.log(req.fields);
         let db = useDB('loygift');
         let User = db.model("User");
         let catalogs_model = db.model("catalogs");
@@ -80,7 +79,6 @@ class AuthController{
     };
 
     login = async function (req, res) {
-        console.log(req.fields);
         let db = useDB('loygift');
         let User = db.model("User");
         let result = []
@@ -165,7 +163,7 @@ class AuthController{
         }
         
         try {
-            let user = await Client.findOne(filter).select('+password')
+            let user = await Client.findOne(filter).populate("news").select('+password')
 
             let errors = {
                 phone: validate[lang]['user_not_found'],
@@ -174,7 +172,6 @@ class AuthController{
 
             if (!user) return res.status(404).json({ status: 404, msg: 'No user found', errors: errors});
             if (!user.password) return res.status(401).json({ status: 401, msg: "Not valid password", auth: false, token: null, errors: errors });
-            console.log(user.password)
             var passwordIsValid = bcrypt.compareSync(req.fields.password, user.password);
             delete errors.phone
             if (!passwordIsValid) return res.status(401).json({ status: 401, msg: "Not valid password", auth: false, token: null, errors: errors });
@@ -206,7 +203,6 @@ class AuthController{
             let number = randomNumber(100000, 1000000)
             // let number = 1000001
             let qrCode = createQrFile(number.toString(), 'loygift' + req.headers['access-place'])
-            console.log(req.headers['access-place']);
             var client = new Client({
                 name: req.fields.name,
                 phone: req.fields.phone,
@@ -331,7 +327,6 @@ class AuthController{
             lang = 'en'
         }
         socialAuth: try {
-            console.log(req.fields)
             let social_res = await socialRegister(req.fields.social, req.fields.token, req.fields.screen_name, req.fields.full_name, req.fields.email)
 
             if (social_res.error) {

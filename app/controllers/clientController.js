@@ -17,7 +17,6 @@ class ClientController {
         let Discount = db.model("Discount");
         let Order = db.model("Order");
         let ClientBonusHistory = db.model("clientBonusHistory");
-        console.log("here")
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "clients", parametr: "active" }, db, res)
             if (checkResult) {
@@ -28,15 +27,16 @@ class ClientController {
             'status': 200,
             'msg': 'Sending client'
         }
+        console.log("result is", result)
         try {
             let discounts = await Discount.find()
-            let client = await Client.findById(req.params.client).populate('messages').populate('category').exec()
+            let client = await Client.findById(req.params.client).populate('messages').populate('category').populate('news').exec()
             if(client){
                 let discount = getClientDiscount(client,discounts);
                 if (discount){
                     result['discount'] = discount
                 }
-                result['orders'] = await Order.find({client:client._id}).populate('client').populate('products').exec();
+                result['orders'] = await Order.find({ client: client._id }).populate('client').populate('products').exec();
                 result['history'] = await ClientBonusHistory.find({client:client._id});
             }
             let newClient = '';
@@ -48,6 +48,7 @@ class ClientController {
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
+        console.log("result is", result)
         res.status(result.status).json(result);
     };
 
@@ -169,47 +170,22 @@ class ClientController {
         }
         updateClient: try {
             let query = { '_id': req.params.client }
-            let client = null
+            let client = await Client.findById(query).populate("news")
+            client.name = req.fields.name
+            client.phone = req.fields.phone
+            client.email = req.fields.email
+            client.custom_field_0 = req.fields.custom_field_0
+            client.custom_field_1 = req.fields.custom_field_1
+            client.custom_field_2 = req.fields.custom_field_2
             if (req.fields.birthDate) {
-                req.fields.birthDate = req.fields.birthDate.replace('\r\n', '');
+                client.birthDate = req.fields.birthDate.replace('\r\n', '');
             }
-            var validate_result = {
-                status: 500,
-                msg: "Validation error",
-                errors: { },
-            }
-            let user_email = await Client.find({ 'email': req.fields.email })
-            let user_phone = await Client.find({ 'phone': req.fields.phone })
-            if (user_email.length > 1 || (user_email.length > 0 && user_email[0]._id != req.params.client)) {
-                result = validate_result
-                result.errors = {
-                    email: validate[lang]['email_unique']
-                }
-                break updateClient
-            }
-            if (user_phone.length > 1 || (user_phone.length > 0 && user_phone[0]._id != req.params.client)) {
-                result = validate_result
-                result.errors = {
-                    phone: validate[lang]['phone_unique']
-                }
-                break updateClient
-            }
-
             if (req.fields.password && req.fields.password != "\r\n") {
-                req.fields.password = req.fields.password.trim()
-                client = await Client.findOneAndUpdate(query, req.fields, {
-                    new: true
-                }).select('+password')
+                client.password = req.fields.password.trim()
                 await client.save()
                 client.password = bcrypt.hashSync(req.fields.password, 8);
                 await client.save()
-            }else{
-                delete req.fields.password
-                client = await Client.findOneAndUpdate(query, req.fields, {
-                    new: true
-                })
             }
-
             if (req.files.avatar) {
                 let filename = saveImage(req.files.avatar, req.db, null, true)
                 if (filename == 'Not image') {
@@ -233,6 +209,7 @@ class ClientController {
                 client.apns.push(req.fields.apns)
                 await client.save()
             }
+            await client.save()
             await new Log({
                 type: "client_updated",
                 description: client.name + " "+ client.phone,
@@ -244,7 +221,6 @@ class ClientController {
             await Analytics.updateAnalytics(req, client.createdAt, false, true)
             result['object'] = client
         } catch (error) {
-            console.log(error)
             result = sendError(error, req.headers["accept-language"])
         }
         console.log(result)
@@ -433,6 +409,33 @@ class ClientController {
                 }).save()
             }
             await Client.findByIdAndRemove(query)
+
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+
+        res.status(result.status).json(result);
+    };
+
+    deleteClientNews = async function (req, res) {
+        let db = useDB(req.db)
+        let Client = db.model("Client");
+        let ClientNews = db.model("ClientNews");
+        let Log = db.model("Log");
+        let result = {
+            'status': 200,
+            'msg': 'Client news deleted'
+        }
+        try {
+
+            let query = { '_id': req.userID }
+            let client = await Client.findById(query)
+            for(let news of client.news){
+                if (news._id == req.params.news){
+                    await ClientNews.findOneAndDelete({ '_id': news._id})
+                    break
+                }
+            }
 
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])

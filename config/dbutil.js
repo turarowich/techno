@@ -39,6 +39,7 @@ const initClientDbConnection = () => {
     require("../app/models/clientBonusHistory.js")
     require("../app/models/user.js")
     require("../app/models/employee.js")
+    require("../app/models/clientNews.js")
     require("../app/models/log.js")
     require("../app/models/schedulePush.js")
     require("../app/models/tempoOrder.js")

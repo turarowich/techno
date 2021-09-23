@@ -6,7 +6,6 @@ class CashbackController{
         let cashback_model = db.model("Cashback");
         let one = await cashback_model.find();
         let cashback_one = {};
-        console.log("here")
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "loyalty", parametr: "active" }, db, res)
             if (checkResult) {
@@ -28,7 +27,6 @@ class CashbackController{
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
-        console.log(result)
         res.status(result.status).json(result);
     };
     updateCashback = async function (req, res) {
