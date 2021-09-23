@@ -18,6 +18,7 @@ class SocketController {
                 return;
             }
         }
+        console.log("new message ", data)
         let message = await new Message({
             client: data.user,
             text: data.text || "uu",
