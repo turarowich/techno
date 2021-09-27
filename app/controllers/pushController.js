@@ -89,7 +89,7 @@ class PushController {
         }
         res.status(result.status).json(result);
     };
-    sendNewMessage = async function (req_db, client, message) {
+    sendNewMessage = async function (req_db, client, message,title = "New message") {
         let db = useDB(req_db)
         let Device = db.model("Device");
         let Message = db.model("Message");
@@ -101,7 +101,7 @@ class PushController {
             let devicesIOS = await Device.find({ 'type': 'ios', 'client': client })
             let noteIOS = new apn.Notification({
                 alert: {
-                    title: "New message",
+                    title: title,
                     subtitle: "",
                     body: message.text,
                 },
@@ -128,7 +128,7 @@ class PushController {
         }
     };
 
-    sendNewMessageAndroid = async function (req_db, client, message) {
+    sendNewMessageAndroid = async function (req_db, client, message,title = "New message",type="chat") {
         console.log("sendNewMessageAndroid")
         let db = useDB(req_db)
         let Device = db.model("Device");
@@ -145,10 +145,11 @@ class PushController {
                     const message1 = {
                         notification : {
                             body : message.text,
-                            title: "New message"
+                            title: title
                         },
                         data: {
                             text: message.text,
+                            type:type
                         },
                         token: device.token
                     };
@@ -173,6 +174,7 @@ class PushController {
 
 
     sendPushNotification = async function (req, res) {
+        console.log("sendPushNotification","ddddd----");
         let db = useDB(req.db)
         let Device = db.model("Device");
         let Settings = db.model("Settings");

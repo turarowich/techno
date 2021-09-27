@@ -3,7 +3,16 @@ const Schema = mongoose.Schema;
 const uid = require('rand-token');
 const { randomNumber } = require('../../services/helper')
 const clientSchema = new Schema({
-
+    receivedBdPoints:{
+        type: Boolean,
+        required: false,
+        default:false,
+    },
+    expiredBdPoints:{
+        type: Boolean,
+        required: false,
+        default:false,
+    },
     name: {
         type: String,
         trim: true,

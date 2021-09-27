@@ -21,7 +21,7 @@ const TwitterStrategy = require("passport-twitter").Strategy;
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const { initClientDbConnection } = require('./config/dbutil');
 const userConnection = initClientDbConnection()
-
+const cron = require("node-cron")
 
 //Event emitter
 require('events').EventEmitter.defaultMaxListeners = 15;
@@ -161,6 +161,21 @@ const serviceAccount = require('./serviceAccountKey.json');
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
 });
+
+//cron
+
+const cronController = require("./app/controllers/cronController")
+
+const job = cron.schedule('0 1 * * *', () => {
+    //Cron job every day at 1am
+    console.log('STARTED CRON');
+    cronController.checkAllClients();
+    cronController.checkBirthdayPointsLife();
+});
+job.start();
+// cron end
+
+
 module.exports = admin
 httpServer.listen(config.port_http, () => {
     console.log(`App listening at http://${config.localhost}:${config.port_http}`);
