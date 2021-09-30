@@ -67,8 +67,6 @@ class SocketController {
         }
         await Message.updateMany({ client: user, isIncoming: true }, { new: false });
         let messages = await Message.find({ client: user }).sort({ $natural: -1 }).limit(50);
-
-        console.log(messages);
         io.to(socket.id).emit("all messages", messages)
     }
 

@@ -7,11 +7,9 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const http = require('http');
 const https = require('https');
-
 const privateKey = fs.readFileSync(config.privateKey, 'utf8');
 const certificate = fs.readFileSync(config.certificate, 'utf8');
 const credentials = { key: privateKey, cert: certificate };
-
 const httpServer = http.createServer(app);
 const httpsServer = https.createServer(credentials, app);
 const passport = require("passport");
@@ -163,9 +161,7 @@ admin.initializeApp({
 });
 
 //cron
-
 const cronController = require("./app/controllers/cronController")
-
 const job = cron.schedule('0 1 * * *', () => {
     //Cron job every day at 1am
     console.log('STARTED CRON');

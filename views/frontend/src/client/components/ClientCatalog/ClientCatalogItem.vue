@@ -62,7 +62,6 @@ name: "ClientCatalogItem",
   methods:{
 
     checkDates(start,end){
-      console.log(start,end,"000000000000000000000000000000")
       if(!start || !start){
         return false
       }

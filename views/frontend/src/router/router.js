@@ -65,7 +65,8 @@ const routes = [
         name: "Orders",
         component: Orders,
         meta:{
-            title:"Orders"
+            title:"Orders",
+            requiresAuthMain:true,
         }
 
     },
@@ -73,42 +74,57 @@ const routes = [
         path: "/edit-client-page/:id",
         name: "EditClientPage",
         component: EditClientPage,
-
+        meta:{
+            requiresAuthMain:true,
+        }
     },
     {
         path: "/push-notification",
         name: "PushNotification",
         component: PushNotification,
-
+        meta:{
+            requiresAuthMain:true,
+        }
     },
     {
         path: "/add-promo-page",
         name: "AddPromoPage",
         component: AddPromoPage,
-
+        meta:{
+            requiresAuthMain:true,
+        }
     },
     {
         path: "/edit-promo",
         name: "EditPromo",
         component: EditPromo,
+        meta:{
+            requiresAuthMain:true,
+        }
     },
     {
         path: "/add-product-page",
         name: "AddProductPage",
         component: AddProductPage,
-
+        meta:{
+            requiresAuthMain:true,
+        }
     },
     {
         path: "/edit-product-page",
         name: "EditProductPage",
         component: EditProductPage,
-
+        meta:{
+            requiresAuthMain:true,
+        }
     },
     {
         path: "/individual-push",
         name: "IndividualPush",
         component: IndividualPush,
-
+        meta:{
+            requiresAuthMain:true,
+        }
     },
     {
         path: "/menu/:code",
@@ -226,7 +242,9 @@ const routes = [
         path: "/clients",
         name: "Clients",
         component: Clients,
-
+        meta:{
+            requiresAuthMain:true,
+        }
     },
     {
         path: "/loyalty",
@@ -249,15 +267,19 @@ const routes = [
                 component: Discount
             },
 
-        ]
-
+        ],
+        meta:{
+            requiresAuthMain:true,
+        }
 
     },
     {
         path: "/chats",
         name: "Chats",
         component: Chats,
-
+        meta:{
+            requiresAuthMain:true,
+        }
     },
     {
         path: "/admin",
@@ -265,26 +287,33 @@ const routes = [
         component: Admin,
         meta: {
             hideNavbar: true,
+            requiresAuthMain:true,
         }
     },
     {
         path: "/log",
         name: "Log",
         component: Log,
-
+        meta:{
+            requiresAuthMain:true,
+        }
     },
 
     {
         path: "/catalog",
         name: "Catalog",
         component: Catalog,
-
+        meta:{
+            requiresAuthMain:true,
+        }
     },
     {
         path: '/analytics',
         name: "Analytics",
         component: Analytics,
-
+        meta:{
+            requiresAuthMain:true,
+        }
     },
     {
         path: '/settings',
@@ -327,26 +356,34 @@ const routes = [
                 component: PersonalSettings,
 
             }
-        ]
-
+        ],
+        meta:{
+            requiresAuthMain:true,
+        }
     },
     {
         path: "/news",
         name: "News",
         component: News,
-
+        meta:{
+            requiresAuthMain:true,
+        }
     },
     {
         path: "/add-news",
         name: "AddNews",
         component: AddNews,
-
+        meta:{
+            requiresAuthMain:true,
+        }
     },
     {
         path: "/edit-news",
         name: "EditNews",
         component: EditNews,
-
+        meta:{
+            requiresAuthMain:true,
+        }
     },
     {
         path: '/signup',
@@ -385,9 +422,20 @@ router.beforeEach((to, from, next) => {
     const current_company_url = store.state.Catalog.company_url;
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
+    const requiresAuthMain = to.matched.some(record => record.meta.requiresAuthMain);
+    const token = localStorage.getItem("token");
+
     // Check for protected route
-    if (requiresAuth && !authenticatedUser) next({ path: `/${current_company_url}/signin` })
-    else next();
+    if (requiresAuth && !authenticatedUser) {
+        //if client catalog
+        next({ path: `/${current_company_url}/signin` })
+    } else if(token == null && requiresAuthMain){
+        //if main crm
+        next({ path: '/' })
+    }
+    else {
+        next();
+    }
 });
 
 // router.beforeEach((to, from, next) => {

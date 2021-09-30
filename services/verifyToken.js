@@ -7,7 +7,8 @@ function verifyToken(req, res, next) {
     let validWithoutToken = ['/searchPromocodeByCodeApi','/getSettings','/getProducts', '/getNews', '/getCategories?type=product', '/getCategories']
     let url = '/'+req.path.split('/')[1]
 
-    console.log("verifyToken999",url,`Token:${token}`,req.headers['access-place'])
+    console.log("verifyToken",url,`Token:${token}`,`Access: ${req.headers['access-place']}`)
+    console.log("-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|")
     if (!token || token.includes('null')){
         console.log("No token")
         if (req.headers['access-place'] && validWithoutToken.includes(url)){
@@ -25,7 +26,6 @@ function verifyToken(req, res, next) {
             console.log(err,"jwt error")
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
         }
-        console.log(decoded,"DECODED")
         // if everything good, save to request for use in other routes
         if (decoded.type){
             req.userType = decoded.type

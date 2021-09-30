@@ -47,6 +47,7 @@ class SettingsController{
     };
 
     getSettings = async function (req, res) {
+        console.log("GETTING SETTINGS");
         //
         let shoes_db = useDB('loygift');
         let catalogs_model = shoes_db.model("catalogs");

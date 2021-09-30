@@ -27,7 +27,6 @@ class ClientController {
             'status': 200,
             'msg': 'Sending client'
         }
-        console.log("result is", result)
         try {
             let discounts = await Discount.find()
             let client = await Client.findById(req.params.client).populate('messages').populate('category').populate('news').exec()
@@ -48,7 +47,6 @@ class ClientController {
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
-        console.log("result is", result)
         res.status(result.status).json(result);
     };
 
@@ -223,7 +221,6 @@ class ClientController {
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
-        console.log(result)
         res.status(result.status).json(result);
     };
     saveAvatar = async function (req, res) {
@@ -289,7 +286,6 @@ class ClientController {
         if (lang != 'ru') {
             lang = 'en'
         }
-        console.log("promocode is", req.fields)
         all_check: try{
             //check if exists and its not his own
             //check if client already has received the promo points
@@ -350,7 +346,6 @@ class ClientController {
             result.msg = "AAAA";
             console.log(e);
         }
-        console.log(result)
         res.status(result.status).json(result);
     }
 
@@ -582,7 +577,6 @@ class ClientController {
         res.status(result.status).json(result);
     };
     getNewMessages = async function (req, res) {
-        console.log("REQ",req.fields)
         let db = useDB(req.db)
         let Message = db.model("Message");
 
@@ -611,7 +605,6 @@ class ClientController {
             if (req.fields.isIncoming !== '' && req.fields.isIncoming !== undefined) {
                 query['isIncoming'] = req.fields.isIncoming
             }
-            console.log(query, req.fields.isIncoming)
             let messages = await Message.find(query)
             result['objects'] = messages
         } catch (error) {
