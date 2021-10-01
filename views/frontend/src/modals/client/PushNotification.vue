@@ -37,7 +37,8 @@
                   <div class="table-head" style="width: 5%;"><label class="custom-checkbox"><input @click="checkMainSelect" type="checkbox"  :ref="`select${client._id}`"><span class="checkmark"></span></label></div>
                   <div  class="d-flex align-items-center"  style="width: 47%;">
                     <div class="table-img">
-                      <img src="../../assets/img/sneak.webp">
+                      <img v-if="!client.avatar" src="../../assets/icons/chat.svg">
+                      <img v-else :src="imgSrc+'/'+client.avatar">
                     </div>
                     {{client.name}}
                   </div>
@@ -124,7 +125,7 @@ export default {
         {date: this.$moment().subtract(6,'months').endOf('month').format('YYYY-MM'), name:'6 month'},
         {date: this.$moment().subtract(12,'months').endOf('month').format('YYYY-MM'),name:'12 month'},
       ],
-
+      imgSrc:"",
       newsList:[],
       clientCategory:[],
       search_news:'',
@@ -279,9 +280,10 @@ export default {
 
   },
   mounted(){
-
+    this.imgSrc=this.$server
     this.getCategories()
     this.getNews()
+
   }
 
 
