@@ -266,7 +266,7 @@ class AuthController{
                 result = social_res.error
                 break socialAuth
             }
-            let user = await Client.findOne(social_res.check)
+            let user = await Client.findOne(social_res.check).populate("news")
             if(user){
                 result = {
                     status: 500,
@@ -333,7 +333,7 @@ class AuthController{
                 result = social_res.error
                 break socialAuth
             }
-            let client = await Client.findOne(social_res.check)
+            let client = await Client.findOne(social_res.check).populate("news")
             
             if (!client) {
                 result = {
@@ -359,7 +359,6 @@ class AuthController{
                     expiresIn: 86400 // expires in 24 hours
                 }),
             }
-
         } catch (error) {
 
             result = sendError(error, lang)
