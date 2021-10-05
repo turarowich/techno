@@ -8,7 +8,7 @@
                 <img src="../../assets/icons/xBlack.svg" alt="">
               </span>
           </button>
-          <h3 class="modal-title" @click="sends">Push notification </h3>
+          <h3 class="modal-title" @click="sends">Push notification</h3>
         </div>
         <div class=" myModal-body">
           <div class="row">
@@ -141,8 +141,6 @@ export default {
         title:'',
         description:'',
         sendToAll:false
-
-
       }
     }
   },
@@ -226,9 +224,7 @@ export default {
       }
       else{
         this.selectAll = false;
-
       }
-
     },
     getNews(){
       this.axios.get(this.url('getNews'))
@@ -241,7 +237,9 @@ export default {
       this.clientList.forEach((client)=>{
         if(this.$refs[`select${client._id}`]!==undefined && this.$refs[`select${client._id}`] !== null){
           if(this.$refs[`select${client._id}`].checked === true){
-            new_data.clients.push(client._id)
+            if(!new_data.clients.includes(client._id)){
+              new_data.clients.push(client._id)
+            }
           }
         }
       })
@@ -255,8 +253,6 @@ export default {
       }
       else{
         const form = new FormData();
-
-
         if(new_data.news !== ''){
           form.append('news', new_data.news)
         }
@@ -271,7 +267,14 @@ export default {
             .then((res)=>{
               this.$successAlert('Push has been sent')
               console.log(res, 'Success push')
-
+              //clear
+              this.newData = {
+                clients:[],
+                news:'',
+                title:'',
+                description:'',
+                sendToAll:false
+              }
             })
         $('#push-notification').modal("hide")
       }

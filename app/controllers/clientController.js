@@ -497,18 +497,20 @@ class ClientController {
 
         let result = {
             'status': 200,
-            'msg': 'Devce added'
+            'msg': 'Device added'
         }
         try {
             let client = await Client.findById(req.fields.client)
             if (client) {
-                let device = await Device.findOne({ "token": req.fields.device_token})
+                // let device = await Device.findOne({ "token": req.fields.device_token})//old
+                let device = await Device.findOne({ "client": client})//new 04/10/21
                 if (device){
-                    device.client = req.fields.client
+                    // device.client = req.fields.client //old
+                    device.token = req.fields.device_token //new 04/10/21
                     device.save()
-                    result['msg'] = "Devce changed"
+                    result['msg'] = "Device changed"
                 }else{
-                    device = await new Device({
+                    await new Device({
                         client: req.fields.client,
                         token: req.fields.device_token,
                         type: req.fields.type

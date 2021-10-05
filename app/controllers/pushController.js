@@ -30,8 +30,13 @@ async function createClientNews(data, db){
     return clientNews
 }
 
+let thisClass;
+
 class PushController {
 
+    constructor() {
+        thisClass = this;
+    }
     sendNewsPN = async function (req, res) {
         let db = useDB(req.db)
         let News = db.model("News");
@@ -128,13 +133,13 @@ class PushController {
         }
     };
 
-    sendNewMessageAndroid = async function (req_db, client, message,title = "New message",type="chat") {
+    sendNewMessageAndroid =  async  function (req_db, client, message,title = "New message",type="chat") {
         console.log("sendNewMessageAndroid")
         let db = useDB(req_db)
         let Device = db.model("Device");
         const admin = require("../../app");
         try{
-            let devicesAndroid = await Device.find({ 'type': 'android', 'client': message.client })
+            let devicesAndroid = await Device.find({ 'type': 'android', 'client': client })
             console.log("sendNewMessageAndroid",devicesAndroid)
             // let registrationToken = ""
             // if(devicesAndroid.length > 0){
@@ -145,7 +150,12 @@ class PushController {
                     const message1 = {
                         notification : {
                             body : message.text,
-                            title: title
+                            title: title,
+                        },
+                        android: {
+                            notification: {
+                                sound: 'default'
+                            },
                         },
                         data: {
                             text: message.text,
@@ -174,7 +184,7 @@ class PushController {
 
 
     sendPushNotification = async function (req, res) {
-        console.log("sendPushNotification","ddddd----");
+        console.log(req.fields,"<<<<<<<<<<<<<<<<<<<<<>>");
         let db = useDB(req.db)
         let Device = db.model("Device");
         let Settings = db.model("Settings");
@@ -241,6 +251,18 @@ class PushController {
                     console.log("Faled to send message to ", error);
                 });
             }
+            //Android
+            try{
+                clients.split(',').forEach(client=>{
+                    let message={
+                        text:data.desc
+                    }
+                    thisClass.sendNewMessageAndroid(req.db,client,message,data.name,"notification")
+                })
+            }catch(andError){
+                console.log(andError)
+            }
+
             result['status'] = 200
             result['msg'] = "Sending push notifications"
         }
