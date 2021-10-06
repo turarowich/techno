@@ -2,6 +2,7 @@ var jwt = require('jsonwebtoken');
 var config = require('../config/config');
 
 function verifyTokenSocket(socket, next) {
+    
     // Header names in Express are auto-converted to lowercase
     // console.log(socket.id,"verifyTokenSocket",token,'o');
     var token = socket.handshake.headers.token
@@ -10,9 +11,10 @@ function verifyTokenSocket(socket, next) {
         // console.log(socket.id,"No verifyTokenSocket");
         next();
     }   
-
+    console.log("token is", token)
     jwt.verify(token, config.secret_key, function (err, decoded) {
         if (err){
+            console.log("verify token entered", err)
             // console.log(socket.id,`${err} verifyTokenSocket`);
             next();
         }
@@ -34,6 +36,7 @@ function verifyTokenSocket(socket, next) {
             socket.handshake.headers.selfRoom = "selfRoom" + decoded.user
             socket.join(socket.handshake.headers.selfRoom)
         }
+        
         next();
     });
 }
