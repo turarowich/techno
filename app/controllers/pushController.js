@@ -151,11 +151,14 @@ class PushController {
                         notification : {
                             body : message.text,
                             title: title,
+
                         },
                         android: {
                             notification: {
-                                sound: 'default'
+                                sound: 'default',
+                                // click_action: "ACTIVITY_FIRE"
                             },
+                            priority: "high"
                         },
                         data: {
                             text: message.text,
