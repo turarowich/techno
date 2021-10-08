@@ -318,8 +318,6 @@ props:['listCategory', 'getProducts'],
         form.append('vendorCode', new_product.vendorCode)
         form.append('recommend',new_product.recommend)
 
-
-
       this.axios.post(this.url('addProduct'), form)
             .then(() => {
               this.getProducts()

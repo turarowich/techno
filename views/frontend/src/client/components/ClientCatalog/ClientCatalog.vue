@@ -18,10 +18,12 @@
     </div>
     <input type="text" id="range-slider" name="example_name" value="" class="d-none"/>
     <div class="line"></div>
+    <div class="sticked-categories">
       <h3 class="price">Categories:</h3>
-    <ul class="list-group">
-      <li v-for="category in listCategory" :key="category._id" :class="{active: category._id === filtered}" class="catalog-list" @click="filtered=category._id">{{category.name}}</li>
-    </ul>
+      <ul class="list-group">
+        <li v-for="category in listCategory" :key="category._id" :class="{active: category._id === filtered}" class="catalog-list" @click="filtered=category._id">{{category.name}}</li>
+      </ul>
+    </div>
     </div>
     <div class="mobile-btns">
       <button  class="save" @click="showFilterCategory('category')" ><img class="list-icon" src="../../../assets/icons/list.svg"><span>Select categories</span></button>
@@ -30,9 +32,11 @@
           <h3 class="filter-category">Categories</h3>
           <img @click="removeFilterCategory('category')" class="close-nav" src="../../../assets/icons/xBlack.svg">
         </div>
-        <ul class="list-group">
-          <li v-for="category in listCategory" :key="category._id" :class="{active: category._id === filtered}" class="catalog-list" @click="displayFiltered(category._id)">{{category.name}}</li>
-        </ul>
+       <div style="height:calc(100% - 82px); overflow-y:auto">
+         <ul class="list-group p-0">
+           <li v-for="category in listCategory" :key="category._id" :class="{active: category._id === filtered}" class="catalog-list" @click="displayFiltered(category._id)">{{category.name}}</li>
+         </ul>
+       </div>
       </div>
       <div class="d-flex mb-3">
         <button class="app-buttons-item" @click="showFilterCategory('filter')"><img src="../../../assets/icons/filter-btn.svg"><span>Filters</span></button>
@@ -57,10 +61,11 @@
             <input class="client-input" v-model="to" style="width:100%">
           </div>
         </div>
-        <input type="text" id="range-slider2" name="example_name" value="" />
+        <input class="d-none" type="text" id="range-slider2" name="example_name" value="" />
         <button class=" show save" @click="removeFilterCategory('filter')">Show</button>
       </div>
       <div class="category-key">Category: <span class="category-value">{{showCategory}}</span></div>
+      <div class="backdrop-filter"></div>
     </div>
   </div>
 
@@ -184,6 +189,8 @@ name: "Catalog",
           }
         })
         $('.showCategory').removeClass('active')
+
+        $('.backdrop-filter').removeClass('active')
       $('body').css({'overflow':'auto'})
       },
     showFilterCategory(item){
@@ -193,12 +200,13 @@ name: "Catalog",
       else{
         $('.showFilter').addClass('active')
       }
-
-
-
-
-
+      $('.backdrop-filter').addClass('active')
+      $('body').css({'overflow':'hidden'})
+      document.body.style.top = `-${window.scrollY}px`;
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
     },
+
     removeFilterCategory(item){
       if(item === 'category'){
         $('.showCategory').removeClass('active')
@@ -208,6 +216,11 @@ name: "Catalog",
         $('.showFilter').removeClass('active')
       }
       $('body').css({'overflow':'auto'})
+      $('.backdrop-filter').removeClass('active')
+      const scrollY = document.body.style.top;
+      document.body.style.top = '';
+      document.body.style.position = '';
+      window.scrollTo(0, parseInt(scrollY || '0') * -1);
 
 
     },
@@ -319,9 +332,22 @@ name: "Catalog",
     -webkit-transform: scale(1);}
 }
 
-
-.showCategory.active, .showFilter.active{
+.backdrop-filter.active{
   display: block;
+}
+.backdrop-filter{
+  display: none;
+  width: 100%;
+  height:100%;
+  position: fixed;
+  top:0;
+  left: 0;
+  background: #000;
+  opacity:0.5;
+  z-index:1040;
+}
+.showCategory.active, .showFilter.active{
+  display:block;
   -webkit-animation: fadeIn 0.3s;
   animation-fill-mode:forwards;
 }
@@ -331,18 +357,14 @@ name: "Catalog",
   height: 100%;
   z-index:9999;
   top: 0;
-  left:0;
+  right:0;
   display: none;
-  overflow-y: scroll;
+  transition: .4s;
   background:#fff;
   padding:0 20px;
-  transition:.3s;
-  -webkit-animation: fadeIn 0.3s;
-  animation-fill-mode:forwards;
-  animation-direction: reverse;
-
 
 }
+
 .filter-category{
   font-size: 20px;
   color:#222;
@@ -409,6 +431,7 @@ name: "Catalog",
 }
 
 .catalog-list{
+  box-sizing: border-box;
   list-style-type: none;
   border:none;
   height: 35px;

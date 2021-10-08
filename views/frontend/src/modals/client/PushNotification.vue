@@ -117,13 +117,13 @@ export default {
   data(){
     return{
       lastMonth:[
-        {date: this.$moment().subtract(1,'months').endOf('month').format('YYYY-MM'), name:'1 month'},
-        {date: this.$moment().subtract(2,'months').endOf('month').format('YYYY-MM') , name:'2 month'},
-        {date: this.$moment().subtract(3,'months').endOf('month').format('YYYY-MM') , name:'3 month'},
-        {date: this.$moment().subtract(4,'months').endOf('month').format('YYYY-MM'), name:'4 month' },
-        {date: this.$moment().subtract(5,'months').endOf('month').format('YYYY-MM'), name:'5 month'},
-        {date: this.$moment().subtract(6,'months').endOf('month').format('YYYY-MM'), name:'6 month'},
-        {date: this.$moment().subtract(12,'months').endOf('month').format('YYYY-MM'),name:'12 month'},
+        {date: this.$moment().subtract(2,'months').endOf('month').format('YYYY-MM-DD'), name:'1 month'},
+        {date: this.$moment().subtract(3,'months').endOf('month').format('YYYY-MM-DD') , name:'2 month'},
+        {date: this.$moment().subtract(4,'months').endOf('month').format('YYYY-MM-DD') , name:'3 month'},
+        {date: this.$moment().subtract(5,'months').endOf('month').format('YYYY-MM-DD'), name:'4 month' },
+        {date: this.$moment().subtract(6,'months').endOf('month').format('YYYY-MM-DD'), name:'5 month'},
+        {date: this.$moment().subtract(7,'months').endOf('month').format('YYYY-MM-DD'), name:'6 month'},
+        {date: this.$moment().subtract(13,'months').endOf('month').format('YYYY-MM-DD'),name:'12 month'},
       ],
       imgSrc:"",
       newsList:[],
@@ -134,7 +134,7 @@ export default {
       selectAll:false,
       filterClient:'',
       newsObj:'',
-      last_purchase_filter:'',
+      last_purchase_filter:'2021-08-01',
       newData:{
         clients:[],
         news:'',
@@ -146,7 +146,6 @@ export default {
   },
   computed:{
     filteredClients(){
-
       return this.clientList
           .filter((item)=>{
             return item.name.toLowerCase().includes(this.search_client.toLowerCase())
@@ -158,6 +157,12 @@ export default {
               return item;
             }
           })
+          // .filter((item)=>{
+          //    if(item.last_purchase){
+          //      return new Date(item.last_purchase).getTime() >= new Date(this.last_purchase_filter).getTime()
+          //
+          //    }
+          // })
 
 
 
@@ -200,11 +205,11 @@ export default {
           })
     },
     toggleSelect(){
+      console.log(new Date(this.last_purchase_filter).getTime())
       this.clientList.forEach((client)=>{
         if(this.$refs[`select${client._id}`]!==undefined && this.$refs[`select${client._id}`] !== null){
           if(this.selectAll === false){
             this.$refs[`select${client._id}`].checked = true
-
           }
           else{
             this.$refs[`select${client._id}`].checked = false
@@ -216,7 +221,6 @@ export default {
       if(this.$refs[`select${item._id}`] !== null){
         return  this.$refs[`select${item._id}`].checked === true
       }
-
     },
     checkMainSelect() {
       if(this.clientList.every(this.checkAll)){

@@ -715,7 +715,8 @@ export default {
           item['total'] = item.orders.reduce((acc,it)=>acc+it.totalPrice, 0);
           item['number_of_purchase'] = item.orders.length;
           if(item.orders.length>0){
-            item['last_purchase'] = new Date(Math.max(...item.orders.map(e => new Date(e.createdAt))))
+            item['last_purchase'] = new Date(Math.max(...item.orders.map(e=>new Date(e.createdAt))));
+          //new Date(Math.max(...item.orders.map(e => new Date(e.createdAt))))
           }
           if(!item.category){
             item['category']=null
