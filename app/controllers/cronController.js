@@ -211,7 +211,49 @@ usedBdPointsCheck = async function (ordersModel, clientObject,history) {
     return result;
 }
 
+checkSchedulePush = async function () {
+    let today = moment()
+    let dayOfTheWeek = today.day();
+    let companies = [];
+    let clientsTodayWithDb = [];
+
+    // try{
+    //     await global.userConnection.useDb('loygift').model("User").find({}, function (err, users) {
+    //         users.forEach(function (user) {
+    //             companies.push(user._id)
+    //         });
+    //     });
+    //     for (const id of companies) {
+    //         await global.userConnection.useDb(`loygift${id}`).model("SchedulePush").find({}, function (err, pushes) {
+    //             pushes.forEach(function (push) {
+    //                 //check if active
+    //                 //check date/day
+    //                 if(push.isActive){
+    //
+    //
+    //                 }
+    //
+    //                 // let birthDay = moment(client.birthDate)
+    //                 // if(birthDay.isSame(today,'day')){
+    //                 //     clientsTodayWithDb.push({
+    //                 //         companyDb:`loygift${id}`,
+    //                 //         clientId:client._id
+    //                 //     })
+    //                 // }
+    //
+    //
+    //
+    //             });
+    //         });
+    //     }
+    // }catch (e){
+    //     console.log(e,"ERRRfffffffffffffffffffffffffffffffffff")
+    // }
+};
+
+
 module.exports = {
     checkAllClients,
-    checkBirthdayPointsLife
+    checkBirthdayPointsLife,
+    checkSchedulePush
 }
