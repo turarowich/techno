@@ -2,6 +2,41 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const schedulePushSchema = new Schema({
+    monthDates:[
+        {
+            date: {
+                type: String,
+                required: true,
+                default: ""
+            },
+            isActive: {
+                type: Boolean,
+                required: true,
+                default: false
+            },
+            push:[{
+                time: {
+                    type: String,
+                    required: false,
+                    default: ""
+                },
+                title: {
+                    type: String,
+                    required: false,
+                    default: ""
+                },
+                desc: {
+                    type: String,
+                    required: false,
+                    default: ""
+                },
+                sendAt:{
+                    type: Date,
+                    required: false,
+                }
+            }],
+        },
+    ],
     clients: [{
         type: Schema.Types.ObjectId,
         ref: 'Client'

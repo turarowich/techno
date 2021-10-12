@@ -82,20 +82,76 @@
                 <!-- By Month  -->
 
                 <div v-show="value === 'month'" >
-                  <div id="months" >
-                    <section>
-                    </section>
+
+                  <div ref="monthDatesWrapper" class="monthDates" >
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('1')}" class="days d-flex justify-content-center align-items-center">1</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('2')}" class="days d-flex justify-content-center align-items-center">2</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('3')}" class="days d-flex justify-content-center align-items-center">3</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('4')}" class="days d-flex justify-content-center align-items-center">4</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('5')}" class="days d-flex justify-content-center align-items-center">5</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('6')}" class="days d-flex justify-content-center align-items-center">6</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('7')}" class="days d-flex justify-content-center align-items-center">7</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('8')}" class="days d-flex justify-content-center align-items-center">8</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('9')}" class="days d-flex justify-content-center align-items-center">9</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('10')}" class="days d-flex justify-content-center align-items-center">10</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('11')}" class="days d-flex justify-content-center align-items-center">11</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('12')}" class="days d-flex justify-content-center align-items-center">12</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('13')}" class="days d-flex justify-content-center align-items-center">13</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('14')}" class="days d-flex justify-content-center align-items-center">14</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('15')}" class="days d-flex justify-content-center align-items-center">15</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('16')}" class="days d-flex justify-content-center align-items-center">16</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('17')}" class="days d-flex justify-content-center align-items-center">17</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('18')}" class="days d-flex justify-content-center align-items-center">18</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('19')}" class="days d-flex justify-content-center align-items-center">19</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('20')}" class="days d-flex justify-content-center align-items-center">20</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('21')}" class="days d-flex justify-content-center align-items-center">21</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('22')}" class="days d-flex justify-content-center align-items-center">22</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('23')}" class="days d-flex justify-content-center align-items-center">23</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('24')}" class="days d-flex justify-content-center align-items-center">24</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('25')}" class="days d-flex justify-content-center align-items-center">25</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('26')}" class="days d-flex justify-content-center align-items-center">26</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('27')}" class="days d-flex justify-content-center align-items-center">27</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('28')}" class="days d-flex justify-content-center align-items-center">28</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('29')}" class="days d-flex justify-content-center align-items-center">29</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('30')}" class="days d-flex justify-content-center align-items-center">30</div>
+                    <div :class="{active: listOfActiveMonthDatesNumbers.includes('31')}" class="days d-flex justify-content-center align-items-center">31</div>
                   </div>
                   <div class="d-flex justify-content-between">
                     <div class="d-flex align-items-center mb-4">
                       <label class="switch d-flex">
-                        <input  type="checkbox">
+                        <input
+                            @change="setMonthDateActive"
+                            type="checkbox"
+                            true-value="true"
+                            false-value="false"
+                            v-model="selectedMonthDate.isActive"
+                            >
                         <span class="slider round"></span>
                       </label>
-                      <h2 class="selected-day">March 27 - April 12</h2>
+                      <h2 class="selected-day">{{selectedMonthDate.date}}</h2>
                     </div>
-                    <span class="add-more">+ Add more</span>
+                    <span class="add-more" @click="addContentMonth">+ Add more</span>
                   </div>
+
+                  <div v-for="(item,index) in selectedMonthDate.push" :key="index" >
+                    <div class="d-flex mb-3">
+                      <div style="width:25%" class="mr-3">
+                        <label>Time</label><br>
+                        <select v-model="item.time"  class=" form-control  mr-2  form-control-lg" aria-label=".form-select-lg example">
+                          <option v-for="(hours,index) in working_hours" :key="index" :value="hours">{{hours}}</option>
+                        </select>
+                      </div>
+                      <div class="titles" style="width:85%">
+                        <label>Title</label><br>
+                        <input v-model="item.title" class=" cashback-input">
+                        <img v-show="index!==0" @click="removeContentMonth(index)" class="remove-content" style="width:18px;height:18px;" src="../../assets/icons/xx.svg">
+                      </div>
+
+                    </div>
+                    <label >Description</label><br>
+                    <textarea v-model="item.desc"  class="general-area"></textarea>
+                  </div>
+
                 </div>
 
               <!----- By week-- -->
@@ -161,12 +217,18 @@
 
 <script>
 import $ from "jquery";
-
 export default {
   name: "AddPush",
   props:['getSchedulePushes'],
   data(){
     return {
+      listOfActiveMonthDates:[],
+      listOfActiveMonthDatesNumbers:[],
+      selectedMonthDate:{
+        date:"",
+        isActive:false,
+        push:[]
+      },
       working_hours:[
         '01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00',
         '13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00','00:00',
@@ -180,6 +242,7 @@ export default {
       value:'week',
       selectedClients:[],
       week:{
+        byWeek:this.value === "week",
         monday: {isActive:true, push:[{time:'',title: '',desc:''}],name:'monday'},
         tuesday:{isActive:true, push:[{time:'',title: '',desc:''}],name:'tuesday'},
         wednesday:{isActive:true, push:[{time:'',title: '',desc:''}],name:'wednesday'},
@@ -192,7 +255,6 @@ export default {
         title: "",
         isActive:true
       }
-
     }
   },
   computed:{
@@ -205,6 +267,7 @@ export default {
   },
   methods:{
     onSubmit(){
+      this.week.monthDates = this.listOfActiveMonthDates;
       if(this.week.title === ''){
         this.push_title = true
       }
@@ -214,16 +277,14 @@ export default {
       else{
         const that = this;
         this.axios.post(this.url('addSchedulePush'),this.week)
-            .then(()=>{
-              this.$successAlert('Push has been added')
-              this.getSchedulePushes()
-              $('#add-push').modal("hide");
-              this.push_title = false
-              that.week.clients = [];
-              this.week.title = ''
-            })
-
-
+          .then(()=>{
+            this.$successAlert('Push has been added')
+            this.getSchedulePushes()
+            $('#add-push').modal("hide");
+            this.push_title = false
+            that.week.clients = [];
+            this.week.title = ''
+          })
       }
     },
     setDay(day){
@@ -244,12 +305,25 @@ export default {
       }
 
     },
+    addContentMonth(){
+      if(this.selectedMonthDate.push.length<3){
+        this.selectedMonthDate.push.push({time:'',title: '',desc:''})
+      }
+      else{
+        this.$warningAlert('Max is 3')
+      }
+    },
     removeContent(el){
         this.selectedDay.push = this.selectedDay.push.filter((item,index)=>{
           console.log(item)
           return el!==index
         })
 
+    },
+    removeContentMonth(el){
+      this.selectedMonthDate.push = this.selectedMonthDate.push.filter((item,index)=>{
+        return el!==index
+      })
     },
     cancel(){
       $('#add-push').modal("hide")
@@ -287,29 +361,80 @@ export default {
       this.selectedClients = this.selectedClients.filter((item)=> item !== client)
       this.week.clients = this.week.clients.filter((item)=>item !== client._id)
     },
-
+    setMonthDateActive(){
+      let newDate = true;
+      let isActive = this.selectedMonthDate.isActive
+      this.listOfActiveMonthDates.forEach((date,index)=>{
+        if(date.date === this.selectedMonthDate.date){
+          if(isActive === "true"){
+            date.isActive = isActive;
+            newDate = false;
+          }else{
+            //remove
+            this.listOfActiveMonthDates.splice(index,1)
+            this.listOfActiveMonthDatesNumbers.splice(index,1)
+          }
+        }
+      })
+      if(newDate && isActive === "true"){
+        this.listOfActiveMonthDates.push({
+          date:this.selectedMonthDate.date,
+          push:this.selectedMonthDate.push,
+          isActive:isActive,
+        })
+        this.listOfActiveMonthDatesNumbers.push(this.selectedMonthDate.date)
+      }
+    },
+    setMonthDate(date){
+      function isNumeric(str) {
+        if (typeof str != "string") return false // we only process strings!
+        return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+            !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
+      }
+      if(isNumeric(date)){
+        this.selectedMonthDate.date = date;
+        let newDate = true;
+        this.listOfActiveMonthDates.forEach(date=>{
+          if(date.date === this.selectedMonthDate.date){
+            this.selectedMonthDate.isActive = date.isActive;
+            this.selectedMonthDate.push = date.push
+            newDate = false;
+          }
+        })
+        if(newDate){
+          this.selectedMonthDate.isActive = false;
+          this.selectedMonthDate.push = [{time:'',title: '',desc:''}];
+        }
+      }
+    },
+    clickOnMonthDate(elem){
+      if(elem.target.classList.contains("days")){
+        this.setMonthDate(elem.target.innerText)
+      }
+    }
   },
   mounted(){
     this.getCategories()
     this.getClients();
-    new this.$lightpick({
-      format:'',
-      autoClose:false,
-      field: document.getElementById('months'),
-      parentEl:'section',
-      lang:'en',
-      inline:true,
-    });
-    this.selectedDay = this.week.monday;
-
-      this.imgSrc=this.$server
-
+    this.imgSrc=this.$server
+    this.$refs.monthDatesWrapper.addEventListener('click', this.clickOnMonthDate);
+  },
+  unmounted() {
+    if(this.$refs.monthDatesWrapper){
+      this.$refs.monthDatesWrapper.removeEventListener('click', this.clickOnMonthDate);
+    }
   }
-
 }
 </script>
 
 <style scoped>
+.monthDates{
+  display: flex;
+  flex-wrap: wrap;;
+}
+.monthDates .days{
+  margin-bottom: 10px;
+}
 .is_active{
   color:#616cf5 !important;
 }
@@ -322,9 +447,6 @@ export default {
   position: absolute;
   right: -30px;
   top: 38px;
-}
-#months{
-  margin-bottom: 20px;
 }
 .selected-day{
   font-size: 16px;

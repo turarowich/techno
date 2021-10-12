@@ -1,6 +1,8 @@
 const moment = require("moment");
 const pushController = require('./pushController');
 const { useDB} = require('../../services/helper')
+const { CronJob }= require('cron');
+
 checkAllClients = async function () {
     let today = moment()
     let companies = [];
@@ -211,49 +213,181 @@ usedBdPointsCheck = async function (ordersModel, clientObject,history) {
     return result;
 }
 
-checkSchedulePush = async function () {
-    let today = moment()
-    let dayOfTheWeek = today.day();
-    let companies = [];
-    let clientsTodayWithDb = [];
 
-    // try{
-    //     await global.userConnection.useDb('loygift').model("User").find({}, function (err, users) {
-    //         users.forEach(function (user) {
-    //             companies.push(user._id)
-    //         });
-    //     });
-    //     for (const id of companies) {
-    //         await global.userConnection.useDb(`loygift${id}`).model("SchedulePush").find({}, function (err, pushes) {
-    //             pushes.forEach(function (push) {
-    //                 //check if active
-    //                 //check date/day
-    //                 if(push.isActive){
-    //
-    //
-    //                 }
-    //
-    //                 // let birthDay = moment(client.birthDate)
-    //                 // if(birthDay.isSame(today,'day')){
-    //                 //     clientsTodayWithDb.push({
-    //                 //         companyDb:`loygift${id}`,
-    //                 //         clientId:client._id
-    //                 //     })
-    //                 // }
-    //
-    //
-    //
-    //             });
-    //         });
-    //     }
-    // }catch (e){
-    //     console.log(e,"ERRRfffffffffffffffffffffffffffffffffff")
-    // }
+class CronManager {
+    constructor() {
+        this._jobs = {};
+    }
+    add(name, periodText, fn) {
+        this._jobs[name] = {
+            name,
+            cron: new CronJob(periodText, fn, null, true)
+        };
+    }
+    stop(name) {
+        delete this._jobs[name];
+    }
+    delete(name) {
+        delete this._jobs[name];
+    }
+    stopAll() {
+        for (let cron in this._jobs) {
+            let activeCron = this._jobs[cron].cron.running;
+            if (activeCron.running) {
+                activeCron.stop();
+            }
+        }
+    }
+    list() {
+        return this._jobs;
+    }
+    running(name) {
+        return this._jobs[name].cron.running;
+    }
+    lastDate(name) {
+        return this._jobs[name].cron.lastDate();
+    }
+    nextDates(name) {
+        return this._jobs[name].cron.nextDates();
+    }
+}
+
+//init cronManager for scheduling
+const cronManager = new CronManager();
+
+sendScheduledPush = async function (companyDb,clientIds,messageBody,messageTitle) {
+    for (const clientId of clientIds) {
+        let message={
+            client:clientId,
+            text: messageBody,
+        }
+        try {
+            // try {
+            //     await pushController.sendNewMessage(companyDb, clientId, message, messageTitle)
+            // } catch (e) {
+            //     console.log(e)
+            // }
+            try {
+                await pushController.sendNewMessageAndroid(companyDb, clientId, message, messageTitle, "notification")
+            } catch (e) {
+                console.log(e)
+            }
+        } catch (e) {
+            console.log(e, "ERROeR")
+        }
+    }
+}
+
+const createCronJob = async function (schedulePush,company) {
+    let weekNames = ["sunday","monday","tuesday","wednesday","thirsday","friday","saturday"]  // Thirsday XD -- have to refactor everywhere
+    //check if active
+    //check date/day
+    //check type - week or day
+    if (schedulePush.isActive) {
+        //check clients
+        let clients = [];
+        if (schedulePush.sendToAll) {
+            let clientObjects = await global.userConnection.useDb(company).model("Client").find({});
+            clients = clientObjects.map(element => element._id);
+        } else {
+            clients = schedulePush.clients;
+        }
+        //
+        if (schedulePush.byWeek) {
+            weekNames.forEach((day, index) => {
+                if (schedulePush[day].isActive) {
+                    let allPushes = schedulePush[day].push;
+                    allPushes.forEach(function (push) {
+                        if (push.time !== "") {
+                            let time = push.time;
+                            let hour = time.split(':')[0];
+                            let cronPeriod = `0 ${hour} * * ${index}`;
+                            console.log(cronPeriod,"CRON PERIOD")
+                            // let cronPeriod = `26 14 * * ${index}`;
+                            let name = `${day}-${push._id}-${schedulePush._id}`;
+                            cronManager.add(name, cronPeriod,function (){
+                                sendScheduledPush(
+                                    company,
+                                    clients,
+                                    push.desc,
+                                    push.title
+                                )
+                            })
+                        }
+                    })
+                }
+            })
+        } else {
+            schedulePush.monthDates.forEach(pushDate=>{
+                if (pushDate.isActive) {
+                    let allPushes = pushDate.push;
+                    allPushes.forEach(function (push) {
+                        if (push.time !== "") {
+                            let time = push.time;
+                            let hour = time.split(':')[0];
+                            let cronPeriod = `0 ${hour} ${pushDate.date} * *`;
+                            console.log(cronPeriod,"CRON PERIOD month")
+                            // let cronPeriod = `26 14 * * ${index}`;
+                            let name = `${pushDate.date}-${push._id}-${schedulePush._id}`;
+                            cronManager.add(name, cronPeriod,function (){
+                                sendScheduledPush(
+                                    company,
+                                    clients,
+                                    push.desc,
+                                    push.title
+                                )
+                            })
+                        }
+                    })
+                }
+            })
+        }
+    }
+}
+
+const removeCronJob = async function (schedulePushId="") {
+    Object.keys(cronManager.list()).forEach(job=>{
+        if(job.includes(schedulePushId)){
+            cronManager.delete(job);
+        }
+    })
+}
+
+checkSchedulePush = async function () {
+    let companies = [];
+    try{
+        await global.userConnection.useDb('loygift').model("User").find({}, function (err, users) {
+            users.forEach(function (user) {
+                companies.push(user._id)
+            });
+        });
+        for (const id of companies) {
+            await global.userConnection.useDb(`loygift${id}`).model("SchedulePush").find({}, async function (err, schedulePushes) {
+                for (const schedulePush of schedulePushes) {
+                    await createCronJob(schedulePush,`loygift${id}`);
+                }
+            });
+        }
+    }catch (e){
+        console.log(e,"ERRR6")
+    }
 };
 
+const testStart = function (){
+    console.log("KING")
+    console.log(Object.keys(cronManager.list()))
+    for (const [key, value] of Object.entries(cronManager.list())) {
+        console.log(`${key}: ${value.cron.cronTime}`);
+    }
+}
+global["cronJobMethods"] = {
+    createCronJob,
+    removeCronJob
+}
+cronManager.add("test","* * * * *",testStart)
 
 module.exports = {
     checkAllClients,
     checkBirthdayPointsLife,
-    checkSchedulePush
+    checkSchedulePush,
 }

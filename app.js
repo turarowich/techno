@@ -162,9 +162,7 @@ admin.initializeApp({
 
 //cron
 const cronController = require("./app/controllers/cronController")
-
-// cronController.checkSchedulePush();
-
+cronController.checkSchedulePush();
 const job = cron.schedule('0 1 * * *', () => {
     //Cron job every day at 1am
     console.log('STARTED CRON');
@@ -173,6 +171,9 @@ const job = cron.schedule('0 1 * * *', () => {
 });
 job.start();
 // cron end
+
+
+
 
 
 module.exports = admin

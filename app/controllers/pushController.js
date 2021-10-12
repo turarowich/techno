@@ -140,14 +140,10 @@ class PushController {
         const admin = require("../../app");
         try{
             let devicesAndroid = await Device.find({ 'type': 'android', 'client': client })
-            console.log("sendNewMessageAndroid",devicesAndroid)
-            // let registrationToken = ""
-            // if(devicesAndroid.length > 0){
-            //     registrationToken = devicesAndroid[3].token
-            // }
             devicesAndroid.forEach(function (device){
                 try{
                     const message1 = {
+                        // priority: "high",
                         notification : {
                             body : message.text,
                             title: title,
@@ -324,8 +320,11 @@ class PushController {
                 user_id: req.userID,
                 icon: "add"
             }).save()
-            schedulePush = await SchedulePush.find({ '_id': schedulePush._id}).populate('clients').exec()
-            result['object'] = schedulePush
+
+            result['object'] = await SchedulePush.find({ '_id': schedulePush._id}).populate('clients').exec()
+
+            await global.cronJobMethods.createCronJob(schedulePush, db)
+
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
@@ -353,8 +352,13 @@ class PushController {
                 user_id: req.userID,
                 icon: "update"
             }).save()
-            schedulePush = await SchedulePush.find({ '_id': schedulePush._id }).populate('clients').exec()
-            result['object'] = schedulePush
+            result['object'] = await SchedulePush.find({ '_id': schedulePush._id }).populate('clients').exec()
+
+            //
+            let newSchedulePush = await SchedulePush.findById(schedulePush.id);
+
+            await global.cronJobMethods.removeCronJob(schedulePush._id)
+            await global.cronJobMethods.createCronJob(newSchedulePush, db)
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
@@ -383,6 +387,7 @@ class PushController {
                 }).save()
             }
             await SchedulePush.findByIdAndRemove(query)
+            await global.cronJobMethods.removeCronJob(schedulePush._id)
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
