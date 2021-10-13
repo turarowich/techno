@@ -262,11 +262,11 @@ sendScheduledPush = async function (companyDb,clientIds,messageBody,messageTitle
             text: messageBody,
         }
         try {
-            // try {
-            //     await pushController.sendNewMessage(companyDb, clientId, message, messageTitle)
-            // } catch (e) {
-            //     console.log(e)
-            // }
+            try {
+                await pushController.sendNewMessage(companyDb, clientId, message, messageTitle)
+            } catch (e) {
+                console.log(e)
+            }
             try {
                 await pushController.sendNewMessageAndroid(companyDb, clientId, message, messageTitle, "notification")
             } catch (e) {
@@ -374,7 +374,6 @@ checkSchedulePush = async function () {
 };
 
 const testStart = function (){
-    console.log("KING")
     console.log(Object.keys(cronManager.list()))
     for (const [key, value] of Object.entries(cronManager.list())) {
         console.log(`${key}: ${value.cron.cronTime}`);
@@ -384,7 +383,7 @@ global["cronJobMethods"] = {
     createCronJob,
     removeCronJob
 }
-cronManager.add("test","* * * * *",testStart)
+// cronManager.add("test","* * * * *",testStart)
 
 module.exports = {
     checkAllClients,
