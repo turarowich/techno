@@ -134,7 +134,7 @@ class PushController {
     };
 
     sendNewMessageAndroid =  async  function (req_db, client, message,title = "New message",type="chat") {
-        console.log("sendNewMessageAndroid")
+        console.log("sendNewMessageAndroid",req_db)
         let db = useDB(req_db)
         let Device = db.model("Device");
         const admin = require("../../app");
@@ -323,7 +323,7 @@ class PushController {
 
             result['object'] = await SchedulePush.find({ '_id': schedulePush._id}).populate('clients').exec()
 
-            await global.cronJobMethods.createCronJob(schedulePush, db)
+            await global.cronJobMethods.createCronJob(schedulePush, req.db)
 
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
@@ -358,7 +358,7 @@ class PushController {
             let newSchedulePush = await SchedulePush.findById(schedulePush.id);
 
             await global.cronJobMethods.removeCronJob(schedulePush._id)
-            await global.cronJobMethods.createCronJob(newSchedulePush, db)
+            await global.cronJobMethods.createCronJob(newSchedulePush, req.db)
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
