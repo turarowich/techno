@@ -4,7 +4,7 @@
       <div class="modal-content myModal-content h-100">
         <div class="modal-header justify-content-start align-items-center">
 
-          <button type="button" data-dismiss="modal" aria-label="Close" class="close">
+          <button type="button" @click="cancel" aria-label="Close" class="close">
               <span aria-hidden="true">
                 <img src="../../assets/icons/x.svg" alt="">
               </span>
