@@ -41,29 +41,56 @@
                 <label>Description</label>
                 <textarea v-model="currentData.description" class="general-area p-3 mb-3" style="height:160px"   name="description"></textarea>
 
-                <div class="d-flex mb-3">
+              <div class="d-flex mb-3">
+                <label class="custom-checkbox">
+                  <input v-model="currentData.hasMultipleTypes"   type="checkbox">
+                  <span class="checkmark"></span>
+                </label>
+                <span>Has Sizes</span>
+              </div>
+              <div v-if="currentData.hasMultipleTypes">
+                <div>SIZES</div>
+                <div class="d-flex" style="justify-content: space-between;">
+                  <div style="flex: 1 1 0px">Size</div>
+                  <div style="flex: 1 1 0px">Quantity</div>
+                  <div style="flex: 1 1 0px">Price</div>
+                  <div style="flex: 1 1 0px">VendorCode</div>
+                </div>
+                <div v-for="(size, index) in currentData.sizes" :key="index" class="d-flex" style="justify-content: space-between;">
+                  <div style="flex: 1 1 0px">{{ size.size }}</div>
+                  <div style="flex: 1 1 0px">{{ size.quantity }}</div>
+                  <div style="flex: 1 1 0px">{{ size.price }} </div>
+                  <div style="flex: 1 1 0px">{{ size.vendorCode }}</div>
+                </div>
+              </div>
+
+                <div v-else class="d-flex ">
+                  <div style=" width:33.33%; margin-right:8px;">
+                    <label>Price</label>
+                    <input :class="{errorInput: validatePrice}" name="price" v-model="currentData.price" class="form-input cashback-input" placeholder="Price"  >
+                    <div v-if="validatePrice" class="fill-fields">Fill in the fields</div>
+                  </div>
+
+                  <div style="width:33.33%;">
+                    <label>Vendor Code</label>
+                    <input name="vendorCode" v-model="currentData.vendorCode"  class="form-input cashback-input mb-4" placeholder="Vendor code"  >
+                  </div>
+                </div>
+
+                <div class="d-flex mb-3 mt-3">
                   <label class="custom-checkbox">
                     <input v-model="showPrice" @change="checkDiscount"  id="edit-show-price" type="checkbox">
                     <span class="checkmark"></span>
                   </label>
                   <span>Discount</span>
                 </div>
-
                 <div class="d-flex ">
-                  <div style=" width:33.33%; margin-right:8px;">
-                    <label>Price</label>
-                    <input :class="{errorInput: validatePrice}" name="price" v-model="currentData.price" class="form-input cashback-input" placeholder="Price"  >
-                    <div v-if="validatePrice" class="fill-fields">Fill in the fields</div>
-                  </div>
                   <div v-if="showPrice"  style="width:33.33%; margin-right:8px;">
-                    <label>Promotional prices</label>
+                    <label>Promotional price (for all sizes)</label>
                     <input :class="{errorInput:validatePromoPrice}"  name="promoPrice" v-model="currentData.promoPrice" class="form-input cashback-input" placeholder="Price">
                     <div class="fill-fields" v-if="validatePromoPrice">Fill in the fields</div>
                   </div>
-                  <div style="width:33.33%;">
-                    <label>Vendor Code</label>
-                    <input name="vendorCode" v-model="currentData.vendorCode"  class="form-input cashback-input mb-4" placeholder="Vendor code"  >
-                  </div>
+
                 </div>
 
                 <label class="valid-label mt-4">Period of action</label>
@@ -105,14 +132,6 @@
                       <input @change="onFileChange($event)" ref="addImage" class="d-none" multiple id="imgsArray" type="file" name="imgArray">
                     </label>
                     <div  class="d-flex">
-                      <!--                   <div v-if="currentData.img">-->
-                      <!--                      <img v-if="typeof currentData.img === 'string'" :src="imgSrc+'/'+currentData.img" class="show-images mr-2">-->
-                      <!--                      <img v-else :src="mainImg" class="show-images mr-2">-->
-
-                      <!--                   </div>-->
-                      <!--                    <div v-if="currentData.img" class="selected-overlay">-->
-                      <!--                      <img  @click="currentData.img = ''" class="remove-images" src="../../../assets/icons/deleteClient.svg">-->
-                      <!--                    </div>-->
                       <div v-for="(img, index) in imagePreview" :key="index" >
                         <div v-if="img" class="selected-images">
                           <img v-if="img ? img.startsWith('images'): ''" :src="imgSrc+'/'+img" class="show-images mr-2" />
@@ -369,7 +388,6 @@ export default {
       form.append("recommend", updatedProduct.recommend)
       form.append('promoStart',this.promoStart.obj)
       form.append('promoEnd',this.promoEnd.obj)
-
 
       if(updatedProduct.promoPrice > updatedProduct.price){
         this.$warningAlert("Promotional price must be < original price")

@@ -16,13 +16,6 @@ export default createStore({
         Client: ClientModule,
         Message :MessageModule
     },
-    // plugins: [createPersistedState({
-    //     storage: {
-    //         getItem: key => Cookies.get(key),
-    //         setItem: (key, value) => Cookies.set(key, value, { expires: 1, secure: false }),
-    //         removeItem: key => Cookies.remove(key)
-    //     }
-    // })],
     plugins: [createPersistedState()],
     state: {},
     mutations: {},

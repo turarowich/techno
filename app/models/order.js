@@ -59,6 +59,10 @@ const orderSchema = new Schema({
             type: String,
             required: false,
         },
+        size:{
+            type: Schema.Types.Mixed,
+            required: false,
+        },
     }],
     personalDiscount: {
         percent:{

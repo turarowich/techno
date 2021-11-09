@@ -49,7 +49,13 @@
                   <div style="width:60%">
                     <h3 class="basket-title long-text">{{ cart_item.product.name }}</h3>
                     <div class="d-flex">
-                      <span class="basket-code" style="flex: 3;">{{ cart_item.product.vendorCode }}</span>
+                      <span v-if="cart_item.product.hasMultipleTypes && cart_item.size._id !== ''" class="basket-code" style="flex: 3;">
+                        {{ cart_item.size.vendorCode }}
+                      </span>
+                      <span v-else class="basket-code" style="flex: 3;">
+                        {{ cart_item.product.vendorCode }}
+                      </span>
+
                       <span class="basket-code" style="flex: 2;">{{ cart_item.quantity }}x</span>
                     </div>
                   </div>
@@ -179,7 +185,11 @@ export default {
       }
       let url = this.url('addOrderWeb');
       let products = this.shoppingCart.map(function (order){
-        return {id:order.product._id,quantity:order.quantity}
+        return {
+          id:order.product._id,
+          quantity:order.quantity,
+          size:order.size
+        }
       })
       let data = {
         guest:this.guest,

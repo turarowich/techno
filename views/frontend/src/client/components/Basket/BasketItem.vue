@@ -9,7 +9,10 @@
         </div>
         <div class="name-vendorCode">
           <h3 class="table-title">{{item.product.name}}</h3>
-          <span style="color:#b0b0b0">{{item.product.vendorCode}}</span>
+
+          <span v-if="item.size._id !== undefined && item.product.hasMultipleTypes" style="color:#b0b0b0">{{item.size.vendorCode}}</span>
+          <span v-else style="color:#b0b0b0">{{item.product.vendorCode}}</span>
+
         </div>
       </div>
       <div style="width:30%" class="basket-amount">
@@ -17,20 +20,37 @@
           <h3 class="table-title long-text">{{item.product.name}}</h3>
           <span style="color:#b0b0b0">{{item.product.vendorCode}}</span>
         </div>
-        <button class="decrease mb-0" @click="decrease(item.product._id)">-</button>
+        <button v-if="item.size._id !== undefined && item.product.hasMultipleTypes" class="decrease mb-0" @click="decreaseType(item.product._id,item.size._id)">-</button>
+        <button v-else class="decrease mb-0" @click="decrease(item.product._id)">-</button>
         <span class="count">{{item.quantity}}</span>
-        <button class="increase mb-0" @click="increase(item.product._id,item.product.quantity,item.quantity)">+</button>
+
+
+        <button v-if="item.size._id !== undefined && item.product.hasMultipleTypes"  class="increase mb-0" @click="increaseType(item.product._id,item.size._id,item.size.quantity,item.quantity)">+</button>
+        <button v-else class="increase mb-0" @click="increase(item.product._id,item.product.quantity,item.quantity)">+</button>
+
+
       </div>
       <div style="width:30%;">
         <span>
           {{item.current_price}} {{catalog_settings.currency}}
         </span>
         <br>
-        <div v-if="item.current_price<(item.product.price*item.quantity)" class="discounts_block">
-          <span class="lineThrough mr-2">{{item.product.price*item.quantity}} {{catalog_settings.currency}}</span>
-          <span style="color: #E94A4A;" v-if="item.isDiscounted">Discount <span class="break-discount">{{item.discount_sum}} {{catalog_settings.currency}}</span></span>
-          <span style="color: #E94A4A;" v-else>Discount {{item.discount_percent_sum}} {{catalog_settings.currency}}</span>
+
+        <div v-if="item.size._id !== undefined && item.product.hasMultipleTypes">
+          <div v-if="item.current_price<(item.size.price*item.quantity)" class="discounts_block">
+            <span class="lineThrough mr-2">{{item.size.price*item.quantity}} {{catalog_settings.currency}}</span>
+            <span style="color: #E94A4A;" v-if="item.isDiscounted">Discount <span class="break-discount">{{item.discount_sum}} {{catalog_settings.currency}}</span></span>
+            <span style="color: #E94A4A;" v-else>Discount {{item.discount_percent_sum}} {{catalog_settings.currency}}</span>
+          </div>
         </div>
+        <div v-else>
+          <div v-if="item.current_price<(item.product.price*item.quantity)" class="discounts_block">
+            <span class="lineThrough mr-2">{{item.product.price*item.quantity}} {{catalog_settings.currency}}</span>
+            <span style="color: #E94A4A;" v-if="item.isDiscounted">Discount <span class="break-discount">{{item.discount_sum}} {{catalog_settings.currency}}</span></span>
+            <span style="color: #E94A4A;" v-else>Discount {{item.discount_percent_sum}} {{catalog_settings.currency}}</span>
+          </div>
+        </div>
+
       </div>
       <div style="width:10%" class="d-flex justify-content-end pr-3"><img @click="removeFromBasket(item.product._id)" src="../../../assets/clients/x.svg"></div>
     </div>
@@ -122,6 +142,14 @@ export default {
           }
       })
     },
+    increaseType(id,sizeId,stock_quant,basket_quant){
+      if(stock_quant>basket_quant){
+        this.$store.dispatch('Orders/increaseQuantityType', {productId:id,sizeId:sizeId});
+        this.$emit('checkPromocode_child',this.basket_promocode);
+      }else{
+        this.$warningAlert('Not enough stock');
+      }
+    },
     increase(id,stock_quant,basket_quant){
       if(stock_quant>basket_quant){
         this.$store.dispatch('Orders/increaseQuantity', id);
@@ -129,6 +157,10 @@ export default {
       }else{
         this.$warningAlert('Not enough stock');
       }
+    },
+    decreaseType(id,sizeId){
+      this.$store.dispatch('Orders/decreaseQuantityType', {productId:id,sizeId:sizeId});
+      this.$emit('checkPromocode_child',this.basket_promocode);
     },
     decrease(id){
       this.$store.dispatch('Orders/decreaseQuantity', id);

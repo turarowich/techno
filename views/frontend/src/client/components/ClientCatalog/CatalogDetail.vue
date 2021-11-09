@@ -26,26 +26,77 @@
            <div class="col-lg-5 detail-left" :class="{active: getProduct.imgArray.length===0}">
              <h3 class="product-name">{{getProduct.name}}</h3>
              <h5 class="product-code">{{getProduct.code}}</h5>
-             <h1 v-if="checkDates(getProduct.promoStart,getProduct.promoEnd)" class="product-price">{{getProduct.promoPrice}} {{catalog_settings.currency}}</h1>
-             <h3 :class="{lineThrough:checkDates(getProduct.promoStart,getProduct.promoEnd)}" class="product-price">{{getProduct.price}} {{catalog_settings.currency}}</h3>
-             <br>
+
+             <div v-if="getProduct.hasMultipleTypes">
+               <div>
+                 <span>Sizes</span>
+               </div>
+               <select class="form-select" aria-label="Size selector"  @change="selectSize($event)" >
+                 <option selected>Select size</option>
+                 <option v-for="(size, index) in getProduct.sizes.filter(prop => prop.quantity > 0)" :key="index" v-bind:value="size.size">{{ size.size }}</option>
+               </select>
+             </div>
+
+             <div v-if="getProduct.hasMultipleTypes">
+               <h1 v-if="checkDates(getProduct.promoStart,getProduct.promoEnd)" class="product-price">{{getProduct.promoPrice}} {{catalog_settings.currency}}</h1>
+
+               <h3 :class="{lineThrough:checkDates(getProduct.promoStart,getProduct.promoEnd)}" class="product-price">{{selectedSize.price || getProduct.price}} {{catalog_settings.currency}}</h3>
+               <br>
+             </div>
+             <div v-else>
+               <h1 v-if="checkDates(getProduct.promoStart,getProduct.promoEnd)" class="product-price">{{getProduct.promoPrice}} {{catalog_settings.currency}}</h1>
+               <h3 :class="{lineThrough:checkDates(getProduct.promoStart,getProduct.promoEnd)}" class="product-price">{{getProduct.price}} {{catalog_settings.currency}}</h3>
+               <br>
+             </div>
 
              <div v-if="!catalog_settings.catalogMode">
                <button class="decrease" @click="decrease(getProduct._id)">-</button>
-               <span v-if="getProductFromStore" class="count">{{getProductFromStore.quantity}}</span>
-               <span v-else class="count">0</span>
+               <span v-if="getProductFromStore" class="count currentItemBasketQuantity">
+
+                 {{getProductFromStore.quantity}}
+
+               </span>
+               <span v-else class="count currentItemBasketQuantity">0</span>
                <button class="increase" @click="addToCart">+</button>
              </div>
 
              <h3 class="price mt-0">Description</h3>
              <p class="product-text">{{getProduct.description}}</p>
-             <button v-if="!catalog_settings.catalogMode" class="catalog-btn" @click="addToCart()"><a >Add to card +</a></button>
+             <div v-if="getProduct.quantity>0">
+               <button v-if="!catalog_settings.catalogMode" class="catalog-btn" @click="addToCart()"><a>Add to card +</a></button>
+             </div>
+             <div v-else>
+               <span class="catalog-btn" style="background: #931f1f;">Out of stock</span>
+             </div>
+
+
+
            </div>
          </div>
        </div>
      </div>
    </div>
  </div>
+
+  <div class="parent-modal">
+    <div class="modal myModal fade" id="selectSizeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content category-content">
+          <div class="modal-header category-header align-items-center">
+            <h3 class="modal-title">Please select size</h3>
+            <button type="button" data-dismiss="modal" aria-label="Close" class="close">
+              <span aria-hidden="true">
+                <img src="../../../assets/icons/x.svg" alt="">
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
 </template>
 
 <script>
@@ -58,6 +109,9 @@ export default {
   },
   data(){
     return{
+      selectedSize:{
+        price:"",
+      },
       today:new Date(),
       getProduct: {
         imgArray:[],
@@ -75,6 +129,7 @@ export default {
       return this.$store.getters['Client/getUserDiscountStatus'];
     },
     getProductFromStore(){
+      this.matchSizeQuantity();
       return this.$store.getters['Orders/getProduct'](this.getProduct._id)[0];
     },
     shoppingCart(){
@@ -88,6 +143,24 @@ export default {
     },
   },
   methods: {
+    selectSize(size){
+      let index = this.getProduct.sizes.findIndex(x => x.size === size.target.value);
+      if(index !== -1){
+        console.log(this.getProduct.sizes[index])
+        this.selectedSize = this.getProduct.sizes[index];
+        this.matchSizeQuantity();
+      }
+    },
+    matchSizeQuantity(){
+      let allProds = this.$store.getters['Orders/getProduct'](this.getProduct._id);
+      let size = this.selectedSize;
+      let index = allProds.findIndex(x => x.size._id==size._id);
+      if(index !== -1){
+        $('.currentItemBasketQuantity').text(allProds[index].quantity);
+      }else{
+        $('.currentItemBasketQuantity').text("0");
+      }
+    },
     increase(id,stock_quant,basket_quant){
       if(stock_quant>basket_quant){
         this.$store.dispatch('Orders/increaseQuantity', id);
@@ -107,10 +180,13 @@ export default {
       if(startDate<=this.today && endDate>=this.today){
         itsPromo = true;
       }
-      console.log(itsPromo,"itsPromoitsPromoitsPromo");
       return itsPromo;
     },
     addToCart(){
+      if(this.selectedSize._id === undefined && this.getProduct.hasMultipleTypes){
+        $('#selectSizeModal').modal('show');
+        return;
+      }
       //check if its the same company
       console.log(this.company_url_basket,this.$route.params.bekon,"STORAGE CHECK");
       if(this.company_url_basket !==this.$route.params.bekon){
@@ -120,6 +196,7 @@ export default {
       }
       let that = this;
       let cart_object = {
+        size:this.selectedSize,
         client_status_discount:this.userDiscountStatus.discount_percentage || 0,
         product:{},
         isDiscounted:false,
@@ -131,20 +208,45 @@ export default {
         current_price:0,
       }
       cart_object.product = this.getProduct;
-      //promo price check
-      let current_price = this.getProduct.price || 0;
-      let old_price = this.getProduct.price || 0;
-      if(this.checkDates(cart_object.product.promoStart,cart_object.product.promoEnd)){
-        current_price = this.getProduct.promoPrice || 0;
-        let discount_sum = old_price - current_price;
-        cart_object.discount_sum = discount_sum>0? discount_sum:0;
-        cart_object.isDiscounted = true;
-      }else if(cart_object.client_status_discount>0){
-        let disc = (current_price*(cart_object.client_status_discount/100)).toFixed(2);
-        current_price = (current_price-disc).toFixed(2);
-        cart_object.discount_percent_sum =disc;
+      let current_price = 0;
+      if(cart_object.size._id !== undefined && cart_object.product.hasMultipleTypes){
+        //promo price check
+        let sizeIndex = cart_object.product.sizes.findIndex(x => x._id === cart_object.size._id)
+        let sizeObject = cart_object.product.sizes[sizeIndex];
+        if(sizeIndex !== -1) {
+          current_price = parseFloat(sizeObject.price) || 0;
+          let old_price = parseFloat(sizeObject.price) || 0;
+
+          if(this.checkDates(cart_object.product.promoStart,cart_object.product.promoEnd)){
+            current_price = this.getProduct.promoPrice || 0;
+            let discount_sum = old_price - current_price;
+            cart_object.discount_sum = discount_sum>0? discount_sum:0;
+            cart_object.isDiscounted = true;
+          }else if(cart_object.client_status_discount>0){
+            let disc = (current_price*(cart_object.client_status_discount/100)).toFixed(2);
+            current_price = (current_price-disc).toFixed(2);
+            cart_object.discount_percent_sum =disc;
+          }
+        }
+
+        //
+      }else{
+        //promo price check
+        current_price = this.getProduct.price || 0;
+        let old_price = this.getProduct.price || 0;
+        if(this.checkDates(cart_object.product.promoStart,cart_object.product.promoEnd)){
+          current_price = this.getProduct.promoPrice || 0;
+          let discount_sum = old_price - current_price;
+          cart_object.discount_sum = discount_sum>0? discount_sum:0;
+          cart_object.isDiscounted = true;
+        }else if(cart_object.client_status_discount>0){
+          let disc = (current_price*(cart_object.client_status_discount/100)).toFixed(2);
+          current_price = (current_price-disc).toFixed(2);
+          cart_object.discount_percent_sum =disc;
+        }
+        //
       }
-      //
+
       cart_object.current_price = current_price;
       this.$store.dispatch('Orders/addToCart', cart_object);
       this.$store.dispatch('Orders/setCompany_url_basket', that.$route.params.bekon);
@@ -192,17 +294,9 @@ export default {
           })
       this.slide()
     },
-
-
-
-
   },
   mounted(){
-
     this.getOneProduct();
-
-
-
   }
 }
 </script>

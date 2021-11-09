@@ -14,7 +14,11 @@ const transporter = nodemailer.createTransport({
         pass: 'helpLoygift321',
     },
 });
-
+async function sumProductQuantity(sizes=[]){
+    let sum = 0;
+    sum.reduce(function (acc,val){return acc+val.quantity},0)
+    return sum;
+}
 async function checkAndSendWarning(client,cashback_model,transporter,bonus_history_model,company){
     let users = useDB('loygift');
     let personal_model = users.model("User");
@@ -157,21 +161,29 @@ async function products_with_discounts(products=[],Product,promocode=null,discou
             product:{},
             discounted:false,
             discountType:'',
+            size:{
+                _id:"",
+            }
         }
         temp.product = product_obj;
-        temp.quantity = parseFloat(product.quantity);
+        temp.quantity = parseFloat(product.quantity)
+        let orderItemPrice = parseFloat(product_obj.price);
+        //check if product has multiple types/sizes
+        if(product_obj.hasMultipleTypes && product.size._id !== ''){
+            orderItemPrice = parseFloat(product.size.price);
+            temp.size = product.size;
+        }
+
         //check if its an old order
         if(product.useOldPrice){
-
             temp.current_price = parseFloat(product.oldPrice);
             temp.discounted = true;
             temp.discountType='own';
             temp.name = product_obj.name;
-            temp.old_price= parseFloat(product_obj.price);
+            temp.old_price= orderItemPrice;
             productCurrentPrice.push(temp);
             continue
         }
-
 
         //check products own discount
         if(compareDates(product_obj.promoStart,product_obj.promoEnd,editDate_)){
@@ -179,25 +191,25 @@ async function products_with_discounts(products=[],Product,promocode=null,discou
             temp.discounted = true;
             temp.discountType='own';
             temp.name = product_obj.name;
-            temp.old_price= parseFloat(product_obj.price);
+            temp.old_price= orderItemPrice;
         }else{
             temp.name = product_obj.name;
-            temp.old_price= parseFloat(product_obj.price);
-            temp.current_price = parseFloat(product_obj.price);
+            temp.old_price= orderItemPrice;
+            temp.current_price = orderItemPrice;
         }
         //check the promo
         if(!temp.discounted){
             if(promocode){
                 //assume that promo is already validated
                 if(promocode.selected_type==="all" || promocode.selected_items_list.includes(product_obj._id.toString())){
-                    let non_discounted = parseFloat(product_obj.price);
+                    let non_discounted = orderItemPrice;
                     let discount_percent = non_discounted*(parseFloat(promocode.discount)/100);
                     let discount_sum = parseFloat(promocode.fixed_sum);
                     let sum = (non_discounted-discount_percent-discount_sum).toFixed(2); //its a string
-                    temp.current_price = sum>0 ? parseFloat(sum) : 0;
+                    temp.current_price = parseFloat(sum)>0 ? parseFloat(sum) : 0;
                     temp.discounted = true;
                     temp.discountType='promocode';
-                    temp.old_price= parseFloat(product_obj.price);
+                    temp.old_price= orderItemPrice;
                 }
             }
         }
@@ -206,14 +218,12 @@ async function products_with_discounts(products=[],Product,promocode=null,discou
             if(discount_obj && discount_obj.discount_percentage){
                 statusDiscount.name = discount_obj.name;
                 statusDiscount.discount_percentage = discount_obj.discount_percentage;
-
-                let non_discounted = parseFloat(product_obj.price);
+                let non_discounted = orderItemPrice;
                 let discount_percent = non_discounted*(parseFloat(discount_obj.discount_percentage)/100);
                 temp.current_price = non_discounted-discount_percent; //its a string
                 temp.discounted = true;
                 temp.discountType='clientStatus';
-                temp.old_price= parseFloat(product_obj.price);
-
+                temp.old_price= orderItemPrice;
             }
         }
         productCurrentPrice.push(temp);
@@ -384,7 +394,6 @@ class OrderController{
     };
 
     addOrder = async function (req, res) {
-        console.log(req)
         // console.log("start")
         // const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
         // await delay(5000) /// waiting 1 second.
@@ -503,7 +512,16 @@ class OrderController{
                         quantity: product.quantity
                     }).save();
                     order.products.push(order_product._id);
-                    search_product.quantity = parseFloat(search_product.quantity)-parseFloat(product.quantity);
+
+                    if(search_product.hasMultipleTypes && product.size && product.size._id){
+                        let index123 = search_product.sizes.findIndex(x => x._id.toString() === product.size._id.toString());
+                        if(index123 !== -1){
+                            search_product.sizes[index123].quantity = parseFloat(search_product.sizes[index123].quantity)-parseFloat(product.quantity);
+                            search_product.quantity = sumProductQuantity(search_product.sizes);
+                        }
+                    }else{
+                        search_product.quantity = parseFloat(search_product.quantity)-parseFloat(product.quantity);
+                    }
                     search_product.save();
                 }else{
                     return res.status(400).send(`Out of stock, ${search_product.name} only ${search_product.quantity} left`);

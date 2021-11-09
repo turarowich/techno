@@ -104,7 +104,7 @@ router.get("/auth/google", passport.authenticate("google", { authType: 'reauthen
 router.get("/auth/twitter", passport.authenticate("twitter", { authType: 'reauthenticate'}));
 
 
-const io = require('socket.io')(httpsServer, {
+const io = require('socket.io')(httpServer, {
     cors: {
         // origin: "http://localhost:3000",
         origin: ["http://10.121.6.75:8080","http://localhost:3000", "http://127.0.0.1:3000", "https://app.loygift.com", "http://10.121.6.29:3000", "*:*"],
@@ -170,10 +170,22 @@ const job = cron.schedule('0 1 * * *', () => {
     cronController.checkBirthdayPointsLife();
 });
 job.start();
+
+const xmlController = require("./app/controllers/xmlController")
+
+const job2 = cron.schedule('* * * * *', () => {  // "* * * * *" every minute // "0 * * * *" every hour
+    //Cron job every hour
+    xmlController.parseXml("loygift60b7032e691787213076f378");
+    console.log('STARTED CRON 1 min');
+
+});
+job2.start();
+
+
 // cron end
 
 //xml start
-const xmlController = require("./app/controllers/xmlController")
+// const xmlController = require("./app/controllers/xmlController")
 //xml end
 
 

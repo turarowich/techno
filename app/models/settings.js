@@ -2,6 +2,27 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const settingsSchema = new Schema({
+    ignoreImagesOnImport: {
+        type: Boolean,
+        required: false,
+        default: true
+    },
+    ignoreChangesOnImport: {
+        type: Boolean,
+        required: false,
+        default: true
+    },
+    removeGhostsOnImport: {
+        type: Boolean,
+        required: false,
+        default: true
+    },
+    groupItemsOnImport: {
+        type: Boolean,
+        required: false,
+        default: true
+    },
+
     name: {
         type: String,
         required: [true, 'name_required'],

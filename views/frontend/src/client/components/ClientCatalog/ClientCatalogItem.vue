@@ -14,15 +14,42 @@
               <span class="mr-2" v-if="checkDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} {{catalog_settings.currency}}</span>
               <span :class="{lineThrough:checkDates(product.promoStart,product.promoEnd)}">{{product.price}} {{catalog_settings.currency}}</span>
             </div>
-            <button v-if="!catalog_settings.catalogMode" class="add-to-card" @click="addToCart(product._id)">Add to cart</button>
-            <button v-else class="add-to-card" @click="selectProduct(product._id)">View</button>
+
+
+<!--            <button v-if="!catalog_settings.catalogMode" class="add-to-card" @click="addToCart(product._id)">Add to cart</button>-->
+<!--            <button v-else class="add-to-card" @click="selectProduct(product._id)">View</button>-->
+            <button class="add-to-card" @click="selectProduct(product._id)">View</button>
+
+
+
           </div>
         </div>
     </div>
   </div>
+
+  <div class="parent-modal">
+    <div class="modal myModal fade" id="selectSizeModalClientCatalogItem" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content category-content">
+          <div class="modal-header category-header align-items-center">
+            <h3 class="modal-title">Please select size</h3>
+            <button type="button" data-dismiss="modal" aria-label="Close" class="close">
+              <span aria-hidden="true">
+                <img src="../../../assets/icons/x.svg" alt="">
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 </template>
 
 <script>
+import $ from "jquery";
+
 export default {
 name: "ClientCatalogItem",
   props:['catalog'],
@@ -75,7 +102,6 @@ name: "ClientCatalogItem",
     },
     addToCart(id){
       //check if its the same company
-      console.log(this.company_url_basket,this.$route.params.bekon);
       if(this.company_url_basket !==this.$route.params.bekon){
         //clear local storage
         this.$store.dispatch("Orders/clearAll");
@@ -83,6 +109,7 @@ name: "ClientCatalogItem",
 
       let that = this;
       let cart_object = {
+        size:{},
         client_status_discount:this.userDiscountStatus.discount_percentage || 0,
         product:{},
         isDiscounted:false,
@@ -95,6 +122,12 @@ name: "ClientCatalogItem",
       }
       const order = this.catalog.filter((el)=>el._id === id);
       cart_object.product = order? order[0] : null;
+
+      if(cart_object.product.hasMultipleTypes){
+        $('#selectSizeModalClientCatalogItem').modal('show');
+        return;
+      }
+
       //promo price check
       let current_price = order? order[0].price : 0;
       let old_price = order? order[0].price : 0;

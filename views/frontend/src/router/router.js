@@ -37,6 +37,7 @@ import EditProductPage from "@/components/catalog/EditProductPage";
 import IndividualPush from "@/components/clients/IndividualPush";
 import CatalogSettings from "@/components/settings/CatalogSettings";
 import StaffSettings from "@/components/settings/StaffSettings";
+import ProductsImport from "@/components/settings/ProductsImport";
 import AddNews from "@/components/News/AddNews";
 import EditNews from "@/components/News/EditNews";
 import EmployeeLogin from "@/client/components/EmployeeLogin";
@@ -355,7 +356,13 @@ const routes = [
                 name: 'PersonalSettings',
                 component: PersonalSettings,
 
-            }
+            },
+            {
+                path: 'products-import',
+                name: 'ProductsImport',
+                component: ProductsImport,
+
+            },
         ],
         meta:{
             requiresAuthMain:true,

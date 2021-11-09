@@ -140,8 +140,7 @@ class SettingsController{
                 }
             }
             
-            let settings = await Settings.find()
-            settings = settings[0]
+            let settings = await Settings.findOne({})
             if (!settings) {
                 settings = await new Settings({
                     slogan: " ",
@@ -572,11 +571,14 @@ class SettingsController{
             let filter = { '_id': req.fields._id };
             let user = await personal_model.findOne(filter);
             if(user){
-                user.name =req.fields.name;
-                user.email =req.fields.email;
-                user.phone =req.fields.phone;
+                user.name =req.fields.name || user.name;
+                user.email =req.fields.email || user.email;
+                user.phone =req.fields.phone || user.phone;
+                user.oneCApiAddress =req.fields.oneCApiAddress || user.oneCApiAddress;
+                user.oneCApiLogin =req.fields.oneCApiLogin || user.oneCApiLogin;
+                user.oneCApiPassword =req.fields.oneCApiPassword || user.oneCApiPassword;
             }
-            if(req.fields.password.length!==0){
+            if(req.fields.password && req.fields.password.length!==0){
                 user.password = bcrypt.hashSync(req.fields.password, 8);
             }
             await user.validate();

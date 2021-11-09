@@ -2,6 +2,21 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
+    oneCApiAddress: {
+        type: String,
+        required: false,
+        default:'',
+    },
+    oneCApiLogin: {
+        type: String,
+        required: false,
+        default:'',
+    },
+    oneCApiPassword: {
+        type: String,
+        required: false,
+        default:'',
+    },
     name: {
         type: String,
         required: [true, 'name_required'],

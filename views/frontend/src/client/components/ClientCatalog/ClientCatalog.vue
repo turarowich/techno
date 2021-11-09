@@ -18,10 +18,10 @@
     </div>
     <input type="text" id="range-slider" name="example_name" value="" class="d-none"/>
     <div class="line"></div>
-    <div class="sticked-categories">
+    <div class="sticked-categories" style="height: 300px;overflow: auto;">
       <h3 class="price">Categories:</h3>
       <ul class="list-group">
-        <li v-for="category in listCategory" :key="category._id" :class="{active: category._id === filtered}" class="catalog-list" @click="filtered=category._id">{{category.name}}</li>
+        <li v-for="category in listCategory" :key="category._id" :class="{active: category._id === selectedCategory}" class="catalog-list" @click="setCategory(category._id)">{{category.name}}</li>
       </ul>
     </div>
     </div>
@@ -34,7 +34,7 @@
         </div>
        <div style="height:calc(100% - 82px); overflow-y:auto">
          <ul class="list-group p-0">
-           <li v-for="category in listCategory" :key="category._id" :class="{active: category._id === filtered}" class="catalog-list" @click="displayFiltered(category._id)">{{category.name}}</li>
+           <li v-for="category in listCategory" :key="category._id" :class="{active: category._id === selectedCategory}" class="catalog-list" @click="setCategory(category._id)">{{category.name}}</li>
          </ul>
        </div>
       </div>
@@ -76,37 +76,61 @@
     <div v-else>
       <ClientCatalogItem v-bind:catalog="filteredList"/>
     </div>
-  </div>
 
 
-
-  <div class="parent-modal">
-    <div class="modal myModal fade" id="categoriess" tabindex="-1" role="dialog" aria-labelledby="add-points" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content category-content">
-          <div class="modal-header category-header align-items-center">
-            <h3 class="modal-title">Edit Category</h3>
-            <button type="button" data-dismiss="modal" aria-label="Close" class="close">
-              <span aria-hidden="true">
-                <img src="../../../assets/icons/xBlack.svg" alt="">
-              </span>
-            </button>
-          </div>
-          <div class="modal-body category-body">
-            <form class="modal-form">
-              <label>Name</label>
-              <input  class="form-input cashback-input mb-3"  placeholder="Enter a name">
-
-              <textarea class="general-area"></textarea>
-              <div class="d-flex justify-content-end">
-                <button  class="save">Save</button>
-              </div>
-            </form>
-          </div>
-        </div>
+    <div style="display: flex;height: 50px;width: 100%;justify-content: center;align-items: center;">
+      <div v-if="currentPage>3"  @click="currentPage--" style="cursor: pointer;">
+        <img src="../../../assets/icons/prevArrow.svg">
+      </div>
+      <div class="paginationItem" v-if="currentPage>3"  @click="currentPage=1" style="cursor: pointer;">1</div>
+      <div v-if="currentPage>3">
+        ...
+      </div>
+      <div v-bind:class="{ activePage: currentPage===page2 }" class="paginationItem" v-for="page2 in numberOfPagesArray.filter(num => num < currentPage+3 && num > currentPage-3)" :key="page2" @click="setPage(page2)">
+        {{page2}}
+      </div>
+      <div v-if="currentPage<numberOfPagesArray.length-2">
+        ...
+      </div>
+      <div class="paginationItem" v-if="currentPage<numberOfPagesArray.length-2" @click="currentPage=numberOfPagesArray.slice(-1)[0]" style="cursor: pointer;">{{numberOfPagesArray.slice(-1)[0]}}</div>
+      <div v-if="currentPage<numberOfPagesArray.length-2" @click="currentPage++" style="cursor: pointer;">
+        <img src="../../../assets/icons/side-arrow.svg">
       </div>
     </div>
   </div>
+
+
+
+
+
+<!--  <div class="parent-modal">-->
+<!--    <div class="modal myModal fade" id="categoriess" tabindex="-1" role="dialog" aria-labelledby="add-points" aria-hidden="true">-->
+<!--      <div class="modal-dialog" role="document">-->
+<!--        <div class="modal-content category-content">-->
+<!--          <div class="modal-header category-header align-items-center">-->
+<!--            <h3 class="modal-title">Edit Category</h3>-->
+<!--            <button type="button" data-dismiss="modal" aria-label="Close" class="close">-->
+<!--              <span aria-hidden="true">-->
+<!--                <img src="../../../assets/icons/xBlack.svg" alt="">-->
+<!--              </span>-->
+<!--            </button>-->
+<!--          </div>-->
+<!--          <div class="modal-body category-body">-->
+<!--            <form class="modal-form">-->
+<!--              <label>Name</label>-->
+<!--              <input  class="form-input cashback-input mb-3"  placeholder="Enter a name">-->
+
+<!--              <textarea class="general-area"></textarea>-->
+<!--              <div class="d-flex justify-content-end">-->
+<!--                <button  class="save">Save</button>-->
+<!--              </div>-->
+<!--            </form>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+
 </div>
 
 </template>
@@ -115,6 +139,7 @@
 import $ from 'jquery';
 import ClientCatalogItem from "@/client/components/ClientCatalog/ClientCatalogItem";
 import Spinner from "../../../components/Spinner";
+const _ = require('lodash');
 export default {
 name: "Catalog",
   components:{
@@ -127,60 +152,49 @@ name: "Catalog",
       catalog:[],
       listCategory:[],
       filtered: 'all',
+      selectedCategory:"all",
       from:0,
       to:0,
       showCategory:'All',
+      currentPage:1,
+      numberOfPagesArray:[],
     }
   },
   computed:{
     filteredList: function(){
       return  this.catalog
-        .filter(product => {
-          if(this.filtered!=='all'){
-            return product.category===this.filtered;
-          }else{
-            return product;
-          }
-        })
-        .filter((product)=>{
-          return product.price >= this.from && product.price <= this.to;
-        })
-        .filter((product)=>{
-          return product.quantity > 0;
-        })
-        .filter((product)=>{
-          return product.active === true;
-        })
+        // .filter(product => {
+        //   if(this.filtered!=='all'){
+        //     return product.category===this.filtered;
+        //   }else{
+        //     return product;
+        //   }
+        // })
+        // .filter((product)=>{
+        //   return product.price >= this.from && product.price <= this.to;
+        // })
+        // .filter((product)=>{
+        //   return product.quantity > 0;
+        // })
+        // .filter((product)=>{
+        //   return product.active === true;
+        // })
     },
     currentCompanyCatalog() {
       return this.$route.params.bekon;
     },
-    minPrice(){
-      let today = new Date();
-      let nums = [];
-      this.catalog.map(function (item){
-        if(item.promoStart<=today && item.promoEnd>=today){
-          nums.push(item.promoPrice);
-        }else{
-          nums.push(item.price);
-        }
-      });
-      return nums.length>0 ? Math.min(...nums) : 0;
-    },
-    maxPrice(){
-      let today = new Date();
-      let nums = [];
-      this.catalog.map(function (item){
-        if(item.promoStart<=today && item.promoEnd>=today){
-          nums.push(item.promoPrice);
-        }else{
-          nums.push(item.price);
-        }
-      });
-      return Math.max(...nums);
-    },
   },
   methods: {
+    setCategory(id){
+      this.selectedCategory = id;
+      this.currentPage = 1;
+      this.getProducts();
+    },
+    setPage(page){
+      console.log(page)
+      this.currentPage = page;
+      this.getProducts();
+    },
     displayFiltered(id){
         this.filtered = id
         this.listCategory.map(i=>{
@@ -222,7 +236,6 @@ name: "Catalog",
       document.body.style.position = '';
       window.scrollTo(0, parseInt(scrollY || '0') * -1);
 
-
     },
     getRangeValues() {
       const slider = $("#range-slider").data("ionRangeSlider");
@@ -258,13 +271,54 @@ name: "Catalog",
     async  getProducts(){
       const options = {
         headers: {"x-client-url": this.currentCompanyCatalog},
+        params: {
+          "page":this.currentPage,
+          "categoryId":this.selectedCategory,
+          "min":this.from,
+          "max":this.to,
+        },
       }
-
        await this.axios.get(this.url('getClientProducts'),options)
          .then((response) => {
            this.catalog = response.data.objects;
+           this.numberOfPagesArray = Array.from({length: response.data.pagesCount || 0}, (_, i) => i + 1)  ;
            this.spinner = false;
          })
+    },
+    async  getProductsForPrice(){
+      let that = this;
+      const options = {
+        headers: {"x-client-url": this.currentCompanyCatalog},
+        params: {
+          "page":this.currentPage,
+          "categoryId":this.selectedCategory,
+          "min":this.from,
+          "max":this.to,
+        },
+      }
+      await this.axios.get(this.url('getClientProducts'),options)
+          .then((response) => {
+            this.catalog = response.data.objects;
+            this.numberOfPagesArray = Array.from({length: response.data.pagesCount || 0}, (_, i) => i + 1)  ;
+            this.spinner = false;
+
+            this.from = response.data.minPrice;
+            this.to = response.data.maxPrice;
+
+            let instance = $("#range-slider").data("ionRangeSlider");
+            instance.update({
+              from: that.from,
+              to:that.to,
+              max:that.to,
+            });
+            let instance2 = $("#range-slider2").data("ionRangeSlider");
+            instance2.update({
+              from: that.from,
+              to:that.to,
+              max:that.to,
+            });
+
+          })
     },
 
     async getCategories() {
@@ -277,26 +331,21 @@ name: "Catalog",
             this.listCategory.unshift({_id: 'all', name: 'All'})
           })
     },
+    getByPrice: _.debounce(function() {
+      this.getProducts();
+    }, 500),
   },
   watch:{
-    catalog: {
-      handler: function (list) {
-        let that = this;
-        let instance = $("#range-slider").data("ionRangeSlider");
-        instance.update({
-          from: that.minPrice,
-          to:that.maxPrice,
-          max:that.maxPrice,
-        });
-        let instance2 = $("#range-slider2").data("ionRangeSlider");
-        instance2.update({
-          from: that.minPrice,
-          to:that.maxPrice,
-          max:that.maxPrice,
-        });
-        that.from = that.minPrice;
-        that.to = that.maxPrice;
-        console.log(list,"NEEEEEEEEEEEEEEEEEEEEEE");
+    from: {
+      handler: function (num) {
+        console.log(num,"FROM");
+        this.getByPrice();
+      },
+    },
+    to: {
+      handler: function (num) {
+        console.log(num,"TO");
+        this.getByPrice();
       },
     },
   },
@@ -305,9 +354,7 @@ name: "Catalog",
     this.getRangeValues()
     this.getCategories()
     this.getProducts()
-
-
-
+    this.getProductsForPrice()
 }
 
 }
@@ -335,6 +382,25 @@ name: "Catalog",
 .backdrop-filter.active{
   display: block;
 }
+
+.paginationItem{
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2px;
+}
+
+.activePage{
+  background-color: #616cf5;
+  color: #fff;
+  font-weight: bold;
+}
+
 .backdrop-filter{
   display: none;
   width: 100%;
@@ -404,7 +470,7 @@ name: "Catalog",
   left: 10px;
 }
 .catalog-left{
-  padding-right:30px;
+  padding-right:5px;
   position: sticky;
   top:40px;
   z-index: 1000;
@@ -431,6 +497,7 @@ name: "Catalog",
 }
 
 .catalog-list{
+  line-height: 1;
   box-sizing: border-box;
   list-style-type: none;
   border:none;
@@ -438,7 +505,7 @@ name: "Catalog",
   color: #8C94A5;
   border-radius: 111.068px;
   padding:0 20px;
-  font-size: 16px;
+  font-size: 14px;
   display: flex;
   justify-content: space-between;
   align-items: center;

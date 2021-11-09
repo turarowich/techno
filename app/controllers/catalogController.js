@@ -15,12 +15,49 @@ class catalogController{
         let db = useDB(req.db)
         let Product = db.model("Product");
 
+        let perPage = 20;
+        let currentPage = req.query.page || 1;
+        let skipCount = (currentPage-1)*perPage;
+
         let result = {
             'status': 200,
             'msg': 'Sending products'
         }
+
+        //filter types:
+        ////by category
+        ////by price
+        //dont show if:
+        ///product.active == false
+        let filterQuery = {
+            'active':true,
+        }
+        if(req.query.categoryId && req.query.categoryId !== "all"){
+            filterQuery.category = req.query.categoryId;
+        }
+
+        if(req.query.min){
+            filterQuery.price = {};
+            filterQuery.price.$gte =  req.query.min;
+        }
+        if(req.query.max){
+            filterQuery.price.$lte = req.query.max;
+        }
+
         try {
-            result['objects'] = await Product.find()
+            if(!req.query.page){
+                result['objects'] = await Product.find({'active':true});
+            }else{
+                result['objects'] = await Product.find(filterQuery).sort({'name':1}).skip(skipCount).limit(perPage);
+                result['pagesCount'] = Math.round(await Product.find(filterQuery).count()/perPage);
+                let allProducts = await Product.find({'active':true});
+                result["maxPrice"] = allProducts.reduce((acc, val) => {
+                    return acc > val.price ? acc : val.price;
+                });
+                result["minPrice"] = allProducts.reduce((acc, val) => {
+                    return acc < val.price ? acc : val.price;
+                });
+            }
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }

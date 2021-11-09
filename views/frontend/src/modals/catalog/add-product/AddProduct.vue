@@ -36,8 +36,37 @@
                       <label>Description</label>
                       <textarea class="general-area mb-3" style="height:160px" v-model="newProduct.description"  name="description"></textarea>
 
+
+<!--                      <div class="d-flex mb-3">-->
+<!--                        <label class="custom-checkbox">-->
+<!--                          <input v-model="sizesBlock" @change="checkDiscount" type="checkbox" >-->
+<!--                          <span class="checkmark"></span>-->
+<!--                        </label>-->
+<!--                        <span>Sizes</span>-->
+<!--                      </div>-->
+<!--                      <div v-if="sizesBlock" class="mb-4 ">-->
+<!--                        <div>-->
+<!--                          <span id="addSize" class="save" style="cursor: pointer;width: 150px">Add size+</span>-->
+<!--                        </div>-->
+
+<!--                        <div class="d-flex justify-content-between">-->
+<!--                            <div class="d-flex">-->
+<!--                              <span>Size</span>-->
+<!--                              <span>40</span>-->
+<!--                            </div>-->
+<!--                            <div class="d-flex">-->
+<!--                              <span>Price</span>-->
+<!--                              <span>400</span>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                      </div>-->
+
+
+
                       <div class="d-flex mb-3">
-                        <label class="custom-checkbox"><input v-model="showPrice" @change="checkDiscount" id="show-price" type="checkbox" ><span class="checkmark"></span></label>
+                        <label class="custom-checkbox">
+                          <input v-model="showPrice" @change="checkDiscount" id="show-price" type="checkbox" >
+                          <span class="checkmark"></span></label>
                         <span>Discount</span>
                       </div>
 
@@ -131,6 +160,7 @@ name: "AddProduct",
 props:['listCategory', 'getProducts'],
   data(){
     return{
+      sizesBlock:false,
       today:this.$moment().format("YYYY-MM-DD"),
       validateFrom: false,
       validateTo: false,
@@ -391,6 +421,10 @@ props:['listCategory', 'getProducts'],
 </script>
 
 <style scoped>
+#addSize{
+
+}
+
 .selected-images:hover .remove-image{
   opacity: 1;
 }

@@ -2,6 +2,29 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const productSchema = new Schema({
+    //if product has sizes or other props
+    hasMultipleTypes: {
+        type: Boolean,
+        required: false,
+        default: false
+    },
+    //necessary for 1c import
+    controlName: {
+        type: String,
+        required: false,
+    },
+    sizes:[{
+            size:String,
+            price:Number,
+            oneCId:String,
+            vendorCode:String,
+            quantity:Number,
+        }],
+    oneCId:{ //remove
+        type: String,
+        default:"",
+        required: false,
+    },
     //either product or service
     type:{
         type: String,

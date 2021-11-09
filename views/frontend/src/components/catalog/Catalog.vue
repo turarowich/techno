@@ -70,10 +70,10 @@
     </div>
     <div class="main-content">
       <div class="catalog-wrapper d-flex">
-        <div class="catalog-menu" style="width:18%">
+        <div class="catalog-menu" style="width:18%;height: 300px;overflow: auto;">
           <ul class="list-group" >
             <li class="catalog-list" :id="category.name" :ref="'menu'+index"  v-for="(category,index) in listCategory" :key="category._id"  :class="{active: filtered === category._id}"  @click="filtered = category._id">
-                <p class="category-text tool-tip" data-toggle="tooltip" data-placement="right" :title="category.name">
+                <p class="category-text tool-tip" data-toggle="tooltip" data-placement="top" :title="category.name">
                   {{category.name}}
                 </p>
                 <div class="dropdown dropMenu">

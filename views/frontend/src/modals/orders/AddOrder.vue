@@ -24,18 +24,46 @@
                   <div class="pl-4 pt-3 pb-3" v-if="filteredProducts.length === 0">
                       Not found
                   </div>
-                  <div  v-else v-for="product in filteredProducts" :key="product._id" @click="selectProduct(product)" class="product-order  d-flex align-items-center justify-content-between">
-                    <div class="table-child d-flex align-items-center">
-                      <div class="table-img">
-                        <img v-if="product.img" :src="imgSrc+'/'+product.img">
-                        <img v-else src="../../assets/icons/no-catalog.svg">
-                      </div>
-                      {{product.name}}
-                    </div>
-                    <div>
-                      <span v-if="compareDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} $ %</span>
-                      <span v-else>{{product.price}} $</span>
+                  <div  v-else v-for="product in filteredProducts" :key="product._id"  class="product-order ">
 
+                    <div v-if="!product.hasMultipleTypes" @click="selectProduct(product)" class="d-flex align-items-center justify-content-between">
+                      <div class="table-child d-flex align-items-center">
+                        <div class="table-img">
+                          <img v-if="product.img" :src="imgSrc+'/'+product.img">
+                          <img v-else src="../../assets/icons/no-catalog.svg">
+                        </div>
+                        {{product.name}}
+                      </div>
+                      <div>
+                        <span v-if="compareDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} $ %</span>
+                        <span v-else>{{product.price}} $</span>
+                      </div>
+                    </div>
+
+                    <div v-else  class="d-flex align-items-center">
+                      <div class="table-child d-flex align-items-center" style="width: 50%;">
+                        <div class="table-img">
+                          <img v-if="product.img" :src="imgSrc+'/'+product.img">
+                          <img v-else src="../../assets/icons/no-catalog.svg">
+                        </div>
+                        {{product.name}}
+                      </div>
+                      <div style="width: 25%;">
+                        <span v-if="compareDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} $ %</span>
+                        <span v-else>{{product.price}} $</span>
+                      </div>
+                      <div style="width: 25%;text-align: right;">
+                        <div class="dropdown">
+                          <button class="btn btn-secondary dropdown-toggle" type="button" v-bind:id="product._id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Select size
+                          </button>
+                          <div class="dropdown-menu" v-bind:aria-labelledby="product._id" >
+                            <div style="display: flex; flex-direction: column;">
+                              <span @click="selectProduct(product,size)" style="border: 1px solid grey;padding: 2px;" v-for="size in product.sizes" :key="size._id" v-bind:value="size._id">Size:{{size.size}}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -64,36 +92,32 @@
                         <img v-else src="../../assets/icons/no-catalog.svg">
                       </div>
                       <div style="overflow: hidden;text-overflow: ellipsis;">
-                        {{item.product.name}}
+                        <div style="display: flex;flex-direction: column;">
+                          <span>{{item.product.name}}</span>
+                          <span style="color: grey;">{{item.size ? item.size.vendorCode : ""}}</span>
+                        </div>
                       </div>
                     </div>
-
-<!--                    <div style="width:20%">-->
-<!--                      <span v-if="compareDates(item.product.promoStart,item.product.promoEnd)">-->
-<!--                        <span>{{item.product.promoPrice}}{{currency}}</span>-->
-<!--                        <span class="lineThrough">-->
-<!--                          {{item.product.price}}-->
-<!--                        </span>-->
-<!--                      </span>-->
-<!--                      <span v-else >{{item.product.price}}{{currency}}</span>-->
-<!--                    </div>-->
-<!--                    <div style="width:20%">-->
-<!--                      <input type="number" min="1" class="quantity" v-model="item.quantity">-->
-<!--                    </div>-->
-<!--                    <div style="width:10%">-->
-<!--                      {{item.quantity * (compareDates(item.product.promoStart,item.product.promoEnd) ? item.product.promoPrice : item.product.price)}}{{currency}}-->
-<!--                    </div>-->
 
                     <div style="width:20%">
                       <span v-if="item.discounted" style="display: flex;flex-direction: column;">
                         <span>{{item.current_price}}{{currency}}</span>
                         <span class="lineThrough">
-                          {{item.product.price}}
+<!--                          {{item.product.price}}-->
+<!--                          {{currency}}                          -->
+                          {{item.old_price}}
                           {{currency}}
                         </span>
                       </span>
                       <span v-else >
-                        {{item.product.price}}{{currency}}
+                        {{item.current_price}}{{currency}}
+<!--                        <span v-if="item.product.hasMultipleTypes && item.size">-->
+<!--                          {{item.size.price}}{{currency}}-->
+<!--                        </span>-->
+<!--                        <span v-else>-->
+<!--                         {{item.product.price}}{{currency}}-->
+<!--                        </span>-->
+
                       </span>
                     </div>
                     <div style="width:10%" class="quantity">
@@ -146,8 +170,7 @@
                       <span>
                         {{client.client_status_discount}}%
                       </span>
-<!--                      <span v-if="client.clientObj.category !== undefined">{{client.clientObj.category.name}}</span>-->
-<!--                      <span v-else>no </span>-->
+
                     </div>
                   </div>
                   <img @click="removeClient" class="close-client" src="../../assets/icons/deleteClient.svg">
@@ -227,9 +250,6 @@
                 </div>
 
               </div>
-<!--              <span class="category">-->
-<!--                {{client.clientObj.address}}-->
-<!--              </span>-->
 
               <div class="line"></div>
               <h3 class="client-sub-title">Personal discount</h3>
@@ -397,11 +417,10 @@ export default {
       return options;
     },
     totalPrice(){
-
+      console.log("Recalc total");
       //products own discount
       //promocode discount
       //clients status discount
-
       //delivery cost
       //client points if used
       //personal discount entered as % or fixed sum --- new
@@ -415,24 +434,28 @@ export default {
           oldPrice:0,
           discountType:'',
         }
+        //check if product has multiple types
+        let itemPrice = item.product.price;
+        if(item.product.hasMultipleTypes && item.size){
+          itemPrice = item.size.price;
+        }
         if(this.compareDates(item.product.promoStart,item.product.promoEnd)){
           obj_.price = item.product.promoPrice;
           obj_.quantity = item.quantity;
-          obj_.oldPrice = item.product.price;
+          obj_.oldPrice = itemPrice;
           obj_.discounted = true;
 
           item.discountType = "own";
           item.discounted = true;
           item.current_price = item.product.promoPrice;
         }else{
-          obj_.price = item.product.price;
+          obj_.price = itemPrice;
           obj_.quantity = item.quantity;
-          obj_.oldPrice = item.product.price;
+          obj_.oldPrice = itemPrice;
           obj_.discounted = false;
-
           item.discountType = "";
           item.discounted = false;
-          item.current_price = item.product.price;
+          item.current_price = itemPrice;
         }
         if(!obj_.discounted){
           if(that.promocode.validItems.length>0 && that.promocode.validItems.includes(item.product._id)){
@@ -503,7 +526,6 @@ export default {
         subDiscount = subDiscount + discount;
       }
       this.setTotalDiscount(subDiscount);
-      console.log("AAAAAAAAAAAAAAAAAAAAAAAA",subTotal.toFixed(2))
       return subTotal.toFixed(2);//type string
     },
     filteredProducts(){
@@ -518,8 +540,6 @@ export default {
     },
   },
   methods:{
-
-
     unSetPersonalDiscount(){
       this.new_order.personalDiscount={
         percent:true,
@@ -765,17 +785,27 @@ export default {
         }
       }
     },
-    selectProduct(selected,quantity=1){
+    selectProduct(selected,size=null){
       let obj = {
-        quantity:quantity,
+        quantity:1,
         current_price:0,
         discounted:false,
         discountType:'',
         product:selected,
+        size:size
       }
-      let checkOld = this.new_order.items.filter(function (order){
-        return order.product._id.toString() == selected._id.toString();
-      })
+      let checkOld = [];
+
+      if(!selected.hasMultipleTypes){
+        checkOld = this.new_order.items.filter(function (order){
+          return order.product._id.toString() == selected._id.toString();
+        })
+      }else{
+        checkOld = this.new_order.items.filter(function (order){
+          return order.product._id.toString() == selected._id.toString() && order.size._id.toString() == size._id;
+        })
+      }
+
       if(checkOld.length>0){
         this.$warningAlert('Already selected');
         return;
@@ -849,8 +879,7 @@ export default {
   },
   watch: {
     selected_order: {
-      handler(val, old) {
-        console.log(val,"--------SELECTED ORDER WATCH---------", old);
+      handler(val) {
         //Check if products,delivery,branch still exist
         let that = this;
         if(val!==''){
@@ -893,7 +922,6 @@ export default {
     },
     totalPrice: {
       handler(val, old) {
-        console.log(val,"--------unSetSelectedDeliveryOption UNSET---------", old);
         if(val<old){
           this.unSetSelectedDeliveryOption()
         }
@@ -933,6 +961,13 @@ export default {
 
 
 <style scoped>
+
+.btn-secondary {
+  color: #0c0c0c;
+  background-color: #f3f6f8;
+  border-color: #6c757d;
+}
+
 .table-item{
   padding: 10px 5px;
 }
