@@ -16,7 +16,12 @@ const db_admin_name = config.admin;
 const db_admin_password = config.password;
 const initClientDbConnection = () => {
     mongoose.set('useFindAndModify', false);
-    const db = mongoose.createConnection(`mongodb://${db_admin_name}:${db_admin_password}@127.0.0.1:27017/admin`, clientOption);
+    var db = ""
+    if (db_admin_name) {
+        db = mongoose.createConnection(`mongodb://${db_admin_name}:${db_admin_password}@127.0.0.1:27017/admin`, clientOption);
+    } else {
+        db = mongoose.createConnection(`mongodb://127.0.0.1:27017`, clientOption);
+    }
 
     require("../app/models/client.js")
     require("../app/models/category.js")
