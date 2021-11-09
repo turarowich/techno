@@ -111,13 +111,6 @@
                       </span>
                       <span v-else >
                         {{item.current_price}}{{currency}}
-<!--                        <span v-if="item.product.hasMultipleTypes && item.size">-->
-<!--                          {{item.size.price}}{{currency}}-->
-<!--                        </span>-->
-<!--                        <span v-else>-->
-<!--                         {{item.product.price}}{{currency}}-->
-<!--                        </span>-->
-
                       </span>
                     </div>
                     <div style="width:10%" class="quantity">

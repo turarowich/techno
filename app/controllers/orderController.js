@@ -53,11 +53,7 @@ async function checkAndSendWarning(client,cashback_model,transporter,bonus_histo
     }catch (e) {
         console.log(e);
     }
-
-
 }
-
-
 
 async function cancelOrDeleteOrder(ClientBonusHistory,Product,cashback_model,client,order){
     //subtract cashback, balance, add cashback used to client, create new bonus history
@@ -74,7 +70,11 @@ async function cancelOrDeleteOrder(ClientBonusHistory,Product,cashback_model,cli
     //and cashback/points is received only on -> done
     if(order.status === 'Done'){
         let products = order.productsDetails.map(function (item){
-            return {id:item.product._id,quantity:item.quantity}
+            return {
+                id:item.product._id,
+                quantity:item.quantity,
+                size:item.size,
+            }
         })
         let result_object = await products_with_discounts(
             products,   // list of product ids $ quant
@@ -148,6 +148,8 @@ async function products_with_discounts(products=[],Product,promocode=null,discou
     let discountsTotal = 0;
     let productCurrentPrice = [];
     let statusDiscount = {name:'',discount_percentage:0}
+
+    console.log(products,"90909909090000000000000000000000000000000000000000000000000000000000000000000000000")
     for (const product of products) {
         let product_obj =  await Product.findById(product.id);
         if(!product_obj){
@@ -169,6 +171,9 @@ async function products_with_discounts(products=[],Product,promocode=null,discou
         temp.quantity = parseFloat(product.quantity)
         let orderItemPrice = parseFloat(product_obj.price);
         //check if product has multiple types/sizes
+
+        console.log(product_obj.hasMultipleTypes ,"&&&&&------------------------", product.size,"*******************")
+
         if(product_obj.hasMultipleTypes && product.size._id !== ''){
             orderItemPrice = parseFloat(product.size.price);
             temp.size = product.size;
@@ -912,7 +917,11 @@ class OrderController{
             let updated_order = await Order.findById(order._id);
             let client = await Client.findById(order.client);
             let products = updated_order.productsDetails.map(function (item){
-                return {id:item.product._id,quantity:item.quantity}
+                return {
+                    id:item.product._id,
+                    quantity:item.quantity,
+                    size:item.size
+                }
             })
             let result_object = await products_with_discounts(
                 products,   // list of product ids $ quant
@@ -1132,7 +1141,11 @@ class OrderController{
             }
 
             let products = order.productsDetails.map(function (item){
-                return {id:item.product._id,quantity:item.quantity}
+                return {
+                    id:item.product._id,
+                    quantity:item.quantity,
+                    size:item.size,
+                }
             })
             let result_object = await products_with_discounts(
                 products,   // list of product ids $ quant

@@ -40,11 +40,11 @@
       </div>
       <div class="d-flex mb-3">
         <button class="app-buttons-item" @click="showFilterCategory('filter')"><img src="../../../assets/icons/filter-btn.svg"><span>Filters</span></button>
-        <select class="new-product form-control long-form-control  form-control-lg" aria-label=".form-select-lg example">
-          <option>Jeans</option>
-          <option>Shoes</option>
-          <option>Clothes</option>
-        </select>
+<!--        <select class="new-product form-control long-form-control  form-control-lg" aria-label=".form-select-lg example">-->
+<!--          <option>Jeans</option>-->
+<!--          <option>Shoes</option>-->
+<!--          <option>Clothes</option>-->
+<!--        </select>-->
       </div>
       <div class="showFilter" >
         <div class="mobile-header d-flex justify-content-between align-items-center" >
@@ -62,7 +62,7 @@
           </div>
         </div>
         <input class="d-none" type="text" id="range-slider2" name="example_name" value="" />
-        <button class=" show save" @click="removeFilterCategory('filter')">Show</button>
+<!--        <button class=" show save" @click="removeFilterCategory('filter')">Show</button>-->
       </div>
       <div class="category-key">Category: <span class="category-value">{{showCategory}}</span></div>
       <div class="backdrop-filter"></div>

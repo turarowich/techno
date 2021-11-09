@@ -26,7 +26,9 @@
             <input v-model="settings.groupItemsOnImport" type="checkbox" >
             <span class="slider round"></span>
           </label>
-          <span style="margin-top: -5px;">Group items as one if they have same names but different properties/sizes. (Группировать одинаковые товары как один)</span>
+          <span style="margin-top: -5px;">Group items as one if they have same names but different properties/sizes.
+            (Группировать одинаковые товары как один, сейчас группирует по значению текста в скобках. Пример: Футболка СМ 48007-N8 (48) и Футболка СМ 48007-N8 (50), будут как один товар с размерами 48 и 50)</span>
+
         </div>
 
         <div class="d-flex enable-title">
@@ -143,10 +145,6 @@ export default {
           that.spinner = false;
           let settings = response.data.object;
           that.settings = settings
-          // that.country = settings.country || '';
-          // that.chat = settings.chat || false;
-          // that.name = settings.name || '';
-          // that.email = settings.email || '';
         })
   },
 }
@@ -162,7 +160,9 @@ export default {
 }
 
 .switch{
-  margin-right: 25px;
+  flex-basis:40px;
+  flex-grow: 0;
+  flex-shrink: 0;
 }
 
 .slider.round{
