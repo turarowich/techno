@@ -1,17 +1,36 @@
 <template>
+
+
 <div class="row catalog">
   <div id="categories" class="pt-3 col-lg-3 col-md-4">
     <div class="catalog-left">
-    <h3  class="product-title"><img src="../../../assets/clients/Icon.svg">Products</h3>
+      <h3  class="product-title"><img src="../../../assets/clients/Icon.svg">Products</h3>
+      <h3 class="price">Sort:</h3>
 
-    <h3 class="price">Price:</h3>
+      <div class="selectWrapper" style="display:flex;flex-direction: column;position: relative">
+        <div @click="showSortDrop=!showSortDrop" style="display: flex;justify-content: space-between">
+          <div>{{sortBy}}</div>
+          <div>
+            <img v-bind:style="[showSortDrop? {transform:'rotate(180deg)'}:'']" src="../../../assets/img/select_arrow.svg">
+          </div>
+        </div>
 
+        <div class="sortDropDown" v-if="showSortDrop">
+          <div @click="showSortDrop=false;" style="float: right;margin-top:-5px;">x</div>
+          <div @click="sortBy='ascendingName';getProducts();showSortDrop=false;">Name A-Z</div>
+          <div @click="sortBy='descendingName';getProducts();showSortDrop=false;">Name Z-A</div>
+          <div @click="sortBy='ascendingPrice';getProducts();showSortDrop=false;">Price 0-100</div>
+          <div @click="sortBy='descendingPrice';getProducts();showSortDrop=false;">Price 100-0</div>
+        </div>
+      </div>
+      <hr/>
+      <h3 class="price">Price:</h3>
     <div class="d-flex mb-5">
-      <div style="width:40%" class="mr-3">
+      <div style="width:50%" class="mr-3">
         <label class="label-client">From</label>
         <input class="client-input" v-model="from" style="width:100%">
       </div>
-      <div style="width:40%">
+      <div style="width:50%">
         <label class="label-client">To</label>
         <input class="client-input" v-model="to" style="width:100%">
       </div>
@@ -40,11 +59,6 @@
       </div>
       <div class="d-flex mb-3">
         <button class="app-buttons-item" @click="showFilterCategory('filter')"><img src="../../../assets/icons/filter-btn.svg"><span>Filters</span></button>
-<!--        <select class="new-product form-control long-form-control  form-control-lg" aria-label=".form-select-lg example">-->
-<!--          <option>Jeans</option>-->
-<!--          <option>Shoes</option>-->
-<!--          <option>Clothes</option>-->
-<!--        </select>-->
       </div>
       <div class="showFilter" >
         <div class="mobile-header d-flex justify-content-between align-items-center" >
@@ -70,6 +84,28 @@
   </div>
 
   <div  id="products" class="pt-3 col-lg-9 col-md-8">
+    <div style="position: relative;">
+      <div class="catalogSearchInputIcon">
+        <img @click="catalogSearch" src="../../../assets/icons/search-icon.svg">
+      </div>
+      <input placeholder="search..." v-model="searchText" @keyup.enter="catalogSearch" class="catalogSearchInput" type="text">
+      <div class="catalogSearchClearIcon" v-if="searchText!==''">
+        <img @click="searchText='';getProducts()" src="../../../assets/icons/xBlack.svg">
+      </div>
+    </div>
+
+    <div v-if="filteredList.length === 0 && searchText !=='' && searchStatus">
+      <div style="display: flex;justify-content: center;align-items: center;">
+        No results found for {{searchText}}
+      </div>
+    </div>
+
+    <div v-if="filteredList.length !== 0 && searchText !=='' && searchStatus">
+      <div style="display: flex;justify-content: center;align-items: center;">
+        Results for: {{searchText}}
+      </div>
+    </div>
+
     <div v-if="spinner">
       <Spinner/>
     </div>
@@ -77,12 +113,11 @@
       <ClientCatalogItem v-bind:catalog="filteredList"/>
     </div>
 
-
     <div style="display: flex;height: 50px;width: 100%;justify-content: center;align-items: center;">
       <div v-if="currentPage>3"  @click="currentPage--" style="cursor: pointer;">
         <img src="../../../assets/icons/prevArrow.svg">
       </div>
-      <div class="paginationItem" v-if="currentPage>3"  @click="currentPage=1" style="cursor: pointer;">1</div>
+      <div class="paginationItem" v-if="currentPage>3"  @click="currentPage=1;getProducts()" style="cursor: pointer;">1</div>
       <div v-if="currentPage>3">
         ...
       </div>
@@ -92,44 +127,12 @@
       <div v-if="currentPage<numberOfPagesArray.length-2">
         ...
       </div>
-      <div class="paginationItem" v-if="currentPage<numberOfPagesArray.length-2" @click="currentPage=numberOfPagesArray.slice(-1)[0]" style="cursor: pointer;">{{numberOfPagesArray.slice(-1)[0]}}</div>
+      <div class="paginationItem" v-if="currentPage<numberOfPagesArray.length-2" @click="currentPage=numberOfPagesArray.slice(-1)[0];getProducts()" style="cursor: pointer;">{{numberOfPagesArray.slice(-1)[0]}}</div>
       <div v-if="currentPage<numberOfPagesArray.length-2" @click="currentPage++" style="cursor: pointer;">
         <img src="../../../assets/icons/side-arrow.svg">
       </div>
     </div>
   </div>
-
-
-
-
-
-<!--  <div class="parent-modal">-->
-<!--    <div class="modal myModal fade" id="categoriess" tabindex="-1" role="dialog" aria-labelledby="add-points" aria-hidden="true">-->
-<!--      <div class="modal-dialog" role="document">-->
-<!--        <div class="modal-content category-content">-->
-<!--          <div class="modal-header category-header align-items-center">-->
-<!--            <h3 class="modal-title">Edit Category</h3>-->
-<!--            <button type="button" data-dismiss="modal" aria-label="Close" class="close">-->
-<!--              <span aria-hidden="true">-->
-<!--                <img src="../../../assets/icons/xBlack.svg" alt="">-->
-<!--              </span>-->
-<!--            </button>-->
-<!--          </div>-->
-<!--          <div class="modal-body category-body">-->
-<!--            <form class="modal-form">-->
-<!--              <label>Name</label>-->
-<!--              <input  class="form-input cashback-input mb-3"  placeholder="Enter a name">-->
-
-<!--              <textarea class="general-area"></textarea>-->
-<!--              <div class="d-flex justify-content-end">-->
-<!--                <button  class="save">Save</button>-->
-<!--              </div>-->
-<!--            </form>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
 
 </div>
 
@@ -148,6 +151,10 @@ name: "Catalog",
   },
   data(){
     return{
+      showSortDrop:false,
+      sortBy:"ascendingName",
+      searchStatus:false,
+      searchText:"",
       spinner:true,
       catalog:[],
       listCategory:[],
@@ -185,6 +192,12 @@ name: "Catalog",
     },
   },
   methods: {
+    catalogSearch(){
+      // this.selectedCategory = "all";
+      this.currentPage = 1;
+      this.getProducts();
+      this.searchStatus = true;
+    },
     setCategory(id){
       this.selectedCategory = id;
       this.currentPage = 1;
@@ -208,6 +221,7 @@ name: "Catalog",
       $('body').css({'overflow':'auto'})
       },
     showFilterCategory(item){
+      console.log("showFilterCategory");
       if(item==='category'){
         $('.showCategory').addClass('active')
       }
@@ -222,6 +236,7 @@ name: "Catalog",
     },
 
     removeFilterCategory(item){
+      console.log("removeFilterCategory");
       if(item === 'category'){
         $('.showCategory').removeClass('active')
 
@@ -269,6 +284,7 @@ name: "Catalog",
       });
     },
     async  getProducts(){
+      this.spinner = true;
       const options = {
         headers: {"x-client-url": this.currentCompanyCatalog},
         params: {
@@ -276,6 +292,8 @@ name: "Catalog",
           "categoryId":this.selectedCategory,
           "min":this.from,
           "max":this.to,
+          "searchText":this.searchText,
+          "sortBy":this.sortBy,
         },
       }
        await this.axios.get(this.url('getClientProducts'),options)
@@ -286,6 +304,7 @@ name: "Catalog",
          })
     },
     async  getProductsForPrice(){
+      //yes its a copy of a function
       let that = this;
       const options = {
         headers: {"x-client-url": this.currentCompanyCatalog},
@@ -336,15 +355,22 @@ name: "Catalog",
     }, 500),
   },
   watch:{
+    searchText:{
+      handler: function (text) {
+        if(text.length===0){
+          this.searchStatus = false;
+          this.getProducts();
+        }
+      },
+    },
+
     from: {
-      handler: function (num) {
-        console.log(num,"FROM");
+      handler: function () {
         this.getByPrice();
       },
     },
     to: {
-      handler: function (num) {
-        console.log(num,"TO");
+      handler: function () {
         this.getByPrice();
       },
     },
@@ -381,6 +407,73 @@ name: "Catalog",
 
 .backdrop-filter.active{
   display: block;
+}
+.catalogSearchClearIcon{
+  position: absolute;
+  top: 12px;
+  right: 28px;
+}
+
+.catalogSort{
+  width: 100%;
+  height: 30px;
+  outline: none;
+  border-style: none;
+  padding: 0 16px;
+  background: url("../../../assets/img/select_arrow.svg") no-repeat;
+  -moz-appearance:none; /* Firefox */
+  -webkit-appearance:none; /* Safari and Chrome */
+  appearance:none;
+  background-position-x: calc(100% - 15px);
+  background-position-y: 7px;
+  color: #606877;
+  font-size: 14px;
+}
+.catalogSort:focus-visible{
+  border-style: none;
+  outline: none;
+}
+.sortDropDown div{
+  cursor: pointer;
+}
+.sortDropDown div:hover{
+  color:#616cf5!important;
+}
+
+.sortDropDown{
+  position: absolute;
+  width: 100%;
+  background: #F4F4F4;
+  border-radius: 5px;
+  top: 35px;
+  right: 0;
+  padding: 10px;
+}
+
+.selectWrapper{
+  padding: 0 16px;
+  color: #606877;
+  font-size: 14px;
+  height: 30px;
+  border-radius: 20px;
+  background: #F4F4F4;
+  justify-content: center;
+}
+
+.catalogSearchInputIcon{
+  position: absolute;
+  top: 12px;
+  left: 15px;
+}
+.catalogSearchInput{
+  width: calc(100% - 13px);
+  font-size: 18px;
+  line-height: 24px;
+  color: black;
+  padding: 10px 120px 10px 40px;
+  border-radius: 50px;
+  border:1px solid #D3D3D3;
+  margin-bottom: 5px;
 }
 
 .paginationItem{
@@ -458,7 +551,7 @@ name: "Catalog",
 }
 .new-product, .app-buttons-item{
   height: 40px;
-  width:50%;
+  width:100%;
 }
 .app-buttons-item{
   justify-content: center;
@@ -471,7 +564,7 @@ name: "Catalog",
 }
 .catalog-left{
   padding-right:5px;
-  position: sticky;
+  /*position: sticky;*/
   top:40px;
   z-index: 1000;
   transition:0.3s;
@@ -509,6 +602,7 @@ name: "Catalog",
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 3px;
 }
 .catalog-list:hover{
   background: #EBEEFF;

@@ -192,6 +192,7 @@ export default {
   },
   methods:{
     removeActiveFromLink(){
+      console.log("removeActiveFromLink","imp");
       $('.menu-wrapper').removeClass('active')
       setTimeout(()=>{
         $('.backdrop-menu').removeClass('active')
@@ -200,6 +201,7 @@ export default {
       document.body.style.position = '';
     },
     removeActive(){
+      console.log("removeActive","imp");
       $('.menu-wrapper').removeClass('active')
       setTimeout(()=>{
         $('.backdrop-menu').removeClass('active')
@@ -210,6 +212,7 @@ export default {
       window.scrollTo(0, parseInt(scrollY || '0') * -1);
     },
     showNavbar(){
+      console.log("showNavbar","imp");
       $('.menu-wrapper').addClass('active')
       $('.backdrop-menu').addClass('active')
       document.body.style.top = `-${window.scrollY}px`;
@@ -217,10 +220,8 @@ export default {
       document.body.style.width = '100%';
     },
     logout(){
-
       this.$store.dispatch("Client/logout");
       this.$store.dispatch("Orders/clearAll");
-
       this.$router.push({ path: `/${this.currentCompanyCatalog}`});
     },
     close_drop(){

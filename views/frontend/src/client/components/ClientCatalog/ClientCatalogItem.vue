@@ -10,18 +10,15 @@
               <!--        <img :src="server+'/'+product.img">-->
             </div>
             <div class="product-add">
-              <h2 class="long-text"  style="overflow: hidden;text-overflow: ellipsis; margin-bottom:10px;">{{product.name}} {{product.quantity}}</h2>
+              <h2 class="long-text tool-tip"  style="overflow: hidden;text-overflow: ellipsis; margin-bottom:10px;"
+                  data-toggle="tooltip" data-placement="top" :title="product.name"
+              >{{product.name}} {{product.quantity}}</h2>
               <span class="mr-2" v-if="checkDates(product.promoStart,product.promoEnd)">{{product.promoPrice}} {{catalog_settings.currency}}</span>
               <span :class="{lineThrough:checkDates(product.promoStart,product.promoEnd)}">{{product.price}} {{catalog_settings.currency}}</span>
             </div>
-
-
 <!--            <button v-if="!catalog_settings.catalogMode" class="add-to-card" @click="addToCart(product._id)">Add to cart</button>-->
 <!--            <button v-else class="add-to-card" @click="selectProduct(product._id)">View</button>-->
             <button class="add-to-card" @click="selectProduct(product._id)">View</button>
-
-
-
           </div>
         </div>
     </div>
@@ -125,6 +122,11 @@ name: "ClientCatalogItem",
 
       if(cart_object.product.hasMultipleTypes){
         $('#selectSizeModalClientCatalogItem').modal('show');
+
+
+
+
+
         return;
       }
 

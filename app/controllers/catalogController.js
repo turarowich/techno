@@ -24,6 +24,8 @@ class catalogController{
             'msg': 'Sending products'
         }
 
+        console.log(req.query,"ASDSDSDSD");
+
         //filter types:
         ////by category
         ////by price
@@ -44,11 +46,38 @@ class catalogController{
             filterQuery.price.$lte = req.query.max;
         }
 
+        if(req.query.searchText && req.query.searchText.length > 0){
+            let searchText = req.query.searchText.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+            console.log(searchText,"45454");
+            filterQuery.name= { $regex: '.*' + searchText + '.*' ,$options: 'i'};
+        }
+
+        console.log(req.query.sortBy,"99999999999999999999")
+
+        let sortBy = {'name':1}
+        switch (req.query.sortBy) {
+            case "ascendingName":
+                sortBy = {'name':1};
+                break;
+            case "descendingName":
+                sortBy = {'name':-1};
+                break;
+            case "ascendingPrice":
+                sortBy = {'price':1};
+                break;
+            case "descendingPrice":
+                sortBy = {'price':-1};
+                break;
+        }
+
+
+
+
         try {
             if(!req.query.page){
                 result['objects'] = await Product.find({'active':true});
             }else{
-                result['objects'] = await Product.find(filterQuery).sort({'name':1}).skip(skipCount).limit(perPage);
+                result['objects'] = await Product.find(filterQuery).sort(sortBy).skip(skipCount).limit(perPage);
                 result['pagesCount'] = Math.round(await Product.find(filterQuery).count()/perPage);
                 let allProducts = await Product.find({'active':true});
                 result["maxPrice"] = allProducts.reduce((acc, val) => {
