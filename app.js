@@ -173,7 +173,7 @@ const xmlController = require("./app/controllers/xmlController")
 
 const job2 = cron.schedule('* * * * *', () => {  // "* * * * *" every minute // "0 * * * *" every hour
     //Cron job every hour
-    xmlController.parseXml("loygift60b7032e691787213076f378");
+    xmlController.parseXml("loygift60f13737d0dc58349bbbfa9f"); // sajda db
 });
 job2.start();
 
