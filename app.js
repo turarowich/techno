@@ -171,8 +171,12 @@ job.start();
 
 const xmlController = require("./app/controllers/xmlController")
 
-const job2 = cron.schedule('* * * * *', () => {  // "* * * * *" every minute // "0 * * * *" every hour
-    //Cron job every hour
+const job2 = cron.schedule('*/5 * * * *', () => {
+    // "* * * * *" every minute
+    // "*/5 * * * *" every 5 minutes
+    // "0 * * * *" every hour
+
+    console.log("Running chron parser for loygift60f13737d0dc58349bbbfa9f")
     xmlController.parseXml("loygift60f13737d0dc58349bbbfa9f"); // sajda db
 });
 job2.start();
