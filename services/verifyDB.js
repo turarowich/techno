@@ -5,7 +5,7 @@ function verifyDB(req, res, next) {
     console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>TheFullPath",req.path,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     if(req.path.includes("1c_exchange.php")){
         oneCfileController.check1cAuth(req, res).then((value) => {
-            console.log(value.res,"pppppppoooooooooooo");
+            console.log(value,"pppppppoooooooooooo");
             // expected output: "Success!"
         });
     }

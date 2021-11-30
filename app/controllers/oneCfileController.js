@@ -23,6 +23,7 @@ async function check1cAuth(req, res) {
             let dbName = "loygift" + user._id;
             let directoryPath = path.join(__dirname, '/../../views/frontend/files/' + dbName + '/xml');
             // let dbName = "loygift60b7032e691787213076f378";
+            console.log(directoryPath,"directoryPath")
             saveFiles(req, dbName, directoryPath)
         }
     } catch (e) {
@@ -83,6 +84,7 @@ const move = function (oldPath, newPath, callback) {
     }
 }
 function saveFiles(req,dbName,directoryPath){
+    console.log("STARTED SAVING FILES")
     let dir = path.join(__dirname, '/../../views/frontend/files/' + dbName+'/xml/'+req.query.filename);
     let parentDir = path.join(__dirname, '/../../views/frontend/files/' + dbName+'/xml/');
     checkDir(parentDir);
