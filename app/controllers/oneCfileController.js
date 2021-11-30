@@ -18,7 +18,7 @@ async function check1cAuth(req, res) {
             return res.status(200).send(`zip=yes\r\nfile_limit=5000000`);
         } else if (req.query.type === "catalog" && req.query.mode === "file") {
             let user = await users.findOne({oneCApiLogin: login, oneCApiPassword: password});
-            console.log(user,"USER");
+            console.log(user,"USER",login,password);
             if (!user) {
                 return;
             }
