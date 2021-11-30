@@ -40,6 +40,7 @@ parseXml = async function(companyName){
     // console.log("STARTED xmlParse");
     //companyName full with Loygift prefix
     let directoryPath = path.join(__dirname, '/../../views/frontend/files/' + companyName+'/xml');
+    await oneCfileController.checkDir(directoryPath);
     let db = useDB(companyName)
     let Category = db.model("Category");  //for createCategory and insertProducts
     let Product = db.model("Product"); //for insertProducts
