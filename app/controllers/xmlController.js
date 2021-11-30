@@ -46,6 +46,7 @@ parseXml = async function(companyName){
     let Settings = db.model("Settings");
     let settings = await Settings.findOne({});
     if(!Category || !Product || !settings){
+        console.log("parser, company not found")
         return;
     }
     fs.readdir(directoryPath, async function (err, folders) {
