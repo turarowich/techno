@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 });
 async function sumProductQuantity(sizes=[]){
     let sum = 0;
-    sum.reduce(function (acc,val){return acc+val.quantity},0)
+    sum = sizes.reduce(function (acc,val){return acc+val.quantity},0)
     return sum;
 }
 async function checkAndSendWarning(client,cashback_model,transporter,bonus_history_model,company){
@@ -522,7 +522,7 @@ class OrderController{
                         let index123 = search_product.sizes.findIndex(x => x._id.toString() === product.size._id.toString());
                         if(index123 !== -1){
                             search_product.sizes[index123].quantity = parseFloat(search_product.sizes[index123].quantity)-parseFloat(product.quantity);
-                            search_product.quantity = sumProductQuantity(search_product.sizes);
+                            search_product.quantity = await sumProductQuantity(search_product.sizes);
                         }
                     }else{
                         search_product.quantity = parseFloat(search_product.quantity)-parseFloat(product.quantity);
