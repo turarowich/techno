@@ -129,7 +129,6 @@ app.use('/', VerifyOrder,require('./routes/menu.js')(router))
 
 // handles not found errors
 app.use((err, req, res, next) => {
-    console.log('NEIIIIIIIIIIIIIIIIIIIIIn');
     if (err.httpStatusCode === 404) {
         res.status(404).render('NotFound');
     }
@@ -165,7 +164,6 @@ const cronController = require("./app/controllers/cronController")
 cronController.checkSchedulePush();
 const job = cron.schedule('0 1 * * *', () => {
     //Cron job every day at 1am
-    console.log('STARTED CRON');
     cronController.checkAllClients();
     cronController.checkBirthdayPointsLife();
 });
@@ -176,8 +174,6 @@ const xmlController = require("./app/controllers/xmlController")
 const job2 = cron.schedule('* * * * *', () => {  // "* * * * *" every minute // "0 * * * *" every hour
     //Cron job every hour
     xmlController.parseXml("loygift60b7032e691787213076f378");
-    console.log('STARTED CRON 1 min');
-
 });
 job2.start();
 

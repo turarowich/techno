@@ -89,7 +89,6 @@ class catalogController{
     };
 
     getCatalogSettings = async function (req, res) {
-        console.log("IN getCatalogSettings")
         if(!req.db){
             return res.status('404');
         }
@@ -222,7 +221,6 @@ class catalogController{
 
         if(tempo_order){
             tempo_order.order.forEach(function (item){
-                console.log(item.product);
                 if(item.product._id == pro_id){
                     if(type==="increase"){
                         item.quantity = parseFloat(item.quantity) + 1;

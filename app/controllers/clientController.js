@@ -11,7 +11,6 @@ const fs = require('fs');
 class ClientController {
     
     getClient = async function (req, res) {
-        console.log("GEtting client")
         let db = useDB(req.db)
         let Client = db.model("Client");
         let Discount = db.model("Discount");
@@ -241,7 +240,6 @@ class ClientController {
             'status': 200,
             'msg': '',
         }
-        console.log('try STARTING SER SAVE');
         try {
             //remove old
             let client_object = await clientModel.findById(client);

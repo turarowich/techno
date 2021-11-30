@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 });
 async function sumProductQuantity(sizes=[]){
     let sum = 0;
-    sum.reduce(function (acc,val){return acc+val.quantity},0)
+    sum = sizes.reduce(function (acc,val){return acc+val.quantity},0)
     return sum;
 }
 async function checkAndSendWarning(client,cashback_model,transporter,bonus_history_model,company){
@@ -149,7 +149,7 @@ async function products_with_discounts(products=[],Product,promocode=null,discou
     let productCurrentPrice = [];
     let statusDiscount = {name:'',discount_percentage:0}
     for (const product of products) {
-        let product_obj =  await Product.findById(product.id);
+        let product_obj = await Product.findById(product.id ?? product._id);
         if(!product_obj){
             continue;
         }
@@ -390,6 +390,7 @@ class OrderController{
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
+        console.log(result.objects)
         res.status(result.status).json(result);
     };
 
@@ -397,7 +398,7 @@ class OrderController{
         // console.log("start")
         // const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
         // await delay(5000) /// waiting 1 second.
-        // console.log("end 5 start")
+        console.log(req.fields)
 
         let db = useDB(req.db)
         let Order = db.model("Order");
@@ -517,7 +518,7 @@ class OrderController{
                         let index123 = search_product.sizes.findIndex(x => x._id.toString() === product.size._id.toString());
                         if(index123 !== -1){
                             search_product.sizes[index123].quantity = parseFloat(search_product.sizes[index123].quantity)-parseFloat(product.quantity);
-                            search_product.quantity = sumProductQuantity(search_product.sizes);
+                            search_product.quantity = await sumProductQuantity(search_product.sizes);
                         }
                     }else{
                         search_product.quantity = parseFloat(search_product.quantity)-parseFloat(product.quantity);
