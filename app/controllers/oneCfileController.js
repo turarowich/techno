@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 async function check1cAuth(req, res) {
     try {
+        console.log("CHECK AUTH TRY");
         let users = global.userConnection.useDb('loygift').model("User");
         let basicAuth = req.headers.authorization.split(" ")[1];
         let buff = new Buffer(basicAuth, 'base64');
@@ -17,6 +18,7 @@ async function check1cAuth(req, res) {
             return res.status(200).send(`zip=yes\r\nfile_limit=5000000`);
         } else if (req.query.type === "catalog" && req.query.mode === "file") {
             let user = await users.findOne({oneCApiLogin: login, oneCApiPassword: password});
+            console.log(user,"USER");
             if (!user) {
                 return;
             }
