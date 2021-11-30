@@ -7,7 +7,6 @@ function verifyToken(req, res, next) {
     let validWithoutToken = ['/searchPromocodeByCodeApi','/getSettings','/getProducts', '/getNews', '/getCategories?type=product', '/getCategories']
     let url = '/'+req.path.split('/')[1]
 
-    console.log("verifyToken",url,`Token:${token}`,`Access: ${req.headers['access-place']}`)
     console.log("-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|")
     if (!token || token.includes('null')){
         console.log("No token")

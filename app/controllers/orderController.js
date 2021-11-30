@@ -151,7 +151,7 @@ async function products_with_discounts(products=[],Product,promocode=null,discou
 
     console.log(products,"90909909090000000000000000000000000000000000000000000000000000000000000000000000000")
     for (const product of products) {
-        let product_obj =  await Product.findById(product.id);
+        let product_obj = await Product.findById(product.id ?? product._id);
         if(!product_obj){
             continue;
         }
@@ -395,6 +395,7 @@ class OrderController{
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
+        console.log(result.objects)
         res.status(result.status).json(result);
     };
 
@@ -402,7 +403,7 @@ class OrderController{
         // console.log("start")
         // const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
         // await delay(5000) /// waiting 1 second.
-        // console.log("end 5 start")
+        console.log(req.fields)
 
         let db = useDB(req.db)
         let Order = db.model("Order");

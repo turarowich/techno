@@ -23,7 +23,7 @@ class ProductController{
         }
         try {
             let product = await Product.findById(req.params.product).populate('category').exec()
-            result['object'] = product
+            
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
@@ -50,12 +50,11 @@ class ProductController{
             'msg': 'Sending products'
         }
         try {
-            let products = await Product.find().populate('category').exec()
+            let products = await Product.find().populate('category').limit(10).exec()
             result['objects'] = products
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
-        // console.log(result)
         res.status(result.status).json(result);
     };
 

@@ -37,7 +37,7 @@ const options = {
 };
 
 parseXml = async function(companyName){
-    console.log("STARTED xmlParse");
+    // console.log("STARTED xmlParse");
     //companyName full with Loygift prefix
     let directoryPath = path.join(__dirname, '/../../views/frontend/files/' + companyName+'/xml');
     let db = useDB(companyName)

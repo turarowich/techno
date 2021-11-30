@@ -775,7 +775,6 @@ async function googleRegister(token) {
     if (response.error) {
         return response
     }
-    console.log("9999999",response)
     let check = { google_id: response.data.sub }
     if (response.data.email) {
         check = { $or: [{ google_id: response.data.sub }, { email: response.data.email }] }
