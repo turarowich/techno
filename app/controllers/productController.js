@@ -22,8 +22,7 @@ class ProductController{
             'msg': 'Sending product'
         }
         try {
-            let product = await Product.findById(req.params.product).populate('category').exec()
-            
+            result['object'] = await Product.findById(req.params.product).populate('category').exec();
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
