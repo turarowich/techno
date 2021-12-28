@@ -19,7 +19,7 @@ var catalogController = require('../app/controllers/catalogController');
 var multer = require('multer');
 var upload = multer({ dest: '../public/product/' });
 var verifyAccess = require('../services/verifyAccess');
-
+var adminController = require('../app/controllers/adminController');
 module.exports = function (app, io) {
     //Clients url
     app.get('/getClient/:client', clientController.getClient);
@@ -173,5 +173,12 @@ module.exports = function (app, io) {
     app.delete('/deleteSchedulePush/:object', verifyAccess, pushController.deleteSchedulePush);
     app.post('/deleteSchedulePushes', verifyAccess, pushController.deleteSchedulePushes);
 
+    //adminUrls
+    app.post('/adminLogin', adminController.login);
+    app.get('/getCompanies', adminController.getCompanies);
+    app.get('/getAdminSettings', adminController.getAdminSettings);
+    app.patch('/updateCompanyAccess/:id', adminController.updateCompanyAccess);
+    app.patch('/updateCompany/:id', adminController.updateCompany);
+    app.patch('/updateAdminSettings', adminController.updateAdminSettings);
     return app;
 }

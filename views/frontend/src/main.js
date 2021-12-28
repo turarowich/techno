@@ -94,7 +94,7 @@ app.config.globalProperties.checkCatalogStorageLife = function (){
         //set new version
         this.$store.dispatch("Orders/setVersion",version);
     }else{
-        console.log('Not time YET &&&');
+        //console.log('Not time YET &&&');
     }
 
 };
@@ -193,7 +193,7 @@ app.config.globalProperties.img = function (main) {
     return this.$server + '/' + main
 }
 app.config.globalProperties.url = function (main, id = null, search = null) {
-    console.log(main,'main');
+
     let additional = '/'
     if (id) {
         additional += id + '/'

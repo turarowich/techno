@@ -24,8 +24,6 @@ class catalogController{
             'msg': 'Sending products'
         }
 
-        console.log(req.query,"ASDSDSDSD");
-
         //filter types:
         ////by category
         ////by price
@@ -52,8 +50,6 @@ class catalogController{
             filterQuery.name= { $regex: '.*' + searchText + '.*' ,$options: 'i'};
         }
 
-        console.log(req.query.sortBy,"99999999999999999999")
-
         let sortBy = {'name':1}
         switch (req.query.sortBy) {
             case "ascendingName":
@@ -69,9 +65,6 @@ class catalogController{
                 sortBy = {'price':-1};
                 break;
         }
-
-
-
 
         try {
             if(!req.query.page){

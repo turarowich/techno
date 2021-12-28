@@ -1,7 +1,7 @@
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 var config = require('../../config/config');
-const { sendError, randomNumber, randomPassword, createQrFile, useDB } = require('../../services/helper')
+const { sendError, randomNumber, randomPassword, createQrFile, useDB, getDaysLeft, checkUserBlockStatus } = require('../../services/helper')
 var validate = require('../../config/messages');
 var axios = require('axios');
 const { response } = require('express');
@@ -78,6 +78,8 @@ class AuthController{
         res.status(result.status).json(result);
     };
 
+
+
     login = async function (req, res) {
         let db = useDB('loygift');
         let User = db.model("User");
@@ -85,9 +87,15 @@ class AuthController{
         try {
             let user = await User.findOne({ email: req.fields.email }).select('+password +DB')
             if (!user) return res.status(404).json({ status: 404, msg: 'No user found' });
-
+            user.loggedAt = Date.now();
+            await user.save();
             var passwordIsValid = bcrypt.compareSync(req.fields.password, user.password);
-            if (!passwordIsValid) return res.status(401).json({ auth: false, token: null });
+            if (!passwordIsValid) return res.status(401).json({ auth: false, token: null, msg:'Incorrect password' });
+
+            let blockCheck = await checkUserBlockStatus(user);
+            if(blockCheck.blocked){
+                res.status(418).json({ msg: blockCheck.msg });
+            }
 
             var token = jwt.sign({ id: user._id, user: user._id, name: user.name, type: "admin" }, config.secret_key, {
                 expiresIn: "30 days" // expires in 24 hours
@@ -117,7 +125,7 @@ class AuthController{
         try {
             let user = await Employee.findOne(filter).select('+password')
             if(user.isBlocked){
-                return res.status(400).json({ status: 400, msg: 'Your account has been blocked' });
+                return res.status(400).json({ status: 418, msg: 'Your account has been blocked' });
             }
             
             let errors = {
@@ -126,7 +134,8 @@ class AuthController{
             }
 
             if (!user) return res.status(400).json({ status: 404, msg: 'No user found', errors: errors });
-
+            user.loggedAt = Date.now();
+            await user.save();
             var passwordIsValid = bcrypt.compareSync(req.fields.password, user.password);
             delete errors.phone
             if (!passwordIsValid) return res.status(401).json({ status: 401, msg: "Not valid password", auth: false, token: null, errors: errors });

@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
+    isBlocked: {
+        type: Boolean,
+        required: false,
+        default: false
+    },
     oneCApiAddress: {
         type: String,
         required: false,

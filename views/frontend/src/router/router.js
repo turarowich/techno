@@ -48,7 +48,7 @@ import AddressDelivery from "@/components/settings/AddressDelivery";
 import Log from "@/components/Log/Log";
 import Admin from "@/components/admin/Admin";
 
-
+import AdminLogin from "@/components/admin/AdminLogin";
 
 
 
@@ -236,8 +236,6 @@ const routes = [
             },
         ],
 
-
-
     },
     {
         path: "/clients",
@@ -288,9 +286,23 @@ const routes = [
         component: Admin,
         meta: {
             hideNavbar: true,
-            requiresAuthMain:true,
-        }
+            requiresAuthAdmin:true,
+        },
+        children: [
+        ],
     },
+    {
+        path: "/adminLogin",
+        name: "AdminLogin",
+        component: AdminLogin,
+        meta: {
+            hideNavbar: true,
+            requiresAuthMain:false,
+        },
+        children: [
+        ],
+    },
+
     {
         path: "/log",
         name: "Log",
@@ -424,21 +436,26 @@ const router = createRouter({
 
 //WEB Catalog auth guard.
 router.beforeEach((to, from, next) => {
-    console.log('router BEFORE EACH');
     const authenticatedUser = store.state.Client.user.auth;
     const current_company_url = store.state.Catalog.company_url;
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
     const requiresAuthMain = to.matched.some(record => record.meta.requiresAuthMain);
+
+    const requiresAuthAdmin = to.matched.some(record => record.meta.requiresAuthAdmin);
+    const tokenAdmin = localStorage.getItem("tokenAdmin");
     const token = localStorage.getItem("token");
 
     // Check for protected route
     if (requiresAuth && !authenticatedUser) {
         //if client catalog
-        next({ path: `/${current_company_url}/signin` })
+        next({ path: `/${current_company_url}/signin` });
     } else if(token == null && requiresAuthMain){
         //if main crm
-        next({ path: '/' })
+        next({ path: '/' });
+    } else if(tokenAdmin == null && requiresAuthAdmin){
+        console.log("router only s admin")
+        next({ path: '/' });
     }
     else {
         next();

@@ -1,6 +1,4 @@
 <template>
-
-
 <div class="row catalog">
   <div id="categories" class="pt-3 col-lg-3 col-md-4">
     <div class="catalog-left">
@@ -161,7 +159,7 @@ name: "Catalog",
       filtered: 'all',
       selectedCategory:"all",
       from:0,
-      to:0,
+      to:1000,
       showCategory:'All',
       currentPage:1,
       numberOfPagesArray:[],
@@ -250,14 +248,15 @@ name: "Catalog",
       document.body.style.top = '';
       document.body.style.position = '';
       window.scrollTo(0, parseInt(scrollY || '0') * -1);
-
     },
     getRangeValues() {
       const slider = $("#range-slider").data("ionRangeSlider");
       this.from = slider.result.from;
       this.to = slider.result.to;
+      console.log(`getRangeValues call ${slider.result.from} ${slider.result.to}`)
     },
     rangeSlider() {
+      console.log("range slider call");
       $("#range-slider").ionRangeSlider({
         type: "double",
         min: 0,
@@ -266,6 +265,7 @@ name: "Catalog",
         to: 9999,
         prefix: "$",
         onChange: (data) => {
+          console.log(`rangeSlider on change ${data.from}`)
           this.from = data.from;
           this.to = data.to
         }
@@ -284,6 +284,7 @@ name: "Catalog",
       });
     },
     async  getProducts(){
+      console.log("getProducts call");
       this.spinner = true;
       const options = {
         headers: {"x-client-url": this.currentCompanyCatalog},
@@ -305,6 +306,7 @@ name: "Catalog",
     },
     async  getProductsForPrice(){
       //yes its a copy of a function
+      console.log("getProductsForPrice_call");
       let that = this;
       const options = {
         headers: {"x-client-url": this.currentCompanyCatalog},
@@ -316,28 +318,25 @@ name: "Catalog",
         },
       }
       await this.axios.get(this.url('getClientProducts'),options)
-          .then((response) => {
-            this.catalog = response.data.objects;
-            this.numberOfPagesArray = Array.from({length: response.data.pagesCount || 0}, (_, i) => i + 1)  ;
-            this.spinner = false;
-
-            this.from = response.data.minPrice;
-            this.to = response.data.maxPrice;
-
-            let instance = $("#range-slider").data("ionRangeSlider");
-            instance.update({
-              from: that.from,
-              to:that.to,
-              max:that.to,
-            });
-            let instance2 = $("#range-slider2").data("ionRangeSlider");
-            instance2.update({
-              from: that.from,
-              to:that.to,
-              max:that.to,
-            });
-
-          })
+        .then((response) => {
+          // this.catalog = response.data.objects;
+          // this.numberOfPagesArray = Array.from({length: response.data.pagesCount || 0}, (_, i) => i + 1)  ;
+          // this.spinner = false;
+          this.from = response.data.minPrice;
+          this.to = response.data.maxPrice;
+          let instance = $("#range-slider").data("ionRangeSlider");
+          instance.update({
+            from: that.from,
+            to:that.to,
+            max:that.to,
+          });
+          let instance2 = $("#range-slider2").data("ionRangeSlider");
+          instance2.update({
+            from: that.from,
+            to:that.to,
+            max:that.to,
+          });
+        })
     },
 
     async getCategories() {
@@ -351,6 +350,7 @@ name: "Catalog",
           })
     },
     getByPrice: _.debounce(function() {
+      console.log("getByPrice debounce call");
       this.getProducts();
     }, 500),
   },
@@ -366,21 +366,25 @@ name: "Catalog",
 
     from: {
       handler: function () {
+        console.log("Watche from")
         this.getByPrice();
       },
     },
     to: {
       handler: function () {
+        console.log("Watche to")
         this.getByPrice();
       },
     },
   },
   mounted(){
-    this.rangeSlider()
-    this.getRangeValues()
-    this.getCategories()
-    this.getProducts()
+    console.log("MOUNTED START")
     this.getProductsForPrice()
+    this.rangeSlider()
+    // this.getRangeValues()
+    this.getCategories()
+    // this.getProducts()
+
 }
 
 }

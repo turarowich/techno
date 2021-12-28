@@ -104,7 +104,7 @@ router.get("/auth/google", passport.authenticate("google", { authType: 'reauthen
 router.get("/auth/twitter", passport.authenticate("twitter", { authType: 'reauthenticate'}));
 
 
-const io = require('socket.io')(httpsServer, {
+const io = require('socket.io')(httpServer, {
     cors: {
         // origin: "http://localhost:3000",
         origin: ["http://10.121.6.75:8080","http://localhost:3000", "http://127.0.0.1:3000", "https://app.loygift.com", "http://10.121.6.29:3000", "*:*"],
@@ -176,8 +176,8 @@ const job2 = cron.schedule('0 * * * *', () => {
     // "*/5 * * * *" every 5 minutes
     // "0 * * * *" every hour
 
-    console.log("Running chron parser for loygift60f13737d0dc58349bbbfa9f")
-    xmlController.parseXml("loygift60f13737d0dc58349bbbfa9f"); // sajda db
+    console.log("Running chron parser for loygift60f13737d0dc58349bbbfa9f")// sajda db
+    xmlController.parseXml("loygift60b7032e691787213076f378");
 });
 job2.start();
 

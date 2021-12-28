@@ -1,11 +1,11 @@
 // var config = require('../config/config');
-const oneCfileController = require('../app/controllers/oneCfileController')
+const oneCfileController = require('../app/controllers/oneCfileController');
+const { checkUserBlockStatus } = require('../services/helper')
 function verifyDB(req, res, next) {
     let path = req.path.split('/')[1]
     console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>TheFullPath",req.path,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     if(req.path.includes("1c_exchange.php")){
         oneCfileController.check1cAuth(req, res).then((value) => {
-
             // expected output: "Success!"
         });
     }
@@ -39,7 +39,25 @@ function verifyDB(req, res, next) {
                     req.db = "loygift" + repo.company;
                     req.headers['access-place'] = repo.company;
                     console.log(repo.company,"repo.company");
-                    next();
+                    //company status check
+                    let mainUsersModel = global.userConnection.useDb('loygift').model("User");
+                    mainUsersModel.findById(repo.company).then(mainUser=>{
+                        if(mainUser){
+                            checkUserBlockStatus(mainUser).then(blockCheck=>{
+                                if(blockCheck.blocked){
+                                    return res.status(404).send('Unable to find the requested company!');
+                                }else {
+                                    next();
+                                }
+                            })
+                        }else{
+                            return res.status(404).send('Unable to find the requested company!');
+                        }
+                    }).catch(err=>{
+                        return res.status(404).send('Unable to find the requested company!');
+                    })
+                    //
+                    // next();
                 }else{
                     //throw error
                     console.log('company settings not found');

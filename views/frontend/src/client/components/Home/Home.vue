@@ -47,7 +47,6 @@ name: "Home",
 
   },
   beforeCreate(){
-    console.log("BeforeCreate HOME VUE");
     ///Ahahah ahahhah
     // (async () => {
     //   const options = {

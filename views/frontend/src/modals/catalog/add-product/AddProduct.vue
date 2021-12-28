@@ -7,144 +7,166 @@
             <h3 class="modal-title">Add Product</h3>
           </div>
           <div class="myModal-body">
-                <div class="row">
-                  <div class="col-11 m-auto">
-                    <form id="myForm" @submit.prevent="onSubmit"  class="modal-form">
-                      <div class="d-flex ">
-                        <div style="width:50%" class="mr-3">
-                          <label class="product-label">Name</label><br>
-                          <input  v-model="newProduct.name" style="width:100%" :class="{errorInput: validateName === true}"  class="cashback-input">
-                          <div class="fill-fields" v-if="validateName === true">Fill in the fields</div>
-                        </div>
-
-                        <div class="quantity-category mr-3">
-                          <label class="product-label">Quantity</label><br>
-                          <input v-model="newProduct.quantity" :class="{errorInput: validateQuantity === true}" type="number" min="1"  class="cashback-input">
-                          <div class="fill-fields" v-if="validateQuantity === true">Fill in the fields</div>
-                        </div>
-
-                        <div style="width:25%;">
-                          <label class="product-label">Select category</label><br>
-                          <select v-model="newProduct.category" class="form-control mb-0 select-phone" aria-label="Default select example">
-                            <option :value="cat._id" v-for="cat in listCategory.slice(1)"  :key="cat._id" >{{cat.name}}</option>
-                          </select>
-                        </div>
+              <div class="row">
+                <div class="col-11 m-auto">
+                  <form id="myForm" @submit.prevent="onSubmit"  class="modal-form">
+                    <div class="d-flex ">
+                      <div style="width:50%" class="mr-3">
+                        <label class="product-label">Name</label><br>
+                        <input  v-model="newProduct.name" style="width:100%" :class="{errorInput: validateName === true}"  class="cashback-input">
+                        <div class="fill-fields" v-if="validateName === true">Fill in the fields</div>
                       </div>
 
-                      <a @click="showRussian" class="add-russian">+ Add in russian</a>
-                      <input id="name_ru"  v-model="newProduct.name_ru" name="name_ru" style="width:50%; display: none"  class="cashback-input mb-4 "><br>
-                      <label>Description</label>
-                      <textarea class="general-area mb-3" style="height:160px" v-model="newProduct.description"  name="description"></textarea>
-
-
-<!--                      <div class="d-flex mb-3">-->
-<!--                        <label class="custom-checkbox">-->
-<!--                          <input v-model="sizesBlock" @change="checkDiscount" type="checkbox" >-->
-<!--                          <span class="checkmark"></span>-->
-<!--                        </label>-->
-<!--                        <span>Sizes</span>-->
-<!--                      </div>-->
-<!--                      <div v-if="sizesBlock" class="mb-4 ">-->
-<!--                        <div>-->
-<!--                          <span id="addSize" class="save" style="cursor: pointer;width: 150px">Add size+</span>-->
-<!--                        </div>-->
-
-<!--                        <div class="d-flex justify-content-between">-->
-<!--                            <div class="d-flex">-->
-<!--                              <span>Size</span>-->
-<!--                              <span>40</span>-->
-<!--                            </div>-->
-<!--                            <div class="d-flex">-->
-<!--                              <span>Price</span>-->
-<!--                              <span>400</span>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                      </div>-->
-
-
-
-                      <div class="d-flex mb-3">
-                        <label class="custom-checkbox">
-                          <input v-model="showPrice" @change="checkDiscount" id="show-price" type="checkbox" >
-                          <span class="checkmark"></span></label>
-                        <span>Discount</span>
+                      <div class="quantity-category mr-3">
+                        <label class="product-label">Quantity</label><br>
+                        <input v-model="newProduct.quantity" :class="{errorInput: validateQuantity === true}" type="number" min="1"  class="cashback-input">
+                        <div class="fill-fields" v-if="validateQuantity === true">Fill in the fields</div>
                       </div>
 
-                      <div class="d-flex mb-4 ">
-                        <div style=" width:33.33%; margin-right:8px;">
-                          <label>Price</label>
-                          <input :class="{errorInput: validatePrice === true}"  v-model="newProduct.price"  type="number" class="form-input cashback-input"  name="price">
-                          <div class="fill-fields" v-if="validatePrice===true">Fill in the fields</div>
-                        </div>
-                        <div  v-if="showPrice" style="width:33.33%; margin-right:8px;">
-                          <label>Promotional prices</label>
-                          <input :class="{errorInput: validatePromoPrice === true}" v-model="newProduct.promoPrice" class="form-input cashback-input" placeholder="Price">
-                          <div class="fill-fields" v-if="validatePromoPrice===true">Fill in the fields</div>
-                        </div>
-                        <div style="width:33.33%;">
-                          <label>Vendor code</label>
-                          <input   v-model="newProduct.vendorCode" class="form-input cashback-input mb-4"  placeholder="Vendor code"  name="vendorCode">
-                        </div>
+                      <div style="width:25%;">
+                        <label class="product-label">Select category</label><br>
+                        <select v-model="newProduct.category" class="form-control mb-0 select-phone" aria-label="Default select example">
+                          <option :value="cat._id" v-for="cat in listCategory.slice(1)"  :key="cat._id" >{{cat.name}}</option>
+                        </select>
                       </div>
+                    </div>
 
-                      <label class="valid-label">Period of action</label>
-                      <div class=" product-calendar d-flex">
-                        <div class="mr-2">
-                          <label >From</label>
-                          <div :class="{errorInput: validateFrom=== true}" class="calendar d-flex align-items-center">
-                            <input  autocomplete="off" name="promoStart" v-model="newProduct.promoStart.formatted" class="calendar-input" id="promoStart">
-                            <img src="../../../assets/icons/Calendar.svg">
-                          </div>
-                          <div class="fill-fields" v-if="validateFrom===true">Fill in the fields</div>
-                        </div>
+                    <a @click="showRussian" class="add-russian">+ Add in russian</a>
+                    <input id="name_ru"  v-model="newProduct.name_ru" name="name_ru" style="width:50%; display: none"  class="cashback-input mb-4 "><br>
+                    <label>Description</label>
+                    <textarea class="general-area mb-3" style="height:160px" v-model="newProduct.description"  name="description"></textarea>
 
+
+
+                    <div class="d-flex mb-3">
+                      <label class="custom-checkbox">
+                        <input v-model="newProduct.hasMultipleTypes"   type="checkbox">
+                        <span class="checkmark"></span>
+                      </label>
+                      <span>Has Sizes</span>
+                    </div>
+                    <div v-if="newProduct.hasMultipleTypes">
+                      <div>SIZES</div>
+                      <div class="d-flex" style="justify-content: space-between;gap: 5px;">
+                        <div style="flex: 1 1 0px">Size</div>
+                        <div style="flex: 1 1 0px">Quantity</div>
+                        <div style="flex: 1 1 0px">Price</div>
+                        <div style="flex: 1 1 0px">VendorCode</div>
+                        <div style="width: 22px;"></div>
+                      </div>
+                      <div v-for="(size, index) in newProduct.sizes" :key="index" class="d-flex" style="justify-content: space-between;gap: 5px;">
+                        <div style="flex: 1 1 0px">{{ size.size }}</div>
+                        <div style="flex: 1 1 0px">{{ size.quantity }}</div>
+                        <div style="flex: 1 1 0px">{{ size.price }} </div>
+                        <div style="flex: 1 1 0px">{{ size.vendorCode }}</div>
                         <div>
-                          <label>To</label>
-                          <div :class="{errorInput: validateTo === true}" class="calendar d-flex align-items-center">
-                            <input  autocomplete="off" name="promoEnd" v-model="newProduct.promoEnd.formatted"  class="calendar-input" id="promoEnd">
-                            <img src="../../../assets/icons/Calendar.svg">
-                          </div>
-                          <div class="fill-fields" v-if="validateTo===true">Fill in the fields</div>
+                          <img @click="removeSize(index)" style="cursor: pointer;" src="../../../assets/icons/greyX.svg">
                         </div>
+                      </div>
 
+                      <div class="mt-1">
+                        <div class="d-flex newSizeBlock">
+                          <div>
+                            <input placeholder="Size" v-model="sizeObject.size" type="text" class="form-input cashback-input"  name="size_size">
+                          </div>
+                          <div>
+                            <input placeholder="Quantity" v-model="sizeObject.quantity" type="text" class="form-input cashback-input"  name="size_quantity">
+                          </div>
+                          <div>
+                            <input placeholder="Price" v-model="sizeObject.price" type="text"  class="form-input cashback-input"  name="size_price">
+                          </div>
+                          <div>
+                            <input placeholder="VendorCode" v-model="sizeObject.vendorCode" type="text"  class="form-input cashback-input"  name="size_vendorCode">
+                          </div>
+                        </div>
+                        <div class="fill-fields" v-if="addSizeError.length>0">
+                          {{ addSizeError }}
+                        </div>
+                        <span class="save" style="cursor: pointer;width: 120px;" @click="addNewSize">Add Size</span>
+
+                      </div>
+                    </div>
+
+                    <div class="d-flex ">
+                      <div style=" width:33.33%; margin-right:8px;">
+                        <label>Price</label>
+                        <input :class="{errorInput: validatePrice === true}"  v-model="newProduct.price"  type="number" class="form-input cashback-input"  name="price">
+                        <div class="fill-fields" v-if="validatePrice===true">Fill in the fields</div>
                       </div>
 
 
-                      <div class="d-flex mb-3">
-                        <label class="custom-checkbox"><input v-model="newProduct.recommend"  type="checkbox" ><span class="checkmark"></span></label>
-                        <span>Recommended</span>
+                      <div style="width:33.33%;">
+                        <label>Vendor code</label>
+                        <input   v-model="newProduct.vendorCode" class="form-input cashback-input mb-4"  placeholder="Vendor code"  name="vendorCode">
                       </div>
+                    </div>
+                    <div class="d-flex mb-3">
+                      <label class="custom-checkbox">
+                        <input v-model="showPrice" @change="checkDiscount" id="show-price" type="checkbox" >
+                        <span class="checkmark"></span></label>
+                      <span>Discount</span>
+                    </div>
 
+                    <div class="d-flex mb-4 ">
 
-                      <div class="modal-img ">
-                          <label> Photos</label>
-                        <p>
-                            You can upload 4 more JPG or PNG photos, the minimum resolution is 400*400px, the size is<br> not more than 3 MB. The first photo will be shown as the main one by default
-                          </p>
+                      <div  v-if="showPrice" style="width:33.33%; margin-right:8px;">
+                        <label>Promotional price</label>
+                        <input :class="{errorInput: validatePromoPrice === true}" v-model="newProduct.promoPrice" class="form-input cashback-input" placeholder="Price">
+                        <div class="fill-fields" v-if="validatePromoPrice===true">Fill in the fields</div>
+                      </div>
+                    </div>
+                    <label class="valid-label">Period of action</label>
+                    <div class=" product-calendar d-flex">
+                      <div class="mr-2">
+                        <label >From</label>
+                        <div :class="{errorInput: validateFrom=== true}" class="calendar d-flex align-items-center">
+                          <input  autocomplete="off" name="promoStart" v-model="newProduct.promoStart.formatted" class="calendar-input" id="promoStart">
+                          <img src="../../../assets/icons/Calendar.svg">
+                        </div>
+                        <div class="fill-fields" v-if="validateFrom===true">Fill in the fields</div>
+                      </div>
+                      <div>
+                        <label>To</label>
+                        <div :class="{errorInput: validateTo === true}" class="calendar d-flex align-items-center">
+                          <input  autocomplete="off" name="promoEnd" v-model="newProduct.promoEnd.formatted"  class="calendar-input" id="promoEnd">
+                          <img src="../../../assets/icons/Calendar.svg">
+                        </div>
+                        <div class="fill-fields" v-if="validateTo===true">Fill in the fields</div>
+                      </div>
+                    </div>
+                    <div class="d-flex mb-3">
+                      <label class="custom-checkbox"><input v-model="newProduct.recommend"  type="checkbox" ><span class="checkmark"></span></label>
+                      <span>Recommended</span>
+                    </div>
 
-                        <div class="d-flex">
-                          <label>
-                            <img src="../../../assets/img/modal-img.svg ">
-                            <input @change="onFileChange($event)" class="d-none" ref="uploadPhoto" accept="image/*" multiple id="imgArray" type="file" name="imgArray">
-                          </label>
-                          <div class="d-flex" v-if="newProduct.imgArray.length !==0">
-                            <div  v-for="(img,index) in imagePreview" :key="index" class="selected-images">
-                              <img id="choosed-img" :src="img" class="show-images mr-2" />
-                              <div class="selected-overlay">
-                                <img @click="removeImage(index)" class="remove-image" src="../../../assets/icons/deleteClient.svg">
-                              </div>
+                    <div class="modal-img ">
+                        <label> Photos</label>
+                      <p>
+                          You can upload 4 more JPG or PNG photos, the minimum resolution is 400*400px, the size is<br> not more than 3 MB. The first photo will be shown as the main one by default
+                        </p>
+                      <div class="d-flex">
+                        <label>
+                          <img src="../../../assets/img/modal-img.svg ">
+                          <input @change="onFileChange($event)" class="d-none" ref="uploadPhoto" accept="image/*" multiple id="imgArray" type="file" name="imgArray">
+                        </label>
+                        <div class="d-flex" v-if="newProduct.imgArray.length !==0">
+                          <div  v-for="(img,index) in imagePreview" :key="index" class="selected-images">
+                            <img id="choosed-img" :src="img" class="show-images mr-2" />
+                            <div class="selected-overlay">
+                              <img @click="removeImage(index)" class="remove-image" src="../../../assets/icons/deleteClient.svg">
                             </div>
                           </div>
                         </div>
-                        </div>
-
-                      <div class="modal-btn d-flex">
-                        <button  type="submit" class="save">Save</button>
-                        <div class="cancel" @click="cancel">Cancel</div>
                       </div>
-                    </form>
-                  </div>
+                      </div>
+
+                    <div class="modal-btn d-flex">
+                      <button  type="submit" class="save">Save</button>
+                      <div class="cancel" @click="cancel">Cancel</div>
+                    </div>
+                  </form>
                 </div>
+              </div>
           </div>
         </div>
       </div>
@@ -160,7 +182,13 @@ name: "AddProduct",
 props:['listCategory', 'getProducts'],
   data(){
     return{
-      sizesBlock:false,
+      addSizeError:"",
+      sizeObject:{
+        size:"",
+        quantity:"",
+        price:"",
+        vendorCode:"",
+      },
       today:this.$moment().format("YYYY-MM-DD"),
       validateFrom: false,
       validateTo: false,
@@ -171,6 +199,8 @@ props:['listCategory', 'getProducts'],
       previewImage:[],
       showPrice:false,
       newProduct:{
+        hasMultipleTypes:false,
+        sizes:[],
         recommend:false,
         name_ru:'',
         imgArray: [],
@@ -202,21 +232,54 @@ props:['listCategory', 'getProducts'],
   }
   },
   methods:{
-    showRussian(){
-    $('#name_ru').toggle();
-  },
-    cancel(){
-    $('#add-products').modal("hide");
-    this.newProduct = {
-      name: '',
-      price:'',
-      quantity:'',
-      category: '',
-      img:'',
-      imgArray: [],
+    isNumeric(str) {
+      if (typeof str != "string") return false // we only process strings!
+      return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+      !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
+    },
+    removeSize(index){
+      this.newProduct.sizes.splice(index,1);
+    },
+    addNewSize(){
+      if(this.sizeObject.size.length<1){
+        this.addSizeError = "Fill in size name";
+        return;
+      }
 
-    }
-  },
+      if(this.sizeObject.quantity.length<1 || !this.isNumeric(this.sizeObject.quantity)){
+        this.addSizeError = "Fill in size quantity with a numeral";
+        return;
+      }
+
+      if(this.sizeObject.price.length<1 || !this.isNumeric(this.sizeObject.price)){
+        this.addSizeError = "Fill in size price with a numeral";
+        return;
+      }
+
+      this.newProduct.sizes.push({ ...this.sizeObject });
+
+      for (const property in this.sizeObject) {
+        this.sizeObject[property] = "";
+      }
+      this.addSizeError = "";
+    },
+    showRussian(){
+      $('#name_ru').toggle();
+    },
+    cancel(){
+      $('#add-products').modal("hide");
+      this.newProduct = {
+        hasMultipleTypes: false,
+        sizes: [],
+        name: '',
+        price:'',
+        quantity:'',
+        category: '',
+        img:'',
+        imgArray: [],
+
+      }
+    },
     removeImage(idx){
     this.newProduct.imgArray = this.newProduct.imgArray.filter((item,index)=>{
       console.log(item);
@@ -258,12 +321,8 @@ props:['listCategory', 'getProducts'],
       })
     },
     onSubmit(){
-
       let new_product = this.newProduct;
       const form  = new FormData;
-
-
-
       for(let item in new_product.imgArray){
           if(item<1){
            form.append('img', new_product.imgArray[item])
@@ -272,8 +331,6 @@ props:['listCategory', 'getProducts'],
            form.append('imgArray'+(item-1),new_product.imgArray[item])
           }
         }
-
-
 
       if(new_product.name === ""){
         this.validateName = true
@@ -347,6 +404,8 @@ props:['listCategory', 'getProducts'],
         form.append('description', new_product.description)
         form.append('vendorCode', new_product.vendorCode)
         form.append('recommend',new_product.recommend)
+        form.append('sizes',JSON.stringify(new_product.sizes))
+        form.append('hasMultipleTypes',new_product.hasMultipleTypes)
 
       this.axios.post(this.url('addProduct'), form)
             .then(() => {
@@ -354,6 +413,8 @@ props:['listCategory', 'getProducts'],
               this.$successAlert('Product has been added');
               $('#add-products').modal("hide")
               this.newProduct = {
+                hasMultipleTypes: false,
+                sizes: [],
                 name: '',
                 price:'',
                 quantity:'',
@@ -385,7 +446,6 @@ props:['listCategory', 'getProducts'],
 
         })
 
-
       $('#add-products').on('shown', function () {
         $("#modal-content").scrollTop(0);
       });
@@ -405,7 +465,6 @@ props:['listCategory', 'getProducts'],
       }
     });
 
-
     new this.$lightpick({
       field: document.getElementById('promoEnd'),
       format:'',
@@ -421,10 +480,14 @@ props:['listCategory', 'getProducts'],
 </script>
 
 <style scoped>
-#addSize{
+.newSizeBlock{
+  gap: 5px;
+  margin-bottom: 5px;
+}
+.newSizeBlock div{
+  flex:1 0 0;
 
 }
-
 .selected-images:hover .remove-image{
   opacity: 1;
 }

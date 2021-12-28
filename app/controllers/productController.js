@@ -80,6 +80,11 @@ class ProductController{
             if(data['category'] === ""){
                 data['category'] = null
             }
+
+            for (let qui of JSON.parse(data.sizes)){
+                console.log(qui,"oooooooooo")
+            }
+
             let product = await new Product({
                 type:data.type || "product",
                 name: data.name,
@@ -98,6 +103,8 @@ class ProductController{
                 category: data.category,
                 recommend: data.recommend,
                 active: data.active,
+                sizes: JSON.parse(data.sizes),
+                hasMultipleTypes: data.hasMultipleTypes,
             });
 
             await product.validate()
@@ -168,6 +175,7 @@ class ProductController{
         }
         updateProduct: try {
             let data = req.fields
+            data.sizes = JSON.parse(data.sizes);
             let query = { '_id': req.params.product }
             data['updatedAt'] = new Date()
             if(data['category'] === ""){
@@ -182,12 +190,6 @@ class ProductController{
 
 
             let product = await Product.findOneAndUpdate(query, data)
-
-
-            // let test2 = await Product.findById(product.id);
-            //
-            // console.log(product,"1111111111");
-            // console.log(test2,"222222222222");
 
             if (typeof req.fields.img === 'string' && req.fields.img != product.img) {
                 product.img = req.fields.img

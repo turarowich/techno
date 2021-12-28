@@ -361,6 +361,35 @@ function getClientDiscount(client=null,discounts = []){
     return discount_object;
 }
 
+function getDaysLeft(selectedDate){
+    let today = moment();
+    let start = moment(selectedDate).startOf('day');
+    let end = moment(today).startOf('day');
+    return start.diff(end, 'days',true);
+}
+async function checkUserBlockStatus(mainUser) {
+    let db = useDB('loygift');
+    let AdminSettings = db.model("AdminSettings");
+    let response = {blocked:false,msg:"Your account has been blocked"};
+    if (mainUser.isBlocked){
+        response.blocked = true;
+        response.msg = "Your account has been blocked";
+    }
+
+    let adminSetting = await AdminSettings.findOne({});
+    if(!adminSetting){
+        adminSetting = await new AdminSettings();
+    }
+    if(adminSetting.autoBlock){
+        if (getDaysLeft(mainUser.activeBefore)<1){
+            response.blocked = true;
+            response.msg = "Your account has been blocked, due to expired subscription";
+        }
+    }
+
+    return response;
+}
+
 function compareDates(dateStart_,dateEnd_,editDate_=null){
     if(!dateStart_ || !dateEnd_){
         return false;
@@ -383,4 +412,6 @@ module.exports = {
     checkAccess: checkAccess,
     getClientDiscount: getClientDiscount,
     compareDates:compareDates,
+    getDaysLeft:getDaysLeft,
+    checkUserBlockStatus:checkUserBlockStatus,
 }
