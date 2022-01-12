@@ -170,27 +170,37 @@ const job = cron.schedule('0 1 * * *', () => {
 job.start();
 
 const xmlController = require("./app/controllers/xmlController")
-
-const job2 = cron.schedule('0 * * * *', () => {
-    // "* * * * *" every minute
-    // "*/5 * * * *" every 5 minutes
-    // "0 * * * *" every hour
-
-    console.log("Running chron parser for loygift60f13737d0dc58349bbbfa9f")// sajda db
-    xmlController.parseXml("loygift60b7032e691787213076f378");
-});
-job2.start();
-
-
+// const job2 = cron.schedule('0 * * * *', () => {
+//     // "* * * * *" every minute
+//     // "*/5 * * * *" every 5 minutes
+//     // "0 * * * *" every hour
+//     console.log("Running chron parser for loygift60f13737d0dc58349bbbfa9f")// sajda db
+//     xmlController.parseXml("loygift60f13737d0dc58349bbbfa9f");
+// });
+// job2.start();
 // cron end
 
 //xml start
-// const xmlController = require("./app/controllers/xmlController")
+const adminController = require("./app/controllers/adminController");
+adminController.getMainUsers().then(listOfUsers => {
+    if(listOfUsers){
+        for(const user of listOfUsers){
+            if(user.catalogParserStatus){
+                global.cronJobMethods.createParserCron(user,global.cronJobMethods.parserCronTime,function (){
+                    //  loygift60f13737d0dc58349bbbfa9f sajda db
+                    console.log(`Running chron parser for loygift${user._id}`)
+                    xmlController.parseXml(`loygift${user._id}`);
+                })
+            }
+        }
+    }else{
+        //throw error
+    }
+}).catch(error => {
+        console.log({ error })
+    });
 //xml end
-
-
-
-module.exports = admin
+module.exports = {admin:admin};
 httpServer.listen(config.port_http, () => {
     console.log(`App listening at http://${config.localhost}:${config.port_http}`);
     console.log(`App listening at http://${config.ip}:${config.port_http}`);

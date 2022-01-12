@@ -1,7 +1,9 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 var config = require('../../config/config');
+const xmlController = require("./xmlController");
 const { sendError,useDB, getDaysLeft } = require('../../services/helper');
+
 sortByFunc = function (property,sortOrder){
     sortOrder = parseInt(sortOrder);
     let first = sortOrder === 1 ? -1 : 1;
@@ -67,6 +69,41 @@ class AdminController{
         res.status(result.status).json(result);
     }
 
+    getMainUsers = async function(){
+        let db = useDB('loygift');
+        let User = db.model("User");
+        return User.find({});
+    };
+
+    // startCronParsers = async function () {
+    //     let db = useDB('loygift');
+    //     let User = db.model("User");
+    //     let users = await User.find({});
+    //     users.foreach(function (comp){
+    //         console.log(comp,"opopopopoooooooo11111111111111111111111111111111111111");
+    //     })
+    // };
+
+    getActiveCronParsers = async function(req,res){
+        let result = {};
+        let listAllJobsArray = [];
+        try{
+            let listAllJobsObject = await global.cronJobMethods.listCronJobs();
+            Object.keys(listAllJobsObject).forEach(job=>{
+                if(job.includes('parser')){
+                    let temp = {};
+                    temp['id'] =  job.replace('parser-', '');
+                    temp['time'] =  listAllJobsObject[job].cron.cronTime;
+                    listAllJobsArray.push(temp);
+                }
+            });
+            result['objects'] = listAllJobsArray;
+            res.status(200).json(result);
+        }catch (e){
+            res.status(500).json(e);
+        }
+    }
+
     getCompanies = async function(req,res){
         let filterQuery = {};
         if(req.query.searchText && req.query.searchText.length > 0){
@@ -88,6 +125,11 @@ class AdminController{
             let Settings = companyDb.model("Settings");
             let clients = await Client.find({});
             let setting = await Settings.findOne(filterQuery);
+
+            if(user.companyName === "admin"){
+                continue;
+            }
+
             if(!setting && filterQuery.name){
                 continue;
             }
@@ -102,6 +144,7 @@ class AdminController{
             detail.created = user.createdAt;
             detail.lastLogged = user.loggedAt;
             detail.isBlocked = user.isBlocked;
+            detail.catalogParserStatus = user.catalogParserStatus;
             detail.password = '';
             detail.daysLeft = getDaysLeft(user.activeBefore);
             companyDetails.push(detail);
@@ -139,6 +182,7 @@ class AdminController{
         let phone = req.fields.company.phone;
         let password = req.fields.company.password;
         let country = req.fields.company.country;
+        let catalogParserStatus = req.fields.company.catalogParserStatus;
 
         let id = req.params['id'] || '';
         let db = useDB('loygift');
@@ -154,10 +198,21 @@ class AdminController{
                 user.activeBefore = expireDate;
                 user.email = email;
                 user.phone = phone;
+                user.catalogParserStatus = catalogParserStatus;
                 if(password.length>0){
                     user.password = bcrypt.hashSync(password, 8);
                 }
                 await user.save();
+
+                if(user.catalogParserStatus){
+                    await global.cronJobMethods.createParserCron(user, global.cronJobMethods.parserCronTime, function () {
+                        console.log(`Running chron parser for loygift${user._id}`)
+                        xmlController.parseXml(`loygift${user._id}`);
+                    })
+                }else{
+                    await global.cronJobMethods.removeCronJob(`parser-${user.companyName}-${user.email}`);
+                }
+
                 let companyDb = useDB(`loygift${user._id}`);
                 let Settings = companyDb.model("Settings");
                 let setting = await Settings.findOne({});

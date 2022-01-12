@@ -80,11 +80,7 @@ class ProductController{
             if(data['category'] === ""){
                 data['category'] = null
             }
-
-            for (let qui of JSON.parse(data.sizes)){
-                console.log(qui,"oooooooooo")
-            }
-
+            
             let product = await new Product({
                 type:data.type || "product",
                 name: data.name,

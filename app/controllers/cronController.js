@@ -215,6 +215,10 @@ usedBdPointsCheck = async function (ordersModel, clientObject,history) {
 
 
 class CronManager {
+    // "* * * * *" every minute
+    // "*/5 * * * *" every 5 minutes
+    // "0 * * * *" every hour
+    parserCronTime="0 * * * *";
     constructor() {
         this._jobs = {};
     }
@@ -353,6 +357,16 @@ const removeCronJob = async function (schedulePushId="") {
     })
 }
 
+const listCronJobs = async function () {
+    return cronManager.list();
+}
+
+const createParserCron = async function (user,time,func) {
+    let parserCronName = `parser-${user.companyName}-${user.email}`;
+    return cronManager.add(parserCronName,time,func);
+}
+
+
 checkSchedulePush = async function () {
     let companies = [];
     try{
@@ -381,7 +395,10 @@ const testStart = function (){
 }
 global["cronJobMethods"] = {
     createCronJob,
-    removeCronJob
+    removeCronJob,
+    listCronJobs,
+    createParserCron,
+    parserCronTime:cronManager.parserCronTime
 }
 // cronManager.add("test","* * * * *",testStart)
 

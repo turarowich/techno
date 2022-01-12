@@ -176,6 +176,7 @@ module.exports = function (app, io) {
     //adminUrls
     app.post('/adminLogin', adminController.login);
     app.get('/getCompanies', adminController.getCompanies);
+    app.get('/getActiveCronParsers', adminController.getActiveCronParsers);
     app.get('/getAdminSettings', adminController.getAdminSettings);
     app.patch('/updateCompanyAccess/:id', adminController.updateCompanyAccess);
     app.patch('/updateCompany/:id', adminController.updateCompany);

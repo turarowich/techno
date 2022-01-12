@@ -46,7 +46,6 @@
                       <span>Has Sizes</span>
                     </div>
                     <div v-if="newProduct.hasMultipleTypes">
-                      <div>SIZES</div>
                       <div class="d-flex" style="justify-content: space-between;gap: 5px;">
                         <div style="flex: 1 1 0px">Size</div>
                         <div style="flex: 1 1 0px">Quantity</div>
@@ -93,8 +92,6 @@
                         <input :class="{errorInput: validatePrice === true}"  v-model="newProduct.price"  type="number" class="form-input cashback-input"  name="price">
                         <div class="fill-fields" v-if="validatePrice===true">Fill in the fields</div>
                       </div>
-
-
                       <div style="width:33.33%;">
                         <label>Vendor code</label>
                         <input   v-model="newProduct.vendorCode" class="form-input cashback-input mb-4"  placeholder="Vendor code"  name="vendorCode">
@@ -108,7 +105,6 @@
                     </div>
 
                     <div class="d-flex mb-4 ">
-
                       <div  v-if="showPrice" style="width:33.33%; margin-right:8px;">
                         <label>Promotional price</label>
                         <input :class="{errorInput: validatePromoPrice === true}" v-model="newProduct.promoPrice" class="form-input cashback-input" placeholder="Price">
@@ -357,55 +353,60 @@ props:['listCategory', 'getProducts'],
         return;
       }
 
-    if(this.showPrice === true){
-      if(new_product.promoPrice === 0){
-        this.validatePromoPrice = true;
-      }
-      else{
-        this.validatePromoPrice = false
-      }
-      if(new_product.promoStart.obj === ''){
-        this.validateFrom = true;
+      if(this.showPrice === true){
+        if(new_product.promoPrice === 0){
+          this.validatePromoPrice = true;
+        }
+        else{
+          this.validatePromoPrice = false
+        }
+        if(new_product.promoStart.obj === ''){
+          this.validateFrom = true;
+
+        }
+        else{
+          this.validateFrom  = false
+        }
+
+        if(new_product.promoEnd.obj === ''){
+          this.validateTo = true;
+          return;
+        }
+        else{
+          this.validateTo  = false
+        }
 
       }
       else{
-        this.validateFrom  = false
+        this.validateFrom = false;
+        this.validateTo = false;
+        this.validatePromoPrice = false;
       }
-
-      if(new_product.promoEnd.obj === ''){
-        this.validateTo = true;
-        return;
-      }
-      else{
-        this.validateTo  = false
-      }
-
-    }
-    else{
-      this.validateFrom = false;
-      this.validateTo = false;
-      this.validatePromoPrice = false;
-    }
-
 
       if((new Date(new_product.promoEnd.formatted).getTime() < new Date(this.today).getTime())){
         this.$warningAlert('End date must greater than todays date')
         return;
       }
 
-        form.append('promoStart', new_product.promoStart.obj)
-        form.append('promoEnd', new_product.promoEnd.obj)
-        form.append('category', new_product.category)
-        form.append('name', new_product.name)
-        form.append('name_ru', new_product.name_ru)
-        form.append('price', new_product.price)
-        form.append('quantity', new_product.quantity)
-        form.append('promoPrice', new_product.promoPrice)
-        form.append('description', new_product.description)
-        form.append('vendorCode', new_product.vendorCode)
-        form.append('recommend',new_product.recommend)
-        form.append('sizes',JSON.stringify(new_product.sizes))
-        form.append('hasMultipleTypes',new_product.hasMultipleTypes)
+      if(new_product.hasMultipleTypes && new_product.sizes.length<0){
+        this.$warningAlert('Sizes list is empty')
+        return;
+      }
+
+
+      form.append('promoStart', new_product.promoStart.obj)
+      form.append('promoEnd', new_product.promoEnd.obj)
+      form.append('category', new_product.category)
+      form.append('name', new_product.name)
+      form.append('name_ru', new_product.name_ru)
+      form.append('price', new_product.price)
+      form.append('quantity', new_product.quantity)
+      form.append('promoPrice', new_product.promoPrice)
+      form.append('description', new_product.description)
+      form.append('vendorCode', new_product.vendorCode)
+      form.append('recommend',new_product.recommend)
+      form.append('sizes',JSON.stringify(new_product.sizes))
+      form.append('hasMultipleTypes',new_product.hasMultipleTypes)
 
       this.axios.post(this.url('addProduct'), form)
             .then(() => {

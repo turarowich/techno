@@ -49,7 +49,6 @@
                 <span>Has Sizes</span>
               </div>
               <div v-if="currentData.hasMultipleTypes">
-                <div>SIZES</div>
                 <div class="d-flex" style="justify-content: space-between;">
                   <div style="flex: 1 1 0px">Size</div>
                   <div style="flex: 1 1 0px">Quantity</div>
@@ -435,6 +434,12 @@ export default {
         this.$warningAlert('End date must greater than todays date')
         return;
       }
+
+      if(updatedProduct.hasMultipleTypes && updatedProduct.sizes.length<0){
+        this.$warningAlert('Sizes list is empty')
+        return;
+      }
+
 
       form.append("name", updatedProduct.name)
       form.append("name_ru", updatedProduct.name_ru)

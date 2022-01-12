@@ -137,7 +137,7 @@ class PushController {
         console.log("sendNewMessageAndroid",req_db)
         let db = useDB(req_db)
         let Device = db.model("Device");
-        const admin = require("../../app");
+        const { admin } = require("../../app");
         try{
             let devicesAndroid = await Device.find({ 'type': 'android', 'client': client })
             devicesAndroid.forEach(function (device){

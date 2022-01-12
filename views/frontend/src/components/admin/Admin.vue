@@ -1,26 +1,26 @@
 <template>
 <div class="contentWrapper">
-    <div class="admin-header">
-      <div style="margin-right: 20px;">
-        <img src="../../assets/img/logoAdmin.svg">
-      </div>
-      <div style="display: flex;justify-content: space-between;flex-direction: column;">
-        <h3 class="company-title" @click="getCompanies">Superadmin panel</h3>
-        <span class="total-company">Companies
-          <span>
-            {{ companies.length }}
-          </span>
-        </span>
-      </div>
+<!--    <div class="admin-header">-->
+<!--      <div style="margin-right: 20px;">-->
+<!--        <img src="../../assets/img/logoAdmin.svg">-->
+<!--      </div>-->
+<!--      <div style="display: flex;justify-content: space-between;flex-direction: column;">-->
+<!--        <h3 class="company-title" @click="getCompanies">Superadmin panel</h3>-->
+<!--        <span class="total-company">Companies-->
+<!--          <span>-->
+<!--            {{ companies.length }}-->
+<!--          </span>-->
+<!--        </span>-->
+<!--      </div>-->
 
-      <div @click="logOut" class="d-flex justify-content-center align-items-center" style="margin-left: auto;cursor: pointer;">
-        <div>
-          <img src="../../assets/icons/log-out.svg" style="margin-bottom: 3px;">
-          <span class="total-company" style="margin-left: 8px;">Log out</span>
-        </div>
-      </div>
+<!--      <div @click="logOut" class="d-flex justify-content-center align-items-center" style="margin-left: auto;cursor: pointer;">-->
+<!--        <div>-->
+<!--          <img src="../../assets/icons/log-out.svg" style="margin-bottom: 3px;">-->
+<!--          <span class="total-company" style="margin-left: 8px;">Log out</span>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
 
-    </div>
     <div class="admin-content">
       <div class="d-flex">
         <div class="main-search d-flex align-items-center" style="width: 40%;">
@@ -43,7 +43,8 @@
 
     <div class="d-flex main-content-header">
       <div class="table-head" style="width: 25%;">Name</div>
-      <div class="table-head" style="width: 25%;">Phone number</div>
+      <div class="table-head" style="width: 15%;">Phone number</div>
+      <div class="table-head" style="width: 10%;">Parser status</div>
       <div @click="setSort('clients')" v-bind:style="[sortBy === 'clients' ? {fontWeight:'bold'}:'']" class="table-head table-link pr-3" style="width: 10%;">
         Clients
         <img v-bind:style="[sortBy === 'clients' && sortOrder === 1 ? {transform:'rotate(180deg)'}:'']" class="date-pol" src="../../assets/icons/polygon.svg">
@@ -75,7 +76,16 @@
           </div>
         </div>
 
-        <div class="table-head" style="width: 25%;">{{company.phone}}</div>
+        <div class="table-head" style="width: 15%;">{{company.phone}}</div>
+        <div class="table-head" style="width: 10%;">
+          <span v-if="company.catalogParserStatus">
+            <img  src="../../assets/icons/greenCheck.svg">
+          </span>
+          <span v-else class="d-flex">
+            <img  src="../../assets/icons/redXRound.svg">
+          </span>
+
+        </div>
         <div class="table-head table-link pr-3" style="width: 10%;">{{ company.clients }}</div>
         <div class="table-head table-link pr-3" style="width: 10%;">
           <div class="status-admin d-flex align-items-center">
@@ -117,7 +127,7 @@
         </div>
       </div>
     </div>
-  </div>                                                                                        
+  </div>
 </div>
   <EditCompany @childDoneEditing="doneEditing()" v-model:selectedCompany="selectedCompany" />
 </template>
@@ -139,6 +149,12 @@ export default {
   },
   components:{
     EditCompany,
+  },
+  computed: {
+    currentRouteName() {
+      console.log(this.$route.name);
+      return this.$route.name;
+    },
   },
   methods:{
     doneEditing(){
@@ -267,7 +283,33 @@ export default {
 </script>
 
 <style scoped>
+.router-link-active{
+  background: none;
+}
+.loyalty-menu{
+  margin-bottom: 10px;
+}
+.loyalty-nav{
+  border-bottom: 1px solid #D3D3D3;
+  margin-bottom: 22px;
+}
+.loyalty-link{
+  color:#999;
+  text-decoration: none;
+  padding-bottom: 11px;
+  border-bottom: 3px solid transparent;
+}
+.loyalty-link.active{
+  color:#222;
+  border-bottom: 3px solid #616CF5;
+  padding-bottom: 11px;
 
+}
+
+.loaylty-list{
+  list-style-type:none;
+  margin-right: 20px;
+}
 .companyName{
   font-size: 16px;
   line-height: 19px;
@@ -279,7 +321,7 @@ export default {
   color: #858585;
 }
 .table-content{
-  height: calc(100vh - 200px);
+  height: 100%;
   overflow-y: overlay;
 }
 .days-left{
@@ -329,7 +371,7 @@ export default {
   border-radius: 10px;
 }
 
-.contentWrapper{
-  margin:30px 30px;
-}
+/*.contentWrapper{*/
+/*  margin:30px 30px;*/
+/*}*/
 </style>

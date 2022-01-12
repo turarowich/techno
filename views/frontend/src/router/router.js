@@ -49,6 +49,8 @@ import Log from "@/components/Log/Log";
 import Admin from "@/components/admin/Admin";
 
 import AdminLogin from "@/components/admin/AdminLogin";
+import AdminNav from "@/components/admin/AdminNav";
+import CatalogImport from "@/components/admin/CatalogImport";
 
 
 
@@ -282,13 +284,23 @@ const routes = [
     },
     {
         path: "/admin",
-        name: "Admin",
-        component: Admin,
+        name: "AdminNav",
+        component: AdminNav,
         meta: {
             hideNavbar: true,
             requiresAuthAdmin:true,
         },
         children: [
+            {
+                path: 'company-list',
+                name: 'CompanyList',
+                component: Admin,
+            },
+            {
+                path: 'catalog-import',
+                name: 'CatalogImport',
+                component: CatalogImport,
+            },
         ],
     },
     {

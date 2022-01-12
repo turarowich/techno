@@ -8,7 +8,7 @@
         <li class="loaylty-list" v-if="isAdmin"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='PersonalSettings' }" to="/settings/personal-settings">Personal settings</router-link></li>
         <li class="loaylty-list" v-if="isAdmin"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='StaffSettings' }" to="/settings/staff-settings">Staff settings</router-link></li>
         <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='AddressDelivery' }" to="/settings/address-delivery">Address and delivery</router-link></li>
-        <li class="loaylty-list" v-if="email==='isamusa786@gmail.com' || 'catzilla312@gmail.com'"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='ProductsImport' }" to="/settings/products-import">Products Import</router-link></li>
+        <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='ProductsImport' }" to="/settings/products-import">Products Import</router-link></li>
       </ul>
     </div>
   </div>

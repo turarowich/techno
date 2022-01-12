@@ -15,7 +15,7 @@ const settingsSchema = new Schema({
     removeGhostsOnImport: {
         type: Boolean,
         required: false,
-        default: true
+        default: false
     },
     groupItemsOnImport: {
         type: Boolean,

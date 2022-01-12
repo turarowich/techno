@@ -41,6 +41,14 @@
               </div>
             </div>
 
+            <div class="d-flex enable-title" style="margin-left: auto;align-items: center;margin-right: 25px;">
+              <label class="switch d-flex">
+                <input v-model="company.catalogParserStatus" type="checkbox" >
+                <span class="slider round"></span>
+              </label>
+              <h2 class="cashback-sub-title">catalogParserStatus</h2>
+            </div>
+
             <div class="modal-btn d-flex">
               <button @click="save" type="button" class="save">Save</button>
               <button data-dismiss="modal" type="button" aria-label="Close" class="closeBtn">Cancel</button>

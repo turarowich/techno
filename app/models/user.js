@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
+    catalogParserStatus: {
+        type: Boolean,
+        required: false,
+        default: false
+    },
     isBlocked: {
         type: Boolean,
         required: false,

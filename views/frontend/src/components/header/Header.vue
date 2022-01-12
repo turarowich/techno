@@ -50,7 +50,7 @@
               </div>
             </div>
             <div class="warning d-flex align-items-center">
-                <span class="number">99</span>
+                <span class="number">{{ getDaysLeft(user_info.activeBefore) }}</span>
                 <span class="mr-2 ml-2" style="color:#8C94A5;">|</span>
                 <span class="days">days lefts</span>
             </div>
@@ -99,10 +99,16 @@ data(){
 }
   },
   methods:{
-  logout(){
-    this.$router.push('/')
-    localStorage.removeItem('token')
-  },
+    logout(){
+      this.$router.push('/')
+      localStorage.removeItem('token')
+    },
+    getDaysLeft(selectedDate){
+      let today = this.$moment();
+      let start = this.$moment(selectedDate).startOf('day');
+      let end = this.$moment(today).startOf('day');
+      return start.diff(end, 'days',true);
+    }
   },
   beforeCreate(){
     this.user_info = JSON.parse(localStorage.getItem('user'))

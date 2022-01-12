@@ -10,8 +10,13 @@ const parser = require('fast-xml-parser');
 const he = require('he');
 const path = require('path');
 const fs = require('fs');
-const { useDB} = require('../../services/helper')
-const oneCfileController = require('./oneCfileController')
+const { useDB} = require('../../services/helper');
+const oneCfileController = require('./oneCfileController');
+
+let productsArray = [];
+let productsCatsAsObjectsArray = [];
+let productsAsObjectsArray = [];
+
 const options = {
     attributeNamePrefix: "@_",
     attrNodeName: "attr", //default is 'false'
@@ -37,7 +42,11 @@ const options = {
 };
 
 parseXml = async function(companyName){
-    // console.log("STARTED xmlParse");
+    console.log(`STARTED xmlParse for ${companyName}`);
+    if(!companyName){
+        console.log("Company is undefined aborting");
+        return;
+    }
     //companyName full with Loygift prefix
     let directoryPath = path.join(__dirname, '/../../views/frontend/files/' + companyName+'/xml');
     await oneCfileController.checkDir(directoryPath);
@@ -173,9 +182,7 @@ const moveImage = async function(imgPath,companyName){
         }
     }
 }
-let productsArray = [];
-let productsCatsAsObjectsArray = [];
-let productsAsObjectsArray = [];
+
 
 const parseVendorCode = function(fullName){
     let res={

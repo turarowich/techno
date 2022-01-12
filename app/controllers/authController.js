@@ -78,8 +78,6 @@ class AuthController{
         res.status(result.status).json(result);
     };
 
-
-
     login = async function (req, res) {
         let db = useDB('loygift');
         let User = db.model("User");

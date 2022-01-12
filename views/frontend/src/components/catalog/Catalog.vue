@@ -484,12 +484,7 @@ name: "Catalog",
        this.axios.get(this.url('getProducts'))
           .then((response) => {
               this.catalogList = response.data.objects;
-              console.log(this.catalogList)
               this.spinner = false;
-
-
-
-
   })
     },
     getCategories(){

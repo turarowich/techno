@@ -21,7 +21,7 @@ function verifyToken(req, res, next) {
                 return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
             }
             jwt.verify(tokenAdmin, config.secret_key, function (err, decoded) {
-                console.log(decoded,"DECODED TOKEN A")
+                // console.log(decoded,"DECODED TOKEN A")
                 if (err){
                     console.log(err,"jwt error")
                     return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
@@ -41,7 +41,7 @@ function verifyToken(req, res, next) {
         token = token.replace(/^Bearer\s+/, "").replace(/^x-access-token\s+/, "");
     }
     jwt.verify(token, config.secret_key, function (err, decoded) {
-        console.log(decoded,"DECODED TOKEN")
+        // console.log(decoded,"DECODED TOKEN")
         if (err){
             console.log(err,"jwt error")
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
