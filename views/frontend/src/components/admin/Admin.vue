@@ -158,7 +158,7 @@ export default {
   },
   methods:{
     doneEditing(){
-      console.log("dd");
+      this.getCompanies();
     },
     async setAutoBlock() {
       const options = {

@@ -219,7 +219,7 @@ class AdminController{
                 if(setting){
                     setting.name = companyName;
                     setting.country = country;
-                    await setting.save();
+                    await setting.save({ validateBeforeSave: false });
                 }
             }
         } catch (error) {
