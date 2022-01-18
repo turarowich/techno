@@ -40,9 +40,17 @@
               </div>
 
               <label>By category</label>
-              <select v-model="filtered" class="select-category form-control">
+              <select v-model="selectedCategory" class="select-category form-control" >
                 <option v-for="cat in listCategory" :key="cat._id" :value="cat._id">{{cat.name}}</option>
               </select>
+
+              <button @click="setFilters" type="button" class="app-buttons-item adding-btns" style="width: 100%;margin-top: 5px;display: flex;justify-content: center;align-items: center;">
+                Filter
+              </button>
+
+              <button @click="clearFilters" type="button" class="app-buttons-item adding-btns" style="width: 100%;margin-top: 5px;display: flex;justify-content: center;align-items: center;">
+                Clear filters
+              </button>
             </form>
           </div>
         </div>
@@ -72,7 +80,7 @@
       <div class="catalog-wrapper d-flex">
         <div class="catalog-menu" style="width:18%;height: 300px;overflow: auto;">
           <ul class="list-group" >
-            <li class="catalog-list" :id="category.name" :ref="'menu'+index"  v-for="(category,index) in listCategory" :key="category._id"  :class="{active: filtered === category._id}"  @click="filtered = category._id">
+            <li class="catalog-list" :id="category.name" :ref="'menu'+index"  v-for="(category,index) in listCategory" :key="category._id"  :class="{active: selectedCategory === category._id}"  @click="setCategory(category._id)">
                 <p class="category-text tool-tip" data-toggle="tooltip" data-placement="top" :title="category.name">
                   {{category.name}}
                 </p>
@@ -135,19 +143,39 @@
 
           </div>
           <div class="pagination d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center">
-              <span>Rows per page</span>
-              <select class="form-control pagination-select" v-model='perPage'>
-                <option value="8">8</option>
-                <option value="16">16</option>
-                <option value="32">32</option>
-              </select>
-            </div>
-            <div class="d-flex align-items-center"><span>{{current_page}}</span> <span class="mr-1 ml-1">of</span> <span class="mr-2">{{totalPages}}</span>
-              <div v-if='showPrev' @click.stop.prevent='currentPage-=1' class=" pagination-btns"><img class="pagination-img"  src="../../assets/icons/prevArrow.svg"></div>
-              <div v-else class="pagination-btns " style="opacity: 0.5;"><img class="pagination-img"  src="../../assets/icons/prevArrow.svg"></div>
-              <div class=" pagination-btns" v-if='showNext' @click.stop.prevent='currentPage+=1'>  <img class="pagination-img"  src="../../assets/icons/side-arrow.svg"></div>
-              <div v-else class=" pagination-btns"  style="opacity: 0.5;">  <img class="pagination-img"   src="../../assets/icons/side-arrow.svg"></div>
+<!--            <div class="d-flex align-items-center">-->
+<!--              <span>Rows per page</span>-->
+<!--              <select class="form-control pagination-select" v-model='perPage'>-->
+<!--                <option value="8">8</option>-->
+<!--                <option value="16">16</option>-->
+<!--                <option value="32">32</option>-->
+<!--              </select>-->
+<!--            </div>-->
+<!--            <div class="d-flex align-items-center"><span>{{current_page}}</span> <span class="mr-1 ml-1">of</span> <span class="mr-2">{{totalPages}}</span>-->
+<!--              <div v-if='showPrev' @click.stop.prevent='currentPage-=1' class=" pagination-btns"><img class="pagination-img"  src="../../assets/icons/prevArrow.svg"></div>-->
+<!--              <div v-else class="pagination-btns " style="opacity: 0.5;"><img class="pagination-img"  src="../../assets/icons/prevArrow.svg"></div>-->
+<!--              <div class=" pagination-btns" v-if='showNext' @click.stop.prevent='currentPage+=1'>  <img class="pagination-img"  src="../../assets/icons/side-arrow.svg"></div>-->
+<!--              <div v-else class=" pagination-btns"  style="opacity: 0.5;">  <img class="pagination-img"   src="../../assets/icons/side-arrow.svg"></div>-->
+<!--            </div>-->
+
+            <div style="display: flex;height: 50px;width: 100%;justify-content: center;align-items: center;">
+              <div v-if="currentPage>3"  @click="currentPage--" style="cursor: pointer;">
+                <img src="../../assets/icons/prevArrow.svg">
+              </div>
+              <div class="paginationItem" v-if="currentPage>3"  @click="currentPage=1;getProducts()" style="cursor: pointer;">1</div>
+              <div v-if="currentPage>3">
+                ...
+              </div>
+              <div v-bind:class="{ activePage: currentPage===page2 }" class="paginationItem" v-for="page2 in numberOfPagesArray.filter(num => num < currentPage+3 && num > currentPage-3)" :key="page2" @click="setPage(page2)">
+                {{page2}}
+              </div>
+              <div v-if="currentPage<numberOfPagesArray.length-2">
+                ...
+              </div>
+              <div class="paginationItem" v-if="currentPage<numberOfPagesArray.length-2" @click="currentPage=numberOfPagesArray.slice(-1)[0];getProducts()" style="cursor: pointer;">{{numberOfPagesArray.slice(-1)[0]}}</div>
+              <div v-if="currentPage<numberOfPagesArray.length-2" @click="currentPage++" style="cursor: pointer;">
+                <img src="../../assets/icons/side-arrow.svg">
+              </div>
             </div>
           </div>
         </div>
@@ -182,13 +210,13 @@ name: "Catalog",
   data(){
     return{
       spinner:true,
-      listCategory:[{_id:'', name:'All'}],
+      listCategory:[{_id:'', name:'all'}],
       catalogList:[],
       deletedProducts:[],
       movedCategories:[],
       search:'',
       sorting:true,
-      filtered: null,
+      selectedCategory: "all",
       perPage: 8,
       currentPage: 1,
       selectAll:false,
@@ -197,86 +225,112 @@ name: "Catalog",
       quantity_from:'',
       quantity_to:'',
       select_product:'',
-      select_category:''
+      select_category:'',
+
+      numberOfPagesArray:[],
     }
   },
   computed:{
     filteredList: function(){
       return  this.catalogList
-          .filter(catalog=>{
-            if(this.price_to.length>0){
-              return catalog.price >= this.price_from && catalog.price <= this.price_to
-            }
-            else if(this.price_to === ''){
-              return catalog.price >=this.price_from;
-            }
-            else{
-              return catalog
-            }
-          })
-          .filter(catalog=>{
-            if(this.quantity_to.length>0){
-              return catalog.quantity >= this.quantity_from && catalog.quantity <= this.quantity_to
-            }
-            else if(this.quantity_to === ''){
-              return catalog.quantity>=this.quantity_from;
-            }
-            else{
-              return catalog
-            }
-          })
-          .filter(catalog => {
-            return catalog.name.toLowerCase().includes(this.search.toLowerCase())
-          })
-          .filter(product => {
-            if(this.filtered){
-              return product.category && product.category._id.includes(this.filtered);
-            }
-            return true;
-          })
-          .filter(product=>{
-            if(this.filtered === ""){
-              return product.category === null
-            }
-            return true
-          })
-
+          // .filter(catalog=>{
+          //   if(this.price_to.length>0){
+          //     return catalog.price >= this.price_from && catalog.price <= this.price_to
+          //   }
+          //   else if(this.price_to === ''){
+          //     return catalog.price >=this.price_from;
+          //   }
+          //   else{
+          //     return catalog
+          //   }
+          // })
+          // .filter(catalog=>{
+          //   if(this.quantity_to.length>0){
+          //     return catalog.quantity >= this.quantity_from && catalog.quantity <= this.quantity_to
+          //   }
+          //   else if(this.quantity_to === ''){
+          //     return catalog.quantity>=this.quantity_from;
+          //   }
+          //   else{
+          //     return catalog
+          //   }
+          // })
+          // .filter(catalog => {
+          //   return catalog.name.toLowerCase().includes(this.search.toLowerCase())
+          // })
+          // .filter(product => {
+          //   if(this.selectedCategory){
+          //     return product.category && product.category._id.includes(this.selectedCategory);
+          //   }
+          //   return true;
+          // })
+          // .filter(product=>{
+          //   if(this.selectedCategory === ""){
+          //     return product.category === null
+          //   }
+          //   return true
+          // })
     },
-    current_page(){
-      if(this.currentPage> this.totalPages){
-        return Math.ceil(this.filteredList.length / this.perPage)
-      }
-
-      return this.currentPage
-    },
+    // current_page(){
+    //   if(this.currentPage> this.totalPages){
+    //     return Math.ceil(this.filteredList.length / this.perPage)
+    //   }
+    //
+    //   return this.currentPage
+    // },
 
     catalogToDisplay: function(){
-      let start = (this.current_page - 1) * this.perPage;
-      let end = this.current_page * this.perPage
-      this.filteredList.map((value, index) =>{
-        value.index = index
-        return value
-      })
-      return this.filteredList.slice(start, end)
+      return this.filteredList;
+      // let start = (this.current_page - 1) * this.perPage;
+      // let end = this.current_page * this.perPage
+      // this.filteredList.map((value, index) =>{
+      //   value.index = index
+      //   return value
+      // })
+      // return this.filteredList.slice(start, end)
     },
-    totalPages:function(){
-      return Math.ceil(this.filteredList.length / this.perPage)
-    },
-    showNext(){
-      return this.currentPage < this.totalPages;
-    },
-    showPrev(){
-      return this.currentPage > 1;
-    },
+    // totalPages:function(){
+    //   return Math.ceil(this.filteredList.length / this.perPage)
+    // },
+
+    // showNext(){
+    //   return this.currentPage < this.totalPages;
+    // },
+    // showPrev(){
+    //   return this.currentPage > 1;
+    // },
 
   },
   methods:{
+    clearFilters(){
+      this.selectedCategory = "all";
+      this.price_from = '';
+      this.price_to = '';
+      this.quantity_from = '';
+      this.quantity_to = '';
+      this.currentPage = 1;
+      this.getProducts();
+    },
+    setFilters(){
+      this.currentPage = 1;
+      this.getProducts();
+    },
+    setPage(page){
+      this.currentPage = page;
+      this.getProducts();
+    },
+    setCategory(id){
+      this.selectedCategory = id;
+      this.currentPage = 1;
+      this.getProducts();
+    },
+
     check(access="catalog", parametr="active", parametr2="canEdit"){
         return this.checkAccess(access, parametr, parametr2)
     },
-  selectAllProduct(){
-      this.catalogToDisplay.map(product=>product['selected'] = this.selectAll)
-  },
+    selectAllProduct(){
+        this.catalogToDisplay.map(product=>product['selected'] = this.selectAll)
+    },
     checkSelection(){
       let selected =  this.filteredList.filter(employee => {
         return employee.selected
@@ -365,9 +419,7 @@ name: "Catalog",
       this.catalogList.map((product)=>{
         if(product._id === id){
           this.select_product = product;
-
         }
-
       })
       console.log(this.select_product,'ssssssssssssss')
     },
@@ -394,31 +446,29 @@ name: "Catalog",
           popup: 'animate__animated animate__fadeOutUp'
         }
 
-
-
       }).then((result) => {
         if (result.isConfirmed) {
           this.axios.delete(this.url('deleteProduct',id))
           .then(()=>{
             this.getProducts()
             Swal.fire({
-                  title:'Success',
-                  timer:800,
-                  text:'Product has been removed',
-                  showConfirmButton:false,
-                  position: 'top-right',
-                  customClass:{
-                    popup:'success-popup',
-                    content:'success-content',
-                    title:'success-title',
-                    header:'success-header',
-                    image:'success-img'
-                  },
-                  showClass:{
-                    popup: 'animate__animated animate__zoomIn'
-                  },
+                title:'Success',
+                timer:800,
+                text:'Product has been removed',
+                showConfirmButton:false,
+                position: 'top-right',
+                customClass:{
+                  popup:'success-popup',
+                  content:'success-content',
+                  title:'success-title',
+                  header:'success-header',
+                  image:'success-img'
+                },
+                showClass:{
+                  popup: 'animate__animated animate__zoomIn'
+                },
 
-                }
+              }
             )}).catch((error)=>{
                 if(error.response && error.response.data){
                     this.$warningAlert(error.response.data.msg)
@@ -428,8 +478,6 @@ name: "Catalog",
       })
     },
     deleteCategory(id){
-
-
       Swal.fire({
         showConfirmButton: true,
         html: 'Are you sure to remove this <br>category',
@@ -454,45 +502,55 @@ name: "Catalog",
       }).then((result) => {
         if (result.isConfirmed) {
           this.axios.delete(this.url('deleteCategory',id))
-              .then(()=>{
-                this.getCategories()
-                const idx = this.listCategory.findIndex(el=>el._id === id);
-                this.$refs[`menu${idx-1}`].click()
-              })
-                Swal.fire({
-                      title:'Success',
-                      timer:800,
-                      text:'Category has been removed',
-                      showConfirmButton:false,
-                      position: 'top-right',
-                      customClass:{
-                        popup:'success-popup',
-                        content:'success-content',
-                        title:'success-title',
-                        header:'success-header',
-                        image:'success-img'
-                      },
-
-
-                    }
-                )
-
+            .then(()=>{
+              this.getCategories()
+              const idx = this.listCategory.findIndex(el=>el._id === id);
+              this.$refs[`menu${idx-1}`].click()
+            })
+              Swal.fire({
+                    title:'Success',
+                    timer:800,
+                    text:'Category has been removed',
+                    showConfirmButton:false,
+                    position: 'top-right',
+                    customClass:{
+                      popup:'success-popup',
+                      content:'success-content',
+                      title:'success-title',
+                      header:'success-header',
+                      image:'success-img'
+                    },
+                  }
+              )
         }
       })
     },
     getProducts(){
-       this.axios.get(this.url('getProducts'))
-          .then((response) => {
-              this.catalogList = response.data.objects;
-              this.spinner = false;
-  })
+      const options = {
+        headers: {"x-client-url": this.currentCompanyCatalog},
+        params: {
+          "page":this.currentPage,
+          "categoryId":this.selectedCategory,
+          "min":this.price_from,
+          "max":this.price_to,
+          "minQuantity":this.quantity_from,
+          "maxQuantity":this.quantity_to,
+        },
+      }
+      this.axios.get(this.url('getProducts'),options)
+        .then((response) => {
+            this.catalogList = response.data.objects;
+            this.numberOfPagesArray = Array.from({length: response.data.pagesCount || 0}, (_, i) => i + 1)  ;
+            this.spinner = false;
+            console.log(this.catalogList,"GET PRODUCTS");
+      })
     },
     getCategories(){
        this.axios.get(this.url('getCategories')+'?type=product')
           .then((res)=>{
             this.listCategory = res.data.objects;
             this.listCategory.unshift({_id:"", name: 'Without category'})
-            this.listCategory.unshift({_id:null, name: 'All'})
+            this.listCategory.unshift({_id:null, name: 'all'})
 
           })
     },
@@ -529,7 +587,6 @@ name: "Catalog",
     }
   },
 
-
   mounted(){
     this.getCategories()
     this.getProducts()
@@ -538,11 +595,25 @@ name: "Catalog",
 }
 </script>￼
 
-
-
-
 <style scoped>
 
+.paginationItem{
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2px;
+}
+
+.activePage{
+  background-color: #616cf5;
+  color: #fff;
+  font-weight: bold;
+}
 .select-category{
   height: 35px;
   background-position-y: 50%;

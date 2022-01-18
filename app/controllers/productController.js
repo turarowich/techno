@@ -36,6 +36,41 @@ class ProductController{
         // await delay(5000) /// waiting 1 second.
         // console.log("end 5 start")
 
+
+        console.log(req.query,"------------------------oooooooooooooooooooooooooo");
+        let perPage = 20;
+        let currentPage = req.query.page || 1;
+        let skipCount = (currentPage-1)*perPage;
+        let filterQuery = {};
+
+        if(req.query.categoryId && req.query.categoryId !== "all"){
+            filterQuery.category = req.query.categoryId;
+        }
+
+        if(req.query.categoryId === ""){
+            filterQuery.category = null;
+        }
+
+        if(req.query.min && req.query.min.length>0){
+            filterQuery.price = {};
+            filterQuery.price.$gte =  req.query.min;
+        }
+        if(req.query.max && req.query.max.length>0){
+            filterQuery.price.$lte = req.query.max;
+        }
+        if(req.query.minQuantity && req.query.minQuantity.length>0){
+            filterQuery.quantity = {};
+            filterQuery.quantity.$gte =  req.query.minQuantity;
+        }
+        if(req.query.maxQuantity && req.query.maxQuantity.length>0){
+            filterQuery.quantity.$lte = req.query.maxQuantity;
+        }
+        if(req.query.searchText && req.query.searchText.length > 0){
+            let searchText = req.query.searchText.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+            filterQuery.name= { $regex: '.*' + searchText + '.*' ,$options: 'i'};
+        }
+
+
         let db = useDB(req.db)
         let Product = db.model("Product");
         if(req.userType == "employee") {
@@ -48,8 +83,12 @@ class ProductController{
             'status': 200,
             'msg': 'Sending products'
         }
+
+        console.log(filterQuery,"filterQueryfilterQuery");
+
         try {
-            let products = await Product.find().populate('category').exec()
+            let products = await Product.find(filterQuery).populate('category').skip(skipCount).limit(perPage).exec()
+            result['pagesCount'] = Math.round(await Product.find(filterQuery).count()/perPage);
             result['objects'] = products
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
