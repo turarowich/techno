@@ -667,7 +667,11 @@ export default {
       }
 
       let products = this.new_order.items.map(function (item){
-        return {id:item.product._id,quantity:item.quantity}
+        return {
+          id:item.product._id,
+          quantity:item.quantity,
+          size:item.size,
+        }
       })
 
       if(this.editState){

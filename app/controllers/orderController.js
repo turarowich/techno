@@ -149,7 +149,6 @@ async function products_with_discounts(products=[],Product,promocode=null,discou
     let productCurrentPrice = [];
     let statusDiscount = {name:'',discount_percentage:0}
 
-    console.log(products,"90909909090000000000000000000000000000000000000000000000000000000000000000000000000")
     for (const product of products) {
         let product_obj = await Product.findById(product.id ?? product._id);
         if(!product_obj){
@@ -171,8 +170,6 @@ async function products_with_discounts(products=[],Product,promocode=null,discou
         temp.quantity = parseFloat(product.quantity)
         let orderItemPrice = parseFloat(product_obj.price);
         //check if product has multiple types/sizes
-
-        console.log(product_obj.hasMultipleTypes ,"&&&&&------------------------", product.size,"*******************")
 
         if(product_obj.hasMultipleTypes && product.size._id !== ''){
             orderItemPrice = parseFloat(product.size.price);
@@ -395,7 +392,6 @@ class OrderController{
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
-        console.log(result.objects)
         res.status(result.status).json(result);
     };
 
@@ -403,7 +399,6 @@ class OrderController{
         // console.log("start")
         // const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
         // await delay(5000) /// waiting 1 second.
-        console.log(req.fields)
 
         let db = useDB(req.db)
         let Order = db.model("Order");

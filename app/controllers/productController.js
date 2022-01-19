@@ -70,7 +70,6 @@ class ProductController{
             filterQuery.name= { $regex: '.*' + searchText + '.*' ,$options: 'i'};
         }
 
-
         let db = useDB(req.db)
         let Product = db.model("Product");
         if(req.userType == "employee") {

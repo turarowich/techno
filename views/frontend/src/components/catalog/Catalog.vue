@@ -66,14 +66,11 @@
           </div>
         </div>
         <button v-if="check()" class="app-buttons-item" data-turbolinks="true"  data-toggle="modal" data-target="#import-client"><img src="../../assets/icons/import.svg"><span>Import</span></button>
-
-
-
       </div>
     </div>
     <div class="main-search d-flex align-items-center">
-      <img src="../../assets/icons/search-icon.svg">
-      <input class="main-input" type="text" placeholder="Search" v-model="search">
+      <img src="../../assets/icons/search-icon.svg" @click="catalogSearch">
+      <input class="main-input" type="text" placeholder="Search" v-model="searchText" @keyup.enter="catalogSearch">
     </div>
     </div>
     <div class="main-content">
@@ -214,7 +211,7 @@ name: "Catalog",
       catalogList:[],
       deletedProducts:[],
       movedCategories:[],
-      search:'',
+      searchText:'',
       sorting:true,
       selectedCategory: "all",
       perPage: 8,
@@ -302,6 +299,11 @@ name: "Catalog",
 
   },
   methods:{
+    catalogSearch(){
+      this.currentPage = 1;
+      this.getProducts();
+      this.searchStatus = true;
+    },
     clearFilters(){
       this.selectedCategory = "all";
       this.price_from = '';
@@ -535,6 +537,7 @@ name: "Catalog",
           "max":this.price_to,
           "minQuantity":this.quantity_from,
           "maxQuantity":this.quantity_to,
+          "searchText":this.searchText,
         },
       }
       this.axios.get(this.url('getProducts'),options)
