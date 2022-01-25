@@ -40,8 +40,8 @@
          {{order.status}}
        </div>
 
-       <div style="width: 8%;"   v-bind:class="{ disabled: order.pointsStatus.received || order.status == 'Cancelled' }">
-         <img  v-on:click="$emit('startScanning',{id:order._id,code:order.code})"   src="../../assets/icons/qr_icon.svg">
+       <div style="width: 8%;text-align: center"  >
+         <img  v-on:click="$emit('startScanning',{id:order._id,code:order.code,state:order.pointsStatus.received})"   src="../../assets/icons/qr_icon.svg">
        </div>
 
        <div class="table-child" style="width:3%">
@@ -165,5 +165,6 @@ mounted() {
 }
 .disabled {
   pointer-events: none;
+  border:1px solid red;
 }
 </style>

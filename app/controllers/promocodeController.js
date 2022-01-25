@@ -235,7 +235,7 @@ class PromocodeController{
             if(type !=="all") {
                 result['objects'] = await Model.find({"name": {$regex: search}, "type": type});
             }else{
-                result['objects'] = await db.model('Product').find( { "name": {$regex: search} } );;
+                result['objects'] = await db.model('Product').find( { "name": {$regex: '.*' + search + '.*' ,$options: 'i'} } );
             }
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])

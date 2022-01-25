@@ -489,6 +489,7 @@ class ClientController {
     };
 
     addClientDevice = async function (req, res) {
+        console.log("ADDING DEVICE",req.fields.device_token)
         let db = useDB(req.db)
         let Client = db.model("Client");
         let Device = db.model("Device");
@@ -502,20 +503,24 @@ class ClientController {
             if (client) {
                 // let device = await Device.findOne({ "token": req.fields.device_token})//old
                 let device = await Device.findOne({ "client": client})//new 04/10/21
+                console.log(device,"DEVICE");
                 if (device){
                     // device.client = req.fields.client //old
                     device.token = req.fields.device_token //new 04/10/21
                     device.save()
                     result['msg'] = "Device changed"
                 }else{
-                    await new Device({
+                    console.log("CREATED 1",req.fields.device_token);
+                    let newDevice = await new Device({
                         client: req.fields.client,
                         token: req.fields.device_token,
                         type: req.fields.type
-                    }).save();
+                    }).save({ validateBeforeSave: false });
+                    console.log("CREATED-",newDevice);
                 }
             }
         } catch (error) {
+            console.log(error,"ERORORRR");
             result = sendError(error, req.headers["accept-language"])
         }
 

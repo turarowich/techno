@@ -296,7 +296,7 @@ function createQrFile(user_id, company) {
     
     QRCode.toFile(dir + link + filename, String(user_id), {
         color: {
-            dark: '#B0B0B0',  // Blue dots
+            dark: '#181818',  // Blue dots
             light: '#0000' // Transparent background
         },
         width: 600

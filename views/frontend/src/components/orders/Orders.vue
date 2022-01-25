@@ -121,14 +121,21 @@
            <div>
              <div style="width: 500px" id="reader"></div>
              <div class="stream">
-               <div>
-                 <p class="error" v-if="camSettings.noFrontCamera">
-                   You don't seem to have a front camera on your device
-                 </p>
-                 <p class="error" v-if="camSettings.noRearCamera">
-                   You don't seem to have a rear camera on your device
-                 </p>
+               <div style="display: flex;flex-direction: column;">
+<!--                 <span @click="getCameraPermissionState" style="cursor:pointer;">Check camera permission</span>-->
+                 <span>Camera permission: {{camSettings.permissionState}}</span>
+                 <span v-if="camSettings.permissionState === 'denied'">
+                   In order to use scanner you have to grant permission to use your camera!
+                 </span>
                </div>
+<!--               <div>-->
+<!--                 <p class="error" v-if="camSettings.noFrontCamera">-->
+<!--                   You don't seem to have a front camera on your device-->
+<!--                 </p>-->
+<!--                 <p class="error" v-if="camSettings.noRearCamera">-->
+<!--                   You don't seem to have a rear camera on your device-->
+<!--                 </p>-->
+<!--               </div>-->
                <div class="qr_header d-flex justify-content-between">
                  <div>
                    <span>Order #</span>
@@ -140,7 +147,7 @@
                  </div>
                </div>
                <qr-stream @decode="onDecode" :camera="camSettings.camera" @init="onInit" class="mb">
-                 <button @click="switchCamera" style="border-radius:5px;margin: 4px;">
+                 <button @click="switchCamera" class="app-buttons-item adding-btns">
                    switch camera
                  </button>
                  <div style="color: red;" class="frame"></div>
@@ -179,7 +186,8 @@ name: "Orders",
       camSettings:{
         camera: 'rear',
         noRearCamera: false,
-        noFrontCamera: false
+        noFrontCamera: false,
+        permissionState:false,
       },
       scanResult:{
         camError:'',
@@ -466,7 +474,33 @@ name: "Orders",
           break
       }
     },
+    getCameraPermissionState(){
+      navigator.permissions.query({ name: "camera" }).then(res => {
+        this.camSettings.permissionState = res.state;
+      })
+    },
     startScanning(order){
+      if(order.state){
+        Swal.fire({
+          timer:1500,
+          title:'Warning',
+          text:"Client already had received bonus for this order",
+          showConfirmButton:false,
+          position: 'top-right',
+          customClass:{
+            popup:'success-popup information-popup',
+            content:'success-content',
+            title:'success-title',
+            header:'success-header',
+            image:'success-img'
+          },
+          showClass:{
+            popup: 'animate__animated animate__zoomIn'
+          }
+        })
+        return
+      }
+
       this.orderForScanning.id = order.id;
       this.orderForScanning.code = order.code;
       $('#QRCodeModalPreview').modal('show');
@@ -493,7 +527,7 @@ name: "Orders",
       try {
         await promise
       } catch (error) {
-        console.log(error,'init-------------------------------------------------------------');
+        console.log(error,'init2-------------------------------------------------------------');
         const triedFrontCamera = this.camSettings.camera === 'front';
         const triedRearCamera = this.camSettings.camera === 'rear';
         const cameraMissingError = error.name === 'OverconstrainedError';
@@ -518,7 +552,10 @@ name: "Orders",
           this.scanResult.camError = "ERROR: installed cameras are not suitable"
         } else if (error.name === 'StreamApiNotSupportedError') {
           this.scanResult.camError = "ERROR: Stream API is not supported in this browser"
+        } else{
+          this.scanResult.camError = error;
         }
+
       }
     }
 
@@ -543,6 +580,7 @@ name: "Orders",
     const to_date = this.$moment().subtract(1, "days").format("YYYY-MM-DD")
     const from_date = this.$moment().format('YYYY-MM-DD')
     this.between_value = to_date + ' to ' + from_date;
+    this.getCameraPermissionState();
   },
 
 

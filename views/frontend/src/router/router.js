@@ -61,6 +61,7 @@ const routes = [
         component: SignIn,
         meta: {
             hideNavbar: true,
+            hideForAuth: true
         }
     },
     {
@@ -451,10 +452,10 @@ router.beforeEach((to, from, next) => {
     const authenticatedUser = store.state.Client.user.auth;
     const current_company_url = store.state.Catalog.company_url;
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-
     const requiresAuthMain = to.matched.some(record => record.meta.requiresAuthMain);
-
     const requiresAuthAdmin = to.matched.some(record => record.meta.requiresAuthAdmin);
+    const hideForAuth = to.matched.some(record => record.meta.hideForAuth);
+
     const tokenAdmin = localStorage.getItem("tokenAdmin");
     const token = localStorage.getItem("token");
 
@@ -470,6 +471,9 @@ router.beforeEach((to, from, next) => {
         next({ path: '/' });
     }
     else {
+        if(token && hideForAuth){
+            next({ path: '/orders' });
+        }
         next();
     }
 });

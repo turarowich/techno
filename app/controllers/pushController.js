@@ -140,6 +140,7 @@ class PushController {
         const { admin } = require("../../app");
         try{
             let devicesAndroid = await Device.find({ 'type': 'android', 'client': client })
+            console.log(devicesAndroid,"devicesAndroid");
             devicesAndroid.forEach(function (device){
                 try{
                     const message1 = {
