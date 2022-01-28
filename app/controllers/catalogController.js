@@ -75,7 +75,7 @@ class catalogController{
                 result['objects'] = await Product.find(filterQuery).sort(sortBy).skip(skipCount).limit(perPage);
                 result['pagesCount'] = Math.round(await Product.find(filterQuery).count()/perPage);
                 let allProducts = await Product.find({'active':true});
-
+                
                 if(allProducts.length<2){
                     result["maxPrice"] = 99999;
                     result["minPrice"] = 1;
@@ -87,7 +87,7 @@ class catalogController{
                         return acc < val.price ? acc : val.price;
                     });
                 }
-
+                
             }
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
