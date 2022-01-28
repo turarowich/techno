@@ -24,6 +24,8 @@ class catalogController{
             'msg': 'Sending products'
         }
 
+        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@",req.query.min)
+
         //filter types:
         ////by category
         ////by price
@@ -65,7 +67,7 @@ class catalogController{
                 sortBy = {'price':-1};
                 break;
         }
-
+        
         try {
             if(!req.query.page){
                 result['objects'] = await Product.find({'active':true});
@@ -73,17 +75,23 @@ class catalogController{
                 result['objects'] = await Product.find(filterQuery).sort(sortBy).skip(skipCount).limit(perPage);
                 result['pagesCount'] = Math.round(await Product.find(filterQuery).count()/perPage);
                 let allProducts = await Product.find({'active':true});
-                result["maxPrice"] = allProducts.reduce((acc, val) => {
-                    return acc > val.price ? acc : val.price;
-                });
-                result["minPrice"] = allProducts.reduce((acc, val) => {
-                    return acc < val.price ? acc : val.price;
-                });
+
+                if(allProducts.length<2){
+                    result["maxPrice"] = 99999;
+                    result["minPrice"] = 1;
+                }else{
+                    result["maxPrice"] = allProducts.reduce((acc, val) => {
+                        return acc > val.price ? acc : val.price;
+                    });
+                    result["minPrice"] = allProducts.reduce((acc, val) => {
+                        return acc < val.price ? acc : val.price;
+                    });
+                }
+
             }
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
-
         res.status(result.status).json(result);
     };
 
