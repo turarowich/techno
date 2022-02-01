@@ -37,7 +37,7 @@ class ProductController{
         // console.log("end 5 start")
 
 
-        console.log(req.query,"------------------------oooooooooooooooooooooooooo");
+        console.log(req.query.page,"------------------------oooooooooooooooooooooooooo");
         let perPage = 20;
         let currentPage = req.query.page || 1;
         let skipCount = (currentPage-1)*perPage;
@@ -83,15 +83,20 @@ class ProductController{
             'msg': 'Sending products'
         }
 
-        console.log(filterQuery,"filterQueryfilterQuery");
-
         try {
-            let products = await Product.find(filterQuery).populate('category').skip(skipCount).limit(perPage).exec()
-            result['pagesCount'] = Math.round(await Product.find(filterQuery).count()/perPage);
-            result['objects'] = products
+
+            if(!req.query.page){
+                result['objects'] = await Product.find({'active': true}).populate('category').exec()
+            }else{
+                let products = await Product.find(filterQuery).populate('category').skip(skipCount).limit(perPage).exec()
+                result['pagesCount'] = Math.round(await Product.find(filterQuery).count()/perPage);
+                result['objects'] = products
+            }
+
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
+        console.log(result['objects'].length,"ppppppppppppppppppppppppppppppppppppppp");
         res.status(result.status).json(result);
     };
 
