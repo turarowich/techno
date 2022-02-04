@@ -348,7 +348,8 @@ props:['listCategory', 'getProducts'],
       else{
         this.validatePrice = false
       }
-      if(new_product.promoPrice > new_product.price){
+
+      if(parseInt(new_product.promoPrice) > parseInt(new_product.price)){
         this.$warningAlert('Promotional price must be less than original price')
         return;
       }
