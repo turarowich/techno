@@ -54,6 +54,7 @@ module.exports = function (app, io) {
     app.post('/getProductImportExcel', verifyAccess, productController.getProductImportExcel);
     app.post('/addProduct', upload.single('file'), productController.addProduct);
     app.put('/updateProduct/:product', verifyAccess, upload.single('file'), productController.updateProduct);
+    app.put('/setProductVisibility/:id', verifyAccess,productController.setProductVisibility);
     app.put('/updateProductsCategory', verifyAccess, productController.updateProductsCategory);
 
 

@@ -197,6 +197,33 @@ class ProductController{
         res.status(result.status).json(result);
     };
 
+    setProductVisibility = async function (req, res) {
+        let db = useDB(req.db)
+        let Product = db.model("Product");
+        if (req.userType == "employee") {
+            let checkResult = await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
+            if (checkResult) {
+                return;
+            }
+        }
+        let result = {
+            'status': 200,
+            'msg': 'Product updated'
+        }
+        try {
+            let product = await Product.findById(req.params.id);
+            if(product){
+                product.active = req.fields.active;
+                product.save();
+            }
+        }catch (e) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.status(result.status).json(result);
+    }
+
+
+
     updateProduct = async function (req, res) {
         let db = useDB(req.db)
         let Product = db.model("Product");

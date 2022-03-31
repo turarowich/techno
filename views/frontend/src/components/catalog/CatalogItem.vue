@@ -68,7 +68,7 @@ export default {
   methods:{
     hideProduct(product,active){
 
-      this.axios.put(this.url('updateProduct',product._id), {active:active})
+      this.axios.put(this.url('setProductVisibility',product._id), {active:active})
           .then(()=>{
             product.active = active
           })
