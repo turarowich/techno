@@ -11,8 +11,8 @@ function verifyTokenSocket(socket, next) {
         // console.log(socket.id,"No verifyTokenSocket");
         next();
     }   
-    console.log("token is", token);
-    console.log("token is", !token || token === "null");
+    // console.log("token is", token);
+    // console.log("token is", !token || token === "null");
     if(token){
         jwt.verify(token, config.secret_key, function (err, decoded) {
             if (err){

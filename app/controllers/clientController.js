@@ -510,7 +510,7 @@ class ClientController {
                 if (device){
                     // device.client = req.fields.client //old
                     device.token = req.fields.device_token //new 04/10/21
-                    device.save()
+                    device.save({ validateBeforeSave: false })
                     result['msg'] = "Device changed"
                 }else{
                     console.log("CREATED 1",req.fields.device_token);
