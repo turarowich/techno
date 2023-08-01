@@ -12,6 +12,8 @@ const productSchema = new Schema({
     controlName: {
         type: String,
         required: false,
+        unique: true,
+        sparse: true,
     },
     sizes:[{
             size:String,
