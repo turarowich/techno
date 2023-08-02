@@ -37,7 +37,9 @@ class ProductController{
         // console.log("end 5 start")
 
 
-        console.log(req.query.page,"------------------------oooooooooooooooooooooooooo");
+        console.log(req.headers['access-place'],"access-place");
+        console.log(req.db,"req.db");
+        // req.db = "loygift64c3cdc2492d8c443c3847a8";
         let perPage = 20;
         let currentPage = req.query.page || 1;
         let skipCount = (currentPage-1)*perPage;
