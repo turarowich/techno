@@ -104,7 +104,7 @@ parseXml = async function (companyName) {
                                         for (const prod of products) {
                                             let name = prod["Наименование"];
                                             let vendorCode = prod["Артикул"];
-                                            let quantity = prod["Количество"];
+                                            let quantity = Math.round(prod["Количество"]);
                                             let oneCId = prod["Ид"];
                                             let price = prod["Цены"]["Цена"]["ЦенаЗаЕдиницу"];
                                             parseProductsToObjects(price, oneCId, name, vendorCode, quantity);
