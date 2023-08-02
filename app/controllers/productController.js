@@ -88,9 +88,10 @@ class ProductController{
         try {
 
             if(!req.query.page){
-                result['objects'] = await Product.find({'active': true}).populate('category').exec()
+                result['objects'] = await Product.find({'active': true}).populate('category').exec();
+                console.log(result['objects'].length,"result['objects']");
             }else{
-                let products = await Product.find(filterQuery).populate('category').skip(skipCount).limit(perPage).exec()
+                let products = await Product.find(filterQuery).populate('category').skip(skipCount).limit(perPage).exec();
                 result['pagesCount'] = Math.round(await Product.find(filterQuery).count()/perPage);
                 result['objects'] = products
             }
