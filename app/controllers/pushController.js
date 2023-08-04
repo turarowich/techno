@@ -84,7 +84,7 @@ class PushController {
                     response.failed.forEach((fail) => {
                         if (fail.status == '400' && fail.response.reason == 'BadDeviceToken'){
                             let device = devicesIOS.find(device => device.token == fail.device)
-                            if(device) device.deleteOne()
+                            if(device && device.type == 'ios') device.deleteOne()
                         }
                     });
                 }
@@ -123,7 +123,7 @@ class PushController {
                     response.failed.forEach((fail) => {
                         if (fail.status == '400' && fail.response.reason == 'BadDeviceToken') {
                             let device = devicesIOS.find(device => device.token == fail.device)
-                            if (device) {
+                            if (device && device.type == 'ios') {
                                 device.deleteOne();
                                 console.log("DELETED@@@@",device);
                             }
@@ -247,7 +247,7 @@ class PushController {
                         response.failed.forEach((fail) => {
                             if (fail.status == '400' && fail.response.reason == 'BadDeviceToken') {
                                 let device = devicesIOS.find(device => device.token == fail.device)
-                                if (device) {
+                                if (device && device.type == 'ios') {
                                     device.deleteOne();
                                     console.log("DELITINGG",device);
                                 }
@@ -517,7 +517,7 @@ class PushController {
                                 response.failed.forEach((fail) => {
                                     if (fail.status == '400' && fail.response.reason == 'BadDeviceToken') {
                                         let device = devicesIOS.find(device => device.token == fail.device)
-                                        if (device) {
+                                        if (device && device.type == 'ios') {
                                             device.deleteOne()
                                             console.log("DELITINGG11",device);
                                         }
