@@ -123,7 +123,10 @@ class PushController {
                     response.failed.forEach((fail) => {
                         if (fail.status == '400' && fail.response.reason == 'BadDeviceToken') {
                             let device = devicesIOS.find(device => device.token == fail.device)
-                            if (device) device.deleteOne()
+                            if (device) {
+                                device.deleteOne();
+                                console.log("DELETED@@@@",device);
+                            }
                         }
                     });
                 }
@@ -213,6 +216,7 @@ class PushController {
             if (req.fields.sendToAll){
                 query = {}
             }
+            console.log(query,"query");
             let devicesIOS = await Device.find(query)
             let dataForNews = {
                 name: data.name,
@@ -243,7 +247,10 @@ class PushController {
                         response.failed.forEach((fail) => {
                             if (fail.status == '400' && fail.response.reason == 'BadDeviceToken') {
                                 let device = devicesIOS.find(device => device.token == fail.device)
-                                if (device) device.deleteOne()
+                                if (device) {
+                                    device.deleteOne();
+                                    console.log("DELITINGG",device);
+                                }
                             }
                         });
                     }
@@ -510,7 +517,10 @@ class PushController {
                                 response.failed.forEach((fail) => {
                                     if (fail.status == '400' && fail.response.reason == 'BadDeviceToken') {
                                         let device = devicesIOS.find(device => device.token == fail.device)
-                                        if (device) device.deleteOne()
+                                        if (device) {
+                                            device.deleteOne()
+                                            console.log("DELITINGG11",device);
+                                        }
                                     }
                                 });
                             }
