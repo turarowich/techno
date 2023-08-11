@@ -170,7 +170,7 @@ const job = cron.schedule('0 1 * * *', () => {
 job.start();
 
 const xmlController = require("./app/controllers/xmlController")
-const job2 = cron.schedule('*/30 * * * *', () => {
+const job2 = cron.schedule('*/15 * * * *', () => {
     // "* * * * *" every minute
     // "*/5 * * * *" every 5 minutes
     // "0 * * * *" every hour
