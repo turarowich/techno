@@ -88,6 +88,7 @@ parseXml = async function (companyName) {
                         if (!fs.lstatSync(fullPathFile).isDirectory()) {
                             const substringToCheck = "offers";
                             if (file.startsWith(substringToCheck)) { //prices
+                                console.log("FOUND FILE offers");
                                 fs.readFile(`${fullPathFile}`, 'utf8', (err, data) => {
                                     if (err) {
                                         console.error(err)
@@ -100,7 +101,7 @@ parseXml = async function (companyName) {
                                         if (!isIterable(products)) {
                                             products = [products];
                                         }
-
+                                        console.log(products.length,"NUMBER OF PRODUCTS");
                                         for (const prod of products) {
                                             let name = prod["Наименование"];
                                             let vendorCode = prod["Артикул"];
@@ -120,9 +121,12 @@ parseXml = async function (companyName) {
                                 await fs.unlink(fullPathFile, () => {
                                     console.log(`Deleted  ${file}`)
                                 })
+                            }else{
+                                console.log("NOT FOUND FILE offers");
                             }
                             const substringToCheck2 = "import";
                             if (file.startsWith(substringToCheck2)) { //category and full name
+                                console.log("FOUND FILE import");
                                 fs.readFile(`${fullPathFile}`, 'utf8', async (err, data) => {
                                     if (err) {
                                         console.error(err)
@@ -160,6 +164,8 @@ parseXml = async function (companyName) {
                                 await fs.unlink(fullPathFile, () => {
                                     console.log(`Deleted  ${file}`)
                                 })
+                            }else{
+                                console.log("NOT FOUND FILE import");
                             }
                             //
                         } else {
