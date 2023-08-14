@@ -157,7 +157,7 @@ async function saveFiles(req,dbName,directoryPath){
     await checkDir(parentDir);
 
     try{
-        await deleteChildrenOfDirectory(parentDir);
+        // await deleteChildrenOfDirectory(parentDir);
         console.log("1 CLEARED");
         await move(req.files.file.path, dir);
         console.log("2 MOVED");
