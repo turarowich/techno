@@ -25,8 +25,13 @@ async function check1cAuth(req, res) {
             let dbName = "loygift" + user._id;
             let directoryPath = path.join(__dirname, '/../../views/frontend/files/' + dbName + '/xml');
             // let dbName = "loygift60b7032e691787213076f378";
-            console.log(directoryPath,"directoryPath")
-            saveFiles(req, dbName, directoryPath)
+            console.log(directoryPath,"directoryPath");
+            let result = await saveFiles(req, dbName, directoryPath);
+            if(result.status == 200){
+                return res.status(200);
+            }else{
+                return res.status(500);
+            }
         }
     } catch (e) {
         console.log(e, "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR")
@@ -62,41 +67,118 @@ const unzipFiles = async function (dirPath) {
     );
 };
 
-const move = function (oldPath, newPath, callback) {
-    fs.rename(oldPath, newPath, function (err) {
-        if (err) {
-            if (err.code === 'EXDEV') {
-                copy();
-            } else {
-                callback(err);
+
+const move = function (oldPath, newPath) {
+    return new Promise((resolve, reject) => {
+        fs.rename(oldPath, newPath, function (err) {
+            if (err) {
+                if (err.code === 'EXDEV') {
+                    copy();
+                } else {
+                    reject(err);
+                }
+                return;
             }
-            return;
-        }
-        callback();
-    });
-    function copy() {
-        const readStream = fs.createReadStream(oldPath);
-        const writeStream = fs.createWriteStream(newPath);
-        readStream.on('error', callback);
-        writeStream.on('error', callback);
-        readStream.on('close', function () {
-            fs.unlink(oldPath, callback);
+            resolve();
         });
-        readStream.pipe(writeStream);
+
+        function copy() {
+            const readStream = fs.createReadStream(oldPath);
+            const writeStream = fs.createWriteStream(newPath);
+            readStream.on('error', reject);
+            writeStream.on('error', reject);
+            readStream.on('close', function () {
+                fs.unlink(oldPath, resolve);
+            });
+            readStream.pipe(writeStream);
+        }
+    });
+}
+
+// const move = function (oldPath, newPath, callback) {
+//     fs.rename(oldPath, newPath, function (err) {
+//         if (err) {
+//             if (err.code === 'EXDEV') {
+//                 copy();
+//             } else {
+//                 callback(err);
+//             }
+//             return;
+//         }
+//         callback();
+//     });
+//     function copy() {
+//         const readStream = fs.createReadStream(oldPath);
+//         const writeStream = fs.createWriteStream(newPath);
+//         readStream.on('error', callback);
+//         writeStream.on('error', callback);
+//         readStream.on('close', function () {
+//             fs.unlink(oldPath, callback);
+//         });
+//         readStream.pipe(writeStream);
+//     }
+// }
+
+
+async function deleteChildrenOfDirectory(parentDirPath) {
+    /**
+     * Deletes all children (files and subfolders) of a given directory.
+     * @param {string} parentDirPath - The path of the parent directory.
+     * @returns {Promise<void>} - A Promise that resolves once all children are deleted.
+     */
+    try {
+        const contents = await fs.promises.readdir(parentDirPath);
+
+        await Promise.all(contents.map(async (item) => {
+            const itemPath = path.join(parentDirPath, item);
+            const itemStats = await fs.promises.stat(itemPath);
+
+            if (itemStats.isDirectory()) {
+                // Recursively delete subdirectory and its contents
+                await deleteChildrenOfDirectory(itemPath);
+            } else {
+                // Delete file
+                await fs.promises.unlink(itemPath);
+            }
+        }));
+
+        console.log(`Children of '${parentDirPath}' have been deleted.`);
+    } catch (error) {
+        console.error('Error while deleting children:', error.message);
     }
 }
-function saveFiles(req,dbName,directoryPath){
+
+
+
+async function saveFiles(req,dbName,directoryPath){
     console.log("STARTED SAVING FILES")
     let dir = path.join(__dirname, '/../../views/frontend/files/' + dbName+'/xml/'+req.query.filename);
     let parentDir = path.join(__dirname, '/../../views/frontend/files/' + dbName+'/xml/');
-    checkDir(parentDir);
+    await checkDir(parentDir);
+
     try{
-        move(req.files.file.path,dir,function (what){
-            unzipFiles(directoryPath);
-        })
-        //unzip
+        await deleteChildrenOfDirectory(parentDir);
+        console.log("1 CLEARED");
+        await move(req.files.file.path, dir);
+        console.log("2 MOVED");
+        await unzipFiles(directoryPath);
+        console.log("2 UNZIPPED");
+        // move(req.files.file.path,dir,function (what){
+        //     unzipFiles(directoryPath);
+        // })
+
+        return {
+            status: 200,
+            message: 'Files saved successfully.',
+        };
+        
     }catch (e){
-        console.log(e,"tryyyy")
+        console.log(e,"tryyyy");
+        return {
+            status: 500,
+            message: 'Server error.',
+        };
+
     }
 }
 

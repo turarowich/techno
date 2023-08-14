@@ -170,12 +170,13 @@ const job = cron.schedule('0 1 * * *', () => {
 job.start();
 
 const xmlController = require("./app/controllers/xmlController")
-const job2 = cron.schedule('*/15 * * * *', () => {
+const job2 = cron.schedule('*/10 * * * *', () => {
     // "* * * * *" every minute
     // "*/5 * * * *" every 5 minutes
     // "0 * * * *" every hour
     // console.log("Running chron parser for loygift60f13737d0dc58349bbbfa9f")// sajda db
     xmlController.parseXml("loygift60f13737d0dc58349bbbfa9f");
+    // xmlController.parseXml("loygift64c3cdc2492d8c443c3847a8");
 });
 job2.start();
 // cron end
