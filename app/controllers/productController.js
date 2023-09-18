@@ -256,10 +256,10 @@ class ProductController{
                 delete data.promoEnd;
             }
 
-            if(data.name_ru === undefined || "undefined"){
+            if(data.name_ru === undefined || data.name_ru === "undefined"){
                 data.name_ru = "";
             }
-            if(data.description === undefined || "undefined"){
+            if(data.description === undefined || data.description === "undefined"){
                 data.description = "";
             }
 
