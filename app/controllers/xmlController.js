@@ -62,7 +62,7 @@ parseXml = async function (companyName) {
         console.log("parser, company not found")
         return;
     }
-
+    //sync
     fs.readdir(directoryPath, async function (err, folders) {
         if (err) {
             return console.log('Unable to scan directory: ' + err);
@@ -70,121 +70,148 @@ parseXml = async function (companyName) {
 
         for (const folder of folders) {
             let fullPath = path.join(__dirname, '/../../views/frontend/files/' + companyName + '/xml/' + folder);
-
             //has to be a folder
+            console.log(folder)
             if (fs.lstatSync(fullPath).isDirectory()) {
-                await fs.readdir(fullPath, async function (err, files) {
-                    //has to be a file
-                    if (files.length === 0) {
-                        try {
-                            fs.rmdirSync(fullPath, { recursive: true });
-                            console.log(`${fullPath} is deleted@@!`);
-                        } catch (err) {
-                            console.error(`Error while deleting @@${fullPath}.`);
-                        }
+                //sync 
+                const files = fs.readdirSync(fullPath);
+
+                // async
+                // fs.readdir(fullPath, async function (err, files) {
+                // })
+
+                //has to be a file
+
+                if (files.length === 0) {
+                    try {
+                        fs.rmdirSync(fullPath, { recursive: true });
+                        console.log(`${fullPath} is deleted@@!`);
+                    } catch (err) {
+                        console.error(`Error while deleting @@${fullPath}.`);
                     }
-                    for (const file of files) {
-                        let fullPathFile = path.join(__dirname, '/../../views/frontend/files/' + companyName + '/xml/' + folder + '/' + file);
-                        if (!fs.lstatSync(fullPathFile).isDirectory()) {
-                            const substringToCheck = "offers";
-                            if (file.startsWith(substringToCheck)) { //prices
-                                console.log("FOUND FILE offers");
-                                fs.readFile(`${fullPathFile}`, 'utf8', (err, data) => {
-                                    if (err) {
-                                        console.error(err)
-                                        return
-                                    }
-                                    try {
-                                        const jsonObj = parser.parse(data, options, true);
-                                        let products = jsonObj["КоммерческаяИнформация"]["ПакетПредложений"]["Предложения"]["Предложение"];
-
-                                        if (!isIterable(products)) {
-                                            products = [products];
-                                        }
-                                        console.log(products.length,"NUMBER OF PRODUCTS");
-                                        for (const prod of products) {
-                                            let name = prod["Наименование"];
-                                            let vendorCode = prod["Артикул"];
-                                            let quantity = Math.round(prod["Количество"]);
-                                            let oneCId = prod["Ид"];
-                                            let price = prod["Цены"]["Цена"]["ЦенаЗаЕдиницу"];
-                                            parseProductsToObjects(price, oneCId, name, vendorCode, quantity);
-                                        }
-                                        if (productsCatsAsObjectsArray.length !== 0 && productsAsObjectsArray.length !== 0) {
-                                            console.log("THIS IS 1")
-                                            createProductToInsert(productsCatsAsObjectsArray, productsAsObjectsArray, settings.groupItemsOnImport || false, Product, Category, settings, companyName);
-                                        }
-                                    } catch (error) {
-                                        console.log(error.message, "offers loop")
-                                    }
-                                })
-                                await fs.unlink(fullPathFile, () => {
-                                    console.log(`Deleted  ${file}`)
-                                })
-                            }else{
-                                console.log("NOT FOUND FILE offers");
-                            }
-                            const substringToCheck2 = "import";
-                            if (file.startsWith(substringToCheck2)) { //category and full name
-                                console.log("FOUND FILE import");
-                                fs.readFile(`${fullPathFile}`, 'utf8', async (err, data) => {
-                                    if (err) {
-                                        console.error(err)
-                                        return
-                                    }
-                                    try {
-                                        const jsonObj = parser.parse(data, options, true);
-                                        let categories = jsonObj["КоммерческаяИнформация"]["Классификатор"]["Группы"] ? jsonObj["КоммерческаяИнформация"]["Классификатор"]["Группы"]["Группа"] : [];
-
-                                        for (const cat of categories) {
-                                            createCategory(cat["Наименование"], cat["Ид"], Category);
-                                        }
-                                        let products2 = jsonObj["КоммерческаяИнформация"]["Каталог"]["Товары"]["Товар"];
-                                        for (const prod2 of products2) {
-                                            let fullProductName = prod2["Наименование"];
-                                            let productProperties = prod2["ЗначенияРеквизитов"]["ЗначениеРеквизита"];
-                                            let catId = prod2["Группы"] ? prod2["Группы"]["Ид"] : "";
-                                            let img = prod2["Картинка"] ? prod2["Картинка"] : "";
-                                            for (const prop of productProperties) {
-                                                if (prop["Наименование"] === "Полное наименование") {
-                                                    fullProductName = prop["Значение"];
-                                                }
-                                            }
-                                            parseCatsToObjects(catId, fullProductName, prod2["Ид"], img);
-                                        }
-                                        if (productsCatsAsObjectsArray.length !== 0 && productsAsObjectsArray.length !== 0) {
-                                            console.log("THIS IS 2")
-                                            await createProductToInsert(productsCatsAsObjectsArray, productsAsObjectsArray, settings.groupItemsOnImport || false, Product, Category, settings, companyName);
-                                        }
-                                        // insertProducts(Product,Category,settings);
-                                    } catch (error) {
-                                        console.log(error.message)
-                                    }
-                                })
-                                await fs.unlink(fullPathFile, () => {
-                                    console.log(`Deleted  ${file}`)
-                                })
-                            }else{
-                                console.log("NOT FOUND FILE import");
-                            }
-                            //
-                        } else {
-                            if (file === "import_files") {
-                                await moveImage(fullPathFile, companyName)
+                }
+                for (const file of files) {
+                    let fullPathFile = path.join(__dirname, '/../../views/frontend/files/' + companyName + '/xml/' + folder + '/' + file);
+                    if (!fs.lstatSync(fullPathFile).isDirectory()) {
+                        const substringToCheck = "offers";
+                        if (file.startsWith(substringToCheck)) { //prices
+                            console.log("FOUND FILE offers");
+                            try {
+                                const data = fs.readFileSync(`${fullPathFile}`, 'utf8');
                                 try {
-                                    fs.rmdirSync(fullPathFile, { recursive: true });
-                                    console.log(`${fullPathFile} is deleted@k@!`);
-                                } catch (err) {
-                                    console.error(`Error while deleting @k@${fullPath}.`);
+                                    const jsonObj = parser.parse(data, options, true);
+                                    let products = jsonObj["КоммерческаяИнформация"]["ПакетПредложений"]["Предложения"]["Предложение"];
+
+                                    if (!isIterable(products)) {
+                                        products = [products];
+                                    }
+                                    console.log(products.length, "NUMBER OF PRODUCTS");
+                                    for (const prod of products) {
+                                        let name = prod["Наименование"];
+                                        let vendorCode = prod["Артикул"];
+                                        let quantity = Math.round(prod["Количество"]);
+                                        let oneCId = prod["Ид"];
+                                        let price = prod["Цены"]["Цена"]["ЦенаЗаЕдиницу"];
+                                        parseProductsToObjects(price, oneCId, name, vendorCode, quantity);
+                                    }
+                                    // if (productsCatsAsObjectsArray.length !== 0 && productsAsObjectsArray.length !== 0) {
+                                    //     console.log("THIS IS 1")
+                                    //     createProductToInsert(productsCatsAsObjectsArray, productsAsObjectsArray, settings.groupItemsOnImport || false, Product, Category, settings, companyName);
+                                    // }
+                                } catch (error) {
+                                    console.log(error.message, "offers loop")
                                 }
+                            } catch (err) {
+                                console.error('Error reading file synchronously:', err);
+                            }
+                            // fs.readFile(`${fullPathFile}`, 'utf8', (err, data) => {
+                            // if (err) {
+                            //     console.error(err)
+                            //     return
+                            // }
+
+                            // })
+                            fs.unlink(fullPathFile, () => {
+                                console.log(`Deleted  ${file}`)
+                            })
+                        } else {
+                            console.log("NOT FOUND FILE offers");
+                        }
+                        const substringToCheck2 = "import";
+                        if (file.startsWith(substringToCheck2)) { //category and full product name
+                            console.log("FOUND FILE import");
+
+                            try {
+                                const data = fs.readFileSync(`${fullPathFile}`, 'utf8');
+                                try {
+                                    const jsonObj = parser.parse(data, options, true);
+                                    let categories = jsonObj["КоммерческаяИнформация"]["Классификатор"]["Группы"] ? jsonObj["КоммерческаяИнформация"]["Классификатор"]["Группы"]["Группа"] : [];
+
+                                    for (const cat of categories) {
+                                        createCategory(cat["Наименование"], cat["Ид"], Category);
+                                    }
+                                    let products2 = jsonObj["КоммерческаяИнформация"]["Каталог"]["Товары"]["Товар"];
+                                    for (const prod2 of products2) {
+                                        let fullProductName = prod2["Наименование"];
+                                        let productProperties = prod2["ЗначенияРеквизитов"]["ЗначениеРеквизита"];
+                                        let catId = prod2["Группы"] ? prod2["Группы"]["Ид"] : "";
+                                        let img = prod2["Картинка"] ? prod2["Картинка"] : "";
+                                        for (const prop of productProperties) {
+                                            if (prop["Наименование"] === "Полное наименование") {
+                                                fullProductName = prop["Значение"];
+                                            }
+                                        }
+                                        parseCatsToObjects(catId, fullProductName, prod2["Ид"], img);
+                                    }
+                                    // if (productsCatsAsObjectsArray.length !== 0 && productsAsObjectsArray.length !== 0) {
+                                    //     console.log("THIS IS 2")
+                                    //     await createProductToInsert(productsCatsAsObjectsArray, productsAsObjectsArray, settings.groupItemsOnImport || false, Product, Category, settings, companyName);
+                                    // }
+
+                                } catch (error) {
+                                    console.log(error.message)
+                                }
+                            } catch (err) {
+                                console.error('Error reading file synchronously:', err);
+                            }
+
+                            // fs.readFile(`${fullPathFile}`, 'utf8', async (err, data) => {
+                            // if (err) {
+                            //     console.error(err)
+                            //     return
+                            // }
+
+                            // })
+                            fs.unlink(fullPathFile, () => {
+                                console.log(`Deleted  ${file}`)
+                            })
+                        } else {
+                            console.log("NOT FOUND FILE import");
+                        }
+                        //
+                    } else {
+                        if (file === "import_files") {
+                            await moveImage(fullPathFile, companyName)
+                            try {
+                                fs.rmdirSync(fullPathFile, { recursive: true });
+                                console.log(`${fullPathFile} is deleted@k@!`);
+                            } catch (err) {
+                                console.error(`Error while deleting @k@${fullPath}.`);
                             }
                         }
                     }
-                })
+                }
+
             }
         }
+
+        //END
+        if (productsCatsAsObjectsArray.length !== 0 && productsAsObjectsArray.length !== 0) {
+            await createProductToInsert(productsCatsAsObjectsArray, productsAsObjectsArray, settings.groupItemsOnImport || false, Product, Category, settings, companyName);
+        }
+        productsCatsAsObjectsArray = [];
+        productsAsObjectsArray = [];
     });
-    //
 }
 
 const moveImage = async function (imgPath, companyName) {
@@ -204,7 +231,7 @@ const moveImage = async function (imgPath, companyName) {
 }
 
 
-const parseVendorCode = function (fullName) {
+const parseProductName = function (fullName) {
     let res = {
         found: false,
         controlName: fullName,
@@ -270,8 +297,8 @@ createProduct = async function (product, groupItems) {
         let commonPrice = 0;
         let totalQuantity = 0;
         let sizePrice = {};
-        let controlName = product.name; //name without size;
-        let parseName = parseVendorCode(product.name);
+        let controlName = product.name; //FULL NAME
+        let parseName = parseProductName(product.name); //ONLY PRODUCT NAME
         if (parseName.found && groupItems) { //found size
             //found match
             let size = parseName.size;
@@ -290,7 +317,14 @@ createProduct = async function (product, groupItems) {
         temp.controlName = controlName;
         temp.name = controlName;
         if (sizePrice.hasOwnProperty("size")) {
-            temp.sizes.push(sizePrice);
+            //CHECK
+            let check = temp.sizes.find(obj => {
+                return obj.size == sizePrice.size
+            })
+            if (!check) {
+                temp.sizes.push(sizePrice);
+            }
+
         }
         temp.commonPrice = commonPrice;
         temp.totalQuantity = totalQuantity;
@@ -301,7 +335,14 @@ createProduct = async function (product, groupItems) {
             let index = productsArray.findIndex(x => x.controlName === controlName);
             if (index !== -1) {
                 if (sizePrice.hasOwnProperty("size")) {
-                    productsArray[index].sizes.push(sizePrice);
+                    //CHECK
+                    let check = productsArray[index].sizes.find(obj => {
+                        return obj.size.toString() == sizePrice.size.toString()
+                    })
+
+                    if (!check) {
+                        productsArray[index].sizes.push(sizePrice);
+                    }
                 }
             } else {
                 if (controlName.length > 0) {

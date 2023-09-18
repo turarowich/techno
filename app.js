@@ -129,15 +129,18 @@ app.use('/', VerifyOrder,require('./routes/menu.js')(router))
 
 // handles not found errors
 app.use((err, req, res, next) => {
+    console.log("NOT FOUND");
     if (err.httpStatusCode === 404) {
         res.status(404).render('NotFound');
     }
+    next();
 });
 
 // handles unauthorized errors
 
 
 app.use((err, req, res, next) => {
+    console.log("NOT FOUND 2");
     if (err.httpStatusCode === 304) {
         res.status(304).render('Unauthorized');
     }
@@ -146,7 +149,7 @@ app.use((err, req, res, next) => {
 
 // catch all
 app.use((err, req, res, next) => {
-    console.log(err);
+    console.log(err,"catch all");
     if (!res.headersSent) {
         res.status(err.httpStatusCode || 500).render('UnknownError');
     }
@@ -174,12 +177,19 @@ const job2 = cron.schedule('*/10 * * * *', () => {
     // "* * * * *" every minute
     // "*/5 * * * *" every 5 minutes
     // "0 * * * *" every hour
-    // console.log("Running chron parser for loygift60f13737d0dc58349bbbfa9f")// sajda db
     xmlController.parseXml("loygift60f13737d0dc58349bbbfa9f");
-    // xmlController.parseXml("loygift64c3cdc2492d8c443c3847a8");
 });
 job2.start();
 // cron end
+//for testing
+app.use('/sajda', (req, res, next) => {
+    xmlController.parseXml("loygift64c3cdc2492d8c443c3847a8");
+    res.send('STARTED')
+})
+
+//testing end
+
+
 
 //xml start
 const adminController = require("./app/controllers/adminController");

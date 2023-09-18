@@ -23,7 +23,7 @@ function verifyDB(req, res, next) {
     let catalogs_model = shoes_db.model("catalogs");
     ///if already has access place
     if(req.headers['access-place'] || !catalog_urls.includes(path)){
-        console.log('already has access place', req.db);
+        console.log('already has access place order', req.db);
         next();
     }else{
         catalogs_model.findOne({ 'cat_url': cat_url })
