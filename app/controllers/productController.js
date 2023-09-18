@@ -129,11 +129,11 @@ class ProductController{
             let product = await new Product({
                 type:data.type || "product",
                 name: data.name,
-                name_ru: data.name_ru,
+                name_ru: data?.name_ru ?? "",
                 secondary: data.secondary,
                 secondary_ru: data.secondary_ru,
                 description: data.description,
-                description_ru: data.description_ru,
+                description_ru: data?.description_ru  ?? "",
                 vendorCode: data.vendorCode,
                 promo: data.promo,
                 promoPrice: data.promoPrice,
@@ -256,6 +256,12 @@ class ProductController{
                 delete data.promoEnd;
             }
 
+            if(data.name_ru === undefined || "undefined"){
+                data.name_ru = "";
+            }
+            if(data.description === undefined || "undefined"){
+                data.description = "";
+            }
 
             let product = await Product.findOneAndUpdate(query, data)
 
