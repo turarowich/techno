@@ -274,7 +274,9 @@ async function calcCashback(products_full_data,cashback_model) {
                     //discounted price
                     let sum = prod.current_price || 0;
                     let quantity = prod.quantity || 0;
-                    cashback_from_order += (parseFloat(sum) * quantity * cashback_default_percent).toFixed(2);
+                    console.log(cashback_from_order,);
+                    cashback_from_order += parseFloat((parseFloat(sum) * quantity * cashback_default_percent).toFixed(2));
+
                 })
             } else {
                 //applies to specific products
@@ -287,7 +289,7 @@ async function calcCashback(products_full_data,cashback_model) {
                             let quantity = prod.quantity || 0;
                             let cashback_percent = parseFloat(cash.percentage_cashback) / 100 || 0;
                             let cashback_sum = cash.fixed_cashback || 0;
-                            cashback_from_order = (parseFloat(cashback_from_order) + (parseFloat(sum) * quantity * cashback_percent) + parseFloat(cashback_sum)).toFixed(2);
+                            cashback_from_order = parseFloat((parseFloat(cashback_from_order) + (parseFloat(sum) * quantity * cashback_percent) + parseFloat(cashback_sum)).toFixed(2));
                         }
                     })
                 })
@@ -927,7 +929,10 @@ class OrderController{
             );
             let cashback_from_order = await calcCashback(result_object.productCurrentPrice,cashback_model);
             if(updated_order.status === "Done" && client){
+                console.log("HERE")
+                console.log(cashback_from_order)
                 updated_order.earnedPoints = parseFloat(cashback_from_order) || 0;
+                console.log(cashback_from_order);
                 await updated_order.save();
                 await createClientHistory(
                     ClientBonusHistory,
