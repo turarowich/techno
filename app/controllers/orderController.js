@@ -401,7 +401,7 @@ class OrderController{
         // console.log("start")
         // const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
         // await delay(5000) /// waiting 1 second.
-
+        console.log(req.fields,"NEW LOGS")
         let db = useDB(req.db)
         let Order = db.model("Order");
         let Client = db.model("Client");  
@@ -500,6 +500,10 @@ class OrderController{
             for(let i=0; i < products.length; i++){
                 let product = products[i]
                 let search_product = await Product.findById(product.id)
+
+
+                console.log(search_product,product.id,"THIS HERE LOGS");
+
                 if(!product.id){
                     search_product = await Product.findById(product._id)
                 }
