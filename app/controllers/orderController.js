@@ -401,7 +401,7 @@ class OrderController{
         // console.log("start")
         // const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
         // await delay(5000) /// waiting 1 second.
-        console.log(req.fields,"NEW LOGS")
+        console.log(req.fields,"NEW LOGS",req.db)
         let db = useDB(req.db)
         let Order = db.model("Order");
         let Client = db.model("Client");  
