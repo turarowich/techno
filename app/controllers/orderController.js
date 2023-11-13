@@ -402,6 +402,7 @@ class OrderController{
         // const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
         // await delay(5000) /// waiting 1 second.
         console.log(req.fields,"NEW LOGS",req.db)
+        console.log(req.path,"PATH");
         let db = useDB(req.db)
         let Order = db.model("Order");
         let Client = db.model("Client");  
