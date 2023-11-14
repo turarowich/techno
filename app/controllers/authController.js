@@ -646,9 +646,9 @@ async function fbRegister(token){
     }).catch( error => {
         let result = {
             status: 500,
-            msg: "Token is not valid",
+            msg: "Token is not validFB",
             errors: {
-                token: "Token is not valid",
+                token: "Token is not validFB",
             }
         }
         return {error: result}
@@ -694,9 +694,9 @@ async function twitterRegister(token, screen_name) {
     }).catch(error => {
         let result = {
             status: 500,
-            msg: "Token is not valid",
+            msg: "Token is not validTW",
             errors: {
-                token: "Token is not valid",
+                token: "Token is not validTW",
             }
         }
         return { error: result }
@@ -714,9 +714,9 @@ async function twitterRegister(token, screen_name) {
     }).catch(error => {
         let result = {
             status: 500,
-            msg: "Token is not valid",
+            msg: "Token is not validTW",
             errors: {
-                token: "Token is not valid",
+                token: "Token is not validTW",
             }
         }
         return { error: result }
@@ -761,6 +761,7 @@ async function appleRegister(token, screen_name, full_name, email) {
     return result
 }
 async function googleRegister(token) {
+    console.log(`googleRegister TOKEN = ${token}`);
     let response = await axios({
         url: 'https://www.googleapis.com/oauth2/v3/tokeninfo',
         // url: 'https://www.googleapis.com/oauth2/v3/userinfo',
@@ -772,9 +773,9 @@ async function googleRegister(token) {
     }).catch(error => {
         let result = {
             status: 500,
-            msg: "Token is not valid",
+            msg: "Token is not valid_Google",
             errors: {
-                token: "Token is not valid",
+                token: "Token is not valid_Google",
             }
         }
         return { error: result }
