@@ -64,9 +64,12 @@ const clientSchema = new Schema({
         type: String,
         required: [true, 'password_required'],
         select: false,
-        minlength: [8, 'password_min'],
+        minlength: [6, 'password_min'],
         maxlength: [64, 'password_max'],
-        match: [/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/, 'password_valid']
+        match: [/^.{6,}$/, 'password_valid']
+    //     minlength: [8, 'password_min'],
+    //     maxlength: [64, 'password_max'],
+    //     match: [/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/, 'password_valid']
     },
     birthDate: {
         type: Date,
