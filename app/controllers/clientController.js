@@ -493,7 +493,7 @@ class ClientController {
 
     addClientDevice = async function (req, res) {
         console.log("ADDING DEVICE",req.fields.device_token);
-        console.log(req);
+        console.log(req.db,"DB");
         let db = useDB(req.db)
         let Client = db.model("Client");
         let Device = db.model("Device");
