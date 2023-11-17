@@ -492,7 +492,8 @@ class ClientController {
     };
 
     addClientDevice = async function (req, res) {
-        console.log("ADDING DEVICE",req.fields.device_token)
+        console.log("ADDING DEVICE",req.fields.device_token);
+        console.log(req);
         let db = useDB(req.db)
         let Client = db.model("Client");
         let Device = db.model("Device");
@@ -503,6 +504,7 @@ class ClientController {
         }
         try {
             let client = await Client.findById(req.fields.client)
+            console.log(client);
             if (client) {
                 // let device = await Device.findOne({ "token": req.fields.device_token})//old
                 let device = await Device.findOne({ "client": client})//new 04/10/21
