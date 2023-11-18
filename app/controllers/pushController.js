@@ -243,7 +243,9 @@ class PushController {
             });
             if (apnProvider){
                 apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
+                    console.log(response,"APN RESPONSE");
                     if (response.failed.length) {
+                        console.log("APN FAIL");
                         response.failed.forEach((fail) => {
                             if (fail.status == '400' && fail.response.reason == 'BadDeviceToken') {
                                 let device = devicesIOS.find(device => device.token == fail.device)
