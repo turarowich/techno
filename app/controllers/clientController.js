@@ -504,7 +504,7 @@ class ClientController {
         }
         try {
             let client = await Client.findById(req.fields.client)
-            console.log(client);
+            console.log(client._id);
             if (client) {
                 // let device = await Device.findOne({ "token": req.fields.device_token})//old
                 let device = await Device.findOne({ "client": client})//new 04/10/21
@@ -515,13 +515,18 @@ class ClientController {
                     device.save({ validateBeforeSave: false })
                     result['msg'] = "Device changed"
                 }else{
-                    console.log("CREATED 1",req.fields.device_token);
-                    let newDevice = await new Device({
-                        client: req.fields.client,
-                        token: req.fields.device_token,
-                        type: req.fields.type
-                    }).save({ validateBeforeSave: false });
-                    console.log("CREATED-",newDevice);
+                    try {
+                        console.log("CREATED 1",req.fields.device_token);
+                        let newDevice = await new Device({
+                            client: req.fields.client,
+                            token: req.fields.device_token,
+                            type: req.fields.type
+                        }).save({ validateBeforeSave: false });
+                        console.log("CREATED-",newDevice);
+                    } catch (error) {
+                        console.log(error,"ADD DEVICE ERROR");
+                    }
+
                 }
             }
         } catch (error) {
