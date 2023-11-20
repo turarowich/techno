@@ -32,7 +32,7 @@
               <label>Custom text</label><br>
               <input :disabled="sendPush.news!==''" v-model="sendPush.title" :class="{disableInput: sendPush.news!== ''}"  class="disables cashback-input mb-2"  placeholder="Title">
               <textarea :disabled="sendPush.news!==''" v-model="sendPush.description" :class="{disableInput: sendPush.news!== ''}"  class=" disables general-area p-2" placeholder="Description"></textarea>
-              <button  class="save" @click.prevent="onSubmit">Send</button>
+              <button  class="save" @click.prevent="onSubmit">SendP2</button>
             </form>
           </div>
         </div>

@@ -142,7 +142,8 @@ class PushController {
         let Device = db.model("Device");
         const { admin } = require("../../app");
         try{
-            let devicesAndroid = await Device.find({ 'type': 'android', 'client': client })
+            // let devicesAndroid = await Device.find({ 'type': 'android', 'client': client });
+            let devicesAndroid = await Device.find({ 'client': client });
             console.log(devicesAndroid,"devicesAndroid");
             devicesAndroid.forEach(function (device){
                 try{
@@ -211,13 +212,12 @@ class PushController {
             'msg': 'Something went wrong'
         }
         if (clients && settings) {
-            let query = { 'type': 'ios', 'client': { $in: clients } }
-
-            if (req.fields.sendToAll){
-                query = {}
-            }
-            console.log(query,"query");
-            let devicesIOS = await Device.find(query)
+            // let query = { 'type': 'ios', 'client': { $in: clients } }s
+            // if (req.fields.sendToAll){
+            //     query = {}
+            // }
+            // console.log(query,"query");
+            // let devicesIOS = await Device.find(query)
             let dataForNews = {
                 name: data.name,
                 name_ru: data.name_ru,
@@ -230,36 +230,36 @@ class PushController {
             }
             let clientNews = await createClientNews(dataForNews, db)
             await Client.updateMany({}, { $push: { news: clientNews } });
-            let noteIOS = new apn.Notification({
-                alert: {
-                    title: data.name,
-                    subtitle: "",
-                    body: data.desc,
-                },
-                mutableContent: 1,
-                payload: dataForNews,
-                sound: "default",
-                topic: settings.APNsTopic
-            });
-            if (apnProvider){
-                apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
-                    console.log(response,"APN RESPONSE");
-                    if (response.failed.length) {
-                        console.log("APN FAIL");
-                        response.failed.forEach((fail) => {
-                            if (fail.status == '400' && fail.response.reason == 'BadDeviceToken') {
-                                let device = devicesIOS.find(device => device.token == fail.device)
-                                if (device && device.type == 'ios') {
-                                    device.deleteOne();
-                                    console.log("DELITINGG",device);
-                                }
-                            }
-                        });
-                    }
-                }).catch(function (error) {
-                    console.log("Faled to send message to ", error);
-                });
-            }
+            // let noteIOS = new apn.Notification({
+            //     alert: {
+            //         title: data.name,
+            //         subtitle: "",
+            //         body: data.desc,
+            //     },
+            //     mutableContent: 1,
+            //     payload: dataForNews,
+            //     sound: "default",
+            //     topic: settings.APNsTopic
+            // });
+            // if (apnProvider){
+            //     apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
+            //         console.log(response,"APN RESPONSE");
+            //         if (response.failed.length) {
+            //             console.log("APN FAIL");
+            //             response.failed.forEach((fail) => {
+            //                 if (fail.status == '400' && fail.response.reason == 'BadDeviceToken') {
+            //                     let device = devicesIOS.find(device => device.token == fail.device)
+            //                     if (device && device.type == 'ios') {
+            //                         device.deleteOne();
+            //                         console.log("DELITINGG",device);
+            //                     }
+            //                 }
+            //             });
+            //         }
+            //     }).catch(function (error) {
+            //         console.log("Faled to send message to ", error);
+            //     });
+            // }
             //Android
             try{
                 clients.split(',').forEach(client=>{
