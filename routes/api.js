@@ -108,7 +108,7 @@ module.exports = function (app, io) {
     // Order url
     app.get('/getOrder/:order', orderController.getOrder);
     app.get('/getOrders', orderController.getOrders);
-    app.get('/getOrdersClient', orderController.getOrdersClient);
+    app.get('/getOrdersAll', orderController.getOrdersAll);
     app.post('/addOrder', orderController.addOrder);
     app.put('/updateOrder/:order', verifyAccess, orderController.updateOrder);
     app.put('/updateOrderStatus/:order', verifyAccess, orderController.updateOrderStatus);

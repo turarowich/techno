@@ -371,6 +371,39 @@ class OrderController{
             'status': 200,
             'msg': 'Sending orders'
         }
+
+        try {
+            result['objects'] = await Order.find({client:req.userID}).sort({ updatedAt: -1 }).populate('products').exec();
+            result['count'] = result['objects'].length;
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.status(result.status).json(result)
+
+    };
+
+    getOrdersAll = async function (req, res) {
+        // let db = useDB(req.db)
+        // let Order = db.model("Order");
+        // let result = {
+        //     'status': 200,
+        //     'msg': 'Sending orders'
+        // }
+
+        // try {
+        //     result['objects'] = await Order.find({client:req.userID}).sort({ updatedAt: -1 }).populate('products').exec();
+        //     result['count'] = result['objects'].length;
+        // } catch (error) {
+        //     result = sendError(error, req.headers["accept-language"])
+        // }
+        // res.status(result.status).json(result);
+
+        let db = useDB(req.db)
+        let Order = db.model("Order");
+        let result = {
+            'status': 200,
+            'msg': 'Sending orders'
+        }
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "orders", parametr: "active" }, db, res)
             if (checkResult) {
@@ -395,23 +428,7 @@ class OrderController{
             result = sendError(error, req.headers["accept-language"])
         }
         res.status(result.status).json(result);
-    };
 
-    getOrdersClient = async function (req, res) {
-        let db = useDB(req.db)
-        let Order = db.model("Order");
-        let result = {
-            'status': 200,
-            'msg': 'Sending orders'
-        }
-
-        try {
-            result['objects'] = await Order.find({client:req.userID}).sort({ updatedAt: -1 }).populate('products').exec();
-            result['count'] = result['objects'].length;
-        } catch (error) {
-            result = sendError(error, req.headers["accept-language"])
-        }
-        res.status(result.status).json(result);
     };
 
 

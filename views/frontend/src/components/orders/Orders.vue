@@ -316,7 +316,7 @@ name: "Orders",
       })
     },
     getOrders(){
-      this.axios.get(this.url('getOrders')+'?populate=client')
+      this.axios.get(this.url('getOrdersAll')+'?populate=client')
       .then((response)=>{
         this.orderList = response.data.objects;
         this.spinner = false;
