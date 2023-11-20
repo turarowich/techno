@@ -407,6 +407,7 @@ class OrderController{
 
         try {
             result['objects'] = await Order.find({client:req.userID}).sort({ updatedAt: -1 }).populate('products').exec();
+            result['count'] = result['objects'].length;
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
