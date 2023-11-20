@@ -397,6 +397,26 @@ class OrderController{
         res.status(result.status).json(result);
     };
 
+    getOrdersClient = async function (req, res) {
+        let db = useDB(req.db)
+        let Order = db.model("Order");
+        let result = {
+            'status': 200,
+            'msg': 'Sending orders'
+        }
+
+        try {
+            result['objects'] = await Order.find({client:req.userID}).sort({ updatedAt: -1 }).populate('products').exec();
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.status(result.status).json(result);
+    };
+
+
+
+
+
     addOrder = async function (req, res) {
         // console.log("start")
         // const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
