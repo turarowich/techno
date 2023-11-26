@@ -1,8 +1,8 @@
 <template>
   <div class="orders">
     <div class="searchAndButtons">
-    <div class="d-flex justify-content-between app-buttons">
-      <div class="d-flex align-items-center">
+    <div class="d-flex justify-content-between app-buttons" style="flex-wrap: wrap;">
+      <div class="d-flex align-items-center" style="flex-wrap: wrap;">
         <button v-if="check()" class="app-buttons-item adding-btns" data-toggle="modal" @click="unSetSelectedOrder" data-target="#add-order" ><span>+ Add order</span></button>
         <button v-if="check()" class="app-buttons-item" @click="deleteAllOrder"><img class="img-btn" src="../../assets/icons/trash_empty.svg" ><span>Remove</span></button>
         <button v-if="check()" class="app-buttons-item" @click="exportOrder"><img class="img-btn" src="../../assets/icons/set.svg"><span>Export to Excell </span></button>
@@ -128,14 +128,14 @@
                    In order to use scanner you have to grant permission to use your camera!
                  </span>
                </div>
-<!--               <div>-->
-<!--                 <p class="error" v-if="camSettings.noFrontCamera">-->
-<!--                   You don't seem to have a front camera on your device-->
-<!--                 </p>-->
-<!--                 <p class="error" v-if="camSettings.noRearCamera">-->
-<!--                   You don't seem to have a rear camera on your device-->
-<!--                 </p>-->
-<!--               </div>-->
+               <div>
+                 <p class="error" v-if="camSettings.noFrontCamera">
+                   You don't seem to have a front camera on your device
+                 </p>
+                 <p class="error" v-if="camSettings.noRearCamera">
+                   You don't seem to have a rear camera on your device
+                </p>
+               </div>
                <div class="qr_header d-flex justify-content-between">
                  <div>
                    <span>Order #</span>
@@ -146,12 +146,14 @@
                    <span style="color:red;">{{scanResult.error}}</span>
                  </div>
                </div>
-               <qr-stream @decode="onDecode" :camera="camSettings.camera" @init="onInit" class="mb">
+               <!-- <qr-stream @decode="onDecode" :camera="camSettings.camera" @init="onInit" class="mb"> -->
+               <qr-stream @decode="onDecode" @init="onInit" class="mb">
                  <button @click="switchCamera" class="app-buttons-item adding-btns">
                    switch camera
                  </button>
                  <div style="color: red;" class="frame"></div>
                </qr-stream>
+
              </div>
            </div>
           </div>
@@ -465,6 +467,7 @@ name: "Orders",
       })
     },
     switchCamera () {
+      
       switch (this.camSettings.camera) {
         case 'front':
           this.camSettings.camera = 'rear'
@@ -473,6 +476,7 @@ name: "Orders",
           this.camSettings.camera = 'front'
           break
       }
+      console.log(this.camSettings.camera);
     },
     getCameraPermissionState(){
       navigator.permissions.query({ name: "camera" }).then(res => {
