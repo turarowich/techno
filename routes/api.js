@@ -29,7 +29,8 @@ module.exports = function (app, io) {
     app.post('/saveAvatar', clientController.saveAvatar);
     app.post('/checkPromocode', clientController.checkPromocode);
     app.put('/updateClientsCategory', verifyAccess, clientController.updateClientsCategory);
-    app.delete('/deleteClient/:client', verifyAccess, clientController.deleteClient);
+    // app.delete('/deleteClient/:client', verifyAccess, clientController.deleteClient);
+    app.delete('/deleteClient/:client',  clientController.deleteClient);
     app.delete('/deleteClients', verifyAccess, clientController.deleteClients);
     app.post('/addClientDevice', clientController.addClientDevice);
     app.get('/updatedMessagesStatus/:client', clientController.updatedMessagesStatus);
