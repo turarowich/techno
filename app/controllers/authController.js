@@ -11,8 +11,10 @@ const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
     auth: {
-        user: 'helpLoygift@gmail.com',
-        pass: 'helpLoygift321',
+        user: 'info.loygift@gmail.com', //Moore123
+        pass: 'yket fzen bzup hdag',
+        // user: 'catzilla312@gmail.com',
+        // pass: 'sbhi freq fqtf dhsh',
     },
 });
 
@@ -420,8 +422,7 @@ class AuthController{
                 }
                 break resetPassword
             }
-            let client = await Client.findOne({"email": req.fields.email})
-
+            let client = await Client.findOne({"email": req.fields.email});
             if (!client) {
                 result = {
                     status: 500,
@@ -444,7 +445,7 @@ class AuthController{
 
             result = {
                 'status': 200,
-                'msg': 'Sending token',
+                'msg': 'Sending code',
             }
 
         } catch (error) {
@@ -536,7 +537,7 @@ class AuthController{
 
             if (client.oneTimeCode &&  client.oneTimeCode == req.fields.code){
 
-                if (req.fields.password && req.fields.password.match(/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/) && req.fields.password.length < 64){
+                if (req.fields.password && req.fields.password.match(/^.{6,}$/) && req.fields.password.length < 64){
                     client.password = bcrypt.hashSync(req.fields.password, 8);
                     client.oneTimeCode = ""
                     await client.save({validateBeforeSave:false})
@@ -555,7 +556,7 @@ class AuthController{
                     }
                 }else{
                     let message = "password_valid"
-                    if (req.fields.password.length < 8) {
+                    if (req.fields.password.length < 6) {
                         message = "password_min"
                     } else if (req.fields.password.length > 64) {
                         message = "password_max"
