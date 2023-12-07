@@ -476,6 +476,13 @@ class OrderController{
             }
             let promocode = await PromocodeModel.findById(req.fields.promoCode);
             let delivery = await DeliveryModel.findById(req.fields.delivery);
+            console.log(req.fields.delivery);
+            console.log(delivery);
+            let all = await DeliveryModel.find({});
+            let one = await DeliveryModel.findOne({_id:req.fields.delivery});
+            console.log(all);    
+            console.log(one);    
+
             let branch = await Branch.findById(req.fields.branch);
             let deliveryPrice = 0;
             if(delivery){
