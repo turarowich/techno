@@ -78,19 +78,27 @@ class PushController {
                 sound: "default",
                 topic: settings.APNsTopic
             });
-            apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
-                if (response.failed.length){
+
+
+            let allClients = await Client.find({});
+            allClients.forEach((client)=>{
+                thisClass.sendNewMessageAndroid(req.db,client._id,{text:data.desc},data.name,"news");
+            })
+
+
+            // apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
+            //     if (response.failed.length){
                     
-                    response.failed.forEach((fail) => {
-                        if (fail.status == '400' && fail.response.reason == 'BadDeviceToken'){
-                            let device = devicesIOS.find(device => device.token == fail.device)
-                            if(device && device.type == 'ios') device.deleteOne()
-                        }
-                    });
-                }
-            }).catch(function (error) {
-                console.log("Faled to send message to ", error);
-            });
+            //         response.failed.forEach((fail) => {
+            //             if (fail.status == '400' && fail.response.reason == 'BadDeviceToken'){
+            //                 let device = devicesIOS.find(device => device.token == fail.device)
+            //                 if(device && device.type == 'ios') device.deleteOne()
+            //             }
+            //         });
+            //     }
+            // }).catch(function (error) {
+            //     console.log("Faled to send message to ", error);
+            // });
         }
         res.status(result.status).json(result);
     };
@@ -137,7 +145,7 @@ class PushController {
     };
 
     sendNewMessageAndroid =  async  function (req_db, client, message,title = "New message",type="chat") {
-        console.log("sendNewMessageAndroid",req_db)
+        console.log("sendNewMessageAndroid",req_db,client,message,title,type)
         let db = useDB(req_db)
         let Device = db.model("Device");
         const { admin } = require("../../app");
