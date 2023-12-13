@@ -247,21 +247,30 @@
           </div>
           <div v-if="data_check.birthday_checked" class="table-head" style="width: 12%;">Birthday</div>
           <div v-if="data_check.discount_checked" class="table-head" style="width: 10%;">Discount</div>
-          <div class="table-head" style="width: 14%;">Category</div>
+          <div v-if="data_check.category_checked"  class="table-head" style="width: 14%;">Category</div>
           <div v-if="data_check.register_date_checked" class="table-head" style="width: 18%;">Registration date</div>
-          <div class="table-head client-phone" style="width:14%">Phone number</div>
-          <div class="table-head table-link d-flex align-item-center" style="width: 8%;" @click="sortByTotal"><span>Total</span> <img class="total-pol total" style="margin-left:5px" src="../../assets/icons/polygon.svg"></div>
+          <div v-if="data_check.phone_checked" class="table-head client-phone" style="width:14%">Phone number</div>
+          <div v-if="data_check.total_checked" class="table-head table-link d-flex align-item-center" style="width: 8%;" @click="sortByTotal"><span>Total</span> <img class="total-pol total" style="margin-left:5px" src="../../assets/icons/polygon.svg"></div>
           <div v-if="data_check.bonus_checked" class="table-head table-link d-flex align-items-center" style="width: 8%;" @click="sortByBonus">Points <img class="date-pol" style="margin-left:5px" src="../../assets/icons/polygon.svg"></div>
-          <div v-if="data_check.last_purchase_checked" class="table-head" style="width: 16%;">Last purchase</div>
+          <div v-if="data_check.last_purchase_checked" class="table-head" style="width: 6%;">Last purchase</div>
+          <div v-if="data_check.last_scan_checked" class="table-head" style="width: 5%;">Last Scan</div>
+          <div v-if="data_check.number_of_scans_checked" class="table-head" style="width: 5%;">Number of Scans</div>
           <div style="width:3%" class="dropdown dropdown-settings pl-3">
             <div class="table-head text-right dropdown-toggle"  id="dropdownBlue" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:5%"><img src="../../assets/icons/BlueSetting.svg"></div>
             <div class="dropdown-menu general-dropdown settings-dropdown" aria-labelledby="#dropdownBlue">
-              <form>
+              <form @change="updatelistFilter">
+                <div><label class="custom-checkbox"><input id="category_f" v-model="data_check.category_checked" type="checkbox"><span class="checkmark"></span></label><label class="show-fields" for="category_f">Category</label></div>
+                <div><label class="custom-checkbox"><input id="phone_f" v-model="data_check.phone_checked" type="checkbox"><span class="checkmark"></span></label><label class="show-fields" for="phone_f">Phone</label></div>
+                <div><label class="custom-checkbox"><input id="total_f" v-model="data_check.total_checked" type="checkbox"><span class="checkmark"></span></label><label class="show-fields" for="total_f">Total</label></div>
                 <div><label class="custom-checkbox"><input id="last" v-model="data_check.last_purchase_checked" type="checkbox"><span class="checkmark"></span></label><label class="show-fields" for="last">Last purchase</label></div>
                 <div><label class="custom-checkbox"><input v-model="data_check.bonus_checked" type="checkbox" id="show-bonus" ><span class="checkmark"></span></label> <label  class="show-fields" for="show-bonus">Points</label></div>
                 <div><label class="custom-checkbox"><input v-model="data_check.register_date_checked" id="date" type="checkbox" ><span class="checkmark"></span></label> <label  class="show-fields" for="date">Registration date</label></div>
                 <div><label class="custom-checkbox"><input v-model="data_check.discount_checked" type="checkbox" id="discount" ><span class="checkmark"></span></label> <label  class="show-fields" for="discount">Discount</label></div>
-                <div class="mb-0"><label class="custom-checkbox"><input v-model="data_check.birthday_checked" id="birthday" type="checkbox" ><span class="checkmark"></span></label> <label  class="show-fields" for="birthday">Birthday</label></div>
+                <div><label class="custom-checkbox"><input v-model="data_check.birthday_checked" id="birthday" type="checkbox" ><span class="checkmark"></span></label> <label  class="show-fields" for="birthday">Birthday</label></div>
+                
+                <div><label class="custom-checkbox"><input id="last_scan_f" v-model="data_check.last_scan_checked" type="checkbox"><span class="checkmark"></span></label><label class="show-fields" for="last_scan_f">Last Scan</label></div>
+                <div class="mb-0"><label class="custom-checkbox"><input id="number_of_scans_f" v-model="data_check.number_of_scans_checked" type="checkbox"><span class="checkmark"></span></label><label class="show-fields" for="number_of_scans_f">Number of Scans</label></div>
+              
               </form>
             </div>
           </div>
@@ -276,6 +285,7 @@
                 v-on:checkSelection="checkSelection"
                 v-on:selectClient="selectClient"
                 v-on:deleteClient="deleteClient"
+                v-on:viewDetails="viewDetails"
                 :clientList="clientToDisplay"
                 :data_check="data_check"
             />
@@ -317,6 +327,30 @@
     </div>
   </div>
 </div>
+
+<div class="parent-modal">
+    <div class="modal myModal fade" id="clientScanDetailsModal" tabindex="-1" role="dialog" aria-labelledby="clientScanDetailsModal" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-body">
+            <button class="btn" @click="closeClientDetailsModal">X</button>
+           <div class="detailsContent">
+            <div>Scan details for {{ clientScanDetailsName }}</div>
+            <div class="clientScanDetailsRowHeader">
+              <div>Clients</div>
+              <div>Date used</div>
+            </div>
+            <div class="clientScanDetailsRow" v-for="(scan,index) in clientScanDetails" :key="scan._id">
+              <div>#  {{ index+1 }} </div> 
+              <div>{{ clientScanDetailsName }}</div> 
+              <div>{{ scan.createdAt }}</div> 
+            </div>
+           </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 
@@ -345,15 +379,22 @@ export default {
 
   data(){
     return {
+      clientScanDetails:[],
+      clientScanDetailsName:"",
       spinner:true,
       clientList:[],
       movedCategories:[],
       data_check:{
-       bonus_checked: false,
-       last_purchase_checked: false,
-       register_date_checked: false,
-       birthday_checked:false,
-       discount_checked:false,
+        category_checked:false, 
+        bonus_checked: false,
+        last_purchase_checked: false,
+        register_date_checked: false,
+        birthday_checked:false,
+        discount_checked:false,
+        phone_checked:false,
+        total_checked:false,
+        last_scan_checked:false,
+        number_of_scans_checked:false,
      },
       clientCategory:[
         {_id:'',name:'All'}
@@ -517,6 +558,26 @@ export default {
   },
 
   methods: {
+    viewDetails(details,name){
+      $('#clientScanDetailsModal').modal('show');
+      this.clientScanDetails = details;
+      this.clientScanDetailsName = name;
+      console.log(details,"===",name)
+    },
+    closeClientDetailsModal(){
+      $('#clientScanDetailsModal').modal('hide');
+      this.clientScanDetails = [];
+      this.clientScanDetailsName = "";
+    },
+    updatelistFilter(){
+      let that = this;
+      this.axios.post(this.url('updateClientFilter'), {filters: that.data_check}).then(()=>{
+      }).catch((error)=>{
+        if(error.response && error.response.data){
+          this.$warningAlert(error.response.data.msg)
+        }
+      });
+    },
     check(access="clients", parametr="active", parametr2="canEdit"){
         return this.checkAccess(access, parametr, parametr2)
     },
@@ -698,12 +759,6 @@ export default {
         this.$warningAlert('Choose clients to delete')
       }
 
-
-
-
-
-
-
     },
     getClients(){
       this.axios.get(this.url('getClients'))
@@ -725,6 +780,19 @@ export default {
         })
       })
 
+    },
+    getSettings(){
+      let that=this;
+      this.axios.get(this.url('getSettings'))
+        .then((response) => {
+          if(response.data.clientsFilter){
+            that.data_check = response.data.clientsFilter;
+          }
+        }).catch(function (error){
+          if (error.response) {
+            console.log('setCatalog_settings EERRRor',error.response)
+          }
+        })
     },
     getCategories(){
       this.axios.get(this.url('getCategories')+'?type=client')
@@ -807,9 +875,10 @@ export default {
     }
   },
    mounted(){
-    this.getClients()
-    this.getCategories()
-     this.getDiscounts()
+    this.getSettings();
+    this.getClients();
+    this.getCategories();
+     this.getDiscounts();
      $('.filter-list').addClass('collapsed')
     new this.$lightpick({
       field: document.getElementById('from-date'),
@@ -1098,5 +1167,8 @@ export default {
 .radio-toolbar-category .radio-checkbox{
   border-radius:3px;
 }
+.clientScanDetailsRow, .clientScanDetailsRowHeader{
+  display: flex;
 
+}
 </style>

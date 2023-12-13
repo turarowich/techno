@@ -54,7 +54,8 @@ class ClientController {
         let Client = db.model("Client");
         let Order = db.model("Order");
         let Discount = db.model("Discount");
-        let discounts = await Discount.find()
+        let discounts = await Discount.find();
+        let OrderScan = db.model("OrderScan");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "clients", parametr: "active" }, db, res)
             if (checkResult) {
@@ -69,13 +70,13 @@ class ClientController {
             
             let clients = await Client.find().populate('messages').populate('category').exec();
 
-
-
             let newClient = [];
             for (const cl of clients) {
+                console.log(cl.scans,"-=-");
                 let copy = JSON.parse(JSON.stringify(cl));
                 copy.orders = await Order.find({client:cl._id});
                 copy.discount = getClientDiscount(cl,discounts) ? getClientDiscount(cl,discounts).discount_percentage : 0;
+                copy.scans = await OrderScan.find({client:cl._id});
                 newClient.push(copy);
             }
 

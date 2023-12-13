@@ -112,8 +112,6 @@ data(){
   },
   beforeCreate(){
     this.user_info = JSON.parse(localStorage.getItem('user'))
-
-
   }
 
 }

@@ -20,14 +20,16 @@
       </div>
       <div class="table-child" v-if="data_check.birthday_checked" style="width: 12%;">{{client.birthDate ? client.birthDate.slice(0,10) :  '' }}</div>
       <div class="table-child" v-show="data_check.discount_checked" style="width: 10%;">{{client.discount? client.discount : '0'}} %</div>
-      <div class="table-child"  style="width: 14%;">
+      <div class="table-child" v-if="data_check.category_checked" style="width: 14%;">
         {{ client.category ? client.category.name : "no category" }}
       </div>
       <div class="table-child" v-if="data_check.register_date_checked"  style="width: 18%;">{{ client.createdAt ? client.createdAt.slice(0,10) : ""}}</div>
-      <div class="client-phone table-child pr-2" style="width:14%" >{{client.phone}}</div>
-      <div class="table-child"  style="width: 8%;">{{client.total.toFixed(0)}}</div>
+      <div class="client-phone table-child pr-2" v-if="data_check.phone_checked"  style="width:14%" >{{client.phone}}</div>
+      <div class="table-child" v-if="data_check.total_checked"  style="width: 8%;">{{client.total.toFixed(0)}}</div>
       <div class="table-child" v-show="data_check.bonus_checked"  style="width: 8%;">{{client.points}}</div>
-      <div class="table-child" v-show="data_check.last_purchase_checked"  style="width: 16%;">{{client.last_purchase?JSON.stringify(client.last_purchase).slice(1,11):'-'}}</div>
+      <div class="table-child" v-show="data_check.last_purchase_checked"  style="width: 6%;">{{client.last_purchase?JSON.stringify(client.last_purchase).slice(1,11):'-'}}</div>
+      <div class="table-child" v-on:click="$emit('viewDetails',client.scans,client.name)" v-show="data_check.last_scan_checked"  style="width: 5%;">View details</div>
+      <div class="table-child" v-show="data_check.number_of_scans_checked"  style="width: 5%;">{{client.scans.length}}</div>
       <div  style="width:3%" class="table-child dropleft dropMenu">
         <div v-if="check()" class="dropdown-toggle" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <img  src="../../assets/icons/three-dots.svg" class="three-dots">

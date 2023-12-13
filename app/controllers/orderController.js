@@ -263,7 +263,7 @@ async function calcCashback(products_full_data,cashback_model) {
             let cashback_status = first_cashback.status;
             let cashback_default_percent = parseFloat(first_cashback.default_cashback) / 100;
             if (!cashback_status) {
-                return;
+                return 0;
             }
             //2
             let cashback_products = first_cashback.selectedItemsList;
@@ -299,6 +299,7 @@ async function calcCashback(products_full_data,cashback_model) {
     } catch (e) {
         console.log(e);
     }
+    console.log("cashback_from_order",cashback_from_order);
     return cashback_from_order;
 }
 async function checkAndUpdatePromo(promocode=null,client=null) {
@@ -1162,8 +1163,11 @@ class OrderController{
         let Log = db.model("Log");
         let ClientBonusHistory = db.model("clientBonusHistory");
         let Client = db.model("Client");
+        let Discount = db.model("Discount");
         let cashback_model = db.model("Cashback");
         let Product = db.model("Product");
+        let Settings = db.model("Settings");
+        let OrderScan = db.model("OrderScan");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "orders", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -1176,11 +1180,16 @@ class OrderController{
         };
         try {
             let order = await Order.findById(req.fields.orderId);
-            let clients = await Client.find({uniqueCode:req.fields.clientCode});
-            let client = null;
-            if(clients.length>0){
-                client = clients[0];
-            }else{
+            let client = await Client.findOne({uniqueCode:req.fields.clientCode});
+
+
+            console.log(order.client,client._id);
+
+            if(order.client.toString() != client._id.toString()){
+                return res.status(400).send(`Wrong Client`);
+            }
+          
+            if(!client){
                 return res.status(400).send(`Client not found`);
             }
 
@@ -1207,6 +1216,7 @@ class OrderController{
             await checkAndSendWarning(client, cashback_model, transporter, ClientBonusHistory,req.db.slice(7));
 
             let cashback_from_order = await calcCashback(result_object.productCurrentPrice,cashback_model);
+            console.log("cashback_from_order",cashback_from_order);
             await createClientHistory(
                 ClientBonusHistory,
                 client,
@@ -1217,10 +1227,35 @@ class OrderController{
                 0
             );
             result['pointsAdded'] = cashback_from_order;
+
+            let discounts = await Discount.find();
+            let settings = await Settings.find();
+            let logo = '';
+
+            if(settings.length>0){
+                logo = settings[0].logo;
+            }    
+             
+
+            let discount_obj = getClientDiscount(client,discounts);    
+
+
+            await new OrderScan({
+                client: client._id,
+                order: order._id,
+            }).save();
+
+            let slimClient = {
+                'name':client.name,
+                'img':client.avatar,
+                'phone':client.phone,
+                'discount_percentage': discount_obj.discount_percentage,
+                'logo':logo,
+            }
+            result['client'] = slimClient;
             order.pointsStatus.received = true;
             order.pointsStatus.amount = cashback_from_order;
             await order.save();
-
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }

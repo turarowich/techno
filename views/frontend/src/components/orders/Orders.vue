@@ -162,6 +162,47 @@
     </div>
   </div>
 
+
+
+  <div class="parent-modal">
+    <div class="modal myModal fade" id="clientInfoModal" tabindex="-1" role="dialog" aria-labelledby="clientInfoModal" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-body">
+            <button class="btn" @click="closeClientInfoModal">X</button>
+           <div class="infoContent">
+            <div class="infoContent_1">
+              <!-- <div class="companyName">{{getCompanyName}}</div> -->
+
+              <div v-if="clientInfoData.logo" class="clientlogo 1" v-bind:style="{ 'background-image': 'url(' + imgSrc+clientInfoData.logo + ')' }"></div>
+              <div v-else class="clientlogo 2">
+                <div class="companyName">{{getCompanyName}}</div>
+              </div>
+
+
+
+              <div class="line"></div>
+
+              <div v-if="clientInfoData.img" class="clientImg 1" v-bind:style="{ 'background-image': 'url(' + imgSrc+clientInfoData.img + ')' }"></div>
+              <div v-else class="clientImg 2">
+                <img style="width: 100%;height: 100%;" src="../../assets/icons/chat.svg">
+              </div>
+                
+
+              <div class="clientName">{{clientInfoData.name}}</div>
+              <div class="clientPhone">{{clientInfoData.phone}}</div>
+            </div>  
+            <div class="infoContent_2">
+              <div class="discountTitle">Скидка</div>
+              <div class="discountPercentage">{{clientInfoData.discount_percentage}}%</div>
+            </div> 
+           </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </template>
 
 <script>
@@ -183,8 +224,15 @@ name: "Orders",
     Spinner
 
   },
+
   data(){
     return{
+      imgSrc:'',
+      clientInfoData:{
+        name:"",
+        phone:"",
+        discount_percentage:"",
+      },
       camSettings:{
         camera: 'rear',
         noRearCamera: false,
@@ -227,6 +275,10 @@ name: "Orders",
   },
 
   computed: {
+    getCompanyName:function(){
+      return  JSON.parse(localStorage.getItem('user')).name
+    },
+
     filteredList:function() {
         
       let newOrders = this.orderList
@@ -284,6 +336,14 @@ name: "Orders",
     },
   },
   methods: {
+    closeClientInfoModal(){
+      $('#clientInfoModal').modal('hide');
+      this.clientInfoData = {
+        name:"",
+        phone:"",
+        discount_percentage:"",
+      }
+    },
     selectAllOrder(){
       this.orderToDisplay.map(order=>order['selected'] = this.selectAll)
     },
@@ -512,11 +572,21 @@ name: "Orders",
       this.scanResult.pointsAdded = '';
     },
     onDecode(uniqueCode) {
+      let that = this;
+      console.log(uniqueCode);
+      if(!uniqueCode){
+        return;
+      }
       this.axios.post(this.url('addOderPoints'),{clientCode:uniqueCode,orderId:this.orderForScanning.id})
         .then((response)=>{
+
           console.log(response.data);
+          let clientData = response.data.client;
           this.scanResult.pointsAdded = `${response.data.pointsAdded} points were added`;
           this.scanResult.error = '';
+
+          that.clientInfoData = clientData;
+          $('#clientInfoModal').modal('show');
         }).catch((error)=>{
           console.log(error);
           if (error.response) {
@@ -565,6 +635,7 @@ name: "Orders",
 
   },
   mounted(){
+    this.imgSrc=this.$server+"/";
     this.getOrders();
     new this.$lightpick({
         field: document.getElementById('datepicker'),
@@ -586,8 +657,6 @@ name: "Orders",
     this.between_value = to_date + ' to ' + from_date;
     this.getCameraPermissionState();
   },
-
-
 }
 
 </script>
@@ -667,5 +736,74 @@ name: "Orders",
   border: 1px solid #E3E3E3;
   border-radius:5px;
 }
+/* #clientInfoModal{
+ display:block; 
+ opacity: 1;
+} */
+#clientInfoModal .modal-dialog,#clientInfoModal .modal-content,#clientInfoModal .infoContent{
+  height: 100%;
+}
+#clientInfoModal .modal-dialog{
+  margin: 0;
+}
+#clientInfoModal .infoContent_2,#clientInfoModal .infoContent_1{
+  flex: 1 0 0;
+  width: 100%;
+}
 
+#clientInfoModal .infoContent_2{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+#clientInfoModal .infoContent{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  padding: 65px;
+}
+
+.discountPercentage{
+  color:#616CF5;
+  font-weight: 700;
+  font-size: 40px;
+}
+.discountTitle{
+  font-weight: 600;
+  font-size: 16px;
+}
+.clientImg{
+  width: 152px;
+  height: 152px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  margin: auto;
+  border-radius: 50%;
+  margin-bottom: 50px;
+}
+.clientPhone{
+  font-weight: 400;
+  font-size: 16px;
+}
+.clientName{
+  font-weight: 500;
+  font-size: 23px;
+}
+.companyName{
+  color: red;
+  font-size: 40px;
+  font-weight: 700;
+}
+
+.clientlogo{
+  height: 35px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  margin-bottom: 25px;
+}
 </style>

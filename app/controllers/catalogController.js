@@ -137,7 +137,7 @@ class catalogController{
             'msg': 'Sending client'
         }
         try {
-            let settings = await Settings.find()
+            let settings = await Settings.find();
             if (!settings[0]){
                 settings = await new Settings({
                     slogan: " ",

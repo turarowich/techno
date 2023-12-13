@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const settingsSchema = new Schema({
+    clientsFilter: {
+        type: Schema.Types.Mixed,
+        required: false,
+    },
     ignoreImagesOnImport: {
         type: Boolean,
         required: false,

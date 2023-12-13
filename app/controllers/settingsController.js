@@ -90,11 +90,36 @@ class SettingsController{
             result['branches'] = branches;
             result['deliveries'] = deliveries;
             result['discounts'] = discounts;
+            result['clientsFilter'] = settings.clientsFilter ?? null;
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
         res.status(result.status).json(result);
     };
+
+    updateClientFilter = async function (req, res) {
+        let db = useDB(req.db)
+        let Settings = db.model("Settings");
+        let result = {
+            'status': 200,
+            'msg': 'Settings updated'
+        }
+        try {
+            let settings = await Settings.findOne({});
+            if (!settings) {
+                settings = await new Settings({
+                    slogan: " ",
+                }).save();
+            }
+
+            settings.clientsFilter = req.fields.filters;
+            await settings.save();
+
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.status(result.status).json(result);
+    }
 
     updateSettings = async function (req, res) {
         //
