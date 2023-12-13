@@ -332,8 +332,8 @@
     <div class="modal myModal fade" id="clientScanDetailsModal" tabindex="-1" role="dialog" aria-labelledby="clientScanDetailsModal" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
-          <div class="modal-body">
-            <button class="btn" @click="closeClientDetailsModal">X</button>
+          <div class="modal-body ">
+            <button class="btn" style="margin-left: auto;" @click="closeClientDetailsModal">x</button>
            <div class="detailsContent">
             <div>Scan details for {{ clientScanDetailsName }}</div>
             <div class="clientScanDetailsRowHeader">
@@ -341,8 +341,12 @@
               <div>Date used</div>
             </div>
             <div class="clientScanDetailsRow" v-for="(scan,index) in clientScanDetails" :key="scan._id">
-              <div>#  {{ index+1 }} </div> 
-              <div>{{ clientScanDetailsName }}</div> 
+              <div>
+                <div>#  {{ index+1 }} </div> 
+                <div>{{ clientScanDetailsName }}</div> 
+              </div>
+
+
               <div>{{ scan.createdAt }}</div> 
             </div>
            </div>
@@ -1169,6 +1173,9 @@ export default {
 }
 .clientScanDetailsRow, .clientScanDetailsRowHeader{
   display: flex;
-
+}
+#clientScanDetailsModal .modal-body{
+  display: flex;
+  flex-direction: column;
 }
 </style>
