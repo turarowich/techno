@@ -285,6 +285,7 @@ class AuthController{
     registerClientSocial = async function (req, res) {
         let db = useDB('loygift' + req.headers['access-place']);
         let Client = db.model("Client");
+        let Settings = db.model("Settings");
         let ClientBonusHistory = db.model("clientBonusHistory");
         let result = []
         let social_res = []
@@ -314,7 +315,32 @@ class AuthController{
             }
             social_res.uniqueCode = randomNumber(100000, 1000000)
             var client = new Client(social_res.save)
-            let qrCode = createQrFile(social_res.uniqueCode, 'loygift' + req.headers['access-place'])
+
+
+
+            //new
+
+            let web = "https://app.loygift.com";
+
+            let dev = false;
+            if(dev){
+                web = "http://localhost:8080";
+            }
+
+            let settings = await Settings.find();
+
+
+            let newQrCodeString =web + "/client_info" + '/' + settings[0].catalogUrl + '/' + social_res.uniqueCode;
+
+            //new
+
+
+            // let qrCode = createQrFile(number.toString(), 'loygift' + req.headers['access-place']);
+            let qrCode = createQrFile(social_res.uniqueCode, 'loygift' + req.headers['access-place'],newQrCodeString);
+
+
+
+            // let qrCode = createQrFile(social_res.uniqueCode, 'loygift' + req.headers['access-place'])
             client.QRCode = qrCode
             client.uniqueCode = social_res.uniqueCode
 
