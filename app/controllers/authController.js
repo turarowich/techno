@@ -229,7 +229,7 @@ class AuthController{
             let settings = await Settings.find();
 
 
-            let newQrCodeString =web + "client_info" + '/' + settings[0].catalogUrl + '/' + number.toString();
+            let newQrCodeString =web + "/client_info" + '/' + settings[0].catalogUrl + '/' + number.toString();
 
             //new
 
