@@ -24,6 +24,7 @@ import ClientNews from "@/client/components/ClientNews/ClientNews";
 import Basket from "@/client/components/Basket/Basket";
 import Menu from "@/client/components/CatalogMenu/Menu";
 import ClientAccount from "@/client/components/ClientAccount/ClientAccount";
+import ClientInfoModal from "@/components/clients/ClientInfoModal";
 import PersonalInfo from "@/client/components/PersonalInfo/PersonalInfo";
 import EditProfile from "@/client/components/EditProfile/EditProfile";
 import ProductInfo from "@/client/components/product-info/ProductInfo";
@@ -55,6 +56,15 @@ import CatalogImport from "@/components/admin/CatalogImport";
 
 
 const routes = [
+    {
+        path: "/client_info/:company_id/:client_id",
+        name: "ClientInfoModal",
+        component: ClientInfoModal,
+        meta: {
+            hideNavbar: true,
+            hideForAuth: true
+        }
+    },
     {
         path: "/",
         name: "SignIn",
@@ -185,6 +195,15 @@ const routes = [
                 meta: { disableScroll: true }
 
             },
+            // {
+            //     path: "client_info/:client_id",
+            //     name: "ClientInfoModal",
+            //     component: ClientInfoModal,
+            //     meta: {
+            //         hideNavbar: true,
+            //         hideForAuth: true
+            //     }
+            // },
             {
                 path:'news-detail/:id',
                 name:"NewsDetail",

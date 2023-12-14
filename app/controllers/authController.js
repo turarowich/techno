@@ -202,16 +202,40 @@ class AuthController{
         let db = useDB('loygift'+req.headers['access-place']);
         let Client = db.model("Client");
         let ClientBonusHistory = db.model("clientBonusHistory");
-        let result = []
+        let Settings = db.model("Settings");
+        let result = [];
+
         let lang = req.headers["accept-language"]
         if (lang != 'ru') {
             lang = 'en'
         }
         try {
+
+
+
+
             let hashedPassword = bcrypt.hashSync(req.fields.password, 8);
             let number = randomNumber(100000, 1000000)
-            // let number = 1000001
-            let qrCode = createQrFile(number.toString(), 'loygift' + req.headers['access-place'])
+            
+            //new
+
+            let web = "https://app.loygift.com";
+
+            let dev = false;
+            if(dev){
+                web = "http://localhost:8080";
+            }
+
+            let settings = await Settings.find();
+
+
+            let newQrCodeString = web + '/' + settings[0].catalogUrl + '/' + number.toString();
+
+            //new
+
+
+            // let qrCode = createQrFile(number.toString(), 'loygift' + req.headers['access-place']);
+            let qrCode = createQrFile(number.toString(), 'loygift' + req.headers['access-place'],newQrCodeString);
             var client = new Client({
                 name: req.fields.name,
                 phone: req.fields.phone,

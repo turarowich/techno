@@ -6,10 +6,10 @@ const orderScanSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Client'
     },
-    order: {
-        type: Schema.Types.ObjectId,
-        ref: 'Order'
-    },
+    // order: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'Order'
+    // },
     createdAt: {
         type: Date,
         required: true,

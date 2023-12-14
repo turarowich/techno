@@ -9,6 +9,47 @@ var path = require('path');
 const fs = require('fs');
 
 class ClientController {
+
+    getClientInfoScan = async function (req, res) {
+        let db = useDB(req.db)
+        let Client = db.model("Client");
+        let Discount = db.model("Discount");
+        let Settings = db.model("Settings");
+        let OrderScan = db.model("OrderScan");
+
+        let result = {
+            'status': 200,
+            'msg': 'Points were transferred',
+        };
+
+        try {
+            let discounts = await Discount.find();
+            let settings = await Settings.find();
+            let logo = '';
+    
+            if(settings.length>0){
+                logo = settings[0].logo;
+            }    
+             
+            let client = await Client.findOne({uniqueCode:req.fields.clientCode});
+            let discount_obj = getClientDiscount(client,discounts); 
+            await new OrderScan({
+                client: client._id,
+            }).save();
+    
+            let slimClient = {
+                'name':client.name,
+                'img':client.avatar,
+                'phone':client.phone,
+                'discount_percentage': discount_obj.discount_percentage,
+                'logo':logo,
+            }
+            result['client'] = slimClient;
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.status(result.status).json(result);
+    }
     
     getClient = async function (req, res) {
         let db = useDB(req.db)

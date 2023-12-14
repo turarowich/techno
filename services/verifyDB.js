@@ -23,6 +23,7 @@ function verifyDB(req, res, next) {
         'getEarnedPoints',
         'getNewsWeb',
         'getSingleNewsWeb',
+        'getClientInfoScan'
     ];
 
     let cat_url = req.headers['x-client-url'];

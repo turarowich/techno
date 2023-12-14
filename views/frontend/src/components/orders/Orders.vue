@@ -573,7 +573,10 @@ name: "Orders",
       this.scanResult.pointsAdded = '';
     },
     onDecode(uniqueCode) {
-      let that = this;
+      // let that = this;
+      console.log(uniqueCode);
+      let urlSplit = uniqueCode.split("/");
+      uniqueCode = urlSplit[urlSplit.length -1];
       console.log(uniqueCode);
       if(!uniqueCode){
         return;
@@ -581,15 +584,15 @@ name: "Orders",
       this.axios.post(this.url('addOderPoints'),{clientCode:uniqueCode,orderId:this.orderForScanning.id})
         .then((response)=>{
 
-          let clientData = response.data.client;
+          // let clientData = response.data.client;
           this.scanResult.pointsAdded = `${response.data.pointsAdded} points were added`;
           this.scanResult.error = '';
 
-
-          if(that.scannerStatus){
-            that.clientInfoData = clientData;
-            $('#clientInfoModal').modal('show');
-          }
+          
+          // if(that.scannerStatus && false){
+          //   that.clientInfoData = clientData;
+          //   $('#clientInfoModal').modal('show');
+          // }
 
         }).catch((error)=>{
           console.log(error);

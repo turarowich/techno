@@ -166,6 +166,7 @@ var home_url = [
     'updateProductTempoOrder',
     'removeProductTempoOrder',
     'searchProductWeb',
+    'getClientInfoScan',
 ]
 app.config.globalProperties.addNewProperty = function(obj, key, value = "", copy) {
     obj.map(function(object) {

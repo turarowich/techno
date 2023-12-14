@@ -1240,10 +1240,10 @@ class OrderController{
             let discount_obj = getClientDiscount(client,discounts);    
 
 
-            await new OrderScan({
-                client: client._id,
-                order: order._id,
-            }).save();
+            // await new OrderScan({
+            //     client: client._id,
+            //     order: order._id,
+            // }).save();
 
             let slimClient = {
                 'name':client.name,

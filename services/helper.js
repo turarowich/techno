@@ -280,7 +280,7 @@ function randomNumber(min, max) {
 function randomPassword(letterCount) {
     return Math.random().toString(36).slice(-letterCount);
 }
-function createQrFile(user_id, company) {
+function createQrFile(user_id, company,newQrCodeString) {
     let link = 'images/' + company + '/qr'
     let filename ='/' + user_id + '.png'
     var dir = path.join(__dirname, '/../views/frontend/')
@@ -294,7 +294,8 @@ function createQrFile(user_id, company) {
         fs.mkdirSync(dir + link);
     }
     
-    QRCode.toFile(dir + link + filename, String(user_id), {
+    // QRCode.toFile(dir + link + filename, String(user_id), {
+        QRCode.toFile(dir + link + filename, String(newQrCodeString), {
         color: {
             dark: '#181818',  // Blue dots
             light: '#0000' // Transparent background
