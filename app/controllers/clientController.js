@@ -41,7 +41,7 @@ class ClientController {
                 'name':client.name,
                 'img':client.avatar,
                 'phone':client.phone,
-                'discount_percentage': discount_obj.discount_percentage ?? 0,
+                'discount_percentage': discount_obj?.discount_percentage ?? 0,
                 'logo':logo,
             }
             result['client'] = slimClient;
