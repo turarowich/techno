@@ -48,8 +48,12 @@ name: "ClientInfoModal",
   },
   methods:{
     getClientInfo(){
+      
       let currentCompanyCatalog = this.$route.params.company_id;
       let client_id = this.$route.params.client_id;
+
+      console.log(currentCompanyCatalog,client_id,"======================");
+
 
       let that=this;
       const options = {

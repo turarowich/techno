@@ -34,7 +34,7 @@ function verifyDB(req, res, next) {
                     next();
                 }else{
                     //throw error
-                    return res.status(404).send('Unable to find the requested company!');
+                    return res.status(404).send('Unable to find the requested company!s');
                 }
             })
             .catch(error => {

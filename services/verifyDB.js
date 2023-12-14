@@ -27,6 +27,7 @@ function verifyDB(req, res, next) {
     ];
 
     let cat_url = req.headers['x-client-url'];
+    console.log(cat_url,"cat_urlcat_urlcat_urlcat_urlcat_urlcat_urlcat_urlcat_urlcat_urlcat_urlcat_urlcat_urlcat_urlcat_urlcat_urlcat_urlcat_urlcat_urlcat_urlcat_urlcat_urlcat_urlcat_url");
     let shoes_db = global.userConnection.useDb('loygift').model("catalogs");
     let catalogs_model = shoes_db.model("catalogs");
     ///if already has access place
@@ -34,6 +35,7 @@ function verifyDB(req, res, next) {
         console.log('already has access place', req.db,req.headers['access-place']);
         next();
     }else{
+        console.log("EEEEEEELSE");
         catalogs_model.findOne({ 'cat_url': cat_url })
             .then(repo => {
                 if(repo){
@@ -46,23 +48,23 @@ function verifyDB(req, res, next) {
                         if(mainUser){
                             checkUserBlockStatus(mainUser).then(blockCheck=>{
                                 if(blockCheck.blocked){
-                                    return res.status(404).send('Unable to find the requested company!');
+                                    return res.status(404).send('Unable to find the requested company!1',cat_url);
                                 }else {
                                     next();
                                 }
                             })
                         }else{
-                            return res.status(404).send('Unable to find the requested company!');
+                            return res.status(404).send('Unable to find the requested company!2',cat_url);
                         }
                     }).catch(err=>{
-                        return res.status(404).send('Unable to find the requested company!');
+                        return res.status(404).send('Unable to find the requested company!3',cat_url);
                     })
                     //
                     // next();
                 }else{
                     //throw error
                     console.log('company settings not found');
-                    return res.status(404).send('Unable to find the requested company!');
+                    return res.status(404).send('Unable to find the requested company!4',cat_url);
                 }
             })
             .catch(error => {
