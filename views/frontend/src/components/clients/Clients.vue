@@ -253,8 +253,8 @@
           <div v-if="data_check.total_checked" class="table-head table-link d-flex align-item-center" style="width: 8%;" @click="sortByTotal"><span>Total</span> <img class="total-pol total" style="margin-left:5px" src="../../assets/icons/polygon.svg"></div>
           <div v-if="data_check.bonus_checked" class="table-head table-link d-flex align-items-center" style="width: 8%;" @click="sortByBonus">Points <img class="date-pol" style="margin-left:5px" src="../../assets/icons/polygon.svg"></div>
           <div v-if="data_check.last_purchase_checked" class="table-head" style="width: 6%;">Last purchase</div>
-          <div v-if="data_check.last_scan_checked" class="table-head" style="width: 5%;">Last Scan</div>
-          <div v-if="data_check.number_of_scans_checked" class="table-head" style="width: 5%;">Number of Scans</div>
+          <div v-if="data_check.last_scan_checked && scannerStatus" class="table-head" style="width: 5%;">Last Scan</div>
+          <div v-if="data_check.number_of_scans_checked && scannerStatus" class="table-head" style="width: 5%;">Number of Scans</div>
           <div style="width:3%" class="dropdown dropdown-settings pl-3">
             <div class="table-head text-right dropdown-toggle"  id="dropdownBlue" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:5%"><img src="../../assets/icons/BlueSetting.svg"></div>
             <div class="dropdown-menu general-dropdown settings-dropdown" aria-labelledby="#dropdownBlue">
@@ -268,8 +268,8 @@
                 <div><label class="custom-checkbox"><input v-model="data_check.discount_checked" type="checkbox" id="discount" ><span class="checkmark"></span></label> <label  class="show-fields" for="discount">Discount</label></div>
                 <div><label class="custom-checkbox"><input v-model="data_check.birthday_checked" id="birthday" type="checkbox" ><span class="checkmark"></span></label> <label  class="show-fields" for="birthday">Birthday</label></div>
                 
-                <div><label class="custom-checkbox"><input id="last_scan_f" v-model="data_check.last_scan_checked" type="checkbox"><span class="checkmark"></span></label><label class="show-fields" for="last_scan_f">Last Scan</label></div>
-                <div class="mb-0"><label class="custom-checkbox"><input id="number_of_scans_f" v-model="data_check.number_of_scans_checked" type="checkbox"><span class="checkmark"></span></label><label class="show-fields" for="number_of_scans_f">Number of Scans</label></div>
+                <div v-if="scannerStatus"><label class="custom-checkbox"><input id="last_scan_f" v-model="data_check.last_scan_checked" type="checkbox"><span class="checkmark"></span></label><label class="show-fields" for="last_scan_f">Last Scan</label></div>
+                <div v-if="scannerStatus" class="mb-0"><label class="custom-checkbox"><input id="number_of_scans_f" v-model="data_check.number_of_scans_checked" type="checkbox"><span class="checkmark"></span></label><label class="show-fields" for="number_of_scans_f">Number of Scans</label></div>
               
               </form>
             </div>
@@ -288,6 +288,7 @@
                 v-on:viewDetails="viewDetails"
                 :clientList="clientToDisplay"
                 :data_check="data_check"
+                :scannerStatus="scannerStatus"
             />
           </div>
 
@@ -333,16 +334,21 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-body ">
-            <button class="btn" style="margin-left: auto;" @click="closeClientDetailsModal">x</button>
+            <!-- <button class="btn" style="margin-left: auto;" @click="closeClientDetailsModal">x</button> -->
            <div class="detailsContent">
-            <div>Scan details for {{ clientScanDetailsName }}</div>
+            <div class="d-flex">
+              <span class="scanDetailsFor">Scan details for</span>
+              <span class="scanDetailsForName"> {{ clientScanDetailsName }}</span>
+              <button class="btn" style="margin-left: auto;margin-top: -5;" @click="closeClientDetailsModal">x</button>
+            </div>
+            
             <div class="clientScanDetailsRowHeader">
-              <div>Clients</div>
-              <div>Date used</div>
+              <div style="margin-left: 13%;">Client</div>
+              <div style="margin-right: 10%;">Date used</div>
             </div>
             <div class="clientScanDetailsRow" v-for="(scan,index) in clientScanDetails" :key="scan._id">
-              <div>
-                <div>#  {{ index+1 }} </div> 
+              <div class="clientScanDetailsRow0">
+                <div class="mr-5">{{ index+1 }} </div> 
                 <div>{{ clientScanDetailsName }}</div> 
               </div>
               <div>{{ formattedDate(scan.createdAt) }}</div> 
@@ -386,11 +392,12 @@ export default {
       spinner:true,
       clientList:[],
       movedCategories:[],
+      scannerStatus:false,
       data_check:{
         category_checked:false, 
         bonus_checked: false,
         last_purchase_checked: false,
-        register_date_checked: false,
+        register_date_checked: true,
         birthday_checked:false,
         discount_checked:false,
         phone_checked:false,
@@ -799,6 +806,7 @@ export default {
         .then((response) => {
           if(response.data.clientsFilter){
             that.data_check = response.data.clientsFilter;
+            that.scannerStatus = response.data.scannerStatus;
           }
         }).catch(function (error){
           if (error.response) {
@@ -1181,9 +1189,38 @@ export default {
 }
 .clientScanDetailsRow, .clientScanDetailsRowHeader{
   display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #E4E4E4;
+  padding: 10px 0;
+  font-size: 14px;
+  font-weight: 400;
+}
+.clientScanDetailsRowHeader{
+  color: #787878;
 }
 #clientScanDetailsModal .modal-body{
   display: flex;
   flex-direction: column;
+}
+.clientScanDetailsRow0{
+  display: flex;
+}
+#clientScanDetailsModal .modal-dialog,#clientScanDetailsModal .modal-content,#clientScanDetailsModal .infoContent{
+  height: 80%;
+  overflow-y: auto;
+}
+.detailsContent{
+  margin: 0 20px;
+}
+
+.scanDetailsFor{
+  font-size: 21px;
+  font-weight: 600;
+  margin-right: 20px;
+}
+.scanDetailsForName{
+  font-size: 21px;
+  font-weight: 600;
+  color: #616CF5;
 }
 </style>

@@ -227,6 +227,7 @@ name: "Orders",
 
   data(){
     return{
+      scannerStatus:false,
       imgSrc:'',
       clientInfoData:{
         name:"",
@@ -580,13 +581,16 @@ name: "Orders",
       this.axios.post(this.url('addOderPoints'),{clientCode:uniqueCode,orderId:this.orderForScanning.id})
         .then((response)=>{
 
-          console.log(response.data);
           let clientData = response.data.client;
           this.scanResult.pointsAdded = `${response.data.pointsAdded} points were added`;
           this.scanResult.error = '';
 
-          that.clientInfoData = clientData;
-          $('#clientInfoModal').modal('show');
+
+          if(that.scannerStatus){
+            that.clientInfoData = clientData;
+            $('#clientInfoModal').modal('show');
+          }
+
         }).catch((error)=>{
           console.log(error);
           if (error.response) {
@@ -631,10 +635,23 @@ name: "Orders",
         }
 
       }
-    }
-
+    },
+    getSettings(){
+      let that=this;
+      this.axios.get(this.url('getSettings'))
+        .then((response) => {
+          if(response.data.clientsFilter){
+            that.scannerStatus = response.data.scannerStatus;
+          }
+        }).catch(function (error){
+          if (error.response) {
+            console.log('setCatalog_settings EERRRor',error.response)
+          }
+        })
+    },
   },
   mounted(){
+    this.getSettings();
     this.imgSrc=this.$server+"/";
     this.getOrders();
     new this.$lightpick({
@@ -740,12 +757,19 @@ name: "Orders",
  display:block; 
  opacity: 1;
 } */
+@media (max-width: 550px) {
+  #clientInfoModal .modal-dialog{
+    margin: 0!important;
+  }
+}
+#clientInfoModal{
+    padding-left: 0px!important;
+}
+
 #clientInfoModal .modal-dialog,#clientInfoModal .modal-content,#clientInfoModal .infoContent{
   height: 100%;
 }
-#clientInfoModal .modal-dialog{
-  margin: 0;
-}
+
 #clientInfoModal .infoContent_2,#clientInfoModal .infoContent_1{
   flex: 1 0 0;
   width: 100%;

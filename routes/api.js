@@ -143,6 +143,7 @@ module.exports = function (app, io) {
     app.get('/getPersonalSettings', settingsController.getPersonalSettings);
     app.put('/updateSettings', verifyAccess, settingsController.updateSettings);
     app.post('/updateClientFilter', settingsController.updateClientFilter);
+    app.post('/updateScannerStatus', settingsController.updateScannerStatus);
     app.put('/updatePersonalSettings', verifyAccess, settingsController.updatePersonalSettings);
     app.delete('/deleteDelivery/:delivery', verifyAccess, settingsController.deleteDelivery);
     app.delete('/deleteBranch/:branch', verifyAccess, settingsController.deleteBranch);

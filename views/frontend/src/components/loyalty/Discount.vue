@@ -5,14 +5,32 @@
   </div>
   <div v-else class="row">
     <div class="col-lg-9">
-      <div class="mb-2 d-flex">
-        <label class="switch d-flex">
-          <input @change="updateStatus" type="checkbox" v-model="status">
-          <span class="slider round"></span>
-        </label>
-        <h2 class="cashback-title">Discount</h2>
+      <div class="mb-2 d-flex" style="justify-content: space-between;">
+        <div class="d-flex" style="flex-direction: column;">
+          <div class="d-flex">
+            <label class="switch d-flex mt-1">
+              <input @change="updateStatus" type="checkbox" v-model="status">
+              <span class="slider round"></span>
+            </label>
+            <h2 class="cashback-title">Discount</h2>
+          </div>
+
+          <p class="mb-5 cashback-description">Increase customer loyalty with the help of this tool</p>
+        </div>
+
+        <div class="d-flex" style="flex-direction: column;">
+          <div class="d-flex">
+            <label class="switch d-flex mt-1">
+              <input @change="updateScannerStatus" type="checkbox" v-model="scannerStatus">
+              <span class="slider round"></span>
+            </label>
+            <h2 class="cashback-title">Scan discount</h2>
+          </div>
+
+          <p class="mb-5 cashback-description">When scanning the qr-code you will see the client’s data and his discount</p>
+        </div>
       </div>
-      <p class="mb-5 cashback-description">Increase customer loyalty with the help of this tool</p>
+
 
       <div class="discount-labels d-flex align-items-center">
         <div style="width:60%" class="cashback-sub-title">Discounting system</div>
@@ -56,6 +74,7 @@ export default {
     return {
       spinner:true,
       status:false,
+      scannerStatus:false,
       id:'',
       current_discount:{
         name:'',
@@ -142,6 +161,24 @@ export default {
             }
       });
     },
+    updateScannerStatus(){
+      let that = this;
+      let url = this.base_url+'/api/updateScannerStatus/';
+      this.axios.post(url, {
+        scannerStatus:that.scannerStatus,
+      }).then(function (response) {
+        console.log(response);
+        that.displayMessages(['Updated'],"Success");
+      }).catch((error)=>{
+            if(error.response.data && !error.response.data.errors){
+                that.scannerStatus = !that.scannerStatus
+                this.$warningAlert(error.response.data.msg)
+            }
+            if (error.response) {
+                that.displayMessages(Object.values(error.response.data.errors),"Errors");
+            }
+      });
+    },
     displayMessages(array,title){
       let message = '';
       array.forEach(item=>message+=`${item}<br>`)
@@ -163,6 +200,19 @@ export default {
         }
       })
     },
+    getSettings(){
+      let that=this;
+      this.axios.get(this.url('getSettings'))
+        .then((response) => {
+          if(response.data.clientsFilter){
+            that.scannerStatus = response.data.scannerStatus;
+          }
+        }).catch(function (error){
+          if (error.response) {
+            console.log('setCatalog_settings EERRRor',error.response)
+          }
+        })
+    },
   },
   watch:{
   },
@@ -181,7 +231,12 @@ export default {
       .then(function (response){
         that.list_of_discounts = response.data.discounts;
       })
+    
+    
   },
+  mounted(){
+    this.getSettings();
+  }
 }
 </script>
 

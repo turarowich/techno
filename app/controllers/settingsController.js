@@ -91,6 +91,7 @@ class SettingsController{
             result['deliveries'] = deliveries;
             result['discounts'] = discounts;
             result['clientsFilter'] = settings.clientsFilter ?? null;
+            result['scannerStatus'] = settings.scannerStatus ?? null;
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
@@ -120,6 +121,32 @@ class SettingsController{
         }
         res.status(result.status).json(result);
     }
+
+    updateScannerStatus = async function (req, res) {
+        let db = useDB(req.db)
+        let Settings = db.model("Settings");
+        let result = {
+            'status': 200,
+            'msg': 'Settings updated'
+        }
+        try {
+            let settings = await Settings.findOne({});
+            if (!settings) {
+                settings = await new Settings({
+                    slogan: " ",
+                }).save();
+            }
+
+            settings.scannerStatus = req.fields.scannerStatus;
+            await settings.save();
+
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.status(result.status).json(result);
+    }
+
+
 
     updateSettings = async function (req, res) {
         //
