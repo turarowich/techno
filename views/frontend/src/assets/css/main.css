@@ -156,7 +156,7 @@ img{
     color:#222;
     transition: .3s;
 }
-.date-pol.active,.total-pol.active {
+.date-pol.active,.total-pol.active ,.total-scans-pol.active{
     filter: invert(44%) sepia(96%) saturate(2719%) hue-rotate(219deg) brightness(96%) contrast(100%);
     transform: rotate(180deg);
 }

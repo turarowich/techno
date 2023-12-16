@@ -113,11 +113,20 @@ class ClientController {
 
             let newClient = [];
             for (const cl of clients) {
-                console.log(cl.scans,"-=-");
                 let copy = JSON.parse(JSON.stringify(cl));
                 copy.orders = await Order.find({client:cl._id});
                 copy.discount = getClientDiscount(cl,discounts) ? getClientDiscount(cl,discounts).discount_percentage : 0;
-                copy.scans = await OrderScan.find({client:cl._id});
+                copy.scans = await OrderScan.find({client:cl._id}).sort({ createdAt: -1 });
+                let last_scanned_date_full = copy.scans[0] ? copy.scans[0].createdAt : null;
+                let last_scanned_date=null;
+                if(last_scanned_date_full){
+                    const year = last_scanned_date_full.getFullYear();
+                    const month = String(last_scanned_date_full.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+                    const day = String(last_scanned_date_full.getDate()).padStart(2, '0');
+                    last_scanned_date = `${year}-${month}-${day}`;
+                }
+                copy.last_scanned_date = last_scanned_date;
+
                 newClient.push(copy);
             }
 
