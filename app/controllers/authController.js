@@ -218,24 +218,17 @@ class AuthController{
             let number = randomNumber(100000, 1000000)
             
             //new
-
-            let web = "https://app.loygift.com";
-
-            let dev = false;
-            if(dev){
-                web = "http://localhost:8080";
+            let web = config.QRCODE_BASE;
+            let settings = await Settings.findOne({});
+            let scannerStatus = settings.scannerStatus;
+            let codeString = number.toString();
+            if(scannerStatus){
+                codeString = web + "/client_info" + '/' + settings.catalogUrl + '/' + number.toString();
             }
-
-            let settings = await Settings.find();
-
-
-            let newQrCodeString =web + "/client_info" + '/' + settings[0].catalogUrl + '/' + number.toString();
-
             //new
 
-
             // let qrCode = createQrFile(number.toString(), 'loygift' + req.headers['access-place']);
-            let qrCode = createQrFile(number.toString(), 'loygift' + req.headers['access-place'],newQrCodeString);
+            let qrCode = createQrFile(number.toString(), 'loygift' + req.headers['access-place'],codeString);
             var client = new Client({
                 name: req.fields.name,
                 phone: req.fields.phone,
@@ -319,26 +312,18 @@ class AuthController{
 
 
             //new
-
-            let web = "https://app.loygift.com";
-
-            let dev = false;
-            if(dev){
-                web = "http://localhost:8080";
+            let web = config.QRCODE_BASE;
+            let settings = await Settings.findOne({});
+            let scannerStatus = settings.scannerStatus;
+            let codeString = number.toString();
+            if(scannerStatus){
+                codeString = web + "/client_info" + '/' + settings.catalogUrl + '/' + number.toString();
             }
-
-            let settings = await Settings.find();
-
-
-            let newQrCodeString =web + "/client_info" + '/' + settings[0].catalogUrl + '/' + social_res.uniqueCode;
-
             //new
 
 
             // let qrCode = createQrFile(number.toString(), 'loygift' + req.headers['access-place']);
-            let qrCode = createQrFile(social_res.uniqueCode, 'loygift' + req.headers['access-place'],newQrCodeString);
-
-
+            let qrCode = createQrFile(social_res.uniqueCode, 'loygift' + req.headers['access-place'],codeString);
 
             // let qrCode = createQrFile(social_res.uniqueCode, 'loygift' + req.headers['access-place'])
             client.QRCode = qrCode

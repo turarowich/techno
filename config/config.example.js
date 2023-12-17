@@ -27,4 +27,5 @@ module.exports = {
     APNsTopic: 'Loyid',
     APNsTeamID: 'F64P295594',
     Shoes:'shoes',
+    QRCODE_BASE:'http://localhost:8080', //NEW 12 16 23
 };
