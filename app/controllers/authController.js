@@ -306,7 +306,8 @@ class AuthController{
                 }
                 break socialAuth
             }
-            social_res.uniqueCode = randomNumber(100000, 1000000)
+            const number = randomNumber(100000, 1000000);
+            social_res.uniqueCode = number;
             var client = new Client(social_res.save)
 
 
@@ -314,7 +315,7 @@ class AuthController{
             //new
             let web = config.QRCODE_BASE;
             let settings = await Settings.findOne({});
-            let scannerStatus = settings.scannerStatus;
+            let scannerStatus = settings ? settings.scannerStatus : null;
             let codeString = number.toString();
             if(scannerStatus){
                 codeString = web + "/client_info" + '/' + settings.catalogUrl + '/' + number.toString();
@@ -390,19 +391,21 @@ class AuthController{
                     client_msg: validate[lang]['client_user_not_found_msg']
                 }
                 break socialAuth
+            } else {
+                result = {
+                    'status': 200,
+                    'msg': 'Sending token',
+                    'auth': true,
+                    'object': client,
+                    'refresh_token': jwt.sign({ id: req.headers['access-place'], user: client._id, name: client.name, type: "client"  }, config.secret_key, {
+                        expiresIn: "30 days"
+                    }),
+                    'token': jwt.sign({ id: req.headers['access-place'], user: client._id, name: client.name, type: "client" }, config.secret_key, {
+                        expiresIn: 86400 // expires in 24 hours
+                    }),
+                }
             }
-            result = {
-                'status': 200,
-                'msg': 'Sending token',
-                'auth': true,
-                'object': client,
-                'refresh_token': jwt.sign({ id: req.headers['access-place'], user: client._id, name: client.name, type: "client"  }, config.secret_key, {
-                    expiresIn: "30 days"
-                }),
-                'token': jwt.sign({ id: req.headers['access-place'], user: client._id, name: client.name, type: "client" }, config.secret_key, {
-                    expiresIn: 86400 // expires in 24 hours
-                }),
-            }
+
         } catch (error) {
 
             result = sendError(error, lang)
