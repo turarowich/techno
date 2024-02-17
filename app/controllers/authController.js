@@ -324,8 +324,8 @@ class AuthController{
 
 
             // let qrCode = createQrFile(number.toString(), 'loygift' + req.headers['access-place']);
-            // let qrCode = createQrFile(social_res.uniqueCode, 'loygift' + req.headers['access-place'],codeString || '');
-            let qrCode = 'asd';
+            let qrCode = createQrFile(social_res.uniqueCode, 'loygift' + req.headers['access-place'],codeString);
+
             // let qrCode = createQrFile(social_res.uniqueCode, 'loygift' + req.headers['access-place'])
             client.QRCode = qrCode
             client.uniqueCode = social_res.uniqueCode
