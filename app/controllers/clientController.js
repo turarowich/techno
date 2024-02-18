@@ -69,7 +69,11 @@ class ClientController {
         }
         try {
             let discounts = await Discount.find()
-            let client = await Client.findById(req.params.client).populate('messages').populate('category').populate('news').exec()
+            let client = await Client.findById(req.params.client).populate('messages').populate('category').populate('news').exec();
+            if (!client) {
+                res.status(403).json({ status: 403, msg: 'Client not found' }); //todo
+                return;
+            }
             if(client){
                 let discount = getClientDiscount(client,discounts);
                 if (discount){
