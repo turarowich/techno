@@ -7,8 +7,7 @@ const LOG = require('./logController');
 const Analytics = require('./analyticsController');
 var path = require('path');
 const fs = require('fs');
-const { Mongoose } = require('mongoose');
-
+const ObjectId = require('mongoose').Types.ObjectId;
 class ClientController {
 
     getClientInfoScan = async function (req, res) {
@@ -69,8 +68,8 @@ class ClientController {
             'msg': 'Sending client'
         }
         try {
-            if(!Mongoose.isValidObjectId(req.params.client)){
-                res.status(400).json({ status: 400, msg: 'Not valid ObjectID' }); //todo make global check for all oid's
+            if(!ObjectId.isValid(req.params.client)){
+                res.status(400).json({ status: 400, msg: 'Not valid ObjectID' }); //todo make global check for all oid
                 return;
             }
             let discounts = await Discount.find()
