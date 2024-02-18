@@ -69,7 +69,7 @@ class ClientController {
         }
         try {
             if(!ObjectId.isValid(req.params.client)){
-                res.status(400).json({ status: 400, msg: 'Not valid ObjectID' }); //todo make global check for all oid
+                res.status(404).json({ status: 404, msg: 'Not valid ObjectID' }); //todo make global check for all oid
                 return;
             }
             let discounts = await Discount.find()
