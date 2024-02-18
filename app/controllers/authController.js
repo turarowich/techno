@@ -382,8 +382,8 @@ class AuthController{
             
             if (!client) {
                 result = {
-                    status: 500,
-                    msg: "Validation error",
+                    status: 404,
+                    msg: "User not found",
                     errors: {
                         user: validate[lang]['user_not_found'],
                     },
@@ -857,7 +857,7 @@ async function registerClientSocialWeb (type,token,lang,access_place,screen_name
         if(user){
             result = {
                 status: 500,
-                msg: "Validation error",
+                msg: "User already exist",
                 errors: {
                     user: validate[lang]['user_exist'],
                 },
@@ -906,8 +906,8 @@ async function loginClientSocialWeb (type,token,lang,access_place,screen_name=""
 
         if (!client) {
             result = {
-                status: 500,
-                msg: "Validation error",
+                status: 404,
+                msg: "User not found",
                 errors: {
                     user: validate[lang]['user_not_found'],
                 },
