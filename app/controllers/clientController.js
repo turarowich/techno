@@ -551,7 +551,7 @@ class ClientController {
     };
 
     removeClientDevice = async (req, res) => {
-        const db = useDB('loygift65576fc3837b531ee537fce9');
+        const db = useDB(req.db);
         const Client = db.model("Client");
         const Device = db.model("Device");
         try {
@@ -563,11 +563,12 @@ class ClientController {
             if (!providedToken) {
                 return res.status(400).json({ status: 400, msg: 'No token provided' });
             }
-            const foundToken = await Device.findOne({ 'token': providedToken });
+            const foundToken = await Device.findOne({ 'token': providedToken, client: foundClient._id });
             if (!foundToken) {
-                return res.status(404).json({ status: 404, msg: 'No paired device with provided token found' });
+                return res.status(404).json({ status: 404, msg: 'No device found' });
             }
             await Device.findByIdAndDelete(foundToken._id);
+
             return res.status(200).json({ status: 200, msg: 'Removed Successfully' });
         } catch (err) {
             const errResponse = sendError(err, req.headers["accept-language"]);
