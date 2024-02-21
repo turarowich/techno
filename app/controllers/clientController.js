@@ -550,6 +550,31 @@ class ClientController {
         res.status(result.status).json(result);
     };
 
+    removeClientDevice = async (req, res) => {
+        const db = useDB(req.db)
+        const Client = db.model("Client");
+        const Device = db.model("Device");
+        try {
+            const foundClient = await Client.findById(req.fields.client);
+            if(!foundClient) {
+                return res.status(404).json({ status: 404, msg: 'No user found' });
+            }
+            const providedToken = req.fields.device_token;
+            if (!providedToken) {
+                return res.status(400).json({ status: 400, msg: 'No token provided' });
+            }
+            // const foundToken = await Device.find({ 'token': providedToken });
+            // if (!foundToken) {
+            //     return res.status(404).json({ status: 404, msg: 'No paired device found' });
+            // }
+            await Device.deleteOne({ token: providedToken });
+            return res.status(200).json({ status: 200, msg: 'No token provided' });
+        } catch (err) {
+            const errResponse = sendError(err, req.headers["accept-language"]);
+            return res.status(errResponse.status).json(errResponse);
+        }
+    };
+
     addClientDevice = async function (req, res) {
         console.log("ADDING DEVICE",req.fields.device_token);
         console.log(req.db,"DB");
