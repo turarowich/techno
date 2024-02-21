@@ -563,12 +563,12 @@ class ClientController {
             if (!providedToken) {
                 return res.status(400).json({ status: 400, msg: 'No token provided' });
             }
-            // const foundToken = await Device.find({ 'token': providedToken });
-            // if (!foundToken) {
-            //     return res.status(404).json({ status: 404, msg: 'No paired device found' });
-            // }
+            const foundToken = await Device.find({ 'token': providedToken });
+            if (!foundToken) {
+                return res.status(404).json({ status: 404, msg: 'No paired device with provided token found' });
+            }
             await Device.deleteOne({ token: providedToken });
-            return res.status(200).json({ status: 200, msg: 'No token provided' });
+            return res.status(200).json({ status: 200, msg: 'Removed Successfully' });
         } catch (err) {
             const errResponse = sendError(err, req.headers["accept-language"]);
             return res.status(errResponse.status).json(errResponse);
