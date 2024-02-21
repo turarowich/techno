@@ -33,6 +33,8 @@ module.exports = function (app, io) {
     app.delete('/deleteClient/:client',  clientController.deleteClient);
     app.delete('/deleteClients', verifyAccess, clientController.deleteClients);
     app.post('/addClientDevice', clientController.addClientDevice);
+    app.post('/removeClientDevice', clientController.removeClientDevice);
+
     app.get('/updatedMessagesStatus/:client', clientController.updatedMessagesStatus);
     app.post('/clearMessages', verifyAccess, clientController.clearMessages);
     app.post('/getNewMessages', clientController.getNewMessages);
