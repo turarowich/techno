@@ -230,7 +230,7 @@ class ClientController {
             client.name = req.fields.name ? req.fields.name : client.name;
             client.phone = req.fields.phone ? req.fields.phone : client.phone;
             client.email = req.fields.email ? req.fields.email : client.email;
-            client.balance = req.fields.balance ? req.fields.balance : client.balance;
+            client.balance = (typeof req.fields.balance !== 'undefined') ? req.fields.balance : client.balance;
             client.gender = req.fields.gender ? req.fields.gender : client.gender;
             
             client.custom_field_0 = req.fields.custom_field_0
