@@ -319,6 +319,7 @@
 
         </div>
       </div>
+<!--      table-->
       <div class="client-content" style="width:76%">
         <div class="main-content">
           <div class="d-flex main-content-header justify-content-between">
@@ -338,14 +339,30 @@
             <div v-if="data_check.bonus_checked" class="table-head table-link d-flex align-items-center"
               style="width: 8%;" @click="sortByBonus">Points <img class="date-pol" style="margin-left:5px"
                 src="../../assets/icons/polygon.svg"></div>
-            <div v-if="data_check.last_purchase_checked" class="table-head" style="width: 6%;">Last purchase</div>
+            <div v-if="data_check.last_purchase_checked" class="table-head">Last purchase</div>
             <div v-if="data_check.last_scan_checked && scannerStatus" class="table-head" style="width: 5%;">Last Scan
             </div>
             <div  v-if="data_check.number_of_scans_checked && scannerStatus" class="table-head" style="width: 5%;"
               @click="sortByTotalScans"><span>Number of Scans</span> <img class="total-scans-pol" style="margin-left:5px"
                 src="../../assets/icons/polygon.svg">
-
             </div>
+
+            <div v-if="data_check.custom_field_0" class="table-head table-link d-flex align-item-center" style="width: 8%;"
+                 @click="sortByCustomField(0)"><span>{{ custom_field_0.fieldName }}</span>
+              <img class="custom-field0-pol total" style="margin-left:5px"
+                   src="../../assets/icons/polygon.svg">
+            </div>
+            <div v-if="data_check.custom_field_1" class="table-head table-link d-flex align-item-center" style="width: 8%;"
+                 @click="sortByCustomField(1)"><span>{{ custom_field_1.fieldName }}</span>
+              <img class="custom-field1-pol total" style="margin-left:5px"
+                   src="../../assets/icons/polygon.svg">
+            </div>
+            <div v-if="data_check.custom_field_2" class="table-head table-link d-flex align-item-center" style="width: 8%;"
+                 @click="sortByCustomField(2)"><span>{{ custom_field_2.fieldName }}</span>
+              <img class="custom-field2-pol total" style="margin-left:5px"
+                   src="../../assets/icons/polygon.svg">
+            </div>
+
             <div style="width:3%" class="dropdown dropdown-settings pl-3">
               <div class="table-head text-right dropdown-toggle" id="dropdownBlue" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false" style="width:5%"><img src="../../assets/icons/BlueSetting.svg">
@@ -376,6 +393,20 @@
                   <div><label class="custom-checkbox"><input v-model="data_check.birthday_checked" id="birthday"
                         type="checkbox"><span class="checkmark"></span></label> <label class="show-fields"
                       for="birthday">Birthday</label></div>
+                  <div v-if="customFields && custom_field_0.fieldName"><label class="custom-checkbox">
+                    <input v-model="data_check.custom_field_0" id="custom_field_0"
+                        type="checkbox"><span class="checkmark"></span></label> <label class="show-fields"
+                      for="custom_field_0">{{ custom_field_0.fieldName }}</label></div>
+
+                  <div v-if="customFields && custom_field_1.fieldName"><label class="custom-checkbox">
+                    <input v-model="data_check.custom_field_1" id="custom_field_1"
+                        type="checkbox"><span class="checkmark"></span></label> <label class="show-fields"
+                      for="custom_field_1">{{ custom_field_1.fieldName }}</label></div>
+
+                  <div v-if="customFields && custom_field_2.fieldName"><label class="custom-checkbox">
+                    <input v-model="data_check.custom_field_2" id="custom_field_2"
+                        type="checkbox"><span class="checkmark"></span></label> <label class="show-fields"
+                      for="custom_field_2">{{ custom_field_2.fieldName }}</label></div>
 
                   <div v-if="scannerStatus"><label class="custom-checkbox"><input id="last_scan_f"
                         v-model="data_check.last_scan_checked" type="checkbox"><span
@@ -503,6 +534,22 @@ export default {
       clientList: [],
       movedCategories: [],
       scannerStatus: false,
+      customFields: false,
+      custom_field_0:{
+        required: false,
+        fieldName: '',
+        values: ['']
+      },
+      custom_field_1:{
+        required: false,
+        fieldName: '',
+        values: ['']
+      },
+      custom_field_2:{
+        required: false,
+        fieldName: '',
+        values: ['']
+      },
       data_check: {
         category_checked: false,
         bonus_checked: false,
@@ -514,6 +561,9 @@ export default {
         total_checked: false,
         last_scan_checked: false,
         number_of_scans_checked: false,
+        custom_field_0: false,
+        custom_field_1: false,
+        custom_field_2: false,
       },
       clientCategory: [
         { _id: '', name: 'All' }
@@ -817,11 +867,25 @@ export default {
       $('.date-pol').removeClass('active')
       $('.total-pol').removeClass('active')
     },
+    sortByCustomField(fieldN) {
+      const objectFieldName = `custom_field_${fieldN}`
+      this.clientList.sort((a, b) =>
+          this.sorting ?
+              (parseInt(a[objectFieldName] || 0) - parseInt(b[objectFieldName] || 0))
+              :
+              (parseInt(b[objectFieldName] || 0) - parseInt(a[objectFieldName] || 0))
+      );
+      this.sorting = !this.sorting;
+
+      $(`.custom-field${fieldN}-pol`).toggleClass('active')
+      $('.total-scans-pol').removeClass('active')
+      $('.date-pol').removeClass('active')
+      $('.total-pol').removeClass('active')
+    },
     selectClient(id) {
       this.clientList.map((item) => {
         if (item._id === id) {
           this.select_client = item;
-          console.log(this.select_client, 'KUDAIBERDIEV')
         }
       })
 
@@ -957,6 +1021,11 @@ export default {
       let that = this;
       this.axios.get(this.url('getSettings'))
         .then((response) => {
+          let settings = response.data.object;
+          that.customFields = settings.customFields || false;
+          that.custom_field_0 = settings.custom_field_0;
+          that.custom_field_1 = settings.custom_field_1;
+          that.custom_field_2 = settings.custom_field_2;
           if (response.data.clientsFilter) {
             that.data_check = response.data.clientsFilter;
             that.scannerStatus = response.data.scannerStatus;

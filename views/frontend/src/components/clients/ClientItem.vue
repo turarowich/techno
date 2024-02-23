@@ -30,6 +30,9 @@
       <div class="table-child" v-show="data_check.last_purchase_checked"  style="width: 6%;">{{client.last_purchase?JSON.stringify(client.last_purchase).slice(1,11):'-'}}</div>
       <div class="table-child" v-on:click="$emit('viewDetails',client.scans,client.name)" v-if="data_check.last_scan_checked && scannerStatus"  style="width: 5%;">View details</div>
       <div class="table-child" v-if="data_check.number_of_scans_checked && scannerStatus"  style="width: 5%;">{{client.scans.length}}</div>
+      <div class="table-child" v-if="data_check.custom_field_0">{{client.custom_field_0}}</div>
+      <div class="table-child" v-if="data_check.custom_field_1">{{client.custom_field_1}}</div>
+      <div class="table-child" v-if="data_check.custom_field_2">{{client.custom_field_2}}</div>
       <div  style="width:3%" class="table-child dropleft dropMenu">
         <div v-if="check()" class="dropdown-toggle" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <img  src="../../assets/icons/three-dots.svg" class="three-dots">
