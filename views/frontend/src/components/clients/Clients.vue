@@ -1022,6 +1022,7 @@ export default {
       this.axios.get(this.url('getSettings'))
         .then((response) => {
           let settings = response.data.object;
+          console.log(JSON.stringify(settings))
           that.customFields = settings.customFields || false;
           that.custom_field_0 = settings.custom_field_0;
           that.custom_field_1 = settings.custom_field_1;
