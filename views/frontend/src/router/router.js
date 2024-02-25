@@ -261,7 +261,7 @@ const routes = [
     },
     {
         path: "/clients",
-        name: "Clientsasdad",
+        name: "Clients",
         component: Clients,
         meta:{
             requiresAuthMain:true,
