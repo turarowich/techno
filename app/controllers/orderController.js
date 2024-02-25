@@ -216,19 +216,16 @@ async function products_with_discounts(products=[],Product,promocode=null,discou
                         temp.discountType='promocode';
                         temp.old_price= orderItemPrice;
                 }
-            }
-        }
-        //check clients discount
-        if(!temp.discounted){
-            if(discount_obj && discount_obj.discount_percentage){
-                statusDiscount.name = discount_obj.name;
-                statusDiscount.discount_percentage = discount_obj.discount_percentage;
-                let non_discounted = orderItemPrice;
-                let discount_percent = non_discounted*(parseFloat(discount_obj.discount_percentage)/100);
-                temp.current_price = non_discounted-discount_percent; //its a string
-                temp.discounted = true;
-                temp.discountType='clientStatus';
-                temp.old_price= orderItemPrice;
+                if(discount_obj && discount_obj.discount_percentage){
+                    statusDiscount.name = discount_obj.name;
+                    statusDiscount.discount_percentage = discount_obj.discount_percentage;
+                    let non_discounted = orderItemPrice;
+                    let discount_percent = non_discounted*(parseFloat(discount_obj.discount_percentage)/100);
+                    temp.current_price = non_discounted-discount_percent; //its a string
+                    temp.discounted = true;
+                    temp.discountType='clientStatus';
+                    temp.old_price= orderItemPrice;
+                }
             }
         }
         productCurrentPrice.push(temp);
