@@ -203,15 +203,18 @@ async function products_with_discounts(products=[],Product,promocode=null,discou
         if(!temp.discounted){
             if(promocode){
                 //assume that promo is already validated
-                if(promocode.selected_type==="all" || promocode.selected_items_list.includes(product_obj._id.toString())){
-                    let non_discounted = orderItemPrice;
-                    let discount_percent = non_discounted*(parseFloat(promocode.discount)/100);
-                    let discount_sum = parseFloat(promocode.fixed_sum);
-                    let sum = (non_discounted-discount_percent-discount_sum).toFixed(2); //its a string
-                    temp.current_price = parseFloat(sum)>0 ? parseFloat(sum) : 0;
-                    temp.discounted = true;
-                    temp.discountType='promocode';
-                    temp.old_price= orderItemPrice;
+                if (promocode.selected_type==="all" ||
+                    promocode.selected_items_list.includes(product_obj._id.toString()) ||
+                    promocode.selected_type === product_obj.type) {
+
+                        let non_discounted = orderItemPrice;
+                        let discount_percent = non_discounted*(parseFloat(promocode.discount)/100);
+                        let discount_sum = parseFloat(promocode.fixed_sum);
+                        let sum = ((non_discounted-discount_percent)-discount_sum).toFixed(2); //its a string
+                        temp.current_price = parseFloat(sum)>0 ? parseFloat(sum) : 0;
+                        temp.discounted = true;
+                        temp.discountType='promocode';
+                        temp.old_price= orderItemPrice;
                 }
             }
         }
@@ -481,8 +484,6 @@ class OrderController{
             console.log(delivery);
             let all = await DeliveryModel.find({});
             let one = await DeliveryModel.findOne({_id:req.fields.delivery});
-            console.log(all);    
-            console.log(one);    
 
             let branch = await Branch.findById(req.fields.branch);
             let deliveryPrice = 0;
