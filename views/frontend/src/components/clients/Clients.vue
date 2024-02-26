@@ -918,6 +918,7 @@ export default {
         if (result.isConfirmed) {
           this.axios.delete(this.url('deleteClient', id))
             .then(() => {
+              this.socket.emit('user_deleted', { id })
               this.getClients()
               Swal.fire({
                 title: 'Success',
