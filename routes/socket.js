@@ -32,14 +32,12 @@ module.exports = io => {
             if(typeof data == 'string' ){
                 data = JSON.parse(data)
             }
-            console.log(data,"message")
             controller.addMessage(io, socket, data)
             socket.join(data.user)
             socket.broadcast.to(data.user).to(socket.handshake.headers.db).emit("server message", data)
         });
 
         socket.on('get messages', (user) => {
-            console.log("GET MESSAGES",user)
             socket.join(user)
             controller.getMessages(io, socket, user)
         });
@@ -51,8 +49,9 @@ module.exports = io => {
         socket.on('send news notification', (newsID) => {
             controller.sendNewsNotification(io, socket, newsID)
         });
-
+        socket.on('user_deleted', (data) => {
+            socket.join(data.id)
+            socket.broadcast.to(data.id).to(socket.handshake.headers.db).emit('user_deleted', data.id)
+        });
     });
-
-
 };
