@@ -171,7 +171,7 @@ async function products_with_discounts(products=[],Product,promocode=null,discou
         let orderItemPrice = parseFloat(product_obj.price);
         //check if product has multiple types/sizes
 
-        if(product_obj.hasMultipleTypes && product.size._id !== ''){
+        if(product_obj.hasMultipleTypes && product?.size?._id && product?.size?._id !== ''){
             orderItemPrice = parseFloat(product.size.price);
             temp.size = product.size;
         }
