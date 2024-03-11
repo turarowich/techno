@@ -31,22 +31,29 @@ class ProductController{
     };
 
     getProducts = async function (req, res) {
-        // console.log("start")
-        // const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
-        // await delay(5000) /// waiting 1 second.
-        // console.log("end 5 start")
-
-
-        console.log(req.headers['access-place'],"access-place");
-        console.log(req.db,"req.db");
-        // req.db = "loygift64c3cdc2492d8c443c3847a8";
+        let db = useDB(req.db)
         let perPage = 20;
         let currentPage = req.query.page || 1;
         let skipCount = (currentPage-1)*perPage;
         let filterQuery = {};
-
-        if(req.query.categoryId && req.query.categoryId !== "all"){
-            filterQuery.category = req.query.categoryId;
+        if (req.query.categoryId && req.query.categoryId !== "all"){
+            try {
+                const CategoryModel = db.model('Category');
+                const foundCategory = await CategoryModel.findById(req.query.categoryId).populate('parent');
+                filterQuery.category = req.query.categoryId;
+                // or
+                if (foundCategory.parent) {
+                    filterQuery.category = {
+                        $or: [
+                            { _id: foundCategory.parent._id },
+                            { _id: foundCategory.foundCategory._id },
+                        ]
+                    };
+                }
+            } catch(err) {
+                // err
+                console.log(err)
+            }
         }
 
         if(req.query.categoryId === ""){
@@ -72,7 +79,6 @@ class ProductController{
             filterQuery.name= { $regex: '.*' + searchText + '.*' ,$options: 'i'};
         }
 
-        let db = useDB(req.db)
         let Product = db.model("Product");
         if(req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "catalog", parametr: "active" }, db, res)

@@ -78,6 +78,8 @@ module.exports = function (app, io) {
     // Category url
     app.get('/getCategory/:category', categoryController.getCategory);
     app.get('/getCategories', categoryController.getCategories);
+    app.get('/getCategories/nested', categoryController.getNestedCategories);
+
     app.post('/addCategory', verifyAccess, categoryController.addCategory);
     app.put('/updateCategory/:category', verifyAccess, categoryController.updateCategory);
     app.delete('/deleteCategory/:category', verifyAccess, categoryController.deleteCategory);

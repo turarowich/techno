@@ -15,6 +15,11 @@ const categorySchema = new Schema({
         type: String,
         required: [false, 'type_required'],
     },
+    parent: {
+        type: Schema.Types.ObjectId,
+        ref: 'Category',
+        required: false
+    },
     createdAt: {
         type: Date,
         required: true,
