@@ -21,7 +21,6 @@ class CategoryController {
 
     getNestedCategories = async function (req, res) {
         let db = useDB(req.db)
-        // const db = useDB('loygift');
 
         let Category = db.model("Category");
 
@@ -62,7 +61,6 @@ class CategoryController {
 
     getCategories = async function (req, res) {
         let db = useDB(req.db)
-        // const db = useDB('loygift');
         let Category = db.model("Category");
 
         let result = {
@@ -85,7 +83,6 @@ class CategoryController {
 
     addCategory = async function (req, res) {
         let db = useDB(req.db)
-        // const db = useDB('loygift');
 
         const CategoryModel = db.model("Category");
 
@@ -98,8 +95,8 @@ class CategoryController {
                 name: req.fields.name,
                 type: req.fields.type,
             }
-            if (req.fields.parent && !ObjectId.isValid(req.fields.parent)) {
-                res.status(400).json({
+            if (req.fields.parent && req.fields.parent !== 'null' && !ObjectId.isValid(req.fields.parent)) {
+                return res.status(400).json({
                     'status': 400,
                     'msg': 'Invalid category ObjectId',
                 });
@@ -107,13 +104,13 @@ class CategoryController {
             if (req.fields.parent && ObjectId.isValid(req.fields.parent)) {
                 const foundParentCategory = await CategoryModel.findOne({ _id: req.fields.parent });
                 if (!foundParentCategory) {
-                    res.status(404).json({
+                    return res.status(404).json({
                         'status': 404,
                         'msg': 'Category not found',
                     });
                 }
                 if (foundParentCategory.parent) {
-                    res.status(400).json({
+                    return res.status(400).json({
                         'status': 400,
                         'msg': 'Cannot add to sub category',
                     });

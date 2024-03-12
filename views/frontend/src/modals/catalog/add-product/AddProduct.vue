@@ -26,6 +26,7 @@
                       <div style="width:25%;">
                         <label class="product-label">Select category</label><br>
                         <select v-model="newProduct.category" class="form-control mb-0 select-phone" aria-label="Default select example">
+                          <option value="">Without category</option>
                           <option :value="cat._id" v-for="cat in listCategory.slice(1)"  :key="cat._id" >{{cat.name}}</option>
                         </select>
                       </div>
