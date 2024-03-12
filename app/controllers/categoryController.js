@@ -20,7 +20,8 @@ class CategoryController {
     };
 
     getNestedCategories = async function (req, res) {
-        let db = useDB(req.db)
+        // let db = useDB(req.db)
+        let db = useDB('loygift')
 
         let Category = db.model("Category");
 
@@ -60,7 +61,9 @@ class CategoryController {
     };
 
     getCategories = async function (req, res) {
-        let db = useDB(req.db)
+        // let db = useDB(req.db)
+        let db = useDB('loygift')
+
 
         let Category = db.model("Category");
 
@@ -83,7 +86,9 @@ class CategoryController {
     };
 
     addCategory = async function (req, res) {
-        let db = useDB(req.db)
+        // let db = useDB(req.db)
+        let db = useDB('loygift')
+
 
         const CategoryModel = db.model("Category");
 
@@ -131,7 +136,9 @@ class CategoryController {
     };
 
     updateCategory = async function (req, res) {
-        let db = useDB(req.db)
+        // let db = useDB(req.db)
+        let db = useDB('loygift')
+
         let Category = db.model("Category");
 
         let result = {
@@ -141,6 +148,10 @@ class CategoryController {
         try {
             let query = { '_id': req.params.category }
             req.fields['updatedAt'] = new Date()
+            if (!req.fields.parent || req.fields.parent === '') {
+                delete req.fields.parent;
+                req.fields.$unset = { parent: ObjectId(req.params.category) };
+            }
             let category = await Category.findOneAndUpdate(query, req.fields)
             result['object'] = category
         } catch (error) {
@@ -151,7 +162,9 @@ class CategoryController {
     };
 
     deleteCategory = async function (req, res) {
-        let db = useDB(req.db)
+        // let db = useDB(req.db)
+        let db = useDB('loygift')
+
         let Category = db.model("Category");
 
         let result = {
