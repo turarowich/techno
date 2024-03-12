@@ -61,6 +61,7 @@ class CategoryController {
 
     getCategories = async function (req, res) {
         let db = useDB(req.db)
+
         let Category = db.model("Category");
 
         let result = {
@@ -69,10 +70,10 @@ class CategoryController {
         }
         try {
             let query = {}
-            if (req.query.type){
-                query = { 'type': req.query.type}
-            } 
-            
+            if (req.query.type) {
+                query = { 'type': req.query.type }
+            }
+
             let categories = await Category.find(query).populate('parent');
             result['objects'] = categories
         } catch (error) {
@@ -158,8 +159,36 @@ class CategoryController {
             'msg': 'Category deleted'
         }
         try {
-            let query = { '_id': req.params.category }
-            await Category.findByIdAndRemove(query)
+            const deleteObjectIds = [];
+            deleteObjectIds.push(req.params.category);
+            const nestedResult = await Category.aggregate([ //this will always be a array length of 1, since matching by ObjectId
+                {
+                    $match: {
+                        _id: ObjectId(req.params.category),
+                    },
+                },
+                {
+                    $lookup: {
+                        from: "categories",
+                        localField: "_id",
+                        foreignField: "parent",
+                        as: "children",
+                    },
+                },
+                {
+                    $match: {
+                        parent: {
+                            $exists: false,
+                        },
+                    },
+                },
+            ]);
+            if (nestedResult?.length > 0 && nestedResult[0].children?.length > 0) {
+                nestedResult[0].children.forEach(child => {
+                    deleteObjectIds.push(child._id)
+                });
+            }
+            await Category.deleteMany({ _id: { $in: deleteObjectIds } });
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }

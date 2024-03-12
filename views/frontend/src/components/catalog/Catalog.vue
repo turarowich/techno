@@ -88,7 +88,7 @@
 
         <div class="catalog-menu" style="width:18%;height: 300px;overflow: auto;">
           <ul class="list-group">
-            <div v-for="(category, index) in parentCategories" :key="category._id">
+            <div v-for="(category, index) in navigateDisplayParentCategories" :key="category._id">
               <li class="catalog-list" :id="category.name" :ref="'menu' + index"
                 :class="{ active: selectedCategory === category._id }" @click="setCategory(category._id)">
                 <p class="category-text tool-tip" data-toggle="tooltip" data-placement="top" :title="category.name">
@@ -138,7 +138,7 @@
 
         <ImportClient />
         <AddCategory :listCategory="parentCategories" :getCategories="getNestedCategories" />
-        <EditCategory :listCategory="listCategory" :select_category="select_category" :getCategories="getCategories" />
+        <EditCategory :listCategory="parentCategories" :select_category="select_category" :getCategories="getNestedCategories" />
         <AddProduct :listCategory="listCategory" :getProducts="getProducts" />
         <EditProduct :listCategory="listCategory" :select_product="select_product" :getProducts="getProducts" />
 
@@ -242,6 +242,7 @@ export default {
       spinner: true,
       listCategory: [{ _id: '', name: 'all' }],
       parentCategories: [{ _id: '', name: 'all' }],
+      navigateDisplayParentCategories: [{ _id: '', name: 'all' }],
       catalogList: [],
       deletedProducts: [],
       movedCategories: [],
@@ -450,6 +451,7 @@ export default {
       this.listCategory.map((item) => {
         if (item._id === id) {
           this.select_category = item
+          this.select_category.parent = item.parent ? item.parent._id : ''
         }
       })
     },
@@ -541,7 +543,7 @@ export default {
         if (result.isConfirmed) {
           this.axios.delete(this.url('deleteCategory', id))
             .then(() => {
-              this.getCategories()
+              this.getNestedCategories()
               const idx = this.listCategory.findIndex(el => el._id === id);
               this.$refs[`menu${idx - 1}`].click()
             })
@@ -594,8 +596,8 @@ export default {
       this.axios.get(this.url('getCategories/nested') + '?type=product')
         .then((res) => {
           this.parentCategories = res.data.objects;
-          // this.parentCategories.unshift({ _id: "", name: 'Without category' })
-          // this.parentCategories.unshift({ _id: null, name: 'all' })
+          this.navigateDisplayParentCategories = [...res.data.objects];
+          this.navigateDisplayParentCategories.unshift({ _id: null, name: 'all' })
         })
     },
     moveCategory(id) {
