@@ -141,6 +141,10 @@ class CategoryController {
         try {
             let query = { '_id': req.params.category }
             req.fields['updatedAt'] = new Date()
+            if (!req.fields.parent || req.fields.parent === '') {
+                delete req.fields.parent;
+                req.fields.$unset = { parent: ObjectId(req.params.category) };
+            }
             let category = await Category.findOneAndUpdate(query, req.fields)
             result['object'] = category
         } catch (error) {
