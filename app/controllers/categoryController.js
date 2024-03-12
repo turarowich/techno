@@ -20,8 +20,7 @@ class CategoryController {
     };
 
     getNestedCategories = async function (req, res) {
-        // let db = useDB(req.db)
-        let db = useDB('loygift')
+        let db = useDB(req.db)
 
         let Category = db.model("Category");
 
@@ -61,9 +60,7 @@ class CategoryController {
     };
 
     getCategories = async function (req, res) {
-        // let db = useDB(req.db)
-        let db = useDB('loygift')
-
+        let db = useDB(req.db)
 
         let Category = db.model("Category");
 
@@ -86,9 +83,7 @@ class CategoryController {
     };
 
     addCategory = async function (req, res) {
-        // let db = useDB(req.db)
-        let db = useDB('loygift')
-
+        let db = useDB(req.db)
 
         const CategoryModel = db.model("Category");
 
@@ -136,9 +131,7 @@ class CategoryController {
     };
 
     updateCategory = async function (req, res) {
-        // let db = useDB(req.db)
-        let db = useDB('loygift')
-
+        let db = useDB(req.db)
         let Category = db.model("Category");
 
         let result = {
@@ -162,9 +155,7 @@ class CategoryController {
     };
 
     deleteCategory = async function (req, res) {
-        // let db = useDB(req.db)
-        let db = useDB('loygift')
-
+        let db = useDB(req.db)
         let Category = db.model("Category");
 
         let result = {
