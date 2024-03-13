@@ -7,8 +7,14 @@ const QRCode = require('qrcode');
 var moment = require("moment")
 const sharp = require('sharp');
 const { isNullOrUndefined } = require('util');
+const config = require('../config/config');
+
 
 function useDB(db_name) {
+    if (config.is_local_dev) {
+        db_name = 'loygift';
+    }
+
     let db = global.userConnection.useDb(db_name);
     return db;
 }

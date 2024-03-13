@@ -19,7 +19,6 @@
             <div>
               <label>Select category</label>
               <select v-model="new_category.parent" class="form-control long-form-control modal-select mb-5">
-                <option value="">Without category</option>
                 <option v-for="cat in listCategory" :key="cat.id"  :value="cat._id">{{cat.name}}</option>
               </select>
             </div>
@@ -73,6 +72,8 @@ name: "AddCategory",
               this.getCategories()
             })
             .catch((error)=>{
+              this.$warningAlert('Failed to add category')
+
               console.log("Error"+error)
             })
 

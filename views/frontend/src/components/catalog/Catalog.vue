@@ -68,7 +68,7 @@
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <img src="../../assets/icons/moveto.svg"><span>Move to</span>
             </button>
-..    
+            ..
             <div class="move-category animate slideIn dropdown-menu" aria-labelledby="dropdownMenuTotal">
               <div class="move-category-item" v-for="cat in listCategory.slice(1)" :key="cat._id"
                 @click="moveCategory(cat._id)">{{ cat.name }}</div>
@@ -109,26 +109,50 @@
                   </div>
                 </div>
               </li>
-              <li v-for="(child) in category.children" :key="child._id" class="catalog-list catalog-list-child"
-                :id="child.name" :ref="'menu' + index" :class="{ active: selectedCategory === child._id }"
-                @click="setCategory(child._id)">
-                <p class="category-text tool-tip" data-toggle="tooltip" data-placement="top">
-                  {{ child.name }}
-                </p>
-                <div class="dropdown dropMenu">
-                  <div class="dropdown-toggle" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false">
-                    <img v-if="child._id" src="../../assets/icons/three-dots.svg">
+              <div v-for="(child) in category.children" :key="child._id">
+                <li :key="child._id" class="catalog-list catalog-list-child"
+                  :id="child.name" :ref="'menu' + index" :class="{ active: selectedCategory === child._id }"
+                  @click="setCategory(child._id)">
+                  <p class="category-text tool-tip" data-toggle="tooltip" data-placement="top">
+                    {{ child.name }}
+                  </p>
+                  <div class="dropdown dropMenu">
+                    <div class="dropdown-toggle" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true"
+                      aria-expanded="false">
+                      <img v-if="child._id" src="../../assets/icons/three-dots.svg">
+                    </div>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+                      <ul class="list-group">
+                        <li class="list-group-item" data-toggle="modal" data-target="#edit-category"
+                          @click="selectCategory(child._id)">Edit</li>
+                        <li class="list-group-item" @click.stop.prevent="deleteCategory(child._id)">Delete</li>
+                      </ul>
+                    </div>
                   </div>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenu">
-                    <ul class="list-group">
-                      <li class="list-group-item" data-toggle="modal" data-target="#edit-category"
-                        @click="selectCategory(child._id)">Edit</li>
-                      <li class="list-group-item" @click.stop.prevent="deleteCategory(child._id)">Delete</li>
-                    </ul>
-                  </div>
+                </li>
+                <div v-if="child.children">
+                  <li v-for="(nestedChild) in child.children" :key="nestedChild._id" class="catalog-list catalog-list-child catalog-list-child-nested"
+                    :id="nestedChild.name" :ref="'menu' + index" :class="{ active: selectedCategory === nestedChild._id }"
+                    @click="setCategory(nestedChild._id)">
+                    <p class="category-text tool-tip" data-toggle="tooltip" data-placement="top">
+                      {{ nestedChild.name }}
+                    </p>
+                    <div class="dropdown dropMenu">
+                      <div class="dropdown-toggle" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                        <img v-if="nestedChild._id" src="../../assets/icons/three-dots.svg">
+                      </div>
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+                        <ul class="list-group">
+                          <li class="list-group-item" data-toggle="modal" data-target="#edit-category"
+                            @click="selectCategory(nestedChild._id)">Edit</li>
+                          <li class="list-group-item" @click.stop.prevent="deleteCategory(nestedChild._id)">Delete</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </li>
                 </div>
-              </li>
+              </div>
             </div>
           </ul>
         </div>
@@ -137,8 +161,9 @@
 
 
         <ImportClient />
-        <AddCategory :listCategory="parentCategories" :getCategories="getNestedCategories" />
-        <EditCategory :listCategory="parentCategories" :select_category="select_category" :getCategories="getNestedCategories" />
+        <AddCategory :listCategory="listCategory" :getCategories="reFetchCategories" />
+        <EditCategory :listCategory="listCategory" :select_category="select_category"
+          :getCategories="reFetchCategories" />
         <AddProduct :listCategory="listCategory" :getProducts="getProducts" />
         <EditProduct :listCategory="listCategory" :select_product="select_product" :getProducts="getProducts" />
 
@@ -543,7 +568,7 @@ export default {
         if (result.isConfirmed) {
           this.axios.delete(this.url('deleteCategory', id))
             .then(() => {
-              this.getNestedCategories()
+              this.reFetchCategories()
               const idx = this.listCategory.findIndex(el => el._id === id);
               this.$refs[`menu${idx - 1}`].click()
             })
@@ -585,11 +610,17 @@ export default {
           this.spinner = false;
         })
     },
+    reFetchCategories() {
+      this.getCategories();
+      this.getNestedCategories();
+    },
     getCategories() {
       this.axios.get(this.url('getCategories') + '?type=product')
         .then((res) => {
           this.listCategory = res.data.objects;
-          this.listCategory.unshift({ _id: "", name: 'Without category' })
+          this.listCategory.unshift({ _id: "", name: 'Without category' });
+          // eslint-disable-next-line
+          // debugger
         })
     },
     getNestedCategories() {
@@ -713,6 +744,11 @@ export default {
   background-color: #F4F4F4;
   margin-left: 20px;
   padding-left: 10px;
+}
+
+.catalog-list-child-nested {
+  background-color: #D1D1D1;
+  margin-left: 30px;
 }
 
 .catalog-menu {

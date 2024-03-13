@@ -20,8 +20,7 @@ class CategoryController {
     };
 
     getNestedCategories = async function (req, res) {
-        let db = useDB(req.db)
-
+        const db = useDB(req.db);
         let Category = db.model("Category");
 
         let result = {
@@ -34,6 +33,8 @@ class CategoryController {
                 query = { 'type': req.query.type }
             }
 
+            // this kind of data should ideally be either redisigned or migrated to sql type of storage
+            // todo do something about it, thats very bad
             const categories = await Category.aggregate([
                 {
                     $lookup: {
@@ -41,15 +42,24 @@ class CategoryController {
                         localField: "_id",
                         foreignField: "parent",
                         as: "children",
-                    }
+                        pipeline: [
+                            {
+                                $lookup: {
+                                    from: "categories",
+                                    localField: "_id",
+                                    foreignField: "parent",
+                                    as: "children",
+                                },
+                            },
+                        ],
+                    },
                 },
                 {
-                    $match:
-                    {
+                    $match: {
                         parent: {
                             $exists: false,
                         },
-                    }
+                    },
                 },
             ]);
             result['objects'] = categories
@@ -103,17 +113,17 @@ class CategoryController {
                 });
             }
             if (req.fields.parent && ObjectId.isValid(req.fields.parent)) {
-                const foundParentCategory = await CategoryModel.findOne({ _id: req.fields.parent });
+                const foundParentCategory = await CategoryModel.findOne({ _id: req.fields.parent }).populate('parent');
                 if (!foundParentCategory) {
                     return res.status(404).json({
                         'status': 404,
                         'msg': 'Category not found',
                     });
                 }
-                if (foundParentCategory.parent) {
+                if (foundParentCategory.parent && foundParentCategory.parent?.parent) {
                     return res.status(400).json({
                         'status': 400,
-                        'msg': 'Cannot add to sub category',
+                        'msg': 'Cannot have nested categories with depth over 2'
                     });
                 }
                 if (foundParentCategory) {
@@ -165,7 +175,8 @@ class CategoryController {
         try {
             const deleteObjectIds = [];
             deleteObjectIds.push(req.params.category);
-            const nestedResult = await Category.aggregate([ //this will always be a array length of 1, since matching by ObjectId
+            // i feel bad for this =(
+            const nestedResult = await Category.aggregate([
                 {
                     $match: {
                         _id: ObjectId(req.params.category),
@@ -177,19 +188,28 @@ class CategoryController {
                         localField: "_id",
                         foreignField: "parent",
                         as: "children",
+                        pipeline: [
+                            {
+                                $lookup: {
+                                    from: "categories",
+                                    localField: "_id",
+                                    foreignField: "parent",
+                                    as: "children",
+                                },
+                            },
+                        ],
                     },
-                },
-                {
-                    $match: {
-                        parent: {
-                            $exists: false,
-                        },
-                    },
-                },
+                }
             ]);
+            // sorry, this is ugly, we had to finish this for the client in a hurry
             if (nestedResult?.length > 0 && nestedResult[0].children?.length > 0) {
                 nestedResult[0].children.forEach(child => {
-                    deleteObjectIds.push(child._id)
+                    deleteObjectIds.push(child._id);
+                    if (child.children?.length > 0) {
+                        child.children.forEach(grandChild => {
+                            deleteObjectIds.push(grandChild._id);
+                        });
+                    }
                 });
             }
             await Category.deleteMany({ _id: { $in: deleteObjectIds } });
