@@ -3,10 +3,16 @@ const fs = require('fs')
 var os = require("os");
 const { useDB, sendError, saveImage, createExcel, removeImage, checkAccess } = require('../../services/helper')
 var validate = require('../../config/messages');
-var readXlsxFile = require('read-excel-file/node')
+var readXlsxFile = require('read-excel-file/node');
+const ObjectId = require('mongoose').Types.ObjectId;
 
-class ProductController{
-    
+// todo move business logic to services
+
+// to whom this may cancern, i sincerely apologise for this mess, 
+// i just dont have the time to clean this whole thing up
+
+class ProductController {
+
     getProduct = async function (req, res) {
         let db = useDB(req.db)
         let Product = db.model("Product");
@@ -31,56 +37,98 @@ class ProductController{
     };
 
     getProducts = async function (req, res) {
-        let db = useDB(req.db)
+        const db = useDB(req.db)
+        const CategoryModel = db.model('Category');
+
         let perPage = 20;
         let currentPage = req.query.page || 1;
-        let skipCount = (currentPage-1)*perPage;
+        let skipCount = (currentPage - 1) * perPage;
         let filterQuery = {};
-        if (req.query.categoryId && req.query.categoryId !== "all"){
+        if (req.query.categoryId && req.query.categoryId !== "all") {
             try {
-                const CategoryModel = db.model('Category');
-                const foundCategory = await CategoryModel.findById(req.query.categoryId).populate('parent');
-                filterQuery.category = req.query.categoryId;
-                // or
-                if (foundCategory.parent) {
-                    filterQuery.category = {
-                        $or: [
-                            { _id: foundCategory.parent._id },
-                            { _id: foundCategory.foundCategory._id },
-                        ]
-                    };
+                if (!ObjectId.isValid(req.query.categoryId)) {
+                    return res.status(400).json({
+                        'status': 400,
+                        'msg': 'Categoryid must be a valid Objectid'
+                    })
                 }
-            } catch(err) {
+                // todo refactor this monstrosity, make this a graphLookup qeury
+                const nestedResult = await CategoryModel.aggregate([
+                    {
+                        $match: {
+                            _id: ObjectId(req.query.categoryId),
+                        },
+                    },
+                    {
+                        $lookup: {
+                          from: "categories",
+                          localField: "_id",
+                          foreignField: "parent",
+                          as: "children",
+                          pipeline: [
+                            {
+                              $lookup: {
+                                from: "categories",
+                                localField: "_id",
+                                foreignField: "parent",
+                                as: "children",
+                              },
+                            },
+                          ],
+                        },
+                      },
+                ]);
+                
+                filterQuery.category = req.query.categoryId;
+
+                // todo move this to helpers/services
+                const getChildrenIds = (parent, arr) => {
+                    if (parent.children && parent.children.length > 0) {
+                        parent.children.forEach(child => {
+                            return getChildrenIds(child, arr); // =( todo refactor this! remove recursion!
+                        });
+                    }
+                    arr.push(parent._id)
+                };
+
+                // or
+                if (nestedResult.length > 0 && nestedResult[0].children.length > 0) {
+                    const searchIds = [];
+                    getChildrenIds(nestedResult[0], searchIds);
+
+                    filterQuery.category = { $in: searchIds };
+                }
+            } catch (err) {
                 // err
                 console.log(err)
             }
         }
 
-        if(req.query.categoryId === ""){
+        if (req.query.categoryId === "") {
             filterQuery.category = null;
         }
 
-        if(req.query.min && req.query.min.length>0){
+        if (req.query.min && req.query.min.length > 0) {
             filterQuery.price = {};
-            filterQuery.price.$gte =  req.query.min;
+            filterQuery.price.$gte = req.query.min;
         }
-        if(req.query.max && req.query.max.length>0){
+        if (req.query.max && req.query.max.length > 0) {
             filterQuery.price.$lte = req.query.max;
         }
-        if(req.query.minQuantity && req.query.minQuantity.length>0){
+        if (req.query.minQuantity && req.query.minQuantity.length > 0) {
             filterQuery.quantity = {};
-            filterQuery.quantity.$gte =  req.query.minQuantity;
+            filterQuery.quantity.$gte = req.query.minQuantity;
         }
-        if(req.query.maxQuantity && req.query.maxQuantity.length>0){
+        if (req.query.maxQuantity && req.query.maxQuantity.length > 0) {
             filterQuery.quantity.$lte = req.query.maxQuantity;
         }
-        if(req.query.searchText && req.query.searchText.length > 0){
+        if (req.query.searchText && req.query.searchText.length > 0) {
             let searchText = req.query.searchText.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-            filterQuery.name= { $regex: '.*' + searchText + '.*' ,$options: 'i'};
+            filterQuery.name = { $regex: '.*' + searchText + '.*', $options: 'i' };
         }
 
         let Product = db.model("Product");
-        if(req.userType == "employee") {
+        if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "catalog", parametr: "active" }, db, res)
             if (checkResult) {
                 return;
@@ -93,12 +141,12 @@ class ProductController{
 
         try {
 
-            if(!req.query.page){
-                result['objects'] = await Product.find({'active': true}).populate('category').exec();
-                console.log(result['objects'].length,"result['objects']");
-            }else{
+            if (!req.query.page) {
+                result['objects'] = await Product.find({ 'active': true }).populate('category').exec();
+                console.log(result['objects'].length, "result['objects']");
+            } else {
                 let products = await Product.find(filterQuery).populate('category').skip(skipCount).limit(perPage).exec();
-                result['pagesCount'] = Math.round(await Product.find(filterQuery).count()/perPage);
+                result['pagesCount'] = Math.round(await Product.find(filterQuery).count() / perPage);
                 result['objects'] = products
             }
 
@@ -128,18 +176,18 @@ class ProductController{
         }
         addProduct: try {
             let data = req.fields
-            if(data['category'] === ""){
+            if (data['category'] === "") {
                 data['category'] = null
             }
-            
+
             let product = await new Product({
-                type:data.type || "product",
+                type: data.type || "product",
                 name: data.name,
                 name_ru: data?.name_ru ?? "",
                 secondary: data.secondary,
                 secondary_ru: data.secondary_ru,
                 description: data.description,
-                description_ru: data?.description_ru  ?? "",
+                description_ru: data?.description_ru ?? "",
                 vendorCode: data.vendorCode,
                 promo: data.promo,
                 promoPrice: data.promoPrice,
@@ -155,7 +203,7 @@ class ProductController{
             });
 
             await product.validate()
-            if (req.files.img){
+            if (req.files.img) {
                 let filename = saveImage(req.files.img, req.db)
                 if (filename == 'Not image') {
                     result = {
@@ -166,12 +214,12 @@ class ProductController{
                         },
                     }
                     break addProduct
-                }else{
-                    product.img = filename   
+                } else {
+                    product.img = filename
                 }
             }
-            
-            for(let $i=0; $i < 3; $i++){
+
+            for (let $i = 0; $i < 3; $i++) {
                 if (req.files['imgArray' + $i]) {
                     let filename = saveImage(req.files['imgArray' + $i], req.db)
                     if (filename == 'Not image') {
@@ -187,7 +235,7 @@ class ProductController{
                         product.imgArray.push(filename)
                     }
                 }
-            }    
+            }
             await product.save()
             await new Log({
                 type: "product_created",
@@ -221,11 +269,11 @@ class ProductController{
         }
         try {
             let product = await Product.findById(req.params.id);
-            if(product){
+            if (product) {
                 product.active = req.fields.active;
                 product.save();
             }
-        }catch (e) {
+        } catch (e) {
             result = sendError(error, req.headers["accept-language"])
         }
         res.status(result.status).json(result);
@@ -252,20 +300,20 @@ class ProductController{
             data.sizes = JSON.parse(data.sizes);
             let query = { '_id': req.params.product }
             data['updatedAt'] = new Date()
-            if(data['category'] === ""){
+            if (data['category'] === "") {
                 data['category'] = null
             }
 
-            if(!data.promoPrice || data.promoPrice <= 0){
+            if (!data.promoPrice || data.promoPrice <= 0) {
                 data.promoPrice = 0;
                 delete data.promoStart;
                 delete data.promoEnd;
             }
 
-            if(data.name_ru === undefined || data.name_ru === "undefined"){
+            if (data.name_ru === undefined || data.name_ru === "undefined") {
                 data.name_ru = "";
             }
-            if(data.description === undefined || data.description === "undefined"){
+            if (data.description === undefined || data.description === "undefined") {
                 data.description = "";
             }
 
@@ -273,7 +321,7 @@ class ProductController{
 
             if (typeof req.fields.img === 'string' && req.fields.img != product.img) {
                 product.img = req.fields.img
-            }else if (req.files.img) {
+            } else if (req.files.img) {
                 let filename = saveImage(req.files.img, req.db, product.img)
                 if (filename == 'Not image') {
                     result = {
@@ -293,7 +341,7 @@ class ProductController{
                     let filename = ""
                     if (product.img != product.imgArray[$i]) {
                         filename = saveImage(req.files['imgArray' + $i], req.db, product.imgArray[$i])
-                    }else{
+                    } else {
                         filename = saveImage(req.files['imgArray' + $i], req.db)
                     }
                     if (filename == 'Not image') {
@@ -306,29 +354,29 @@ class ProductController{
                         }
                         break updateProduct
                     } else {
-                        if (product.imgArray[$i] != undefined){
+                        if (product.imgArray[$i] != undefined) {
                             product.imgArray[$i] = filename
-                        }else{
+                        } else {
                             product.imgArray.push(filename)
                         }
                     }
-                } else if (req.fields['imgArray' + $i] == "" && product.imgArray[$i]){
-                    if (product.img != product.imgArray[$i]){
+                } else if (req.fields['imgArray' + $i] == "" && product.imgArray[$i]) {
+                    if (product.img != product.imgArray[$i]) {
                         removeImage(product.imgArray[$i])
                     }
                     delete product.imgArray[$i]
                 }
             }
             for (let $i = 2; $i >= 0; $i--) {
-                if (product.imgArray[$i] == null || product.imgArray[$i] == undefined){
+                if (product.imgArray[$i] == null || product.imgArray[$i] == undefined) {
                     product.imgArray.splice($i, 1)
                 }
             }
-            await product.save({new:true})
+            await product.save({ new: true })
 
             let test2 = await Product.findById(product.id);
-            if(test2.promoPrice === 0){
-                await Product.updateOne(query, { $unset: { promoStart: "", promoEnd: ""}})
+            if (test2.promoPrice === 0) {
+                await Product.updateOne(query, { $unset: { promoStart: "", promoEnd: "" } })
             }
             let test3 = await Product.findById(product.id);
             // if(product.promoPrice === 0){
@@ -354,7 +402,7 @@ class ProductController{
     updateProductsCategory = async function (req, res) {
         let db = useDB(req.db)
         let Product = db.model("Product");
-        
+
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -394,7 +442,7 @@ class ProductController{
         try {
             let query = { '_id': req.params.product }
             let product = await Product.findById(query)
-            if(product){
+            if (product) {
                 await new Log({
                     type: "product_deleted",
                     description: product.name,
@@ -426,7 +474,7 @@ class ProductController{
             'status': 200,
             'msg': 'Product deleted'
         }
-        if (req.fields.objects.length){
+        if (req.fields.objects.length) {
             try {
                 let query = {
                     '_id': {
@@ -452,13 +500,13 @@ class ProductController{
             } catch (error) {
                 result = sendError(error, req.headers["accept-language"])
             }
-        }else{
+        } else {
             result = {
                 'status': 200,
                 'msg': 'Parametr objects is empty'
             }
         }
-        
+
 
         res.status(result.status).json(result);
     };
@@ -507,7 +555,7 @@ class ProductController{
         }
         try {
 
-            let rows = await readXlsxFile(req.files.excel.path).catch((error) =>{
+            let rows = await readXlsxFile(req.files.excel.path).catch((error) => {
                 console.log(error)
             })
             var products = []
@@ -563,7 +611,7 @@ class ProductController{
         }
 
         try {
-            let product = await Product.find( { "name": {$regex: search} } )
+            let product = await Product.find({ "name": { $regex: search } })
             result['objects'] = product
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
@@ -579,7 +627,7 @@ class ProductController{
             'msg': 'Sending products'
         }
         try {
-            result['objects'] = await Product.find( { "name": {$regex: search} } );
+            result['objects'] = await Product.find({ "name": { $regex: search } });
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
