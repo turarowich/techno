@@ -246,6 +246,7 @@ export default {
   name: "CatalogSettings",
   components:{
     ColorPicker,
+    Spinner
   },
   data(){
     return{
