@@ -1,7 +1,7 @@
 <template>
   <div class="modal fade right "  id="add-products" tabindex="-1" role="dialog" aria-labelledby="add-products" aria-hidden="true">
       <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: calc(100% - 250px);" role="document" >
-        <div id="modal-content" class="modal-content  myModal-content h-100">
+        <div id="modal-content" class="modal-content  myModal-content h-100" >
           <div class="modal-header justify-content-start align-items-center">
             <img  data-dismiss="modal" aria-label="Close" class="close" src="../../../assets/icons/xBlack.svg" alt="">
             <h3 class="modal-title">Add Product</h3>
@@ -29,6 +29,59 @@
                           <option value="">Without category</option>
                           <option :value="cat._id" v-for="cat in listCategory.slice(1)"  :key="cat._id" >{{cat.name}}</option>
                         </select>
+                      </div>
+                    </div>
+
+                    <div class="d-flex " style="margin-top:20px">
+                      <div style="width:35%" class="mr-3" v-if="productCustomFields.productCustomFields">
+                        <label class="product-label">{{ this.productCustomFields.productCustomField1 }}</label><br>
+                        <input  v-model="newProduct.productCustomField1" style="width:100%" class="cashback-input">
+                      </div>
+                      <div style="width:35%" class="mr-3" v-if="!productCustomFields.productCustomFields">
+                        <label class="product-label">{{ this.productCustomFields?.productCustomField1 || 'Custom field 1' }}</label><br>
+                        <input disabled v-model="newProduct.productCustomField1" style="width:100%" class="cashback-input">
+                      </div>
+                      <div style="width:35%" class="quantity-category mr-3" v-if="productCustomFields.productCustomFields">
+                        <label class="product-label">{{ this.productCustomFields.productCustomField2 }}</label><br>
+                        <input v-model="newProduct.productCustomField2" class="cashback-input">
+                      </div>
+                      <div style="width:35%" class="quantity-category mr-3" v-if="!productCustomFields.productCustomFields">
+                        <label class="product-label">{{ this.productCustomFields?.productCustomField2  || 'Custom field 2'}}</label><br>
+                        <input disabled v-model="newProduct.productCustomField2" class="cashback-input">
+                      </div>
+                      <div style="width:30%;">
+                        <label class="product-label">Select colors</label><br>
+
+
+                        <div id="customSelect" class="custom-select" @blur="blurred">
+                          <div class="selected" @click="openColorSelect">
+                            Select Colors
+                          </div>
+                          <div class="items" :class="{ selectHide: !open }">
+                            <div
+                              v-for="(option, i) in productCustomFields.productCustomColors.values" 
+                              :key="i" 
+                              @click=" 
+                                selected = option;
+                                selectedColors.productCustomColors.values[i].selected = !selectedColors.productCustomColors.values[i].selected
+                              "
+                              class="item"
+                            >
+                            
+                              <div :style="{background: option.value}" class="colorBox"> </div>
+                              <div class="name">
+                                {{ option.name }}
+                              </div>
+                              <div class="checkBox">
+                                <label class="custom-checkbox">
+                                  <input type="checkbox" v-model="selectedColors.productCustomColors.values[i].selected">
+                                  <span class="checkmark">
+                                </span>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -172,13 +225,16 @@
 </template>
 
 <script>
+/* eslint-disable */
+
 import $ from "jquery";
 
 export default {
 name: "AddProduct",
-props:['listCategory', 'getProducts'],
+props:['listCategory', 'getProducts', 'productCustomFields'],
   data(){
     return{
+      open: false,
       addSizeError:"",
       sizeObject:{
         size:"",
@@ -216,9 +272,22 @@ props:['listCategory', 'getProducts'],
           obj:'',
           formatted:'',
         },
-        promoPrice:0
-
+        promoPrice:0,
+        productCustomField1: '',
+        productCustomField2: '',
+        productCustomColors: [],
       },
+      customFields: {
+        productCustomField1: '',
+        productCustomField2: '',
+        productCustomFields: false,
+        productCustomColors:{
+          required: false,
+          values: [],
+        },
+      },
+
+      selectedColors: this.productCustomFields,
     };
   },
   computed:{
@@ -226,9 +295,44 @@ props:['listCategory', 'getProducts'],
    return this.newProduct.imgArray.map((item)=>{
      return URL.createObjectURL(item)
    })
-  }
+  },
+  setSelectedColors() {
+      return this.productCustomFields.productCustomColors.values.map(field => {
+        this.selectedColors.push({
+          name: field.name,
+          color: field.color,
+          selected: false
+        })
+      });
+
+    },
   },
   methods:{
+
+    blurred() {
+      this.open = false;
+      console.log('blur')
+    },
+    openColorSelect() {
+      console.log('clicked');
+      this.open = !this.open;
+    },
+    fetchSettings(){
+      this.axios.get(this.url('getSettings'))
+        .then((response) => {
+          if(response.data.productCustomFields) {
+            this.productCustomField1 = response.data.productCustomField1
+            this.productCustomField2 = response.data.productCustomField2
+          }
+          if(response.data.productCustomColors.required) {
+            this.productCustomColors = response.data.productCustomColors
+          }
+        }).catch(function (error){
+          if (error.response) {
+            console.log('setCatalog_settings EERRRor',error.response)
+          }
+        })
+    },
     isNumeric(str) {
       if (typeof str != "string") return false // we only process strings!
       return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
@@ -394,7 +498,19 @@ props:['listCategory', 'getProducts'],
         this.$warningAlert('Sizes list is empty')
         return;
       }
-
+      const colors = [];
+      if (this.selectedColors.productCustomColors.required) {
+        this.selectedColors.productCustomColors.values.forEach(color => {
+          if(color.selected) {
+            colors.push({
+              name: color.name,
+              value: color.value
+            }
+          );
+          }
+          
+        })
+      }
 
       form.append('promoStart', new_product.promoStart.obj)
       form.append('promoEnd', new_product.promoEnd.obj)
@@ -409,7 +525,9 @@ props:['listCategory', 'getProducts'],
       form.append('recommend',new_product.recommend)
       form.append('sizes',JSON.stringify(new_product.sizes))
       form.append('hasMultipleTypes',new_product.hasMultipleTypes)
-
+      form.append('productCustomField1',new_product.productCustomField1)
+      form.append('productCustomField2',new_product.productCustomField2)
+      form.append('productCustomColors', JSON.stringify(colors))
       this.axios.post(this.url('addProduct'), form)
             .then(() => {
               this.getProducts()
@@ -444,6 +562,8 @@ props:['listCategory', 'getProducts'],
               this.validateFrom = false;
               this.validateTo = false;
               this.showPrice = false;
+              this.selectedColors = this.productCustomFields;
+
             }).catch((error) => {
           console.log("fail", error)
 
@@ -456,6 +576,12 @@ props:['listCategory', 'getProducts'],
 
   },
   mounted(){
+    window.addEventListener( 'click', ( e ) => {
+      if (!document.getElementById( 'customSelect' ).contains( e.target )) {
+        // showDropdown.value = !showD ropdown.value
+        this.open = false;
+      }
+    } );
     let that = this;
     new this.$lightpick({
       field: document.getElementById('promoStart'),
@@ -483,6 +609,79 @@ props:['listCategory', 'getProducts'],
 </script>
 
 <style scoped>
+.items.closed {
+  display: none;
+}
+.custom-select .selected.open {
+  border: 1px solid #ad8225;
+  border-radius: 6px 6px 0px 0px;
+}
+
+.custom-select .items .name {
+  color: #767676;
+  padding-left: 1em;
+  cursor: pointer;
+  user-select: none;
+  height: 49px;
+  padding-top: 10px;
+}
+.custom-select .items .item {
+  display: flex; 
+  align-items: center;
+  padding: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  width: 100%;
+  border-bottom: 1px solid #D3D3D3;
+  
+}
+.custom-select .items .colorBox{
+  width: 30px; 
+  height: 30px;
+  border-radius: 5px;
+}
+.custom-select .items .checkBox{
+  margin-left: auto;
+  margin-top: 5px;
+}
+
+.custom-select .items {
+  width: 100%;
+  font-size: 16px;
+  color: #767676;
+  margin-top: 10px;
+  overflow-y: scroll;
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 5px;
+  background-color: white;  
+  max-height: 250px;
+
+
+
+
+
+  
+  
+
+}
+.selected {}
+.custom-select {
+  font-size: 16px;
+  color: #767676;
+  position: relative;
+  width: 100%;
+  text-align: left;
+  outline: none;
+  height: 45px;
+  padding-top: 10px;
+}
+.selectHide {
+  display: none;
+}
 .newSizeBlock{
   gap: 5px;
   margin-bottom: 5px;

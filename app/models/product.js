@@ -130,6 +130,18 @@ const productSchema = new Schema({
         required: true,
         default: Date.now,
     },
+    colors: [{
+        type: Schema.Types.Mixed,
+        required: false        
+    }],
+    productCustomField1: {
+        type: String,
+        required: false,
+    },
+    productCustomField2: {
+        type: String,
+        required: false,
+    }
 })
 
 module.exports = mongoose.model('Product', productSchema)

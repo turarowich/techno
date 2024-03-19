@@ -164,8 +164,8 @@
         <AddCategory :listCategory="listCategory" :getCategories="reFetchCategories" />
         <EditCategory :listCategory="listCategory" :select_category="select_category"
           :getCategories="reFetchCategories" />
-        <AddProduct :listCategory="listCategory" :getProducts="getProducts" />
-        <EditProduct :listCategory="listCategory" :select_product="select_product" :getProducts="getProducts" />
+        <AddProduct :listCategory="listCategory" :getProducts="getProducts" :productCustomFields="customFields"/>
+        <EditProduct :listCategory="listCategory" :select_product="select_product" :getProducts="getProducts" :productCustomFields="customFields"/>
 
         <div class="catalog-content" style="width:82%">
           <div class="d-flex main-content-header">
@@ -283,6 +283,15 @@ export default {
       quantity_to: '',
       select_product: '',
       select_category: '',
+      customFields: {
+        productCustomField1: '',
+        productCustomField2: '',
+        productCustomFields: false,
+        productCustomColors:{
+          required: false,
+          values: [],
+        },
+      },
 
       numberOfPagesArray: [],
     }
@@ -359,6 +368,24 @@ export default {
 
   },
   methods: {
+    fetchSettings(){
+      this.axios.get(this.url('getSettings'))
+        .then((response) => {
+          if(response.data.object.productCustomFields) {
+            this.customFields.productCustomField1 = response.data.object.productCustomField1
+            this.customFields.productCustomField2 = response.data.object.productCustomField2
+            this.customFields.productCustomFields = response.data.object.productCustomFields
+
+          }
+          if(response.data.object.productCustomColors.required) {
+            this.customFields.productCustomColors = response.data.object.productCustomColors
+          }
+        }).catch(function (error){
+          if (error.response) {
+            console.log('setCatalog_settings EERRRor',error.response)
+          }
+        })
+    },
     catalogSearch() {
       this.currentPage = 1;
       this.getProducts();
@@ -665,6 +692,7 @@ export default {
   },
 
   mounted() {
+    this.fetchSettings()
     this.getCategories()
     this.getNestedCategories()
     this.getProducts()

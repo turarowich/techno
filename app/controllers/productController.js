@@ -200,6 +200,10 @@ class ProductController {
                 active: data.active,
                 sizes: JSON.parse(data.sizes),
                 hasMultipleTypes: data.hasMultipleTypes,
+                colors: data.productCustomColors ? JSON.parse(data.productCustomColors) : [],
+                productCustomField1: data.productCustomField1 || '',
+                productCustomField2: data.productCustomField2 || '',
+
             });
 
             await product.validate()
