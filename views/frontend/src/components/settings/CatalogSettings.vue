@@ -95,6 +95,85 @@
       <p class="catalog-description margin-50">
         Necessary if you want to use the catalog only as an online menu suitable for cafes, coffee houses, etc.
       </p>
+
+      <div class="d-flex margin-10" style="margin-top: '50px';">
+        <label class="switch d-flex">
+          <input v-model="productCustomFields" type="checkbox">
+          <span class="slider round"></span>
+        </label>
+        <h2 class="catalog-sub-title">Additional Fields</h2>
+      </div>
+      <p class="catalog-description margin-30">
+        Necessary if you want to use the catalog only as an online menu suitable for cafes, coffee houses, etc.
+      </p>
+      
+      <input v-model="productCustomField1" class="social-btns" placeholder="Field name 1">
+      <input v-model="productCustomField2" class="social-btns" placeholder="Field name 2">
+
+      <div class="d-flex margin-10" :style="{'margin-top': '40px'} ">
+        <label class="switch d-flex">
+          <input v-model="productCustomColors.required" type="checkbox">
+          <span class="slider round"></span>
+        </label>
+        <h2 class="catalog-sub-title">Choose Color</h2>
+      </div>
+      <p class="catalog-description margin-30">
+        When you enable this item, you can add color to products
+      </p>
+      <div class="d-flex">
+        <div :style="{ background: productCustomColors.values[0] }" class="dropdown dropMenu color-picker-button" style="size: 20px; padding: 0; left: 22px;
+                                                                                          position: absolute;
+                                                                                          border-radius: 5px;
+                                                                                          margin-top: 8px;"
+    >
+        <div class="dropdown-toggle" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" style="size: 20px; padding: 0"
+          aria-expanded="false">
+          <div :style="{height: '20px', width: '20px'}"></div>
+        </div>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+          <div :style="{background: color}">
+            <ColorPicker
+              style="width: 250px;"
+              theme="light"
+              :color="color"
+              :sucker-hide="false"
+              :sucker-canvas="suckerCanvas"
+              :sucker-area="suckerArea"
+              @changeColor="changeColor($event, 0)"
+              @openSucker="openSucker"
+              @inputFocus="inputFocus"  
+              @inputBlur="inputBlur"
+            />
+          </div>
+        </div>
+      </div>
+        <input v-model="productCustomColors.names[0]" class="form-input cashback-input" placeholder="Choose color" style="padding-left: 42px">
+        <button v-if="index != 1" type="button" 
+            @click="addNewVal('productCustomColors'), addNewColorName(); this.colorPalleteVisible = true;" class="discount-btn ml-2"><img alt="+" src="../../assets/icons/enable+.svg"></button>
+      </div>  
+      <div class="custom-fields col-12 pr-0 pl-0" v-for="(item, index) in productCustomColors.values.slice(0, productCustomColors.values.length - 1)" :key="index" >
+        <div class="dropdown dropMenu" :style="{ background: productCustomColors.values[index + 1] }" style="size: 30px; padding: 0;
+                                                                              position: absolute;
+                                                                              size: 30px;
+                                                                              margin-top: 8px;
+                                                                              left: 7px;
+                                                                              border-radius: 5px;
+        ">
+        <div class="dropdown-toggle" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" style="size: 20px; padding: 0"
+          aria-expanded="false">
+          <div :style="{height: '20px', width: '20px'}"></div>
+        </div>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+        </div>
+      </div>
+        <div class="d-flex" v-if="productCustomColors.values.length >= 1">
+          <input disabled v-model="productCustomColors.names[index + 1]" class="form-input cashback-input mb-2" placeholder="Name color" style="padding-left: 42px">
+          <button type="button" 
+          @click="removeVal('productCustomColors', index)" class="discount-btn ml-2"><img alt="x" src="../../assets/icons/x.svg"></button>
+        </div>
+      </div>
+      
+      
       <button type="button" @click="saveCatalogSettings" class="save mb-3">Save</button>
     </div>
 
@@ -159,13 +238,18 @@
 </template>
 
 <script>
+/* eslint-disable */
+import Vue from 'vue'
+import Picker from "@/components/settings/Picker";
+import vClickOutside from 'v-click-outside'
 
-// import Picker from "@/components/settings/Picker";
+import { ColorPicker } from 'vue-color-kit'
 import Spinner from "../Spinner";
 export default {
   name: "CatalogSettings",
   components:{
-    // Picker
+    ColorPicker,
+    Picker,
     Spinner
   },
   data(){
@@ -191,6 +275,14 @@ export default {
       instagram:'',
       website:'',
       seen: false,
+      productCustomField1: '',
+      productCustomField2: '',
+      productCustomFields: false,
+      productCustomColors:{
+        required: false,
+        values: ['black'],
+        names: ['']
+      },
       // previewImage:require('../../assets/icons/profile-img.svg'),
     }
   },
@@ -241,6 +333,22 @@ export default {
     },
   },
   methods:{
+    changePickerColor() {
+        $('.siding-bar').removeClass('active')
+      },
+    changeColor(color, index) {
+      debugger
+      this.productCustomColors.values[index] = color.hex;
+    },
+    removeVal(field, index){
+      this[field].values.splice(index, 1)
+    },
+    addNewVal(field){
+      this[field].values.unshift('');
+    },
+    addNewColorName() {
+      this.productCustomColors.names.unshift('');
+    },
     async uploadImage(e,type){
       let that = this;
       const image = e.target.files[0];
@@ -395,6 +503,8 @@ export default {
     saveCatalogSettings(){
       let that=this;
       let url = this.url('updateSettings');
+      //eslint-disable-next-line 
+      debugger
       this.axios.put(url, {
         catalogStatus:this.catalog_status,
         catalogUrl:this.catalogUrl,
@@ -413,6 +523,10 @@ export default {
         facebook:this.facebook,
         instagram:this.instagram,
         website:this.website,
+        productCustomField1: this.productCustomField1,
+        productCustomField2: this.productCustomField2,
+        productCustomFields: this.productCustomFields,
+        productCustomColors: this.productCustomColors,
       }).then(function (response) {
         console.log(response);
         that.$successAlert('Updated');
@@ -436,7 +550,6 @@ export default {
     this.axios
       .get(this.url('getSettings'))
       .then(function (response){
-        console.log(response,"<><><>><><>>><<>");
         let settings = response.data.object;
         that.id= settings._id || '';
         that.company = response.data.company || '';
@@ -458,6 +571,16 @@ export default {
         that.instagram = settings.instagram || '';
         that.website = settings.website || '';
         that.spinner = false;
+        // es-lint-disable-next-line
+        debugger
+        that.productCustomField1 = settings?.productCustomField1 ?? ``;
+        that.productCustomField2 = settings?.productCustomField2 ?? ``;
+        that.productCustomFields = settings?.productCustomFields ?? false;
+        that.productCustomColors = settings?.productCustomColors ?? {
+          required: false,
+          values: ['black'],
+          names: ['']
+      };
       })
   },
   mounted() {
@@ -467,6 +590,14 @@ export default {
 </script>
 
 <style scoped>
+
+.discount-btn{
+  height: 45px;
+  flex: 0 0 45px;
+  border-radius:5px;
+  background: none;
+  border: none;
+}
 .working-label{
   color:#858585;
 }
