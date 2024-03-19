@@ -62,7 +62,6 @@
                               v-for="(option, i) in productCustomFields.productCustomColors.values" 
                               :key="i" 
                               @click=" 
-                                selected = option;
                                 selectedColors.productCustomColors.values[i].selected = !selectedColors.productCustomColors.values[i].selected
                               "
                               class="item"
@@ -296,18 +295,27 @@ props:['listCategory', 'getProducts', 'productCustomFields'],
      return URL.createObjectURL(item)
    })
   },
-  setSelectedColors() {
-      return this.productCustomFields.productCustomColors.values.map(field => {
+  // setSelectedColors() {
+  //     return this.productCustomFields.productCustomColors.values.map(field => {
+  //       this.selectedColors.push({
+  //         name: field.name,
+  //         color: field.color,
+  //         selected: false
+  //       })
+  //     });
+
+  //   },
+  },
+  methods:{
+    resetColors() {
+      this.productCustomFields.productCustomColors.values.map(field => {
         this.selectedColors.push({
           name: field.name,
           color: field.color,
           selected: false
         })
       });
-
     },
-  },
-  methods:{
 
     blurred() {
       this.open = false;
@@ -511,7 +519,6 @@ props:['listCategory', 'getProducts', 'productCustomFields'],
           
         })
       }
-
       form.append('promoStart', new_product.promoStart.obj)
       form.append('promoEnd', new_product.promoEnd.obj)
       form.append('category', new_product.category)
@@ -562,8 +569,9 @@ props:['listCategory', 'getProducts', 'productCustomFields'],
               this.validateFrom = false;
               this.validateTo = false;
               this.showPrice = false;
-              this.selectedColors = this.productCustomFields;
-
+              this.selectedColors.productCustomColors.values.forEach((field, i) => {
+              this.selectedColors.productCustomColors.values[i].selected = false;
+              });
             }).catch((error) => {
           console.log("fail", error)
 
