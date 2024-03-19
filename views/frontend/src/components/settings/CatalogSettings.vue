@@ -239,9 +239,6 @@
 
 <script>
 /* eslint-disable */
-import Vue from 'vue'
-import Picker from "@/components/settings/Picker";
-import vClickOutside from 'v-click-outside'
 
 import { ColorPicker } from 'vue-color-kit'
 import Spinner from "../Spinner";
@@ -249,7 +246,6 @@ export default {
   name: "CatalogSettings",
   components:{
     ColorPicker,
-    Picker,
     Spinner
   },
   data(){
