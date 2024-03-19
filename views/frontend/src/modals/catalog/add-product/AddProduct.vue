@@ -585,7 +585,7 @@ props:['listCategory', 'getProducts', 'productCustomFields'],
   },
   mounted(){
     window.addEventListener( 'click', ( e ) => {
-      if (!document.getElementById( 'customSelect' ).contains( e.target )) {
+      if (!document.getElementById( 'customSelect' )?.contains( e.target )) {
         // showDropdown.value = !showD ropdown.value
         this.open = false;
       }
