@@ -35,7 +35,50 @@
                     </select>
                   </div>
                 </div>
+                <div class="d-flex  mb-3">
+                  <div style="width:35%" class="mr-3">
+                        <label class="product-label">{{ this.currentData.productCustomField1 || 'Custom field 1' }}</label><br>
+                        <input  v-model="currentData.productCustomField1" style="width:100%" class="cashback-input">
+                      </div>
+                      <div style="width:35%" class="mr-3">
+                        <label class="product-label">{{ this.currentData.productCustomField2 || 'Custom field 2'}}</label><br>
+                        <input  v-model="currentData.productCustomField2" style="width:100%" class="cashback-input">
+                      </div>
+                      <div style="width:30%;">
+                        <label class="product-label">Select colors</label><br>
 
+
+                        <div id="customSelect" class="custom-select" @blur="blurred">
+                          <div class="selected" @click="openColorSelect">
+                            Select Colors
+                          </div>
+                          <div class="items" :class="{ selectHide: !open }">
+                            <div
+                              v-for="(option, i) in productCustomFields.productCustomColors.values" 
+                              :key="i" 
+                              @click=" 
+                                selected = option;
+                                selectedColors.productCustomColors.values[i].selected = !selectedColors.productCustomColors.values[i].selected
+                              "
+                              class="item"
+                            >
+                            
+                              <div :style="{background: option.value}" class="colorBox"> </div>
+                              <div class="name">
+                                {{ option.name }}
+                              </div>
+                              <div class="checkBox">
+                                <label class="custom-checkbox">
+                                  <input type="checkbox" v-model="selectedColors.productCustomColors.values[i].selected">
+                                  <span class="checkmark">
+                                </span>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          </div>
+                        </div>
+                </div>
                 <label>Name in russian</label><br>
                 <input v-model="currentData.name_ru" class="cashback-input mb-3" style="width:50%"><br>
                 <label>Description</label>
@@ -187,14 +230,19 @@
 </template>
 
 <script>
+/* eslint-disable */
 
 import $ from "jquery";
 
 export default {
   name: "EditProduct",
-  props: ['listCategory','select_product','getProducts'],
+  props: ['listCategory','select_product','getProducts', 'productCustomFields'],
   data(){
-    return{
+    return {
+      selectedColors: this.productCustomFields,
+
+      open: false,
+
       addSizeError:"",
       sizeObject:{
         size:"",
@@ -229,6 +277,17 @@ export default {
     }
   },
   computed:{
+    setSelectedColors() {
+      return this.productCustomFields.productCustomColors.values.map(field => {
+        this.selectedColors.push({
+          name: field.name,
+          color: field.color,
+          selected: false
+        })
+      });
+
+    },
+  
     mainImg(){
       if(typeof this.currentData.img === 'object'){
         return URL.createObjectURL(this.currentData.img)
@@ -250,6 +309,10 @@ export default {
 
   },
   methods:{
+    openColorSelect() {
+      console.log('clicked');
+      this.open = !this.open;
+    },
     isNumeric(str) {
       if (typeof str != "string") return false // we only process strings!
       return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
@@ -439,6 +502,18 @@ export default {
         this.$warningAlert('Sizes list is empty')
         return;
       }
+      const colors = [];
+      if (this.selectedColors.productCustomColors.required) {
+        this.selectedColors.productCustomColors.values.forEach(color => {
+          if(color.selected) {
+            colors.push({
+              name: color.name,
+              value: color.value
+            }
+          );
+          }
+        })
+      }
 
 
       form.append("name", updatedProduct.name)
@@ -453,7 +528,9 @@ export default {
       form.append('promoEnd',this.promoEnd.obj)
       form.append('sizes',JSON.stringify(updatedProduct.sizes))
       form.append('hasMultipleTypes',updatedProduct.hasMultipleTypes)
-
+      if (colors.length > 0) {
+        form.append('productCustomColors', JSON.stringify(colors))
+      }
       if(updatedProduct.promoPrice > updatedProduct.price){
         this.$warningAlert("Promotional price must be < original price")
       }
@@ -510,6 +587,7 @@ export default {
     },
   },
   mounted() {
+
     this.selectDates();
     this.imgSrc = this.$server;
   },
@@ -517,6 +595,79 @@ export default {
 </script>
 
 <style scoped>
+.items.closed {
+  display: none;
+}
+.custom-select .selected.open {
+  border: 1px solid #ad8225;
+  border-radius: 6px 6px 0px 0px;
+}
+
+.custom-select .items .name {
+  color: #767676;
+  padding-left: 1em;
+  cursor: pointer;
+  user-select: none;
+  height: 49px;
+  padding-top: 10px;
+}
+.custom-select .items .item {
+  display: flex; 
+  align-items: center;
+  padding: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  width: 100%;
+  border-bottom: 1px solid #D3D3D3;
+  
+}
+.custom-select .items .colorBox{
+  width: 30px; 
+  height: 30px;
+  border-radius: 5px;
+}
+.custom-select .items .checkBox{
+  margin-left: auto;
+  margin-top: 5px;
+}
+
+.custom-select .items {
+  width: 100%;
+  font-size: 16px;
+  color: #767676;
+  margin-top: 10px;
+  overflow-y: scroll;
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 5px;
+  background-color: white;  
+  max-height: 250px;
+
+
+
+
+
+  
+  
+
+}
+.selected {}
+.custom-select {
+  font-size: 16px;
+  color: #767676;
+  position: relative;
+  width: 100%;
+  text-align: left;
+  outline: none;
+  height: 45px;
+  padding-top: 10px;
+}
+.selectHide {
+  display: none;
+}
 
 .newSizeBlock{
   gap: 5px;

@@ -121,7 +121,7 @@
         When you enable this item, you can add color to products
       </p>
       <div class="d-flex">
-        <div :style="{ background: productCustomColors.values[0] }" class="dropdown dropMenu color-picker-button" style="size: 20px; padding: 0; left: 22px;
+        <div :style="{ background: currentNewColor.value }" class="dropdown dropMenu color-picker-button" style="size: 20px; padding: 0; left: 22px;
                                                                                           position: absolute;
                                                                                           border-radius: 5px;
                                                                                           margin-top: 8px;"
@@ -147,12 +147,12 @@
           </div>
         </div>
       </div>
-        <input v-model="productCustomColors.names[0]" class="form-input cashback-input" placeholder="Choose color" style="padding-left: 42px">
-        <button v-if="index != 1" type="button" 
-            @click="addNewVal('productCustomColors'), addNewColorName(); this.colorPalleteVisible = true;" class="discount-btn ml-2"><img alt="+" src="../../assets/icons/enable+.svg"></button>
+        <input v-model="currentNewColor.name" class="form-input cashback-input" placeholder="Choose color" style="padding-left: 42px">
+        <button type="button" 
+            @click="addColor" class="discount-btn ml-2"><img alt="+" src="../../assets/icons/enable+.svg"></button>
       </div>  
-      <div class="custom-fields col-12 pr-0 pl-0" v-for="(item, index) in productCustomColors.values.slice(0, productCustomColors.values.length - 1)" :key="index" >
-        <div class="dropdown dropMenu" :style="{ background: productCustomColors.values[index + 1] }" style="size: 30px; padding: 0;
+      <div class="custom-fields col-12 pr-0 pl-0" v-for="(item, index) in productCustomColors.values" :key="index" >
+        <div class="dropdown dropMenu" :style="{ background: item.value }" style="size: 30px; padding: 0;
                                                                               position: absolute;
                                                                               size: 30px;
                                                                               margin-top: 8px;
@@ -166,8 +166,8 @@
         <div class="dropdown-menu" aria-labelledby="dropdownMenu">
         </div>
       </div>
-        <div class="d-flex" v-if="productCustomColors.values.length >= 1">
-          <input disabled v-model="productCustomColors.names[index + 1]" class="form-input cashback-input mb-2" placeholder="Name color" style="padding-left: 42px">
+        <div class="d-flex">
+          <input disabled v-model="item.name" class="form-input cashback-input mb-2" placeholder="Name color" style="padding-left: 42px">
           <button type="button" 
           @click="removeVal('productCustomColors', index)" class="discount-btn ml-2"><img alt="x" src="../../assets/icons/x.svg"></button>
         </div>
@@ -280,9 +280,12 @@ export default {
       productCustomFields: false,
       productCustomColors:{
         required: false,
-        values: ['black'],
-        names: ['']
+        values: [],
       },
+      currentNewColor: {
+        name: '',
+        value: 'black'
+      }
       // previewImage:require('../../assets/icons/profile-img.svg'),
     }
   },
@@ -333,12 +336,25 @@ export default {
     },
   },
   methods:{
+    addColor() {
+      if (this.currentNewColor.name.length === 0) {
+        this.$warningAlert('Enter color name');
+        return        
+      }
+
+      this.productCustomColors.values.push(this.currentNewColor);
+      this.currentNewColor = {
+        name: '',
+        value: 'black' 
+      }
+
+    },
     changePickerColor() {
         $('.siding-bar').removeClass('active')
       },
     changeColor(color, index) {
-      debugger
-      this.productCustomColors.values[index] = color.hex;
+      this.currentNewColor.value = color.hex;
+      // eslint-disable-next-line
     },
     removeVal(field, index){
       this[field].values.splice(index, 1)
@@ -503,8 +519,8 @@ export default {
     saveCatalogSettings(){
       let that=this;
       let url = this.url('updateSettings');
+      
       //eslint-disable-next-line 
-      debugger
       this.axios.put(url, {
         catalogStatus:this.catalog_status,
         catalogUrl:this.catalogUrl,
@@ -572,14 +588,12 @@ export default {
         that.website = settings.website || '';
         that.spinner = false;
         // es-lint-disable-next-line
-        debugger
         that.productCustomField1 = settings?.productCustomField1 ?? ``;
         that.productCustomField2 = settings?.productCustomField2 ?? ``;
         that.productCustomFields = settings?.productCustomFields ?? false;
-        that.productCustomColors = settings?.productCustomColors ?? {
+        that.productCustomColors = settings.productCustomColors?.values?.length > 0 ? settings.productCustomColors : {
           required: false,
-          values: ['black'],
-          names: ['']
+          values: [],
       };
       })
   },

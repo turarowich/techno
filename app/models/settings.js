@@ -82,6 +82,32 @@ const settingsSchema = new Schema({
         default: ""
     },
     ////Catalog settings
+    productCustomField1: {
+        type: String,
+        required: false,
+        default: ""
+    },
+    productCustomField2: {
+        type: String,
+        required: false,
+        default: ""
+    },
+    productCustomFields: {
+        type: Boolean,
+        required: false,
+    },
+    productCustomColors: {
+        required: {
+            type: Boolean,
+            required: false,
+            default: false
+        },
+        values: [{
+            type: Schema.Types.Mixed,
+            required: false,
+        }],
+       
+    },
     catalogStatus: {
         type: Boolean,
         required: false,
