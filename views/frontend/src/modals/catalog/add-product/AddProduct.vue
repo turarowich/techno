@@ -35,7 +35,7 @@
                     <div class="d-flex " style="margin-top:20px">
                       <div style="width:35%" class="mr-3" v-if="productCustomFields.productCustomFields">
                         <label class="product-label">{{ this.productCustomFields?.productCustomField1.name || 'Custom field 1' }}</label><br>
-                        <input  v-model="newProduct.productCustomField1.value" style="width:100%" class="cashback-input">
+                        <input  v-model="newProduct.productCustomField1Value" style="width:100%" class="cashback-input">
                       </div>
                       <!-- <div style="width:35%" class="mr-3" v-if="!productCustomFields.productCustomFields">
                         <label class="product-label">{{ this.productCustomFields?.productCustomField1 || 'Custom field 1' }}</label><br>
@@ -43,7 +43,7 @@
                       </div> -->
                       <div style="width:35%" class="quantity-category mr-3" v-if="productCustomFields.productCustomFields">
                         <label class="product-label">{{ this.productCustomFields?.productCustomField2.name  || 'Custom field 2' }}</label><br>
-                        <input v-model="newProduct.productCustomField2.value" class="cashback-input">
+                        <input v-model="newProduct.productCustomField2Value" class="cashback-input">
                       </div>
                       <!-- <div style="width:35%" class="quantity-category mr-3" v-if="!productCustomFields.productCustomFields">
                         <label class="product-label">{{ this.productCustomFields?.productCustomField2  || 'Custom field 2'}}</label><br>
@@ -272,8 +272,8 @@ props:['listCategory', 'getProducts', 'productCustomFields'],
           formatted:'',
         },
         promoPrice:0,
-        productCustomField1: { name: 'Custom field 1', value: ''},
-        productCustomField2: { name:'Custom field 2', value: '' },
+        productCustomField1Value: '',
+        productCustomField2Value: '',
         productCustomColors: [],
       },
       customFields: {
@@ -532,8 +532,8 @@ props:['listCategory', 'getProducts', 'productCustomFields'],
       form.append('recommend',new_product.recommend)
       form.append('sizes',JSON.stringify(new_product.sizes))
       form.append('hasMultipleTypes',new_product.hasMultipleTypes)
-      form.append('productCustomField1',new_product.productCustomField1)
-      form.append('productCustomField2',new_product.productCustomField2)
+      form.append('productCustomField1', new_product.productCustomField1Value)
+      form.append('productCustomField2', new_product.productCustomField2Value)
       form.append('productCustomColors', JSON.stringify(colors))
       this.axios.post(this.url('addProduct'), form)
             .then(() => {

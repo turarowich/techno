@@ -107,8 +107,8 @@
           Necessary if you want to use the catalog only as an online menu suitable for cafes, coffee houses, etc.
         </p>
         
-        <input v-model="productCustomField1" class="social-btns" placeholder="Field name 1">
-        <input v-model="productCustomField2" class="social-btns" placeholder="Field name 2">
+        <input v-model="productCustomField1.name" class="social-btns" placeholder="Field name 1">
+        <input v-model="productCustomField2.name" class="social-btns" placeholder="Field name 2">
   
         <div class="d-flex margin-10" :style="{'margin-top': '40px'} ">
           <label class="switch d-flex">
@@ -262,8 +262,8 @@
         instagram:'',
         website:'',
         seen: false,
-        productCustomField1: '',
-        productCustomField2: '',
+        productCustomField1: { name: '', value: ''},
+        productCustomField2:  { name: '', value: ''},
         productCustomFields: false,
         productCustomColors:{
           required: false,
@@ -512,8 +512,8 @@
           facebook:this.facebook,
           instagram:this.instagram,
           website:this.website,
-          productCustomField1: {name: this.productCustomField1, value: ''},
-          productCustomField2: {name:this.productCustomField2, value: ''},
+          productCustomField1: {name: this.productCustomField1.name, value: ''},
+          productCustomField2: {name:this.productCustomField2.name, value: ''},
           productCustomFields: this.productCustomFields,
           productCustomColors: this.productCustomColors,
         }).then(function (response) {
@@ -560,8 +560,8 @@
           that.instagram = settings.instagram || '';
           that.website = settings.website || '';
           that.spinner = false;
-          that.productCustomField1 = settings?.productCustomField1 ?? ``;
-          that.productCustomField2 = settings?.productCustomField2 ?? ``;
+          that.productCustomField1.name = settings?.productCustomField1.name ?? ``;
+          that.productCustomField2.name = settings?.productCustomField2.name ?? ``;
           that.productCustomFields = settings?.productCustomFields ?? false;
           that.productCustomColors = settings?.productCustomColors ?? {
             required: false,

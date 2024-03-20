@@ -208,6 +208,9 @@ class SettingsController{
             }
             
             let settings = await Settings.findOne({})
+            if (req.fields.statuses) {
+                await Settings.findOneAndUpdate({ '_id': settings._id }, { orderStatuses: req.fields.statuses });
+            }
             if (!settings) {
                 settings = await new Settings({
                     slogan: " ",

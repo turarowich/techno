@@ -37,12 +37,13 @@
                 </div>
                 <div class="d-flex  mb-3">
                   <div style="width:35%" class="mr-3">
+                    
                         <label class="product-label">{{ this.selectedColors.productCustomField1.name || 'Custom field 1' }}</label><br>
-                        <input  v-model="selectedColors.productCustomField1.value" style="width:100%" class="cashback-input">
+                        <input  v-model="currentData.productCustomField1" style="width:100%" class="cashback-input">
                       </div>
                       <div style="width:35%" class="mr-3">
                         <label class="product-label">{{ this.selectedColors.productCustomField2.name || 'Custom field 2'}}</label><br>
-                        <input  v-model="selectedColors.productCustomField1.value" style="width:100%" class="cashback-input">
+                        <input  v-model="currentData.productCustomField2" style="width:100%" class="cashback-input">
                       </div>
                       <div style="width:30%;">
                         <label class="product-label">Select colors</label><br>
@@ -238,7 +239,7 @@ export default {
   data(){
     return {
       selectedColors: this.productCustomFields,
-
+      selectedProduct: this.select_product,
       open: false,
 
       addSizeError:"",
@@ -410,6 +411,7 @@ export default {
     },
 
     onSubmit(){
+      debugger
       const updatedProduct = this.currentData;
       const form = new FormData();
       const img = updatedProduct.imgArray.find((item=>item!==''))
@@ -532,28 +534,32 @@ export default {
       if(updatedProduct.promoPrice > updatedProduct.price){
         this.$warningAlert("Promotional price must be < original price")
       }
-      else{
-        this.axios.put(this.url('updateProduct',updatedProduct._id),form)
-          .then(()=>{
-            this.getProducts()
-            this.$informationAlert('Changes are saved')
-            $('#edit-product').modal("hide")
-            this.validateFrom = false;
-            this.validateTo = false
-            this.no_category = '';
-            this.validateQuantity = false;
-            this.validateName = false;
-            this.validatePrice = false;
+      if (updatedProduct.productCustomField1) {
+        form.append('productCustomField1', updatedProduct.productCustomField1);
+      }
+      if (updatedProduct.productCustomField2) {
+        form.append('productCustomField2', updatedProduct.productCustomField2);
+      }
+      this.axios.put(this.url('updateProduct',updatedProduct._id),form)
+        .then(()=>{
+          this.getProducts()
+          this.$informationAlert('Changes are saved')
+          $('#edit-product').modal("hide")
+          this.validateFrom = false;
+          this.validateTo = false
+          this.no_category = '';
+          this.validateQuantity = false;
+          this.validateName = false;
+          this.validatePrice = false;
 
-            this.productCustomFields.productCustomColors.values.map(field => {
-            this.selectedColors.push({
-              name: field.name,
-              color: field.color,
-              selected: false
-            })
+          this.productCustomFields.productCustomColors.values.map(field => {
+          this.selectedColors.push({
+            name: field.name,
+            color: field.color,
+            selected: false
           })
         })
-      }
+      })
     }
   },
 

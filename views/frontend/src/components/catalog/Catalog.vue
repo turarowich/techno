@@ -146,7 +146,8 @@
                         <ul class="list-group">
                           <li class="list-group-item" data-toggle="modal" data-target="#edit-category"
                             @click="selectCategory(nestedChild._id)">Edit</li>
-                          <li class="list-group-item" @click.stop.prevent="deleteCategory(nestedChild._id)">Delete</li>
+                          <li class="list-group-item" @click.stop.prevent="deleteCategory(nestedChild._id)"
+                            >Delete</li>
                         </ul>
                       </div>
                     </div>
@@ -373,7 +374,6 @@ export default {
     fetchSettings(){
       this.axios.get(this.url('getSettings'))
         .then((response) => {
-          debugger
           if(response.data.object.productCustomFields) {
             this.customFields.productCustomField1 = response.data.object.productCustomField1
             this.customFields.productCustomField2 = response.data.object.productCustomField2
