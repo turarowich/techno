@@ -512,8 +512,8 @@
           facebook:this.facebook,
           instagram:this.instagram,
           website:this.website,
-          productCustomField1: this.productCustomField1,
-          productCustomField2: this.productCustomField2,
+          productCustomField1: {name: this.productCustomField1, value: ''},
+          productCustomField2: {name:this.productCustomField2, value: ''},
           productCustomFields: this.productCustomFields,
           productCustomColors: this.productCustomColors,
         }).then(function (response) {

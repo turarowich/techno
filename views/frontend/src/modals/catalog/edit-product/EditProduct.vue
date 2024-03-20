@@ -37,12 +37,12 @@
                 </div>
                 <div class="d-flex  mb-3">
                   <div style="width:35%" class="mr-3">
-                        <label class="product-label">{{ this.currentData.productCustomField1 || 'Custom field 1' }}</label><br>
-                        <input  v-model="currentData.productCustomField1" style="width:100%" class="cashback-input">
+                        <label class="product-label">{{ this.selectedColors.productCustomField1.name || 'Custom field 1' }}</label><br>
+                        <input  v-model="selectedColors.productCustomField1.value" style="width:100%" class="cashback-input">
                       </div>
                       <div style="width:35%" class="mr-3">
-                        <label class="product-label">{{ this.currentData.productCustomField2 || 'Custom field 2'}}</label><br>
-                        <input  v-model="currentData.productCustomField2" style="width:100%" class="cashback-input">
+                        <label class="product-label">{{ this.selectedColors.productCustomField2.name || 'Custom field 2'}}</label><br>
+                        <input  v-model="selectedColors.productCustomField1.value" style="width:100%" class="cashback-input">
                       </div>
                       <div style="width:30%;">
                         <label class="product-label">Select colors</label><br>
@@ -57,7 +57,6 @@
                               v-for="(option, i) in productCustomFields.productCustomColors.values" 
                               :key="i" 
                               @click=" 
-                                selected = option;
                                 selectedColors.productCustomColors.values[i].selected = !selectedColors.productCustomColors.values[i].selected
                               "
                               class="item"
