@@ -546,7 +546,15 @@ export default {
             this.validateQuantity = false;
             this.validateName = false;
             this.validatePrice = false;
+
+            this.productCustomFields.productCustomColors.values.map(field => {
+            this.selectedColors.push({
+              name: field.name,
+              color: field.color,
+              selected: false
+            })
           })
+        })
       }
     }
   },

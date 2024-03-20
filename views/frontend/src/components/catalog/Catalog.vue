@@ -241,6 +241,8 @@
 </template>
 
 <script>
+  /* eslint-disable */
+
 import Spinner from "../Spinner";
 import EditProduct from "@/modals/catalog/edit-product/EditProduct";
 import CatalogItem from "@/components/catalog/CatalogItem";
@@ -371,6 +373,7 @@ export default {
     fetchSettings(){
       this.axios.get(this.url('getSettings'))
         .then((response) => {
+          debugger
           if(response.data.object.productCustomFields) {
             this.customFields.productCustomField1 = response.data.object.productCustomField1
             this.customFields.productCustomField2 = response.data.object.productCustomField2
