@@ -121,7 +121,7 @@
           When you enable this item, you can add color to products
         </p>
         <div class="d-flex">
-          <div :style="{ background: productCustomColors.values[0] }" class="dropdown dropMenu color-picker-button" style="size: 20px; padding: 0; left: 22px;
+          <div :style="{ background: currentNewColor.value }" class="dropdown dropMenu color-picker-button" style="size: 20px; padding: 0; left: 22px;
                                                                                             position: absolute;
                                                                                             border-radius: 5px;
                                                                                             margin-top: 8px;"

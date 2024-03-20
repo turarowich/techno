@@ -637,8 +637,9 @@ props:['listCategory', 'getProducts', 'productCustomFields'],
   display: flex; 
   align-items: center;
   padding: 20px;
+  padding-left: 0;
   padding-top: 5px;
-  padding-bottom: 5px;
+  padding-bottom: 0;
   width: 100%;
   border-bottom: 1px solid #D3D3D3;
   
@@ -667,7 +668,8 @@ props:['listCategory', 'getProducts', 'productCustomFields'],
   border-radius: 5px;
   background-color: white;  
   max-height: 250px;
-
+  padding-left: 14px;
+  padding-right: 10px;
 
 
 
