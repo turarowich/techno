@@ -34,26 +34,26 @@
 
                     <div class="d-flex " style="margin-top:20px">
                       <div style="width:35%" class="mr-3" v-if="productCustomFields.productCustomFields">
-                        <label class="product-label">{{ this.productCustomFields.productCustomField1 }}</label><br>
+                        <label class="product-label">{{ this.productCustomFields?.productCustomField1 || 'Custom field 1' }}</label><br>
                         <input  v-model="newProduct.productCustomField1" style="width:100%" class="cashback-input">
                       </div>
-                      <div style="width:35%" class="mr-3" v-if="!productCustomFields.productCustomFields">
+                      <!-- <div style="width:35%" class="mr-3" v-if="!productCustomFields.productCustomFields">
                         <label class="product-label">{{ this.productCustomFields?.productCustomField1 || 'Custom field 1' }}</label><br>
                         <input disabled v-model="newProduct.productCustomField1" style="width:100%" class="cashback-input">
-                      </div>
+                      </div> -->
                       <div style="width:35%" class="quantity-category mr-3" v-if="productCustomFields.productCustomFields">
-                        <label class="product-label">{{ this.productCustomFields.productCustomField2 }}</label><br>
+                        <label class="product-label">{{ this.productCustomFields?.productCustomField2  || 'Custom field 2' }}</label><br>
                         <input v-model="newProduct.productCustomField2" class="cashback-input">
                       </div>
-                      <div style="width:35%" class="quantity-category mr-3" v-if="!productCustomFields.productCustomFields">
+                      <!-- <div style="width:35%" class="quantity-category mr-3" v-if="!productCustomFields.productCustomFields">
                         <label class="product-label">{{ this.productCustomFields?.productCustomField2  || 'Custom field 2'}}</label><br>
                         <input disabled v-model="newProduct.productCustomField2" class="cashback-input">
-                      </div>
+                      </div> -->
                       <div style="width:30%;">
                         <label class="product-label">Select colors</label><br>
 
 
-                        <div id="customSelect" class="custom-select" @blur="blurred">
+                        <div v-if="productCustomFields.productCustomColors.required" id="customSelect" class="custom-select" @blur="blurred">
                           <div class="selected" @click="openColorSelect">
                             Select Colors
                           </div>
