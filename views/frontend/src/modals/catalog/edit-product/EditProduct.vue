@@ -62,10 +62,9 @@
                               "
                               class="item"
                             >
-                            
-                              <div :style="{background: option.value}" class="colorBox"> </div>
+                              <div :style="{background: option.value.hex}" class="colorBox"> </div>
                               <div class="name">
-                                {{ option.name }}
+                                <label>{{ option.name }}</label>
                               </div>
                               <div class="checkBox">
                                 <label class="custom-checkbox">
@@ -612,12 +611,18 @@ export default {
 }
 
 .custom-select .items .name {
-  color: #767676;
+  color: #000;
   padding-left: 1em;
   cursor: pointer;
   user-select: none;
   height: 49px;
-  padding-top: 10px;
+  padding-top: 14px;
+}
+.custom-select .items .name label {
+  overflow: hidden;
+  text-overflow: ellipsis; 
+  max-width: 70px;
+  white-space: nowrap;
 }
 .custom-select .items .item {
   display: flex; 
@@ -630,13 +635,14 @@ export default {
   
 }
 .custom-select .items .colorBox{
-  width: 30px; 
+  min-width: 30px; 
   height: 30px;
   border-radius: 5px;
 }
 .custom-select .items .checkBox{
   margin-left: auto;
   margin-top: 5px;
+  margin-right: -20px;
 }
 
 .custom-select .items {

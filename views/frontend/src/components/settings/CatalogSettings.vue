@@ -121,7 +121,7 @@
           When you enable this item, you can add color to products
         </p>
         <div class="d-flex">
-          <div :style="{ background: currentNewColor.value }" class="dropdown dropMenu color-picker-button" style="size: 20px; padding: 0; left: 22px;
+          <div :style="{ background: currentNewColor.value.hex }" class="dropdown dropMenu color-picker-button" style="size: 20px; padding: 0; left: 22px;
                                                                                             position: absolute;
                                                                                             border-radius: 5px;
                                                                                             margin-top: 8px;"
@@ -132,18 +132,12 @@
           </div>
           <div class="dropdown-menu" aria-labelledby="dropdownMenu">
             <div :style="{background: color}">
-              <ColorPicker
-                style="width: 250px;"
-                theme="light"
-                :color="color"
-                :sucker-hide="false"
-                :sucker-canvas="suckerCanvas"
-                :sucker-area="suckerArea"
-                @changeColor="changeColor($event, 0)"
-                @openSucker="openSucker"
-                @inputFocus="inputFocus"  
-                @inputBlur="inputBlur"
+
+              <Sketch 
+                v-model="currentNewColor.value" 
+                @input="()=>{console.log('change color')}"
               />
+
             </div>
           </div>
         </div>
@@ -152,7 +146,7 @@
               @click="addColor()" class="discount-btn ml-2"><img alt="+" src="../../assets/icons/enable+.svg"></button>
         </div>  
         <div class="custom-fields col-12 pr-0 pl-0" v-for="(item, index) in productCustomColors.values" :key="index" >
-          <div class="dropdown dropMenu" :style="{ background: productCustomColors.values[index].value }" style="size: 30px; padding: 0;
+          <div class="dropdown dropMenu" :style="{ background: productCustomColors.values[index].value.hex }" style="size: 30px; padding: 0;
                                                                                 position: absolute;
                                                                                 size: 30px;
                                                                                 margin-top: 8px;
@@ -167,7 +161,7 @@
             @click="removeVal('productCustomColors', index)" class="discount-btn ml-2"><img alt="x" src="../../assets/icons/x.svg"></button>
           </div>
         </div>
-        
+
         
         <button type="button" @click="saveCatalogSettings" class="save mb-3">Save</button>
       </div>
@@ -233,17 +227,17 @@
   </template>
   
   <script>
-  /* eslint-disable */
-  import Picker from "@/components/settings/Picker";
-  
-  import { ColorPicker } from 'vue-color-kit'
+  import { Sketch } from '@ckpack/vue-color';
+  import $ from "jquery";
+
+
+  // import { ColorPicker } from 'vue-color-kit'
   import Spinner from "../Spinner";
   export default {
     name: "CatalogSettings",
     components:{
-      ColorPicker,
-      Picker,
-      Spinner
+      Spinner,
+      Sketch
     },
     data(){
       return{
@@ -278,7 +272,7 @@
         },
         currentNewColor: {
           name: '',
-          value: 'black'
+          value: { hex: '#000' }
         }
         // previewImage:require('../../assets/icons/profile-img.svg'),
       }
@@ -338,16 +332,13 @@
       this.productCustomColors.values.push(this.currentNewColor);
       this.currentNewColor = {
         name: '',
-        value: 'black' 
+        value: { hex: '#000'} 
       }
     },
       changePickerColor() {
           $('.siding-bar').removeClass('active')
         },
-      changeColor(color, index) {
-        debugger
-        this.currentNewColor.value = color.hex;
-      },
+
       removeVal(field, index){
         this[field].values.splice(index, 1)
       },
@@ -418,9 +409,7 @@
                   that.$warningAlert(error.response.data.msg)
               }
           if (error.response) {
-            // console.log(error.response.status);
-            // console.log(error.response.headers);
-            // that.displayMessages(Object.values(error.response.data.errors),"Errors");
+            console.log(error.message)
           }
         });
       },
@@ -458,9 +447,6 @@
               if(error.response.data && !error.response.data.errors){
                   that.$warningAlert(error.response.data.msg)
               }
-            // console.log(error.response.status);
-            // console.log(error.response.headers);
-            // that.displayMessages(Object.values(error.response.data.errors),"Errors");
           }
         });
       },
@@ -499,9 +485,6 @@
               if(error.response.data && !error.response.data.errors){
                   that.$warningAlert(error.response.data.msg)
               }
-            // console.log(error.response.status);
-            // console.log(error.response.headers);
-            // that.displayMessages(Object.values(error.response.data.errors),"Errors");
           }
         });
       },
@@ -511,8 +494,6 @@
       saveCatalogSettings(){
         let that=this;
         let url = this.url('updateSettings');
-        //eslint-disable-next-line 
-        debugger
         this.axios.put(url, {
           catalogStatus:this.catalog_status,
           catalogUrl:this.catalogUrl,
@@ -579,8 +560,6 @@
           that.instagram = settings.instagram || '';
           that.website = settings.website || '';
           that.spinner = false;
-          // es-lint-disable-next-line
-          debugger
           that.productCustomField1 = settings?.productCustomField1 ?? ``;
           that.productCustomField2 = settings?.productCustomField2 ?? ``;
           that.productCustomFields = settings?.productCustomFields ?? false;
@@ -598,7 +577,8 @@
   </script>
   
   <style scoped>
-  
+  /* @import url('vue-accessible-color-picker/styles'); */
+
   .discount-btn{
     height: 45px;
     flex: 0 0 45px;

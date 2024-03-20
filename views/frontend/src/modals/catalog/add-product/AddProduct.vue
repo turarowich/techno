@@ -67,9 +67,9 @@
                               class="item"
                             >
                             
-                              <div :style="{background: option.value}" class="colorBox"> </div>
+                            <div :style="{background: option.value.hex}" class="colorBox"> </div>
                               <div class="name">
-                                {{ option.name }}
+                                <label>{{ option.name }}</label>
                               </div>
                               <div class="checkBox">
                                 <label class="custom-checkbox">
@@ -626,32 +626,38 @@ props:['listCategory', 'getProducts', 'productCustomFields'],
 }
 
 .custom-select .items .name {
-  color: #767676;
+  color: #000;
   padding-left: 1em;
   cursor: pointer;
   user-select: none;
   height: 49px;
-  padding-top: 10px;
+  padding-top: 14px;
+}
+.custom-select .items .name label {
+  overflow: hidden;
+  text-overflow: ellipsis; 
+  max-width: 70px;
+  white-space: nowrap;
 }
 .custom-select .items .item {
   display: flex; 
   align-items: center;
   padding: 20px;
-  padding-left: 0;
   padding-top: 5px;
-  padding-bottom: 0;
+  padding-bottom: 5px;
   width: 100%;
   border-bottom: 1px solid #D3D3D3;
   
 }
 .custom-select .items .colorBox{
-  width: 30px; 
+  min-width: 30px; 
   height: 30px;
   border-radius: 5px;
 }
 .custom-select .items .checkBox{
   margin-left: auto;
   margin-top: 5px;
+  margin-right: -20px;
 }
 
 .custom-select .items {
@@ -668,8 +674,7 @@ props:['listCategory', 'getProducts', 'productCustomFields'],
   border-radius: 5px;
   background-color: white;  
   max-height: 250px;
-  padding-left: 14px;
-  padding-right: 10px;
+
 
 
 
