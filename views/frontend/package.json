@@ -40,7 +40,7 @@
     "spartan-multi-image-picker": "^1.0.3-rc-1",
     "sweetalert2": "^10.15.5",
     "vue": "^3.0.5",
-    "vue-color-kit": "^1.0.3",
+    "vue-color-kit": "^1.0.6",
     "vue-infinite-loading": "^2.4.5",
     "vue-router": "^4.0.3",
     "vue-scroll-behavior": "^0.3.0",
