@@ -2,6 +2,18 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const settingsSchema = new Schema({
+    orderStatuses: {
+        required: {
+            type: Boolean,
+            required: true,
+            default: false
+        },
+        values: [{
+            type: String,
+            required: false,
+            default:'',
+        }]
+    },
     scannerStatus: {
         type: Boolean,
         required: false,
@@ -83,14 +95,28 @@ const settingsSchema = new Schema({
     },
     ////Catalog settings
     productCustomField1: {
-        type: String,
-        required: false,
-        default: ""
+        name: {
+            type: String,
+            required: false,
+            default: ""
+        }, 
+        value:{
+            type: String,
+            required: false,
+            default: ""
+        }
     },
     productCustomField2: {
-        type: String,
-        required: false,
-        default: ""
+        name: {
+            type: String,
+            required: false,
+            default: ""
+        }, 
+        value:{
+            type: String,
+            required: false,
+            default: ""
+        }
     },
     productCustomFields: {
         type: Boolean,
