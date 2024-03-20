@@ -135,12 +135,12 @@ const productSchema = new Schema({
         required: false        
     }],
     productCustomField1: {
-        type: String,
-        required: false,
+        type: Schema.Types.Mixed,
+        required: false       
     },
     productCustomField2: {
-        type: String,
-        required: false,
+        type: Schema.Types.Mixed,
+        required: false       
     }
 })
 

@@ -286,8 +286,8 @@ export default {
       select_product: '',
       select_category: '',
       customFields: {
-        productCustomField1: '',
-        productCustomField2: '',
+        productCustomField1: {name: 'Custom field 1', value: ''},
+        productCustomField2: {name:'Custom field 1', value: ''},
         productCustomFields: false,
         productCustomColors:{
           required: false,
