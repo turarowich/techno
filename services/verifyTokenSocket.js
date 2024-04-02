@@ -6,16 +6,16 @@ function verifyTokenSocket(socket, next) {
     // Header names in Express are auto-converted to lowercase
     // console.log(socket.id,"verifyTokenSocket",token,'o');
     var token = socket.handshake.headers.token
-    if (!token){
+    if (!token || token === "null"){
         // return res.status(403).send({ auth: false, message: 'No token provided.' });
         // console.log(socket.id,"No verifyTokenSocket");
         next();
     }   
-    console.log("token is", token)
+    // console.log("token is", token);
+    // console.log("token is", !token || token === "null");
     if(token){
         jwt.verify(token, config.secret_key, function (err, decoded) {
             if (err){
-                console.log("verify token entered", err)
                 // console.log(socket.id,`${err} verifyTokenSocket`);
                 next();
             }

@@ -11,13 +11,12 @@
 
   <div class="login">
    <h1 class="welcome-sign-in">Welcome<br> to loy <span>Gift</span></h1>
-    <div  v-if=" addErrorClass === true" class="text-left d-flex justify-content-between mb-3"><span>Incorrect username or password</span><img @click="closeErrorClass" src="../../assets/icons/redX.svg"/></div>
+    <div  v-if=" errorStatus === true" class="text-left d-flex justify-content-between mb-3"><span>{{ errorMessage }}</span><img @click="errorStatus = false" src="../../assets/icons/redX.svg"/></div>
     <form @submit.prevent="loginSubmit">
       <label class="label">Login</label>
       <input v-model="login.email" name="email" class="login-input">
       <label class="label">Password</label>
       <div class="password d-flex justify-space-between align-items-center "><input  name="password" v-model="login.password" id="password"  class="login-input" style="background: transparent" type="password"><img id="hide-eye" @click="showPassword" src="../../assets/icons/Hide.svg"><img id="show-eye"  @click="showPassword" src="../../assets/icons/eye.svg"></div>
-
         <div class="remind d-flex justify-content-between align-item-center">
           <div class="d-flex ">
             <label class="custom-checkbox"><input type="checkbox"><span class="checkmark"></span></label>
@@ -56,22 +55,16 @@ name: "SignIn",
       password:'',
 
     },
-    errorClass:false
+    errorStatus:false,
+    errorMessage:"",
   }
   },
   computed:{
-    addErrorClass(){
-      return this.errorClass;
-    }
+
   },
-
-
   methods:{
-    closeErrorClass(){
-      this.errorClass = false;
-    },
     showPassword: function () {
-      var x = document.getElementById("password");
+      let x = document.getElementById("password");
       if (x.type === "password") {
         x.type = "text";
         $('#hide-eye').css({'display':'none'})
@@ -80,26 +73,42 @@ name: "SignIn",
         x.type = "password";
         $('#show-eye').css({'display':'none'})
         $('#hide-eye').css({'display':'block'})
-
       }
     },
     loginSubmit(){
-
       const data  = new FormData();
       data.append('email', this.login.email)
       data.append('password', this.login.password)
       this.axios.post(this.url('login'), data)
       .then((resp)=>{
+        this.errorStatus = false;
         localStorage.setItem('token', resp.data.token)
         localStorage.setItem('user',JSON.stringify(resp.data.object))
         this.changeToken();
         this.$router.push('/orders')
       })
-      .catch(()=>{
+      .catch((error)=>{
+        this.errorStatus = true;
         localStorage.removeItem('token')
-        this.errorClass= true;
         this.login.password = ''
-
+        if (error.response) {
+          // Request made and server responded
+          // console.log(error.response.data.msg);
+          // console.log(error.response.status);
+          if(error.response.data && error.response.data.msg){
+            this.errorMessage = error.response.data.msg;
+          }else{
+            this.errorMessage = "Server error";
+          }
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.log(error.request,"2");
+          this.errorMessage = "Server error";
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log('Error', error.message,"3");
+          this.errorMessage = "Server error";
+        }
       })
     }
   }

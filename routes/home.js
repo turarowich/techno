@@ -18,6 +18,9 @@ module.exports = function(app, passport){
     
     app.post('/login', authController.login);
     app.post('/loginClient', authController.loginClient);
+
+    app.post('/getClientInfoScan', clientController.getClientInfoScan);
+
     app.post('/loginClientSocial', authController.loginClientSocial);
     app.post('/register', authController.register);
     app.post('/registerClient', authController.registerClient);

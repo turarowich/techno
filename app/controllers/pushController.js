@@ -78,19 +78,27 @@ class PushController {
                 sound: "default",
                 topic: settings.APNsTopic
             });
-            apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
-                if (response.failed.length){
+
+
+            let allClients = await Client.find({});
+            allClients.forEach((client)=>{
+                thisClass.sendNewMessageAndroid(req.db,client._id,{text:data.desc},data.name,"news");
+            })
+
+
+            // apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
+            //     if (response.failed.length){
                     
-                    response.failed.forEach((fail) => {
-                        if (fail.status == '400' && fail.response.reason == 'BadDeviceToken'){
-                            let device = devicesIOS.find(device => device.token == fail.device)
-                            if(device) device.deleteOne()
-                        }
-                    });
-                }
-            }).catch(function (error) {
-                console.log("Faled to send message to ", error);
-            });
+            //         response.failed.forEach((fail) => {
+            //             if (fail.status == '400' && fail.response.reason == 'BadDeviceToken'){
+            //                 let device = devicesIOS.find(device => device.token == fail.device)
+            //                 if(device && device.type == 'ios') device.deleteOne()
+            //             }
+            //         });
+            //     }
+            // }).catch(function (error) {
+            //     console.log("Faled to send message to ", error);
+            // });
         }
         res.status(result.status).json(result);
     };
@@ -123,7 +131,10 @@ class PushController {
                     response.failed.forEach((fail) => {
                         if (fail.status == '400' && fail.response.reason == 'BadDeviceToken') {
                             let device = devicesIOS.find(device => device.token == fail.device)
-                            if (device) device.deleteOne()
+                            if (device && device.type == 'ios') {
+                                device.deleteOne();
+                                console.log("DELETED@@@@",device);
+                            }
                         }
                     });
                 }
@@ -134,12 +145,14 @@ class PushController {
     };
 
     sendNewMessageAndroid =  async  function (req_db, client, message,title = "New message",type="chat") {
-        console.log("sendNewMessageAndroid",req_db)
+        console.log("sendNewMessageAndroid",req_db,client,message,title,type)
         let db = useDB(req_db)
         let Device = db.model("Device");
-        const admin = require("../../app");
+        const { admin } = require("../../app");
         try{
-            let devicesAndroid = await Device.find({ 'type': 'android', 'client': client })
+            // let devicesAndroid = await Device.find({ 'type': 'android', 'client': client });
+            let devicesAndroid = await Device.find({ 'client': client });
+            console.log(devicesAndroid,"devicesAndroid");
             devicesAndroid.forEach(function (device){
                 try{
                     const message1 = {
@@ -207,12 +220,12 @@ class PushController {
             'msg': 'Something went wrong'
         }
         if (clients && settings) {
-            let query = { 'type': 'ios', 'client': { $in: clients } }
-
-            if (req.fields.sendToAll){
-                query = {}
-            }
-            let devicesIOS = await Device.find(query)
+            // let query = { 'type': 'ios', 'client': { $in: clients } }s
+            // if (req.fields.sendToAll){
+            //     query = {}
+            // }
+            // console.log(query,"query");
+            // let devicesIOS = await Device.find(query)
             let dataForNews = {
                 name: data.name,
                 name_ru: data.name_ru,
@@ -225,31 +238,36 @@ class PushController {
             }
             let clientNews = await createClientNews(dataForNews, db)
             await Client.updateMany({}, { $push: { news: clientNews } });
-            let noteIOS = new apn.Notification({
-                alert: {
-                    title: data.name,
-                    subtitle: "",
-                    body: data.desc,
-                },
-                mutableContent: 1,
-                payload: dataForNews,
-                sound: "default",
-                topic: settings.APNsTopic
-            });
-            if (apnProvider){
-                apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
-                    if (response.failed.length) {
-                        response.failed.forEach((fail) => {
-                            if (fail.status == '400' && fail.response.reason == 'BadDeviceToken') {
-                                let device = devicesIOS.find(device => device.token == fail.device)
-                                if (device) device.deleteOne()
-                            }
-                        });
-                    }
-                }).catch(function (error) {
-                    console.log("Faled to send message to ", error);
-                });
-            }
+            // let noteIOS = new apn.Notification({
+            //     alert: {
+            //         title: data.name,
+            //         subtitle: "",
+            //         body: data.desc,
+            //     },
+            //     mutableContent: 1,
+            //     payload: dataForNews,
+            //     sound: "default",
+            //     topic: settings.APNsTopic
+            // });
+            // if (apnProvider){
+            //     apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
+            //         console.log(response,"APN RESPONSE");
+            //         if (response.failed.length) {
+            //             console.log("APN FAIL");
+            //             response.failed.forEach((fail) => {
+            //                 if (fail.status == '400' && fail.response.reason == 'BadDeviceToken') {
+            //                     let device = devicesIOS.find(device => device.token == fail.device)
+            //                     if (device && device.type == 'ios') {
+            //                         device.deleteOne();
+            //                         console.log("DELITINGG",device);
+            //                     }
+            //                 }
+            //             });
+            //         }
+            //     }).catch(function (error) {
+            //         console.log("Faled to send message to ", error);
+            //     });
+            // }
             //Android
             try{
                 clients.split(',').forEach(client=>{
@@ -505,11 +523,16 @@ class PushController {
                     });
                     if (apnProvider) {
                         apnProvider.send(noteIOS, devicesIOS.map(device => device.token)).then((response) => {
+                            console.log(response,"APN RESPONSE");
                             if (response.failed.length) {
+                                console.log("FAIL")
                                 response.failed.forEach((fail) => {
                                     if (fail.status == '400' && fail.response.reason == 'BadDeviceToken') {
                                         let device = devicesIOS.find(device => device.token == fail.device)
-                                        if (device) device.deleteOne()
+                                        if (device && device.type == 'ios') {
+                                            device.deleteOne()
+                                            console.log("DELITINGG11",device);
+                                        }
                                     }
                                 });
                             }

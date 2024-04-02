@@ -35,7 +35,49 @@
                     </select>
                   </div>
                 </div>
+                <div class="d-flex  mb-3">
+                  <div style="width:35%" class="mr-3">
+                    
+                        <label class="product-label">{{ this.selectedColors.productCustomField1.name || 'Custom field 1' }}</label><br>
+                        <input  v-model="currentData.productCustomField1" style="width:100%" class="cashback-input">
+                      </div>
+                      <div style="width:35%" class="mr-3">
+                        <label class="product-label">{{ this.selectedColors.productCustomField2.name || 'Custom field 2'}}</label><br>
+                        <input  v-model="currentData.productCustomField2" style="width:100%" class="cashback-input">
+                      </div>
+                      <div style="width:30%;">
+                        <label class="product-label">Select colors</label><br>
 
+
+                        <div id="customSelect" class="custom-select" @blur="blurred">
+                          <div class="selected" @click="openColorSelect">
+                            Select Colors
+                          </div>
+                          <div class="items" :class="{ selectHide: !open }">
+                            <div
+                              v-for="(option, i) in productCustomFields.productCustomColors.values" 
+                              :key="i" 
+                              @click=" 
+                                selectedColors.productCustomColors.values[i].selected = !selectedColors.productCustomColors.values[i].selected
+                              "
+                              class="item"
+                            >
+                              <div :style="{background: option.value.hex}" class="colorBox"> </div>
+                              <div class="name">
+                                <label>{{ option.name }}</label>
+                              </div>
+                              <div class="checkBox">
+                                <label class="custom-checkbox">
+                                  <input type="checkbox" v-model="selectedColors.productCustomColors.values[i].selected">
+                                  <span class="checkmark">
+                                </span>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          </div>
+                        </div>
+                </div>
                 <label>Name in russian</label><br>
                 <input v-model="currentData.name_ru" class="cashback-input mb-3" style="width:50%"><br>
                 <label>Description</label>
@@ -49,22 +91,49 @@
                 <span>Has Sizes</span>
               </div>
               <div v-if="currentData.hasMultipleTypes">
-                <div>SIZES</div>
                 <div class="d-flex" style="justify-content: space-between;">
                   <div style="flex: 1 1 0px">Size</div>
                   <div style="flex: 1 1 0px">Quantity</div>
                   <div style="flex: 1 1 0px">Price</div>
                   <div style="flex: 1 1 0px">VendorCode</div>
+                  <div style="width: 22px;"></div>
                 </div>
                 <div v-for="(size, index) in currentData.sizes" :key="index" class="d-flex" style="justify-content: space-between;">
                   <div style="flex: 1 1 0px">{{ size.size }}</div>
                   <div style="flex: 1 1 0px">{{ size.quantity }}</div>
                   <div style="flex: 1 1 0px">{{ size.price }} </div>
                   <div style="flex: 1 1 0px">{{ size.vendorCode }}</div>
+                  <div>
+                    <img @click="removeSize(index)" style="cursor: pointer;" src="../../../assets/icons/greyX.svg">
+                  </div>
+                </div>
+
+
+                <div class="mt-1">
+                  <div class="d-flex newSizeBlock">
+                    <div>
+                      <input placeholder="Size"  v-model="sizeObject.size" type="text" class="form-input cashback-input"  name="size_size">
+                    </div>
+                    <div>
+                      <input placeholder="Quantity" v-model="sizeObject.quantity" type="text" class="form-input cashback-input"  name="size_quantity">
+                    </div>
+                    <div>
+                      <input placeholder="Price" v-model="sizeObject.price" type="text"  class="form-input cashback-input"  name="size_price">
+                    </div>
+                    <div>
+                      <input placeholder="VendorCode" v-model="sizeObject.vendorCode" type="text"  class="form-input cashback-input"  name="size_vendorCode">
+                    </div>
+
+                  </div>
+                  <div class="fill-fields" v-if="addSizeError.length>0">
+                    {{ addSizeError }}
+                  </div>
+                  <span class="save" style="cursor: pointer;width: 120px;" @click="addNewSize">Add Size</span>
+
                 </div>
               </div>
 
-                <div v-else class="d-flex ">
+                <div class="d-flex ">
                   <div style=" width:33.33%; margin-right:8px;">
                     <label>Price</label>
                     <input :class="{errorInput: validatePrice}" name="price" v-model="currentData.price" class="form-input cashback-input" placeholder="Price"  >
@@ -76,6 +145,8 @@
                     <input name="vendorCode" v-model="currentData.vendorCode"  class="form-input cashback-input mb-4" placeholder="Vendor code"  >
                   </div>
                 </div>
+
+
 
                 <div class="d-flex mb-3 mt-3">
                   <label class="custom-checkbox">
@@ -90,7 +161,6 @@
                     <input :class="{errorInput:validatePromoPrice}"  name="promoPrice" v-model="currentData.promoPrice" class="form-input cashback-input" placeholder="Price">
                     <div class="fill-fields" v-if="validatePromoPrice">Fill in the fields</div>
                   </div>
-
                 </div>
 
                 <label class="valid-label mt-4">Period of action</label>
@@ -159,15 +229,26 @@
 </template>
 
 <script>
-
+/* eslint-disable */
 
 import $ from "jquery";
 
 export default {
   name: "EditProduct",
-  props: ['listCategory','select_product','getProducts'],
+  props: ['listCategory','select_product','getProducts', 'productCustomFields'],
   data(){
-    return{
+    return {
+      selectedColors: this.productCustomFields,
+      selectedProduct: this.select_product,
+      open: false,
+
+      addSizeError:"",
+      sizeObject:{
+        size:"",
+        quantity:"",
+        price:"",
+        vendorCode:"",
+      },
       validateName:false,
       validateQuantity:false,
       validatePrice:false,
@@ -195,6 +276,17 @@ export default {
     }
   },
   computed:{
+    setSelectedColors() {
+      return this.productCustomFields.productCustomColors.values.map(field => {
+        this.selectedColors.push({
+          name: field.name,
+          color: field.color,
+          selected: false
+        })
+      });
+
+    },
+  
     mainImg(){
       if(typeof this.currentData.img === 'object'){
         return URL.createObjectURL(this.currentData.img)
@@ -202,7 +294,6 @@ export default {
       return this.currentData.img
     },
     imagePreview(){
-
       return  this.currentData.imgArray.map((item)=>{
         if(this.currentData.imgArray.length>0){
           if(item !== null){
@@ -211,13 +302,43 @@ export default {
             }
           }
           return item;
-
         }
       })
     },
 
   },
   methods:{
+    openColorSelect() {
+      console.log('clicked');
+      this.open = !this.open;
+    },
+    isNumeric(str) {
+      if (typeof str != "string") return false // we only process strings!
+      return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+          !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
+    },
+    removeSize(index){
+      this.currentData.sizes.splice(index,1);
+    },
+    addNewSize(){
+      if(this.sizeObject.size.length<1){
+        this.addSizeError = "Fill in size name";
+        return;
+      }
+      if(this.sizeObject.quantity.length<1 || !this.isNumeric(this.sizeObject.quantity)){
+        this.addSizeError = "Fill in size quantity with a numeral";
+        return;
+      }
+      if(this.sizeObject.price.length<1 || !this.isNumeric(this.sizeObject.price)){
+        this.addSizeError = "Fill in size price with a numeral";
+        return;
+      }
+      this.currentData.sizes.push({ ...this.sizeObject });
+      for (const property in this.sizeObject) {
+        this.sizeObject[property] = "";
+      }
+      this.addSizeError = "";
+    },
 
     removeImage(idx){
       this.currentData.imgArray.forEach((item,index)=>{
@@ -290,6 +411,7 @@ export default {
     },
 
     onSubmit(){
+      debugger
       const updatedProduct = this.currentData;
       const form = new FormData();
       const img = updatedProduct.imgArray.find((item=>item!==''))
@@ -371,12 +493,28 @@ export default {
         this.validatePromoPrice = false;
       }
 
-
-
       if((new Date(this.promoEnd.formatted).getTime() < new Date(this.today).getTime())){
         this.$warningAlert('End date must greater than todays date')
         return;
       }
+
+      if(updatedProduct.hasMultipleTypes && updatedProduct.sizes.length<0){
+        this.$warningAlert('Sizes list is empty')
+        return;
+      }
+      const colors = [];
+      if (this.selectedColors.productCustomColors.required) {
+        this.selectedColors.productCustomColors.values.forEach(color => {
+          if(color.selected) {
+            colors.push({
+              name: color.name,
+              value: color.value
+            }
+          );
+          }
+        })
+      }
+
 
       form.append("name", updatedProduct.name)
       form.append("name_ru", updatedProduct.name_ru)
@@ -388,26 +526,40 @@ export default {
       form.append("recommend", updatedProduct.recommend)
       form.append('promoStart',this.promoStart.obj)
       form.append('promoEnd',this.promoEnd.obj)
-
+      form.append('sizes',JSON.stringify(updatedProduct.sizes))
+      form.append('hasMultipleTypes',updatedProduct.hasMultipleTypes)
+      if (colors.length > 0) {
+        form.append('productCustomColors', JSON.stringify(colors))
+      }
       if(updatedProduct.promoPrice > updatedProduct.price){
         this.$warningAlert("Promotional price must be < original price")
       }
-      else{
-        this.axios.put(this.url('updateProduct',updatedProduct._id),form)
-            .then(()=>{
-              this.getProducts()
-              this.$informationAlert('Changes are saved')
-              $('#edit-product').modal("hide")
-              this.validateFrom = false;
-              this.validateTo = false
-              this.no_category = '';
-              this.validateQuantity = false;
-              this.validateName = false;
-              this.validatePrice = false;
-            })
+      if (updatedProduct.productCustomField1) {
+        form.append('productCustomField1', updatedProduct.productCustomField1);
       }
+      if (updatedProduct.productCustomField2) {
+        form.append('productCustomField2', updatedProduct.productCustomField2);
+      }
+      this.axios.put(this.url('updateProduct',updatedProduct._id),form)
+        .then(()=>{
+          this.getProducts()
+          this.$informationAlert('Changes are saved')
+          $('#edit-product').modal("hide")
+          this.validateFrom = false;
+          this.validateTo = false
+          this.no_category = '';
+          this.validateQuantity = false;
+          this.validateName = false;
+          this.validatePrice = false;
 
-
+          this.productCustomFields.productCustomColors.values.map(field => {
+          this.selectedColors.push({
+            name: field.name,
+            color: field.color,
+            selected: false
+          })
+        })
+      })
     }
   },
 
@@ -447,6 +599,7 @@ export default {
     },
   },
   mounted() {
+
     this.selectDates();
     this.imgSrc = this.$server;
   },
@@ -454,6 +607,97 @@ export default {
 </script>
 
 <style scoped>
+.items.closed {
+  display: none;
+}
+.custom-select .selected.open {
+  border: 1px solid #ad8225;
+  border-radius: 6px 6px 0px 0px;
+}
+
+.custom-select .items .name {
+  color: #000;
+  padding-left: 1em;
+  cursor: pointer;
+  user-select: none;
+  height: 49px;
+  padding-top: 14px;
+}
+.custom-select .items .name label {
+  overflow: hidden;
+  text-overflow: ellipsis; 
+  max-width: 70px;
+  white-space: nowrap;
+}
+.custom-select .items .item {
+  display: flex; 
+  align-items: center;
+  padding: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  width: 100%;
+  border-bottom: 1px solid #D3D3D3;
+  
+}
+.custom-select .items .colorBox{
+  min-width: 30px; 
+  height: 30px;
+  border-radius: 5px;
+}
+.custom-select .items .checkBox{
+  margin-left: auto;
+  margin-top: 5px;
+  margin-right: -20px;
+}
+
+.custom-select .items {
+  width: 100%;
+  font-size: 16px;
+  color: #767676;
+  margin-top: 10px;
+  overflow-y: scroll;
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 5px;
+  background-color: white;  
+  max-height: 250px;
+
+
+
+
+
+  
+  
+
+}
+.selected {}
+.custom-select {
+  font-size: 16px;
+  color: #767676;
+  position: relative;
+  width: 100%;
+  text-align: left;
+  outline: none;
+  height: 45px;
+  padding-top: 10px;
+}
+.selectHide {
+  display: none;
+}
+
+.newSizeBlock{
+  gap: 5px;
+  margin-bottom: 5px;
+}
+.newSizeBlock div{
+  flex:1 0 0;
+
+}
+
+
 .show-images{
   object-fit: contain;
 }

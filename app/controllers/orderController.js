@@ -53,11 +53,7 @@ async function checkAndSendWarning(client,cashback_model,transporter,bonus_histo
     }catch (e) {
         console.log(e);
     }
-
-
 }
-
-
 
 async function cancelOrDeleteOrder(ClientBonusHistory,Product,cashback_model,client,order){
     //subtract cashback, balance, add cashback used to client, create new bonus history
@@ -74,7 +70,11 @@ async function cancelOrDeleteOrder(ClientBonusHistory,Product,cashback_model,cli
     //and cashback/points is received only on -> done
     if(order.status === 'Done'){
         let products = order.productsDetails.map(function (item){
-            return {id:item.product._id,quantity:item.quantity}
+            return {
+                id:item.product._id,
+                quantity:item.quantity,
+                size:item.size,
+            }
         })
         let result_object = await products_with_discounts(
             products,   // list of product ids $ quant
@@ -148,6 +148,7 @@ async function products_with_discounts(products=[],Product,promocode=null,discou
     let discountsTotal = 0;
     let productCurrentPrice = [];
     let statusDiscount = {name:'',discount_percentage:0}
+
     for (const product of products) {
         let product_obj = await Product.findById(product.id ?? product._id);
         if(!product_obj){
@@ -169,7 +170,8 @@ async function products_with_discounts(products=[],Product,promocode=null,discou
         temp.quantity = parseFloat(product.quantity)
         let orderItemPrice = parseFloat(product_obj.price);
         //check if product has multiple types/sizes
-        if(product_obj.hasMultipleTypes && product.size._id !== ''){
+
+        if(product_obj.hasMultipleTypes && product?.size?._id && product?.size?._id !== ''){
             orderItemPrice = parseFloat(product.size.price);
             temp.size = product.size;
         }
@@ -201,29 +203,29 @@ async function products_with_discounts(products=[],Product,promocode=null,discou
         if(!temp.discounted){
             if(promocode){
                 //assume that promo is already validated
-                if(promocode.selected_type==="all" || promocode.selected_items_list.includes(product_obj._id.toString())){
+                if (promocode.selected_type==="all" ||
+                    promocode.selected_items_list.includes(product_obj._id.toString()) ||
+                    promocode.selected_type === product_obj.type) {
+
+                        let non_discounted = orderItemPrice;
+                        let discount_percent = non_discounted*(parseFloat(promocode.discount)/100);
+                        let discount_sum = parseFloat(promocode.fixed_sum);
+                        let sum = ((non_discounted-discount_percent)-discount_sum).toFixed(2); //its a string
+                        temp.current_price = parseFloat(sum)>0 ? parseFloat(sum) : 0;
+                        temp.discounted = true;
+                        temp.discountType='promocode';
+                        temp.old_price= orderItemPrice;
+                }
+                if(discount_obj && discount_obj.discount_percentage){
+                    statusDiscount.name = discount_obj.name;
+                    statusDiscount.discount_percentage = discount_obj.discount_percentage;
                     let non_discounted = orderItemPrice;
-                    let discount_percent = non_discounted*(parseFloat(promocode.discount)/100);
-                    let discount_sum = parseFloat(promocode.fixed_sum);
-                    let sum = (non_discounted-discount_percent-discount_sum).toFixed(2); //its a string
-                    temp.current_price = parseFloat(sum)>0 ? parseFloat(sum) : 0;
+                    let discount_percent = non_discounted*(parseFloat(discount_obj.discount_percentage)/100);
+                    temp.current_price = non_discounted-discount_percent; //its a string
                     temp.discounted = true;
-                    temp.discountType='promocode';
+                    temp.discountType='clientStatus';
                     temp.old_price= orderItemPrice;
                 }
-            }
-        }
-        //check clients discount
-        if(!temp.discounted){
-            if(discount_obj && discount_obj.discount_percentage){
-                statusDiscount.name = discount_obj.name;
-                statusDiscount.discount_percentage = discount_obj.discount_percentage;
-                let non_discounted = orderItemPrice;
-                let discount_percent = non_discounted*(parseFloat(discount_obj.discount_percentage)/100);
-                temp.current_price = non_discounted-discount_percent; //its a string
-                temp.discounted = true;
-                temp.discountType='clientStatus';
-                temp.old_price= orderItemPrice;
             }
         }
         productCurrentPrice.push(temp);
@@ -261,7 +263,7 @@ async function calcCashback(products_full_data,cashback_model) {
             let cashback_status = first_cashback.status;
             let cashback_default_percent = parseFloat(first_cashback.default_cashback) / 100;
             if (!cashback_status) {
-                return;
+                return 0;
             }
             //2
             let cashback_products = first_cashback.selectedItemsList;
@@ -272,7 +274,9 @@ async function calcCashback(products_full_data,cashback_model) {
                     //discounted price
                     let sum = prod.current_price || 0;
                     let quantity = prod.quantity || 0;
-                    cashback_from_order += (parseFloat(sum) * quantity * cashback_default_percent).toFixed(2);
+                    console.log(cashback_from_order,);
+                    cashback_from_order += parseFloat((parseFloat(sum) * quantity * cashback_default_percent).toFixed(2));
+
                 })
             } else {
                 //applies to specific products
@@ -285,7 +289,7 @@ async function calcCashback(products_full_data,cashback_model) {
                             let quantity = prod.quantity || 0;
                             let cashback_percent = parseFloat(cash.percentage_cashback) / 100 || 0;
                             let cashback_sum = cash.fixed_cashback || 0;
-                            cashback_from_order = (parseFloat(cashback_from_order) + (parseFloat(sum) * quantity * cashback_percent) + parseFloat(cashback_sum)).toFixed(2);
+                            cashback_from_order = parseFloat((parseFloat(cashback_from_order) + (parseFloat(sum) * quantity * cashback_percent) + parseFloat(cashback_sum)).toFixed(2));
                         }
                     })
                 })
@@ -295,6 +299,7 @@ async function calcCashback(products_full_data,cashback_model) {
     } catch (e) {
         console.log(e);
     }
+    console.log("cashback_from_order",cashback_from_order);
     return cashback_from_order;
 }
 async function checkAndUpdatePromo(promocode=null,client=null) {
@@ -367,6 +372,39 @@ class OrderController{
             'status': 200,
             'msg': 'Sending orders'
         }
+
+        try {
+            result['objects'] = await Order.find({client:req.userID}).sort({ updatedAt: -1 }).populate('products').exec();
+            result['count'] = result['objects'].length;
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.status(result.status).json(result)
+
+    };
+
+    getOrdersAll = async function (req, res) {
+        // let db = useDB(req.db)
+        // let Order = db.model("Order");
+        // let result = {
+        //     'status': 200,
+        //     'msg': 'Sending orders'
+        // }
+
+        // try {
+        //     result['objects'] = await Order.find({client:req.userID}).sort({ updatedAt: -1 }).populate('products').exec();
+        //     result['count'] = result['objects'].length;
+        // } catch (error) {
+        //     result = sendError(error, req.headers["accept-language"])
+        // }
+        // res.status(result.status).json(result);
+
+        let db = useDB(req.db)
+        let Order = db.model("Order");
+        let result = {
+            'status': 200,
+            'msg': 'Sending orders'
+        }
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "orders", parametr: "active" }, db, res)
             if (checkResult) {
@@ -390,16 +428,20 @@ class OrderController{
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
-        console.log(result.objects)
         res.status(result.status).json(result);
+
     };
+
+
+
+
 
     addOrder = async function (req, res) {
         // console.log("start")
         // const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
         // await delay(5000) /// waiting 1 second.
-        console.log(req.fields)
-
+        console.log(req.fields,"NEW LOGS",req.db)
+        console.log(req.path,"PATH");
         let db = useDB(req.db)
         let Order = db.model("Order");
         let Client = db.model("Client");  
@@ -435,6 +477,11 @@ class OrderController{
             }
             let promocode = await PromocodeModel.findById(req.fields.promoCode);
             let delivery = await DeliveryModel.findById(req.fields.delivery);
+            console.log(req.fields.delivery);
+            console.log(delivery);
+            let all = await DeliveryModel.find({});
+            let one = await DeliveryModel.findOne({_id:req.fields.delivery});
+
             let branch = await Branch.findById(req.fields.branch);
             let deliveryPrice = 0;
             if(delivery){
@@ -498,6 +545,10 @@ class OrderController{
             for(let i=0; i < products.length; i++){
                 let product = products[i]
                 let search_product = await Product.findById(product.id)
+
+
+                console.log(search_product,product.id,"THIS HERE LOGS");
+
                 if(!product.id){
                     search_product = await Product.findById(product._id)
                 }
@@ -913,7 +964,11 @@ class OrderController{
             let updated_order = await Order.findById(order._id);
             let client = await Client.findById(order.client);
             let products = updated_order.productsDetails.map(function (item){
-                return {id:item.product._id,quantity:item.quantity}
+                return {
+                    id:item.product._id,
+                    quantity:item.quantity,
+                    size:item.size
+                }
             })
             let result_object = await products_with_discounts(
                 products,   // list of product ids $ quant
@@ -923,7 +978,10 @@ class OrderController{
             );
             let cashback_from_order = await calcCashback(result_object.productCurrentPrice,cashback_model);
             if(updated_order.status === "Done" && client){
+                console.log("HERE")
+                console.log(cashback_from_order)
                 updated_order.earnedPoints = parseFloat(cashback_from_order) || 0;
+                console.log(cashback_from_order);
                 await updated_order.save();
                 await createClientHistory(
                     ClientBonusHistory,
@@ -1103,8 +1161,11 @@ class OrderController{
         let Log = db.model("Log");
         let ClientBonusHistory = db.model("clientBonusHistory");
         let Client = db.model("Client");
+        let Discount = db.model("Discount");
         let cashback_model = db.model("Cashback");
         let Product = db.model("Product");
+        let Settings = db.model("Settings");
+        let OrderScan = db.model("OrderScan");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "orders", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -1117,11 +1178,16 @@ class OrderController{
         };
         try {
             let order = await Order.findById(req.fields.orderId);
-            let clients = await Client.find({uniqueCode:req.fields.clientCode});
-            let client = null;
-            if(clients.length>0){
-                client = clients[0];
-            }else{
+            let client = await Client.findOne({uniqueCode:req.fields.clientCode});
+
+
+            console.log(order.client,client._id);
+
+            if(order.client.toString() != client._id.toString()){
+                return res.status(400).send(`Wrong Client`);
+            }
+          
+            if(!client){
                 return res.status(400).send(`Client not found`);
             }
 
@@ -1133,7 +1199,11 @@ class OrderController{
             }
 
             let products = order.productsDetails.map(function (item){
-                return {id:item.product._id,quantity:item.quantity}
+                return {
+                    id:item.product._id,
+                    quantity:item.quantity,
+                    size:item.size,
+                }
             })
             let result_object = await products_with_discounts(
                 products,   // list of product ids $ quant
@@ -1144,6 +1214,7 @@ class OrderController{
             await checkAndSendWarning(client, cashback_model, transporter, ClientBonusHistory,req.db.slice(7));
 
             let cashback_from_order = await calcCashback(result_object.productCurrentPrice,cashback_model);
+            console.log("cashback_from_order",cashback_from_order);
             await createClientHistory(
                 ClientBonusHistory,
                 client,
@@ -1154,10 +1225,35 @@ class OrderController{
                 0
             );
             result['pointsAdded'] = cashback_from_order;
+
+            let discounts = await Discount.find();
+            let settings = await Settings.find();
+            let logo = '';
+
+            if(settings.length>0){
+                logo = settings[0].logo;
+            }    
+             
+
+            let discount_obj = getClientDiscount(client,discounts);    
+
+
+            // await new OrderScan({
+            //     client: client._id,
+            //     order: order._id,
+            // }).save();
+
+            let slimClient = {
+                'name':client.name,
+                'img':client.avatar,
+                'phone':client.phone,
+                'discount_percentage': discount_obj.discount_percentage,
+                'logo':logo,
+            }
+            result['client'] = slimClient;
             order.pointsStatus.received = true;
             order.pointsStatus.amount = cashback_from_order;
             await order.save();
-
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }

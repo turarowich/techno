@@ -48,6 +48,8 @@ const initClientDbConnection = () => {
     require("../app/models/log.js")
     require("../app/models/schedulePush.js")
     require("../app/models/tempoOrder.js")
+    require("../app/models/adminSettings.js")
+    require("../app/models/orderScan.js")
     return db;
 };
 

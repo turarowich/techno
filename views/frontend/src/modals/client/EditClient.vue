@@ -58,6 +58,35 @@
                 <span class="maled">Female</span>
               </div>
             </div>
+
+            <div v-if="customFields && custom_field_0.fieldName">
+              <label>{{ custom_field_0.fieldName }}</label><br>
+              <select
+                  class="form-control custom-fields-select "
+                  v-model="currentData.custom_field_0"
+              >
+                <option v-bind:key="item" v-for="item in custom_field_0.values" >{{ item }}</option>
+              </select>
+            </div>
+            <div v-if="customFields && custom_field_1.fieldName">
+              <label>{{ custom_field_1.fieldName }}</label><br>
+              <select
+                  class="form-control custom-fields-select mr-2"
+                  v-model="currentData.custom_field_1"
+
+              >
+                <option v-bind:key="item" v-for="item in custom_field_1.values" >{{ item }}</option>
+              </select>
+            </div>
+            <div v-if="customFields && custom_field_2.fieldName">
+              <label>{{ custom_field_2.fieldName }}</label><br>
+              <select
+                  class="form-control custom-fields-select mr-2"
+                  v-model="currentData.custom_field_2"
+              >
+                <option v-bind:key="item" v-for="item in custom_field_2.values" >{{ item }}</option>
+              </select>
+            </div>
             <div class="modal-btn d-flex">
               <button class="save" @click.prevent="onSubmit(currentData._id)">Save</button>
 <!--              <button class="remove" @click.prevent="deleteClient(currentData._id)">Remove</button>-->
@@ -82,7 +111,27 @@ export default {
       currentData:{
         avatar:''
       },
-      imgSrc:''
+      imgSrc:'',
+      customFields: false,
+      custom_field_0: {
+        newVal: null,
+        required: false,
+        fieldName: '',
+        values: ['']
+      },
+      custom_field_1: {
+        newVal: null,
+
+        required: false,
+        fieldName: '',
+        values: ['']
+      },
+      custom_field_2: {
+        newVal: null,
+        required: false,
+        fieldName: '',
+        values: ['']
+      },
     }
   },
   computed:{
@@ -94,7 +143,6 @@ export default {
     }
   },
   methods:{
-
     deleteClient(id){
       Swal.fire({
         showConfirmButton: true,
@@ -161,7 +209,7 @@ export default {
         this.currentData.avatar = event.target.files[0]
       }
     },
- onSubmit(id){
+    onSubmit(id){
       const updatedData = this.currentData;
       let form = new FormData;
       if(updatedData.avatar){
@@ -177,7 +225,15 @@ export default {
       form.append('name', updatedData.name);
       form.append('email',updatedData.email);
       form.append('phone',updatedData.phone);
-
+      if (updatedData.custom_field_0.length > 0) {
+        form.append('custom_field_0', updatedData.custom_field_0);
+      }
+      if (updatedData.custom_field_1.length > 0) {
+        form.append('custom_field_1', updatedData.custom_field_1);
+      }
+      if (updatedData.custom_field_2.length > 0) {
+        form.append('custom_field_2', updatedData.custom_field_2);
+      }
       this.axios.put(this.url('updateClient',id),form)
       .then(()=>{
         if(this.$route.path.startsWith('/edit-client-page')){
@@ -204,13 +260,30 @@ export default {
           this.currentData.birthDate = date.format('YYYY-MM-DD')
         }
       });
-    }
+    },
+    getSettings() {
+      let that = this;
+      this.axios.get(this.url('getSettings'))
+          .then((response) => {
+            const settings = response.data.object;
+            that.customFields = settings.customFields || false;
+            if (that.customFields) {
+              that.custom_field_0 = { ...settings.custom_field_0 };
+              that.custom_field_1 = { ...settings.custom_field_1 };
+              that.custom_field_2 = { ...settings.custom_field_2 };
+            }
+            console.log('asdasdasdasdasdasdasdas', JSON.stringify(settings));
+          }).catch(function (error) {
+            if (error.response) {
+              console.log('setCatalog_settings EERRRor', error.response)
+            }
+          });
+    },
   },
   mounted(){
     this.selectDate();
     this.imgSrc = this.$server;
-
-
+    this.getSettings();
   },
   watch:{
     select_client(newCat){
@@ -294,11 +367,18 @@ export default {
 }
 /*==============Radio Button==============*/
 
-
+.custom-fields-select {
+  width: 100%;
+  margin-bottom: 15px;
+  background-position-x: 97%;
+}
+.save {
+  margin-top: 15px;
+}
 .radio-toolbar {
   display: flex;
   align-items: center;
-  margin-bottom: 80px;
+  margin-bottom:15px;
 
 }
 

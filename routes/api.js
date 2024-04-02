@@ -19,7 +19,7 @@ var catalogController = require('../app/controllers/catalogController');
 var multer = require('multer');
 var upload = multer({ dest: '../public/product/' });
 var verifyAccess = require('../services/verifyAccess');
-
+var adminController = require('../app/controllers/adminController');
 module.exports = function (app, io) {
     //Clients url
     app.get('/getClient/:client', clientController.getClient);
@@ -29,9 +29,12 @@ module.exports = function (app, io) {
     app.post('/saveAvatar', clientController.saveAvatar);
     app.post('/checkPromocode', clientController.checkPromocode);
     app.put('/updateClientsCategory', verifyAccess, clientController.updateClientsCategory);
-    app.delete('/deleteClient/:client', verifyAccess, clientController.deleteClient);
+    // app.delete('/deleteClient/:client', verifyAccess, clientController.deleteClient);
+    app.delete('/deleteClient/:client',  clientController.deleteClient);
     app.delete('/deleteClients', verifyAccess, clientController.deleteClients);
     app.post('/addClientDevice', clientController.addClientDevice);
+    app.post('/removeClientDevice', clientController.removeClientDevice);
+
     app.get('/updatedMessagesStatus/:client', clientController.updatedMessagesStatus);
     app.post('/clearMessages', verifyAccess, clientController.clearMessages);
     app.post('/getNewMessages', clientController.getNewMessages);
@@ -54,6 +57,7 @@ module.exports = function (app, io) {
     app.post('/getProductImportExcel', verifyAccess, productController.getProductImportExcel);
     app.post('/addProduct', upload.single('file'), productController.addProduct);
     app.put('/updateProduct/:product', verifyAccess, upload.single('file'), productController.updateProduct);
+    app.put('/setProductVisibility/:id', verifyAccess,productController.setProductVisibility);
     app.put('/updateProductsCategory', verifyAccess, productController.updateProductsCategory);
 
 
@@ -74,6 +78,8 @@ module.exports = function (app, io) {
     // Category url
     app.get('/getCategory/:category', categoryController.getCategory);
     app.get('/getCategories', categoryController.getCategories);
+    app.get('/getCategories/nested', categoryController.getNestedCategories);
+
     app.post('/addCategory', verifyAccess, categoryController.addCategory);
     app.put('/updateCategory/:category', verifyAccess, categoryController.updateCategory);
     app.delete('/deleteCategory/:category', verifyAccess, categoryController.deleteCategory);
@@ -107,6 +113,7 @@ module.exports = function (app, io) {
     // Order url
     app.get('/getOrder/:order', orderController.getOrder);
     app.get('/getOrders', orderController.getOrders);
+    app.get('/getOrdersAll', orderController.getOrdersAll);
     app.post('/addOrder', orderController.addOrder);
     app.put('/updateOrder/:order', verifyAccess, orderController.updateOrder);
     app.put('/updateOrderStatus/:order', verifyAccess, orderController.updateOrderStatus);
@@ -139,6 +146,8 @@ module.exports = function (app, io) {
     app.get('/getSettings', settingsController.getSettings);
     app.get('/getPersonalSettings', settingsController.getPersonalSettings);
     app.put('/updateSettings', verifyAccess, settingsController.updateSettings);
+    app.post('/updateClientFilter', settingsController.updateClientFilter);
+    app.post('/updateScannerStatus', settingsController.updateScannerStatus);
     app.put('/updatePersonalSettings', verifyAccess, settingsController.updatePersonalSettings);
     app.delete('/deleteDelivery/:delivery', verifyAccess, settingsController.deleteDelivery);
     app.delete('/deleteBranch/:branch', verifyAccess, settingsController.deleteBranch);
@@ -173,5 +182,13 @@ module.exports = function (app, io) {
     app.delete('/deleteSchedulePush/:object', verifyAccess, pushController.deleteSchedulePush);
     app.post('/deleteSchedulePushes', verifyAccess, pushController.deleteSchedulePushes);
 
+    //adminUrls
+    app.post('/adminLogin', adminController.login);
+    app.get('/getCompanies', adminController.getCompanies);
+    app.get('/getActiveCronParsers', adminController.getActiveCronParsers);
+    app.get('/getAdminSettings', adminController.getAdminSettings);
+    app.patch('/updateCompanyAccess/:id', adminController.updateCompanyAccess);
+    app.patch('/updateCompany/:id', adminController.updateCompany);
+    app.patch('/updateAdminSettings', adminController.updateAdminSettings);
     return app;
 }

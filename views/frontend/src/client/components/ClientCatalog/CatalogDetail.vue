@@ -2,7 +2,7 @@
  <div>
   <div v-if="!getProduct.name"><Spinner/></div>
    <div v-else class="container client-container" >
-     <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg"><div @click="$router.go(-1)"  class="mr-1">Back </div> | <span > {{getProduct.name}}</span> </div>
+     <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg" style="margin:1px 5px 0 0;"><div @click="$router.go(-1)"  class="mr-1">Back </div> | <span > {{getProduct.name}}</span> </div>
      <div class="row  mb-5" >
        <div class="col-lg-10  m-auto">
          <div class="row">
@@ -31,10 +31,19 @@
                <div>
                  <span>Sizes</span>
                </div>
-               <select class="form-select" aria-label="Size selector"  @change="selectSize($event)" >
-                 <option selected>Select size</option>
-                 <option v-for="(size, index) in getProduct.sizes.filter(prop => prop.quantity > 0)" :key="index" v-bind:value="size.size">{{ size.size }}</option>
-               </select>
+
+               <div style="display: flex;flex-wrap: wrap;">
+                 <div @click="selectSize(size.size)" v-bind:class="{ selectedSizeClass: selectedSize ===size }"   class="sizeItemClass" v-for="(size, index) in getProduct.sizes.filter(prop => prop.quantity > 0)" :key="index">
+                   {{ size.size }}
+                 </div>
+               </div>
+
+
+
+<!--               <select class="form-select" aria-label="Size selector"  @change="selectSize($event)" >-->
+<!--                 <option selected>Select size</option>-->
+<!--                 <option v-for="(size, index) in getProduct.sizes.filter(prop => prop.quantity > 0)" :key="index" v-bind:value="size.size">{{ size.size }}</option>-->
+<!--               </select>-->
              </div>
 
              <div v-if="getProduct.hasMultipleTypes">
@@ -102,6 +111,7 @@
 <script>
 import Spinner from "../../../components/Spinner";
 import $ from 'jquery';
+import Swal from "sweetalert2";
 export default {
   name: "CatalogDetail",
   components:{
@@ -144,7 +154,8 @@ export default {
   },
   methods: {
     selectSize(size){
-      let index = this.getProduct.sizes.findIndex(x => x.size === size.target.value);
+      // let index = this.getProduct.sizes.findIndex(x => x.size === size.target.value);
+      let index = this.getProduct.sizes.findIndex(x => x.size === size);
       if(index !== -1){
         console.log(this.getProduct.sizes[index])
         this.selectedSize = this.getProduct.sizes[index];
@@ -184,7 +195,29 @@ export default {
     },
     addToCart(){
       if(this.selectedSize._id === undefined && this.getProduct.hasMultipleTypes){
-        $('#selectSizeModal').modal('show');
+        // $('#selectSizeModal').modal('show');
+        Swal.fire({
+          showConfirmButton: false,
+          html: 'Select size',
+          showCloseButton: true,
+          showCancelButton: false,
+          confirmButtonText: 'Remove',
+          buttonsStyling:false,
+          customClass:{
+            popup: 'sweet-delete',
+            confirmButton: 'confirm-btn',
+            cancelButton:'cancel-btn',
+            actions:'btn-group',
+            content:'content-sweet',
+            closeButton:'close-btn'
+          },
+          showClass: {
+            popup: 'animate__animated animate__slideInDown'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          }
+        })
         return;
       }
       //check if its the same company
@@ -305,6 +338,29 @@ export default {
 .product-img{
   height: 440px;
   margin-bottom: 40px;
+}
+
+.selectedSizeClass{
+  color:#616cf5!important;
+  background: #616cf54f!important;
+  border:2px solid #616cf5!important;
+}
+.sizeItemClass:hover{
+  background: #f061f56e!important;
+}
+.sizeItemClass{
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background: white;
+  border:2px solid #606877;
+  color:#606877;
+  border-radius: 5px;
+  margin-right:5px;
+  margin-bottom:5px;
 }
 
 .lineThrough{

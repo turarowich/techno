@@ -7,8 +7,14 @@ const QRCode = require('qrcode');
 var moment = require("moment")
 const sharp = require('sharp');
 const { isNullOrUndefined } = require('util');
+const config = require('../config/config');
+
 
 function useDB(db_name) {
+    if (config.is_local_dev) {
+        db_name = 'loygift';
+    }
+
     let db = global.userConnection.useDb(db_name);
     return db;
 }
@@ -280,10 +286,14 @@ function randomNumber(min, max) {
 function randomPassword(letterCount) {
     return Math.random().toString(36).slice(-letterCount);
 }
-function createQrFile(user_id, company) {
+function createQrFile(user_id, company,newQrCodeString) {
     let link = 'images/' + company + '/qr'
     let filename ='/' + user_id + '.png'
     var dir = path.join(__dirname, '/../views/frontend/')
+
+    if(!newQrCodeString){
+        newQrCodeString = user_id;
+    }
 
     if (!fs.existsSync(dir + 'images/' +  company)) {
         fs.mkdirSync(dir + 'images/' + company);
@@ -294,9 +304,10 @@ function createQrFile(user_id, company) {
         fs.mkdirSync(dir + link);
     }
     
-    QRCode.toFile(dir + link + filename, String(user_id), {
+    // QRCode.toFile(dir + link + filename, String(user_id), {
+    QRCode.toFile(dir + link + filename, String(newQrCodeString), {
         color: {
-            dark: '#B0B0B0',  // Blue dots
+            dark: '#181818',  // Blue dots
             light: '#0000' // Transparent background
         },
         width: 600
@@ -361,6 +372,35 @@ function getClientDiscount(client=null,discounts = []){
     return discount_object;
 }
 
+function getDaysLeft(selectedDate){
+    let today = moment();
+    let start = moment(selectedDate).startOf('day');
+    let end = moment(today).startOf('day');
+    return start.diff(end, 'days',true);
+}
+async function checkUserBlockStatus(mainUser) {
+    let db = useDB('loygift');
+    let AdminSettings = db.model("AdminSettings");
+    let response = {blocked:false,msg:"Your account has been blocked"};
+    if (mainUser.isBlocked){
+        response.blocked = true;
+        response.msg = "Your account has been blocked";
+    }
+
+    let adminSetting = await AdminSettings.findOne({});
+    if(!adminSetting){
+        adminSetting = await new AdminSettings();
+    }
+    if(adminSetting.autoBlock){
+        if (getDaysLeft(mainUser.activeBefore)<1){
+            response.blocked = true;
+            response.msg = "Your account has been blocked, due to expired subscription";
+        }
+    }
+
+    return response;
+}
+
 function compareDates(dateStart_,dateEnd_,editDate_=null){
     if(!dateStart_ || !dateEnd_){
         return false;
@@ -383,4 +423,6 @@ module.exports = {
     checkAccess: checkAccess,
     getClientDiscount: getClientDiscount,
     compareDates:compareDates,
+    getDaysLeft:getDaysLeft,
+    checkUserBlockStatus:checkUserBlockStatus,
 }

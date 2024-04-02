@@ -58,6 +58,7 @@ class SocketController {
         let updated = await Message.updateMany({ client: msg.client, isIncoming: msg.isIncoming }, { new: false });
     }
     getMessages = async function (io, socket, user) {
+        console.log("HERE",user);
         let db = useDB(socket.handshake.headers.db)
         let Message = db.model("Message");
         if (socket.handshake.headers.userType == "employee") {
@@ -66,9 +67,16 @@ class SocketController {
                 return;
             }
         }
-        await Message.updateMany({ client: user, isIncoming: true }, { new: false });
-        let messages = await Message.find({ client: user }).sort({ $natural: -1 }).limit(50);
-        io.to(socket.id).emit("all messages", messages)
+        try{
+            await Message.updateMany({ client: user, isIncoming: true }, { new: false });
+            let messages = await Message.find({ client: user }).sort({ $natural: -1 }).limit(50);
+            io.to(socket.id).emit("all messages", messages)
+        }catch(e){
+            console.log(e,"getMessages---------------------------------------------------");
+        }
+        
+        
+        
     }
 
     sendNewsNotification = async function (io, socket, id) {

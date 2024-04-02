@@ -2,6 +2,27 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const settingsSchema = new Schema({
+    orderStatuses: {
+        required: {
+            type: Boolean,
+            required: true,
+            default: false
+        },
+        values: [{
+            type: String,
+            required: false,
+            default:'',
+        }]
+    },
+    scannerStatus: {
+        type: Boolean,
+        required: false,
+        default: false
+    },
+    clientsFilter: {
+        type: Schema.Types.Mixed,
+        required: false,
+    },
     ignoreImagesOnImport: {
         type: Boolean,
         required: false,
@@ -15,7 +36,7 @@ const settingsSchema = new Schema({
     removeGhostsOnImport: {
         type: Boolean,
         required: false,
-        default: true
+        default: false
     },
     groupItemsOnImport: {
         type: Boolean,
@@ -73,6 +94,46 @@ const settingsSchema = new Schema({
         default: ""
     },
     ////Catalog settings
+    productCustomField1: {
+        name: {
+            type: String,
+            required: false,
+            default: ""
+        }, 
+        value:{
+            type: String,
+            required: false,
+            default: ""
+        }
+    },
+    productCustomField2: {
+        name: {
+            type: String,
+            required: false,
+            default: ""
+        }, 
+        value:{
+            type: String,
+            required: false,
+            default: ""
+        }
+    },
+    productCustomFields: {
+        type: Boolean,
+        required: false,
+    },
+    productCustomColors: {
+        required: {
+            type: Boolean,
+            required: false,
+            default: false
+        },
+        values: [{
+            type: Schema.Types.Mixed,
+            required: false,
+        }],
+       
+    },
     catalogStatus: {
         type: Boolean,
         required: false,

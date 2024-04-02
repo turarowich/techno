@@ -24,6 +24,7 @@ import ClientNews from "@/client/components/ClientNews/ClientNews";
 import Basket from "@/client/components/Basket/Basket";
 import Menu from "@/client/components/CatalogMenu/Menu";
 import ClientAccount from "@/client/components/ClientAccount/ClientAccount";
+import ClientInfoModal from "@/components/clients/ClientInfoModal";
 import PersonalInfo from "@/client/components/PersonalInfo/PersonalInfo";
 import EditProfile from "@/client/components/EditProfile/EditProfile";
 import ProductInfo from "@/client/components/product-info/ProductInfo";
@@ -48,17 +49,29 @@ import AddressDelivery from "@/components/settings/AddressDelivery";
 import Log from "@/components/Log/Log";
 import Admin from "@/components/admin/Admin";
 
-
+import AdminLogin from "@/components/admin/AdminLogin";
+import AdminNav from "@/components/admin/AdminNav";
+import CatalogImport from "@/components/admin/CatalogImport";
 
 
 
 const routes = [
+    {
+        path: "/client_info/:company_id/:client_id",
+        name: "ClientInfoModal",
+        component: ClientInfoModal,
+        meta: {
+            hideNavbar: true,
+            hideForAuth: true
+        }
+    },
     {
         path: "/",
         name: "SignIn",
         component: SignIn,
         meta: {
             hideNavbar: true,
+            hideForAuth: true
         }
     },
     {
@@ -182,6 +195,15 @@ const routes = [
                 meta: { disableScroll: true }
 
             },
+            // {
+            //     path: "client_info/:client_id",
+            //     name: "ClientInfoModal",
+            //     component: ClientInfoModal,
+            //     meta: {
+            //         hideNavbar: true,
+            //         hideForAuth: true
+            //     }
+            // },
             {
                 path:'news-detail/:id',
                 name:"NewsDetail",
@@ -236,8 +258,6 @@ const routes = [
             },
         ],
 
-
-
     },
     {
         path: "/clients",
@@ -284,13 +304,37 @@ const routes = [
     },
     {
         path: "/admin",
-        name: "Admin",
-        component: Admin,
+        name: "AdminNav",
+        component: AdminNav,
         meta: {
             hideNavbar: true,
-            requiresAuthMain:true,
-        }
+            requiresAuthAdmin:true,
+        },
+        children: [
+            {
+                path: 'company-list',
+                name: 'CompanyList',
+                component: Admin,
+            },
+            {
+                path: 'catalog-import',
+                name: 'CatalogImport',
+                component: CatalogImport,
+            },
+        ],
     },
+    {
+        path: "/adminLogin",
+        name: "AdminLogin",
+        component: AdminLogin,
+        meta: {
+            hideNavbar: true,
+            requiresAuthMain:false,
+        },
+        children: [
+        ],
+    },
+
     {
         path: "/log",
         name: "Log",
@@ -424,23 +468,31 @@ const router = createRouter({
 
 //WEB Catalog auth guard.
 router.beforeEach((to, from, next) => {
-    console.log('router BEFORE EACH');
     const authenticatedUser = store.state.Client.user.auth;
     const current_company_url = store.state.Catalog.company_url;
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-
     const requiresAuthMain = to.matched.some(record => record.meta.requiresAuthMain);
+    const requiresAuthAdmin = to.matched.some(record => record.meta.requiresAuthAdmin);
+    const hideForAuth = to.matched.some(record => record.meta.hideForAuth);
+
+    const tokenAdmin = localStorage.getItem("tokenAdmin");
     const token = localStorage.getItem("token");
 
     // Check for protected route
     if (requiresAuth && !authenticatedUser) {
         //if client catalog
-        next({ path: `/${current_company_url}/signin` })
+        next({ path: `/${current_company_url}/signin` });
     } else if(token == null && requiresAuthMain){
         //if main crm
-        next({ path: '/' })
+        next({ path: '/' });
+    } else if(tokenAdmin == null && requiresAuthAdmin){
+        console.log("router only s admin")
+        next({ path: '/' });
     }
     else {
+        if(token && hideForAuth){
+            next({ path: '/orders' });
+        }
         next();
     }
 });

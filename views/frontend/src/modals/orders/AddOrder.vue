@@ -111,13 +111,6 @@
                       </span>
                       <span v-else >
                         {{item.current_price}}{{currency}}
-<!--                        <span v-if="item.product.hasMultipleTypes && item.size">-->
-<!--                          {{item.size.price}}{{currency}}-->
-<!--                        </span>-->
-<!--                        <span v-else>-->
-<!--                         {{item.product.price}}{{currency}}-->
-<!--                        </span>-->
-
                       </span>
                     </div>
                     <div style="width:10%" class="quantity">
@@ -674,7 +667,11 @@ export default {
       }
 
       let products = this.new_order.items.map(function (item){
-        return {id:item.product._id,quantity:item.quantity}
+        return {
+          id:item.product._id,
+          quantity:item.quantity,
+          size:item.size,
+        }
       })
 
       if(this.editState){

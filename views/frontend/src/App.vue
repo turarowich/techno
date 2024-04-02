@@ -76,6 +76,7 @@ export default {
         document.title = "Loygift";
       }
     },
+
   }
   }
 

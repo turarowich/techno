@@ -51,3 +51,6 @@ Thumbs.db
 *.wmv
 
 keys/
+/views/frontend/.env
+launch.json
+.vscode/

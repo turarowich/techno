@@ -18,9 +18,8 @@
 
             <div>
               <label>Select category</label>
-              <select class="form-control long-form-control modal-select mb-5">
-                <option value="">Without category</option>
-                <option v-for="cat in listCategory" :key="cat.id"  :value="cat.name.toLowerCase()">{{cat.name}}</option>
+              <select v-model="new_category.parent" class="form-control long-form-control modal-select mb-5">
+                <option v-for="cat in listCategory" :key="cat.id"  :value="cat._id">{{cat.name}}</option>
               </select>
             </div>
 
@@ -55,7 +54,8 @@ name: "AddCategory",
     return{
       new_category: {
         name: '',
-        type:'product'
+        type: 'product',
+        parent: ''
       }
     }
   },
@@ -64,12 +64,16 @@ name: "AddCategory",
       const data = new FormData();
       data.append('name', this.new_category.name)
       data.append('type', this.new_category.type)
+      data.append('parent', this.new_category.parent)
+
       this.axios.post(this.url('addCategory'),data)
             .then(()=>{
               this.$successAlert('Category has been added')
               this.getCategories()
             })
             .catch((error)=>{
+              this.$warningAlert('Failed to add category')
+
               console.log("Error"+error)
             })
 

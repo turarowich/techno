@@ -169,11 +169,9 @@ name: "Dashboard",
     });
   },
   created(){
-    console.log('@@ created');
     // this.getCatalogSettings();
   },
   mounted() {
-    console.log('@@ mounted');
     this.getNews();
     const options = {
       headers: {

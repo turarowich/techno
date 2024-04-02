@@ -1,7 +1,7 @@
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 var config = require('../../config/config');
-const { sendError, randomNumber, randomPassword, createQrFile, useDB } = require('../../services/helper')
+const { sendError, randomNumber, randomPassword, createQrFile, useDB, getDaysLeft, checkUserBlockStatus } = require('../../services/helper')
 var validate = require('../../config/messages');
 var axios = require('axios');
 const { response } = require('express');
@@ -11,8 +11,10 @@ const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
     auth: {
-        user: 'helpLoygift@gmail.com',
-        pass: 'helpLoygift321',
+        user: 'info.loygift@gmail.com', //Moore123
+        pass: 'yket fzen bzup hdag',
+        // user: 'catzilla312@gmail.com',
+        // pass: 'sbhi freq fqtf dhsh',
     },
 });
 
@@ -85,9 +87,15 @@ class AuthController{
         try {
             let user = await User.findOne({ email: req.fields.email }).select('+password +DB')
             if (!user) return res.status(404).json({ status: 404, msg: 'No user found' });
-
+            user.loggedAt = Date.now();
+            await user.save();
             var passwordIsValid = bcrypt.compareSync(req.fields.password, user.password);
-            if (!passwordIsValid) return res.status(401).json({ auth: false, token: null });
+            if (!passwordIsValid) return res.status(401).json({ auth: false, token: null, msg:'Incorrect password' });
+
+            let blockCheck = await checkUserBlockStatus(user);
+            if(blockCheck.blocked){
+                res.status(418).json({ msg: blockCheck.msg });
+            }
 
             var token = jwt.sign({ id: user._id, user: user._id, name: user.name, type: "admin" }, config.secret_key, {
                 expiresIn: "30 days" // expires in 24 hours
@@ -117,7 +125,7 @@ class AuthController{
         try {
             let user = await Employee.findOne(filter).select('+password')
             if(user.isBlocked){
-                return res.status(400).json({ status: 400, msg: 'Your account has been blocked' });
+                return res.status(400).json({ status: 418, msg: 'Your account has been blocked' });
             }
             
             let errors = {
@@ -126,7 +134,8 @@ class AuthController{
             }
 
             if (!user) return res.status(400).json({ status: 404, msg: 'No user found', errors: errors });
-
+            user.loggedAt = Date.now();
+            await user.save();
             var passwordIsValid = bcrypt.compareSync(req.fields.password, user.password);
             delete errors.phone
             if (!passwordIsValid) return res.status(401).json({ status: 401, msg: "Not valid password", auth: false, token: null, errors: errors });
@@ -193,16 +202,33 @@ class AuthController{
         let db = useDB('loygift'+req.headers['access-place']);
         let Client = db.model("Client");
         let ClientBonusHistory = db.model("clientBonusHistory");
-        let result = []
+        let Settings = db.model("Settings");
+        let result = [];
+
         let lang = req.headers["accept-language"]
         if (lang != 'ru') {
             lang = 'en'
         }
         try {
+
+
+
+
             let hashedPassword = bcrypt.hashSync(req.fields.password, 8);
             let number = randomNumber(100000, 1000000)
-            // let number = 1000001
-            let qrCode = createQrFile(number.toString(), 'loygift' + req.headers['access-place'])
+            
+            //new
+            let web = config.QRCODE_BASE;
+            let settings = await Settings.findOne({});
+            let scannerStatus = settings.scannerStatus;
+            let codeString = number.toString();
+            if(scannerStatus){
+                codeString = web + "/client_info" + '/' + settings.catalogUrl + '/' + number.toString();
+            }
+            //new
+
+            // let qrCode = createQrFile(number.toString(), 'loygift' + req.headers['access-place']);
+            let qrCode = createQrFile(number.toString(), 'loygift' + req.headers['access-place'],codeString);
             var client = new Client({
                 name: req.fields.name,
                 phone: req.fields.phone,
@@ -252,6 +278,7 @@ class AuthController{
     registerClientSocial = async function (req, res) {
         let db = useDB('loygift' + req.headers['access-place']);
         let Client = db.model("Client");
+        let Settings = db.model("Settings");
         let ClientBonusHistory = db.model("clientBonusHistory");
         let result = []
         let social_res = []
@@ -279,9 +306,27 @@ class AuthController{
                 }
                 break socialAuth
             }
-            social_res.uniqueCode = randomNumber(100000, 1000000)
+            const number = randomNumber(100000, 1000000);
+            social_res.uniqueCode = number;
             var client = new Client(social_res.save)
-            let qrCode = createQrFile(social_res.uniqueCode, 'loygift' + req.headers['access-place'])
+
+
+
+            //new
+            let web = config.QRCODE_BASE;
+            let settings = await Settings.findOne({});
+            let scannerStatus = settings ? settings.scannerStatus : null;
+            let codeString = number.toString();
+            if(scannerStatus){
+                codeString = web + "/client_info" + '/' + settings.catalogUrl + '/' + number.toString();
+            }
+            //new
+
+
+            // let qrCode = createQrFile(number.toString(), 'loygift' + req.headers['access-place']);
+            let qrCode = createQrFile(social_res.uniqueCode, 'loygift' + req.headers['access-place'],codeString);
+
+            // let qrCode = createQrFile(social_res.uniqueCode, 'loygift' + req.headers['access-place'])
             client.QRCode = qrCode
             client.uniqueCode = social_res.uniqueCode
 
@@ -337,8 +382,8 @@ class AuthController{
             
             if (!client) {
                 result = {
-                    status: 500,
-                    msg: "Validation error",
+                    status: 404,
+                    msg: "User not found",
                     errors: {
                         user: validate[lang]['user_not_found'],
                     },
@@ -346,19 +391,21 @@ class AuthController{
                     client_msg: validate[lang]['client_user_not_found_msg']
                 }
                 break socialAuth
+            } else {
+                result = {
+                    'status': 200,
+                    'msg': 'Sending token',
+                    'auth': true,
+                    'object': client,
+                    'refresh_token': jwt.sign({ id: req.headers['access-place'], user: client._id, name: client.name, type: "client"  }, config.secret_key, {
+                        expiresIn: "30 days"
+                    }),
+                    'token': jwt.sign({ id: req.headers['access-place'], user: client._id, name: client.name, type: "client" }, config.secret_key, {
+                        expiresIn: 86400 // expires in 24 hours
+                    }),
+                }
             }
-            result = {
-                'status': 200,
-                'msg': 'Sending token',
-                'auth': true,
-                'object': client,
-                'refresh_token': jwt.sign({ id: req.headers['access-place'], user: client._id, name: client.name, type: "client"  }, config.secret_key, {
-                    expiresIn: "30 days"
-                }),
-                'token': jwt.sign({ id: req.headers['access-place'], user: client._id, name: client.name, type: "client" }, config.secret_key, {
-                    expiresIn: 86400 // expires in 24 hours
-                }),
-            }
+
         } catch (error) {
 
             result = sendError(error, lang)
@@ -413,8 +460,7 @@ class AuthController{
                 }
                 break resetPassword
             }
-            let client = await Client.findOne({"email": req.fields.email})
-
+            let client = await Client.findOne({"email": req.fields.email});
             if (!client) {
                 result = {
                     status: 500,
@@ -437,7 +483,7 @@ class AuthController{
 
             result = {
                 'status': 200,
-                'msg': 'Sending token',
+                'msg': 'Sending code',
             }
 
         } catch (error) {
@@ -529,7 +575,7 @@ class AuthController{
 
             if (client.oneTimeCode &&  client.oneTimeCode == req.fields.code){
 
-                if (req.fields.password && req.fields.password.match(/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/) && req.fields.password.length < 64){
+                if (req.fields.password && req.fields.password.match(/^.{6,}$/) && req.fields.password.length < 64){
                     client.password = bcrypt.hashSync(req.fields.password, 8);
                     client.oneTimeCode = ""
                     await client.save({validateBeforeSave:false})
@@ -548,7 +594,7 @@ class AuthController{
                     }
                 }else{
                     let message = "password_valid"
-                    if (req.fields.password.length < 8) {
+                    if (req.fields.password.length < 6) {
                         message = "password_min"
                     } else if (req.fields.password.length > 64) {
                         message = "password_max"
@@ -639,9 +685,9 @@ async function fbRegister(token){
     }).catch( error => {
         let result = {
             status: 500,
-            msg: "Token is not valid",
+            msg: "Token is not validFB",
             errors: {
-                token: "Token is not valid",
+                token: "Token is not validFB",
             }
         }
         return {error: result}
@@ -687,9 +733,9 @@ async function twitterRegister(token, screen_name) {
     }).catch(error => {
         let result = {
             status: 500,
-            msg: "Token is not valid",
+            msg: "Token is not validTW",
             errors: {
-                token: "Token is not valid",
+                token: "Token is not validTW",
             }
         }
         return { error: result }
@@ -707,9 +753,9 @@ async function twitterRegister(token, screen_name) {
     }).catch(error => {
         let result = {
             status: 500,
-            msg: "Token is not valid",
+            msg: "Token is not validTW",
             errors: {
-                token: "Token is not valid",
+                token: "Token is not validTW",
             }
         }
         return { error: result }
@@ -754,6 +800,7 @@ async function appleRegister(token, screen_name, full_name, email) {
     return result
 }
 async function googleRegister(token) {
+    console.log(`googleRegister TOKEN = ${token}`);
     let response = await axios({
         url: 'https://www.googleapis.com/oauth2/v3/tokeninfo',
         // url: 'https://www.googleapis.com/oauth2/v3/userinfo',
@@ -765,9 +812,9 @@ async function googleRegister(token) {
     }).catch(error => {
         let result = {
             status: 500,
-            msg: "Token is not valid",
+            msg: "Token is not valid_Google",
             errors: {
-                token: "Token is not valid",
+                token: "Token is not valid_Google",
             }
         }
         return { error: result }
@@ -810,7 +857,7 @@ async function registerClientSocialWeb (type,token,lang,access_place,screen_name
         if(user){
             result = {
                 status: 500,
-                msg: "Validation error",
+                msg: "User already exist",
                 errors: {
                     user: validate[lang]['user_exist'],
                 },
@@ -859,8 +906,8 @@ async function loginClientSocialWeb (type,token,lang,access_place,screen_name=""
 
         if (!client) {
             result = {
-                status: 500,
-                msg: "Validation error",
+                status: 404,
+                msg: "User not found",
                 errors: {
                     user: validate[lang]['user_not_found'],
                 },

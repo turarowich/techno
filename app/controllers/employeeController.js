@@ -1,8 +1,6 @@
 var bcrypt = require('bcryptjs');
-const { useDB, sendError, saveImage, createQrFile, randomNumber, checkAccess } = require('../../services/helper')
+const { useDB, sendError, saveImage, checkAccess } = require('../../services/helper')
 var validate = require('../../config/messages');
-const { query } = require('express');
-
 
 class EmployeeController{
     

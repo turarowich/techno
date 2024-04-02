@@ -12,6 +12,8 @@ const productSchema = new Schema({
     controlName: {
         type: String,
         required: false,
+        unique: true,
+        sparse: true,
     },
     sizes:[{
             size:String,
@@ -128,6 +130,18 @@ const productSchema = new Schema({
         required: true,
         default: Date.now,
     },
+    colors: [{
+        type: Schema.Types.Mixed,
+        required: false        
+    }],
+    productCustomField1: {
+        type: String,
+        required: false       
+    },
+    productCustomField2: {
+        type: String,
+        required: false       
+    }
 })
 
 module.exports = mongoose.model('Product', productSchema)

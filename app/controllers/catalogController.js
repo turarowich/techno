@@ -24,6 +24,8 @@ class catalogController{
             'msg': 'Sending products'
         }
 
+        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@",req.query.min)
+
         //filter types:
         ////by category
         ////by price
@@ -44,24 +46,52 @@ class catalogController{
             filterQuery.price.$lte = req.query.max;
         }
 
+        if(req.query.searchText && req.query.searchText.length > 0){
+            let searchText = req.query.searchText.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+            console.log(searchText,"45454");
+            filterQuery.name= { $regex: '.*' + searchText + '.*' ,$options: 'i'};
+        }
+
+        let sortBy = {'name':1}
+        switch (req.query.sortBy) {
+            case "ascendingName":
+                sortBy = {'name':1};
+                break;
+            case "descendingName":
+                sortBy = {'name':-1};
+                break;
+            case "ascendingPrice":
+                sortBy = {'price':1};
+                break;
+            case "descendingPrice":
+                sortBy = {'price':-1};
+                break;
+        }
+        
         try {
             if(!req.query.page){
                 result['objects'] = await Product.find({'active':true});
             }else{
-                result['objects'] = await Product.find(filterQuery).sort({'name':1}).skip(skipCount).limit(perPage);
+                result['objects'] = await Product.find(filterQuery).sort(sortBy).skip(skipCount).limit(perPage);
                 result['pagesCount'] = Math.round(await Product.find(filterQuery).count()/perPage);
                 let allProducts = await Product.find({'active':true});
-                result["maxPrice"] = allProducts.reduce((acc, val) => {
-                    return acc > val.price ? acc : val.price;
-                });
-                result["minPrice"] = allProducts.reduce((acc, val) => {
-                    return acc < val.price ? acc : val.price;
-                });
+                
+                if(allProducts.length<2){
+                    result["maxPrice"] = 99999;
+                    result["minPrice"] = 1;
+                }else{
+                    result["maxPrice"] = allProducts.reduce((acc, val) => {
+                        return acc > val.price ? acc : val.price;
+                    });
+                    result["minPrice"] = allProducts.reduce((acc, val) => {
+                        return acc < val.price ? acc : val.price;
+                    });
+                }
+                
             }
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
-
         res.status(result.status).json(result);
     };
 
@@ -107,7 +137,7 @@ class catalogController{
             'msg': 'Sending client'
         }
         try {
-            let settings = await Settings.find()
+            let settings = await Settings.find();
             if (!settings[0]){
                 settings = await new Settings({
                     slogan: " ",

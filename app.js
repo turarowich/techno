@@ -31,6 +31,14 @@ app.use((req, res, next) => {
     }
     next();
 })
+
+app.use((req, res, next) => {
+    console.log("--------------------------------------------------------------------");
+    console.log(req.path, req.method);
+    console.log(req.headers);
+    next()
+})
+
 const formidableMiddleware = require('express-formidable');
 const VerifyToken = require('./services/verifyToken');
 const VerifyDB = require('./services/verifyDB');
@@ -104,7 +112,7 @@ router.get("/auth/google", passport.authenticate("google", { authType: 'reauthen
 router.get("/auth/twitter", passport.authenticate("twitter", { authType: 'reauthenticate'}));
 
 
-const io = require('socket.io')(httpServer, {
+const io = require('socket.io')(httpsServer, {
     cors: {
         // origin: "http://localhost:3000",
         origin: ["http://10.121.6.75:8080","http://localhost:3000", "http://127.0.0.1:3000", "https://app.loygift.com", "http://10.121.6.29:3000", "*:*"],
@@ -129,15 +137,18 @@ app.use('/', VerifyOrder,require('./routes/menu.js')(router))
 
 // handles not found errors
 app.use((err, req, res, next) => {
+    console.log("NOT FOUND");
     if (err.httpStatusCode === 404) {
         res.status(404).render('NotFound');
     }
+    next();
 });
 
 // handles unauthorized errors
 
 
 app.use((err, req, res, next) => {
+    console.log("NOT FOUND 2");
     if (err.httpStatusCode === 304) {
         res.status(304).render('Unauthorized');
     }
@@ -146,7 +157,7 @@ app.use((err, req, res, next) => {
 
 // catch all
 app.use((err, req, res, next) => {
-    console.log(err);
+    console.log(err,"catch all");
     if (!res.headersSent) {
         res.status(err.httpStatusCode || 500).render('UnknownError');
     }
@@ -170,23 +181,45 @@ const job = cron.schedule('0 1 * * *', () => {
 job.start();
 
 const xmlController = require("./app/controllers/xmlController")
-
-const job2 = cron.schedule('* * * * *', () => {  // "* * * * *" every minute // "0 * * * *" every hour
-    //Cron job every hour
-    xmlController.parseXml("loygift60b7032e691787213076f378");
+const job2 = cron.schedule('*/10 * * * *', () => {
+    // "* * * * *" every minute
+    // "*/5 * * * *" every 5 minutes
+    // "0 * * * *" every hour
+    xmlController.parseXml("loygift60f13737d0dc58349bbbfa9f");
 });
 job2.start();
-
-
 // cron end
+//for testing
+app.use('/sajda', (req, res, next) => {
+    xmlController.parseXml("loygift64c3cdc2492d8c443c3847a8");
+    res.send('STARTED')
+})
+
+//testing end
+
+
 
 //xml start
-// const xmlController = require("./app/controllers/xmlController")
+const adminController = require("./app/controllers/adminController");
+adminController.getMainUsers().then(listOfUsers => {
+    if(listOfUsers){
+        for(const user of listOfUsers){
+            if(user.catalogParserStatus){
+                global.cronJobMethods.createParserCron(user,global.cronJobMethods.parserCronTime,function (){
+                    //  loygift60f13737d0dc58349bbbfa9f sajda db
+                    console.log(`Running chron parser for loygift${user._id}`)
+                    xmlController.parseXml(`loygift${user._id}`);
+                })
+            }
+        }
+    }else{
+        //throw error
+    }
+}).catch(error => {
+        console.log({ error })
+    });
 //xml end
-
-
-
-module.exports = admin
+module.exports = {admin:admin};
 httpServer.listen(config.port_http, () => {
     console.log(`App listening at http://${config.localhost}:${config.port_http}`);
     console.log(`App listening at http://${config.ip}:${config.port_http}`);

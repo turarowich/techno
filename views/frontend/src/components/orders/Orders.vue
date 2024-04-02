@@ -1,8 +1,8 @@
 <template>
   <div class="orders">
     <div class="searchAndButtons">
-    <div class="d-flex justify-content-between app-buttons">
-      <div class="d-flex align-items-center">
+    <div class="d-flex justify-content-between app-buttons" style="flex-wrap: wrap;">
+      <div class="d-flex align-items-center" style="flex-wrap: wrap;">
         <button v-if="check()" class="app-buttons-item adding-btns" data-toggle="modal" @click="unSetSelectedOrder" data-target="#add-order" ><span>+ Add order</span></button>
         <button v-if="check()" class="app-buttons-item" @click="deleteAllOrder"><img class="img-btn" src="../../assets/icons/trash_empty.svg" ><span>Remove</span></button>
         <button v-if="check()" class="app-buttons-item" @click="exportOrder"><img class="img-btn" src="../../assets/icons/set.svg"><span>Export to Excell </span></button>
@@ -121,13 +121,20 @@
            <div>
              <div style="width: 500px" id="reader"></div>
              <div class="stream">
+               <div style="display: flex;flex-direction: column;">
+<!--                 <span @click="getCameraPermissionState" style="cursor:pointer;">Check camera permission</span>-->
+                 <span>Camera permission: {{camSettings.permissionState}}</span>
+                 <span v-if="camSettings.permissionState === 'denied'">
+                   In order to use scanner you have to grant permission to use your camera!
+                 </span>
+               </div>
                <div>
                  <p class="error" v-if="camSettings.noFrontCamera">
                    You don't seem to have a front camera on your device
                  </p>
                  <p class="error" v-if="camSettings.noRearCamera">
                    You don't seem to have a rear camera on your device
-                 </p>
+                </p>
                </div>
                <div class="qr_header d-flex justify-content-between">
                  <div>
@@ -139,13 +146,56 @@
                    <span style="color:red;">{{scanResult.error}}</span>
                  </div>
                </div>
-               <qr-stream @decode="onDecode" :camera="camSettings.camera" @init="onInit" class="mb">
-                 <button @click="switchCamera" style="border-radius:5px;margin: 4px;">
+               <!-- <qr-stream @decode="onDecode" :camera="camSettings.camera" @init="onInit" class="mb"> -->
+               <qr-stream @decode="onDecode" @init="onInit" class="mb">
+                 <button @click="switchCamera" class="app-buttons-item adding-btns">
                    switch camera
                  </button>
                  <div style="color: red;" class="frame"></div>
                </qr-stream>
+
              </div>
+           </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="parent-modal">
+    <div class="modal myModal fade" id="clientInfoModal" tabindex="-1" role="dialog" aria-labelledby="clientInfoModal" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-body">
+            <button class="btn" @click="closeClientInfoModal">X</button>
+           <div class="infoContent">
+            <div class="infoContent_1">
+              <!-- <div class="companyName">{{getCompanyName}}</div> -->
+
+              <div v-if="clientInfoData.logo" class="clientlogo 1" v-bind:style="{ 'background-image': 'url(' + imgSrc+clientInfoData.logo + ')' }"></div>
+              <div v-else class="clientlogo 2">
+                <div class="companyName">{{getCompanyName}}</div>
+              </div>
+
+
+
+              <div class="line"></div>
+
+              <div v-if="clientInfoData.img" class="clientImg 1" v-bind:style="{ 'background-image': 'url(' + imgSrc+clientInfoData.img + ')' }"></div>
+              <div v-else class="clientImg 2">
+                <img style="width: 100%;height: 100%;" src="../../assets/icons/chat.svg">
+              </div>
+                
+
+              <div class="clientName">{{clientInfoData.name}}</div>
+              <div class="clientPhone">{{clientInfoData.phone}}</div>
+            </div>  
+            <div class="infoContent_2">
+              <div class="discountTitle">Скидка</div>
+              <div class="discountPercentage">{{clientInfoData.discount_percentage}}%</div>
+            </div> 
            </div>
           </div>
         </div>
@@ -174,12 +224,21 @@ name: "Orders",
     Spinner
 
   },
+
   data(){
     return{
+      scannerStatus:false,
+      imgSrc:'',
+      clientInfoData:{
+        name:"",
+        phone:"",
+        discount_percentage:"",
+      },
       camSettings:{
         camera: 'rear',
         noRearCamera: false,
-        noFrontCamera: false
+        noFrontCamera: false,
+        permissionState:false,
       },
       scanResult:{
         camError:'',
@@ -217,6 +276,10 @@ name: "Orders",
   },
 
   computed: {
+    getCompanyName:function(){
+      return  JSON.parse(localStorage.getItem('user')).name
+    },
+
     filteredList:function() {
         
       let newOrders = this.orderList
@@ -274,6 +337,14 @@ name: "Orders",
     },
   },
   methods: {
+    closeClientInfoModal(){
+      $('#clientInfoModal').modal('hide');
+      this.clientInfoData = {
+        name:"",
+        phone:"",
+        discount_percentage:"",
+      }
+    },
     selectAllOrder(){
       this.orderToDisplay.map(order=>order['selected'] = this.selectAll)
     },
@@ -308,7 +379,7 @@ name: "Orders",
       })
     },
     getOrders(){
-      this.axios.get(this.url('getOrders')+'?populate=client')
+      this.axios.get(this.url('getOrdersAll')+'?populate=client')
       .then((response)=>{
         this.orderList = response.data.objects;
         this.spinner = false;
@@ -457,6 +528,7 @@ name: "Orders",
       })
     },
     switchCamera () {
+      
       switch (this.camSettings.camera) {
         case 'front':
           this.camSettings.camera = 'rear'
@@ -465,8 +537,35 @@ name: "Orders",
           this.camSettings.camera = 'front'
           break
       }
+      console.log(this.camSettings.camera);
+    },
+    getCameraPermissionState(){
+      navigator.permissions.query({ name: "camera" }).then(res => {
+        this.camSettings.permissionState = res.state;
+      })
     },
     startScanning(order){
+      if(order.state){
+        Swal.fire({
+          timer:1500,
+          title:'Warning',
+          text:"Client already had received bonus for this order",
+          showConfirmButton:false,
+          position: 'top-right',
+          customClass:{
+            popup:'success-popup information-popup',
+            content:'success-content',
+            title:'success-title',
+            header:'success-header',
+            image:'success-img'
+          },
+          showClass:{
+            popup: 'animate__animated animate__zoomIn'
+          }
+        })
+        return
+      }
+
       this.orderForScanning.id = order.id;
       this.orderForScanning.code = order.code;
       $('#QRCodeModalPreview').modal('show');
@@ -474,11 +573,27 @@ name: "Orders",
       this.scanResult.pointsAdded = '';
     },
     onDecode(uniqueCode) {
+      // let that = this;
+      console.log(uniqueCode);
+      let urlSplit = uniqueCode.split("/");
+      uniqueCode = urlSplit[urlSplit.length -1];
+      console.log(uniqueCode);
+      if(!uniqueCode){
+        return;
+      }
       this.axios.post(this.url('addOderPoints'),{clientCode:uniqueCode,orderId:this.orderForScanning.id})
         .then((response)=>{
-          console.log(response.data);
+
+          // let clientData = response.data.client;
           this.scanResult.pointsAdded = `${response.data.pointsAdded} points were added`;
           this.scanResult.error = '';
+
+          
+          // if(that.scannerStatus && false){
+          //   that.clientInfoData = clientData;
+          //   $('#clientInfoModal').modal('show');
+          // }
+
         }).catch((error)=>{
           console.log(error);
           if (error.response) {
@@ -493,7 +608,7 @@ name: "Orders",
       try {
         await promise
       } catch (error) {
-        console.log(error,'init-------------------------------------------------------------');
+        console.log(error,'init2-------------------------------------------------------------');
         const triedFrontCamera = this.camSettings.camera === 'front';
         const triedRearCamera = this.camSettings.camera === 'rear';
         const cameraMissingError = error.name === 'OverconstrainedError';
@@ -518,12 +633,29 @@ name: "Orders",
           this.scanResult.camError = "ERROR: installed cameras are not suitable"
         } else if (error.name === 'StreamApiNotSupportedError') {
           this.scanResult.camError = "ERROR: Stream API is not supported in this browser"
+        } else{
+          this.scanResult.camError = error;
         }
-      }
-    }
 
+      }
+    },
+    getSettings(){
+      let that=this;
+      this.axios.get(this.url('getSettings'))
+        .then((response) => {
+          if(response.data.clientsFilter){
+            that.scannerStatus = response.data.scannerStatus;
+          }
+        }).catch(function (error){
+          if (error.response) {
+            console.log('setCatalog_settings EERRRor',error.response)
+          }
+        })
+    },
   },
   mounted(){
+    this.getSettings();
+    this.imgSrc=this.$server+"/";
     this.getOrders();
     new this.$lightpick({
         field: document.getElementById('datepicker'),
@@ -543,9 +675,8 @@ name: "Orders",
     const to_date = this.$moment().subtract(1, "days").format("YYYY-MM-DD")
     const from_date = this.$moment().format('YYYY-MM-DD')
     this.between_value = to_date + ' to ' + from_date;
+    this.getCameraPermissionState();
   },
-
-
 }
 
 </script>
@@ -625,5 +756,81 @@ name: "Orders",
   border: 1px solid #E3E3E3;
   border-radius:5px;
 }
+/* #clientInfoModal{
+ display:block; 
+ opacity: 1;
+} */
+@media (max-width: 550px) {
+  #clientInfoModal .modal-dialog{
+    margin: 0!important;
+  }
+}
+#clientInfoModal{
+    padding-left: 0px!important;
+}
 
+#clientInfoModal .modal-dialog,#clientInfoModal .modal-content,#clientInfoModal .infoContent{
+  height: 100%;
+}
+
+#clientInfoModal .infoContent_2,#clientInfoModal .infoContent_1{
+  flex: 1 0 0;
+  width: 100%;
+}
+
+#clientInfoModal .infoContent_2{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+#clientInfoModal .infoContent{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  padding: 65px;
+}
+
+.discountPercentage{
+  color:#616CF5;
+  font-weight: 700;
+  font-size: 40px;
+}
+.discountTitle{
+  font-weight: 600;
+  font-size: 16px;
+}
+.clientImg{
+  width: 152px;
+  height: 152px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  margin: auto;
+  border-radius: 50%;
+  margin-bottom: 50px;
+}
+.clientPhone{
+  font-weight: 400;
+  font-size: 16px;
+}
+.clientName{
+  font-weight: 500;
+  font-size: 23px;
+}
+.companyName{
+  color: red;
+  font-size: 40px;
+  font-weight: 700;
+}
+
+.clientlogo{
+  height: 35px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  margin-bottom: 25px;
+}
 </style>

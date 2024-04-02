@@ -7,8 +7,49 @@ const LOG = require('./logController');
 const Analytics = require('./analyticsController');
 var path = require('path');
 const fs = require('fs');
-
+const ObjectId = require('mongoose').Types.ObjectId;
 class ClientController {
+
+    getClientInfoScan = async function (req, res) {
+        let db = useDB(req.db)
+        let Client = db.model("Client");
+        let Discount = db.model("Discount");
+        let Settings = db.model("Settings");
+        let OrderScan = db.model("OrderScan");
+
+        let result = {
+            'status': 200,
+            'msg': 'Points were transferred',
+        };
+
+        try {
+            let discounts = await Discount.find();
+            let settings = await Settings.find();
+            let logo = '';
+    
+            if(settings.length>0){
+                logo = settings[0].logo;
+            }    
+             
+            let client = await Client.findOne({uniqueCode:req.fields.clientCode});
+            let discount_obj = getClientDiscount(client,discounts); 
+            await new OrderScan({
+                client: client._id,
+            }).save();
+    
+            let slimClient = {
+                'name':client.name,
+                'img':client.avatar,
+                'phone':client.phone,
+                'discount_percentage': discount_obj?.discount_percentage ?? 0,
+                'logo':logo,
+            }
+            result['client'] = slimClient;
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.status(result.status).json(result);
+    }
     
     getClient = async function (req, res) {
         let db = useDB(req.db)
@@ -27,8 +68,16 @@ class ClientController {
             'msg': 'Sending client'
         }
         try {
+            if(!ObjectId.isValid(req.params.client)){
+                res.status(404).json({ status: 404, msg: 'Not valid ObjectID' }); //todo make global check for all oid
+                return;
+            }
             let discounts = await Discount.find()
-            let client = await Client.findById(req.params.client).populate('messages').populate('category').populate('news').exec()
+            let client = await Client.findById(req.params.client).populate('messages').populate('category').populate('news').exec();
+            if (!client) {
+                res.status(403).json({ status: 403, msg: 'Client not found' }); //todo
+                return;
+            }
             if(client){
                 let discount = getClientDiscount(client,discounts);
                 if (discount){
@@ -54,7 +103,8 @@ class ClientController {
         let Client = db.model("Client");
         let Order = db.model("Order");
         let Discount = db.model("Discount");
-        let discounts = await Discount.find()
+        let discounts = await Discount.find();
+        let OrderScan = db.model("OrderScan");
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "clients", parametr: "active" }, db, res)
             if (checkResult) {
@@ -69,13 +119,22 @@ class ClientController {
             
             let clients = await Client.find().populate('messages').populate('category').exec();
 
-
-
             let newClient = [];
             for (const cl of clients) {
                 let copy = JSON.parse(JSON.stringify(cl));
                 copy.orders = await Order.find({client:cl._id});
                 copy.discount = getClientDiscount(cl,discounts) ? getClientDiscount(cl,discounts).discount_percentage : 0;
+                copy.scans = await OrderScan.find({client:cl._id}).sort({ createdAt: -1 });
+                let last_scanned_date_full = copy.scans[0] ? copy.scans[0].createdAt : null;
+                let last_scanned_date=null;
+                if(last_scanned_date_full){
+                    const year = last_scanned_date_full.getFullYear();
+                    const month = String(last_scanned_date_full.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+                    const day = String(last_scanned_date_full.getDate()).padStart(2, '0');
+                    last_scanned_date = `${year}-${month}-${day}`;
+                }
+                copy.last_scanned_date = last_scanned_date;
+
                 newClient.push(copy);
             }
 
@@ -168,9 +227,12 @@ class ClientController {
         updateClient: try {
             let query = { '_id': req.params.client }
             let client = await Client.findById(query).populate("news")
-            client.name = req.fields.name
-            client.phone = req.fields.phone
-            client.email = req.fields.email
+            client.name = req.fields.name ? req.fields.name : client.name;
+            client.phone = req.fields.phone ? req.fields.phone : client.phone;
+            client.email = req.fields.email ? req.fields.email : client.email;
+            client.balance = (typeof req.fields.balance !== 'undefined') ? req.fields.balance : client.balance;
+            client.gender = req.fields.gender ? req.fields.gender : client.gender;
+            
             client.custom_field_0 = req.fields.custom_field_0
             client.custom_field_1 = req.fields.custom_field_1
             client.custom_field_2 = req.fields.custom_field_2
@@ -488,7 +550,35 @@ class ClientController {
         res.status(result.status).json(result);
     };
 
+    removeClientDevice = async (req, res) => {
+        const db = useDB(req.db);
+        const Client = db.model("Client");
+        const Device = db.model("Device");
+        try {
+            const foundClient = await Client.findById(req.fields.client);
+            if(!foundClient) {
+                return res.status(404).json({ status: 404, msg: 'No user found' });
+            }
+            const providedToken = req.fields.device_token;
+            if (!providedToken) {
+                return res.status(400).json({ status: 400, msg: 'No token provided' });
+            }
+            const foundToken = await Device.findOne({ 'token': providedToken, client: foundClient._id });
+            if (!foundToken) {
+                return res.status(404).json({ status: 404, msg: 'No device found' });
+            }
+            await Device.findByIdAndDelete(foundToken._id);
+
+            return res.status(200).json({ status: 200, msg: 'Removed Successfully' });
+        } catch (err) {
+            const errResponse = sendError(err, req.headers["accept-language"]);
+            return res.status(errResponse.status).json(errResponse);
+        }
+    };
+
     addClientDevice = async function (req, res) {
+        console.log("ADDING DEVICE",req.fields.device_token);
+        console.log(req.db,"DB");
         let db = useDB(req.db)
         let Client = db.model("Client");
         let Device = db.model("Device");
@@ -499,23 +589,33 @@ class ClientController {
         }
         try {
             let client = await Client.findById(req.fields.client)
+            console.log(client._id);
             if (client) {
                 // let device = await Device.findOne({ "token": req.fields.device_token})//old
                 let device = await Device.findOne({ "client": client})//new 04/10/21
+                console.log(device,"DEVICE");
                 if (device){
                     // device.client = req.fields.client //old
                     device.token = req.fields.device_token //new 04/10/21
-                    device.save()
+                    device.save({ validateBeforeSave: false })
                     result['msg'] = "Device changed"
                 }else{
-                    await new Device({
-                        client: req.fields.client,
-                        token: req.fields.device_token,
-                        type: req.fields.type
-                    }).save();
+                    try {
+                        console.log("CREATED 1",req.fields.device_token);
+                        let newDevice = await new Device({
+                            client: req.fields.client,
+                            token: req.fields.device_token,
+                            type: req.fields.type
+                        }).save({ validateBeforeSave: false });
+                        console.log("CREATED-",newDevice);
+                    } catch (error) {
+                        console.log(error,"ADD DEVICE ERROR");
+                    }
+
                 }
             }
         } catch (error) {
+            console.log(error,"ERORORRR");
             result = sendError(error, req.headers["accept-language"])
         }
 

@@ -8,7 +8,7 @@
         <li class="loaylty-list" v-if="isAdmin"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='PersonalSettings' }" to="/settings/personal-settings">Personal settings</router-link></li>
         <li class="loaylty-list" v-if="isAdmin"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='StaffSettings' }" to="/settings/staff-settings">Staff settings</router-link></li>
         <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='AddressDelivery' }" to="/settings/address-delivery">Address and delivery</router-link></li>
-        <li class="loaylty-list" v-if="isAdmin"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='ProductsImport' }" to="/settings/products-import">Products Import</router-link></li>
+        <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='ProductsImport' }" to="/settings/products-import">Products Import</router-link></li>
       </ul>
     </div>
   </div>
@@ -20,9 +20,9 @@
 
 export default {
     name: "SettingsNavbar",
-  
     data() {
         return {
+            email:"",
             user: JSON.parse(localStorage.getItem('user'))
         }
     },
@@ -47,6 +47,15 @@ export default {
     //     });
     //   });
     // }
+  },
+  beforeCreate(){
+    let that = this;
+    this.axios
+        .get(this.url('getSettings'))
+        .then(function (response){
+          let settings = response.data.object;
+          that.email = settings.email;
+        })
   },
   mounted(){
     // this.addActive()

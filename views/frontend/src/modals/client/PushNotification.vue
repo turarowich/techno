@@ -96,7 +96,7 @@
               <h3 class="notification-title">Custom text</h3>
               <input :disabled="newData.news!==''" :class="{disableInput:newData.news!==''}" v-model="newData.title"  class="cashback-input mb-3" placeholder="Title">
               <textarea :disabled="newData.news!==''" :class="{disableInput:newData.news!==''}"  v-model="newData.description"  class="general-area p-2" placeholder="Description"></textarea>
-              <button class="save" @click.prevent="onSubmit">Send</button>
+              <button class="save" @click.prevent="onSubmit">SendP1</button>
             </div>
           </div>
         </div>

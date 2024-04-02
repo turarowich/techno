@@ -1,14 +1,10 @@
 var bcrypt = require('bcryptjs');
-const { useDB, sendError, saveImage, checkAccess } = require('../../services/helper')
+const { useDB, sendError, saveImage, checkAccess, createQrFile } = require('../../services/helper');
 var validate = require('../../config/messages');
-const { query } = require('express');
-const mongoose = require("mongoose");
-
-const delivery = require('../models/delivery');
 const config = require("../../config/config");
 const QRCode = require('qrcode');
 var path = require('path');
-const fs = require('fs')
+const fs = require('fs');
 class SettingsController{
     
     getSettingsClient = async function (req, res) {
@@ -47,7 +43,6 @@ class SettingsController{
     };
 
     getSettings = async function (req, res) {
-        console.log("GETTING SETTINGS");
         //
         let shoes_db = useDB('loygift');
         let catalogs_model = shoes_db.model("catalogs");
@@ -90,11 +85,83 @@ class SettingsController{
             result['branches'] = branches;
             result['deliveries'] = deliveries;
             result['discounts'] = discounts;
+            result['clientsFilter'] = settings.clientsFilter ?? null;
+            result['scannerStatus'] = settings.scannerStatus ?? null;
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
         res.status(result.status).json(result);
     };
+
+    updateClientFilter = async function (req, res) {
+        let db = useDB(req.db)
+        let Settings = db.model("Settings");
+        let result = {
+            'status': 200,
+            'msg': 'Settings updated'
+        }
+        try {
+            let settings = await Settings.findOne({});
+            if (!settings) {
+                settings = await new Settings({
+                    slogan: " ",
+                }).save();
+            }
+
+            settings.clientsFilter = req.fields.filters;
+            await settings.save();
+
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.status(result.status).json(result);
+    }
+
+    updateScannerStatus = async function (req, res) {
+        let db = useDB(req.db);
+        let Settings = db.model("Settings");
+        let result = {
+            'status': 200,
+            'msg': 'Settings updated'
+        }
+        try {
+            let settings = await Settings.findOne({});
+            if (!settings) {
+                settings = await new Settings({
+                    slogan: " ",
+                }).save();
+            }
+
+            settings.scannerStatus = req.fields.scannerStatus;
+            await settings.save();
+
+            //RECREATE ALL CLIENT QR CODES
+
+
+            let web = config.QRCODE_BASE;
+            let scannerStatus = settings.scannerStatus;
+
+            let Client = db.model("Client");
+            let clients = await Client.find();
+
+
+            for(const client of clients){
+                let codeString = client.uniqueCode;
+                if(scannerStatus){
+                    codeString = web + "/client_info" + '/' + settings.catalogUrl + '/' + client.uniqueCode;
+                }
+            
+                let qrCode = createQrFile(client.uniqueCode, req.db ,codeString);
+                client.QRCode = qrCode;
+                await client.save();
+            }
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.status(result.status).json(result);
+    }
+
+
 
     updateSettings = async function (req, res) {
         //
@@ -141,6 +208,9 @@ class SettingsController{
             }
             
             let settings = await Settings.findOne({})
+            if (req.fields.statuses) {
+                await Settings.findOneAndUpdate({ '_id': settings._id }, { orderStatuses: req.fields.statuses });
+            }
             if (!settings) {
                 settings = await new Settings({
                     slogan: " ",
@@ -267,7 +337,7 @@ class SettingsController{
         let dir = path.join(__dirname, '/../../views/frontend/images/' + company+'/qr');
 
         try {
-            function createQrFile(){
+            function createCatalogQrFile(){
                 let filename = dir + '/' + 'code.png';
                 QRCode.toFile(filename, catalogUrl, {
                     color: {
@@ -284,7 +354,7 @@ class SettingsController{
                     console.log(err)
                 })
             }
-            createQrFile();
+            createCatalogQrFile();
             result.msg = 'Success';
             await Settings.findOneAndUpdate(req.fields.settings_id, {catalogUrl:catalog});
         }catch (errr){

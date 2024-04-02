@@ -23,7 +23,7 @@ function verifyDB(req, res, next) {
     let catalogs_model = shoes_db.model("catalogs");
     ///if already has access place
     if(req.headers['access-place'] || !catalog_urls.includes(path)){
-        console.log('already has access place', req.db);
+        console.log('already has access place order', req.db);
         next();
     }else{
         catalogs_model.findOne({ 'cat_url': cat_url })
@@ -34,7 +34,7 @@ function verifyDB(req, res, next) {
                     next();
                 }else{
                     //throw error
-                    return res.status(404).send('Unable to find the requested company!');
+                    return res.status(404).send('Unable to find the requested company!s');
                 }
             })
             .catch(error => {
