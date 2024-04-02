@@ -160,12 +160,11 @@
 
 
 
-
         <ImportClient />
         <AddCategory :listCategory="listCategory" :getCategories="reFetchCategories" />
         <EditCategory :listCategory="listCategory" :select_category="select_category"
           :getCategories="reFetchCategories" />
-        <AddProduct :listCategory="listCategory" :getProducts="getProducts" :productCustomFields="customFields"/>
+        <AddProduct :navigateDisplayParentCategories="navigateDisplayParentCategories" :listCategory="listCategory" :getProducts="getProducts" :productCustomFields="customFields"/>
         <EditProduct :listCategory="listCategory" :select_product="select_product" :getProducts="getProducts" :productCustomFields="customFields"/>
 
         <div class="catalog-content" style="width:82%">
@@ -656,6 +655,7 @@ export default {
     getNestedCategories() {
       this.axios.get(this.url('getCategories/nested') + '?type=product')
         .then((res) => {
+          console.log(res.data.objects);
           this.parentCategories = res.data.objects;
           this.navigateDisplayParentCategories = [...res.data.objects];
           this.navigateDisplayParentCategories.unshift({ _id: null, name: 'all' })

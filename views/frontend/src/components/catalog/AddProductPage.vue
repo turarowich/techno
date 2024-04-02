@@ -141,10 +141,11 @@ export default {
       await this.axios.get(this.url('getCategories'))
           .then((res)=>{
             this.listCategory = res.data.objects;
-            this.listCategory.unshift({_id:'', name: 'All'})
-
+            this.listCategory.unshift({_id:'', name: 'All'});
+            
           })
     },
+    
     onSubmit(){
       let new_product = this.newProduct;
       const form  = new FormData;

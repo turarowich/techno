@@ -25,10 +25,72 @@
 
                       <div style="width:25%;">
                         <label class="product-label">Select category</label><br>
-                        <select v-model="newProduct.category" class="form-control mb-0 select-phone" aria-label="Default select example">
-                          <option value="">Without category</option>
-                          <option :value="cat._id" v-for="cat in listCategory.slice(1)"  :key="cat._id" >{{cat.name}}</option>
-                        </select>
+                        <div class="sel-block-main">
+                          <div class="sel-block-main_modal" :class="{ 'show-category': isCategoryVisible }">
+                            <div v-for="(category, index) in navigateDisplayParentCategories" :key="category._id">
+                              <li v-if="category.name !== 'all'" class="catalog-list" :id="category.name" :ref="'menu' + index"
+                                :class="{ active: selectedCategory === category._id }">
+                                <p class="category-text tool-tip" data-toggle="tooltip" data-placement="top">
+                                  <span class="name-category" @click="selectCategory(category._id, category.name)">{{ category.name }} </span>
+                                  <span v-if="category.children && category.children.length > 0" class="arrow" :class="{ 'arrow-down': isCategoryOpen[index] }"  @click="toggleCategory(index)">
+                                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <g clip-path="url(#clip0_89_1499)">
+                                      <path d="M8.99956 9.87903L12.7121 6.16653L13.7726 7.22703L8.99956 12L4.22656 7.22703L5.28706 6.16653L8.99956 9.87903Z" fill="#D3D3D3"/>
+                                      </g>
+                                      <defs>
+                                      <clipPath id="clip0_89_1499">
+                                      <rect width="18" height="18" fill="white"/>
+                                      </clipPath>
+                                      </defs>
+                                    </svg>
+                                  </span>
+                                </p>
+                              </li>
+                              <div v-show="isCategoryOpen[index]">
+                                <div v-for="(child) in category.children" :key="child._id">
+                                  <li :key="child._id" class="catalog-list catalog-list-child"
+                                    :id="child.name" :ref="'menu' + index" :class="{ active: selectedCategory === child._id }">
+                                    <p class="category-text tool-tip" data-toggle="tooltip" data-placement="top">
+                                      <span class="name-category" @click="selectCategory(child._id, child.name)">{{ child.name }} </span>
+                                      <span v-if="child.children && child.children.length > 0" class="arrow" :class="{ 'arrow-down': isChildOpen[child._id] }" @click.stop="toggleChild(index, child._id)">
+                                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                          <g clip-path="url(#clip0_89_1499)">
+                                          <path d="M8.99956 9.87903L12.7121 6.16653L13.7726 7.22703L8.99956 12L4.22656 7.22703L5.28706 6.16653L8.99956 9.87903Z" fill="#D3D3D3"/>
+                                          </g>
+                                          <defs>
+                                          <clipPath id="clip0_89_1499">
+                                          <rect width="18" height="18" fill="white"/>
+                                          </clipPath>
+                                          </defs>
+                                        </svg>
+                                      </span>
+                                    </p>
+                                  </li>
+                                  <div v-show="isChildOpen[child._id]">
+                                    <li v-for="(nestedChild) in child.children" :key="nestedChild._id" class="catalog-list catalog-list-child catalog-list-child-nested"
+                                      :id="nestedChild.name" :ref="'menu' + index" :class="{ active: selectedCategory === nestedChild._id }">
+                                      <p class="category-text tool-tip" data-toggle="tooltip" data-placement="top">
+                                        <span class="name-category" @click="selectCategory(nestedChild._id, nestedChild.name)">{{ nestedChild.name }}</span>
+                                      </p>
+                                    </li>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <input placeholder="Without category" type="text" class="cashback-input" v-model="selectedCategoryInput" readonly @click="toggleCategoryVisibility">
+                        </div>
+           
+
+
+
+
+
+
+
+
+
+
                       </div>
                     </div>
 
@@ -230,7 +292,7 @@ import $ from "jquery";
 
 export default {
 name: "AddProduct",
-props:['listCategory', 'getProducts', 'productCustomFields'],
+props:['navigateDisplayParentCategories', 'listCategory', 'getProducts', 'productCustomFields',],
   data(){
     return{
       open: false,
@@ -287,6 +349,13 @@ props:['listCategory', 'getProducts', 'productCustomFields'],
       },
 
       selectedColors: this.productCustomFields,
+
+      // Состояние для категории
+      isCategoryOpen: {},
+      isChildOpen: {},
+      selectedCategory: null,
+      isCategoryVisible: false,
+      selectedCategoryInput:'',
     };
   },
   computed:{
@@ -307,6 +376,36 @@ props:['listCategory', 'getProducts', 'productCustomFields'],
   //   },
   },
   methods:{
+    toggleCategoryVisibility() {
+      this.isCategoryVisible = !this.isCategoryVisible;
+    },
+    closeCategory(event) {
+      if (!document.querySelector('.sel-block-main').contains(event.target)) {
+        // Если нет, закрываем категорию
+        this.isCategoryVisible = false;
+      }
+    },
+    selectCategory(categoryId, categoryName) {
+      this.newProduct.category = categoryId;
+      this.selectedCategoryInput = categoryName;
+    },
+    toggleCategory(index) {
+      console.log(index);
+      this.isCategoryOpen = {...this.isCategoryOpen, [index]: !this.isCategoryOpen[index]};
+    },
+    toggleChild(index, childId) {
+      this.isChildOpen = {...this.isChildOpen, [childId]: !this.isChildOpen[childId]};
+    },
+
+
+
+    
+    toggleSubcategories(category) {
+      // Переключаем флаг для показа/скрытия подкатегорий
+      if (category.children) {
+        category.showChildren = !category.showChildren;
+      }
+    },
     resetColors() {
       this.productCustomFields.productCustomColors.values.map(field => {
         this.selectedColors.push({
@@ -584,6 +683,7 @@ props:['listCategory', 'getProducts', 'productCustomFields'],
 
   },
   mounted(){
+    document.addEventListener('click', this.closeCategory);
     window.addEventListener( 'click', ( e ) => {
       if (!document.getElementById( 'customSelect' )?.contains( e.target )) {
         // showDropdown.value = !showD ropdown.value
@@ -617,6 +717,35 @@ props:['listCategory', 'getProducts', 'productCustomFields'],
 </script>
 
 <style scoped>
+
+
+.custom-select {
+  /* Здесь вы можете добавить свои стили */
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.custom-select option {
+  /* Стилизация опций */
+  background-color: white;
+  color: black;
+}
+
+.custom-select:focus {
+  /* Стилизация при фокусировке */
+  outline: none;
+  border-color: #66afe9;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+
+
 .items.closed {
   display: none;
 }
@@ -768,4 +897,85 @@ props:['listCategory', 'getProducts', 'productCustomFields'],
 .cashback-input{
   font-size: 16px;
 }
+
+
+
+
+
+
+
+
+.sel-block-main{
+  position: relative;
+}
+.sel-block-main input{
+  cursor: pointer;
+}
+.sel-block-main .sel-block-main_modal{
+  position: absolute;
+  top: 100%;
+  background: white;
+  z-index: 1;
+  width: 100%;
+  border-radius: 0px 0px 5px 5px;
+  box-shadow: 2px 11px 35px 0px rgba(0, 0, 0, 0.1);
+  display: none;
+  min-width: 120px;
+  padding-bottom: 20px;
+  max-height: 634px;
+  overflow-y: auto;
+}
+.sel-block-main .sel-block-main_modal.show-category{
+  display: block;
+}
+.sel-block-main .sel-block-main_modal div .catalog-list{
+  list-style: none;
+  cursor: pointer;
+}
+.sel-block-main .sel-block-main_modal div .catalog-list:hover{
+  background: rgb(248, 249, 255);
+  color: black;
+}
+.sel-block-main .sel-block-main_modal .catalog-list + div {
+    margin-left: 16px;
+}
+.sel-block-main .sel-block-main_modal .catalog-list .category-text {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 19px;
+  padding: 0 16px;
+  position: relative;
+}
+.sel-block-main .sel-block-main_modal .catalog-list .category-text::after{
+    content: '';
+    position: absolute;
+    display: inline-block;
+    height: 1px;
+    background: rgb(211, 211, 211);
+    left: auto;
+    bottom: 0;
+    width: calc(100% - 32px);
+    right: auto;
+}
+.sel-block-main .sel-block-main_modal .catalog-list .category-text .arrow, .sel-block-main .sel-block-main_modal .catalog-list .category-text .arrow path{
+  transition: 0.3s ease;
+}
+.sel-block-main .sel-block-main_modal .catalog-list .category-text .arrow:hover path{
+  fill: black;
+}
+.sel-block-main .sel-block-main_modal .catalog-list .category-text .arrow.arrow-down{
+  transform: rotate(180deg);
+}
+.catalog-list .category-text .name-category{
+  width: 100%;
+  padding: 15px 0px;
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 </style>
