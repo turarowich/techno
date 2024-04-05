@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const orderProductSchema = new Schema({
+    color: {
+        type: Schema.Types.Mixed,
+        required: false,
+        default: {}     
+    },
     product: {
         type: Schema.Types.ObjectId,
         ref: 'Product'
