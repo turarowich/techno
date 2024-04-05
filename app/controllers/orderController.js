@@ -561,7 +561,8 @@ class OrderController{
                         secondary_ru: search_product.secondary_ru,
                         img: search_product.img,
                         price: search_product.price,
-                        quantity: product.quantity
+                        quantity: product.quantity,
+                        color: req.fields.color
                     }).save();
                     order.products.push(order_product._id);
 
