@@ -640,7 +640,7 @@ export default {
         })
       this.axios.get(this.url('getProductPP'))    
       this.axios.get(this.url('getCategoryPP'))    
-      this.axios.get(this.url('getCheckPP'))    
+      this.axios.get(this.url('getCheckPP'))
     },
     reFetchCategories() {
       this.getCategories();
