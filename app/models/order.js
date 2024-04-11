@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const orderSchema = new Schema({
+    post_id: {
+        type: "String",
+        default:"",
+        required: false,
+    },
     pointsStatus:{
         received:{
             type: Boolean,

@@ -6,6 +6,46 @@ const moment = require('moment');
 const { connect } = require('mongodb');
 const Analytics = require('./analyticsController');
 const nodemailer = require('nodemailer');
+const postUrl = 'https://joinposter.com/api'
+const axios = require('axios');
+async function callAPI(href) {
+    let response = await axios({
+      url: href,
+      method: "get",
+      params: {
+        limit: 500,
+      },
+      headers: {
+        "Content-Type": "application/json",
+        "Accept-Encoding": "gzip",
+      },
+    }).catch((error) => {
+      console.log(
+        error.response?.data?.errors,
+        "Call Api error"
+      );
+      return { error: error };
+    });
+    return response
+  }
+async function postAPI(href, data) {
+    let response = await axios({
+      url: href,
+      method: "post",
+      data: data,
+      headers: {
+        "Content-Type": "application/json",
+        "Accept-Encoding": "gzip",
+      },
+    }).catch((error) => {
+      console.log(
+        error.response?.data?.errors,
+        "Call Api error"
+      );
+      return { error: error };
+    });
+    return response;
+}
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
@@ -453,6 +493,9 @@ class OrderController{
         let Discount = db.model("Discount");
         let PromocodeModel = db.model("Promocode");
         let Branch = db.model("Branch");
+        let Settings = db.model("Settings");
+        let settings = await Settings.find();
+        let tokenPP = settings[0].tokenPosterPos ? settings[0].tokenPosterPos : ""
         let lang = req.headers["accept-language"]
         if (lang != 'ru') {
             lang = 'en'
@@ -551,6 +594,54 @@ class OrderController{
 
                 if(!product.id){
                     search_product = await Product.findById(product._id)
+                }
+                let branchPP = {}
+                await callAPI(`${postUrl}/spots.getSpots?token=${tokenPP}`)
+                .then(data => branchPP = data)
+                let spotID = 1
+                for (let item of branchPP.data.response) {
+                    if (item.name === branch.name) {
+                        spotID = item.spot_id;
+                    }
+                }
+                let PostData = {
+                    'spot_id'        : spotID,
+                    'spot_tablet_id' : 1,
+                    'table_id'       : 1,
+                    'user_id'        : 5,
+                    'guests_count'   : 1,
+                }
+                
+                if (tokenPP != "")  {
+                    await postAPI(`${postUrl}/transactions.createTransaction?token=${tokenPP}`,PostData)
+                    .then(result => {
+                        order.post_id = result.data.response.transaction_id
+                    })
+                }
+                console.log(branch.name)
+                let PostData2 = {
+                    'spot_id'        : spotID,
+                    'spot_tablet_id' : 1,
+                    'transaction_id' : order.post_id,
+                    'product_id'     : search_product.post_id,
+                }
+                if (tokenPP != "")  {
+                    await postAPI(`${postUrl}/transactions.addTransactionProduct?token=${tokenPP}`,PostData2)
+                    .then(result => {
+                    })
+                }
+
+                // add comment in check
+                let PostData3 = {
+                    'spot_id'        : spotID,
+                    'spot_tablet_id' : 1,
+                    'transaction_id' : order.post_id,
+                    'comment'     : order.notes,
+                }
+                if (tokenPP != "")  {
+                    await postAPI(`${postUrl}/transactions.changeComment?token=${tokenPP}`,PostData3)
+                    .then(result => {
+                    })
                 }
                 if (search_product && search_product.quantity>=product.quantity) {
                     let order_product = await new OrderProduct({
@@ -936,7 +1027,9 @@ class OrderController{
         let Client = db.model("Client");
         let ClientBonusHistory = db.model("clientBonusHistory");
         let cashback_model = db.model("Cashback");
-
+        let Settings = db.model("Settings");
+        let settings = await Settings.find();
+        let tokenPP = settings[0].tokenPosterPos ? settings[0].tokenPosterPos : ""
         if (req.userType == "employee" && Object.keys(req.fields).length == 1 && "status" in req.fields){
             let checkResult = await checkAccess(req.userID, { access: "canChangeOrderStatus" }, db, res)
             if (checkResult) {
@@ -979,6 +1072,21 @@ class OrderController{
                 updated_order.statusDiscount,// discount object or null
             );
             let cashback_from_order = await calcCashback(result_object.productCurrentPrice,cashback_model);
+            if(updated_order.status === "Done") {
+                console.log(updated_order)
+                let PostData2 = {
+                    'spot_id'        : 1,
+                    'spot_tablet_id' : 1,
+                    'transaction_id' : updated_order.post_id,
+                    'payed_cash'     : updated_order.totalPrice,
+                }
+                if (tokenPP != "")  {
+                    await postAPI(`${postUrl}/transactions.closeTransaction?token=${tokenPP}`,PostData2)
+                    .then(result => {
+                        console.log("result.data",result)
+                    })
+                }
+            }
             if(updated_order.status === "Done" && client){
                 console.log("HERE")
                 console.log(cashback_from_order)

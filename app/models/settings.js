@@ -275,6 +275,11 @@ const settingsSchema = new Schema({
             default: ""
         }]
     },
+    tokenPosterPos: {
+        type: String,
+        required: false,
+        default: ""
+    },
     //////catalog end
     createdAt: {
         type: Date,

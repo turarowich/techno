@@ -1,5 +1,26 @@
 const ObjectId = require('mongoose').Types.ObjectId;
 const { useDB, sendError } = require('../../services/helper')
+const postUrl = 'https://joinposter.com/api'
+const axios = require('axios');
+
+async function postAPI(href, data) {
+    let response = await axios({
+      url: href,
+      method: "post",
+      data: data,
+      headers: {
+        "Content-Type": "application/json",
+        "Accept-Encoding": "gzip",
+      },
+    }).catch((error) => {
+      console.log(
+        error.response?.data?.errors,
+        "Call Api error"
+      );
+      return { error: error };
+    });
+    return response;
+}
 class CategoryController {
     getCategory = async function (req, res) {
         let db = useDB(req.db)
@@ -94,7 +115,9 @@ class CategoryController {
 
     addCategory = async function (req, res) {
         let db = useDB(req.db)
-
+        let Settings = db.model("Settings");
+        let settings = await Settings.find();
+        let tokenPP = settings[0].tokenPosterPos ? settings[0].tokenPosterPos : ""
         const CategoryModel = db.model("Category");
 
         let result = {
@@ -130,7 +153,19 @@ class CategoryController {
                     newCategoryObject.parent = foundParentCategory
                 }
             }
-
+            let data = {
+                'category_name'   : req.fields.name,
+                'parent_category' : 0,
+                'category_color'  : 'yellow',
+                'category_hidden' : 0,
+                'tax_id'          : 0,
+            }
+            if (tokenPP != "")  {
+                await postAPI(`${postUrl}/menu.createCategory?token=${tokenPP}`,data)
+                .then(data => {
+                    newCategoryObject.post_id = data.data.response
+                })
+            }
             const category = await new CategoryModel(newCategoryObject).save();
             result['object'] = category
         } catch (error) {
@@ -143,7 +178,9 @@ class CategoryController {
     updateCategory = async function (req, res) {
         let db = useDB(req.db)
         let Category = db.model("Category");
-
+        let Settings = db.model("Settings");
+        let settings = await Settings.find();
+        let tokenPP = settings[0].tokenPosterPos ? settings[0].tokenPosterPos : ""
         let result = {
             'status': 200,
             'msg': 'Category updated'
@@ -154,6 +191,23 @@ class CategoryController {
             if (!req.fields.parent || req.fields.parent === '') {
                 delete req.fields.parent;
                 req.fields.$unset = { parent: ObjectId(req.params.category) };
+            }
+            let searchProduct = await Category.findById(query)
+
+            let data = {
+                'category_id'     : searchProduct.post_id,
+                'category_name'   : req.fields.name,
+                'parent_category' : 0,
+                'category_color'  : 'yellow',
+                'category_hidden' : 0,
+                'tax_id'          : 0,
+            }
+            if (tokenPP != "")  {
+                await postAPI(`${postUrl}/menu.updateCategory?token=${tokenPP}`,data)
+                .then(result => {
+                    console.log("searchProduct",searchProduct)
+                    console.log(result)
+                })
             }
             let category = await Category.findOneAndUpdate(query, req.fields)
             result['object'] = category
@@ -167,7 +221,9 @@ class CategoryController {
     deleteCategory = async function (req, res) {
         let db = useDB(req.db)
         let Category = db.model("Category");
-
+        let Settings = db.model("Settings");
+        let settings = await Settings.find();
+        let tokenPP = settings[0].tokenPosterPos ? settings[0].tokenPosterPos : ""
         let result = {
             'status': 200,
             'msg': 'Category deleted'
@@ -211,6 +267,14 @@ class CategoryController {
                         });
                     }
                 });
+            }
+            if (tokenPP != "")  {
+                for(let i =0; i < deleteObjectIds.length; i++) {
+                    let category = await Category.findById(deleteObjectIds[i])
+                    console.log(category)
+                    await postAPI(`${postUrl}/menu.removeCategory?token=${tokenPP}`,{'category_id': category.post_id})
+                    
+                }
             }
             await Category.deleteMany({ _id: { $in: deleteObjectIds } });
         } catch (error) {

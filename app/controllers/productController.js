@@ -5,7 +5,27 @@ const { useDB, sendError, saveImage, createExcel, removeImage, checkAccess } = r
 var validate = require('../../config/messages');
 var readXlsxFile = require('read-excel-file/node');
 const ObjectId = require('mongoose').Types.ObjectId;
+const postUrl = 'https://joinposter.com/api'
+const axios = require('axios');
 
+async function postAPI(href, data) {
+    let response = await axios({
+      url: href,
+      method: "post",
+      data: data,
+      headers: {
+        "Content-Type": "application/json",
+        "Accept-Encoding": "gzip",
+      },
+    }).catch((error) => {
+      console.log(
+        error.response?.data?.errors,
+        "Call Api error"
+      );
+      return { error: error };
+    });
+    return response;
+}
 // todo move business logic to services
 
 // to whom this may cancern, i sincerely apologise for this mess, 
@@ -160,6 +180,9 @@ class ProductController {
         let db = useDB(req.db)
         let Product = db.model("Product");
         let Log = db.model("Log");
+        let Settings = db.model("Settings");
+        let settings = await Settings.find();
+        let tokenPP = settings[0].tokenPosterPos ? settings[0].tokenPosterPos : ""
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -240,6 +263,24 @@ class ProductController {
                     }
                 }
             }
+            let PostData = {
+                'product_name'          : data.name,
+                'menu_category_id'      : 0,
+                'workshop'              : 1,
+                'weight_flag'           : 0,
+                'different_spots_prices': 0,
+                'modifications'         : 0,
+                'barcode'               : 0,
+                'cost'                  : data.promoPrice ? data.promoPrice : 0,
+                'price'                 : data.price * 100,
+                'visible'               : 1,
+            }
+            if (tokenPP != "")  {
+                await postAPI(`${postUrl}/menu.createProduct?token=${tokenPP}`,PostData)
+                .then(result => {
+                    product.post_id = result.data.response
+                })
+            }
             await product.save()
             await new Log({
                 type: "product_created",
@@ -289,6 +330,9 @@ class ProductController {
         let db = useDB(req.db)
         let Product = db.model("Product");
         let Log = db.model("Log");
+        let Settings = db.model("Settings");
+        let settings = await Settings.find();
+        let tokenPP = settings[0].tokenPosterPos ? settings[0].tokenPosterPos : ""
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -376,6 +420,28 @@ class ProductController {
                     product.imgArray.splice($i, 1)
                 }
             }
+            let searchProduct = await Product.findById(query)
+
+            let PostData = {
+                'id'                    : searchProduct.post_id,
+                'product_name'          : data.name,
+                'menu_category_id'      : 0,
+                'workshop'              : 1,
+                'weight_flag'           : 0,
+                'different_spots_prices': 0,
+                'modifications'         : 0,
+                'barcode'               : 0,
+                'cost'                  : data.promoPrice,
+                'price'                 : data.price * 100,
+                'visible'               : 1,
+            }
+            if (tokenPP != "")  {
+                await postAPI(`${postUrl}/menu.updateProduct?token=${tokenPP}`,PostData)
+                .then(result => {
+                    console.log("searchProduct",searchProduct)
+                    console.log(result)
+                })
+            }
             await product.save({ new: true })
 
             let test2 = await Product.findById(product.id);
@@ -433,6 +499,9 @@ class ProductController {
         let db = useDB(req.db)
         let Product = db.model("Product");
         let Log = db.model("Log");
+        let Settings = db.model("Settings");
+        let settings = await Settings.find();
+        let tokenPP = settings[0].tokenPosterPos ? settings[0].tokenPosterPos : ""
         if (req.userType == "employee") {
             let checkResult = await checkAccess(req.userID, { access: "catalog", parametr: "active", parametr2: 'canEdit' }, db, res)
             if (checkResult) {
@@ -456,6 +525,9 @@ class ProductController {
                     user_id: req.userID,
                     icon: "delete"
                 }).save()
+            }
+            if (tokenPP != "")  {
+                await postAPI(`${postUrl}/menu.removeProduct?token=${tokenPP}`,{'product_id': product.post_id})
             }
             await Product.findByIdAndRemove(query)
         } catch (error) {

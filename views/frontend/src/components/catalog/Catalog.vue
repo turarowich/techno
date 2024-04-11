@@ -638,6 +638,9 @@ export default {
           this.numberOfPagesArray = Array.from({ length: response.data.pagesCount || 0 }, (_, i) => i + 1);
           this.spinner = false;
         })
+      this.axios.get(this.url('getProductPP'))    
+      this.axios.get(this.url('getCategoryPP'))    
+      this.axios.get(this.url('getCheckPP'))    
     },
     reFetchCategories() {
       this.getCategories();
