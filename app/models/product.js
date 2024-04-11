@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const productSchema = new Schema({
+    post_id: {
+        type: "String",
+        default:"",
+        required: false,
+    },
     //if product has sizes or other props
     hasMultipleTypes: {
         type: Boolean,

@@ -14,6 +14,8 @@
         <input v-model="oneCApiLogin" class="form-input cashback-input " placeholder="apiLogin">
         <label class="sum-point">Password</label><br>
         <input v-model="oneCApiPassword" class="form-input cashback-input " placeholder="apiPassword">
+        <label class="sum-point">Poster Pos</label><br>
+        <input v-model="tokenPosterPos" class="form-input cashback-input " placeholder="Poster Pos">
       </div>
       <div style="flex: 1;margin-left: 3px;">
 
@@ -73,6 +75,7 @@ export default {
       oneCApiAddress:"",
       oneCApiLogin:"",
       oneCApiPassword: "",
+      tokenPosterPos: "",
       id: "",
       settings:{},
     }
@@ -109,6 +112,7 @@ export default {
     updateSettingsGeneral(){
       let that=this;
       let url = this.url('updateSettings');
+      this.settings.tokenPosterPos = that.tokenPosterPos
       this.axios.put(url, this.settings).then(function (response) {
         console.log(response);
         that.$successAlert('Updated');
@@ -145,6 +149,7 @@ export default {
           that.spinner = false;
           let settings = response.data.object;
           that.settings = settings
+          that.tokenPosterPos = settings.tokenPosterPos || '';
         })
   },
 }

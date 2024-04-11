@@ -20,7 +20,14 @@ var multer = require('multer');
 var upload = multer({ dest: '../public/product/' });
 var verifyAccess = require('../services/verifyAccess');
 var adminController = require('../app/controllers/adminController');
+var posterPosController = require('../app/controllers/posterPosController');
+
 module.exports = function (app, io) {
+    // PosterPos get product category check
+    app.get('/getProductPP', posterPosController.getProductPoster)
+    app.get('/getCategoryPP', posterPosController.getCategoryPoster)
+    app.get('/getCheckPP', posterPosController.getCheckPoster)
+    
     //Clients url
     app.get('/getClient/:client', clientController.getClient);
     app.get('/getClients', verifyAccess, clientController.getClients);
