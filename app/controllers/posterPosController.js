@@ -4,14 +4,18 @@ const { useDB, randomNumber } = require('../../services/helper')
 let baseUrl = `https://joinposter.com`;
 const fs = require("fs");
 const path = require("path")
+const { HttpsProxyAgent } = require('https-proxy-agent');
+const proxy = 'http://117.250.3.58:8080';
+const agent = new HttpsProxyAgent(proxy);
 
 async function downloadImage(url, filename, db) {
   try {
       const response = await axios({
           method: 'GET',
           url: url,
-          responseType: 'stream'
-      });
+          responseType: 'stream',
+          httpsAgent: agent // Добавление агента в запрос
+      }, );
       const imageName = path.basename(filename);
       const dbL = db
       const savePath = path.join(__dirname, '..', '..', 'views','frontend','images', dbL,'products', imageName);
@@ -37,6 +41,7 @@ async function callAPI(href) {
       "Content-Type": "application/json",
       "Accept-Encoding": "gzip",
     },
+    httpsAgent: agent
   }).catch((error) => {
     console.log(
       error,
