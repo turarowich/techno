@@ -9,7 +9,7 @@ const nodemailer = require('nodemailer');
 const postUrl = 'https://joinposter.com/api'
 const axios = require('axios');
 const { HttpsProxyAgent } = require('https-proxy-agent');
-const proxy = 'http://your-proxy-url:port';
+const proxy = 'http://117.250.3.58:8080';
 const agent = new HttpsProxyAgent(proxy);
 async function callAPI(href) {
     let response = await axios({
