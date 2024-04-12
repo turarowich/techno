@@ -63,16 +63,15 @@ class PosterPosController {
       let fetchFromPoster = await callAPI(`${postUrl}/menu.getProducts?token=${tokenPP}`);
       let data = fetchFromPoster.data.response
       for (const product of data) {
-        // downloadImage(baseUrl + product["photo_origin"], product["photo_origin"], req.db)
-        // .then(savedFilename => {
-        //   console.log(`Изображение успешно загружено и сохранено как ${savedFilename}.`);
-        // })
-        // .catch(error => {
-        //     console.error('Ошибка при загрузке и сохранении изображения:', error);
-        // });
-        // let imageName = path.basename(product["photo_origin"]);
+        downloadImage(baseUrl + product["photo_origin"], product["photo_origin"], req.db)
+        .then(savedFilename => {
+          console.log(`Изображение успешно загружено и сохранено как ${savedFilename}.`);
+        })
+        .catch(error => {
+            console.error('Ошибка при загрузке и сохранении изображения:', error);
+        });
         let imageName = product["photo_origin"] ? product["photo_origin"].split('/').pop() : product["product_id"]
-        let imgPath = "images/"+req.db+"/products/"+imageName;
+        let imgPath = "images/"+req.db+"/"+imageName;
 
         let oldProduct = await Product.findOne({ post_id: product["product_id"] });
         if (!oldProduct) {
