@@ -2,6 +2,9 @@ const ObjectId = require('mongoose').Types.ObjectId;
 const { useDB, sendError } = require('../../services/helper')
 const postUrl = 'https://joinposter.com/api'
 const axios = require('axios');
+const { HttpsProxyAgent } = require('https-proxy-agent');
+const proxy = 'http://your-proxy-url:port';
+const agent = new HttpsProxyAgent(proxy);
 
 async function postAPI(href, data) {
     let response = await axios({
@@ -12,6 +15,7 @@ async function postAPI(href, data) {
         "Content-Type": "application/json",
         "Accept-Encoding": "gzip",
       },
+      httpsAgent: agent
     }).catch((error) => {
       console.log(
         error.response?.data?.errors,

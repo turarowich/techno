@@ -8,6 +8,9 @@ const Analytics = require('./analyticsController');
 const nodemailer = require('nodemailer');
 const postUrl = 'https://joinposter.com/api'
 const axios = require('axios');
+const { HttpsProxyAgent } = require('https-proxy-agent');
+const proxy = 'http://your-proxy-url:port';
+const agent = new HttpsProxyAgent(proxy);
 async function callAPI(href) {
     let response = await axios({
       url: href,
@@ -19,6 +22,7 @@ async function callAPI(href) {
         "Content-Type": "application/json",
         "Accept-Encoding": "gzip",
       },
+      httpsAgent: agent
     }).catch((error) => {
       console.log(
         error.response?.data?.errors,
@@ -37,6 +41,7 @@ async function postAPI(href, data) {
         "Content-Type": "application/json",
         "Accept-Encoding": "gzip",
       },
+      httpsAgent: agent
     }).catch((error) => {
       console.log(
         error.response?.data?.errors,

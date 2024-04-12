@@ -15,10 +15,10 @@ async function downloadImage(url, filename, db) {
           url: url,
           responseType: 'stream',
           httpsAgent: agent // Добавление агента в запрос
-      }, );
+      });
       const imageName = path.basename(filename);
       const dbL = db
-      const savePath = path.join(__dirname, '..', '..', 'views','frontend','images', dbL,'products', imageName);
+      const savePath = path.join(__dirname, '..', '..', 'views','frontend','images', dbL, imageName);
       const writer = fs.createWriteStream(savePath);
       response.data.pipe(writer);
 
@@ -63,14 +63,15 @@ class PosterPosController {
       let fetchFromPoster = await callAPI(`${postUrl}/menu.getProducts?token=${tokenPP}`);
       let data = fetchFromPoster.data.response
       for (const product of data) {
-        downloadImage(baseUrl + product["photo_origin"], product["photo_origin"], req.db)
-        .then(savedFilename => {
-          console.log(`Изображение успешно загружено и сохранено как ${savedFilename}.`);
-        })
-        .catch(error => {
-            console.error('Ошибка при загрузке и сохранении изображения:', error);
-        });
-        let imageName = path.basename(product["photo_origin"]);
+        // downloadImage(baseUrl + product["photo_origin"], product["photo_origin"], req.db)
+        // .then(savedFilename => {
+        //   console.log(`Изображение успешно загружено и сохранено как ${savedFilename}.`);
+        // })
+        // .catch(error => {
+        //     console.error('Ошибка при загрузке и сохранении изображения:', error);
+        // });
+        // let imageName = path.basename(product["photo_origin"]);
+        let imageName = product["photo_origin"] ? product["photo_origin"].split('/').pop() : product["product_id"]
         let imgPath = "images/"+req.db+"/products/"+imageName;
 
         let oldProduct = await Product.findOne({ post_id: product["product_id"] });
