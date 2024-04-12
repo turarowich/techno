@@ -18,7 +18,7 @@ async function postAPI(href, data) {
       httpsAgent: agent
     }).catch((error) => {
       console.log(
-        error.response?.data?.errors,
+        error,
         "Call Api error"
       );
       return { error: error };
@@ -276,8 +276,7 @@ class CategoryController {
                 for(let i =0; i < deleteObjectIds.length; i++) {
                     let category = await Category.findById(deleteObjectIds[i])
                     console.log(category)
-                    await postAPI(`${postUrl}/menu.removeCategory?token=${tokenPP}`,{'category_id': category.post_id})
-                    
+                    await postAPI(`${postUrl}/menu.removeCategory?token=${tokenPP}`,{'category_id': category.post_id}) 
                 }
             }
             await Category.deleteMany({ _id: { $in: deleteObjectIds } });

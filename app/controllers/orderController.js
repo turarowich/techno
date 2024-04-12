@@ -25,7 +25,7 @@ async function callAPI(href) {
       httpsAgent: agent
     }).catch((error) => {
       console.log(
-        error.response?.data?.errors,
+        error,
         "Call Api error"
       );
       return { error: error };
@@ -44,7 +44,7 @@ async function postAPI(href, data) {
       httpsAgent: agent
     }).catch((error) => {
       console.log(
-        error.response?.data?.errors,
+        error,
         "Call Api error"
       );
       return { error: error };
