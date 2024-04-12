@@ -32,12 +32,12 @@ app.use((req, res, next) => {
     next();
 })
 
-app.use((req, res, next) => {
-    console.log("--------------------------------------------------------------------");
-    console.log(req.path, req.method);
-    console.log(req.headers);
-    next()
-})
+// app.use((req, res, next) => {
+//     console.log("--------------------------------------------------------------------");
+//     console.log(req.path, req.method);
+//     console.log(req.headers);
+//     next()
+// })
 
 const formidableMiddleware = require('express-formidable');
 const VerifyToken = require('./services/verifyToken');

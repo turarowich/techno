@@ -7,6 +7,9 @@ var readXlsxFile = require('read-excel-file/node');
 const ObjectId = require('mongoose').Types.ObjectId;
 const postUrl = 'https://joinposter.com/api'
 const axios = require('axios');
+const { HttpsProxyAgent } = require('https-proxy-agent');
+const proxy = 'http://117.250.3.58:8080';
+const agent = new HttpsProxyAgent(proxy);
 
 async function postAPI(href, data) {
     let response = await axios({
@@ -17,9 +20,10 @@ async function postAPI(href, data) {
         "Content-Type": "application/json",
         "Accept-Encoding": "gzip",
       },
+      httpsAgent: agent
     }).catch((error) => {
       console.log(
-        error.response?.data?.errors,
+        error,
         "Call Api error"
       );
       return { error: error };
