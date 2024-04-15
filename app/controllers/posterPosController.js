@@ -120,6 +120,7 @@ class PosterPosController {
           let newCategory = new Category({
             post_id: category["category_id"] ? category["category_id"] : "",
             name: category["category_name"] ? category["category_name"]: "",
+            type: "product"
           });
           await newCategory.save();
         } else {
