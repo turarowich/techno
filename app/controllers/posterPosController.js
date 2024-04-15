@@ -58,6 +58,7 @@ class PosterPosController {
       let db = useDB(req.db)
       let Product = db.model("Product");
       let Settings = db.model("Settings");
+      let Category = db.model("Category")
       let settings = await Settings.find();
       let tokenPP = settings[0].tokenPosterPos ? settings[0].tokenPosterPos : ""
       let fetchFromPoster = await callAPI(`${postUrl}/menu.getProducts?token=${tokenPP}`);
@@ -74,6 +75,7 @@ class PosterPosController {
         let imgPath = "images/"+req.db+"/"+imageName;
 
         let oldProduct = await Product.findOne({ post_id: product["product_id"] });
+        let cat = await Category.findOne({ post_id: product["menu_category_id"] });
         if (!oldProduct) {
           let newProduct = new Product({
             post_id: product["product_id"] ? product["product_id"] : "",
@@ -83,6 +85,7 @@ class PosterPosController {
             description: product['product_production_description'] ? product['product_production_description']: "",
             quantity: product['unit'] ? product['unit'] : 20,
             img: imgPath ? imgPath : null,
+            category: cat ? cat._id : null
           });
           await newProduct.save();
         } else {
@@ -93,6 +96,7 @@ class PosterPosController {
           oldProduct.description = product['product_production_description'] ? product['product_production_description']: "",
           oldProduct.quantity = product['unit'] ? product['unit'] : 20,
           oldProduct.img = imgPath ? imgPath : null
+          oldProduct.category = cat ? cat._id : null
           await oldProduct.save();
         }
       }
