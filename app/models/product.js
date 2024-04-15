@@ -50,6 +50,7 @@ const productSchema = new Schema({
     name_ru: {
         type: String,
         required: false,
+        default:"",
     },
     category: {
         type: Schema.Types.ObjectId,
