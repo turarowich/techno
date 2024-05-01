@@ -8,7 +8,7 @@ const clientOption = {
     poolSize: 50,
     useNewUrlParser: true,
     autoIndex: false,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
 };
 const option = { useNewUrlParser: true };
 

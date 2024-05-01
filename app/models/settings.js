@@ -3,16 +3,12 @@ const Schema = mongoose.Schema;
 
 const settingsSchema = new Schema({
     orderStatuses: {
-        required: {
-            type: Boolean,
-            required: true,
-            default: false
-        },
-        values: [{
-            type: String,
-            required: false,
-            default:'',
-        }]
+        type: Array,
+        default: ["Accept", "In Progress", "Done"]
+    },
+    orderStatusesPass: {
+        type: Boolean,
+        default: false,
     },
     scannerStatus: {
         type: Boolean,

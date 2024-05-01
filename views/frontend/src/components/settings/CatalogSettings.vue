@@ -221,6 +221,32 @@
           <input v-model="instagram" class="social-btns" placeholder="Instagram">
           <input v-model="website" class="social-btns" placeholder="Website">
         </div>
+        <div class="margin-20">
+          <h3 class="catalog-sub-title">Order statuses</h3>
+          <p class="catalog-description margin-10">Here you can edit status names when preparing an order</p>
+        </div>
+        <div>
+          <span>First Status</span>
+          <input v-model="orderStatuses[0]" class="social-btns" :placeholder="orderStatuses[0]">
+        </div>
+        <div>
+          <span>Second Status</span>
+          <input v-model="orderStatuses[1]" class="social-btns" :placeholder="orderStatuses[1]">
+        </div>
+        <div>
+          <span>Third Status</span>
+          <input v-model="orderStatuses[2]" class="social-btns" :placeholder="orderStatuses[2]">
+        </div>
+        <div class="d-flex margin-10" :style="{'margin-top': '40px'} ">
+          <label class="switch d-flex">
+            <input v-model="orderStatusesPass" type="checkbox">
+            <span class="slider round"></span>
+          </label>
+          <h2 class="catalog-sub-title">Automatically show first status</h2>
+        </div>
+        <p class="catalog-description margin-30">
+          When you enable this item, the first status will automatically appear in the app and in the “orders” tab
+        </p>
       </div>
     </div>
   </div>
@@ -265,11 +291,13 @@
         productCustomField1: { name: '', value: ''},
         productCustomField2:  { name: '', value: ''},
         productCustomFields: false,
+        orderStatusesPass: false,
         productCustomColors:{
           required: false,
           values: ['black'],
           names: ['']
         },
+        orderStatuses: ["Accept", "In Progress", "Done"],
         currentNewColor: {
           name: '',
           value: { hex: '#000' }
@@ -512,6 +540,8 @@
           facebook:this.facebook,
           instagram:this.instagram,
           website:this.website,
+          orderStatuses: this.orderStatuses,
+          orderStatusesPass: this.orderStatusesPass,
           productCustomField1: {name: this.productCustomField1.name, value: ''},
           productCustomField2: {name:this.productCustomField2.name, value: ''},
           productCustomFields: this.productCustomFields,
@@ -560,6 +590,8 @@
           that.instagram = settings.instagram || '';
           that.website = settings.website || '';
           that.spinner = false;
+          that.orderStatuses = settings.orderStatuses;
+          that.orderStatusesPass = settings.orderStatusesPass;
           that.productCustomField1.name = settings?.productCustomField1.name ?? ``;
           that.productCustomField2.name = settings?.productCustomField2.name ?? ``;
           that.productCustomFields = settings?.productCustomFields ?? false;

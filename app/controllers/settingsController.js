@@ -208,8 +208,11 @@ class SettingsController{
             }
             
             let settings = await Settings.findOne({})
-            if (req.fields.statuses) {
-                await Settings.findOneAndUpdate({ '_id': settings._id }, { orderStatuses: req.fields.statuses });
+            if (req.fields.orderStatuses) {
+                await Settings.findOneAndUpdate({ '_id': settings._id }, { orderStatuses: req.fields.orderStatuses });
+            }
+            if (req.fields.orderStatusesPass) {
+                await Settings.findOneAndUpdate({ '_id': settings._id }, { orderStatusesPass: req.fields.orderStatusesPass });
             }
             if (!settings) {
                 settings = await new Settings({

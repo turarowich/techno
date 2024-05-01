@@ -24,9 +24,7 @@
               <h3 class="drop-title">Sort by</h3>
               <select  v-model="filter_by_status" class="filter-select form-control form-control-sm mb-2" aria-label=".form-select-lg example">
                 <option value="">All</option>
-                <option value="Done">Done</option>
-                <option value="In Progress">In process</option>
-                <option value="Cancelled">Cancelled</option>
+                <option v-for="statusItem, key in orderStatuses" :key="statusItem" :value="key">{{statusItem}}</option>
               </select>
             </form>
           </div>
@@ -76,6 +74,7 @@
       </div>
       <div v-else>
         <OrderItem
+            :orderStatuses="orderStatuses"
             v-on:checkSelection="checkSelection"
             v-on:selectOrder="selectOrder"
             v-bind:orderList="orderToDisplay"
@@ -271,7 +270,8 @@ name: "Orders",
       perPage:8,
       total_price:'',
       user: this.getUser(),
-      isAdmin: this.isAdmin()
+      isAdmin: this.isAdmin(),
+      orderStatuses: []
     }
   },
 
@@ -289,7 +289,8 @@ name: "Orders",
             return (order.client_name && order.client_name.toLowerCase().includes(this.search.toLowerCase())) || (order.client_phone && order.client_phone.includes(this.search))
           })
           .filter(order=>{
-            return order.status.includes(this.filter_by_status)
+            if(!this.filter_by_status ) return order;
+            return order.status.includes(this.filter_by_status);
           })
           .filter(order=>{
             if(this.price_to.length>0){
@@ -646,6 +647,7 @@ name: "Orders",
           if(response.data.clientsFilter){
             that.scannerStatus = response.data.scannerStatus;
           }
+          that.orderStatuses = response.data.object.orderStatuses;
         }).catch(function (error){
           if (error.response) {
             console.log('setCatalog_settings EERRRor',error.response)

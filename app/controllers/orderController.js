@@ -487,6 +487,7 @@ class OrderController{
         // await delay(5000) /// waiting 1 second.
         console.log(req.fields,"NEW LOGS",req.db)
         console.log(req.path,"PATH");
+        
         let db = useDB(req.db)
         let Order = db.model("Order");
         let Client = db.model("Client");  
@@ -499,8 +500,9 @@ class OrderController{
         let PromocodeModel = db.model("Promocode");
         let Branch = db.model("Branch");
         let Settings = db.model("Settings");
-        let settings = await Settings.find();
+        let settings = await Settings.findOne();
         let tokenPP = settings[0].tokenPosterPos ? settings[0].tokenPosterPos : ""
+
         let lang = req.headers["accept-language"]
         if (lang != 'ru') {
             lang = 'en'
@@ -515,7 +517,6 @@ class OrderController{
             'status': 200,
             'msg': 'Order added'
         }
-
         order_try: try {
             let discounts = await Discount.find();
             let client = await Client.findById(req.fields.client);
@@ -561,6 +562,10 @@ class OrderController{
                 }
             }
 
+            let orderStatus = 0
+            if(settings.orderStatusesPass) {
+                orderStatus = 1
+            }
             //update promocode
             await checkAndUpdatePromo(promocode,client);
             let order = await new Order({
@@ -570,7 +575,7 @@ class OrderController{
                 statusDiscount:result_object.statusDiscount,
                 promoCode: req.fields.promoCode,
                 promoCodeObject: promocode,
-                status: req.fields.status,
+                status: orderStatus,
                 address: req.fields.address,
                 delivery: req.fields.delivery,
                 deliveryObject: delivery,
@@ -939,12 +944,16 @@ class OrderController{
                 );
             }
 
+            // status handler
+            // Settings
+
+
             let data = {
                 updatedAt:new Date(),
                 statusDiscount:result_object.statusDiscount, ///need old
                 promoCode: req.fields.promoCode,
                 promoCodeObject: promocode, ///need old
-                status: req.fields.status,
+                status: req.fields.status ,
                 address: req.fields.address,
                 delivery: req.fields.delivery,
                 deliveryObject: delivery_obj, ///need old

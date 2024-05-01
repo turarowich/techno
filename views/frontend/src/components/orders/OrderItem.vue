@@ -30,14 +30,15 @@
        <div  class="table-child"  style="width: 15%;">{{order.totalPrice}} {{catalog_settings.currency}}</div>
        <div class="table-child" v-show="data_check.date_checked"  style="width: 13%;">{{order.createdAt.split('').slice(0,10).join('')}}</div>
        <div class="table-child  pr-3" v-show="data_check.notes_checked" style="width: 10%;" ><div class="long-text">{{order.notes}}</div></div>
-       <div class="table-child" style="width: 15%;"
-            :class="[{red: order.status === 'Cancelled'},
-          {green: order.status === 'Done'},
-          {orange: order.status === 'In Progress'},
-
+       <div 
+            class="table-child"
+            style="width: 15%;"
+            :class="[{red: order.status == 3},
+                  {green: order.status == 2},
+                  {orange: order.status == 1},
           ]">
-         <i class=" circle-status fas fa-circle"></i>
-         {{order.status}}
+         <i class="circle-status fas fa-circle"></i>
+         {{orderStatuses[order.status]}}
        </div>
 
        <div style="width: 8%;text-align: center"  >
@@ -54,12 +55,13 @@
              <ul class="list-group " >
                <!--              <li v-if="!['Cancelled','Done'].includes(order.status) && check()" class="list-group-item" data-toggle="modal" data-target="#edit-order" @click="$emit('selectOrder',order._id)">Edit</li>-->
                <li v-if="check()" class="list-group-item" data-toggle="modal" data-target="#add-order" @click="$emit('selectOrder',order._id)">
-                 <span v-if="!['Cancelled','Done'].includes(order.status)">Edit</span>
+                 <span v-if="![2].includes(order.status)">Edit</span>
                  <span v-else>View</span>
                </li>
                <li class="list-group-item" v-if="check()" v-on:click="$emit('deleteOrder',order._id)">Delete</li>
-               <li v-if="!['Cancelled','Done'].includes(order.status) && check('canChangeOrderStatus', null, null)" class="list-group-item" v-on:click="statusChange(order,'Done')">Done</li>
-               <li v-if="!['Cancelled'].includes(order.status) && check('canChangeOrderStatus', null, null)" class="list-group-item" @click="statusChange(order, 'Cancelled')">Cancel</li>
+               <li v-if="![2].includes(order.status) && check('canChangeOrderStatus', null, null) && [0].includes(parseInt(order.status))" class="list-group-item" v-on:click="statusChange(order, 1)">{{ orderStatuses[1] }}</li>
+               <li v-if="![2].includes(order.status) && check('canChangeOrderStatus', null, null) && [0,1].includes(parseInt(order.status))" class="list-group-item" v-on:click="statusChange(order, 2)">{{ orderStatuses[2] }}</li>
+               <li v-if="![3].includes(order.status) && check('canChangeOrderStatus', null, null) && order.status != 2" class="list-group-item" @click="statusChange(order, 3)">Cancel</li>
              </ul>
            </div>
          </div>
@@ -75,6 +77,10 @@ export default {
     orderList: { },
     data_check: {
       type: Object
+    },
+    orderStatuses: {
+      type: Array,
+      default: () => ([]),
     },
   },
   data() {
@@ -104,7 +110,7 @@ export default {
                 }
         });
         //send push
-        let pushable = ['Done','Cancelled','In Progress']
+        let pushable = [0,1,2]
         if(pushable.includes(status) && order.client){
           this.axios.post(this.url('updateOrderWeb'), {status: status,order:order._id,code:order.code,client:order.client._id}).then(()=>{
           }).catch((error)=>{
