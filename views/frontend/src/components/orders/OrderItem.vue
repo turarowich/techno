@@ -2,20 +2,20 @@
   <div>
     <div v-if="orderList.length===0" class="text-center empty-box" >
       <img src="../../assets/icons/emptyOrder.svg">
-      <p class="empty-page-text">There are no orders for the selected period</p>
+      <p class="empty-page-text">За выбранный период заказов нет.</p>
     </div>
    <div v-else>
      <div  v-for="order in orderList" class="table-item d-flex justify-content-between align-items-center" :key="order._id">
        <div class="table-child d-flex align-items-center"  style="width: 18%;">
          <div><label class="custom-checkbox"><input  type="checkbox"  v-model="order.selected" @change="$emit('checkSelection')"><span class="checkmark"></span></label></div>
-         {{order.code}}
+         {{order.sample.name}}
        </div>
-       <div v-if="order.products" class="table-child d-flex align-items-center"  style="width: 25%;">
+       <div v-if="order.sample" class="table-child d-flex align-items-center"  style="width: 25%;">
          <div  class="table-img">
-           <img  v-if="order.products[0] && order.products[0].img" :src="imgSrc+'/'+order.products[0].img">
+           <img  v-if="order.sample && order.sample.img" :src="imgSrc+'/'+order.sample.img">
            <img v-else src="../../assets/icons/no-catalog.svg">
          </div>
-         <span style="overflow: hidden;text-overflow: ellipsis;">{{order.products[0] ? order.products[0].name : 'empty'}}</span>
+         <span style="overflow: hidden;text-overflow: ellipsis;">{{order.sample.name ? order.sample.name : 'empty'}}</span>
        </div>
        <div v-if="order.client" class="table-child" v-show="data_check.client_checked"  style="width: 20%;">
          {{order.client ? order.client.name : ''}}
@@ -27,12 +27,13 @@
        <div class="table-child" v-show="data_check.phone_checked" style="width: 18%;">
          {{order.client_name ? order.client_phone : ''}}
        </div>
-       <div  class="table-child"  style="width: 15%;">{{order.totalPrice}} {{catalog_settings.currency}}</div>
+       <div  class="table-child"  style="width: 10%;">{{order.quantity}}</div>
+       <div  class="table-child"  style="width: 10%;">{{order.totalPrice}} RUB</div>
        <div class="table-child" v-show="data_check.date_checked"  style="width: 13%;">{{order.createdAt.split('').slice(0,10).join('')}}</div>
        <div class="table-child  pr-3" v-show="data_check.notes_checked" style="width: 10%;" ><div class="long-text">{{order.notes}}</div></div>
        <div 
             class="table-child"
-            style="width: 15%;"
+            style="width: 10%;"
             :class="[{red: order.status == 3},
                   {green: order.status == 2},
                   {orange: order.status == 1},
@@ -40,11 +41,6 @@
          <i class="circle-status fas fa-circle"></i>
          {{orderStatuses[order.status]}}
        </div>
-
-       <div style="width: 8%;text-align: center"  >
-         <img  v-on:click="$emit('startScanning',{id:order._id,code:order.code,state:order.pointsStatus.received})"   src="../../assets/icons/qr_icon.svg">
-       </div>
-
        <div class="table-child" style="width:3%">
          <div class="dropleft dropMenu">
            <div class="dropdown-toggle" id="dropdownMenuTotal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -55,13 +51,11 @@
              <ul class="list-group " >
                <!--              <li v-if="!['Cancelled','Done'].includes(order.status) && check()" class="list-group-item" data-toggle="modal" data-target="#edit-order" @click="$emit('selectOrder',order._id)">Edit</li>-->
                <li v-if="check()" class="list-group-item" data-toggle="modal" data-target="#add-order" @click="$emit('selectOrder',order._id)">
-                 <span v-if="![2].includes(order.status)">Edit</span>
-                 <span v-else>View</span>
+                 <span v-if="![2].includes(order.status)">Изменить</span>
+                 <span v-else>Посмотреть</span>
                </li>
-               <li class="list-group-item" v-if="check()" v-on:click="$emit('deleteOrder',order._id)">Delete</li>
-               <li v-if="![2].includes(order.status) && check('canChangeOrderStatus', null, null) && [0].includes(parseInt(order.status))" class="list-group-item" v-on:click="statusChange(order, 1)">{{ orderStatuses[1] }}</li>
-               <li v-if="![2].includes(order.status) && check('canChangeOrderStatus', null, null) && [0,1].includes(parseInt(order.status))" class="list-group-item" v-on:click="statusChange(order, 2)">{{ orderStatuses[2] }}</li>
-               <li v-if="![3].includes(order.status) && check('canChangeOrderStatus', null, null) && order.status != 2" class="list-group-item" @click="statusChange(order, 3)">Cancel</li>
+               <li class="list-group-item" v-if="check()" v-on:click="$emit('deleteOrder',order._id)">Удалить</li>
+               <li v-if="check('canChangeOrderStatus', null, null)" class="list-group-item" v-on:click="statusChange(order, +order.status+1)">{{ orderStatuses[+order.status + 1] }}</li>
              </ul>
            </div>
          </div>

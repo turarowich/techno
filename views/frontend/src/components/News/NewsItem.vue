@@ -12,13 +12,8 @@
                 </p>
             </div>
         </div>
-        <div style="width:30%">
+        <div style="width:60%">
             {{ news.updatedAt.slice(0, 10) }}
-        </div>
-        <div style="width:30%">
-            <button class="news-btn" @click="sendNewsNotification(news._id)">
-            <img src="../../assets/icons/notification1.svg">
-            </button>
         </div>
         <div style="width:10%" class="d-flex justify-content-end" >
             <div v-if="check()" class="dropleft dropMenu">
@@ -28,8 +23,8 @@
             </div>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
                 <ul class="list-group">
-                <li class="list-group-item"  data-toggle="modal" data-target="#edit-news" @click="$emit('selectNews', news)">Edit</li>
-                <li class="list-group-item" v-on:click="$emit('deleteNews' ,news._id)">Delete</li>
+                <li class="list-group-item"  data-toggle="modal" data-target="#edit-news" @click="$emit('selectNews', news)"> Изменить</li>
+                <li class="list-group-item" v-on:click="$emit('deleteNews' ,news._id)">Удалить</li>
                 </ul>
             </div>
             </div>

@@ -82,9 +82,9 @@ export default {
         if (messages.length){
             val = messages[messages.length - 1]
             if(val.isIncoming){
-                val = "You: "
+                val = "Вы: "
             }else{
-                val = "Client: "
+                val = "Клиент: "
             }
         }
         return val

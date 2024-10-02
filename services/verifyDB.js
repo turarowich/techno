@@ -36,6 +36,7 @@ function verifyDB(req, res, next) {
         next();
     }else{
         console.log("EEEEEEELSE");
+        console.log(cat_url)
         catalogs_model.findOne({ 'cat_url': cat_url })
             .then(repo => {
                 if(repo){

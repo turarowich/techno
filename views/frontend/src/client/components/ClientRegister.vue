@@ -2,21 +2,21 @@
   <div class="authorization">
     <div class="container-fluid">
       <div class="login">
-        <h1 class="welcome-sign-in">Register</h1>
+        <h1 class="welcome-sign-in">Регистрация</h1>
         <form >
-          <label for="name" class="label">Name</label>
+          <label for="name" class="label">Имя</label>
           <input  v-model="name" id="name" name="name" class="login-input">
           <label class="label">Email</label>
           <input v-model="email" name="email" class="login-input">
-          <label class="label">Phone number</label>
+          <label class="label">Номер телефона</label>
           <input  v-model="phone" name="phone" class="login-input">
-          <label class="label">Password</label>
+          <label class="label">Пароль</label>
           <div class="password d-flex justify-space-between align-items-center">
             <input v-model="password" name="password" id="password"  class="login-input" type="password">
             <img @click="showPassword" id="hide-eye"  src="../../assets/icons/Hide.svg"><img @click="showPassword" id="show-eye"  src="../../assets/icons/eye.svg">
           </div>
           <div class="remind ">
-            <span>At least 8 characters, 1 uppercase letter, 1 number, 1 symbol</span>
+            <span>Минимум 8 символов, 1 заглавная буква, 1 цифра, 1 символ.</span>
           </div>
 
           <div class="remind mb-3 d-flex justify-content-between align-item-center">
@@ -28,28 +28,17 @@
                 </span>
                 </label>
               </div>
-              <span>I have read the Privacy Policy and accept its terms.</span>
+              <span>
+                Я прочитал Политику конфиденциальности и принимаю ее условия.</span>
             </div>
 
           </div>
           <button @click="register" v-bind:class="{ disabled_btn: !read_pp }" class="sign-in-btn" type="button">Register</button>
         </form>
 
-        <div class="have-account">Sign up with Social of fill the form to continue. </div>
-
-        <div class="social-link d-flex justify-content-center">
-          <div class="social-icons">      <img src="../../assets/icons/facebook.svg"></div>
-          <div class="social-icons mr-0">      <img src="../../assets/icons/google.svg"></div>
-        </div>
-
-
-        <div class="main-or d-flex align-items-center justify-content-center">
-          <div class="or-div"></div>
-          <span class="or-text">or</span>
-          <div class="or-div"></div>
-        </div>
-        <div class="have-account mb-0">Have an account? <router-link class="client-link" :to="`/${currentCompanyCatalog}/signin`">Sign in now</router-link></div>
-
+        <div class="have-account">Зарегистрируйтесь в социальных сетях или заполните форму, чтобы продолжить. </div>
+        <div class="have-account mb-0">У вас уже есть аккаут? <router-link class="client-link" :to="`/${currentCompanyCatalog}/signin`">
+          Войдите сейчас</router-link></div>
       </div>
     </div>
   </div>

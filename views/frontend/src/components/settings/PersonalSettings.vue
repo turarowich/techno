@@ -3,25 +3,25 @@
   <form>
     <div class="row mb-5">
       <div class="col-lg-5">
-        <label class="sum-point">Name</label>
-        <input v-model="name" class="form-input cashback-input " placeholder="Your name">
+        <label class="sum-point">Имя</label>
+        <input v-model="name" class="form-input cashback-input " placeholder="Ваше имя">
 
-        <label class="sum-point">Password</label>
+        <label class="sum-point">Пароль</label>
         <div class="pswrd-input ">
-          <input id="show-password" v-model="password" type="password" placeholder="Password">
+          <input id="show-password" v-model="password" type="password" placeholder="Пароль">
           <img class="hide-eye" @click="showPassword" src="../../assets/icons/Hide.svg">
           <img class="show-eye"  @click="showPassword" src="../../assets/icons/eye.svg">
         </div>
-        <label class="sum-point">Repeat password</label>
+        <label class="sum-point">Повторить пароль</label>
         <div class="pswrd-input not-handle-error" :class="comparePassword">
-          <input id="show-repeat" class="" v-model="repeatPassword" type="password" placeholder="Password" >
+          <input id="show-repeat" class="" v-model="repeatPassword" type="password" placeholder="Повторитье пароль" >
           <img id="hide-eye" @click="showRepeat" src="../../assets/icons/Hide.svg">
           <img id="show-eye"  @click="showRepeat" src="../../assets/icons/eye.svg">
         </div>
       </div>
 
       <div class="col-lg-5">
-        <label class="sum-point">Phone number</label>
+        <label class="sum-point">Номер телефона</label>
         <div class="d-flex">
 <!--          <select class="form-control select-phone" aria-label="Default select example">-->
 <!--            <option>+996</option>-->
@@ -42,7 +42,7 @@
       </div>
     </div>
 
-    <button @click="save" type="button" class="save">Save</button>
+    <button @click="save" type="button" class="save">Сохранить</button>
   </form>
 </div>
 </template>

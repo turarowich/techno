@@ -8,7 +8,7 @@
                 <img src="../../assets/icons/x.svg" alt="">
               </span>
           </button>
-          <h3 class="modal-title">Access settings</h3>
+          <h3 class="modal-title">Настройки доступа</h3>
         </div>
         <div class=" myModal-body">
         <div class="access-settings">
@@ -22,11 +22,11 @@
                     <div class="d-flex align-items-center"  >
                         <img class="settings-icon" src="../../assets/icons/setting-icon/Plus.svg">
                         <div>
-                            <h4 class="settings-title" :class="employee.orders.active ? '' : 'unactive' ">Access to order</h4>
+                            <h4 class="settings-title" :class="employee.orders.active ? '' : 'unactive' ">Доступ к всем заказам</h4>
                             <div class="d-flex">
                             <label class="custom-checkbox mr-2" v-if="employee.orders.active"><input type="checkbox" v-model="employee.orders.canEdit"><span class="checkmark"></span></label>
                             <label class="custom-checkbox mr-2" v-else ><input type="checkbox" value="false" onclick="return false;"><span class="checkmark"></span></label>
-                            <div class="edit-access">Edit access</div>
+                            <div class="edit-access">Доступ изменения</div>
                             </div>
                         </div>
                     </div>
@@ -41,11 +41,11 @@
                     <div class="d-flex align-items-center"  >
                         <img class="settings-icon" src="../../assets/icons/setting-icon/Setting.svg">
                         <div>
-                            <h4 class="settings-title" :class="employee.settings.active ? '' : 'unactive' ">Access to company settings</h4>
+                            <h4 class="settings-title" :class="employee.settings.active ? '' : 'unactive' ">Доступ к настройкам компании</h4>
                             <div class="d-flex">
                             <label class="custom-checkbox mr-2" v-if="employee.settings.active"><input type="checkbox" v-model="employee.settings.canEdit"><span class="checkmark"></span></label>
                             <label class="custom-checkbox mr-2" v-else ><input type="checkbox" value="false" onclick="return false;"><span class="checkmark"></span></label>
-                            <div class="edit-access">Edit access</div>
+                            <div class="edit-access">Доступ изменения</div>
                             </div>
                         </div>
                     </div>
@@ -60,11 +60,11 @@
                     <div class="d-flex align-items-center"  >
                         <img class="settings-icon" src="../../assets/icons/setting-icon/Chart.svg">
                         <div>
-                            <h4 class="settings-title" :class="employee.analytics.active ? '' : 'unactive' ">Access to Analytics</h4>
+                            <h4 class="settings-title" :class="employee.analytics.active ? '' : 'unactive' ">Доступ к аналитике</h4>
                             <div class="d-flex">
                             <label class="custom-checkbox mr-2" v-if="employee.analytics.active"><input type="checkbox" v-model="employee.analytics.canEdit"><span class="checkmark"></span></label>
-                            <label class="custom-checkbox mr-2" v-else ><input type="checkbox" value="false" onclick="return false;"><span class="checkmark"></span></label>
-                            <div class="edit-access">Edit access</div>
+                            <!-- <label class="custom-checkbox mr-2" v-else ><input type="checkbox" value="false" onclick="return false;"><span class="checkmark"></span></label>
+                            <div class="edit-access">Edit access</div> -->
                             </div>
                         </div>
                     </div>
@@ -79,11 +79,11 @@
                     <div class="d-flex align-items-center"  >
                         <img class="settings-icon" src="../../assets/icons/setting-icon/Document.svg">
                         <div>
-                            <h4 class="settings-title" :class="employee.clients.active ? '' : 'unactive' ">Access to the clients base</h4>
+                            <h4 class="settings-title" :class="employee.clients.active ? '' : 'unactive' ">Доступ к базе клиентов</h4>
                             <div class="d-flex">
                             <label class="custom-checkbox mr-2" v-if="employee.clients.active"><input type="checkbox" v-model="employee.clients.canEdit"><span class="checkmark"></span></label>
                             <label class="custom-checkbox mr-2" v-else ><input type="checkbox" value="false" onclick="return false;"><span class="checkmark"></span></label>
-                            <div class="edit-access">Edit access</div>
+                            <div class="edit-access">Доступ изменения</div>
                             </div>
                         </div>
                     </div>
@@ -98,11 +98,11 @@
                     <div class="d-flex align-items-center"  >
                         <img class="settings-icon" src="../../assets/icons/setting-icon/VolumeUp.svg">
                         <div>
-                            <h4 class="settings-title" :class="employee.news.active ? '' : 'unactive' ">Access to news</h4>
+                            <h4 class="settings-title" :class="employee.news.active ? '' : 'unactive' ">Доступ к новостям</h4>
                             <div class="d-flex">
                             <label class="custom-checkbox mr-2" v-if="employee.news.active"><input type="checkbox" v-model="employee.news.canEdit"><span class="checkmark"></span></label>
                             <label class="custom-checkbox mr-2" v-else ><input type="checkbox" value="false" onclick="return false;"><span class="checkmark"></span></label>
-                            <div class="edit-access">Edit access</div>
+                            <div class="edit-access">Доступ изменения</div>
                             </div>
                         </div>
                     </div>
@@ -117,11 +117,11 @@
                     <div class="d-flex align-items-center"  >
                         <img class="settings-icon" src="../../assets/icons/setting-icon/Discovery.svg">
                         <div>
-                            <h4 class="settings-title" :class="employee.catalog.active ? '' : 'unactive' ">Catalog Access</h4>
+                            <h4 class="settings-title" :class="employee.catalog.active ? '' : 'unactive' ">Доступ к каталогу</h4>
                             <div class="d-flex">
                             <label class="custom-checkbox mr-2" v-if="employee.catalog.active"><input type="checkbox" v-model="employee.catalog.canEdit"><span class="checkmark"></span></label>
                             <label class="custom-checkbox mr-2" v-else ><input type="checkbox" value="false" onclick="return false;"><span class="checkmark"></span></label>
-                            <div class="edit-access">Edit access</div>
+                            <div class="edit-access">Доступ изменения</div>
                             </div>
                         </div>
                     </div>
@@ -136,11 +136,11 @@
                     <div class="d-flex align-items-center"  >
                         <img class="settings-icon" src="../../assets/icons/setting-icon/MoreSquare.svg">
                         <div>
-                            <h4 class="settings-title" :class="employee.chat.active ? '' : 'unactive' ">Chat access</h4>
+                            <h4 class="settings-title" :class="employee.chat.active ? '' : 'unactive' ">Доступ к чатам</h4>
                             <div class="d-flex">
                             <label class="custom-checkbox mr-2" v-if="employee.chat.active"><input type="checkbox" v-model="employee.chat.canEdit"><span class="checkmark"></span></label>
                             <label class="custom-checkbox mr-2" v-else ><input type="checkbox" value="false" onclick="return false;"><span class="checkmark"></span></label>
-                            <div class="edit-access">Edit access</div>
+                            <div class="edit-access">Доступ отправке сообщения</div>
                             </div>
                         </div>
                     </div>
@@ -150,7 +150,7 @@
                     </label>
                 </div>
             </div>
-            <div class="col-lg-4" v-if="employee.loyalty">
+            <!-- <div class="col-lg-4" v-if="employee.loyalty">
                 <div class="settings-box d-flex align-items-center justify-content-between" >
                     <div class="d-flex align-items-center"  >
                         <img class="settings-icon" src="../../assets/icons/setting-icon/Game.svg">
@@ -168,8 +168,8 @@
                         <span class="slider round"></span>
                     </label>
                 </div>
-            </div>
-            <div class="col-lg-4" v-if="employee.logs">
+            </div> -->
+            <!-- <div class="col-lg-4" v-if="employee.logs">
                 <div class="settings-box d-flex align-items-center justify-content-between" >
                     <div class="d-flex align-items-center"  >
                         <img class="settings-icon" src="../../assets/icons/setting-icon/paper.svg">
@@ -187,15 +187,15 @@
                         <span class="slider round"></span>
                     </label>
                 </div>
-            </div>
+            </div> -->
         </div>
 
-        <h2 class="cashback-sub-title mt-3 mb-3">Loyalty settings</h2>
+        <!-- <h2 class="cashback-sub-title mt-3 mb-3">Loyalty settings</h2> -->
 
         <div class="row mb-5" v-if="employee">
             <div class="col-lg-4">
                 <div class="loyalty-box d-flex justify-content-between align-items-center">
-                    <h3 class="cashback-sub-title" :class="employee.canAddPoint ? '' : 'unactive' ">Accruals of points</h3>
+                    <h3 class="cashback-sub-title" :class="employee.canAddPoint ? '' : 'unactive' ">Начисление бонусов</h3>
                     <label class="switch d-flex">
                         <input type="checkbox" v-model="employee.canAddPoint">
                         <span class="slider round"></span>
@@ -204,7 +204,7 @@
             </div>
             <div class="col-lg-4">
                 <div class="loyalty-box d-flex justify-content-between align-items-center">
-                    <h3 class="cashback-sub-title"  :class="employee.canDeductPoint ? '' : 'unactive' ">Writing off money</h3>
+                    <h3 class="cashback-sub-title"  :class="employee.canDeductPoint ? '' : 'unactive' ">Удаления бонусов</h3>
                     <label class="switch d-flex">
                         <input type="checkbox" v-model="employee.canDeductPoint">
                         <span class="slider round"></span>
@@ -213,14 +213,14 @@
             </div>
             <div class="col-lg-4">
                 <div class="loyalty-box d-flex justify-content-between align-items-center">
-                    <h3 class="cashback-sub-title"  :class="employee.canChangeOrderStatus ? '' : 'unactive' ">Change status order</h3>
+                    <h3 class="cashback-sub-title"  :class="employee.canChangeOrderStatus ? '' : 'unactive' ">Измнения статуса заказа</h3>
                     <label class="switch d-flex">
                         <input type="checkbox" v-model="employee.canChangeOrderStatus">
                         <span class="slider round"></span>
                     </label>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <!-- <div class="col-lg-4">
                 <div class="loyalty-box d-flex justify-content-between align-items-center">
                     <h3 class="cashback-sub-title"  :class="employee.canSendPush ? '' : 'unactive' ">Push notification</h3>
                     <label class="switch d-flex">
@@ -237,7 +237,7 @@
                         <span class="slider round"></span>
                     </label>
                 </div>
-            </div>
+            </div> -->
         </div>
         <button class="save mb-5" @click="editAccess">Save</button>
         </div>

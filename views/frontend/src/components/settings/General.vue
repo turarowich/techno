@@ -1,25 +1,25 @@
 <template>
   <div class="general">
-  <div v-if="spinner"  style="height:65vh; " class="d-flex align-items-center">
-    <Spinner/>
-  </div>
+    <div v-if="spinner" style="height:65vh; " class="d-flex align-items-center">
+      <Spinner />
+    </div>
     <form v-else class="mb-5">
       <div class="row">
         <div class="col-lg-5 mr-5 left-general">
-          <label class="sum-point">Currency</label><br>
-          <input v-model="currency" class="form-input cashback-input " placeholder="USD">
+          <label class="sum-point">Валюта</label><br>
+          <input v-model="currency" class="form-input cashback-input " placeholder="KGS">
 
-          <label class="sum-point">Your country</label>
+          <!-- <label class="sum-point">Ваша страна</label>
           <select v-model="country" class="form-control long-form-control  form-control-lg " aria-label=".form-select-lg example">
             <option val="Kyrgyzstan">Kyrgyzstan</option>
             <option val="Russia">Russia</option>
             <option val="USA">USA</option>
-          </select>
-          <label class="sum-point">Name of the company</label><br>
+          </select> -->
+          <label class="sum-point">Название компании</label><br>
           <input v-model="name" class="form-input cashback-input " placeholder="Company">
           <label class="sum-point">Email</label><br>
           <input v-model="email" class="form-input cashback-input " placeholder="Company email">
-          <h2 class="cashback-title mt-3">
+          <!-- <h2 class="cashback-title mt-3">
             Chat settings
           </h2>
           <div class="d-flex enable-title">
@@ -28,11 +28,50 @@
               <span class="slider round"></span>
             </label>
             <h2 class="cashback-sub-title">Chat</h2>
-          </div>
-          <p class="cashback-description mb-5">Disables the ability to write to you in the chat</p>
+          </div> -->
+          <!-- <p class="cashback-description mb-5">Disables the ability to write to you in the chat</p> -->
         </div>
         <div class="col-lg-5">
-          <h2 class="cashback-title mt-3">
+          <!-- <div class="margin-20">
+            <h3 class="catalog-sub-title">Статусы заказов</h3>
+            <p class="catalog-description margin-10">Здесь вы можете редактировать названия статусов при подготовке
+              заказа.</p>
+          </div>
+          <div>
+            <span>1 статус</span>
+            <input v-model="orderStatuses[0]" class="social-btns" :placeholder="orderStatuses[0]">
+          </div>
+          <div>
+            <span>2 статус</span>
+            <input v-model="orderStatuses[1]" class="social-btns" :placeholder="orderStatuses[1]">
+          </div>
+          <div>
+            <span>3 статус</span>
+            <input v-model="orderStatuses[2]" class="social-btns" :placeholder="orderStatuses[2]">
+          </div>
+          <div>
+            <span>4 статус</span>
+            <input v-model="orderStatuses[3]" class="social-btns" :placeholder="orderStatuses[3]">
+          </div>
+          <div>
+            <span>5 статус</span>
+            <input v-model="orderStatuses[4]" class="social-btns" :placeholder="orderStatuses[4]">
+          </div>
+          <div>
+            <span>6 статус</span>
+            <input v-model="orderStatuses[5]" class="social-btns" :placeholder="orderStatuses[5]">
+          </div> -->
+          <!-- <div class="d-flex margin-10" :style="{ 'margin-top': '40px' }">
+            <label class="switch d-flex">
+              <input v-model="orderStatusesPass" type="checkbox">
+              <span class="slider round"></span>
+            </label>
+            <h2 class="catalog-sub-title">Automatically show first status</h2>
+          </div>
+          <p class="catalog-description margin-30">
+            When you enable this item, the first status will automatically appear in the app and in the “orders” tab
+          </p> -->
+          <!--  <h2 class="cashback-title mt-3">
             Custom fields settings
           </h2>
           <div class="d-flex enable-title">
@@ -93,7 +132,7 @@
                 <button v-if="index != 0" type="button" @click="removeVal('custom_field_2', index)" class="discount-btn ml-2"><img alt="x" src="../../assets/icons/x.svg"></button>
               </div>
             </div>
-          </div>
+          </div>-->
         </div>
       </div>
       <button type="button" @click="updateSettings" class="save">Save</button>
@@ -105,157 +144,202 @@
 import Spinner from "../Spinner";
 export default {
   name: "General",
-  components:{
+  components: {
     Spinner
   },
-  data(){
-    return{
-      spinner:true,
-      currency:"",
-      country:"",
+  data() {
+    return {
+      spinner: true,
+      currency: "",
+      country: "",
       chat: false,
-      name:'',
-      email:'',
+      name: '',
+      email: '',
+      // orderStatusesPass: false,
+      orderStatuses: [],
       customFields: false,
-      custom_field_0:{
+      custom_field_0: {
         required: false,
         fieldName: '',
         values: ['']
       },
-      custom_field_1:{
+      custom_field_1: {
         required: false,
         fieldName: '',
         values: ['']
       },
-      custom_field_2:{
+      custom_field_2: {
         required: false,
         fieldName: '',
         values: ['']
       },
     }
   },
-  methods:{
-    addNewVal(field){
+  methods: {
+    addNewVal(field) {
       this[field].values.unshift('')
     },
-    removeVal(field, index){
+    removeVal(field, index) {
       this[field].values.splice(index, 1)
     },
-    updateSettings(){
-      let that=this;
+    updateSettings() {
+      let that = this;
       let url = this.url('updateSettings');
       this.axios.put(url, {
-        currency:this.currency,
-        country:this.country,
-        chat:this.chat,
-        name:this.name,
-        email:this.email,
+        currency: this.currency,
+        country: this.country,
+        chat: this.chat,
+        name: this.name,
+        email: this.email,
         customFields: this.customFields,
+        // orderStatuses: this.orderStatuses,
+        orderStatusesPass: this.orderStatusesPass,
         custom_field_0: this.custom_field_0,
         custom_field_1: this.custom_field_1,
         custom_field_2: this.custom_field_2,
       }).then(function (response) {
         console.log(response);
         that.$successAlert('Updated');
-      }).catch(function(error){
+      }).catch(function (error) {
         if (error.response) {
-          if(error.response.data && !error.response.data.errors){
+          if (error.response.data && !error.response.data.errors) {
             that.$warningAlert(error.response.data.msg)
-          }else{
+          } else {
             that.$warningAlert('Something went wrong');
           }
 
-          that.$warningAlert(Object.values(error.response.data.errors),"Errors");
+          that.$warningAlert(Object.values(error.response.data.errors), "Errors");
         }
       });
     },
   },
 
-  beforeCreate(){
+  beforeCreate() {
     let that = this;
     this.axios
-        .get(this.url('getSettings'))
-        .then(function (response){
-          that.spinner = false;
-          let settings = response.data.object;
-          that.currency = settings.currency || '';
-          that.country = settings.country || '';
-          that.chat = settings.chat || false;
-          that.name = settings.name || '';
-          that.email = settings.email || '';
-          that.customFields = settings.customFields || false;
-          if(!settings.custom_field_0.values.length){
-            settings.custom_field_0.values = ['']
-          }
-          if(!settings.custom_field_1.values.length){
-            settings.custom_field_1.values = ['']
-          }
-          if(!settings.custom_field_2.values.length){
-            settings.custom_field_2.values = ['']
-          }
-          that.custom_field_0 = settings.custom_field_0;
-          that.custom_field_1 = settings.custom_field_1;
-          that.custom_field_2 = settings.custom_field_2;
-        })
+      .get(this.url('getSettings'))
+      .then(function (response) {
+        that.spinner = false;
+        let settings = response.data.object;
+        that.currency = settings.currency || '';
+        that.orderStatuses = settings.orderStatuses
+        that.country = settings.country || '';
+        that.chat = settings.chat || false;
+        that.name = settings.name || '';
+        that.email = settings.email || '';
+        that.customFields = settings.customFields || false;
+        if (!settings.custom_field_0.values.length) {
+          settings.custom_field_0.values = ['']
+        }
+        if (!settings.custom_field_1.values.length) {
+          settings.custom_field_1.values = ['']
+        }
+        if (!settings.custom_field_2.values.length) {
+          settings.custom_field_2.values = ['']
+        }
+        that.custom_field_0 = settings.custom_field_0;
+        that.custom_field_1 = settings.custom_field_1;
+        that.custom_field_2 = settings.custom_field_2;
+      })
   },
 }
 
 </script>
 
 <style scoped>
-.discount-btn{
+.social-btns {
+  border: 1px solid #D3D3D3;
+  border-radius: 5px;
+  width: 100%;
+  height: 45px;
+  background: none;
+  color: #8C94A5;
+  text-align: left;
+  padding-left: 20px;
+  margin-bottom: 10px;
+}
+
+.catalog-description {
+  font-size: 14px;
+  color: #b0b0b0;
+  margin-bottom: 0;
+}
+
+.catalog-sub-title {
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.margin-10 {
+  margin-bottom: 10px;
+}
+
+.margin-30 {
+  margin-bottom: 30px;
+}
+
+.discount-btn {
   height: 45px;
   flex: 0 0 45px;
-  border-radius:5px;
+  border-radius: 5px;
   background: none;
   border: none;
 }
-.custom-fields .cashback-input{
+
+.custom-fields .cashback-input {
   width: 80%;
 }
-.cashback-input{
+
+.cashback-input {
   width: 100%;
 }
-.save{
+
+.save {
   width: 120px;
 
 }
-.custom-fields .slider:before{
-  bottom:1.5px;
+
+.custom-fields .slider:before {
+  bottom: 1.5px;
 }
 
 
-.form input{
+.form input {
   width: 100%;
 }
-.cashback-title{
+
+.cashback-title {
   margin-bottom: 20px;
 }
 
-.help-settings .cashback-input{
+.help-settings .cashback-input {
   width: 100%;
   margin-bottom: 15px;
 }
-.rm-question{
+
+.rm-question {
   position: absolute;
   right: -18px;
   top: 45%;
 }
-.add-more{
-  color:#616cf5;
+
+.add-more {
+  color: #616cf5;
   display: inline-block;
   margin-bottom: 30px;
 }
-.left-general .cashback-input{
+
+.left-general .cashback-input {
   margin-bottom: 20px;
 }
 
-.form-control{
+.form-control {
   margin-bottom: 20px;
   font-size: 14px;
-  color:#222;
+  color: #222;
   padding-left: 10px;
 }
+
 /*
 
 
@@ -341,5 +425,4 @@ export default {
 
               </div>
 */
-
 </style>

@@ -1,42 +1,42 @@
 <template>
 <div class="container container-profile">
   <div class="profile-content">
-    <div class="d-flex align-items-center path-box mt-5" @click="$router.go(-1)"><img class="mr-3" src="../../../assets/clients/slide.svg"><h3 class="path-title">Edit profile</h3></div>
+    <div class="d-flex align-items-center path-box mt-5" @click="$router.go(-1)"><img class="mr-3" src="../../../assets/clients/slide.svg"><h3 class="path-title">Изменить профиль</h3></div>
 
 
     <form class="edit-form">
          <div class="row">
            <div class="col-lg-6">
-             <label class="personal-label">Name</label><br>
+             <label class="personal-label">Имя</label><br>
              <input v-model="user.name" class="edit-input cashback-input" placeholder="Name">
              <label class="personal-label">Email</label><br>
              <input  v-model="user.email"  class="edit-input cashback-input email" placeholder="Your email">
-            <span class="gender">Gender</span>
+            <span class="gender">Пол</span>
 
              <div class="radio-toolbar">
                <div class="d-flex align-items-center mr-5">
                  <input type="radio" id="radioApple" v-model="user.gender" name="radioFruit" value="male">
                  <label for="radioApple"></label>
-                 <span class="male">Male</span>
+                 <span class="male">Мужской</span>
                </div>
                <div class="d-flex align-items-center">
                  <input type="radio" id="radioOrange" v-model="user.gender" name="radioFruit" value="female">
                  <label for="radioOrange"></label>
-                 <span class="male">Female</span>
+                 <span class="male">Женский</span>
                </div>
              </div>
 
              <div class="d-flex">
-               <button type="button" @click="save" class="save mr-2">Save</button>
-               <button class="cancel">Cancel</button>
+               <button type="button" @click="save" class="save mr-2">Сохранить</button>
+               <button class="cancel">Отмена</button>
              </div>
            </div>
 
            <div class="col-lg-6">
-             <label class="personal-label">Phone number</label><br>
+             <label class="personal-label">Номер телефона</label><br>
              <input v-model="user.phone" class="edit-input cashback-input" placeholder="Phone number">
-             <label class="personal-label">Birthday</label><br>
-             <input id="clientBirthDay" v-model="clientBirthDay.formatted" class="edit-input cashback-input" placeholder="Select a date">
+             <label class="personal-label">Дата рождения</label><br>
+             <input id="clientBirthDay" v-model="clientBirthDay.formatted" class="edit-input cashback-input" placeholder="Выберитие дату">
 
            </div>
          </div>
@@ -131,12 +131,6 @@ export default {
 .gender{
   margin-bottom: 23px;
   display: inline-block;
-}
-
-@media(min-width:1200px){
-  .container-profile{
-    max-width:1000px
-  }
 }
 
 /*=========radio button==========*/

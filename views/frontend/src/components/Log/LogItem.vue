@@ -4,7 +4,7 @@
       <div class="table-head d-flex align-items-center" style="width: 60%;">
         <img :src="getImgUrl(log.icon)" class="log-img">
         <div>
-          <h5 class="operation-title">{{log.title}}</h5>
+          <h5 class="operation-title">{{replaceText(log.title)}}</h5>
           <div class="d-flex">
               <span class="operation-desc">{{replaceText(log.description)}}</span>
               <span class="operation-status pl-2" :class="log.valueColor">{{replaceText(log.value)}}</span>
@@ -33,7 +33,7 @@ export default {
     },
     methods:{
         replaceText(text){
-            return this.replaceTxt(text, "en")
+            return this.replaceTxt(text, "ru")
         },
          getImgUrl(icon) {
             return require('../../assets/icons/'+this.icons[icon])

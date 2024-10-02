@@ -7,57 +7,9 @@ const { connect } = require('mongodb');
 const Analytics = require('./analyticsController');
 const nodemailer = require('nodemailer');
 const postUrl = 'https://joinposter.com/api'
-const axios = require('axios');
-const { HttpsProxyAgent } = require('https-proxy-agent');
-const proxy = 'http://117.250.3.58:8080';
-const agent = new HttpsProxyAgent(proxy);
-async function callAPI(href) {
-    let response = await axios({
-      url: href,
-      method: "get",
-      params: {
-        limit: 500,
-      },
-      headers: {
-        "Content-Type": "application/json",
-        "Accept-Encoding": "gzip",
-      },
-      httpsAgent: agent
-    }).catch((error) => {
-      console.log(
-        error,
-        "Call Api error"
-      );
-      return { error: error };
-    });
-    return response
-  }
-async function postAPI(href, data) {
-    let response = await axios({
-      url: href,
-      method: "post",
-      data: data,
-      headers: {
-        "Content-Type": "application/json",
-        "Accept-Encoding": "gzip",
-      },
-      httpsAgent: agent
-    }).catch((error) => {
-      console.log(
-        error,
-        "Call Api error"
-      );
-      return { error: error };
-    });
-    return response;
-}
+
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    auth: {
-        user: 'helpLoygift@gmail.com',
-        pass: 'helpLoygift321',
-    },
+   
 });
 async function sumProductQuantity(sizes=[]){
     let sum = 0;
@@ -464,7 +416,7 @@ class OrderController{
             let orders = {}
             if (req.query.populate == "client"){
                 // orders = await Order.find(query).populate('client').populate('products').exec();
-                orders = await Order.find(query).sort({ updatedAt: -1 }).populate('client').populate({path:'products',populate: { path: 'product', model: 'Product' }}).exec();
+                orders = await Order.find(query).sort({ updatedAt: -1 }).populate('client').populate('sample').populate('branch').populate('branchObject').populate('manager').exec();
             }else{
                 orders = await Order.find(query).sort({ updatedAt: -1 }).populate('products').exec()
             }
@@ -482,26 +434,18 @@ class OrderController{
 
 
     addOrder = async function (req, res) {
-        // console.log("start")
-        // const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
-        // await delay(5000) /// waiting 1 second.
         console.log(req.fields,"NEW LOGS",req.db)
         console.log(req.path,"PATH");
         
         let db = useDB(req.db)
         let Order = db.model("Order");
         let Client = db.model("Client");  
-        let Product = db.model("Product");
-        let OrderProduct = db.model("OrderProduct");
         let Log = db.model("Log");
         let ClientBonusHistory = db.model("clientBonusHistory");
         let DeliveryModel = db.model("Delivery");
         let Discount = db.model("Discount");
         let PromocodeModel = db.model("Promocode");
         let Branch = db.model("Branch");
-        let Settings = db.model("Settings");
-        let settings = await Settings.findOne();
-        let tokenPP = settings[0].tokenPosterPos ? settings[0].tokenPosterPos : ""
 
         let lang = req.headers["accept-language"]
         if (lang != 'ru') {
@@ -532,157 +476,38 @@ class OrderController{
             let one = await DeliveryModel.findOne({_id:req.fields.delivery});
 
             let branch = await Branch.findById(req.fields.branch);
-            let deliveryPrice = 0;
-            if(delivery){
-                deliveryPrice = delivery.price;
-            }
+            
 
             //params: product->list of products ids and quantity, Product model,promocode obj,client obj,discounts list.
-            let result_object = await products_with_discounts(
-                req.fields.products, // list of product ids and quant
-                Product,             // Product model
-                promocode,           // promocode object
-                discount_obj,        // discount object or null
-            );
 
-            let total = (parseFloat(result_object.discountedTotal) + parseFloat(deliveryPrice) - parseFloat(req.fields.points || 0)).toFixed(2);
-            let totalDiscount = result_object.discountsTotal;
-            //personal discount
-
-            if(req.fields.personalDiscount && req.fields.personalDiscount.hasOwnProperty('sum') && req.fields.personalDiscount.hasOwnProperty('percent')){
-                let personalDiscountSum = parseFloat(req.fields.personalDiscount.sum || 0);
-                if(req.fields.personalDiscount.percent){
-                    let discount = parseFloat(total)  * personalDiscountSum / 100;
-                    total = (parseFloat(total)  - discount).toFixed(2);
-                    totalDiscount = (parseFloat(totalDiscount) + discount).toFixed(2);
-                }else{
-                    let discount = personalDiscountSum;
-                    total = (parseFloat(total) - discount).toFixed(2);
-                    totalDiscount = (parseFloat(totalDiscount) + discount).toFixed(2);
-                }
-            }
-
-            let orderStatus = 0
-            if(settings.orderStatusesPass) {
-                orderStatus = 1
-            }
             //update promocode
             await checkAndUpdatePromo(promocode,client);
             let order = await new Order({
-                 // client: client._id,
-                 // client_name: client.name,
-                 // client_phone: client.phone,
-                statusDiscount:result_object.statusDiscount,
+                statusDiscount: req.fields.statusDiscount,
                 promoCode: req.fields.promoCode,
+                manager: req.fields.manager,
                 promoCodeObject: promocode,
-                status: orderStatus,
+                status: 0,
                 address: req.fields.address,
                 delivery: req.fields.delivery,
-                deliveryObject: delivery,
+                // deliveryObject: delivery,
                 deliveryType: req.fields.deliveryType,
                 notes: req.fields.notes,
                 points: req.fields.points || 0,
                 code: randomNumber(100000, 10000000),
-                deliveryPrice: deliveryPrice,
-                totalDiscount: totalDiscount,
-                productsPrice: result_object.nonDiscountedTotal,
-                totalPrice: total,
+                deliveryPrice: req.fields.deliveryPrice,
+                totalDiscount: req.fields.totalDiscount,
+                totalPrice: req.fields.totalPrice,
                 branch: req.fields.branch,
-                branchObject: branch,
-                products:[],
+                branchObject: req.fields.branch,
+                sample: req.fields.sample,
                 personalDiscount:req.fields.personalDiscount,
-                productsDetails:result_object.productCurrentPrice,
+                dateStart: req.fields.dateStart,
+                dateEnd: req.fields.dateEnd,
+                quantity: req.fields.quantity,
+                sizes: req.fields.sizes,
+                prepay: req.fields.prepay
             });
-
-            var products = req.fields.products
-            for(let i=0; i < products.length; i++){
-                let product = products[i]
-                let search_product = await Product.findById(product.id)
-
-
-                console.log(search_product,product.id,"THIS HERE LOGS");
-
-                if(!product.id){
-                    search_product = await Product.findById(product._id)
-                }
-                let branchPP = {}
-                await callAPI(`${postUrl}/spots.getSpots?token=${tokenPP}`)
-                .then(data => branchPP = data)
-                let spotID = 1
-                for (let item of branchPP.data.response) {
-                    if (item.name === branch.name) {
-                        spotID = item.spot_id;
-                    }
-                }
-                let PostData = {
-                    'spot_id'        : spotID,
-                    'spot_tablet_id' : 1,
-                    'table_id'       : 1,
-                    'user_id'        : 5,
-                    'guests_count'   : 1,
-                }
-                
-                if (tokenPP != "")  {
-                    await postAPI(`${postUrl}/transactions.createTransaction?token=${tokenPP}`,PostData)
-                    .then(result => {
-                        order.post_id = result.data.response.transaction_id
-                    })
-                }
-                console.log(branch.name)
-                let PostData2 = {
-                    'spot_id'        : spotID,
-                    'spot_tablet_id' : 1,
-                    'transaction_id' : order.post_id,
-                    'product_id'     : search_product.post_id,
-                }
-                if (tokenPP != "")  {
-                    await postAPI(`${postUrl}/transactions.addTransactionProduct?token=${tokenPP}`,PostData2)
-                    .then(result => {
-                    })
-                }
-
-                // add comment in check
-                let PostData3 = {
-                    'spot_id'        : spotID,
-                    'spot_tablet_id' : 1,
-                    'transaction_id' : order.post_id,
-                    'comment'     : order.notes,
-                }
-                if (tokenPP != "")  {
-                    await postAPI(`${postUrl}/transactions.changeComment?token=${tokenPP}`,PostData3)
-                    .then(result => {
-                    })
-                }
-                if (search_product && search_product.quantity>=product.quantity) {
-                    let order_product = await new OrderProduct({
-                        product: product.id ? product.id : product._id,
-                        name: search_product.name,
-                        name_ru: search_product.name_ru,
-                        secondary: search_product.secondary,
-                        secondary_ru: search_product.secondary_ru,
-                        img: search_product.img,
-                        price: search_product.price,
-                        quantity: product.quantity,
-                        color: req.fields.color
-                    }).save();
-                    order.products.push(order_product._id);
-
-                    if(search_product.hasMultipleTypes && product.size && product.size._id){
-                        let index123 = search_product.sizes.findIndex(x => x._id.toString() === product.size._id.toString());
-                        if(index123 !== -1){
-                            search_product.sizes[index123].quantity = parseFloat(search_product.sizes[index123].quantity)-parseFloat(product.quantity);
-                            search_product.quantity = await sumProductQuantity(search_product.sizes);
-                        }
-                    }else{
-                        search_product.quantity = parseFloat(search_product.quantity)-parseFloat(product.quantity);
-                    }
-                    search_product.save();
-                }else{
-                    return res.status(400).send(`Out of stock, ${search_product.name} only ${search_product.quantity} left`);
-                    // break order_try;
-                }
-                //send warning
-            }
 
             if(client){
                 if (req.fields.points){
@@ -709,7 +534,7 @@ class OrderController{
                 order.client_phone=guest.phone || '';
             }
             await new Log({
-                type: "order_created",
+                type: "Создание заказа",
                 description: "order_num",
                 value: "#" + order.code,
                 user: req.userName,
@@ -735,16 +560,10 @@ class OrderController{
     updateOrder = async function (req, res) {
         let db = useDB(req.db)
         let Order = db.model("Order");
-        let Product = db.model("Product");
-        let OrderProduct = db.model("OrderProduct");
         let Log = db.model("Log");
-        let Discount = db.model("Discount");
         let PromocodeModel = db.model("Promocode");
         let Client = db.model("Client");
         let ClientBonusHistory = db.model("clientBonusHistory");
-        let DeliveryModel = db.model("Delivery");
-        let Branch = db.model("Branch");
-        let cashback_model = db.model("Cashback");
 
         if (req.userType == "employee" && Object.keys(req.fields).length == 1 && "status" in req.fields){
             let checkResult = await checkAccess(req.userID, { access: "canChangeOrderStatus" }, db, res)
@@ -769,69 +588,10 @@ class OrderController{
             'msg': 'Order updated',
         }
         try {
-            //order has to use the old clients status discount if its the same client
-            //old product price if it was discounted at that time
-            //old promocode is used if unchanged
-            //old delivery is used if unchanged
             let query = { '_id': req.params.order }
-            let products = req.fields.products;
             let promocode = await PromocodeModel.findById(req.fields.promoCode);
             let old_order = req.fields.old_order;
-            let old_products = old_order.productsDetails;
-            let new_products  = req.fields.products;
-            let new_array = [];
-            new_products.forEach(function (new_p){
-                let obj = {
-                    id:new_p.id,
-                    quantity:new_p.quantity,
-                    useOldPrice:false,
-                    oldPrice:0,
-                };
-                old_products.forEach(function (old_p){
-                    if(old_p.product._id === new_p.id && old_p.discounted && old_p.discountType === "own"){
-                        obj.useOldPrice = true;
-                        obj.oldPrice = old_p.current_price;
-                    }
-                })
-                new_array.push(obj);
-            })
-            let discount_obj = old_order.statusDiscount;
-            let delivery_obj = old_order.deliveryObject;
-            let discounts = await Discount.find();
-            let branch = await Branch.findById(req.fields.branch);
-            let deliveryPrice = 0;
-
-            if(old_order.delivery != req.fields.delivery){
-                delivery_obj = await DeliveryModel.findById(req.fields.delivery);
-            }
-
-            if(delivery_obj){
-                deliveryPrice = delivery_obj.price;
-            }
-            //Get sums
-            let result_object = await products_with_discounts(
-                new_array,   // list of product ids $ quant
-                Product,     // Product model
-                promocode,   // promocode object
-                discount_obj,// discount object or null
-            );
-
-            let total = (parseFloat(result_object.discountedTotal) + parseFloat(deliveryPrice) - parseFloat(req.fields.points || 0)).toFixed(2);
-            let totalDiscount = result_object.discountsTotal;
-            //personal discount
-            if(req.fields.personalDiscount && req.fields.personalDiscount.hasOwnProperty('sum') && req.fields.personalDiscount.hasOwnProperty('percent')){
-                let personalDiscountSum = parseFloat(req.fields.personalDiscount.sum || 0);
-                if(req.fields.personalDiscount.percent){
-                    let discount = parseFloat(total)  * personalDiscountSum / 100;
-                    total = (parseFloat(total)  - discount).toFixed(2);
-                    totalDiscount = (parseFloat(totalDiscount) + discount).toFixed(2);
-                }else{
-                    let discount = personalDiscountSum;
-                    total = (parseFloat(total) - discount).toFixed(2);
-                    totalDiscount = (parseFloat(totalDiscount) + discount).toFixed(2);
-                }
-            }
-
+            
             //Client Related
             //1 old guest to new guest  -> nothing
             //2 old guest to new client -> subtract points, add balance from/to new client
@@ -850,7 +610,7 @@ class OrderController{
 
             //balance
             let old_total = parseFloat(old_order.totalPrice);
-            let diff_total = parseFloat(total)-old_total;
+            let diff_total = parseFloat(req.fields.totalPrice)-old_total;
 
             if(old_order.client){
                 old_client = await Client.findById(old_order.client._id);
@@ -868,7 +628,7 @@ class OrderController{
                     `Points used order # ${old_order.code}`,
                     old_order._id,
                     "used",
-                    total
+                    null
                 );
             }
             if(old_client && !new_client){
@@ -940,36 +700,38 @@ class OrderController{
                     `Points used order # ${old_order.code}`,
                     old_order._id,
                     "used",
-                    total
+                    null
                 );
             }
 
             // status handler
             // Settings
-
-
             let data = {
+                manager: req.fields.manager,
                 updatedAt:new Date(),
-                statusDiscount:result_object.statusDiscount, ///need old
+                statusDiscount: req.fields.statusDiscount,
                 promoCode: req.fields.promoCode,
                 promoCodeObject: promocode, ///need old
                 status: req.fields.status ,
                 address: req.fields.address,
                 delivery: req.fields.delivery,
-                deliveryObject: delivery_obj, ///need old
+                deliveryObject: req.fields.deliveryObject, ///need old
                 deliveryType: req.fields.deliveryType,
                 notes: req.fields.notes,
                 points: req.fields.points || 0,
-                code: randomNumber(100000, 10000000),
-                deliveryPrice: deliveryPrice,
-                totalDiscount: totalDiscount,
-                productsPrice: result_object.nonDiscountedTotal,
-                totalPrice: total,
+                deliveryPrice: req.fields.deliveryPrice,
+                totalDiscount: req.fields.totalDiscount,
+                totalPrice: req.fields.totalPrice,
                 branch: req.fields.branch,
-                branchObject: branch,
-                products:[],
+                branchObject: req.fields.branch,
                 personalDiscount:req.fields.personalDiscount,
-                productsDetails:result_object.productCurrentPrice,
+                dateStart: req.fields.dateStart,
+                dateEnd: req.fields.dateEnd,
+                quantity: req.fields.quantity,
+                sizes: req.fields.sizes,
+                prepay: req.fields.prepay,
+                sample: req.fields.sample,
+
             }
             if(new_client){
                 data.client=new_client._id;
@@ -984,32 +746,6 @@ class OrderController{
             let order = await Order.findOneAndUpdate(query, data);
             await checkAndUpdatePromo(promocode,new_client);
 
-            if(products && products.length){
-                order.products = []
-                for (let i = 0; i < products.length; i++) {
-                    let product = products[i]
-                    let search_product = await Product.findById(product.id)
-                    if (!product.id) {
-                        search_product = await Product.findById(product._id)
-                    }
-                    if (search_product) {
-                        let order_product = await new OrderProduct({
-                            product: search_product._id,
-                            name: search_product.name,
-                            name_ru: search_product.name_ru,
-                            secondary: search_product.secondary,
-                            secondary_ru: search_product.secondary_ru,
-                            img: search_product.img,
-                            price: search_product.price,
-                            quantity: product.quantity,
-                            color: req.fields.color
-                        }).save();
-
-                        order.products.push(order_product._id)
-                    }
-                }
-                await order.save()
-            }
             let status = req.fields.status.replace(/ /g, '').toLowerCase()
             var logVal = {
                 type: "order_updated",
@@ -1036,14 +772,6 @@ class OrderController{
     updateOrderStatus = async function (req, res) {
         let db = useDB(req.db)
         let Order = db.model("Order");
-        let Product = db.model("Product");
-        let Log = db.model("Log");
-        let Client = db.model("Client");
-        let ClientBonusHistory = db.model("clientBonusHistory");
-        let cashback_model = db.model("Cashback");
-        let Settings = db.model("Settings");
-        let settings = await Settings.find();
-        let tokenPP = settings[0].tokenPosterPos ? settings[0].tokenPosterPos : ""
         if (req.userType == "employee" && Object.keys(req.fields).length == 1 && "status" in req.fields){
             let checkResult = await checkAccess(req.userID, { access: "canChangeOrderStatus" }, db, res)
             if (checkResult) {
@@ -1070,76 +798,7 @@ class OrderController{
             let query = { '_id': req.params.order }
             req.fields['updatedAt'] = new Date();
             let order = await Order.findOneAndUpdate(query, req.fields);
-            let updated_order = await Order.findById(order._id);
-            let client = await Client.findById(order.client);
-            let products = updated_order.productsDetails.map(function (item){
-                return {
-                    id:item.product._id,
-                    quantity:item.quantity,
-                    size:item.size
-                }
-            })
-            let result_object = await products_with_discounts(
-                products,   // list of product ids $ quant
-                Product,     // Product model
-                updated_order.promoCodeObject,// promocode object
-                updated_order.statusDiscount,// discount object or null
-            );
-            let cashback_from_order = await calcCashback(result_object.productCurrentPrice,cashback_model);
-            if(updated_order.status === "Done") {
-                console.log(updated_order)
-                let PostData2 = {
-                    'spot_id'        : 1,
-                    'spot_tablet_id' : 1,
-                    'transaction_id' : updated_order.post_id,
-                    'payed_cash'     : updated_order.totalPrice,
-                }
-                if (tokenPP != "")  {
-                    await postAPI(`${postUrl}/transactions.closeTransaction?token=${tokenPP}`,PostData2)
-                    .then(result => {
-                        console.log("result.data",result)
-                    })
-                }
-            }
-            if(updated_order.status === "Done" && client){
-                console.log("HERE")
-                console.log(cashback_from_order)
-                updated_order.earnedPoints = parseFloat(cashback_from_order) || 0;
-                console.log(cashback_from_order);
-                await updated_order.save();
-                await createClientHistory(
-                    ClientBonusHistory,
-                    client,
-                    cashback_from_order,
-                    `Points received order # ${updated_order.code}`,
-                    updated_order._id,
-                    "received",
-                    0
-                );
-            }
-            if(updated_order.status === "Cancelled" && client){
-                //subtract cashback, balance, add cashback used to client, create new bonus history
-                await createClientHistory(
-                    ClientBonusHistory,
-                    client,
-                    updated_order.points,
-                    `Points refunded, order # ${updated_order.code}`,
-                    updated_order._id,
-                    "received",
-                    -parseFloat(updated_order.totalPrice),
-                );
-                if(updated_order.status === 'Done') {
-                    await createClientHistory(
-                        ClientBonusHistory,
-                        client,
-                        cashback_from_order,
-                        `Points cancelled, order # ${updated_order.code}`,
-                        updated_order._id,
-                        "deducted",
-                        0,
-                    );
-                }
-            }
+            result.object = order
         } catch (error) {
             result = sendError(error, req.headers["accept-language"])
         }
@@ -1169,7 +828,7 @@ class OrderController{
             if(order){
                 let client = await Client.findById(order.client);
                 await new Log({
-                    type: "order_deleted",
+                    type: "Удаление заказа",
                     title: "#" + order.code,
                     description: "order_by",
                     value: order.client_name,
@@ -1223,7 +882,7 @@ class OrderController{
                     }).join(", ")
                     await Analytics.updateAnalytics(req, orders[0].createdAt, true)
                     await new Log({
-                        type: "orders_deleted",
+                        type: "Удаление заказов",
                         description: desc,
                         user: req.userName,
                         user_id: req.userID,

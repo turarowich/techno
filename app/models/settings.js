@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const settingsSchema = new Schema({
     orderStatuses: {
         type: Array,
-        default: ["Accept", "In Progress", "Done"]
+        default: ["Договор", "Закуп", "Крой", "Пошив", "Отправка", 'Закончен']
     },
     orderStatusesPass: {
         type: Boolean,

@@ -50,6 +50,23 @@ class ClientController {
         }
         res.status(result.status).json(result);
     }
+    getClientMessages = async function (req, res) {
+        let db = useDB(req.db)
+        let Client = db.model("Client");
+
+        let result = {
+            'status': 200,
+            'msg': 'Sending Messages',
+        };
+
+        try {
+            let client = await await Client.findById({_id: req.userID}).populate('messages').populate('category').populate('news').exec();
+            result['objects'] = client;
+        } catch (error) {
+            result = sendError(error, req.headers["accept-language"])
+        }
+        res.status(result.status).json(result);
+    }
     
     getClient = async function (req, res) {
         let db = useDB(req.db)
@@ -83,7 +100,7 @@ class ClientController {
                 if (discount){
                     result['discount'] = discount
                 }
-                result['orders'] = await Order.find({ client: client._id }).populate('client').populate('products').exec();
+                result['orders'] = await Order.find({ client: client._id }).populate('client').populate('sample').populate('branch').populate('branchObject').populate('manager').exec();
                 result['history'] = await ClientBonusHistory.find({client:client._id});
             }
             let newClient = '';
@@ -270,7 +287,7 @@ class ClientController {
             }
             await client.save()
             await new Log({
-                type: "client_updated",
+                type: "Обновление клиента",
                 description: client.name + " "+ client.phone,
                 user: req.userName,
                 user_id: req.userID,
@@ -456,7 +473,7 @@ class ClientController {
             let client = await Client.findById(query)
             if (client) {
                 await new Log({
-                    type: "client_deleted",
+                    type: "Удаление клиента",
                     description: client.name + ' ' + (client.phone ? client.phone : ""),
                     user: req.userName,
                     user_id: req.userID,
@@ -527,7 +544,7 @@ class ClientController {
                         return elem.name +' ' + (client.phone ? client.phone : "");
                     }).join(", ")
                     await new Log({
-                        type: "clients_deleted",
+                        type: "Удаление клиентов",
                         description: desc,
                         user: req.userName,
                         user_id: req.userID,
@@ -749,8 +766,8 @@ class ClientController {
                     type: 'received',
                 }).save();
                 await new Log({
-                    type: "points_added",
-                    description: client.name + " successfully_get",
+                    type: "Добавление бонусов",
+                    description: client.name + " Успешно получил",
                     value: req.fields.points + 'P',
                     valueColor: "done",
                     user: req.userName,
@@ -804,8 +821,8 @@ class ClientController {
                     type: 'deducted',
                 }).save();
                 await new Log({
-                    type: "points_deducted",
-                    description: "from_client " + client.name + " writting_off",
+                    type: "Удаление бонусов",
+                    description: "from_client " + client.name + " Удалено",
                     value: -req.fields.points + 'P',
                     valueColor: "canceled",
                     user: req.userName,

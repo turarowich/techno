@@ -4,8 +4,8 @@
     <div v-if="catalogList.length === 0" class="d-flex justify-content-center align-items-center">
           <div class="no-product">
             <img src="../../assets/img/emp-product.svg">
-            <p>There are no products in this category yet</p>
-            <button class="save add-product" @click="addProduct">Add product</button>
+            <p>В этой категории пока нет продуктов</p>
+            <button class="save add-product" @click="addProduct">Добавить продукт</button>
           </div>
     </div>
 
@@ -38,8 +38,8 @@
             </div>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
               <ul class="list-group " >
-                <li class="list-group-item"  data-toggle="modal" data-target="#edit-product" @click="$emit('selectProduct', catalog._id)">Edit</li>
-                <li class="list-group-item" v-on:click="$emit('deleteProduct' ,catalog._id)">Delete</li>
+                <li class="list-group-item"  data-toggle="modal" data-target="#edit-product" @click="$emit('selectProduct', catalog._id)">Изменить</li>
+                <li class="list-group-item" v-on:click="$emit('deleteProduct' ,catalog._id)">Удалить</li>
               </ul>
             </div>
           </div>

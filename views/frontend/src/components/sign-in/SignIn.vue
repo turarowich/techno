@@ -2,29 +2,25 @@
 <div class="authorization">
   <div class="container-fluid">
   <div class="sign-in-header">
-    <img class="main-logo" src="../../assets/img/sign-logo.svg">
-    <select class="select-lang form-control">
-      <option>Eng</option>
-      <option>Rus</option>
-    </select>
+    <!-- <img class="main-logo" src="../../assets/img/sign-logo.svg"> -->
   </div>
 
   <div class="login">
-   <h1 class="welcome-sign-in">Welcome<br> to loy <span>Gift</span></h1>
+   <h1 class="welcome-sign-in">Добро пожаловать<br> в Techno<span>.</span></h1>
     <div  v-if=" errorStatus === true" class="text-left d-flex justify-content-between mb-3"><span>{{ errorMessage }}</span><img @click="errorStatus = false" src="../../assets/icons/redX.svg"/></div>
     <form @submit.prevent="loginSubmit">
-      <label class="label">Login</label>
+      <label class="label">Логин</label>
       <input v-model="login.email" name="email" class="login-input">
-      <label class="label">Password</label>
+      <label class="label">Пароль</label>
       <div class="password d-flex justify-space-between align-items-center "><input  name="password" v-model="login.password" id="password"  class="login-input" style="background: transparent" type="password"><img id="hide-eye" @click="showPassword" src="../../assets/icons/Hide.svg"><img id="show-eye"  @click="showPassword" src="../../assets/icons/eye.svg"></div>
         <div class="remind d-flex justify-content-between align-item-center">
           <div class="d-flex ">
             <label class="custom-checkbox"><input type="checkbox"><span class="checkmark"></span></label>
-            <span>Stay signed in</span>
+            <span>Остатся в системе</span>
           </div>
-          <a href="/">Forgot your password?</a>
+          <a href="/">Забыли пароль?</a>
         </div>
-      <button class="sign-in-btn" type="submit">Sign In</button>
+      <button class="sign-in-btn" type="submit">Войти</button>
     </form>
 
     <div class="main-or d-flex align-items-center justify-content-center">
@@ -33,13 +29,13 @@
       <div class="or-div"></div>
     </div>
 
-    <div class="have-account">Don't have an account? <a  @click="$router.push('/signup')">Sign up now</a></div>
+    <div class="have-account">У вас уже есть аккаунт? <a  @click="$router.push('/signup')">Зарегистроватся сейчас</a></div>
 
 
   </div>
-
+<!-- 
   <p class="footer-text">Cashback. Loyalty program. Client base. Offline cashback.
-    Growing your business with one Mobile Application.</p>
+    Growing your business with one Mobile Application.</p> -->
   </div>
 </div>
 </template>

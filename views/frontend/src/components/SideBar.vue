@@ -1,22 +1,25 @@
 <template>
 <div class="side-bar">
     <div class="side-bar-header">
-          <img class="logo" src="../assets/img/logo.svg"/>
+          <img class="logo" src="../assets/icons/icon.png"/>
           <button v-on:click="closeSideBar" class="btn closing"><i class="fas fa-align-right "></i></button>
     </div>
     <div v-on:click="closeSideBar">
-      <router-link class="router-link" v-if="check('orders', 'active')" to="/orders"><span class="sider-bar-link"> <div class="left-line"></div><img src="../assets/icons/Plus.svg" >Orders</span> </router-link>
-      <router-link class="router-link" v-if="check('clients', 'active')"  data-turbolinks="false" to="/clients" ><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Document.svg" >Clients</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
-      <router-link class="router-link" v-if="check('loyalty', 'active')" to="/loyalty"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Game.svg" >Loyalty</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
-      <router-link class="router-link" v-if="check('catalog', 'active')" to="/catalog"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Discovery.svg"  data-turbolinks="false">Catalog</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
-      <router-link class="router-link" v-if="check('chat', 'active')" to="/chats"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/MoresSquare.svg" >Chats <span class="chats-quantity" v-if="msgsCount != ''">{{msgsCount}}</span></span><img v-if="msgsCount == ''" class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
-      <router-link class="router-link" v-if="check('analytics', 'active')" to="/analytics"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/group.svg" >Analytics</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
-      <router-link class="router-link" v-if="check('news', 'active')" to="/news"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/VolumeUp.svg" >News</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
-      <router-link class="router-link" v-if="check('log', 'active')" to="/log"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/logs.svg" >Log</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+      <router-link class="router-link" v-if="check('orders', 'active')" to="/orders"><span class="sider-bar-link"> <div class="left-line"></div><img src="../assets/icons/Plus.svg" >Заказы</span> </router-link>
+      <router-link class="router-link" v-if="check('orders', 'active')" to="/sample"><span class="sider-bar-link"> <div class="left-line"></div><img src="../assets/icons/wear.svg" >Образец</span> </router-link>
+      <router-link class="router-link" v-if="check('clients', 'active')"  data-turbolinks="false" to="/clients" ><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Document.svg" >Клиениты</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+      <!-- <router-link class="router-link" v-if="check('loyalty', 'active')" to="/loyalty"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Game.svg" >Loyalty</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link> -->
+      <router-link class="router-link" v-if="check('catalog', 'active')" to="/catalog"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Discovery.svg"  data-turbolinks="false">Каталог</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+      <router-link class="router-link" v-if="check('chat', 'active')" to="/chats"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/MoresSquare.svg" >Чаты <span class="chats-quantity" v-if="msgsCount != ''">{{msgsCount}}</span></span><img v-if="msgsCount == ''" class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+      <router-link class="router-link" v-if="check('analytics', 'active')" to="/analytics"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/group.svg" >Аналитика</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+      <router-link class="router-link" v-if="check('news', 'active')" to="/news"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/VolumeUp.svg" >Новости</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+      <router-link class="router-link" v-if="check('log', 'active')" to="/log"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/logs.svg" >Лог</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+      <router-link class="router-link" to="/workers"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/workers.svg" >Работники</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+      <!-- <router-link class="router-link" v-if="check('worker', 'active')" to="/workers"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/accounting.svg" >Бухгалтерия</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link> -->
      <div class="help-setting">
         <router-link class="d-none router-link help" to="/"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/question.svg" >Help</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
-        <div class="line-side"></div>
-        <router-link class="router-link" v-if="check('settings', 'active')" to="/settings"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Setting.svg" >Settings</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
+        <div class="line-side"></div> 
+        <router-link class="router-link" v-if="check('settings', 'active')" to="/settings"><span class="sider-bar-link"><div class="left-line"></div><img src="../assets/icons/Setting.svg" >Настройки</span><img class="arrow" src="../assets/icons/side-arrow.svg"></router-link>
       </div>
     </div>
 </div>
@@ -57,8 +60,9 @@ name: "SideBar",
 
 <style scoped>
 .logo{
-  height: auto;
-  width:50%;
+  height: 60px;
+  width:100%;
+  object-fit: cover;
 }
 .side-bar{
   background: #25262C;
@@ -69,7 +73,7 @@ name: "SideBar",
 .side-bar-header{
   display: flex;
   justify-content: center;
-  background: #3B3B45;
+  background: #616cf5;
   height:60px;
   margin-bottom: 20px;
 }

@@ -5,6 +5,7 @@ var promocodeController = require('../app/controllers/promocodeController');
 var categoryController = require('../app/controllers/categoryController');
 var reviewController = require('../app/controllers/reviewController');
 var orderController = require('../app/controllers/orderController');
+var sampleController = require('../app/controllers/sampleController');
 var userController = require('../app/controllers/userController');
 var newsController = require('../app/controllers/newsController');
 var pushController = require('../app/controllers/pushController');
@@ -16,17 +17,14 @@ var analyticsController = require('../app/controllers/analyticsController');
 var orderStatusController = require('../app/controllers/orderStatusController');
 var logController = require('../app/controllers/logController');
 var catalogController = require('../app/controllers/catalogController');
+var WorkersController = require('../app/controllers/workersController');
+
 var multer = require('multer');
 var upload = multer({ dest: '../public/product/' });
 var verifyAccess = require('../services/verifyAccess');
 var adminController = require('../app/controllers/adminController');
-var posterPosController = require('../app/controllers/posterPosController');
 
 module.exports = function (app, io) {
-    // PosterPos get product category check
-    app.get('/getProductPP', posterPosController.getProductPoster)
-    app.get('/getCategoryPP', posterPosController.getCategoryPoster)
-    app.get('/getCheckPP', posterPosController.getCheckPoster)
     
     //Clients url
     app.get('/getClient/:client', clientController.getClient);
@@ -36,6 +34,18 @@ module.exports = function (app, io) {
     app.post('/saveAvatar', clientController.saveAvatar);
     app.post('/checkPromocode', clientController.checkPromocode);
     app.put('/updateClientsCategory', verifyAccess, clientController.updateClientsCategory);
+
+    app.get('/getWorker/:worker', WorkersController.getWorker)
+    app.get('/getWorkers', WorkersController.getWorkers)
+    app.post('/addWorker', WorkersController.addWorker)
+    app.put('/updateWorker/:worker', WorkersController.updateWorker);
+    app.delete('/deleteWorker/:worker',  WorkersController.deleteWorker);
+    app.delete('/deleteWorkers', verifyAccess, WorkersController.deleteWorkers);
+    app.post('/addWork', WorkersController.addWork)
+    app.get('/getWorks/:worker', WorkersController.getWorks)
+    app.post('/addPrepay', WorkersController.addPrepay)
+    app.get('/getPrepay/:worker', WorkersController.getPrepay)
+
     // app.delete('/deleteClient/:client', verifyAccess, clientController.deleteClient);
     app.delete('/deleteClient/:client',  clientController.deleteClient);
     app.delete('/deleteClients', verifyAccess, clientController.deleteClients);
@@ -116,7 +126,13 @@ module.exports = function (app, io) {
     app.post('/addReview', reviewController.addReview);
     app.put('/updateReview/:review', reviewController.updateReview);
     app.delete('/deleteReview/:review', reviewController.deleteReview);
-
+    //sample url
+    app.post('/addSample', sampleController.addSample);
+    app.put('/updateSample/:sample', verifyAccess, sampleController.updateSample);
+    app.get('/getSample/:sample', sampleController.getSample);
+    app.get('/getSamples', sampleController.getSamples);
+    app.get('/getSamplesAll', sampleController.getSamplesAll);
+    app.delete('/deleteSample/:sample', verifyAccess, sampleController.deleteSample);
     // Order url
     app.get('/getOrder/:order', orderController.getOrder);
     app.get('/getOrders', orderController.getOrders);

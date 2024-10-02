@@ -3,22 +3,22 @@
     <div class="searchAndButtons">
       <div class="d-flex justify-content-between app-buttons">
         <div class="d-flex align-items-center">
-          <button v-if="check()" class="app-buttons-item adding-btns" data-toggle="modal"
-            data-target="#add-client-category"><span>+ Add category</span></button>
+          <!-- <button v-if="check()" class="app-buttons-item adding-btns" data-toggle="modal"
+            data-target="#add-client-category"><span>+ Добавить категорию</span></button>
           <button v-if="check()" class="app-buttons-item" data-toggle="modal" data-target="#push-notification "><img
               src="../../assets/icons/bgNotification.svg"><span>Push notification</span></button>
           <button v-if="check()" class="app-buttons-item" data-toggle="modal" data-target="#individual-push"><img
-              src="../../assets/icons/send-individual.svg"><span>Schedule push</span></button>
+              src="../../assets/icons/send-individual.svg"><span>Schedule push</span></button> -->
 
         </div>
         <div class="d-flex align-items-center">
           <button v-if="check()" class="app-buttons-item" @click="deleteAllClient"><img
-              src="../../assets/icons/trash_empty.svg"><span>Remove</span></button>
+              src="../../assets/icons/trash_empty.svg"><span>Удалить</span></button>
           <div class="dropdown">
-            <button v-if="check()" class="dropdown-toggle app-buttons-item" id="dropdownMenuTotal" data-toggle="dropdown"
+            <!-- <button v-if="check()" class="dropdown-toggle app-buttons-item" id="dropdownMenuTotal" data-toggle="dropdown"
               aria-haspopup="true" aria-expanded="false">
-              <img src="../../assets/icons/moveto.svg"><span>Move to</span>
-            </button>
+              <img src="../../assets/icons/moveto.svg"><span>Перенести</span>
+            </button> -->
 
             <div class="move-category animate slideIn dropdown-menu" aria-labelledby="dropdownMenuTotal">
               <div class="move-category-item" v-for="cat in clientCategory.slice(1)" :key="cat._id"
@@ -28,11 +28,11 @@
           <div class="dropdown filter">
             <button class="dropdown-toggle app-buttons-item mr-0" id="dropdownFilterClient" data-toggle="dropdown"
               aria-haspopup="true" aria-expanded="false"><img
-                src="../../assets/icons/filter.svg"><span>Filter</span></button>
+                src="../../assets/icons/filter.svg"><span>Фильтр</span></button>
             <div class="dropdown-menu animate slideIn  filter-box" aria-labelledby="dropdownFilterClient">
               <form id="form">
                 <div class="filter-header">
-                  <h3>Filters</h3>
+                  <h3>Фильтры</h3>
                 </div>
 
                 <div class="row">
@@ -40,13 +40,13 @@
                     <div>
                       <div class="filter-list" data-toggle="collapse" data-target="#register-collapse" role="button"
                         aria-expanded="false" aria-controls="multiCollapseExample1">
-                        Registration date
+                        Дата регистрации
                         <img src="../../assets/icons/down.svg" class="filter-img">
                       </div>
                       <div class="collapse" id="register-collapse">
                         <div class="filter-body d-flex">
                           <div class="d-flex align-items-center mr-2">
-                            <label>From</label>
+                            <label>От</label>
                             <div class="calendar d-flex align-items-center">
                               <input v-model="from_register_date" class="calendar-input" id="from-date">
                               <img src="../../assets/icons/Calendar.svg">
@@ -54,7 +54,7 @@
                           </div>
 
                           <div class="d-flex align-items-center">
-                            <label>To</label>
+                            <label>До</label>
                             <div class="calendar d-flex align-items-center">
                               <input v-model="to_register_date" class="calendar-input" id="to-date">
                               <img src="../../assets/icons/Calendar.svg">
@@ -103,29 +103,24 @@
                     <div>
                       <div class="filter-list" data-toggle="collapse" data-target="#purchase-collapse" role="button"
                         aria-expanded="false" aria-controls="multiCollapseExample1">
-                        Number of purchase
+                        Количество покупок
                         <img src="../../assets/icons/down.svg" class="filter-img">
                       </div>
                       <div class="collapse" id="purchase-collapse">
                         <div class="filter-body d-flex">
                           <div class="d-flex align-items-center mr-2">
-                            <label>From</label>
+                            <label>От</label>
                             <input v-model="from_number_purchase" class="cashback-input">
                           </div>
 
                           <div class="d-flex align-items-center">
-                            <label>To</label>
+                            <label>До</label>
                             <input class="cashback-input" v-model="to_number_purchase">
                           </div>
                         </div>
                       </div>
                     </div>
                     <div>
-                      <div class="filter-list" data-toggle="collapse" data-target="#category-collapse" role="button"
-                        aria-expanded="false" aria-controls="multiCollapseExample1">
-                        Category
-                        <img src="../../assets/icons/down.svg" class="filter-img">
-                      </div>
                       <div class="collapse" id="category-collapse">
                         <div class="filter-body">
                           <select v-model="category" class="filter-form  form-control long-form-control  form-control-lg"
@@ -138,7 +133,7 @@
                     <div>
                       <div class="filter-list" data-toggle="collapse" data-target="#birthday-collapse" role="button"
                         aria-expanded="false" aria-controls="multiCollapseExample1">
-                        Birthday
+                        Дата рождения
                         <img src="../../assets/icons/down.svg" class="filter-img">
                       </div>
                       <div class="collapse" id="birthday-collapse">
@@ -174,7 +169,7 @@
                     <div>
                       <div class="filter-list" data-toggle="collapse" data-target="#gender-collapse" role="button"
                         aria-expanded="false" aria-controls="multiCollapseExample1">
-                        Gender
+                        Пол
                         <img src="../../assets/icons/down.svg" class="filter-img">
                       </div>
                       <div class="collapse" id="gender-collapse">
@@ -199,7 +194,7 @@
                     <div>
                       <div class="filter-list" data-toggle="collapse" data-target="#discount-collapse" role="button"
                         aria-expanded="false" aria-controls="multiCollapseExample1">
-                        Discount
+                        Скидка
                         <img src="../../assets/icons/down.svg" class="filter-img">
                       </div>
                       <div class="collapse" id="discount-collapse">
@@ -216,7 +211,7 @@
                     <div>
                       <div class="filter-list" data-toggle="collapse" data-target="#last-collapse" role="button"
                         aria-expanded="false" aria-controls="multiCollapseExample1">
-                        Last purchase
+                        Последняя покупка
                         <img src="../../assets/icons/down.svg" class="filter-img">
                       </div>
                       <div class="collapse" id="last-collapse">
@@ -243,8 +238,8 @@
                   </div>
                 </div>
                 <div class="d-flex justify-content-end align-items-center">
-                  <div @click="resetFilter()" class="reset">Reset all</div>
-                  <button class="save" @click.prevent="filterSubmit" type="submit">Apply</button>
+                  <div @click="resetFilter()" class="reset">Стереть</div>
+                  <button class="save" @click.prevent="filterSubmit" type="submit">Найти</button>
                 </div>
               </form>
             </div>
@@ -253,7 +248,7 @@
       </div>
       <div v-if="showMainSearch" class="main-search d-flex align-items-center">
         <img src="../../assets/icons/search-icon.svg">
-        <input class="main-input" type="text" placeholder="Search" v-model="search">
+        <input class="main-input" type="text" placeholder="Поиск..." v-model="search">
       </div>
       <div class="d-flex align-items-center flex-wrap">
         <span class="show-properties" v-if="f_from_register_date !== ''">Register from: {{ f_from_register_date }} <img
@@ -286,10 +281,10 @@
       </div>
     </div>
     <div class="d-flex">
-      <div class="client-category-menu" style="width:24%">
+      <!-- <div class="client-category-menu" style="width:24%">
 
         <div class="category-box">
-          <h3 class="category-title">Client category</h3>
+          <h3 class="category-title">Client category  </h3>
           <input v-model="search_category" placeholder="Search" style="height:35px; margin-bottom:15px"
             class="cashback-input">
 
@@ -318,28 +313,27 @@
 
 
         </div>
-      </div>
+      </div> -->
 <!--      table-->
-      <div class="client-content" style="width:76%">
+      <div class="client-content" style="width:100%">
         <div class="main-content">
           <div class="d-flex main-content-header justify-content-between">
             <div class="table-head d-flex align-items-center client-names">
               <div class="table-head"><label class="custom-checkbox"><input type="checkbox" @change="selectAllClient"
                     class="main_select" v-model="selectAll"><span class="checkmark"></span></label></div>
-              Name
+              ФИО
             </div>
-            <div v-if="data_check.birthday_checked" class="table-head" style="width: 12%;">Birthday</div>
-            <div v-if="data_check.discount_checked" class="table-head" style="width: 10%;">Discount</div>
-            <div v-if="data_check.category_checked" class="table-head" style="width: 14%;">Category</div>
-            <div v-if="data_check.register_date_checked" class="table-head" style="width: 18%;">Registration date</div>
-            <div v-if="data_check.phone_checked" class="table-head client-phone" style="width:14%">Phone number</div>
+            <div v-if="data_check.birthday_checked" class="table-head" style="width: 12%;">Дата рождения</div>
+            <div v-if="data_check.discount_checked" class="table-head" style="width: 10%;">Скидка</div>
+            <div v-if="data_check.register_date_checked" class="table-head" style="width: 18%;">Дата регистрации</div>
+            <div v-if="data_check.phone_checked" class="table-head client-phone" style="width:14%">Номер телефона</div>
             <div v-if="data_check.total_checked" class="table-head table-link d-flex align-item-center" style="width: 8%;"
               @click="sortByTotal"><span>Total</span> <img class="total-pol total" style="margin-left:5px"
                 src="../../assets/icons/polygon.svg"></div>
             <div v-if="data_check.bonus_checked" class="table-head table-link d-flex align-items-center"
-              style="width: 8%;" @click="sortByBonus">Points <img class="date-pol" style="margin-left:5px"
+              style="width: 8%;" @click="sortByBonus">Бонусы <img class="date-pol" style="margin-left:5px"
                 src="../../assets/icons/polygon.svg"></div>
-            <div v-if="data_check.last_purchase_checked" class="table-head">Last purchase</div>
+            <div v-if="data_check.last_purchase_checked" class="table-head">Последняя покупка</div>
             <div v-if="data_check.last_scan_checked && scannerStatus" class="table-head" style="width: 5%;">Last Scan
             </div>
             <div  v-if="data_check.number_of_scans_checked && scannerStatus" class="table-head" style="width: 5%;"
@@ -369,30 +363,26 @@
               </div>
               <div class="dropdown-menu general-dropdown settings-dropdown" aria-labelledby="#dropdownBlue">
                 <form @change="updatelistFilter">
-                  <div><label class="custom-checkbox"><input id="category_f" v-model="data_check.category_checked"
-                        type="checkbox"><span class="checkmark"></span></label><label class="show-fields"
-                      for="category_f">Category</label></div>
                   <div><label class="custom-checkbox"><input id="phone_f" v-model="data_check.phone_checked"
                         type="checkbox"><span class="checkmark"></span></label><label class="show-fields"
-                      for="phone_f">Phone</label></div>
+                      for="phone_f">Номер телефона</label></div>
                   <div><label class="custom-checkbox"><input id="total_f" v-model="data_check.total_checked"
                         type="checkbox"><span class="checkmark"></span></label><label class="show-fields"
-                      for="total_f">Total</label></div>
+                      for="total_f">Общий</label></div>
                   <div><label class="custom-checkbox"><input id="last" v-model="data_check.last_purchase_checked"
-                        type="checkbox"><span class="checkmark"></span></label><label class="show-fields" for="last">Last
-                      purchase</label></div>
+                        type="checkbox"><span class="checkmark"></span></label><label class="show-fields" for="last">Последняя покупка</label></div>
                   <div><label class="custom-checkbox"><input v-model="data_check.bonus_checked" type="checkbox"
                         id="show-bonus"><span class="checkmark"></span></label> <label class="show-fields"
-                      for="show-bonus">Points</label></div>
+                      for="show-bonus">Бонусы</label></div>
                   <div><label class="custom-checkbox"><input v-model="data_check.register_date_checked" id="date"
                         type="checkbox"><span class="checkmark"></span></label> <label class="show-fields"
-                      for="date">Registration date</label></div>
+                      for="date">Дата регистрации</label></div>
                   <div><label class="custom-checkbox"><input v-model="data_check.discount_checked" type="checkbox"
                         id="discount"><span class="checkmark"></span></label> <label class="show-fields"
-                      for="discount">Discount</label></div>
+                      for="discount">Скидка</label></div>
                   <div><label class="custom-checkbox"><input v-model="data_check.birthday_checked" id="birthday"
                         type="checkbox"><span class="checkmark"></span></label> <label class="show-fields"
-                      for="birthday">Birthday</label></div>
+                      for="birthday">Дата рождения</label></div>
                   <div v-if="customFields && custom_field_0.fieldName"><label class="custom-checkbox">
                     <input v-model="data_check.custom_field_0" id="custom_field_0"
                         type="checkbox"><span class="checkmark"></span></label> <label class="show-fields"
@@ -551,7 +541,6 @@ export default {
         values: ['']
       },
       data_check: {
-        category_checked: false,
         bonus_checked: false,
         last_purchase_checked: false,
         register_date_checked: true,

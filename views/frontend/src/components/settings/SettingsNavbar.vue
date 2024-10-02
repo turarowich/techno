@@ -2,13 +2,12 @@
   <div>
     <div class="loyalty-nav d-flex align-items-end">
       <ul class="loyalty-menu p-0 d-flex">
-        <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='General' }" to="/settings" exact>General</router-link></li>
-        <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='Price' }" to="/settings/price">Price</router-link></li>
-        <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='CatalogSettings' }" to="/settings/catalog-settings">Catalog</router-link></li>
-        <li class="loaylty-list" v-if="isAdmin"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='PersonalSettings' }" to="/settings/personal-settings">Personal settings</router-link></li>
-        <li class="loaylty-list" v-if="isAdmin"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='StaffSettings' }" to="/settings/staff-settings">Staff settings</router-link></li>
-        <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='AddressDelivery' }" to="/settings/address-delivery">Address and delivery</router-link></li>
-        <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='ProductsImport' }" to="/settings/products-import">Products Import</router-link></li>
+        <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='General' }" to="/settings" exact>Главные настройки</router-link></li>
+        <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='CatalogSettings' }" to="/settings/catalog-settings">Каталог</router-link></li>
+        <li class="loaylty-list" v-if="isAdmin"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='PersonalSettings' }" to="/settings/personal-settings">Персональная настройка</router-link></li>
+        <li class="loaylty-list" v-if="isAdmin"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='StaffSettings' }" to="/settings/staff-settings">Менеджера</router-link></li>
+        <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='AddressDelivery' }" to="/settings/address-delivery">Адрес и доставка</router-link></li>
+        <!-- <li class="loaylty-list"><router-link class="loyalty-link" v-bind:class="{ active: currentRouteName==='ProductsImport' }" to="/settings/products-import">Products Import</router-link></li> -->
       </ul>
     </div>
   </div>
@@ -32,7 +31,7 @@ export default {
             return this.$route.name;
         },
         isAdmin(){
-            if(this.user.rate != undefined && this.user.activeBefore != undefined){
+            if((this.user && this.user.rate) != undefined && this.user.activeBefore != undefined){
                 return true
             }
             return false

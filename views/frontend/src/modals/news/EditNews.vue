@@ -8,14 +8,14 @@
                 <img src="../../assets/icons/xBlack.svg" alt="">
               </span>
             </button>
-            <h3 class="modal-title">Edit news</h3>
+            <h3 class="modal-title">Изменить новость</h3>
           </div>
           <div class=" myModal-body">
             <div class="row">
                 <div class="col-lg-5  ">
-                    <h3 class="news-title mb-1">Cover Art <span>(Optional)</span></h3>
-                    <p class="news-description margin-bottom-20">You can upload JPG or PNG, the minimum resolution is<br> 540*405 px, the size is not more than 3 MB.</p>
-                    <button class="upload-photo margin-bottom-30" @click="selectPhoto">+ Upload photo</button><br>        
+                    <h3 class="news-title mb-1">Обложка <span>(Optional)</span></h3>
+                    <p class="news-description margin-bottom-20">Вы можете загрузить JPG или PNG, минимальное разрешение<br> 540*405 пикселей, размер не более 3 МБ.</p>
+                    <button class="upload-photo margin-bottom-30" @click="selectPhoto">+ Загрузить фото</button><br>        
                     <input class="d-none" type="file" name="" ref="uploadPhoto" @change="uploadPhoto($event)" accept="image/*">
                     <div class="image-preview position-relative" v-if="news.img">
                         <img v-if="newImage" :src="imagePreview" alt="" class="img-new w-100 d-block" accept="image/png, image/jpeg">
@@ -27,39 +27,13 @@
                     
                 </div>
                 <div class="col-lg-6 parent">
-                    <label>Name</label>
+                    <label>Название</label>
                     <input v-model="news.name" class="cashback-input margin-bottom-30" style="width:100%">
-                    <label>Description</label>
+                    <label>Описание</label>
                     <textarea v-model="news.desc"  name="" id="" cols="30" rows="10" class="form-control"></textarea>    
-                    <div class="rules d-flex my-3">
-                        <label class="custom-checkbox"><input type="checkbox" @change="checkPromo" v-model="news.category"><span class="checkmark"></span></label>
-                        <span class="ml-2">Promotion</span>
-                    </div>
-                    
-                    <div class="promotion-body w-100" :class="news.category ? '': 'd-none'">
-                        <label class="mb-1"> PROMO Completion date</label>
-                        <p class="news-description margin-bottom-30">Set the end time for creating a special offer</p>
-                        <div class=" product-calendar d-flex align-items-center ">
-                            <div class="d-flex align-items-center mr-2">
-                            <label class="mr-2">From</label>
-                            <div class="calendar d-flex align-items-center">
-                                <input  name="startDate" v-model="news.startDate" class="calendar-input" id="startDateEdit" autocomplete="off">
-                                <img src="../../assets/icons/Calendar.svg">
-                            </div>
-                            </div>
-
-                            <div class="d-flex align-items-center">
-                            <label class="mr-2">to</label>
-                            <div class="calendar d-flex align-items-center">
-                                <input   name="endDate" v-model="news.endDate"  class="calendar-input" id="endDateEdit" autocomplete="off">
-                                <img src="../../assets/icons/Calendar.svg">
-                            </div>
-                            </div>
-                        </div>
-                    </div>
                     <div class="d-flex btns">
-                        <button class="save mr-2" @click="onSubmit">Save</button>
-                        <button data-dismiss="modal" aria-label="Close" class="cancel">Cancel</button>
+                        <button class="save mr-2" @click="onSubmit">Сохранить</button>
+                        <button data-dismiss="modal" aria-label="Close" class="cancel">Отменить</button>
                     </div>
                 </div>  
             </div>
@@ -82,8 +56,6 @@ export default {
                 desc: '',
                 category:false,
                 img: '',
-                startDate:'',
-                endDate: ''
             },
             newImage: false
         };
@@ -111,13 +83,6 @@ export default {
             return null
         }
     },
-  checkPromo(){
-    if(this.news.category===false){
-      this.news.startDate = ''
-      this.news.endDate = ''
-
-    }
-  },
     methods:{
         selectPhoto(){
             this.$refs.uploadPhoto.click();
@@ -147,16 +112,6 @@ export default {
         if (news.img){
             form.append('img', news.img)
         }
-      if(news.category){
-        if (!news.startDate && !news.endDate){
-          this.$warningAlert('Add promotion')
-          return;
-        }
-        else{
-          form.append('startDate', news.startDate)
-          form.append('endDate', news.endDate)
-        }
-      }
         form.append('category',news.category)
         form.append('name', news.name)
         form.append('desc', news.desc)
@@ -171,8 +126,6 @@ export default {
                         desc: '',
                         category:false,
                         img: '',
-                        startDate:'',
-                        endDate: ''
                     }
                  }, 500);
                 this.$successAlert('News has been updated')
@@ -187,25 +140,6 @@ export default {
         }
 
   },
-  mounted(){
-    new this.$lightpick({
-      field: document.getElementById('startDateEdit'),
-      format:'',
-      lang:'en',
-      onSelect:(date) => {
-        this.news.startDate = date.format().toString().slice(0,10)
-      }
-    });
-    new this.$lightpick({
-      field: document.getElementById('endDateEdit'),
-      format:'',
-      lang:'en',
-      onSelect:(date)=>{
-        this.news.endDate = date.format().toString().slice(0,10)
-      }
-    });
-  }
-
 }
 </script>
 

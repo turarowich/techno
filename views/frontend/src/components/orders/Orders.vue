@@ -3,27 +3,26 @@
     <div class="searchAndButtons">
     <div class="d-flex justify-content-between app-buttons" style="flex-wrap: wrap;">
       <div class="d-flex align-items-center" style="flex-wrap: wrap;">
-        <button v-if="check()" class="app-buttons-item adding-btns" data-toggle="modal" @click="unSetSelectedOrder" data-target="#add-order" ><span>+ Add order</span></button>
-        <button v-if="check()" class="app-buttons-item" @click="deleteAllOrder"><img class="img-btn" src="../../assets/icons/trash_empty.svg" ><span>Remove</span></button>
-        <button v-if="check()" class="app-buttons-item" @click="exportOrder"><img class="img-btn" src="../../assets/icons/set.svg"><span>Export to Excell </span></button>
+        <button v-if="check()" class="app-buttons-item adding-btns" data-toggle="modal" @click="unSetSelectedOrder" data-target="#add-order" ><span>+ Добавить заказ</span></button>
+        <button v-if="check()" class="app-buttons-item" @click="deleteAllOrder"><img class="img-btn" src="../../assets/icons/trash_empty.svg" ><span>Удалить</span></button>
         <div class="dropdown filter-drops">
           <button class="app-buttons-item dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
-            <img class="img-btn" src="../../assets/icons/filter.svg"><span>Filter</span>
+            <img class="img-btn" src="../../assets/icons/filter.svg"><span>Фильтр</span>
           </button>
 
           <div class="dropdown-menu animate slideIn filter-orders general-dropdown" aria-labelledby="dropdownMenuButton">
             <form class="filter-dropdown">
-                <h3 class="drop-title">By price</h3>
+                <h3 class="drop-title">По цене</h3>
                 <div class="d-flex">
                   <input placeholder="0" v-model="price_from"  type="number" class="drop-input">
                   <div class="d-flex">
-                    <label class="mr-2 pl-2">to</label>
+                    <label class="mr-2 pl-2">до</label>
                     <input placeholder="0" v-model="price_to" type="number"  class="drop-input">
                   </div>
                 </div>
-              <h3 class="drop-title">Sort by</h3>
+              <h3 class="drop-title">Сортировать по</h3>
               <select  v-model="filter_by_status" class="filter-select form-control form-control-sm mb-2" aria-label=".form-select-lg example">
-                <option value="">All</option>
+                <option value="">Все статусы</option>
                 <option v-for="statusItem, key in orderStatuses" :key="statusItem" :value="key">{{statusItem}}</option>
               </select>
             </form>
@@ -32,8 +31,8 @@
       </div>
       <div>
         <span class="d-none" @click="test">SERVER LOG ROOMS</span>
-        <button class="app-buttons-item" @click="showYesterday"><img src="../../assets/icons/yesterday.svg"><span>Yesterday</span></button>
-        <button class="app-buttons-item" @click="showTodayData"><img src="../../assets/icons/yesterday.svg"><span>Today</span></button>
+        <button class="app-buttons-item" @click="showYesterday"><img src="../../assets/icons/yesterday.svg"><span>Вчера</span></button>
+        <button class="app-buttons-item" @click="showTodayData"><img src="../../assets/icons/yesterday.svg"><span>Сегодня</span></button>
         <button class="app-buttons-item" @click="clickOnDate"><img src="../../assets/icons/yesterday.svg"><input :value="between_value"  class="date-pick" id="datepicker"></button>
       </div>
     </div>
@@ -44,25 +43,25 @@
     </div>
     <div class="d-flex main-content-header justify-content-between align-items-center">
       <div class="table-head d-flex align-items-center" style="width: 18%;">
-        <div><label class="custom-checkbox"><input type="checkbox" id="parent-check"  v-model="selectAll"  @change="selectAllOrder"><span class="checkmark"></span></label></div>
-
-        Name order</div>
-      <div class="table-head" style="width: 25%;">Product</div>
-      <div v-show="data_check.client_checked" class="table-head" style="width: 20%;">Client</div>
-      <div v-show="data_check.phone_checked" class="table-head" style="width: 18%;">Phone number</div>
-      <div class="table-head table-link d-flex align-items-center" style="width: 15%;" @click="sortByTotal()" >Total <img class="total-pol" style="margin-left:7px" src="../../assets/icons/polygon.svg"></div>
+        <div>
+          <label class="custom-checkbox"><input type="checkbox" id="parent-check"  v-model="selectAll"  @change="selectAllOrder"><span class="checkmark"></span></label></div>
+        Название заказа</div>
+      <div class="table-head" style="width: 25%;">Образец</div>
+      <div v-show="data_check.client_checked" class="table-head" style="width: 20%;">Клиент</div>
+      <div v-show="data_check.phone_checked" class="table-head" style="width: 18%;">Номер телефона</div>
+      <div class="table-head table-link d-flex align-items-center" style="width: 10%;" @click="sortByQuantity()" >Количество <img class="total-pol" style="margin-left:7px" src="../../assets/icons/polygon.svg"></div>
+      <div class="table-head table-link d-flex align-items-center" style="width: 10%;" @click="sortByTotal()" >Сумма <img class="total-pol" style="margin-left:7px" src="../../assets/icons/polygon.svg"></div>
       <div v-if="data_check.date_checked" class="table-head table-link d-flex align-items-center" style="width: 13%; cursor: pointer" v-on:click="sortByDate" >Date <img class="date-pol" style="margin-left:7px" src="../../assets/icons/polygon.svg"></div>
-      <div v-show="data_check.notes_checked" class="table-head" style="width: 10%;">Notes</div>
-      <div class="table-head" style="width: 15%;">Status</div>
-      <div class="table-head" style="width: 8%;"></div>
+      <div v-show="data_check.notes_checked" class="table-head" style="width: 10%;">Примичание</div>
+      <div class="table-head" style="width: 10%;">Статус</div>
       <div style="width:3%" class="dropdown pl-3">
         <div class="table-head text-right dropdown-toggle"  id="dropdownBlue" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:3%"><img src="../../assets/icons/BlueSetting.svg"></div>
         <div class="dropdown-menu general-dropdown settings-dropdown" aria-labelledby="dropdownBlue">
           <form>
-            <div><label class="custom-checkbox"><input v-model="data_check.client_checked" type="checkbox" id="client" ><span class="checkmark"></span></label> <label class="show-field" for="client">Client</label></div>
-            <div><label class="custom-checkbox"><input v-model="data_check.phone_checked" type="checkbox" id="phone"><span class="checkmark"></span></label> <label class="show-field" for="phone">Phone number</label></div>
-            <div><label class="custom-checkbox"><input v-model="data_check.date_checked" type="checkbox" id="date" ><span class="checkmark"></span></label> <label class="show-field" for="date">Date</label></div>
-            <div><label class="custom-checkbox"><input v-model="data_check.notes_checked" type="checkbox" id="notes" ><span class="checkmark"></span></label> <label class="show-field" for="notes">Notes</label></div>
+            <div><label class="custom-checkbox"><input v-model="data_check.client_checked" type="checkbox" id="client" ><span class="checkmark"></span></label> <label class="show-field" for="client">Клиент</label></div>
+            <div><label class="custom-checkbox"><input v-model="data_check.phone_checked" type="checkbox" id="phone"><span class="checkmark"></span></label> <label class="show-field" for="phone">Номер телефона</label></div>
+            <div><label class="custom-checkbox"><input v-model="data_check.date_checked" type="checkbox" id="date" ><span class="checkmark"></span></label> <label class="show-field" for="date">Дата</label></div>
+            <div><label class="custom-checkbox"><input v-model="data_check.notes_checked" type="checkbox" id="notes" ><span class="checkmark"></span></label> <label class="show-field" for="notes">Примичание</label></div>
        </form>
         </div>
       </div>
@@ -80,7 +79,6 @@
             v-bind:orderList="orderToDisplay"
             v-on:deleteOrder="deleteOrder"
             v-bind:data_check="data_check"
-            @startScanning="startScanning"
         />
       </div>
     </div>
@@ -88,13 +86,9 @@
       :getOrders="getOrders"
       :selected_order="select_order"
     />
-    <EditOrder
-      :getOrders="getOrders"
-      :select_order="select_order"
-    />
     <div class="pagination d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-center">
-        <span>Rows per page</span>
+        <span>Количество на странице</span>
         <select class="form-control pagination-select" v-model='perPage'>
           <option value="8">8</option>
           <option value="16">16</option>
@@ -107,56 +101,6 @@
         <div v-else class="pagination-btns " style="opacity: 0.5;"><img class="pagination-img"  src="../../assets/icons/prevArrow.svg"></div>
         <div class=" pagination-btns" v-if='showNext' @click.stop.prevent='currentPage+=1'>  <img class="pagination-img"  src="../../assets/icons/side-arrow.svg"></div>
         <div v-else class=" pagination-btns"  style="opacity: 0.5;">  <img class="pagination-img"   src="../../assets/icons/side-arrow.svg"></div>
-      </div>
-    </div>
-  </div>
-
-
-  <div class="parent-modal">
-    <div class="modal myModal fade" id="QRCodeModalPreview" tabindex="-1" role="dialog" aria-labelledby="QRCodeModalPreview" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-body">
-           <div>
-             <div style="width: 500px" id="reader"></div>
-             <div class="stream">
-               <div style="display: flex;flex-direction: column;">
-<!--                 <span @click="getCameraPermissionState" style="cursor:pointer;">Check camera permission</span>-->
-                 <span>Camera permission: {{camSettings.permissionState}}</span>
-                 <span v-if="camSettings.permissionState === 'denied'">
-                   In order to use scanner you have to grant permission to use your camera!
-                 </span>
-               </div>
-               <div>
-                 <p class="error" v-if="camSettings.noFrontCamera">
-                   You don't seem to have a front camera on your device
-                 </p>
-                 <p class="error" v-if="camSettings.noRearCamera">
-                   You don't seem to have a rear camera on your device
-                </p>
-               </div>
-               <div class="qr_header d-flex justify-content-between">
-                 <div>
-                   <span>Order #</span>
-                   <span>{{ orderForScanning.code }}</span>
-                 </div>
-                 <div>
-                   <span style="color:green;">{{scanResult.pointsAdded}}</span>
-                   <span style="color:red;">{{scanResult.error}}</span>
-                 </div>
-               </div>
-               <!-- <qr-stream @decode="onDecode" :camera="camSettings.camera" @init="onInit" class="mb"> -->
-               <qr-stream @decode="onDecode" @init="onInit" class="mb">
-                 <button @click="switchCamera" class="app-buttons-item adding-btns">
-                   switch camera
-                 </button>
-                 <div style="color: red;" class="frame"></div>
-               </qr-stream>
-
-             </div>
-           </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -208,20 +152,14 @@
 import Spinner from "../Spinner";
 import OrderItem from "@/components/orders/OrderItem";
 import AddOrder from "@/modals/orders/AddOrder";
-import EditOrder from "@/modals/orders/EditOrder";
 import Swal from "sweetalert2";
 import $ from 'jquery';
-import { QrStream} from 'vue3-qr-reader';
 export default {
 name: "Orders",
-
   components:{
     OrderItem,
     AddOrder,
-    EditOrder,
-    QrStream,
     Spinner
-
   },
 
   data(){
@@ -233,21 +171,6 @@ name: "Orders",
         phone:"",
         discount_percentage:"",
       },
-      camSettings:{
-        camera: 'rear',
-        noRearCamera: false,
-        noFrontCamera: false,
-        permissionState:false,
-      },
-      scanResult:{
-        camError:'',
-        error:'',
-        pointsAdded:'',
-      },
-      orderForScanning:{
-        id:'',
-        code:'',
-      },
       between_value:'',
       deletedOrders:[],
       orderList:[],
@@ -256,7 +179,7 @@ name: "Orders",
           client_checked:false,
           phone_checked:false,
           date_checked:false,
-          notes_checked:false
+          notes_checked:false,
       },
       spinner:true,
       filter_by_status: '',
@@ -387,22 +310,6 @@ name: "Orders",
 
       })
     },
-
-    exportOrder(){
-        this.axios.post(this.url('getOrderExcel'),{
-            orders: ['608a5131405656e224436194', '608a5102405656e224436191']
-        }).then((response)=>{
-            const link = document.createElement('a');
-            link.href = response.data.object;
-            link.setAttribute('download', 'file.xlsx'); //any other extension
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-        })
-        .catch((error)=>{
-            console.log("Error",error)
-        })
-    },
     clickOnDate(){
         $('.date-pick').click()
     },
@@ -491,6 +398,16 @@ name: "Orders",
         $('.date-pol').removeClass('active')
       }
     },
+    sortByQuantity() {
+      if (this.orderList.length === 0) {
+        return null;
+      } else {
+        this.orderList.sort((a, b) => this.sorting ? (parseInt(a.quantity) - parseInt(b.quantity)) : (parseInt(b.quantity) - parseInt(a.quantity)));
+        this.sorting = !this.sorting;
+        $('.total-pol').toggleClass('active')
+        $('.date-pol').removeClass('active')
+      }
+    },
     deleteOrder(id) {
       Swal.fire({
         showConfirmButton: true,
@@ -527,118 +444,6 @@ name: "Orders",
           });
         }
       })
-    },
-    switchCamera () {
-      
-      switch (this.camSettings.camera) {
-        case 'front':
-          this.camSettings.camera = 'rear'
-          break
-        case 'rear':
-          this.camSettings.camera = 'front'
-          break
-      }
-      console.log(this.camSettings.camera);
-    },
-    getCameraPermissionState(){
-      navigator.permissions.query({ name: "camera" }).then(res => {
-        this.camSettings.permissionState = res.state;
-      })
-    },
-    startScanning(order){
-      if(order.state){
-        Swal.fire({
-          timer:1500,
-          title:'Warning',
-          text:"Client already had received bonus for this order",
-          showConfirmButton:false,
-          position: 'top-right',
-          customClass:{
-            popup:'success-popup information-popup',
-            content:'success-content',
-            title:'success-title',
-            header:'success-header',
-            image:'success-img'
-          },
-          showClass:{
-            popup: 'animate__animated animate__zoomIn'
-          }
-        })
-        return
-      }
-
-      this.orderForScanning.id = order.id;
-      this.orderForScanning.code = order.code;
-      $('#QRCodeModalPreview').modal('show');
-      this.scanResult.error = '';
-      this.scanResult.pointsAdded = '';
-    },
-    onDecode(uniqueCode) {
-      // let that = this;
-      console.log(uniqueCode);
-      let urlSplit = uniqueCode.split("/");
-      uniqueCode = urlSplit[urlSplit.length -1];
-      console.log(uniqueCode);
-      if(!uniqueCode){
-        return;
-      }
-      this.axios.post(this.url('addOderPoints'),{clientCode:uniqueCode,orderId:this.orderForScanning.id})
-        .then((response)=>{
-
-          // let clientData = response.data.client;
-          this.scanResult.pointsAdded = `${response.data.pointsAdded} points were added`;
-          this.scanResult.error = '';
-
-          
-          // if(that.scannerStatus && false){
-          //   that.clientInfoData = clientData;
-          //   $('#clientInfoModal').modal('show');
-          // }
-
-        }).catch((error)=>{
-          console.log(error);
-          if (error.response) {
-            this.scanResult.error = error.response.data;
-            this.scanResult.pointsAdded = '';
-        }
-      });
-    },
-
-    async onInit (promise) {
-      console.log('init-------------------------------------------------------------');
-      try {
-        await promise
-      } catch (error) {
-        console.log(error,'init2-------------------------------------------------------------');
-        const triedFrontCamera = this.camSettings.camera === 'front';
-        const triedRearCamera = this.camSettings.camera === 'rear';
-        const cameraMissingError = error.name === 'OverconstrainedError';
-
-        if (triedRearCamera && cameraMissingError) {
-          this.camSettings.noRearCamera = true
-        }
-
-        if (triedFrontCamera && cameraMissingError) {
-          this.camSettings.noFrontCamera = true
-        }
-
-        if (error.name === 'NotAllowedError') {
-          this.scanResult.camError = "ERROR: you need to grant camera access permisson"
-        } else if (error.name === 'NotFoundError') {
-          this.scanResult.camError = "ERROR: no camera on this device"
-        } else if (error.name === 'NotSupportedError') {
-          this.scanResult.camError = "ERROR: secure context required (HTTPS, localhost)"
-        } else if (error.name === 'NotReadableError') {
-          this.scanResult.camError = "ERROR: is the camera already in use?"
-        } else if (error.name === 'OverconstrainedError') {
-          this.scanResult.camError = "ERROR: installed cameras are not suitable"
-        } else if (error.name === 'StreamApiNotSupportedError') {
-          this.scanResult.camError = "ERROR: Stream API is not supported in this browser"
-        } else{
-          this.scanResult.camError = error;
-        }
-
-      }
     },
     getSettings(){
       let that=this;
@@ -677,7 +482,6 @@ name: "Orders",
     const to_date = this.$moment().subtract(1, "days").format("YYYY-MM-DD")
     const from_date = this.$moment().format('YYYY-MM-DD')
     this.between_value = to_date + ' to ' + from_date;
-    this.getCameraPermissionState();
   },
 }
 

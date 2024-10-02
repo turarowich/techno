@@ -7,6 +7,11 @@ const analyticsSchema = new Schema({
         required: false,
         default: 0
     },
+    income: {
+        type: Number,
+        required: false,
+        default: 0
+    },
     discounts: {
         type: Number,
         required: false,

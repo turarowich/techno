@@ -3,17 +3,17 @@
   <div class="searchAndButtons">
     <div class="d-flex justify-content-between app-buttons">
       <div class="d-flex align-items-center">
-        <button class="app-buttons-item adding-btns" data-toggle="modal" data-target="#add-cashier"><span>+ Add cashier</span></button>
+        <button class="app-buttons-item adding-btns" data-toggle="modal" data-target="#add-cashier"><span>+ Добавить менеджера</span></button>
       </div>
       <div class="d-flex align-items-center">
-        <button class="app-buttons-item" @click="removeSelected"><img src="../../assets/icons/trash_empty.svg"><span>Remove</span></button>
-        <button class="app-buttons-item" @click="changeStatus(true)"><img src="../../assets/icons/setting-icon/Lock.svg"><span>Block</span></button>
-        <button class="app-buttons-item" @click="changeStatus(false)"><img src="../../assets/icons/setting-icon/Unblock.svg"><span>Unblock</span></button>
+        <button class="app-buttons-item" @click="removeSelected"><img src="../../assets/icons/trash_empty.svg"><span>Удалить</span></button>
+        <button class="app-buttons-item" @click="changeStatus(true)"><img src="../../assets/icons/setting-icon/Lock.svg"><span>Блокировать</span></button>
+        <button class="app-buttons-item" @click="changeStatus(false)"><img src="../../assets/icons/setting-icon/Unblock.svg"><span>Разблокировать</span></button>
       </div>
     </div>
     <div class="main-search d-flex align-items-center ">
       <img src="../../assets/icons/search-icon.svg">
-      <input class="main-input" type="text" placeholder="Search" v-model="search" @input="checkSelection">
+      <input class="main-input" type="text" placeholder="Поиск" v-model="search" @input="checkSelection">
     </div>
   </div>
     <AddCashier  v-on:getEmployees="getEmployees"/>
@@ -21,11 +21,11 @@
     <AccessSettings v-bind:selectedEmployee="selectedEmployee"  v-on:getEmployees="getEmployees"/>
   <div class="d-flex main-content-header">
     <div class="table-head" style="width: 3%;"><label class="custom-checkbox"><input type="checkbox" v-model="selectAll" @change="selectAllEmployees"><span class="checkmark"></span></label></div>
-    <div class="table-head" style="width: 36%;">Name</div>
-    <div class="table-head" style="width: 22%;">Average check</div>
-    <div class="table-head" style="width: 12%;">Total</div>
-    <div class="table-head" style="width: 12%;">Date</div>
-    <div class="table-head" style="width: 12%; ">Status</div>
+    <div class="table-head" style="width: 36%;">Имя</div>
+    <div class="table-head" style="width: 22%;">Средний чек</div>
+    <div class="table-head" style="width: 12%;">Общий</div>
+    <div class="table-head" style="width: 12%;">Дата</div>
+    <div class="table-head" style="width: 12%; ">Статус</div>
     <div class="table-head" style="width:3%"></div>
   </div>
 
@@ -52,12 +52,12 @@
           </div>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
             <ul class="list-group" >
-              <li class="list-group-item" data-toggle="modal" data-target="#edit-cashier" @click="selectEmployee(employee)">Edit</li>
-              <li class="list-group-item" v-if="employee.isBlocked" @click="changeStatus(false, employee)">Unblock</li>
-              <li class="list-group-item" v-else @click="changeStatus(true, employee)">Block</li>
-              <li class="list-group-item" data-toggle="modal" data-target="#edit-access-settings" @click="selectEmployee(employee)">Access settings</li>
-              <li class="list-group-item"  @click="removeSelected(employee)">Delete</li>
-            </ul>
+              <li class="list-group-item" data-toggle="modal" data-target="#edit-cashier" @click="selectEmployee(employee)">Изменить</li>
+              <li class="list-group-item" v-if="employee.isBlocked" @click="changeStatus(false, employee)">Разблокировать</li>
+              <li class="list-group-item" v-else @click="changeStatus(true, employee)">Блокировать</li>
+              <li class="list-group-item" data-toggle="modal" data-target="#edit-access-settings" @click="selectEmployee(employee)">Настройки доступа</li>
+              <li class="list-group-item"  @click="removeSelected(employee)">Удалить</li>
+            </ul> 
           </div>
       </div>
     </div>

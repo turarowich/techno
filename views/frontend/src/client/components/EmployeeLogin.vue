@@ -2,11 +2,11 @@
   <div class="authorization">
     <div class="container-fluid">
       <div class="login">
-        <h1 class="welcome-sign-in">Log In</h1>
+        <h1 class="welcome-sign-in">Войти</h1>
         <form  class="loginEmployee">
           <label class="label">Email</label>
           <input v-model="email" name="email" class="login-input mb-0">
-          <label class="label mt-2">Password</label>
+          <label class="label mt-2">Пароль</label>
           <div class="password d-flex justify-space-between align-items-center">
             <input name="password" v-model="password" id="password"  class="login-input" type="password">
             <img @click="showPassword" id="hide-eye"  src="../../assets/icons/Hide.svg">
@@ -17,10 +17,10 @@
           <div class="remind d-flex justify-content-between align-item-center">
             <div class="d-flex ">
               <label class="custom-checkbox"><input type="checkbox"><span class="checkmark"></span></label>
-              <span>Stay signed in</span>
+              <span>Оставаться в системе</span>
             </div>
           </div>
-          <button @click="login" class="sign-in-btn" type="button">Sign In</button>
+          <button @click="login" class="sign-in-btn" type="button">Войти</button>
         </form>
       </div>
     </div>

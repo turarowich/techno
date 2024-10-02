@@ -7,6 +7,29 @@ const orderSchema = new Schema({
         default:"",
         required: false,
     },
+    code: {
+        type: String,
+        required: true,
+        default: '323232',
+    },
+    sizes:[{
+        size:String,
+        quantity:Number,
+    }],
+    manager: {
+        type: Schema.Types.ObjectId,
+        ref: 'Employee'
+    },
+    quantity:{
+        type: Number,
+        required: true,
+        default: 0,
+    },
+    prepay:{
+        type: Number,
+        required: false,
+        default: 0,
+    },
     pointsStatus:{
         received:{
             type: Boolean,
@@ -31,44 +54,6 @@ const orderSchema = new Schema({
             required: false,
         },
     },
-    productsDetails: [{
-        name: {
-            type: String,
-            required: false,
-            default:'',
-        },
-        current_price:{
-            type:Number,
-            default:0,
-            required: false,
-        },
-        old_price:{
-            type:Number,
-            default:0,
-            required: false,
-        },
-        quantity:{
-            type:Number,
-            default:0,
-            required: false,
-        },
-        product:{
-            type: Schema.Types.Mixed,
-            required: false,
-        },
-        discounted:{
-            type: Boolean,
-            required: false,
-        },
-        discountType: {
-            type: String,
-            required: false,
-        },
-        size:{
-            type: Schema.Types.Mixed,
-            required: false,
-        },
-    }],
     personalDiscount: {
         percent:{
             type: Boolean,
@@ -80,17 +65,13 @@ const orderSchema = new Schema({
             required: false,
         },
     },
-    products: [{
+    sample: {
         type: Schema.Types.ObjectId,
-        ref: 'OrderProduct'
-    }],
+        ref: 'Sample'
+    },
     client: {
         type: Schema.Types.ObjectId,
         ref: 'Client'
-    },
-    code: {
-        type: String,
-        required: false,
     },
     client_name: {
         type: String,
@@ -102,14 +83,6 @@ const orderSchema = new Schema({
     },
     notes: {
         type: String,
-        required: false,
-    },
-    promoCode: {
-        type: String,
-        required: false,
-    },
-    promoCodeObject: {
-        type: Schema.Types.Mixed,
         required: false,
     },
     address: {
@@ -172,6 +145,16 @@ const orderSchema = new Schema({
         type: Number,
         required: false,
         default: 0
+    },
+    dateStart: {
+        type: Date,
+        required: false,
+        default: Date.now,
+    },
+    dateEnd: {
+        type: Date,
+        required: false,
+        default: Date.now,
     },
     createdAt: {
         type: Date,

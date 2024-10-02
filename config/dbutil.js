@@ -50,6 +50,10 @@ const initClientDbConnection = () => {
     require("../app/models/tempoOrder.js")
     require("../app/models/adminSettings.js")
     require("../app/models/orderScan.js")
+    require("../app/models/sample.js")
+    require("../app/models/workers.js")
+    require("../app/models/workHistory.js")
+    require("../app/models/workerPrepay.js")
     return db;
 };
 

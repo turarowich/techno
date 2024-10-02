@@ -5,8 +5,8 @@
         <div class="modal-content category-content">
           <div class="modal-header category-header align-items-center">
            <div>
-             <h3 class="modal-title">Add points</h3>
-             <span class="under-title">Сurrent number of points {{client.points}}</span>
+             <h3 class="modal-title">Добавить брнусы</h3>
+             <span class="under-title">Текущее количество бонусов {{client.points}}</span>
            </div>
             <button type="button" data-dismiss="modal" aria-label="Close" class="close">
               <span aria-hidden="true">
@@ -16,12 +16,12 @@
           </div>
           <div class="modal-body category-body">
             <!-- <form class="modal-form"> -->
-              <label>Quantity</label><br>
-              <input type="number" v-model="points" class="cashback-input mb-3"  placeholder="Enter a quantity">
+              <label>Количество</label><br>
+              <input type="number" v-model="points" class="cashback-input mb-3"  placeholder="Введите количество бонусов">
 
-              <label>Comments</label><br>
-              <textarea v-model="comments" class="general-area p-2" placeholder="Description"></textarea>
-              <button  class="save" @click.prevent="onSubmit">Add</button>
+              <label>Коментарий</label><br>
+              <textarea v-model="comments" class="general-area p-2" placeholder="Описание"></textarea>
+              <button  class="save" @click.prevent="onSubmit">Добавить</button>
             <!-- </form> -->
           </div>
         </div>

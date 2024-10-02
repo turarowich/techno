@@ -4,7 +4,7 @@
         <div id="modal-content" class="modal-content  myModal-content h-100" >
           <div class="modal-header justify-content-start align-items-center">
             <img  data-dismiss="modal" aria-label="Close" class="close" src="../../../assets/icons/xBlack.svg" alt="">
-            <h3 class="modal-title">Add Product</h3>
+            <h3 class="modal-title">Добавить продукт</h3>
           </div>
           <div class="myModal-body">
               <div class="row">
@@ -12,19 +12,19 @@
                   <form id="myForm" @submit.prevent="onSubmit"  class="modal-form">
                     <div class="d-flex ">
                       <div style="width:50%" class="mr-3">
-                        <label class="product-label">Name</label><br>
+                        <label class="product-label">Название</label><br>
                         <input  v-model="newProduct.name" style="width:100%" :class="{errorInput: validateName === true}"  class="cashback-input">
                         <div class="fill-fields" v-if="validateName === true">Fill in the fields</div>
                       </div>
 
                       <div class="quantity-category mr-3">
-                        <label class="product-label">Quantity</label><br>
+                        <label class="product-label">Количество</label><br>
                         <input v-model="newProduct.quantity" :class="{errorInput: validateQuantity === true}" type="number" min="1"  class="cashback-input">
                         <div class="fill-fields" v-if="validateQuantity === true">Fill in the fields</div>
                       </div>
 
                       <div style="width:25%;">
-                        <label class="product-label">Select category</label><br>
+                        <label class="product-label">Выбрать категорию</label><br>
                         <div class="sel-block-main">
                           <div class="sel-block-main_modal" :class="{ 'show-category': isCategoryVisible }">
                             <div v-for="(category, index) in navigateDisplayParentCategories" :key="category._id">
@@ -95,26 +95,8 @@
                     </div>
 
                     <div class="d-flex " style="margin-top:20px">
-                      <div style="width:35%" class="mr-3" v-if="productCustomFields.productCustomFields">
-                        <label class="product-label">{{ this.productCustomFields?.productCustomField1.name || 'Custom field 1' }}</label><br>
-                        <input  v-model="newProduct.productCustomField1Value" style="width:100%" class="cashback-input">
-                      </div>
-                      <!-- <div style="width:35%" class="mr-3" v-if="!productCustomFields.productCustomFields">
-                        <label class="product-label">{{ this.productCustomFields?.productCustomField1 || 'Custom field 1' }}</label><br>
-                        <input disabled v-model="newProduct.productCustomField1" style="width:100%" class="cashback-input">
-                      </div> -->
-                      <div style="width:35%" class="quantity-category mr-3" v-if="productCustomFields.productCustomFields">
-                        <label class="product-label">{{ this.productCustomFields?.productCustomField2.name  || 'Custom field 2' }}</label><br>
-                        <input v-model="newProduct.productCustomField2Value" class="cashback-input">
-                      </div>
-                      <!-- <div style="width:35%" class="quantity-category mr-3" v-if="!productCustomFields.productCustomFields">
-                        <label class="product-label">{{ this.productCustomFields?.productCustomField2  || 'Custom field 2'}}</label><br>
-                        <input disabled v-model="newProduct.productCustomField2" class="cashback-input">
-                      </div> -->
                       <div style="width:30%;">
-                        <label class="product-label">Select colors</label><br>
-
-
+                        <label class="product-label">Выбрать цвета</label><br>
                         <div v-if="productCustomFields.productCustomColors.required" id="customSelect" class="custom-select" @blur="blurred">
                           <div class="selected" @click="openColorSelect">
                             Select Colors
@@ -146,9 +128,9 @@
                       </div>
                     </div>
 
-                    <a @click="showRussian" class="add-russian">+ Add in russian</a>
-                    <input id="name_ru"  v-model="newProduct.name_ru" name="name_ru" style="width:50%; display: none"  class="cashback-input mb-4 "><br>
-                    <label>Description</label>
+                    <!-- <a @click="showRussian" class="add-russian">+ Add in russian</a>
+                    <input id="name_ru"  v-model="newProduct.name_ru" name="name_ru" style="width:50%; display: none"  class="cashback-input mb-4 "><br> -->
+                    <label>Описание</label>
                     <textarea class="general-area mb-3" style="height:160px" v-model="newProduct.description"  name="description"></textarea>
 
 
@@ -158,14 +140,14 @@
                         <input v-model="newProduct.hasMultipleTypes"   type="checkbox">
                         <span class="checkmark"></span>
                       </label>
-                      <span>Has Sizes</span>
+                      <span>Есть размеры</span>
                     </div>
                     <div v-if="newProduct.hasMultipleTypes">
                       <div class="d-flex" style="justify-content: space-between;gap: 5px;">
-                        <div style="flex: 1 1 0px">Size</div>
-                        <div style="flex: 1 1 0px">Quantity</div>
-                        <div style="flex: 1 1 0px">Price</div>
-                        <div style="flex: 1 1 0px">VendorCode</div>
+                        <div style="flex: 1 1 0px">Размер</div>
+                        <div style="flex: 1 1 0px">Количесто</div>
+                        <div style="flex: 1 1 0px">Цена</div>
+                        <div style="flex: 1 1 0px">VendorID</div>
                         <div style="width: 22px;"></div>
                       </div>
                       <div v-for="(size, index) in newProduct.sizes" :key="index" class="d-flex" style="justify-content: space-between;gap: 5px;">
@@ -203,12 +185,12 @@
 
                     <div class="d-flex ">
                       <div style=" width:33.33%; margin-right:8px;">
-                        <label>Price</label>
+                        <label>Цена</label>
                         <input :class="{errorInput: validatePrice === true}"  v-model="newProduct.price"  type="number" class="form-input cashback-input"  name="price">
                         <div class="fill-fields" v-if="validatePrice===true">Fill in the fields</div>
                       </div>
                       <div style="width:33.33%;">
-                        <label>Vendor code</label>
+                        <label>Vendor код</label>
                         <input   v-model="newProduct.vendorCode" class="form-input cashback-input mb-4"  placeholder="Vendor code"  name="vendorCode">
                       </div>
                     </div>
@@ -216,45 +198,38 @@
                       <label class="custom-checkbox">
                         <input v-model="showPrice" @change="checkDiscount" id="show-price" type="checkbox" >
                         <span class="checkmark"></span></label>
-                      <span>Discount</span>
+                      <span>Скидка</span>
                     </div>
 
                     <div class="d-flex mb-4 ">
                       <div  v-if="showPrice" style="width:33.33%; margin-right:8px;">
-                        <label>Promotional price</label>
+                        <label>Цена в периуд акции</label>
                         <input :class="{errorInput: validatePromoPrice === true}" v-model="newProduct.promoPrice" class="form-input cashback-input" placeholder="Price">
-                        <div class="fill-fields" v-if="validatePromoPrice===true">Fill in the fields</div>
+                        <div class="fill-fields" v-if="validatePromoPrice===true">Заполните поле</div>
                       </div>
                     </div>
-                    <label class="valid-label">Period of action</label>
+                    <label class="valid-label">Периуд акции</label>
                     <div class=" product-calendar d-flex">
                       <div class="mr-2">
-                        <label >From</label>
+                        <label >От</label>
                         <div :class="{errorInput: validateFrom=== true}" class="calendar d-flex align-items-center">
                           <input  autocomplete="off" name="promoStart" v-model="newProduct.promoStart.formatted" class="calendar-input" id="promoStart">
                           <img src="../../../assets/icons/Calendar.svg">
                         </div>
-                        <div class="fill-fields" v-if="validateFrom===true">Fill in the fields</div>
+                        <div class="fill-fields" v-if="validateFrom===true">Заполните поле</div>
                       </div>
                       <div>
-                        <label>To</label>
+                        <label>До</label>
                         <div :class="{errorInput: validateTo === true}" class="calendar d-flex align-items-center">
                           <input  autocomplete="off" name="promoEnd" v-model="newProduct.promoEnd.formatted"  class="calendar-input" id="promoEnd">
                           <img src="../../../assets/icons/Calendar.svg">
                         </div>
-                        <div class="fill-fields" v-if="validateTo===true">Fill in the fields</div>
+                        <div class="fill-fields" v-if="validateTo===true">Заполните поле</div>
                       </div>
-                    </div>
-                    <div class="d-flex mb-3">
-                      <label class="custom-checkbox"><input v-model="newProduct.recommend"  type="checkbox" ><span class="checkmark"></span></label>
-                      <span>Recommended</span>
                     </div>
 
                     <div class="modal-img ">
-                        <label> Photos</label>
-                      <p>
-                          You can upload 4 more JPG or PNG photos, the minimum resolution is 400*400px, the size is<br> not more than 3 MB. The first photo will be shown as the main one by default
-                        </p>
+                        <label> Фотографии</label>
                       <div class="d-flex">
                         <label>
                           <img src="../../../assets/img/modal-img.svg ">
@@ -272,8 +247,8 @@
                       </div>
 
                     <div class="modal-btn d-flex">
-                      <button  type="submit" class="save">Save</button>
-                      <div class="cancel" @click="cancel">Cancel</div>
+                      <button  type="submit" class="save">Сохранить</button>
+                      <div class="cancel" @click="cancel">Отмена</div>
                     </div>
                   </form>
                 </div>
@@ -683,7 +658,7 @@ props:['navigateDisplayParentCategories', 'listCategory', 'getProducts', 'produc
 
   },
   mounted(){
-    document.addEventListener('click', this.closeCategory);
+    // document.addEventListener('click', this.closeCategory);
     window.addEventListener( 'click', ( e ) => {
       if (!document.getElementById( 'customSelect' )?.contains( e.target )) {
         // showDropdown.value = !showD ropdown.value

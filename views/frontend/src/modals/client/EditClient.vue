@@ -4,7 +4,7 @@
     <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: 580px" role="document" >
       <div class="modal-content myModal-content h-100">
         <div class="modal-header align-items-center">
-          <h3 class="modal-title">Edit user</h3>
+          <h3 class="modal-title">Изменить пользователя</h3>
           <button type="button" data-dismiss="modal" aria-label="Close" class="close">
               <span aria-hidden="true">
                 <img src="../../assets/icons/x.svg" alt="">
@@ -22,12 +22,12 @@
                 <label for="add-user-img"><img class="add-profile-img" src="../../assets/icons/addBtn.svg"></label>
             </div>
 
-            <label>Name</label><br>
+            <label>Имя</label><br>
             <input v-model="currentData.name" class="cashback-input">
             <label>Email</label><br>
             <input v-model="currentData.email" class="cashback-input margin-b">
 
-            <label>Phone number</label>
+            <label>Номер телефона</label>
             <div class="d-flex phones">
               <select class="form-control select-phone mr-2" aria-label="Default select example">
                 <option>+996</option>
@@ -38,24 +38,24 @@
               <input v-model="currentData.phone" class="cashback-input" style="width:80%">
             </div>
 
-            <label>Birthday</label>
+            <label>Дата рождения</label>
             <div class="calendar d-flex align-items-center">
               <input v-model="currentData.birthDate" class="calendar-input" id="birthDate">
               <img class="calendar-img" src="../../assets/icons/Calendar.svg">
             </div>
 
-            <label class="gender-label">Gender</label>
+            <label class="gender-label">Пол</label>
 
             <div class="radio-toolbar">
               <div class="d-flex align-items-center mr-4">
                 <input  type="radio" id="radioMale" :checked="currentData.gender === 'men'" @click="currentData.gender = 'men'" name="gender" value="apple" >
                 <label for="radioMale"></label>
-                <span class="male">Male</span>
+                <span class="male">Мужской</span>
               </div>
               <div class="d-flex align-items-center">
                 <input  type="radio" id="radioFemale" :checked="currentData.gender === 'woman'"  @click="currentData.gender = 'woman'" name="gender" value="orange">
                 <label for="radioFemale"></label>
-                <span class="maled">Female</span>
+                <span class="maled">Женский</span>
               </div>
             </div>
 
@@ -88,7 +88,7 @@
               </select>
             </div>
             <div class="modal-btn d-flex">
-              <button class="save" @click.prevent="onSubmit(currentData._id)">Save</button>
+              <button class="save" @click.prevent="onSubmit(currentData._id)">Сохранить</button>
 <!--              <button class="remove" @click.prevent="deleteClient(currentData._id)">Remove</button>-->
             </div>
           </form>

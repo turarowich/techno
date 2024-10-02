@@ -1,11 +1,11 @@
 <template>
   <div class="conversation-header d-flex align-items-center">
-    <div class="d-flex align-items-center"  v-if="contact" style="height:40px">
+    <div class="d-flex align-items-center"  v-if="contact" style="height:90px">
       <img class="user-picture" v-if="contact.avatar" :src="makeImg(contact.avatar)" alt="">
       <img class="user-picture" v-else src="../../../assets/icons/chat.svg" > 
       <h5 class="contact-name">{{contact.name}}</h5>
     </div>
-      <h5 class="contact-name" v-else>Select a contact</h5>
+      <h5 class="contact-name" v-else>Выберите контакт</h5>
   </div>
 </template>
 

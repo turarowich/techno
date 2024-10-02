@@ -1,7 +1,7 @@
 <template>
   <div class="side-bar">
     <div class="side-bar-header">
-      <img class="logo" src="../../assets/img/logo.svg"/>
+      <img class="logo" src="../../assets/icons/icon.png"/>
     </div>
     <div>
       <router-link class="router-link" to="/orders"><span class="sider-bar-link"> <div class="left-line"></div><img src="../../assets/icons/Plus.svg" >Company</span> <img class="arrow" src="../../assets/icons/side-arrow.svg"></router-link>
@@ -34,8 +34,9 @@ export default {
 <style scoped>
 
 .logo{
-  height: auto;
-  width:50%;
+  height: 60px;
+  width:100%;
+  object-fit: cover;
 }
 .side-bar{
   background: #25262C;

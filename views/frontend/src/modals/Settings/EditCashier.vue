@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-full-height myModal-dialog mr-0 mt-0 mb-0 mr-0 h-100" style="max-width: 587px;" role="document" >
       <div class="modal-content myModal-content h-100">
         <div class="modal-header align-items-center">
-          <h3 class="modal-title">Edit Cashier</h3>
+          <h3 class="modal-title">Изменить менеджера</h3>
           <button type="button" data-dismiss="modal" aria-label="Close" class="close">
               <span aria-hidden="true">
                 <img src="../../assets/icons/x.svg" alt="">
@@ -21,28 +21,28 @@
                 <img src="../../assets/icons/addBtn.svg" class="add-btn" @click="selectPhoto">
             </div>
             <input name="avatar" class="d-none">
-            <label class="li-label">Name</label><br>
+            <label class="li-label">Имя</label><br>
             <input name="name" class="cashback-input" v-model="employee.name">
 
             <label class="li-label">Email</label><br>
             <input name="email" class="cashback-input" v-model="employee.email">
 
-            <label class="li-label">Birthday</label><br>
+            <label class="li-label">Дата рождения</label><br>
             <input id="birthDateEdit" name="birthDate" class="cashback-input calendar-input" v-model="employee.birthDate" readonly>
             
-            <label class="li-label">Password</label><br>
+            <label class="li-label">Пароль</label><br>
             <input name="password" type="password" class="cashback-input" v-model="employee.password">
 
-            <label class="li-label">Repeat password</label><br>
+            <label class="li-label">Повторить пароль</label><br>
             <input type="password" class="cashback-input not-handle-error" v-model="employee.repeatPassword"  :class="comparePassword">
 
-            <label class="li-label">Comment</label>
+            <label class="li-label">Коментарий</label>
             <textarea class="general-area"  v-model="employee.comment"></textarea>
             
           </form>
           <div class="modal-btn d-flex">
-              <button class="save" @click="addEmployee">Save</button>
-              <button class="cancel" @click="cancelAdd">Cancel</button>
+              <button class="save" @click="addEmployee">Сохранить</button>
+              <button class="cancel" @click="cancelAdd">Отмена</button>
             </div>
         </div>
       </div>

@@ -11,13 +11,13 @@
       <div class="overflow-hidden contacts-container">
         <div class="d-flex align-items-center  search-chat bbnone">
           <img class="mr-3" src="../../assets/icons/search-icon.svg">
-          <input type="text" placeholder="Search, user or chat" v-model="search" @input="checkSelection">
+          <input type="text" placeholder="Поиск чатов и клиентов" v-model="search" @input="checkSelection">
         </div>
         <div class="d-flex align-items-center justify-content-between search-chat pl-0 pr-1">
-          <div class="pl-1" style="width: 100px;"><label class="custom-checkbox checkbox-text w-100 d-flex align-items-center"><input id="parent-check" type="checkbox"  v-model="selectAll" @change="selectAllContact"><span class="checkmark"></span><p class="mb-0 pl-2">Select all</p>  </label></div>
+          <div class="pl-1" style="width: 100px;"><label class="custom-checkbox checkbox-text w-100 d-flex align-items-center"><input id="parent-check" type="checkbox"  v-model="selectAll" @change="selectAllContact"><span class="checkmark"></span><p class="mb-0 pl-2">Выбрать всех</p>  </label></div>
           <button class="clear-chat" @click="clearChats" v-if="selectedQuantity">
             <img src="../../assets/icons/redX.svg" alt="">
-            Clear chat(s)
+            Стереть чат(ы)
           </button>
         </div>
         <div class="list-people">
@@ -117,7 +117,7 @@ export default {
     },
     sendMessage(data){
         this.socket.emit('message', data)
-        let message = {client:data.user, text:data.text, isIncoming: true, createdAt: new Date().toJSON(), new: false}
+        let message = {client:data.user, text:data.text, isIncoming: data.isIncoming, createdAt: new Date().toJSON(), new: false}
         let index = this.contactList.findIndex(user => user._id === data.user );
         if(index != undefined){
             this.contactList[index].messages.push(message)
@@ -130,10 +130,11 @@ export default {
     clearChats(){
         Swal.fire({
         showConfirmButton: true,
-        html: 'Are you sure to remove these<br> chats',
+        html: 'Вы точно хотите удалить <br/> чаты?',
         showCloseButton: true,
         showCancelButton: true,
-        confirmButtonText: 'Delete',
+        confirmButtonText: 'Удалить',
+        cancelButtonText: 'Отмена',
         buttonsStyling:false,
         customClass:{
             popup: 'sweet-delete',
@@ -191,7 +192,7 @@ export default {
     created() {
         let that = this
         this.socket.on("server message", function(data) {
-            let message = {client:data.user , text:data.text, isIncoming: false, createdAt: new Date().toJSON(), new: true}
+            let message = {client:data.user , text:data.text, isIncoming:  data.isIncoming, createdAt: new Date().toJSON(), new: true}
             let index = that.contactList.findIndex(user => user._id === data.user );
             if(index != undefined){
                 that.contactList[index].messages.push(message)

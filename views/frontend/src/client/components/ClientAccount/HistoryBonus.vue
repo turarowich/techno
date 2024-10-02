@@ -3,7 +3,7 @@
     <div v-if="orderList.length === 0" class="text-center mt-5">
       <img src="../../../assets/clients/box.png" class="mb-3">
 
-      <p class="client-paragraph">Information about your orders will be stored here</p>
+      <p class="client-paragraph">Здесь будет храниться информация о ваших заказах.</p>
     </div>
     <div v-else class="table-item d-flex align-items-center justify-content-between" v-for="order in orderList" :key="order.id">
       <div style="width:50%" class=" pr-3 mobile-source">

@@ -3,6 +3,7 @@ import { createWebHistory, createRouter } from "vue-router";
 import SignIn from "@/components/sign-in/SignIn";
 import SignUp from "@/components/sign-up/SignUp";
 import Orders from "@/components/orders/Orders";
+import Sample from "@/components/Sample/Sample";
 import Loaylty from "@/components/loyalty/Loaylty";
 import Chats from '@/components/chats/Chats';
 import Clients from "@/components/clients/Clients";
@@ -13,11 +14,11 @@ import Home from "@/client/components/Home/Home";
 import About from "@/client/components/About/About";
 import Dashboard from "@/client/components/Dashboard/Dashboard";
 import News from "@/components/News/News";
+import Workers from "@/components/workers/Workers";
 import CashBack from "@/components/loyalty/CashBack";
 import Discount from "@/components/loyalty/Discount";
 import PromoCode from "@/components/loyalty/Promocode";
 import General from "@/components/settings/General";
-import Price from "@/components/settings/Price";
 import CatalogDetail from "@/client/components/ClientCatalog/CatalogDetail";
 import NewsDetail from "@/client/components/ClientNews/NewsDetail";
 import ClientNews from "@/client/components/ClientNews/ClientNews";
@@ -41,7 +42,10 @@ import StaffSettings from "@/components/settings/StaffSettings";
 import ProductsImport from "@/components/settings/ProductsImport";
 import AddNews from "@/components/News/AddNews";
 import EditNews from "@/components/News/EditNews";
+import AddWorkers from "@/components/workers/AddWorker";
+import EditWorkers from "@/components/workers/EditWorker";
 import EmployeeLogin from "@/client/components/EmployeeLogin";
+
 
 import EditPromo from "@/components/loyalty/EditPromo";
 import PersonalSettings from "@/components/settings/PersonalSettings";
@@ -76,10 +80,20 @@ const routes = [
     },
     {
         path: "/orders",
-        name: "Orders",
+        name: "Заказы",
         component: Orders,
         meta:{
             title:"Orders",
+            requiresAuthMain:true,
+        }
+
+    },
+    {
+        path: "/sample",
+        name: "Образец",
+        component: Sample,
+        meta:{
+            title:"Sample",
             requiresAuthMain:true,
         }
 
@@ -261,7 +275,7 @@ const routes = [
     },
     {
         path: "/clients",
-        name: "Clients",
+        name: "Клиенты",
         component: Clients,
         meta:{
             requiresAuthMain:true,
@@ -296,7 +310,7 @@ const routes = [
     },
     {
         path: "/chats",
-        name: "Chats",
+        name: "Чаты",
         component: Chats,
         meta:{
             requiresAuthMain:true,
@@ -337,7 +351,7 @@ const routes = [
 
     {
         path: "/log",
-        name: "Log",
+        name: "Логи",
         component: Log,
         meta:{
             requiresAuthMain:true,
@@ -346,7 +360,7 @@ const routes = [
 
     {
         path: "/catalog",
-        name: "Catalog",
+        name: "Каталог",
         component: Catalog,
         meta:{
             requiresAuthMain:true,
@@ -354,7 +368,7 @@ const routes = [
     },
     {
         path: '/analytics',
-        name: "Analytics",
+        name: "Аналитика",
         component: Analytics,
         meta:{
             requiresAuthMain:true,
@@ -362,19 +376,13 @@ const routes = [
     },
     {
         path: '/settings',
-        name: "Settings",
+        name: "Настройки",
         component: Settings,
         children: [
             {
                 path: '',
                 name: 'General',
                 component: General,
-
-            },
-            {
-                path: 'price',
-                name: 'Price',
-                component: Price,
 
             },
             {
@@ -414,7 +422,7 @@ const routes = [
     },
     {
         path: "/news",
-        name: "News",
+        name: "Новости",
         component: News,
         meta:{
             requiresAuthMain:true,
@@ -432,6 +440,30 @@ const routes = [
         path: "/edit-news",
         name: "EditNews",
         component: EditNews,
+        meta:{
+            requiresAuthMain:true,
+        }
+    },
+    {
+        path: "/workers",
+        name: "Работники",
+        component: Workers,
+        meta:{
+            requiresAuthMain:true,
+        }
+    },
+    {
+        path: "/add-workers",
+        name: "AddWorkers",
+        component: AddWorkers,
+        meta:{
+            requiresAuthMain:true,
+        }
+    },
+    {
+        path: "/edit-worker-page/:id",
+        name: "Работник",
+        component: EditWorkers,
         meta:{
             requiresAuthMain:true,
         }

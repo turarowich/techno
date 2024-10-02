@@ -1,7 +1,7 @@
 <template>
   <div class="container myContainer">
     <div class="row">
-      <div class="col-lg-10 m-auto">
+      <div class="col-lg-12">
         <div class="profile-info">
           <div class="d-flex align-items-center mobile-profile">
               <div class="client_avatar_container" style="position: relative;">
@@ -22,46 +22,19 @@
                 </router-link>
               </h1>
               <span class="profile-phone">{{user.phone}}</span>
-              <span class="user_status_class">{{userDiscountStatus.name || ''}} {{userDiscountStatus.discount_percentage || 0}}%</span>
             </div>
           </div>
           <div @click="logout" class="logout">
-            Logout
+            Выйти
             <img class="ml-2" src="../../../assets/clients/log-out.svg">
           </div>
-        </div>
-        <div v-if="catalog_settings.share_points_status" class="d-flex mb-5 promo-check">
-          <div v-if="!user.promocodeIsUsed" class="pr-5 mr-5" style="border-right:1px solid #f4f4f4" >
-            <h3 class="cashback-sub-title mb-2">Enter promo</h3>
-            <span class="mb-3 d-block" style="color:#8C94A5">If you have promo please enter here</span>
-            <div class="d-flex align-items-center enterPromocodeClass justify-content-between">
-              <input style="border:none;" v-model="enteredPromocode" type="text">
-              <span @click="checkPromocode" class="checkPromocodeBtn"><img src="../../../assets/icons/bird.svg"></span>
-            </div>
-          </div>
-          <div>
-            <h3 class="cashback-sub-title mb-2">Share with friend</h3>
-            <span class="mb-3 d-block" style="color:#8C94A5">Your Promocode that you can send to your friends</span>
-            <div style="font-weight: bold; border-bottom:1px solid #d3d3d3; height:35px; padding-top:10px;">
-              {{user.promocode || ''}}
-            </div>
-          </div>
-
-
-
-        </div>
-        <div class="bonus-notification">
-          <div class=" bonus-title d-flex align-items-center">
-            <img class="mr-2" src="../../../assets/clients/Discount.svg"> <span class="bonus-span" v-if="user">My bonuses: {{user.points}}</span>
-          </div>
-          <p @click="sendCLientEmit" class="client-paragraph mb-0">You can spend your current points or continue to accumulate them</p>
         </div>
         <ul class="nav nav-tabs mb-5">
           <li>
             <a class="disable-underline" data-toggle="tab" href="#menu1">
               <div class="order-tab d-flex align-items-center mr-4">
                 <img src="../../../assets/clients/trash.svg">
-                <h2 class="orders-title">Orders</h2>
+                <h2 class="orders-title">Заказы</h2>
                 <div class="order-count">{{filterUserOrders.length}}</div>
               </div>
             </a>
@@ -69,8 +42,7 @@
           <li>
             <a class="disable-underline" data-toggle="tab" href="#menu2">
               <div data-toggle="tab" class="order-tab d-flex align-items-center">
-<!--                <img src="../../../assets/clients/DiscountBlack.svg">-->
-                <h2 class="orders-title">Bonus history</h2>
+                <h2 class="orders-title">Бонусы</h2>
               </div>
             </a>
           </li>
@@ -79,14 +51,15 @@
         <div class="tab-content">
           <div id="menu1" class="tab-pane fade">
             <div class="d-flex main-content-header order">
-              <div class="table-head" style="width: 10%;">Order #</div>
-              <div class="table-head" style="width: 24%;">Deliver address</div>
-              <div class="table-head table-link " @click="sortByDate" style="width: 10%;">Date<img class="date-pol" style="margin-left:10px" src="../../../assets/icons/polygon.svg"></div>
-              <div class="table-head " style="width: 12%;" >Total quantity </div>
-              <div class="table-head " style="width: 12%; cursor: pointer">Delivery price</div>
-              <div class="table-head" style="width: 12%; ">Discount</div>
-              <div class="table-head table-link" @click="sortByTotal" style="width: 11%;">Total <img class="total-pol" style="margin-left:10px" src="../../../assets/icons/polygon.svg"></div>
-              <div class="table-head" style="width:10%">Status</div>
+              <div class="table-head" style="width: 10%;">Заказ #</div>
+              <div class="table-head" style="width: 24%;">Адрес доставки</div>
+              <div class="table-head table-link " @click="sortByDate" style="width: 10%;">Дата<img class="date-pol" style="margin-left:10px" src="../../../assets/icons/polygon.svg"></div>
+              <div class="table-head " style="width: 12%;" >Количество </div>
+              <div class="table-head " style="width: 12%; cursor: pointer">Цена доставки</div>
+              <div class="table-head" style="width: 12%; ">Скидка</div>
+              <div class="table-head table-link" @click="sortByTotal" style="width: 11%;">Цена <img class="total-pol" style="margin-left:10px" src="../../../assets/icons/polygon.svg"></div>
+              <div class="table-head" style="width:10%">Статус</div>
+              <div class="table-head" style="width:10%">Менеджер</div>
             </div>
             <OrdersItem :orderList="filterUserOrders"/>
 
@@ -159,9 +132,7 @@ name: "ClientAccount",
       return this.$route.params.bekon;
     },
     filterUserOrders(){
-      return this.userOrders.filter((order)=>{
-        return order.status === 'Cancelled' || order.status === 'Done'
-      })
+      return this.userOrders
     }
   },
   methods:{

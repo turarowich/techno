@@ -3,18 +3,17 @@
   <div class="searchAndButtons">
     <div class="d-flex justify-content-between app-buttons">
       <div class="d-flex align-items-center">
-        <button v-if="check()" class="app-buttons-item adding-btns" data-toggle="modal" data-target="#add-news"><span>+ Add news</span></button>
+        <button v-if="check()" class="app-buttons-item adding-btns" data-toggle="modal" data-target="#add-news"><span>+ Добавить новость</span></button>
       </div>
     </div>
     <div class="main-search d-flex align-items-center ">
       <img src="../../assets/icons/search-icon.svg">
-      <input class="main-input" type="text" placeholder="Search" v-model="search">
+      <input class="main-input" type="text" placeholder="Поиск" v-model="search">
     </div>
   </div>
   <div class="d-flex main-content-header">
-    <div class="table-head" style="width: 30%;">Title</div>
-    <div class="table-head" style="width: 30%;">Recent changes</div>
-    <div class="table-head" style="width: 30%;">Action</div>
+    <div class="table-head" style="width: 30%;">Загаловок</div>
+    <div class="table-head" style="width: 60%;">Недавние изменения</div>
     <div class="table-head" style="width: 10%;"></div>
   </div>
 

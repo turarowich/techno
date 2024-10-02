@@ -5,31 +5,7 @@ const { useDB, sendError, saveImage, createExcel, removeImage, checkAccess } = r
 var validate = require('../../config/messages');
 var readXlsxFile = require('read-excel-file/node');
 const ObjectId = require('mongoose').Types.ObjectId;
-const postUrl = 'https://joinposter.com/api'
-const axios = require('axios');
-const { HttpsProxyAgent } = require('https-proxy-agent');
-const proxy = 'http://117.250.3.58:8080';
-const agent = new HttpsProxyAgent(proxy);
 
-async function postAPI(href, data) {
-    let response = await axios({
-      url: href,
-      method: "post",
-      data: data,
-      headers: {
-        "Content-Type": "application/json",
-        "Accept-Encoding": "gzip",
-      },
-      httpsAgent: agent
-    }).catch((error) => {
-      console.log(
-        error,
-        "Call Api error"
-      );
-      return { error: error };
-    });
-    return response;
-}
 // todo move business logic to services
 
 // to whom this may cancern, i sincerely apologise for this mess, 
@@ -267,27 +243,9 @@ class ProductController {
                     }
                 }
             }
-            let PostData = {
-                'product_name'          : data.name,
-                'menu_category_id'      : 0,
-                'workshop'              : 1,
-                'weight_flag'           : 0,
-                'different_spots_prices': 0,
-                'modifications'         : 0,
-                'barcode'               : 0,
-                'cost'                  : data.promoPrice ? data.promoPrice : 0,
-                'price'                 : data.price * 100,
-                'visible'               : 1,
-            }
-            if (tokenPP != "")  {
-                await postAPI(`${postUrl}/menu.createProduct?token=${tokenPP}`,PostData)
-                .then(result => {
-                    product.post_id = result.data.response
-                })
-            }
             await product.save()
             await new Log({
-                type: "product_created",
+                type: "Создание продукта",
                 description: product.name,
                 value: product.price,
                 valueColor: "done",
@@ -426,26 +384,7 @@ class ProductController {
             }
             let searchProduct = await Product.findById(query)
 
-            let PostData = {
-                'id'                    : searchProduct.post_id,
-                'product_name'          : data.name,
-                'menu_category_id'      : 0,
-                'workshop'              : 1,
-                'weight_flag'           : 0,
-                'different_spots_prices': 0,
-                'modifications'         : 0,
-                'barcode'               : 0,
-                'cost'                  : data.promoPrice,
-                'price'                 : data.price * 100,
-                'visible'               : 1,
-            }
-            if (tokenPP != "")  {
-                await postAPI(`${postUrl}/menu.updateProduct?token=${tokenPP}`,PostData)
-                .then(result => {
-                    console.log("searchProduct",searchProduct)
-                    console.log(result)
-                })
-            }
+        
             await product.save({ new: true })
 
             let test2 = await Product.findById(product.id);
@@ -458,7 +397,7 @@ class ProductController {
             // }
 
             await new Log({
-                type: "product_updated",
+                type: "Обновление продукта",
                 description: product.name,
                 value: product.price,
                 valueColor: "done",
@@ -521,7 +460,7 @@ class ProductController {
             let product = await Product.findById(query)
             if (product) {
                 await new Log({
-                    type: "product_deleted",
+                    type: "Удаление продукта",
                     description: product.name,
                     value: product.price,
                     valueColor: "canceled",
@@ -529,9 +468,6 @@ class ProductController {
                     user_id: req.userID,
                     icon: "delete"
                 }).save()
-            }
-            if (tokenPP != "")  {
-                await postAPI(`${postUrl}/menu.removeProduct?token=${tokenPP}`,{'product_id': product.post_id})
             }
             await Product.findByIdAndRemove(query)
         } catch (error) {
@@ -568,7 +504,7 @@ class ProductController {
                         return elem.name;
                     }).join(", ")
                     await new Log({
-                        type: "products_deleted",
+                        type: "Удаление продуктов",
                         description: desc,
                         user: req.userName,
                         user_id: req.userID,

@@ -4,27 +4,27 @@
     <img class="profile-img" v-if="contact.avatar" :src="makeImg(contact.avatar)" alt="">
     <img class="profile-img" v-else src="../../../assets/icons/chat.svg" > 
     <h3 class="profile-title">{{contact.name}}</h3>
-    <span>Last purchase {{contact.updatedAt ? contact.updatedAt.slice(0, 10) : ""}}</span>
+    <span>Последняя покупка {{contact.updatedAt ? contact.updatedAt.slice(0, 10) : ""}}</span>
     <div class="chat-line"> </div>
 
     <div class="d-flex justify-content-center mb-5">
         <div class="paid-for">
             <h4>{{contact.balance}}</h4>
-        <span>Paid for</span>
+        <span>Оплачено</span>
         </div>
         <div class="points">
         <h4>{{contact.points}}</h4>
-        <span>Point</span>
+        <span>Бонусы</span>
         </div>
     </div>
 
     <div class="profile-contact">
         <p><img src="../../../assets/icons/Call.svg">{{contact.phone}}</p>
         <p><img src="../../../assets/icons/Message.svg">{{contact.email}}</p>
-        <p><img src="../../../assets/icons/Calendar.svg">{{contact.birthDate ? contact.birthDate.slice(0, 10) : ""}}</p>
+        <p><img src="../../../assets/icons/Calendar.svg">{{contact.createdAt ? contact.createdAt.slice(0, 10) : ""}}</p>
     </div>
 
-    <button class="view-profile" @click="$router.push('/edit-client-page/'+contact._id)">View profile</button>
+    <button class="view-profile" @click="$router.push('/edit-client-page/'+contact._id)">Посмотреть профиль</button>
   </div>
 </div>
 </template>
@@ -94,10 +94,10 @@ h4{
   border:none;
   background: #E9ECFF;
   border-radius: 5px;
-  width: 145px;
   height: 36px;
   font-size: 16px;
   color: #616CF5;
+  padding: 0 10px;
 }
 .view-profile:hover{
   background: #616CF5;

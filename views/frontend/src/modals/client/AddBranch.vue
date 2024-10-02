@@ -7,54 +7,54 @@
 
           <img data-dismiss="modal" aria-label="Close" class="close"  src="../../assets/icons/xBlack.svg">
 
-            <h3 v-if="edit" class="modal-title">Edit Branch</h3>
-            <h3 v-else class="modal-title">Add Branch</h3>
+            <h3 v-if="edit" class="modal-title">Изменить филиал</h3>
+            <h3 v-else class="modal-title">Добавить филиал</h3>
 
           </div>
           <div class="modal-body add_branch_modal_body d-flex">
             <div class="add_branch_block">
-              <h4 class="circle-question">Address</h4>
+              <h4 class="circle-question">Адрес</h4>
               <input v-model="branch_object.address" class="cashback-input company-input" placeholder="Enter your company address">
               <div class="d-flex atitude">
                 <div class="mr-3" style="width:50%">
-                  <label>Longitude</label>
+                  <label>Долгота</label>
                   <input v-model="branch_object.longitude" class="cashback-input">
                 </div>
                 <div style="width:50%">
-                  <label>Latitude</label>
+                  <label>Широта</label>
                   <input v-model="branch_object.latitude" class="cashback-input">
                 </div>
               </div>
-              <label>Name</label>
+              <label>Название</label>
               <input v-model="branch_object.name" class="phone-input cashback-input">
-              <label>Phone number</label>
-              <input v-model="branch_object.phone"  class="phone-input cashback-input" placeholder="Branch phone number">
-              <input v-model="branch_object.phone2"  class="phone-input mb-4 cashback-input" placeholder="Branch phone number">
-              <label class="working-hours">Working hours</label>
+              <label>Номер телефона</label>
+              <input v-model="branch_object.phone"  class="phone-input cashback-input" placeholder="996 700 000 000">
+              <input v-model="branch_object.phone2"  class="phone-input mb-4 cashback-input" placeholder="996 700 000 000">
+              <label class="working-hours">Рабочее время</label>
               <div class="week">
-                <div @click="setDay('monday')" :class="{active: branch_object.monday.active,selected_active:current_selected_day.day==='monday'}" class="days d-flex justify-content-center align-items-center">MO</div>
-                <div @click="setDay('tuesday')" :class="{active: branch_object.tuesday.active,selected_active:current_selected_day.day==='tuesday'}" class="days d-flex justify-content-center align-items-center">TU</div>
-                <div @click="setDay('wednesday')" :class="{active: branch_object.wednesday.active,selected_active:current_selected_day.day==='wednesday'}" class="days d-flex justify-content-center align-items-center">WE</div>
-                <div @click="setDay('thursday')" :class="{active: branch_object.thursday.active,selected_active:current_selected_day.day==='thursday'}" class="days d-flex justify-content-center align-items-center">TH</div>
-                <div @click="setDay('friday')" :class="{active: branch_object.friday.active,selected_active:current_selected_day.day==='friday'}" class="days d-flex justify-content-center align-items-center">FR</div>
-                <div @click="setDay('saturday')" :class="{active: branch_object.saturday.active,selected_active:current_selected_day.day==='saturday'}" class="days d-flex justify-content-center align-items-center">SA</div>
-                <div @click="setDay('sunday')" :class="{active: branch_object.sunday.active,selected_active:current_selected_day.day==='sunday'}" class="days d-flex justify-content-center align-items-center">SU</div>
+                <div @click="setDay('monday')" :class="{active: branch_object.monday.active,selected_active:current_selected_day.day==='monday'}" class="days d-flex justify-content-center align-items-center">ПН</div>
+                <div @click="setDay('tuesday')" :class="{active: branch_object.tuesday.active,selected_active:current_selected_day.day==='tuesday'}" class="days d-flex justify-content-center align-items-center">ВТ</div>
+                <div @click="setDay('wednesday')" :class="{active: branch_object.wednesday.active,selected_active:current_selected_day.day==='wednesday'}" class="days d-flex justify-content-center align-items-center">СР</div>
+                <div @click="setDay('thursday')" :class="{active: branch_object.thursday.active,selected_active:current_selected_day.day==='thursday'}" class="days d-flex justify-content-center align-items-center">ЧТ</div>
+                <div @click="setDay('friday')" :class="{active: branch_object.friday.active,selected_active:current_selected_day.day==='friday'}" class="days d-flex justify-content-center align-items-center">ПТ</div>
+                <div @click="setDay('saturday')" :class="{active: branch_object.saturday.active,selected_active:current_selected_day.day==='saturday'}" class="days d-flex justify-content-center align-items-center">СБ</div>
+                <div @click="setDay('sunday')" :class="{active: branch_object.sunday.active,selected_active:current_selected_day.day==='sunday'}" class="days d-flex justify-content-center align-items-center">ВС</div>
               </div>
               <div v-if="current_selected_day.day !==''" class="d-flex working-phones">
                 <div class="mr-3 d-flex align-items-center">
-                  <label class="mb-0 mr-3 working-label">From</label>
+                  <label class="mb-0 mr-3 working-label">От</label>
                   <select class="form-control" v-model="current_selected_day.object.start">
                     <option v-for="(hour,index) in working_hours" :key="index" :value="hour">{{hour}}</option>
                   </select>
                 </div>
                 <div class="d-flex align-items-center">
-                  <label class="mb-0 mr-3 working-label">To</label>
+                  <label class="mb-0 mr-3 working-label">До</label>
                   <select class="form-control" v-model="current_selected_day.object.end" aria-label="Default select example">
                     <option v-for="(hour,index) in working_hours" :key="index" :value="hour">{{hour}}</option>
                   </select>
                 </div>
                 <div style="display: flex;justify-content: center;align-items: center;margin-left: 2px;flex: 1;">
-                  <span class="mr-2">Is a work day</span>
+                  <span class="mr-2">Это рабочий день</span>
                   <label class="switch d-flex">
                     <input v-model="current_selected_day.object.active" type="checkbox">
                     <span class="slider round"></span>
@@ -70,8 +70,8 @@
 
           </div>
           <div class="d-flex">
-            <button @click="saveBranch" class="save">Save</button>
-            <button v-if="edit" @click="removeBranch(branch_object._id)" class="remove_branch">Remove branch</button>
+            <button @click="saveBranch" class="save">Сохранить</button>
+            <button v-if="edit" @click="removeBranch(branch_object._id)" class="remove_branch">Удалить филиал</button>
           </div>
 
         </div>
@@ -174,10 +174,11 @@ export default {
 
       Swal.fire({
         showConfirmButton: true,
-        html: 'Are you sure to remove this <br>branch',
+        html: 'Вы точно хотите удалить филиал,',
         showCloseButton: true,
         showCancelButton: true,
-        confirmButtonText: 'Delete',
+        confirmButtonText: 'Удалить',
+        cancelButtonText: 'Отмена',
         buttonsStyling:false,
         customClass:{
           popup: 'sweet-delete',

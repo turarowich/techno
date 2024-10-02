@@ -5,8 +5,8 @@
         <div class="modal-content category-content">
           <div class="modal-header category-header align-items-center">
             <div>
-              <h3 class="modal-title">Remove points</h3>
-              <span class="under-title">Сurrent number of points {{client.points}}</span>
+              <h3 class="modal-title">Удалить бонусы</h3>
+              <span class="under-title">Текущее количество бонусов {{client.points}}</span>
             </div>
             <button type="button" data-dismiss="modal" aria-label="Close" class="close">
               <span aria-hidden="true">
@@ -16,12 +16,12 @@
           </div>
           <div class="modal-body category-body">
             <form class="modal-form">
-              <label>Quantity</label><br>
-              <input type="number" v-model="points" class="cashback-input mb-3"  placeholder="Enter a quantity">
+              <label>Количество</label><br>
+              <input type="number" v-model="points" class="cashback-input mb-3"  placeholder="Введите количество бонусов">
 
-              <label>Comments</label><br>
-              <textarea v-model="comments" placeholder="Description" class="p-2 general-area"></textarea>
-              <button @click.prevent="onSubmit"  class="save">Write off</button>
+              <label>Коментарий</label><br>
+              <textarea v-model="comments" placeholder="Описание" class="p-2 general-area"></textarea>
+              <button @click.prevent="onSubmit"  class="save">Удалить</button>
             </form>
           </div>
         </div>

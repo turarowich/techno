@@ -4,7 +4,7 @@
     <MessageFeed v-if="contact" v-bind:contact="contact" v-bind:messages="messages" />
     <div v-else class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
         <img src="../../../assets/icons/chat-empty.svg" alt="">
-        <p class="empty-chat-text mt-3">Chat is empty, no active chats </p>
+        <p class="empty-chat-text mt-3">Не выбран активный чат</p>
     </div>
   <MessageComposer v-on:send="sendMessage"/>
 

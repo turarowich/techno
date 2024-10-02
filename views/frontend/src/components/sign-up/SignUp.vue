@@ -3,27 +3,27 @@
   <div class="authorization">
     <div class="container-fluid">
       <div class="sign-in-header">
-        <img class="main-logo" src="../../assets/img/sign-logo.svg">
+        <!-- <img class="main-logo" src="../../assets/img/sign-logo.svg">
         <select class="form-control select-lang">
           <option>Eng</option>
           <option>Rus</option>
-        </select>
+        </select> -->
       </div>
 
       <div class="sign-up">
-          <h1 class="welcome-sign-up ">Growth for your<br>
-            business with<br class="br"> loy <span>Gift</span></h1>
+          <h1 class="welcome-sign-up ">Начните свой <br>
+            бизнес с <br class="br"> Techno <span>.</span></h1>
       <form @submit.prevent="registerSubmit">
 
           <div class="row">
             <div class="col-lg-6">
-              <label class="label">Your name</label>
+              <label class="label">Имя</label>
               <input :class="{errorInput: validateName === true}" v-model="register.name" class="login-input" name="name">
               <p class="fill-fields" v-if="validateName===true">Enter your name</p>
               <label class="label">Email</label>
               <input :class="{errorInput: validateEmail === true}" v-model="register.email" class="login-input" name="password">
               <p class="fill-fields" v-if="validateEmail===true">Enter your email</p>
-              <label class="label">Password</label>
+              <label class="label">Пароль</label>
               <div  :class="{errorInput: validatePassword === true}" class="password d-flex justify-space-between align-items-center">
                 <input  v-model="register.password" id="show-password"  name="password" class="login-input bg-transparent" type="password">
                 <img class="hide-eye" @click="showPassword" src="../../assets/icons/Hide.svg">
@@ -33,12 +33,12 @@
 
             </div>
             <div class="col-lg-6">
-              <label class="label">Phone number</label>
+              <label class="label">Номер телефона</label>
               <input :class="{errorInput: validatePhone === true}" v-model="register.phone" class="login-input" name="phone">
               <p class="fill-fields" v-if="validatePhone===true">Enter your phone number</p>
-              <label class="label">Description</label>
+              <label class="label">Описание</label>
               <input v-model="register.description" class="login-input" name="description">
-              <label class="label">Repeat password</label>
+              <label class="label">Повторить пароль</label>
               <div   class=" password d-flex justify-space-between align-items-center">
                 <input id="show-repeat"  class="login-input" type="password">
                 <img id="hide-eye" @click="showRepeat" src="../../assets/icons/Hide.svg">
@@ -50,19 +50,19 @@
             <div class="policy">
               <div class="rules d-flex">
                <div> <label class="custom-checkbox " ><input type="checkbox"><span class="checkmark"></span></label></div>
-                <span>I have read the <a href="#">Privacy Policy </a> and accept its terms.</span>
+                <span>Я прочитал<a href="#"> Политику конфиденциальности </a> и принимаю ее условия. </span>
               </div>
               <div class="rules d-flex">
                 <div><label class="custom-checkbox " ><input type="checkbox"><span class="checkmark"></span></label></div>
-                <span>I have read and accept the <a href="#">Terms of the offer</a></span>
+                <span>Я прочитал и принимаю <a href="#">Условия предложения</a></span>
               </div>
             </div>
           <div class="row align-items-center">
                    <div class="col-lg-6">
-                     <button class="sign-in-btn">Continue</button>
+                     <button class="sign-in-btn">Продолжить</button>
                    </div>
                    <div class="col-lg-6">
-                     <div class="have-account">Have an account? <a style="color:#616cf5; cursor:pointer;" @click="$router.push('/')">Sign in now</a></div>
+                     <div class="have-account">У вас уже есть аккаунт? <a style="color:#616cf5; cursor:pointer;" @click="$router.push('/')">Войти</a></div>
                    </div>
                  </div>
 
@@ -70,8 +70,8 @@
 
       </form>
       </div>
-      <p class="footer-text">Cashback. Loyalty program. Client base. Offline cashback.
-        Growing your business with one Mobile Application.</p>
+      <!-- <p class="footer-text">Cashback. Loyalty program. Client base. Offline cashback.
+        Growing your business with one Mobile Application.</p> -->
 
     </div>
   </div>

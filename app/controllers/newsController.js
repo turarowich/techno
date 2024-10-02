@@ -106,7 +106,7 @@ class NewsController {
             await news.save()
 
             await new Log({
-                type: "news_created",
+                type: "Создание новости",
                 description: news.name,
                 user: req.userName,
                 user_id: req.userID,
@@ -162,7 +162,7 @@ class NewsController {
             }
             news = await News.findById(query)
             await new Log({
-                type: "news_updated",
+                type: "Обновление новости",
                 description: news.name,
                 user: req.userName,
                 user_id: req.userID,
@@ -195,7 +195,7 @@ class NewsController {
             let query = { '_id': req.params.news }
             let news = await News.findById(query)
             await new Log({
-                type: "news_deleted",
+                type: "Удаление новости",
                 description: news.name,
                 user: req.userName,
                 user_id: req.userID,

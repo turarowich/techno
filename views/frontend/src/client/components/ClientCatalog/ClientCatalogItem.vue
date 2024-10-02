@@ -2,7 +2,7 @@
   <div>
     <div class="row add-padding" >
       <div  class="col-lg-3 col-6  product-box" :id="`catalog${product._id}`"  v-for="(product) in catalog" :key="product._id"   >
-          <div>
+          <div class="product-wrapper">
             <div @click="$router.push({ path:`/${currentCompanyCatalog}/catalog-detail/${product._id}`})" class="product-img"  >
               <img v-if="!product.error" :src="server+'/'+product.img" @error="product.error=true">
               <!--          <img v-else src="../../../assets/img/default.svg" >-->
@@ -18,7 +18,7 @@
             </div>
 <!--            <button v-if="!catalog_settings.catalogMode" class="add-to-card" @click="addToCart(product._id)">Add to cart</button>-->
 <!--            <button v-else class="add-to-card" @click="selectProduct(product._id)">View</button>-->
-            <button class="add-to-card" @click="selectProduct(product._id)">View</button>
+            <button class="add-to-card" @click="selectProduct(product._id)">Посмотреть</button>
           </div>
         </div>
     </div>
@@ -175,28 +175,34 @@ name: "ClientCatalogItem",
 .product-img {
   margin-bottom: 16px;
   height:176px;
-
+  width: 100%;
 }
 .product-img img{
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
+  border-radius: 25px 25px 0 0;
+}
+.product-wrapper{
+  display: flex;
+  flex-direction: column;
 }
 .product-add{
   font-weight: bold;
   font-size: 14px;
-  text-align: center;
   margin-bottom: 15px;
+  padding: 6px;
 }
 
 .add-to-card{
   color: #898989;
   font-size: 14px;
   border:none;
-  padding: 0.3rem  2rem;
+  padding: .7rem  2rem;
   background: #F4F4F4;
   border-radius: 10px;
-  width: 140px;
+  align-self: center;
+  width: 95%;
 }
 .add-to-card:hover{
   color:#222;
@@ -204,31 +210,32 @@ name: "ClientCatalogItem",
   transition:.3s;
 }
 .product-box{
-  text-align: center;
-  cursor:pointer;
-  padding:15px;
-  box-sizing: border-box;
-  border: 0.5px solid transparent;
-  padding-bottom: 20px;
-
-
+  width: 280px;
+  border: 1px solid #ebebeb;
+  padding: 0 0 13px 0;
+  margin-bottom: 30px;
+  border-radius: 25px;
+  position: relative;
+  box-shadow: 20px 20px 30px rgba(0, 0, 0, 0.02);
+  transition: box-shadow 0.2s;
 }
 .product-box:hover{
   border: 0.5px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 20px 20px 30px rgba(0, 0, 0, 0.06);
   box-sizing: border-box;
-  border-radius: 5px;
   transition:0.3s;
-  /*transform:scale(1.1,1.1)*/
 }
 
 .product-add  span{
   font-size: 16px;
+  color: #222;
 }
 .product-add h2{
   margin-bottom: 5px;
 }
 .product-add h2, .product-add h3{
-  font-size: 14px;
+  font-size: 22px;
+  font-weight: bold;
 }
 .product-add h3{
   font-weight: normal;

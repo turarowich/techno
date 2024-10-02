@@ -8,14 +8,7 @@ const { response } = require('express');
 var queryString = require('query-string');
 const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    auth: {
-        user: 'info.loygift@gmail.com', //Moore123
-        pass: 'yket fzen bzup hdag',
-        // user: 'catzilla312@gmail.com',
-        // pass: 'sbhi freq fqtf dhsh',
-    },
+   
 });
 
 async function addWelcomePoints(db) {

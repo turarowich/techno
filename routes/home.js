@@ -20,7 +20,8 @@ module.exports = function(app, passport){
     app.post('/loginClient', authController.loginClient);
 
     app.post('/getClientInfoScan', clientController.getClientInfoScan);
-
+    app.get('/getClientMessages', clientController.getClientMessages)
+    
     app.post('/loginClientSocial', authController.loginClientSocial);
     app.post('/register', authController.register);
     app.post('/registerClient', authController.registerClient);
@@ -54,7 +55,6 @@ module.exports = function(app, passport){
     // News url
     app.get('/getSingleNewsWeb/:news', newsController.getSingleNews);
     app.get('/getNewsWeb', newsController.getNews);
-
     
     app.get('/sendSchedulePushes', pushController.sendSchedulePushes);
     

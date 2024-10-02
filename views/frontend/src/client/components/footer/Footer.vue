@@ -3,21 +3,20 @@
   <div class="footer d-flex justify-content-between  footer-container container">
  <div class="d-flex contact-address">
    <div class="footer-contact mb-3">
-     <h3>Contacts</h3>
+     <h3>Контакты</h3>
      <p class="footer-info"><img src="../../../assets/clients/Call.svg"><a  href="/">{{companyAddresses[0] ? companyAddresses[0].phone : "+996771236478"}}</a></p>
      <p class="footer-info"><img src="../../../assets/clients/Message.svg"><a href="/">{{catalog_settings.email || "example@gmail.com"}}</a></p>
    </div>
    <div class="footer-address mb-4">
-     <h3>Address</h3>
+     <h3>Адрес</h3>
      <p class="footer-info" >{{companyAddresses[0] ? companyAddresses[0].address : "Bishkek, Kyrgyzstan"}}</p>
      <p class="footer-info" >08:00-19:00 Every day</p>
    </div>
  </div>
   <div @click="$router.push('/')" class="footer-logo d-flex align-items-center">
-    <img class="mr-2" src="../../../assets/clients/footerLogo.svg">
     <div>
       <span class="poweredby">powered by</span>
-      <h3 class="footer-title">Loy Gift</h3>
+      <h3 class="footer-title">@dazzdevx</h3>
     </div>
   </div>
   </div>

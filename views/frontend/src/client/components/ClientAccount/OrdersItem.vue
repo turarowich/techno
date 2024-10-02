@@ -2,23 +2,23 @@
   <div>
     <div v-if="orderList.length === 0" class="text-center mt-5">
           <img src="../../../assets/clients/box.png" class="mb-3">
-          <p class="client-paragraph">Information about your orders will be stored here</p>
+          <p class="client-paragraph">Здесь будет храниться информация о ваших заказах.</p>
     </div>
 <div v-else class="table-item d-flex align-items-center" v-for="order in orderList" :key="order.id">
   <div style="width:10%" class="d-flex align-items-center">
     {{order.code}}
   </div>
-  <div style="width:24%;overflow: hidden;text-overflow: ellipsis;"> {{order.address}}</div>
+  <div style="width:24%;overflow: hidden;text-overflow: ellipsis;"> {{ ['self','Pick-up'].includes(order.deliveryType) ? order.branch.address : order.address}}</div>
   <div style="width:10%">{{format_date(order.createdAt)}}</div>
-  <div style="width:12%">{{order.products.length}}</div>
-  <div v-if="order.deliveryPrice>0" style="width:12%">{{order.deliveryPrice}} {{catalog_settings.currency}}</div>
+  <div style="width:12%">{{order.quantity}}</div>
+  <div v-if="!['self','Pick-up'].includes(order.deliveryType)" style="width:12%">{{order.deliveryPrice}} {{catalog_settings.currency}}</div>
   <div v-else style="width:12%;color:#5CBD85;">
-    <span v-if="['self','Pick-up'].includes(order.deliveryType)">Pick Up</span>
-    <span v-else>Free</span>
+    <span >Забрать(0RUB)</span>
   </div>
   <div style="width:12%">{{order.totalDiscount}} {{catalog_settings.currency}}</div>
   <div style="width:11%">{{order.totalPrice}} {{catalog_settings.currency}}</div>
-  <div style="width:10%">{{order.status}}</div>
+  <div style="width:10%">{{statuses[order.status]}}</div>
+  <div style="width:10%">{{order.manager.name}}</div>
 </div>
 
     <div class="mobile-item  align-items-center justify-content-between" v-for="order in orderList" :key="order.id">
@@ -40,6 +40,9 @@
 export default {
 name: "OrdersItem",
   props:['orderList'],
+  data: () => ({
+    statuses: ["Договор", "Закуп", "Крой", "Пошив", "Отправка", 'Закончен']
+  }),
   computed:{
     catalog_settings(){
       return this.$store.getters['Catalog/getCatalog_settings'];

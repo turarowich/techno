@@ -6,14 +6,14 @@
 
     <div class="relatives">
       <h1 class="text-center">{{catalog_settings.name || 'Company Name'}}</h1>
-      <p>{{catalog_settings.welcome || 'Welcome to our thingy'}}</p>
+      <p class="text-center p-5">{{catalog_settings.description || 'Welcome to our thingy'}}</p>
     </div>
   </div>
   <div class="new">
     <div class="news">
       <div class="d-flex justify-content-between align-items-center mb-3" >
-        <div style="font-weight: bold;font-size: 20px;">News</div>
-        <div><router-link class="view-all" :to="`/${currentCompanyCatalog}/client-news`">View all</router-link></div>
+        <div style="font-weight: bold;font-size: 20px;">Новости</div>
+        <div><router-link class="view-all" :to="`/${currentCompanyCatalog}/client-news`">Посмотреть все</router-link></div>
       </div>
       <div v-if="spinner">
         <Spinner/>
@@ -278,14 +278,15 @@ name: "Dashboard",
   border-radius:5px;
 }
 .main-box{
-  height: 320px;
+  height: calc(100vh - 120px);
   /*background: url('../../../assets/clients/main-box.svg');*/
   background-position: center;
   background-repeat: no-repeat;
   position: relative;
   margin-bottom: 25px;
   margin-top: -28px;
- border-radius:5px;
+  border-radius:5px;
+  background-size: cover;
 
 
 }

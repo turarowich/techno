@@ -4,8 +4,8 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content category-content">
           <div class="modal-header category-header align-items-center">
-            <h3 v-if="edit" class="modal-title">Edit Delivery option</h3>
-            <h3 v-else class="modal-title">Add Delivery option</h3>
+            <h3 v-if="edit" class="modal-title">Изменить вариант доставки</h3>
+            <h3 v-else class="modal-title">Добавить вариант доставки</h3>
             <button type="button" data-dismiss="modal" aria-label="Close" class="close mr-0">
               <span aria-hidden="true">
                 <img src="../../assets/icons/x.svg" alt="">
@@ -14,21 +14,21 @@
           </div>
           <div class="modal-body category-body add_branch_modal_body">
             <div class="add_branch_block">
-              <label>Name</label>
-              <input v-model="option_object.name" class="cashback-input company-input" placeholder="Name of the option">
+              <label>Название</label>
+              <input v-model="option_object.name" class="cashback-input company-input" placeholder="Название доставки">
               <div class="d-flex atitude">
                 <div style="margin-right: 5px;flex: 1;">
-                  <label>Cost</label>
+                  <label>Стоимость</label>
                   <input v-model="option_object.price" class="cashback-input">
                 </div>
                 <div style="margin-left: 3px;flex: 1;">
-                  <label>Minimum order sum</label>
+                  <label>Минимальная сумма заказа</label>
                   <input v-model="option_object.minPrice" class="cashback-input">
                 </div>
               </div>
             </div>
             <div class="d-flex">
-              <button @click="saveOption" class="save">Save</button>
+              <button @click="saveOption" class="save">Сохранить</button>
             </div>
           </div>
 

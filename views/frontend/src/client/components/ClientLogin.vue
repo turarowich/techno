@@ -2,11 +2,11 @@
   <div class="authorization">
     <div class="container-fluid">
       <div class="login">
-        <h1 class="welcome-sign-in">Log In</h1>
+        <h1 class="welcome-sign-in">Войти</h1>
         <form >
           <label class="label">Email</label>
           <input v-model="email" name="email" class="login-input">
-          <label class="label">Password</label>
+          <label class="label">Пароль</label>
           <div class="password d-flex justify-space-between align-items-center">
             <input v-model="password" name="password" id="password"  class="login-input" type="password">
             <img @click="showPassword" id="hide-eye"  src="../../assets/icons/Hide.svg">
@@ -16,14 +16,13 @@
           <div class="remind d-flex justify-content-between align-item-center">
             <div class="d-flex ">
               <label class="custom-checkbox"><input type="checkbox"><span class="checkmark"></span></label>
-              <span>Stay signed in</span>
+              <span>Оставаться в системе</span>
             </div>
-            <a href="/">Forgot your password?</a>
+            <a href="/">Забыли пароль?</a>
           </div>
-          <button @click="login" class="sign-in-btn" type="button">Sign In</button>
+          <button @click="login" class="sign-in-btn" type="button">Войти</button>
         </form>
-
-        <div class="have-account">Sign in with Social of fill the form to continue. </div>
+        <!-- <div class="have-account">Войдите в систему через Social или заполните форму, чтобы продолжить. </div>
 
         <div class="social-link d-flex justify-content-center">
         <div class="social-icons">  <img src="../../assets/icons/facebook.svg"></div>
@@ -32,10 +31,10 @@
 
         <div class="main-or d-flex align-items-center justify-content-center">
           <div class="or-div"></div>
-          <span class="or-text">or</span>
+          <span class="or-text">или</span>
           <div class="or-div"></div>
-        </div>
-        <div class="have-account mb-0">Don't have an account? <router-link class="client-link" :to="`/${currentCompanyCatalog}/signup`">Sign up now</router-link></div>
+        </div> -->
+        <div class="have-account mb-0">Еще нет аккаунта? <router-link class="client-link" :to="`/${currentCompanyCatalog}/signup`">Зарегистрируйтесь сейчас</router-link></div>
       </div>
 
     </div>

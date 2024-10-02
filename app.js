@@ -11,7 +11,7 @@ const privateKey = fs.readFileSync(config.privateKey, 'utf8');
 const certificate = fs.readFileSync(config.certificate, 'utf8');
 const credentials = { key: privateKey, cert: certificate };
 const httpServer = http.createServer(app);
-const httpsServer = https.createServer(credentials, app);
+// const httpsServer = https.createServer(credentials, app);
 const passport = require("passport");
 // const strategy = require("passport-facebook");
 const FacebookStrategy = require("passport-facebook").Strategy;
@@ -112,12 +112,12 @@ router.get("/auth/google", passport.authenticate("google", { authType: 'reauthen
 router.get("/auth/twitter", passport.authenticate("twitter", { authType: 'reauthenticate'}));
 
 
-const io = require('socket.io')(httpsServer, {
+const io = require('socket.io')(httpServer, {
     cors: {
         // origin: "http://localhost:3000",
-        origin: ["http://10.121.6.75:8080","http://localhost:3000", "http://127.0.0.1:3000", "https://app.loygift.com", "http://10.121.6.29:3000", "*:*"],
+        origin: ["http://81.200.158.101","http://localhost:3000", "http://127.0.0.1:3000", "*:*"],
         methods: ["GET", "POST"],
-        credentials: true
+        credentials: true,
     },
     path: '/socket.io',
 });
@@ -181,21 +181,6 @@ const job = cron.schedule('0 1 * * *', () => {
 job.start();
 
 const xmlController = require("./app/controllers/xmlController")
-const job2 = cron.schedule('*/10 * * * *', () => {
-    // "* * * * *" every minute
-    // "*/5 * * * *" every 5 minutes
-    // "0 * * * *" every hour
-    xmlController.parseXml("loygift60f13737d0dc58349bbbfa9f");
-});
-job2.start();
-// cron end
-//for testing
-app.use('/sajda', (req, res, next) => {
-    xmlController.parseXml("loygift64c3cdc2492d8c443c3847a8");
-    res.send('STARTED')
-})
-
-//testing end
 
 
 
@@ -206,7 +191,6 @@ adminController.getMainUsers().then(listOfUsers => {
         for(const user of listOfUsers){
             if(user.catalogParserStatus){
                 global.cronJobMethods.createParserCron(user,global.cronJobMethods.parserCronTime,function (){
-                    //  loygift60f13737d0dc58349bbbfa9f sajda db
                     console.log(`Running chron parser for loygift${user._id}`)
                     xmlController.parseXml(`loygift${user._id}`);
                 })

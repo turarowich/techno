@@ -33,10 +33,9 @@ name: "MessageFeed",
         },
         messages: {
             handler: function (msgs) {
-                this.socket.emit('read messages', {'client': this.contact._id, 'isIncoming': false})
+                this.socket.emit('read messages', {'client': this.contact._id, 'isIncoming': true})
                 this.$store.dispatch("Message/setMessages",{axios:this.axios, url:this.url('getNewMessages')});
                 this.filteredMessages = msgs.map(function(msg){ msg.new = false; return msg }).slice(Math.max(msgs.length - this.show, 0)).reduce((groups, msg) => {
-                
                     const date = msg.createdAt.split('T')[0];
                     if (!groups[date]) {
                         groups[date] = [];
@@ -46,7 +45,8 @@ name: "MessageFeed",
                 }, {});
                 
             },
-            deep: true
+            deep: true,
+            immediate: true
         },
         show: function (len) {
             this.filteredMessages = this.messages.slice(Math.max(this.messages.length - len, 1)).reduce((groups, msg) => {

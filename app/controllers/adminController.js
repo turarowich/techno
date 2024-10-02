@@ -63,10 +63,11 @@ class AdminController{
                 adminSetting = await new AdminSettings();
             }
             result["object"] = adminSetting;
+            res.status(result.status).json(result);
         } catch (error) {
             result = sendError(error, req.headers["accept-language"]);
+            res.status(result.status).json(result);
         }
-        res.status(result.status).json(result);
     }
 
     getMainUsers = async function(){

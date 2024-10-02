@@ -9,24 +9,24 @@
           <img v-else class="edit-img" src="../../assets/icons/editUserAvatar.svg">
           <div>
             <h3 class="edit-name">{{client.name !== undefined ? client.name : ''}}</h3>
-            <div  class="edit-category">Category: <span>{{client.category && client.category!== null ? client.category.name : 'No category'}}</span></div>
-            <span class="edit-user"  data-toggle="modal"  data-target="#edit-client" >Edit user</span>
+            <!-- <div  class="edit-category">Category: <span>{{client.category && client.category!== null ? client.category.name : 'No category'}}</span></div> -->
+            <span class="edit-user"  data-toggle="modal"  data-target="#edit-client" >Изменить пользователя</span>
           </div>
         </div>
       </div>
 
       <div class="edit-header-right d-flex align-items-center">
-        <div class="selects">
+        <!-- <div class="selects">
 
           <select @change="changeDiscount(client._id)" id="change-discount" class=" form-control long-form-control  form-control-lg" aria-label=".form-select-lg example">
             <option value='0' selected>no discount</option>
             <option v-for="discount in discountList" :key="discount._id" :selected="client.discount == discount.discount_percentage" :value="discount.min_sum_of_purchases">{{discount.name}} {{discount.discount_percentage}} %</option>
           </select>
 
-        </div>
-        <div class="d-flex align-items-center" data-toggle="modal" data-target="#send-push"><img src="../../assets/icons/roundPlus.svg"><span>Send push</span></div>
-        <div class="d-flex align-items-center" data-toggle="modal" data-target="#add-points"><img src="../../assets/icons/roundPlus.svg"><span>Add points</span></div>
-        <div class="d-flex align-items-center" data-toggle="modal" data-target="#remove-points"><img src="../../assets/icons/roundMinus.svg"><span>Remove points</span></div>
+        </div> -->
+        <!-- <div class="d-flex align-items-center" data-toggle="modal" data-target="#send-push"><img src="../../assets/icons/roundPlus.svg"><span>Send push</span></div> -->
+        <div class="d-flex align-items-center" data-toggle="modal" data-target="#add-points"><img src="../../assets/icons/roundPlus.svg"><span>Добавить бонус</span></div>
+        <div class="d-flex align-items-center" data-toggle="modal" data-target="#remove-points"><img src="../../assets/icons/roundMinus.svg"><span>Удалить бонус</span></div>
 
       </div>
     </div>
@@ -54,15 +54,15 @@
 
     <div class="row client-number-row">
       <div class="col-lg-2 client-number-box">
-        <span class="client-number-label">Points</span>
+        <span class="client-number-label">Бонусы</span>
         <h5 class="client-number" style="color:#616cf5">{{client.points}}</h5>
       </div>
       <div class="col-lg-2 client-number-box">
-        <span class="client-number-label">Paid by points</span>
+        <span class="client-number-label">Оплачено бонусамы</span>
         <h5 class="client-number">{{usedPoints}}</h5>
       </div>
       <div class="col-lg-2 client-number-box">
-        <span class="client-number-label">Total of paid</span>
+        <span class="client-number-label">Всего оплачено</span>
         <h5 class="client-number">{{totalPaid.toFixed(2)}}</h5>
       </div>
     </div>
@@ -72,14 +72,14 @@
         <li>
           <a  class="disable-underline purchase"  data-toggle="tab" href="#menu1">
             <div class="order-tab d-flex align-items-center mr-4">
-              <h2 class="history-title">Purchase history</h2>
+              <h2 class="history-title">История покупок</h2>
             </div>
           </a>
         </li>
         <li>
           <a class="disable-underline bonus" data-toggle="tab" href="#bonuses">
             <div data-toggle="tab" class="order-tab d-flex align-items-center">
-              <h2 class="history-title">Bonuses</h2>
+              <h2 class="history-title">Бонусы</h2>
             </div>
           </a>
         </li>
@@ -92,16 +92,16 @@
     <div class="tab-content">
       <div id="menu1" class="tab-pane fade">
         <div class="d-flex main-content-header">
-          <div class="table-head" style="width: 45%;">Order name</div>
-          <div class="table-head table-link" @click="sortByDate(purchaseHistory)" style="width: 25%;">Date<img class="date-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
-          <div class="table-head " style="width: 25%;" >Total </div>
+          <div class="table-head" style="width: 45%;">Название заказа</div>
+          <div class="table-head table-link" @click="sortByDate(purchaseHistory)" style="width: 25%;">Дата<img class="date-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
+          <div class="table-head " style="width: 25%;" >Всго </div>
           <div class="table-head " style="width: 5%;" ></div>
         </div>
 
         <div class="table-content">
           <div v-if="purchaseHistory.length ===0" class="text-center mt-5">
               <img src="../../assets/icons/emptyOrder.svg" class="mb-3" style="width:60px; height:60px">
-              <p class="client-paragraph">Information about your orders will be stored here</p>
+              <p class="client-paragraph">Здесь будет храниться информация о ваших заказах.</p>
             </div>
           <div v-else v-for="order in filteredPurchaseHistory"  :key="order._id" class="table-item d-flex align-items-center">
               <div style="width:45%" class="d-flex align-items-center">
@@ -115,10 +115,10 @@
       </div>
       <div id="bonuses" class="tab-pane fade">
         <div class="d-flex main-content-header">
-          <div class="table-head" style="width: 40%;">Name</div>
-          <div class="table-head table-link" @click="sortByDate(historyBonus)" style="width: 20%;">Date<img class="date-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
-          <div class="table-head " style="width: 30%;" >Notes </div>
-          <div class="table-head " style="width: 10%;" >Quantity </div>
+          <div class="table-head" style="width: 40%;">Название</div>
+          <div class="table-head table-link" @click="sortByDate(historyBonus)" style="width: 20%;">Дата<img class="date-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
+          <div class="table-head " style="width: 30%;" >Примечание </div>
+          <div class="table-head " style="width: 10%;" >Количество </div>
 
         </div>
 

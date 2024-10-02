@@ -1,12 +1,9 @@
 <template>
   <div class="container-fluid analytics">
     <div class="d-flex justify-content-between app-buttons analytics-btn">
-      <div class="d-flex align-items-center">
-        <button class="app-buttons-item"><img class="img-btn" src="../../assets/icons/set.svg"><span>Export to Excell </span></button>
-      </div>
       <div>
-        <button class="app-buttons-item" @click="selectDate(new Date(), -1)"><img src="../../assets/icons/yesterday.svg"><span>Yesterday</span></button>
-        <button class="app-buttons-item" @click="selectDate(new Date())"><img src="../../assets/icons/yesterday.svg"><span>Today</span></button>
+        <button class="app-buttons-item" @click="selectDate(new Date(), -1)"><img src="../../assets/icons/yesterday.svg"><span>Вчера</span></button>
+        <button class="app-buttons-item" @click="selectDate(new Date())"><img src="../../assets/icons/yesterday.svg"><span>Сегодня</span></button>
         <button class="app-buttons-item"><img src="../../assets/icons/yesterday.svg"><input :value="between_value"  class="date-pick" id="datepicker" readonly></button>
       </div>
     </div>
@@ -17,42 +14,42 @@
     <div v-else>
       <div class="analytics-wrapper">
         <div class="analytics-box" >
-          <p><img class="mr-2" src="../../assets/icons/analytics/spent.svg">Spent with bonuses</p>
-          <h2 class="analytics-title">{{analyticsFiltered.spentPoints}}</h2>
+          <p><img class="mr-2" src="../../assets/icons/analytics/spent.svg">Потрачено с бонусами</p>
+          <h2 class="analytics-title">{{getInfo.points?.toFixed(2) || 0}}</h2>
         </div>
         <div class="analytics-box" >
-          <p><img class="mr-2" src="../../assets/icons/analytics/customer.svg">The amount of discounts</p>
-          <h2 class="analytics-title">{{analyticsFiltered.discounts.toFixed(2)}}</h2>
+          <p><img class="mr-2" src="../../assets/icons/analytics/customer.svg">Размер скидки</p>
+          <h2 class="analytics-title">{{getInfo.discount?.toFixed(2) || 0}}</h2>
         </div>
         <div class="analytics-box" >
-          <p><img class="mr-2" src="../../assets/icons/analytics/check.svg">Average check</p>
-          <h2 class="analytics-title">{{analyticsFiltered.averageCheck.toFixed(4)}}</h2>
+          <p><img class="mr-2" src="../../assets/icons/analytics/check.svg">Средний чек</p>
+          <h2 class="analytics-title">{{getInfo.averageCheck?.toFixed(4) || 0}}</h2>
         </div>
         <div class="analytics-box" >
-          <p><img class="mr-2" src="../../assets/icons/analytics/coin.svg">The amount of profit</p>
-          <h2 class="analytics-title">{{analyticsFiltered.profit.toFixed(2)}}</h2>
+          <p><img class="mr-2" src="../../assets/icons/analytics/coin.svg">Сумма прибыли</p>
+          <h2 class="analytics-title">{{getInfo.income?.toFixed(2) || 0}}</h2>
         </div>
         <div class="analytics-box" >
-          <p><img class="mr-2" src="../../assets/icons/analytics/numUser.svg">Number of clients</p>
-          <h2 class="analytics-title">{{analyticsFiltered.clients}}</h2>
+          <p><img class="mr-2" src="../../assets/icons/analytics/numUser.svg">Количество клиентов</p>
+          <h2 class="analytics-title">{{getInfo.clients}}</h2>
         </div>
         <div class="analytics-box" >
-          <p><img class="mr-2" src="../../assets/icons/analytics/middle.svg">Mans</p>
-          <h2 class="analytics-title">{{analyticsFiltered.mans}}</h2>
+          <p><img class="mr-2" src="../../assets/icons/analytics/numUser.svg">Количество работников</p>
+          <h2 class="analytics-title">{{getInfo.workersCount}}</h2>
         </div>
         <div class="analytics-box" >
-          <p><img class="mr-2" src="../../assets/icons/analytics/middle.svg">Women</p>
-          <h2 class="analytics-title">{{analyticsFiltered.women}}</h2>
+          <p><img class="mr-2" src="../../assets/icons/analytics/check.svg">Оборот</p>
+          <h2 class="analytics-title">{{getInfo.total?.toFixed(2) || 0}}</h2>
         </div>
         <div class="analytics-box" >
-          <p><img class="mr-2" src="../../assets/icons/analytics/middle.svg">Middle age</p>
-          <h2 class="analytics-title">{{analyticsFiltered.middleAge}}</h2>
+          <p><img class="mr-2" src="../../assets/icons/analytics/coin.svg">Цех работа</p>
+          <h2 class="analytics-title">{{getInfo.building?.toFixed(2) || 0}}</h2>
         </div>
 
       </div>
 
       <div class="graph">
-        <h3 class="graph-title mb-4">Number and amount of orders</h3>
+        <h3 class="graph-title mb-4">Количество и сумма заказов</h3>
         <div class="canvas-graph">
           <canvas ref="canvas" id="planet-chart" width="100%"></canvas>
         </div>
@@ -77,10 +74,14 @@ export default {
             endDate:'',
             analytics:[],
             chart:[],
-            profitChart: {}
+            profitChart: {},
+            info: {}
         }
     },
     computed:{
+        getInfo() {
+          return this.info
+        },
         analyticsFiltered(){
             let new_analytics = {
                 profit: 0,
@@ -247,7 +248,7 @@ export default {
 
             this.analytics = response.data.objects;
             this.chart = response.data.chart;
-
+            this.info = response.data.info
 
             this.updateChart();
         }).catch((error)=>{
@@ -319,11 +320,12 @@ export default {
   flex-wrap: wrap;
   margin-bottom: 30px;
 }
+
 .analytics-box{
   width: 25%;
   margin-bottom: 50px;
   position: relative;
-
+  padding: 10px;
 }
 .analytics-box:nth-child(4):before,
 .analytics-box:nth-child(8):before{

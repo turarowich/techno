@@ -1,6 +1,6 @@
 <template>
 <div class="about container client-container">
-  <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg"><div @click="$router.go(-1)" class="mr-1">Back </div>  | <span>{{$route.name}}</span> </div>
+  <div class="show-path"><img class="path-img" src="../../../assets/clients/path-img.svg"><div @click="$router.go(-1)" class="mr-1">Назад </div>  | <span>{{$route.name}}</span> </div>
 
   <div class="row">
   <div class="col-lg-7 left-about">
@@ -10,11 +10,11 @@
 <!--        <div class="relatives">-->
 <!--         </div>-->
       </div>
-      <h3 class="about-title">About us</h3>
+      <h3 class="about-title">О нас</h3>
       <p class="client-paragraph">
         {{catalog_settings.description}}
       </p>
-      <button class=" catalog-btn" @click="$router.push(`/${currentCompanyCatalog}`)">Go to catalog</button>
+      <button class=" catalog-btn" @click="$router.push(`/${currentCompanyCatalog}`)">Прейти в каталог</button>
     </div>
   </div>
   <div class="col-lg-4">
@@ -22,7 +22,7 @@
       <h2 class="shop-name">{{catalog_settings.name || ""}}</h2>
       <div class="line mt-0"></div>
 
-      <h3 class="contact-title">Contacts</h3>
+      <h3 class="contact-title">Контакты</h3>
       <div v-if="companyAddresses.length>1">
 
       <div class="contact-box">
@@ -41,7 +41,7 @@
         <p v-if="companyAddresses[0].sunday.active" class="contact-time mb-0">Sun {{companyAddresses[0].sunday.start}}-{{companyAddresses[0].sunday.end}}</p>
       </div>
 
-      <h3 class="contact-title">Links</h3>
+      <h3 class="contact-title">Ссылки</h3>
       <div class="contact-icon">
         <a :href="catalog_settings.facebook" target="_blank"><img src="../../../assets/clients/Facebook.svg"></a>
         <a :href="catalog_settings.instagram" target="_blank"><img src="../../../assets/clients/Instagram.svg"></a>

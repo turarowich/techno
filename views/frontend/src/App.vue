@@ -73,7 +73,7 @@ export default {
     $route: {
       immediate: true,
       handler() {
-        document.title = "Loygift";
+        document.title = "Techno";
       }
     },
 

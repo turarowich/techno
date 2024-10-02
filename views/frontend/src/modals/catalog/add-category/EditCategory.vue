@@ -6,7 +6,7 @@
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content category-content">
           <div class="modal-header category-header align-items-center">
-            <h3 class="modal-title">Edit Category</h3>
+            <h3 class="modal-title">Изменить категорию</h3>
             <button type="button" data-dismiss="modal" aria-label="Close" class="close">
               <span aria-hidden="true">
                 <img src="../../../assets/icons/x.svg" alt="">
@@ -15,10 +15,10 @@
           </div>
           <div class="modal-body category-body">
             <form @submit.prevent="onSubmit" class="modal-form">
-              <label>Name</label><br>
-              <input v-model="currentCategory.name" class="form-input cashback-input mb-3" placeholder="Enter a name">
+              <label>Название</label><br>
+              <input v-model="currentCategory.name" class="form-input cashback-input mb-3" placeholder="Введите название">
               <div>
-                <label>Move to the Category</label>
+                <label>Перенести в категорию</label>
                 <select v-model="currentCategory.parent" class="form-control long-form-control modal-select mb-5">
                   <option value="">Without category</option>
                   <option v-for="category in listCategory" :value="category._id" :key="category._id">{{ category.name }}
@@ -26,7 +26,7 @@
                 </select>
               </div>
               <div class="d-flex justify-content-end">
-                <button @click.prevent="onSubmit(currentCategory._id)" class="save">Save</button>
+                <button @click.prevent="onSubmit(currentCategory._id)" class="save">Сохранить</button>
               </div>
             </form>
           </div>

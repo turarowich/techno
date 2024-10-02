@@ -53,7 +53,6 @@ const employeeSchema = new Schema({
         select: false,
         minlength: [8, 'password_min'],
         maxlength: [64, 'password_max'],
-        match: [/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/, 'password_valid']
     },
     comment: {
         type: String,
@@ -94,122 +93,122 @@ const employeeSchema = new Schema({
         active: {
             type: Boolean,
             required: true,
-            default: false
+            default: true
         },
         canEdit: {
             type: Boolean,
             required: true,
-            default: false
+            default: true
         },
     },
     analytics: {
         active: {
             type: Boolean,
             required: true,
-            default: false
+            default: true
         },
         canEdit: {
             type: Boolean,
             required: true,
-            default: false
+            default: true
         },
     },
     clients: {
         active: {
             type: Boolean,
             required: true,
-            default: false
+            default: true
         },
         canEdit: {
             type: Boolean,
             required: true,
-            default: false
+            default: true
         },
     },
     news: {
         active: {
             type: Boolean,
             required: true,
-            default: false
+            default: true
         },
         canEdit: {
             type: Boolean,
             required: true,
-            default: false
+            default: true
         },
     },
     catalog: {
         active: {
             type: Boolean,
             required: true,
-            default: false
+            default: true
         },
         canEdit: {
             type: Boolean,
             required: true,
-            default: false
+            default: true
         },
     },
     chat: {
         active: {
             type: Boolean,
             required: true,
-            default: false
+            default: true
         },
         canEdit: {
             type: Boolean,
             required: true,
-            default: false
+            default: true
         },
     },
     loyalty: {
         active: {
             type: Boolean,
             required: true,
-            default: false
+            default: true
         },
         canEdit: {
             type: Boolean,
             required: true,
-            default: false
+            default: true
         },
     },
     logs: {
         active: {
             type: Boolean,
             required: true,
-            default: false
+            default: true
         },
         canEdit: {
             type: Boolean,
             required: true,
-            default: false
+            default: true
         },
     },
     canAddPoint: {
         type: Boolean,
         required: true,
-        default: false
+        default: true
     },
     canDeductPoint: {
         type: Boolean,
         required: true,
-        default: false
+        default: true
     },
     canChangeOrderStatus: {
         type: Boolean,
         required: true,
-        default: false
+        default: true
     },
     canSendPush: {
         type: Boolean,
         required: true,
-        default: false
+        default: true
     },
     canScanQR: {
         type: Boolean,
         required: true,
-        default: false
+        default: true
     },
     createdAt: {
         type: Date,

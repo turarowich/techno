@@ -44,7 +44,7 @@ class LogController {
                     "$lt": moment(req.query.end).endOf('day')
                 }
             }
-            let logs = await Log.find(query)
+            let logs = await Log.find(query).sort({createdAt: -1})
             result['objects'] = logs
 
         } catch (error) {

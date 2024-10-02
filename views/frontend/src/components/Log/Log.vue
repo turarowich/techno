@@ -5,7 +5,7 @@
       <div class="d-flex align-items-center">
        <div class="dropdown filter-drops">
           <button class="app-buttons-item dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
-            <img class="img-btn" src="../../assets/icons/filter.svg"><span>Filter</span>
+            <img class="img-btn" src="../../assets/icons/filter.svg"><span>Фильтр</span>
           </button>
 
           <div class="dropdown-menu general-dropdown animate slideIn log-filter" aria-labelledby="dropdownMenuButton">
@@ -13,13 +13,13 @@
              <form>
                <div>
                 <div class="filter-list" data-toggle="collapse" data-target="#admins" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
-                   Admins
+                   Админы
                    <img src="../../assets/icons/down.svg" class="filter-img">
                 </div>
                 <div class="collapse" id="admins">
                     <div class="filter-body">
                         <select class="filter-select form-control form-control-sm mb-2" aria-label=".form-select-lg example" v-model="selectedEmployee">
-                            <option value="">All</option>
+                            <option value="">Все</option>
                             <option v-for="employee, index in employees" :key="index"  :value="employee._id">
                             {{employee.name}}
                             </option>
@@ -29,7 +29,7 @@
                </div>
                <div >
                  <div class="filter-list" data-toggle="collapse" data-target="#cashback" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
-                   Cash back
+                   Кешбек
                    <img src="../../assets/icons/down.svg" class="filter-img">
                  </div>
                  <div class="collapse" id="cashback">
@@ -38,29 +38,29 @@
                        <div class="d-flex align-items-center mb-2 mr-5">
                          <input ref="client-filter" type="radio" id="radioMen" name="sortLogs" value="cashback_created" v-model="sortBy">
                          <label for="radioMen"></label>
-                         <span class="male">Added</span>
+                         <span class="male">Добавлено</span>
                        </div>
                        <div class="d-flex align-items-center mb-2">
                          <input ref="client-filter" type="radio" id="radioWoman" name="sortLogs" value="cashback_updated" v-model="sortBy">
                          <label for="radioWoman"></label>
-                         <span class="male">Edited</span>
+                         <span class="male">Изменено</span>
                        </div>
                      </div>
                    </div>
                  </div>
                </div>
-               <div class="filter-list">Orders</div>
-               <div class="order_users mb-2"><label class="custom-checkbox mr-2"><input ref="client-filter" name="sortLogs"  id="client-birthday" type="radio" value="order_created"  v-model="sortBy"><span class="checkmark"></span></label>Show only created orders</div>
-               <div class="filter-list">Clients</div>
-               <div class="order_users"><label class="custom-checkbox mr-2"><input ref="client-filter" name="sortLogs"   id="created" type="radio" value="client_deleted clients_deleted"  v-model="sortBy"><span class="checkmark"></span></label>Show only deleted clients</div>
+               <div class="filter-list">Заказы</div>
+               <div class="order_users mb-2"><label class="custom-checkbox mr-2"><input ref="client-filter" name="sortLogs"  id="client-birthday" type="radio" value="order_created"  v-model="sortBy"><span class="checkmark"></span></label>Показать созданные заказы</div>
+               <div class="filter-list">Клиенты</div>
+               <div class="order_users"><label class="custom-checkbox mr-2"><input ref="client-filter" name="sortLogs"   id="created" type="radio" value="client_deleted clients_deleted"  v-model="sortBy"><span class="checkmark"></span></label>Показать удаленных клиентов</div>
              </form>
             </div>
           </div>
         </div>
       </div>
       <div>
-        <button class="app-buttons-item" @click="selectDate(new Date(), -1)"><img src="../../assets/icons/yesterday.svg"><span>Yesterday</span></button>
-        <button class="app-buttons-item" @click="selectDate(new Date())"><img src="../../assets/icons/yesterday.svg"><span>Today</span></button>
+        <button class="app-buttons-item" @click="selectDate(new Date(), -1)"><img src="../../assets/icons/yesterday.svg"><span>Вчера</span></button>
+        <button class="app-buttons-item" @click="selectDate(new Date())"><img src="../../assets/icons/yesterday.svg"><span>Сегодня</span></button>
         <button class="app-buttons-item"><img src="../../assets/icons/yesterday.svg"><input :value="between_value"  class="date-pick" id="datepicker" readonly></button>
       </div>
     </div>
@@ -71,9 +71,9 @@
   </div>
 
   <div class="d-flex main-content-header justify-content-between align-items-center">
-     <div class="table-head" style="width: 60%;">Operation name</div>
-     <div class="table-head" style="width: 20%;">User</div>
-     <div class="table-head" style="width: 20%;">Date and time</div>
+     <div class="table-head" style="width: 60%;">Название операции</div>
+     <div class="table-head" style="width: 20%;">Пользователь</div>
+     <div class="table-head" style="width: 20%;">Дата и время</div>
   </div>
   <div class="table-content">
     <div v-if="spinner" style="height:100%; " class="d-flex align-items-center">

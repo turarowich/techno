@@ -2,7 +2,7 @@
   <div>
     <div v-if="clientList.length==0" class="d-flex align-items-center flex-column justify-content-center" style="height:calc(100vh - 350px)">
           <img style="width:70px; height:70px; margin-bottom:10px" src="../../assets/icons/clientbase.svg">
-          <span style="color:#8C94A5">Client base is empty</span>
+          <span style="color:#8C94A5">Не найдено</span>
     </div>
 
     <div v-else v-for="client in clientList" class="table-item d-flex align-items-center justify-content-between" :key="client._id">
@@ -20,9 +20,6 @@
       </div>
       <div class="table-child" v-if="data_check.birthday_checked" style="width: 12%;">{{client.birthDate ? client.birthDate.slice(0,10) :  '' }}</div>
       <div class="table-child" v-show="data_check.discount_checked" style="width: 10%;">{{client.discount? client.discount : '0'}} %</div>
-      <div class="table-child" v-if="data_check.category_checked" style="width: 14%;">
-        {{ client.category ? client.category.name : "no category" }}
-      </div>
       <div class="table-child" v-if="data_check.register_date_checked"  style="width: 18%;">{{ client.createdAt ? client.createdAt.slice(0,10) : ""}}</div>
       <div class="client-phone table-child pr-2" v-if="data_check.phone_checked"  style="width:14%" >{{client.phone}}</div>
       <div class="table-child" v-if="data_check.total_checked"  style="width: 8%;">{{client.total.toFixed(0)}}</div>
@@ -39,8 +36,8 @@
         </div>
         <div v-if="check()" class="dropdown-menu" aria-labelledby="dropdownMenuTotal">
           <ul class="list-group" >
-            <li class="list-group-item" data-toggle="modal" id="editUser" value="1beka" data-target="#edit-client" @click="$emit('selectClient', client._id)">Edit</li>
-            <li class="list-group-item" v-on:click="$emit('deleteClient',client._id)">Delete</li>
+            <li class="list-group-item" data-toggle="modal" id="editUser" value="1beka" data-target="#edit-client" @click="$emit('selectClient', client._id)">Изменить</li>
+            <li class="list-group-item" v-on:click="$emit('deleteClient',client._id)">Удалить</li>
           </ul>
         </div>
       </div>

@@ -5,20 +5,20 @@
  </div>
   <div v-else class="row mb-5">
     <div class="col-lg-5">
-      <h2 class="cashback-title address-titles">Address delivery</h2>
+      <h2 class="cashback-title address-titles">Адрес и доставка</h2>
       <div class="d-flex margin-10">
         <label class="switch d-flex">
           <input v-model="delivery_status" type="checkbox">
           <span class="slider round"></span>
         </label>
-        <h2 class="catalog-sub-title">Delivery</h2>
+        <h2 class="catalog-sub-title">Доставка</h2>
       </div>
       <p class="catalog-description margin-30">
-        You can customize the delivery method
+        Вы можете настроить способ доставки
       </p>
-      <h2 class="catalog-sub-title mb-2">Delivery description</h2>
+      <h2 class="catalog-sub-title mb-2">Описание доставки</h2>
       <p class="catalog-description margin-20">
-        Describe the possible delivery options
+        Опишите возможные варианты доставки.
       </p>
       <textarea v-model="deliveryDescription" class="general-area pt-2"></textarea>
 
@@ -28,15 +28,15 @@
         </div>
         <div class="d-flex branch_list_item">
           <div class="branch_list_item_number">{{option.minPrice}}</div>
-          <div @click="getEditDeliveryOption(option._id)" style="color:#616cf5;cursor: pointer">Edit</div>
+          <div @click="getEditDeliveryOption(option._id)" style="color:#616cf5;cursor: pointer">Изменить</div>
           <div @click="removeDeliveryOption(option._id)" style="margin-left:20px;cursor: pointer">
             <img src="../../assets/icons/greyX.svg">
           </div>
         </div>
       </div>
 
-      <span @click="clearEditDelivery" class="add-branch" style="color:#616cf5;cursor: pointer;" data-toggle="modal" data-target="#add_delivery_option">+ Add delivery option</span>
-      <button @click="save" type="button" class="save">Save</button>
+      <span @click="clearEditDelivery" class="add-branch" style="color:#616cf5;cursor: pointer;" data-toggle="modal" data-target="#add_delivery_option">+ Добавить метод доставки</span>
+      <button @click="save" type="button" class="save">Сохранить</button>
     </div>
 
     <div class="col-lg-5">
@@ -46,11 +46,11 @@
         </div>
         <div class="d-flex branch_list_item">
           <div class="branch_list_item_number">{{branch.phone}}</div>
-          <div @click="getEdit(branch._id)" style="color:#616cf5;cursor: pointer">Edit</div>
+          <div @click="getEdit(branch._id)" style="color:#616cf5;cursor: pointer">Изменить</div>
         </div>
       </div>
 
-      <span @click="clearEdit" class="add-branch" style="color:#616cf5;cursor: pointer" data-toggle="modal" data-target="#add_branch">+ Add branch</span>
+      <span @click="clearEdit" class="add-branch" style="color:#616cf5;cursor: pointer" data-toggle="modal" data-target="#add_branch">+ Добавить филиал</span>
       <AddBranch :edit_branch="edit_branch"  v-on:sendUpdate="updateData"/>
       <AddDeliveryOption :edit_delivery="edit_delivery" v-on:sendUpdate="updateData"/>
     </div>

@@ -4,35 +4,35 @@
       <div class="d-flex justify-content-between app-buttons">
         <div class="d-flex align-items-center">
           <button v-if="check()" class="app-buttons-item adding-btns" id="add-product" data-toggle="modal"
-            data-target="#add-products"><span>+ Add product</span></button>
-          <button v-if="check()" class="app-buttons-item adding-btns" @click="getProducts" data-toggle="modal"
-            data-target="#add-service"><span>+ Add service</span></button>
+            data-target="#add-products"><span>+ Добавить продукт</span></button>
+          <!-- <button v-if="check()" class="app-buttons-item adding-btns" @click="getProducts" data-toggle="modal"
+            data-target="#add-service"><span>+ Add service</span></button> -->
           <button v-if="check()" class="app-buttons-item adding-btns" data-toggle="modal"
-            data-target="#add-category"><span>+ Add category </span></button>
+            data-target="#add-category"><span>+ Добавить категорию</span></button>
         </div>
         <div class="d-flex align-items-center">
           <div class="dropdown">
             <button class="app-buttons-item dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown"
               aria-haspopup="true" aria-expanded="false">
-              <img class="img-btn" src="../../assets/icons/filter.svg"><span>Filter</span>
+              <img class="img-btn" src="../../assets/icons/filter.svg"><span>Фильтр</span>
             </button>
 
             <div class=" dropdown-menu filter-catalogs animate slideIn" aria-labelledby="dropdownMenuButton">
               <form class="filter-product">
-                <label>By price</label>
+                <label>По цене</label>
                 <div class="d-flex">
                   <input v-model="price_from" class="drop-input">
                   <div class="d-flex">
-                    <label class="mr-2 pl-2">to</label>
+                    <label class="mr-2 pl-2">до</label>
                     <input v-model="price_to" class="drop-input">
                   </div>
                 </div>
 
-                <label>By quantity</label>
+                <label>По количеству</label>
                 <div class="d-flex">
                   <input v-model="quantity_from" class="drop-input">
                   <div class="d-flex">
-                    <label class="mr-2 pl-2">to</label>
+                    <label class="mr-2 pl-2">до</label>
                     <input v-model="quantity_to" class="drop-input">
                   </div>
                 </div>
@@ -43,39 +43,39 @@
                   <span style="font-size:14px">Show only auction items</span>
                 </div>
 
-                <label>By category</label>
+                <label>По категориям</label>
                 <select v-model="selectedCategory" class="select-category form-control">
                   <option v-for="cat in listCategory" :key="cat._id" :value="cat._id">{{ cat.name }}</option>
                 </select>
 
                 <button @click="setFilters" type="button" class="app-buttons-item adding-btns"
                   style="width: 100%;margin-top: 5px;display: flex;justify-content: center;align-items: center;">
-                  Filter
+                  Искать
                 </button>
 
                 <button @click="clearFilters" type="button" class="app-buttons-item adding-btns"
                   style="width: 100%;margin-top: 5px;display: flex;justify-content: center;align-items: center;">
-                  Clear filters
+                  Очистить
                 </button>
               </form>
             </div>
           </div>
           <button v-if="check()" class="app-buttons-item" @click="deleteAllOrder"><img
-              src="../../assets/icons/trash_empty.svg"><span>Remove</span></button>
+              src="../../assets/icons/trash_empty.svg"><span>Удалить</span></button>
 
           <div class="dropdown">
-            <button v-if="check()" class="dropdown-toggle app-buttons-item" id="dropdownMenuTotal"
+            <!-- <button v-if="check()" class="dropdown-toggle app-buttons-item" id="dropdownMenuTotal"
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <img src="../../assets/icons/moveto.svg"><span>Move to</span>
-            </button>
+            </button> -->
             ..
             <div class="move-category animate slideIn dropdown-menu" aria-labelledby="dropdownMenuTotal">
               <div class="move-category-item" v-for="cat in listCategory.slice(1)" :key="cat._id"
                 @click="moveCategory(cat._id)">{{ cat.name }}</div>
             </div>
           </div>
-          <button v-if="check()" class="app-buttons-item" data-turbolinks="true" data-toggle="modal"
-            data-target="#import-client"><img src="../../assets/icons/import.svg"><span>Import</span></button>
+          <!-- <button v-if="check()" class="app-buttons-item" data-turbolinks="true" data-toggle="modal"
+            data-target="#import-client"><img src="../../assets/icons/import.svg"><span>Import</span></button> -->
         </div>
       </div>
       <div class="main-search d-flex align-items-center">
@@ -103,8 +103,8 @@
                   <div class="dropdown-menu" aria-labelledby="dropdownMenu">
                     <ul class="list-group">
                       <li class="list-group-item" data-toggle="modal" data-target="#edit-category"
-                        @click="selectCategory(category._id)">Edit</li>
-                      <li class="list-group-item" @click.stop.prevent="deleteCategory(category._id)">Delete</li>
+                        @click="selectCategory(category._id)">Изменить</li>
+                      <li class="list-group-item" @click.stop.prevent="deleteCategory(category._id)">Удалить</li>
                     </ul>
                   </div>
                 </div>
@@ -124,8 +124,8 @@
                     <div class="dropdown-menu" aria-labelledby="dropdownMenu">
                       <ul class="list-group">
                         <li class="list-group-item" data-toggle="modal" data-target="#edit-category"
-                          @click="selectCategory(child._id)">Edit</li>
-                        <li class="list-group-item" @click.stop.prevent="deleteCategory(child._id)">Delete</li>
+                          @click="selectCategory(child._id)">Изменить</li>
+                        <li class="list-group-item" @click.stop.prevent="deleteCategory(child._id)">Удалить</li>
                       </ul>
                     </div>
                   </div>
@@ -145,9 +145,9 @@
                       <div class="dropdown-menu" aria-labelledby="dropdownMenu">
                         <ul class="list-group">
                           <li class="list-group-item" data-toggle="modal" data-target="#edit-category"
-                            @click="selectCategory(nestedChild._id)">Edit</li>
+                            @click="selectCategory(nestedChild._id)">Изменить</li>
                           <li class="list-group-item" @click.stop.prevent="deleteCategory(nestedChild._id)"
-                            >Delete</li>
+                            >Удалить</li>
                         </ul>
                       </div>
                     </div>
@@ -172,11 +172,11 @@
             <div class="table-head" style="width: 5%;"><label class="custom-checkbox"><input id="parent-check"
                   type="checkbox" @change="selectAllProduct" v-model="selectAll"><span class="checkmark"></span></label>
             </div>
-            <div class="table-head" style="width: 36%;">Name</div>
-            <div class="table-head" style="width: 24%;">Article</div>
-            <div class="table-head table-link pr-3" style="width: 13%;" @click="sortByQunatity">Quantity<img
+            <div class="table-head" style="width: 36%;">Название</div>
+            <div class="table-head" style="width: 24%;">Описание</div>
+            <div class="table-head table-link pr-3" style="width: 13%;" @click="sortByQunatity">Количество<img
                 class="date-pol" style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
-            <div class="table-head table-link" style="width: 13%;" @click="sortByPrice">Price<img class="total-pol"
+            <div class="table-head table-link" style="width: 13%;" @click="sortByPrice">Цена<img class="total-pol"
                 style="margin-left:10px" src="../../assets/icons/polygon.svg"></div>
             <div class="table-head" style="width: 8%;"></div>
             <div class="table-head" style="width: 8%;"></div>
@@ -519,10 +519,11 @@ export default {
     deleteProduct(id) {
       Swal.fire({
         showConfirmButton: true,
-        html: 'Are you sure to remove this <br>product',
+        html: 'Вы точно хотите удалить этот <br/> продукт?',
         showCloseButton: true,
         showCancelButton: true,
-        confirmButtonText: 'Delete',
+        confirmButtonText: 'Удалить',
+        cancelButtonText: 'Отмена',
         buttonsStyling: false,
         customClass: {
           popup: 'sweet-delete',
@@ -574,10 +575,11 @@ export default {
     deleteCategory(id) {
       Swal.fire({
         showConfirmButton: true,
-        html: 'Are you sure to remove this <br>category',
+        html: 'Вы точно хотите удалить <br/> категорию?',
         showCloseButton: true,
         showCancelButton: true,
-        confirmButtonText: 'Delete',
+        confirmButtonText: 'Удалить',
+        cancelButtonText: 'Отмена',
         buttonsStyling: false,
         customClass: {
           popup: 'sweet-delete',
