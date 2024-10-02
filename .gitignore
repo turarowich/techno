@@ -24,7 +24,7 @@ target/
 dist/
 images/
 files/
-config/config.js
+#config/config.js
 # JetBrains IDE
 .idea/
 
