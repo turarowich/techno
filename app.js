@@ -11,7 +11,7 @@ const privateKey = fs.readFileSync(config.privateKey, 'utf8');
 const certificate = fs.readFileSync(config.certificate, 'utf8');
 const credentials = { key: privateKey, cert: certificate };
 const httpServer = http.createServer(app);
-// const httpsServer = https.createServer(credentials, app);
+const httpsServer = https.createServer(credentials, app);
 const passport = require("passport");
 // const strategy = require("passport-facebook");
 const FacebookStrategy = require("passport-facebook").Strategy;
@@ -115,7 +115,7 @@ router.get("/auth/twitter", passport.authenticate("twitter", { authType: 'reauth
 const io = require('socket.io')(httpServer, {
     cors: {
         // origin: "http://localhost:3000",
-        origin: ["http://81.200.158.101","http://localhost:3000", "http://127.0.0.1:3000", "*:*"],
+        origin: ["http://81.200.158.101","http://localhost:3000", "http://127.0.0.1:3000", "https://81.200.158.101", "*:*"],
         methods: ["GET", "POST"],
         credentials: true,
     },
@@ -208,8 +208,8 @@ httpServer.listen(config.port_http, () => {
     console.log(`App listening at http://${config.localhost}:${config.port_http}`);
     console.log(`App listening at http://${config.ip}:${config.port_http}`);
 })
-// httpsServer.listen(config.port_https, () => {
-//     console.log(`App listening at https://${config.localhost}:${config.port_https}`);
-//     console.log(`App listening at https://${config.ip}:${config.port_https}`);
-// })
+httpsServer.listen(config.port_https, () => {
+    console.log(`App listening at https://${config.localhost}:${config.port_https}`);
+    console.log(`App listening at https://${config.ip}:${config.port_https}`);
+})
 
